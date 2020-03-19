@@ -8,50 +8,65 @@ public class InputController : MonoBehaviour
 
     //Serialized Fields
 
-    [SerializeField] private EGamepad gamepad = EGamepad.XboxController;
+    [SerializeField] private EGamepad gamepad;
 
     //Non-Serialized Fields
 
+    private static InputController instance;
     private string gamepadPrefix;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
+    //Basic Properties
+
     public EGamepad Gamepad { get => gamepad; }
 
-    //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
+    //Complex Properties
 
-    private void Awake()
+    public static InputController Instance
     {
-        switch (PlayerPrefs.GetString("gamepad"))
+        get
         {
-            case "xbox":
-                gamepad = EGamepad.XboxController;
-                gamepadPrefix = "XB";
-                break;
-            case "dualshock":
-                gamepad = EGamepad.DualShockController;
-                gamepadPrefix = "DS";
-                break;
-            default:
-                gamepad = EGamepad.MouseAndKeyboard;
-                gamepadPrefix = "MK";
-                break;
+            if (instance == null)
+            {
+                instance = new InputController();
+            }
+
+            return instance;
         }
     }
 
-    //Recurring Methods------------------------------------------------------------------------------------------------------------------------------
+    //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
-    //private void Update()
-    //{
-        
+    private InputController()
+    {
+        switch (gamepad)
+        {
+            case EGamepad.XboxController:
+                gamepadPrefix = "XB";
+                break;
+            case EGamepad.DualShockController:
+                gamepadPrefix = "DS";
+                break;
+            case EGamepad.MouseAndKeyboard:
+            default:
+                gamepadPrefix = "MK";
+                break;
+        }
 
-    //}
+        Debug.Log($"Gamepad Prefix: {gamepadPrefix}");
+    }
 
     //Input Methods----------------------------------------------------------------------------------------------------------------------------------
 
     //Checks if the player has clicked the specified button
     public bool GetButtonDown(string requestedInput)
     {
+        if (gamepadPrefix == "")
+        {
+            return false;
+        }
+
         switch (requestedInput)
         {
             //Always a button for MK, XB and DS
@@ -74,8 +89,8 @@ public class InputController : MonoBehaviour
                 }
 
             //Always an axis for MK, XB and DS
-            case "LookHorizontal":
-            case "LookVertical":
+            case "LookUpDown":
+            case "LookLeftRight":
                 return GetAxis(requestedInput) != 0;
 
             //Unknown input
@@ -87,6 +102,11 @@ public class InputController : MonoBehaviour
     //Checks if the player is holding the specified button down
     public bool GetButton(string requestedInput)
     {
+        if (gamepadPrefix == "")
+        {
+            return false;
+        }
+
         switch (requestedInput)
         {
             //Always a button for MK, XB and DS
@@ -109,8 +129,8 @@ public class InputController : MonoBehaviour
                 }
 
             //Always an axis for MK, XB and DS
-            case "LookHorizontal":
-            case "LookVertical":
+            case "LookUpDown":
+            case "LookLeftRight":
                 return GetAxis(requestedInput) != 0;
 
             //Unknown input
@@ -119,15 +139,24 @@ public class InputController : MonoBehaviour
         }
     }
 
-    //Check if player is moving the mouse / analog stick in specified direction
+    //Check if player is moving or looking; if axes are button pairs, returns integer value of -1, 0 or 1; 
+    //if axes are mouse / analog stick axes, returns float value between -1 and 1
     public float GetAxis(string requestedInput)
     {
+        Debug.Log($"Gamepad Prefix: {gamepadPrefix}, requestedInput: {requestedInput}, Final Requested Input: {gamepadPrefix}{requestedInput}");
+
+        if (gamepadPrefix == "")
+        {
+            return 0f;
+        }
+
         switch (requestedInput)
         {
+            case "MoveUpDown":
             case "MoveLeftRight":
             case "MoveForwardsBackwards":
-            case "LookHorizontal":
-            case "LookVertical":
+            case "LookUpDown":
+            case "LookLeftRight":
                 return Input.GetAxis(gamepadPrefix + requestedInput);
 
             //Unknown input
