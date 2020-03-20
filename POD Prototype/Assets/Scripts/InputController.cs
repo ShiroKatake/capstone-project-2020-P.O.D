@@ -73,7 +73,7 @@ public class InputController : MonoBehaviour
             case "Shoot":       //TODO: check if XB/DS trigger buttons are buttons or axes
             case "CycleWeapon":
             case "Pause":
-            case "MoveUpDown":
+            //case "MoveUpDown":
                 return Input.GetButtonDown(gamepadPrefix + requestedInput);
 
             //Button for MK, axis for XB and DS
@@ -89,9 +89,9 @@ public class InputController : MonoBehaviour
                 }
 
             //Always an axis for MK, XB and DS
-            case "LookUpDown":
-            case "LookLeftRight":
-                return GetAxis(requestedInput) != 0;
+            //case "LookUpDown":
+            //case "LookLeftRight":
+            //    return GetAxis(requestedInput) != 0;
 
             //Unknown input
             default:
@@ -113,7 +113,7 @@ public class InputController : MonoBehaviour
             case "Shoot":       //TODO: check if XB/DS trigger buttons are buttons or axes
             case "CycleWeapon":
             case "Pause":
-            case "MoveUpDown":
+            //case "MoveUpDown":
                 return Input.GetButton(gamepadPrefix + requestedInput);
 
             //Button for MK, axis for XB and DS
@@ -129,9 +129,9 @@ public class InputController : MonoBehaviour
                 }
 
             //Always an axis for MK, XB and DS
-            case "LookUpDown":
-            case "LookLeftRight":
-                return GetAxis(requestedInput) != 0;
+            //case "LookUpDown":
+            //case "LookLeftRight":
+            //    return GetAxis(requestedInput) != 0;
 
             //Unknown input
             default:
@@ -152,11 +152,11 @@ public class InputController : MonoBehaviour
 
         switch (requestedInput)
         {
-            case "MoveUpDown":
+            //case "MoveUpDown":
             case "MoveLeftRight":
             case "MoveForwardsBackwards":
-            case "LookUpDown":
-            case "LookLeftRight":
+            //case "LookUpDown":
+            //case "LookLeftRight":
                 return Input.GetAxis(gamepadPrefix + requestedInput);
 
             //Unknown input

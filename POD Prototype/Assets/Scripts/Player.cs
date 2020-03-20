@@ -8,17 +8,24 @@ public class Player : MonoBehaviour
 
     //Serialized Fields
 
+    [Header("Player Objects")]
     [SerializeField] private GameObject drone;
-    [SerializeField] private Camera camera;
-    [SerializeField] private GameObject cameraPivot;
+    [SerializeField] private GameObject cameraTarget;
+
+    [Header("Player Movement Speeds")]
+    [SerializeField] private float movementSpeed;
+    [SerializeField] private float rotationSpeed;
 
     //Non-Serialized Fields
 
-    private float moveLeftRight;
-    private float moveForwardsBackwards;
-    private float moveUpDown;
-    private float lookUpDown;
-    private float lookLeftRight;
+    //Variables for moving & determining if rotation is necessary
+    private Vector3 movement;
+    private Vector3 previousMovement = Vector3.zero;
+
+    //Variables for rotating smoothly
+    private Quaternion newRotation;
+    private Quaternion oldRotation;
+    private float slerpProgress = 1;
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -30,12 +37,7 @@ public class Player : MonoBehaviour
             Debug.Log("Player.drone needs to have a GameObject assigned to it.");
         }
 
-        if (camera == null)
-        {
-            Debug.Log("Player.camera needs to have a Camera assigned to it.");
-        }
-
-        if (cameraPivot == null)
+        if (cameraTarget == null)
         {
             Debug.Log("Player.cameraPivot needs to have a Camera assigned to it.");
         }
@@ -52,37 +54,40 @@ public class Player : MonoBehaviour
 
     private void GetInput()
     {
-        //Reset old input
-        moveLeftRight = 0f;
-        moveForwardsBackwards = 0f;
-        moveUpDown = 0f;
-        lookUpDown = 0f;
-        lookLeftRight = 0f;
-
-        //Get new input
-        moveLeftRight = InputController.Instance.GetAxis("MoveLeftRight");
-        moveForwardsBackwards = InputController.Instance.GetAxis("MoveForwardsBackwards");
-        moveUpDown = InputController.Instance.GetAxis("MoveUpDown");
-        lookUpDown = InputController.Instance.GetAxis("LookUpDown");
-        lookLeftRight = InputController.Instance.GetAxis("LookLeftRight");
+        movement = new Vector3(InputController.Instance.GetAxis("MoveLeftRight"), 0, InputController.Instance.GetAxis("MoveForwardsBackwards"));
     }
 
     private void UpdateDrone()
     {
-        //Update Look
-        if (lookLeftRight != 0)
+        Look();
+        Move();    
+    }
+
+    private void Look()
+    {
+        //Player wants to move in a new direction? Update Slerp variables.
+        if (movement != previousMovement)
         {
-            Debug.Log("LookingLR");
-            drone.transform.Rotate(0, lookLeftRight, 0);
+            slerpProgress = 0;
+            oldRotation = drone.transform.rotation;
+            newRotation = Quaternion.LookRotation(movement);
         }
 
-        if (lookUpDown != 0)
+        //Still turning? Rotate towards direction player wants to move in, but smoothly.
+        if (slerpProgress < 1/* && movement != Vector3.zero*/)
         {
-            Debug.Log("LookingUD");
-            cameraPivot.transform.Rotate(-lookUpDown, 0, 0);
-        }
+            slerpProgress = Mathf.Min(1, slerpProgress + rotationSpeed * Time.deltaTime);
+            drone.transform.rotation = Quaternion.Slerp(oldRotation, newRotation, slerpProgress);
+        }       
+    }
 
-        if (moveForwardsBackwards != 0 || moveLeftRight != 0 || moveUpDown != 0)
-        drone.transform.Translate(new Vector3(moveLeftRight, moveUpDown, moveForwardsBackwards), Space.Self);
+    private void Move()
+    {
+        //Player wants to move? Move the drone.
+        if (movement != Vector3.zero)
+        {
+            drone.transform.Translate(new Vector3(0, 0, movementSpeed * movement.magnitude * Time.deltaTime), Space.Self);
+            cameraTarget.transform.position = drone.transform.position;
+        }
     }
 }
