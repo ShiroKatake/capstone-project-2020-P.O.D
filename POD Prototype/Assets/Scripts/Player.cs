@@ -11,6 +11,10 @@ public class Player : MonoBehaviour
     [Header("Player Objects")]
     [SerializeField] private GameObject drone;
     [SerializeField] private GameObject cameraTarget;
+    [SerializeField] private Transform terraformerHoldPoint;
+
+    [Header("Prefabs")]
+    [SerializeField] private Terraformer terraformerPrefab;
 
     [Header("Player Movement Speeds")]
     [SerializeField] private float movementSpeed;
@@ -27,11 +31,28 @@ public class Player : MonoBehaviour
     private Quaternion oldRotation;
     private float slerpProgress = 1;
 
+    //Variables for Terraformer Spawning
+    private Terraformer heldTerraformer;
+    private bool holdingTerraformer;
+    private bool spawnTerraformer;
+
+    //Public Properties------------------------------------------------------------------------------------------------------------------------------
+
+    //Singleton Public Property
+
+    public static Player Instance { get; protected set; }
+
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
-    // Start is called before the first frame update
     void Awake()
     {
+        if (Instance != null)
+        {
+            Debug.LogError("There should never be 2 or more Players.");
+        }
+
+        Instance = this;
+
         if (drone == null)
         {
             Debug.Log("Player.drone needs to have a GameObject assigned to it.");
@@ -54,13 +75,37 @@ public class Player : MonoBehaviour
 
     private void GetInput()
     {
+        //Movement Input
         movement = new Vector3(InputController.Instance.GetAxis("MoveLeftRight"), 0, InputController.Instance.GetAxis("MoveForwardsBackwards"));
+
+        Debug.Log($"GetButtonDown(\"HoldTerraformer\") is {InputController.Instance.ButtonPressed("HoldTerraformer")}");
+        Debug.Log($"GetButton(\"HoldTerraformer\") is {InputController.Instance.ButtonHeld("HoldTerraformer")}");
+
+        //Terraformer Input
+        if (InputController.Instance.ButtonHeld("HoldTerraformer"))
+        {
+            if (!holdingTerraformer)
+            {
+                holdingTerraformer = true;
+                spawnTerraformer = true;
+            }
+        }
+        else if (holdingTerraformer)
+        {
+            holdingTerraformer = false;
+        }
+
+        //if (InputController.Instance.ButtonPressed("HoldTerraformer"))
+        //{
+        //    spawnTerraformer = true;
+        //}
     }
 
     private void UpdateDrone()
     {
         Look();
-        Move();    
+        Move();
+        CheckTerraformerSpawning();
     }
 
     private void Look()
@@ -78,7 +123,7 @@ public class Player : MonoBehaviour
         {
             slerpProgress = Mathf.Min(1, slerpProgress + rotationSpeed * Time.deltaTime);
             drone.transform.rotation = Quaternion.Slerp(oldRotation, newRotation, slerpProgress);
-        }       
+        }
     }
 
     private void Move()
@@ -88,6 +133,34 @@ public class Player : MonoBehaviour
         {
             drone.transform.Translate(new Vector3(0, 0, movementSpeed * movement.magnitude * Time.deltaTime), Space.Self);
             cameraTarget.transform.position = drone.transform.position;
+        }
+    }
+
+    private void CheckTerraformerSpawning()
+    {
+        if (spawnTerraformer)
+        {
+            heldTerraformer = Instantiate<Terraformer>(terraformerPrefab, terraformerHoldPoint.position, terraformerHoldPoint.rotation);
+            Planet.Instance.Terraformers.Add(heldTerraformer);
+            spawnTerraformer = false;
+        }
+
+        if (heldTerraformer != null)
+        {
+            heldTerraformer.transform.rotation = terraformerHoldPoint.rotation;
+
+            if (holdingTerraformer)
+            {
+                heldTerraformer.transform.position = terraformerHoldPoint.position;
+            }
+            else
+            {
+                Vector3 spawnPos = terraformerHoldPoint.position;
+                spawnPos.y = 0.5f;
+                heldTerraformer.transform.position = spawnPos;
+                heldTerraformer.Terraforming = Planet.Instance.TerraformingProgress < 1;
+                heldTerraformer = null;
+            }
         }
     }
 }

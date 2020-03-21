@@ -12,34 +12,29 @@ public class InputController : MonoBehaviour
 
     //Non-Serialized Fields
 
-    private static InputController instance;
     private string gamepadPrefix;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    //Basic Properties
+    //Singleton Public Property
+
+    public static InputController Instance { get; protected set; }
+
+    //Basic Public Properties
 
     public EGamepad Gamepad { get => gamepad; }
 
-    //Complex Properties
-
-    public static InputController Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
-                instance = new InputController();
-            }
-
-            return instance;
-        }
-    }
-
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
-
-    private InputController()
+    
+    void Awake()
     {
+        if (Instance != null)
+        {
+            Debug.LogError("There should never be 2 or more InputControllers.");
+        }
+
+        Instance = this;
+
         switch (gamepad)
         {
             case EGamepad.XboxController:
@@ -53,14 +48,12 @@ public class InputController : MonoBehaviour
                 gamepadPrefix = "MK";
                 break;
         }
-
-        Debug.Log($"Gamepad Prefix: {gamepadPrefix}");
     }
 
     //Input Methods----------------------------------------------------------------------------------------------------------------------------------
 
-    //Checks if the player has clicked the specified button
-    public bool GetButtonDown(string requestedInput)
+    //Checks if the player has pressed the specified button
+    public bool ButtonPressed(string requestedInput)
     {
         if (gamepadPrefix == "")
         {
@@ -73,6 +66,7 @@ public class InputController : MonoBehaviour
             case "Shoot":       //TODO: check if XB/DS trigger buttons are buttons or axes
             case "CycleWeapon":
             case "Pause":
+            case "HoldTerraformer":
             //case "MoveUpDown":
                 return Input.GetButtonDown(gamepadPrefix + requestedInput);
 
@@ -100,7 +94,7 @@ public class InputController : MonoBehaviour
     }
 
     //Checks if the player is holding the specified button down
-    public bool GetButton(string requestedInput)
+    public bool ButtonHeld(string requestedInput)
     {
         if (gamepadPrefix == "")
         {
@@ -113,6 +107,7 @@ public class InputController : MonoBehaviour
             case "Shoot":       //TODO: check if XB/DS trigger buttons are buttons or axes
             case "CycleWeapon":
             case "Pause":
+            case "HoldTerraformer":
             //case "MoveUpDown":
                 return Input.GetButton(gamepadPrefix + requestedInput);
 
@@ -143,10 +138,9 @@ public class InputController : MonoBehaviour
     //if axes are mouse / analog stick axes, returns float value between -1 and 1
     public float GetAxis(string requestedInput)
     {
-        Debug.Log($"Gamepad Prefix: {gamepadPrefix}, requestedInput: {requestedInput}, Final Requested Input: {gamepadPrefix}{requestedInput}");
-
         if (gamepadPrefix == "")
         {
+            Debug.Log("No Gamepad Prefix Yet");
             return 0f;
         }
 
