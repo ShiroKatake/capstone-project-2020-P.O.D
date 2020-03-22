@@ -78,9 +78,6 @@ public class Player : MonoBehaviour
         //Movement Input
         movement = new Vector3(InputController.Instance.GetAxis("MoveLeftRight"), 0, InputController.Instance.GetAxis("MoveForwardsBackwards"));
 
-        Debug.Log($"GetButtonDown(\"HoldTerraformer\") is {InputController.Instance.ButtonPressed("HoldTerraformer")}");
-        Debug.Log($"GetButton(\"HoldTerraformer\") is {InputController.Instance.ButtonHeld("HoldTerraformer")}");
-
         //Terraformer Input
         if (InputController.Instance.ButtonHeld("HoldTerraformer"))
         {
@@ -141,7 +138,6 @@ public class Player : MonoBehaviour
         if (spawnTerraformer)
         {
             heldTerraformer = Instantiate<Terraformer>(terraformerPrefab, terraformerHoldPoint.position, terraformerHoldPoint.rotation);
-            Planet.Instance.Terraformers.Add(heldTerraformer);
             spawnTerraformer = false;
         }
 
@@ -159,6 +155,7 @@ public class Player : MonoBehaviour
                 spawnPos.y = 0.5f;
                 heldTerraformer.transform.position = spawnPos;
                 heldTerraformer.Terraforming = Planet.Instance.TerraformingProgress < 1;
+                Planet.Instance.Terraformers.Add(heldTerraformer);
                 heldTerraformer = null;
             }
         }

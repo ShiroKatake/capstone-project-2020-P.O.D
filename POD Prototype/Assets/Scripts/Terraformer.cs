@@ -10,7 +10,6 @@ public class Terraformer : MonoBehaviour
 
     [Header("Terraformer Stats")]
     [SerializeField] private float terraformingSpeed;
-    [SerializeField] private float health;
 
     [Header("Colours")]
     [SerializeField] private Material activeMaterial;
@@ -18,6 +17,7 @@ public class Terraformer : MonoBehaviour
 
     //Non-Serialized Fields
     private bool terraforming = false;
+    private Health health;
     
     private Material terraformerMaterial;
     private Color activeColour;
@@ -50,6 +50,7 @@ public class Terraformer : MonoBehaviour
         MeshRenderer meshRenderer = gameObject.GetComponent <MeshRenderer> () as MeshRenderer;
         meshRenderer.material = new Material(inactiveMaterial);
         terraformerMaterial = meshRenderer.material;
+        health = GetComponent<Health>();
     }
 
     //Recurring Methods------------------------------------------------------------------------------------------------------------------------------
@@ -62,10 +63,10 @@ public class Terraformer : MonoBehaviour
 
     private void CheckHealth()
     {
-        if (health <= 0)
+        if (health.IsDead())
         {
             Planet.Instance.Terraformers.Remove(this);
-            Destroy(this.gameObject);
+            health.Die();
         }
     }
 
