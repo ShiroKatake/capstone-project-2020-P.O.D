@@ -20,6 +20,12 @@ public class Enemy : MonoBehaviour
     private float radius;
     private float targetRadius;
 
+    //Public Properties------------------------------------------------------------------------------------------------------------------------------
+
+    //Basic Public Properties
+
+    public Health Health { get => health; }
+
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
     void Awake()
@@ -85,28 +91,17 @@ public class Enemy : MonoBehaviour
         movement *= speed;
     }
 
-    //Recurring Methods------------------------------------------------------------------------------------------------------------------------------
+    //Recurring Methods (Fixed)----------------------------------------------------------------------------------------------------------------------
 
-    // Update is called once per frame
-    void Update()
+    private void FixedUpdate()
     {
-        CheckHealth();
         Move();
         CheckTarget();
     }
 
-    private void CheckHealth()
-    {
-        if (health.IsDead())
-        {
-            EnemyController.Instance.Enemies.Remove(this);
-            health.Die();
-        }
-    }
-
     private void Move()
     {
-        transform.Translate(movement * Time.deltaTime);
+        transform.Translate(movement * Time.fixedDeltaTime);
     }
 
     private void CheckTarget()
@@ -120,6 +115,22 @@ public class Enemy : MonoBehaviour
         if (Vector3.Distance(transform.position, target.position) < radius + targetRadius)
         {
             target.GetComponent<Health>().Value -= damage;
+            EnemyController.Instance.Enemies.Remove(this);
+            health.Die();
+        }
+    }
+
+    //Reucrring Methods (Framerate)------------------------------------------------------------------------------------------------------------------
+
+    private void Update()
+    {
+        CheckHealth();
+    }
+
+    private void CheckHealth()
+    {
+        if (health.IsDead())
+        {
             EnemyController.Instance.Enemies.Remove(this);
             health.Die();
         }

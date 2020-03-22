@@ -10,6 +10,8 @@ public class HumanPod : MonoBehaviour
 
     private Health health;
     private Material material;
+    private Color startColour;
+    private float colourLerpProgress = 0;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -33,9 +35,10 @@ public class HumanPod : MonoBehaviour
         MeshRenderer meshRenderer = GetComponent<MeshRenderer>();
         meshRenderer.material = new Material(meshRenderer.material);
         material = meshRenderer.material;
+        startColour = material.color;
     }
 
-    //Recurring Methods------------------------------------------------------------------------------------------------------------------------------
+    //Recurring Methods (Framerate)------------------------------------------------------------------------------------------------------------------
 
     void Update()
     {
@@ -44,10 +47,9 @@ public class HumanPod : MonoBehaviour
 
     private void CheckHealth()
     {
-        if (health.IsDead())
+        if (colourLerpProgress != health.Value * 0.01)
         {
-            //health.Die();
-            material.color = Color.red;
+            material.color = Color.Lerp(Color.red, startColour, health.Value * 0.01f);
         }
     }
 }

@@ -50,7 +50,7 @@ public class InputController : MonoBehaviour
         }
     }
 
-    //Input Methods----------------------------------------------------------------------------------------------------------------------------------
+    //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
     //Checks if the player has pressed the specified button
     public bool ButtonPressed(string requestedInput)

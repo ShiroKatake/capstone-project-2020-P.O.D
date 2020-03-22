@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -12,13 +11,17 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject drone;
     [SerializeField] private GameObject cameraTarget;
     [SerializeField] private Transform terraformerHoldPoint;
+    [SerializeField] private Transform laserCannonTip;
+    [SerializeField] private Transform laserBatteryPoint;
 
     [Header("Prefabs")]
     [SerializeField] private Terraformer terraformerPrefab;
+    [SerializeField] private LaserBolt laserBoltPrefab;
 
-    [Header("Player Movement Speeds")]
+    [Header("Player Stats")]
     [SerializeField] private float movementSpeed;
     [SerializeField] private float rotationSpeed;
+    [SerializeField] private int laserBatteryCapacity;
 
     //Non-Serialized Fields
 
@@ -36,11 +39,21 @@ public class Player : MonoBehaviour
     private bool holdingTerraformer;
     private bool spawnTerraformer;
 
+    //Laser Bolt Variables
+
+    private bool shooting;
+    private List<LaserBolt> laserBattery = new List<LaserBolt>();
+
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
     //Singleton Public Property
 
     public static Player Instance { get; protected set; }
+
+    //Basic Public Properties
+
+    public List<LaserBolt> LaserBattery { get => laserBattery; }
+    public Transform LaserBatteryPoint { get => laserBatteryPoint; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -53,21 +66,15 @@ public class Player : MonoBehaviour
 
         Instance = this;
 
-        if (drone == null)
+        for (int i = 0; i < laserBatteryCapacity; i++)
         {
-            Debug.Log("Player.drone needs to have a GameObject assigned to it.");
-        }
-
-        if (cameraTarget == null)
-        {
-            Debug.Log("Player.cameraPivot needs to have a Camera assigned to it.");
+            laserBattery.Add(Instantiate<LaserBolt>(laserBoltPrefab, laserBatteryPoint.position, laserBoltPrefab.transform.rotation));
         }
     }
 
-    //Recurring Methods------------------------------------------------------------------------------------------------------------------------------
+    //Recurring Methods (Fixed)----------------------------------------------------------------------------------------------------------------------
 
-    // Update is called once per frame
-    void Update()
+    private void FixedUpdate()
     {
         GetInput();
         UpdateDrone();
@@ -96,6 +103,9 @@ public class Player : MonoBehaviour
         //{
         //    spawnTerraformer = true;
         //}
+
+        //Shooting Input
+        shooting = InputController.Instance.ButtonHeld("Shoot");
     }
 
     private void UpdateDrone()
@@ -103,6 +113,7 @@ public class Player : MonoBehaviour
         Look();
         Move();
         CheckTerraformerSpawning();
+        CheckShooting();
     }
 
     private void Look()
@@ -135,7 +146,7 @@ public class Player : MonoBehaviour
 
     private void CheckTerraformerSpawning()
     {
-        if (spawnTerraformer)
+        if (spawnTerraformer && (!shooting || laserBattery.Count == 0))
         {
             heldTerraformer = Instantiate<Terraformer>(terraformerPrefab, terraformerHoldPoint.position, terraformerHoldPoint.rotation);
             spawnTerraformer = false;
@@ -145,7 +156,7 @@ public class Player : MonoBehaviour
         {
             heldTerraformer.transform.rotation = terraformerHoldPoint.rotation;
 
-            if (holdingTerraformer)
+            if (holdingTerraformer && (!shooting || laserBattery.Count == 0))
             {
                 heldTerraformer.transform.position = terraformerHoldPoint.position;
             }
@@ -158,6 +169,17 @@ public class Player : MonoBehaviour
                 Planet.Instance.Terraformers.Add(heldTerraformer);
                 heldTerraformer = null;
             }
+        }
+    }
+
+    private void CheckShooting()
+    {
+        if (shooting && laserBattery.Count > 0)
+        {
+            LaserBolt laserBolt = laserBattery[0];
+            laserBattery.Remove(laserBolt);
+            laserBolt.transform.position = laserCannonTip.position;
+            laserBolt.Shoot((transform.forward * 2 - transform.up).normalized);
         }
     }
 }
