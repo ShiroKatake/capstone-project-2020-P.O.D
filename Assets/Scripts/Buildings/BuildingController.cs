@@ -16,6 +16,7 @@ public class BuildingController : MonoBehaviour
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
     private List<Building> buildings = new List<Building>();
+    private List<Building> destroyedBuildings = new List<Building>();
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -64,22 +65,51 @@ public class BuildingController : MonoBehaviour
     /// <summary>
     /// Update() is run every frame.
     /// </summary>
-    //private void Update()
-    //{
+    private void Update()
+    {
+        foreach (Building b in buildings)
+        {
+            CheckBuildingHealth(b);
+        }
 
-    //}
+        CleanupBuildings();
+    }
 
     /// <summary>
     /// FixedUpdate() is run at a fixed interval independant of framerate.
     /// </summary>
     //private void FixedUpdate()
     //{
-        //If having building controller execute building behaviour, for each building in list "buildings", check its type and execute behaviour for it using the value of its public properties
+    //If having building controller execute building behaviour, for each building in list "buildings", check its type and execute behaviour for it using the value of its public properties
     //}
 
     //Recurring Methods (Update())------------------------------------------------------------------------------------------------------------------  
 
+    /// <summary>
+    /// Checks the building's health, and passes it to BuildingFactory to be destroyed if it falls below 0.
+    /// <param name="building">The building whose health is being checked.</param>
+    /// </summary>
+    private void CheckBuildingHealth(Building building)
+    {
+        if (building.Health.Value <= 0 && building.BuildingType != EBuilding.CryoEgg)
+        {
+            destroyedBuildings.Add(building);
+        }
+    }
 
+    /// <summary>
+    /// Processes all Buildings that have been destroyed.
+    /// </summary>
+    private void CleanupBuildings()
+    {
+        //TODO: Test that cleaning up buildings this way doesn't break when the building is removed from any lists mid-loop.
+        while (destroyedBuildings.Count > 0)
+        {
+            Building b = destroyedBuildings[0];
+            destroyedBuildings.RemoveAt(0);
+            BuildingFactory.Instance.DestroyBuilding(b);
+        }
+    }
 
     //Recurring Methods (FixedUpdate())--------------------------------------------------------------------------------------------------------------
 

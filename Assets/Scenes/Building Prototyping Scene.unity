@@ -37803,7 +37803,7 @@ GameObject:
   - component: {fileID: 1170871699}
   - component: {fileID: 1170871698}
   m_Layer: 0
-  m_Name: HumanPod
+  m_Name: CryoEgg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -49812,36 +49812,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1527809183}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &1528816734
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1528816735}
-  m_Layer: 0
-  m_Name: LaserBatteryPoint
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1528816735
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1528816734}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -5, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1532476755
 GameObject:
   m_ObjectHideFlags: 0
@@ -53480,6 +53450,8 @@ GameObject:
   - component: {fileID: 1623106989}
   - component: {fileID: 1623106988}
   - component: {fileID: 1623106990}
+  - component: {fileID: 1623106992}
+  - component: {fileID: 1623106991}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -53528,6 +53500,38 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 130242450852513669, guid: 65e2d9413bdfaa8499dd94fda9573c1c,
     type: 3}
+--- !u!114 &1623106991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1623106987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3c05046c54acfd4f9708df36e0e81fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1623106992
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1623106987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d3aff46ccea6cf46a5548ffc2b50ebd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cryoEggPrefab: {fileID: 0}
+  solarPanelsPrefab: {fileID: 0}
+  windTurbinePrefab: {fileID: 0}
+  waterDrillPrefab: {fileID: 0}
+  gasDiffuserPrefab: {fileID: 0}
+  humidifierPrefab: {fileID: 0}
+  greenhousePrefab: {fileID: 0}
+  turretPrefab: {fileID: 0}
 --- !u!1 &1625396031
 GameObject:
   m_ObjectHideFlags: 0
@@ -70371,10 +70375,5 @@ PrefabInstance:
       propertyPath: cameraTarget
       value: 
       objectReference: {fileID: 1858808679}
-    - target: {fileID: 403112268726757339, guid: c59556a7ef07f27488ad22ca85e6db1c,
-        type: 3}
-      propertyPath: laserBatteryPoint
-      value: 
-      objectReference: {fileID: 1528816735}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c59556a7ef07f27488ad22ca85e6db1c, type: 3}

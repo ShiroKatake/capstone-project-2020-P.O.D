@@ -65,9 +65,9 @@ public class BuildingFactory : MonoBehaviour
 
         switch(buildingType)
         {
-            case EBuilding.CryoEgg:
-                building = Instantiate(cryoEggPrefab);
-                break;
+            //case EBuilding.CryoEgg:
+            //    building = Instantiate(cryoEggPrefab);
+            //    break;
             case EBuilding.SolarPanels:
                 building = Instantiate(solarPanelsPrefab);
                 break;
