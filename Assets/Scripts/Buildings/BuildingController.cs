@@ -27,7 +27,7 @@ public class BuildingController : MonoBehaviour
     /// </summary>
     public static BuildingController Instance { get; protected set; }
 
-    //Basic Public Properties                                                                                                                          
+    //Basic Public Properties----------------------------------------------------------------------                                                                                                                          
 
 
 
@@ -91,7 +91,7 @@ public class BuildingController : MonoBehaviour
     /// </summary>
     private void CheckBuildingHealth(Building building)
     {
-        if (building.Health.Value <= 0 && building.BuildingType != EBuilding.CryoEgg)
+        if (building.Health.IsDead() && building.BuildingType != EBuilding.CryoEgg)
         {
             destroyedBuildings.Add(building);
         }

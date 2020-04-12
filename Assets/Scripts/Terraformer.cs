@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Terraformers to terraform the planet.
+/// </summary>
 public class Terraformer : MonoBehaviour
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
-    //Serialized Fields
+    //Serialized Fields----------------------------------------------------------------------------
 
     [Header("Terraformer Stats")]
     [SerializeField] private float terraformingSpeed;
@@ -15,7 +18,8 @@ public class Terraformer : MonoBehaviour
     [SerializeField] private Material activeMaterial;
     [SerializeField] private Material inactiveMaterial;
 
-    //Non-Serialized Fields
+    //Non-Serialized Fields------------------------------------------------------------------------
+
     private bool terraforming = false;
     private Health health;
     
@@ -25,8 +29,11 @@ public class Terraformer : MonoBehaviour
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    //Complex Public Properties
+    //Complex Public Properties--------------------------------------------------------------------
 
+    /// <summary>
+    /// Is the terraformer active and terraforming the planet?
+    /// </summary>
     public bool Terraforming
     {
         get
@@ -43,6 +50,10 @@ public class Terraformer : MonoBehaviour
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
+    /// <summary>
+    /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
+    /// Awake() runs before Start().
+    /// </summary>
     private void Awake()
     {
         activeColour = activeMaterial.color;
@@ -53,14 +64,22 @@ public class Terraformer : MonoBehaviour
         health = GetComponent<Health>();
     }
 
-    //Recurring Methods (Framerate)------------------------------------------------------------------------------------------------------------------
+    //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
 
+    /// <summary>
+    /// Update() is run every frame.
+    /// </summary>
     private void Update()
     {
         CheckHealth();
         Terraform();
     }
 
+    //Recurring Methods(Update())--------------------------------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Checks if the terraformer is dead or not, and destroys it if it is.
+    /// </summary>
     private void CheckHealth()
     {
         if (health.IsDead())
@@ -70,6 +89,9 @@ public class Terraformer : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Checks if the terraformer is active, and if so, terraforms the planet.
+    /// </summary>
     private void Terraform()
     {
         if (terraforming)

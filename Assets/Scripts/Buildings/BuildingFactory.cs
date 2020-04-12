@@ -105,6 +105,6 @@ public class BuildingFactory : MonoBehaviour
     public void DestroyBuilding(Building building)
     {
         BuildingController.Instance.DeRegisterBuilding(building);
-        Destroy(building.gameObject);
+        building.Health.Die();
     }
 }

@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Demo class for the Cryo Egg the drone's humans are inside.
+/// </summary>
 public class HumanPod : MonoBehaviour
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
-    //Non-Serialized Fields
+    //Non-Serialized Fields------------------------------------------------------------------------
 
     private Health health;
     private Material material;
@@ -15,12 +18,19 @@ public class HumanPod : MonoBehaviour
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    //Singleton Public Property
+    //Singleton Public Property--------------------------------------------------------------------
 
+    /// <summary>
+    /// HumanPod's singleton public property.
+    /// </summary>
     public static HumanPod Instance { get; protected set; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
+    /// <summary>
+    /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
+    /// Awake() runs before Start().
+    /// </summary>
     void Awake()
     {
         if (Instance != null)
@@ -38,13 +48,21 @@ public class HumanPod : MonoBehaviour
         startColour = material.color;
     }
 
-    //Recurring Methods (Framerate)------------------------------------------------------------------------------------------------------------------
+    //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
 
+    /// <summary>
+    /// Update() is run every frame.
+    /// </summary>
     void Update()
     {
         CheckHealth();
     }
 
+    //Recurring Methods (Update())-------------------------------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Checks the health of HumanPod, changing its colour if it changes.
+    /// </summary>
     private void CheckHealth()
     {
         if (colourLerpProgress != health.Value * 0.01)

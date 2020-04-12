@@ -34,7 +34,7 @@ public class Building : MonoBehaviour
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    //Basic Public Properties 
+    //Basic Public Properties----------------------------------------------------------------------
 
     /// <summary>
     /// How quickly this building fills up terraforming bars.

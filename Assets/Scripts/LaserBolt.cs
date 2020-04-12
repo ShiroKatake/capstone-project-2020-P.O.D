@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Laser bolts the player shoots at enemies.
+/// </summary>
 public class LaserBolt : MonoBehaviour
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
-    //Serialized Fields
+    //Serialized Fields----------------------------------------------------------------------------
 
     [Header("Laser Bolt Stats")]
     [SerializeField] private float speed;
@@ -15,20 +18,23 @@ public class LaserBolt : MonoBehaviour
     [Header("Laser Bolt Components")]
     [SerializeField] private Rigidbody rigidbody;
 
-    //Non-Serialized Fields
+    //Non-Serialized Fields------------------------------------------------------------------------
 
     //private Vector3 vector;
     private bool active = false;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    //Basic Public Properties
+    //Basic Public Properties----------------------------------------------------------------------
 
     //public Rigidbody Rigidbody { get => rigidbody; }
     //public float Speed { get => speed; }
 
-    //Recurring Methods (Fixed)----------------------------------------------------------------------------------------------------------------------
+    //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
 
+    /// <summary>
+    /// FixedUpdate() is run at a fixed interval independant of framerate.
+    /// </summary>
     private void FixedUpdate()
     {
         if (active)
@@ -44,6 +50,10 @@ public class LaserBolt : MonoBehaviour
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
+    /// <summary>
+    /// Activates a laser bolt, applying a velocity to it.
+    /// </summary>
+    /// <param name="vector">The normalised direction of the laser bolt's velocity.</param>
     public void Shoot(Vector3 vector)
     {
         active = true;
@@ -52,11 +62,19 @@ public class LaserBolt : MonoBehaviour
         rigidbody.velocity = vector * speed;
     }
 
+    /// <summary>
+    /// Triggered if a laser bolt collides with another object.
+    /// </summary>
+    /// <param name="other">The collider of the other object the laser bolt collided with.</param>
     public void OnTriggerEnter(Collider other)
     {
         LaserBoltCollision(other);
     }
 
+    /// <summary>
+    /// Deals damage to enemies upon collision, before cleaning the laser bolt up.
+    /// </summary>
+    /// <param name="collidedWith">The collider of the other object the laser bolt collided with.</param>
     private void LaserBoltCollision(Collider collidedWith)
     {
         Enemy enemy = collidedWith.gameObject.GetComponent<Enemy>();
@@ -69,6 +87,9 @@ public class LaserBolt : MonoBehaviour
         LaserBoltCollision();
     }
 
+    /// <summary>
+    /// Cleans up the laser bolt after it collides with something.
+    /// </summary>
     private void LaserBoltCollision()
     {
         rigidbody.isKinematic = true;

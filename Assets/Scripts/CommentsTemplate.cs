@@ -26,7 +26,7 @@ public class CommentsTemplate : MonoBehaviour
     /// </summary>
     public static CommentsTemplate Instance { get; protected set; }
 
-    //Basic Public Properties                                                                                                                          
+    //Basic Public Properties----------------------------------------------------------------------                                                                                                                          
 
 
 

@@ -2,30 +2,43 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// A manager class for getting the right input values from the player's current input device(s) without having to specify the device-specific input for what you're after.
+/// </summary>
 public class InputController : MonoBehaviour
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
-    //Serialized Fields
+    //Serialized Fields----------------------------------------------------------------------------
 
     [SerializeField] private EGamepad gamepad;
 
-    //Non-Serialized Fields
+    //Non-Serialized Fields------------------------------------------------------------------------
 
     private string gamepadPrefix;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    //Singleton Public Property
+    //Singleton Public Property--------------------------------------------------------------------
 
+    /// <summary>
+    /// InputController's singleton public property.
+    /// </summary>
     public static InputController Instance { get; protected set; }
 
-    //Basic Public Properties
+    //Basic Public Properties----------------------------------------------------------------------
 
+    /// <summary>
+    /// The input device(s) the player is using.
+    /// </summary>
     public EGamepad Gamepad { get => gamepad; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
-    
+
+    /// <summary>
+    /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
+    /// Awake() runs before Start().
+    /// </summary>
     void Awake()
     {
         if (Instance != null)
@@ -52,7 +65,10 @@ public class InputController : MonoBehaviour
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
-    //Checks if the player has pressed the specified button
+    /// <summary>
+    ///  Checks if the player has pressed the specified button.
+    ///  <param name="requestedInput">The input or button to check.</param>
+    /// </summary>
     public bool ButtonPressed(string requestedInput)
     {
         if (gamepadPrefix == "")
@@ -93,7 +109,10 @@ public class InputController : MonoBehaviour
         }
     }
 
-    //Checks if the player is holding the specified button down
+    /// <summary>
+    ///  Checks if the player is holding the specified button or input down.
+    ///  <param name="requestedInput">The input or button to check.</param>
+    /// </summary>
     public bool ButtonHeld(string requestedInput)
     {
         if (gamepadPrefix == "")
@@ -134,8 +153,11 @@ public class InputController : MonoBehaviour
         }
     }
 
-    //Check if player is moving or looking; if axes are button pairs, returns integer value of -1, 0 or 1; 
-    //if axes are mouse / analog stick axes, returns float value between -1 and 1
+    /// <summary>
+    ///  Check if player is moving or looking; if axes are button pairs, returns integer value of -1, 0 or 1; 
+    ///  if axes are mouse / analog stick axes, returns float value between -1 and 1
+    ///  <param name="requestedInput">The input or axis to check.</param>
+    /// </summary>
     public float GetAxis(string requestedInput)
     {
         if (gamepadPrefix == "")

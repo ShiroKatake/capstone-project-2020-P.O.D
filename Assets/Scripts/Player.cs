@@ -1,11 +1,14 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// The player.
+/// </summary>
 public class Player : MonoBehaviour
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
-    //Serialized Fields
+    //Serialized Fields----------------------------------------------------------------------------
 
     [Header("Player Objects")]
     [SerializeField] private GameObject drone;
@@ -23,7 +26,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float rotationSpeed;
     [SerializeField] private int laserBatteryCapacity;
 
-    //Non-Serialized Fields
+    //Non-Serialized Fields------------------------------------------------------------------------
 
     //Variables for moving & determining if rotation is necessary
     private Vector3 movement;
@@ -46,17 +49,31 @@ public class Player : MonoBehaviour
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    //Singleton Public Property
+    //Singleton Public Property--------------------------------------------------------------------
 
+    /// <summary>
+    /// Singleton public property for the player.
+    /// </summary>
     public static Player Instance { get; protected set; }
 
-    //Basic Public Properties
+    //Basic Public Properties----------------------------------------------------------------------
 
+    /// <summary>
+    /// A pool for laser bolts that aren't in use.
+    /// </summary>
     public List<LaserBolt> LaserBattery { get => laserBattery; }
+
+    /// <summary>
+    /// The physical location of the pool of laser bolts in-scene.
+    /// </summary>
     public Transform LaserBatteryPoint { get => laserBatteryPoint; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
+    /// <summary>
+    /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
+    /// Awake() runs before Start().
+    /// </summary>
     void Awake()
     {
         if (Instance != null)
@@ -72,14 +89,23 @@ public class Player : MonoBehaviour
         }
     }
 
-    //Recurring Methods (Fixed)----------------------------------------------------------------------------------------------------------------------
 
+    //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// FixedUpdate() is run at a fixed interval independant of framerate.
+    /// </summary>
     private void FixedUpdate()
     {
         GetInput();
         UpdateDrone();
     }
 
+    //Recurring Methods (FixedUpdate())--------------------------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Gets the player's input from the keyboard and mouse / gamepad they're using.
+    /// </summary>
     private void GetInput()
     {
         //Movement Input
@@ -108,6 +134,9 @@ public class Player : MonoBehaviour
         shooting = InputController.Instance.ButtonHeld("Shoot");
     }
 
+    /// <summary>
+    /// Updates the player based on their input.
+    /// </summary>
     private void UpdateDrone()
     {
         Look();
@@ -116,6 +145,10 @@ public class Player : MonoBehaviour
         CheckShooting();
     }
 
+
+    /// <summary>
+    /// Changes where the player is looking based on their input.
+    /// </summary>
     private void Look()
     {
         //Player wants to move in a new direction? Update Slerp variables.
@@ -134,6 +167,10 @@ public class Player : MonoBehaviour
         }
     }
 
+
+    /// <summary>
+    /// Moves the player based on their input.
+    /// </summary>
     private void Move()
     {
         //Player wants to move? Move the drone.
@@ -144,6 +181,9 @@ public class Player : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Checks if the player wants to spawn a building.
+    /// </summary>
     private void CheckTerraformerSpawning()
     {
         if (spawnTerraformer && (!shooting || laserBattery.Count == 0))
@@ -172,6 +212,9 @@ public class Player : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Checks if the player wants to shoot based on their input, and fires laser bolts if they do.
+    /// </summary>
     private void CheckShooting()
     {
         if (shooting && laserBattery.Count > 0)
