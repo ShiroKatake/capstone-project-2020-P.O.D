@@ -58,9 +58,12 @@ public class BuildingFactory : MonoBehaviour
     /// Get buildings of a specified type from BuildingFactory.
     /// </summary>
     /// <param name="buildingType">The type of building you want BuildingFactory to get for you.</param>
+    /// <param name="position">Where you want BuildingFactory to position the building.</param>
+    /// <param name="rotation">The rotation you want BuildingFactory to give the building.</param>
     /// <returns></returns>
-    public Building GetBuilding(EBuilding buildingType)
+    public Building GetBuilding(EBuilding buildingType, Vector3 position, Quaternion rotation)
     {
+        Debug.Log("Getting Building");
         Building building;
 
         switch(buildingType)
@@ -69,25 +72,25 @@ public class BuildingFactory : MonoBehaviour
             //    building = Instantiate(cryoEggPrefab);
             //    break;
             case EBuilding.SolarPanel:
-                building = Instantiate(solarPanelPrefab);
+                building = Instantiate<Building>(solarPanelPrefab, position, rotation) ;
                 break;
             case EBuilding.WindTurbine:
-                building = Instantiate(windTurbinePrefab);
+                building = Instantiate<Building>(windTurbinePrefab, position, rotation);
                 break;
             case EBuilding.WaterDrill:
-                building = Instantiate(waterDrillPrefab);
+                building = Instantiate<Building>(waterDrillPrefab, position, rotation);
                 break;
             case EBuilding.GasDiffuser:
-                building = Instantiate(gasDiffuserPrefab);
+                building = Instantiate<Building>(gasDiffuserPrefab, position, rotation);
                 break;
             case EBuilding.Humidifier:
-                building = Instantiate(humidifierPrefab);
+                building = Instantiate<Building>(humidifierPrefab, position, rotation);
                 break;
             case EBuilding.Greenhouse:
-                building = Instantiate(greenhousePrefab);
+                building = Instantiate<Building>(greenhousePrefab, position, rotation);
                 break;
             case EBuilding.Turret:
-                building = Instantiate(turretPrefab);
+                building = Instantiate<Building>(turretPrefab, position, rotation);
                 break;
             default:
                 Debug.LogError("Invalid EBuildingType value passed to BuildingFactory.GetBuilding().");
@@ -98,6 +101,50 @@ public class BuildingFactory : MonoBehaviour
         BuildingController.Instance.RegisterBuilding(building);
         return building;
     }
+
+    //public GameObject GetBuilding(EBuilding buildingType, Vector3 position, Quaternion rotation, bool eh)
+    //{
+    //    Debug.Log("Getting Building");
+    //    GameObject o;
+    //    Building b;
+
+    //    switch (buildingType)
+    //    {
+    //        //case EBuilding.CryoEgg:
+    //        //    building = Instantiate(cryoEggPrefab);
+    //        //    break;
+    //        //case EBuilding.SolarPanel:
+    //        //    building = Instantiate(solarPanelPrefab, position, rotation);
+    //        //    break;
+    //        //case EBuilding.WindTurbine:
+    //        //    building = Instantiate(windTurbinePrefab, position, rotation);
+    //        //    break;
+    //        //case EBuilding.WaterDrill:
+    //        //    building = Instantiate(waterDrillPrefab, position, rotation);
+    //        //    break;
+    //        //case EBuilding.GasDiffuser:
+    //        //    building = Instantiate(gasDiffuserPrefab, position, rotation);
+    //        //    break;
+    //        //case EBuilding.Humidifier:
+    //        //    building = Instantiate(humidifierPrefab, position, rotation);
+    //        //    break;
+    //        //case EBuilding.Greenhouse:
+    //        //    building = Instantiate(greenhousePrefab, position, rotation);
+    //        //    break;
+    //        case EBuilding.Turret:
+    //            o = Instantiate(turretPrefab, position, rotation);
+    //            break;
+    //        default:
+    //            Debug.LogError("Invalid EBuildingType value passed to BuildingFactory.GetBuilding().");
+    //            return null;
+    //    }
+
+    //    b = o.GetComponent<Building>();
+
+    //    b.Id = IdGenerator.Instance.GetNextId();
+    //    BuildingController.Instance.RegisterBuilding(b);
+    //    return o;
+    //}
 
     /// <summary>
     /// Destroy a building.

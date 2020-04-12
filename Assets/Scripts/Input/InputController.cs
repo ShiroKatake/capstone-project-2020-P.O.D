@@ -82,7 +82,6 @@ public class InputController : MonoBehaviour
             case "Shoot":       //TODO: check if XB/DS trigger buttons are buttons or axes
             case "CycleWeapon":
             case "Pause":
-            case "HoldTerraformer":
             //case "MoveUpDown":
                 return Input.GetButtonDown(gamepadPrefix + requestedInput);
 
@@ -126,7 +125,6 @@ public class InputController : MonoBehaviour
             case "Shoot":       //TODO: check if XB/DS trigger buttons are buttons or axes
             case "CycleWeapon":
             case "Pause":
-            case "HoldTerraformer":
             //case "MoveUpDown":
                 return Input.GetButton(gamepadPrefix + requestedInput);
 
@@ -179,5 +177,56 @@ public class InputController : MonoBehaviour
             default:
                 return 0f;
         }
+    }
+
+    /// <summary>
+    /// Checks if the player is holding a button to spawn a building.
+    /// </summary>
+    /// <returns></returns>
+    public EBuilding SpawnBuilding()
+    {
+        if (gamepad == EGamepad.MouseAndKeyboard)
+        {
+            if (Input.GetButton("MKBuildSolarPanel"))
+            {
+                return EBuilding.SolarPanel;
+            }
+
+            if (Input.GetButton("MKBuildWindTurbine"))
+            {
+                return EBuilding.WindTurbine;
+            }
+
+            if (Input.GetButton("MKBuildWaterDrill"))
+            {
+                return EBuilding.WaterDrill;
+            }
+
+            if (Input.GetButton("MKBuildGasDiffuser"))
+            {
+                return EBuilding.GasDiffuser;
+            }
+
+            if (Input.GetButton("MKBuildHumidifier"))
+            {
+                return EBuilding.Humidifier;
+            }
+
+            if (Input.GetButton("MKBuildGreenhouse"))
+            {
+                return EBuilding.Greenhouse;
+            }
+
+            if (Input.GetButton("MKBuildTurret"))
+            {
+                return EBuilding.Turret;
+            }
+        }
+        else if (gamepad == EGamepad.XboxController || gamepad == EGamepad.DualShockController)
+        {
+            //TODO: implement controller support
+        }     
+
+        return EBuilding.None;
     }
 }

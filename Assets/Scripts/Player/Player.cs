@@ -18,7 +18,6 @@ public class Player : MonoBehaviour
     [SerializeField] private Transform laserBatteryPoint;
 
     [Header("Prefabs")]
-    [SerializeField] private Terraformer terraformerPrefab;
     [SerializeField] private LaserBolt laserBoltPrefab;
 
     [Header("Player Stats")]
@@ -38,9 +37,10 @@ public class Player : MonoBehaviour
     private float slerpProgress = 1;
 
     //Variables for Terraformer Spawning
-    private Terraformer heldTerraformer;
-    private bool holdingTerraformer;
-    private bool spawnTerraformer;
+    private Building heldBuilding;
+    private EBuilding heldBuildingType;
+    private bool holdingBuilding;
+    private bool spawnBuilding;
 
     //Laser Bolt Variables
 
@@ -110,19 +110,20 @@ public class Player : MonoBehaviour
     {
         //Movement Input
         movement = new Vector3(InputController.Instance.GetAxis("MoveLeftRight"), 0, InputController.Instance.GetAxis("MoveForwardsBackwards"));
+        heldBuildingType = InputController.Instance.SpawnBuilding();
 
         //Terraformer Input
-        if (InputController.Instance.ButtonHeld("HoldTerraformer"))
+        if (heldBuildingType != EBuilding.None)
         {
-            if (!holdingTerraformer)
+            if (!holdingBuilding)
             {
-                holdingTerraformer = true;
-                spawnTerraformer = true;
+                holdingBuilding = true;
+                spawnBuilding = true;
             }
         }
-        else if (holdingTerraformer)
+        else if (holdingBuilding)
         {
-            holdingTerraformer = false;
+            holdingBuilding = false;
         }
 
         //if (InputController.Instance.ButtonPressed("HoldTerraformer"))
@@ -174,7 +175,7 @@ public class Player : MonoBehaviour
     private void Move()
     {
         //Player wants to move? Move the drone.
-        if (movement != Vector3.zero)
+        if (movement != Vector3.zero && heldBuilding == null)
         {
             drone.transform.Translate(new Vector3(0, 0, movementSpeed * movement.magnitude * Time.deltaTime), Space.Self);
             cameraTarget.transform.position = drone.transform.position;
@@ -186,28 +187,43 @@ public class Player : MonoBehaviour
     /// </summary>
     private void CheckTerraformerSpawning()
     {
-        if (spawnTerraformer && (!shooting || laserBattery.Count == 0))
+        if (!shooting || laserBattery.Count == 0)
         {
-            heldTerraformer = Instantiate<Terraformer>(terraformerPrefab, terraformerHoldPoint.position, terraformerHoldPoint.rotation);
-            spawnTerraformer = false;
+            if (heldBuilding == null)
+            {
+                if (spawnBuilding)
+                {
+                    heldBuilding = BuildingFactory.Instance.GetBuilding(heldBuildingType, terraformerHoldPoint.position, terraformerHoldPoint.rotation);
+                    spawnBuilding = false;
+                }
+            }
+            else
+            {
+                if (heldBuildingType != EBuilding.None && heldBuilding.BuildingType != heldBuildingType)
+                {
+                    BuildingFactory.Instance.DestroyBuilding(heldBuilding);
+                    heldBuilding = BuildingFactory.Instance.GetBuilding(heldBuildingType, terraformerHoldPoint.position, terraformerHoldPoint.rotation);
+                }
+            }
         }
 
-        if (heldTerraformer != null)
+        if (heldBuilding != null)
         {
-            heldTerraformer.transform.rotation = terraformerHoldPoint.rotation;
+            heldBuilding.transform.rotation = terraformerHoldPoint.rotation;
 
-            if (holdingTerraformer && (!shooting || laserBattery.Count == 0))
+            if (holdingBuilding && (!shooting || laserBattery.Count == 0))
             {
-                heldTerraformer.transform.position = terraformerHoldPoint.position;
+                heldBuilding.transform.position = terraformerHoldPoint.position;
             }
             else
             {
                 Vector3 spawnPos = terraformerHoldPoint.position;
                 spawnPos.y = 0.5f;
-                heldTerraformer.transform.position = spawnPos;
-                heldTerraformer.Terraforming = Planet.Instance.TerraformingProgress < 1;
-                Planet.Instance.Terraformers.Add(heldTerraformer);
-                heldTerraformer = null;
+                heldBuilding.transform.position = spawnPos;
+                //heldBuilding.Terraforming = Planet.Instance.TerraformingProgress < 1;
+                //Planet.Instance.Terraformers.Add(heldBuilding);
+                heldBuilding = null;
+                heldBuildingType = EBuilding.None;
             }
         }
     }

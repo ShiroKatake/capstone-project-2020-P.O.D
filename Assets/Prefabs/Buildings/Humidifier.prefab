@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1695929192926328449}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -10.04, y: 0.5, z: 3}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 514400051476016873}
@@ -45,8 +45,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fc4c47b30ac0644e9720df61d64f2ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingCategory: 0
-  buildingType: 0
+  buildingCategory: 2
+  buildingType: 6
   oreCost: 0
   powerUsage: 0
   waterUsage: 0
@@ -66,7 +66,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7d1fe85e34b94943ad23931779e30d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 0
+  health: 100
 --- !u!1 &5797989508795119653
 GameObject:
   m_ObjectHideFlags: 0
