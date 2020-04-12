@@ -61,10 +61,11 @@ public class BuildingFactory : MonoBehaviour
     /// <param name="position">Where you want BuildingFactory to position the building.</param>
     /// <param name="rotation">The rotation you want BuildingFactory to give the building.</param>
     /// <returns></returns>
-    public Building GetBuilding(EBuilding buildingType, Vector3 position, Quaternion rotation)
+    public Building GetBuilding(EBuilding buildingType, Vector3 position/*, Quaternion rotation*/)
     {
         Debug.Log("Getting Building");
         Building building;
+        Quaternion rotation = new Quaternion();
 
         switch(buildingType)
         {

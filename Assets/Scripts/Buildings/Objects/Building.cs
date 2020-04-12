@@ -22,7 +22,8 @@ public class Building : MonoBehaviour
 
     [Header("Other Stats")]
     [SerializeField] private int id;
-    [SerializeField] private int gridSize;
+    [SerializeField] [Range(1, 3)] private int xSize;
+    [SerializeField] [Range(1, 3)] private int zSize;
     [SerializeField] private float buildSpeed;
     [SerializeField] private float barSpeed;
 
@@ -30,6 +31,7 @@ public class Building : MonoBehaviour
 
     private BuildingBehaviour buildingBehaviour;
     private Health health;
+    private Dictionary<string, Vector3> offsets;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -54,11 +56,6 @@ public class Building : MonoBehaviour
     /// How quickly this building builds itself when the player places it in the scene.
     /// </summary>
     public float BuildSpeed { get => buildSpeed; }
-    
-    /// <summary>
-    /// How many squares this building occupies in the scene.
-    /// </summary>
-    public int GridSize { get => gridSize; }
 
     /// <summary>
     /// The Building's Health component.
@@ -85,6 +82,16 @@ public class Building : MonoBehaviour
     /// </summary>
     public int WaterUsage { get => waterUsage; }
 
+    /// <summary>
+    /// How many squares this building occupies along the x-axis.
+    /// </summary>
+    public int XSize { get => xSize; }
+
+    /// <summary>
+    /// How many squares this building occupies along the z-axis.
+    /// </summary>
+    public int ZSize { get => zSize; }
+
     //Complex Public Properties--------------------------------------------------------------------                                                    
 
 
@@ -98,6 +105,34 @@ public class Building : MonoBehaviour
     private void Awake()
     {
         health = GetComponent<Health>();
+
+        if (xSize < 1 || xSize > 3)
+        {
+            Debug.LogError("xSize is invalid. It needs to be between 1 and 3.");
+        }
+
+        if (zSize < 1 || zSize > 3)
+        {
+            Debug.LogError("zSize is invalid. It needs to be between 1 and 3.");
+        }
+
+        CalculateOffsets();
+    }
+
+    /// <summary>
+    /// Calculates the offset this building will need when being placed in any given direction relative to the player.
+    /// </summary>
+    private void CalculateOffsets()
+    {
+        offsets = new Dictionary<string, Vector3>();
+        offsets["N"]  = new Vector3( xSize == 2 ? 0.5f  : 0                       , 0, zSize == 1 ? 1f    : zSize == 2 ? 1.5f  : 2f  );
+        offsets["NE"] = new Vector3( xSize == 1 ? 1f    : xSize == 2 ? 1.5f  : 2f , 0, zSize == 1 ? 1f    : zSize == 2 ? 1.5f  : 2f  );
+        offsets["E"]  = new Vector3( xSize == 1 ? 1f    : xSize == 2 ? 1.5f  : 2f , 0, zSize == 2 ? -0.5f : 0                        );
+        offsets["SE"] = new Vector3( xSize == 1 ? 1f    : xSize == 2 ? 1.5f  : 2f , 0, zSize == 1 ? -1f   : zSize == 2 ? -1.5f : -2f );
+        offsets["S"]  = new Vector3( xSize == 2 ? -0.5f : 0                       , 0, zSize == 1 ? -1f   : zSize == 2 ? -1.5f : -2f );
+        offsets["SW"] = new Vector3( xSize == 1 ? -1f   : xSize == 2 ? -1.5f : -2f, 0, zSize == 1 ? -1f   : zSize == 2 ? -1.5f : -2f );
+        offsets["W"]  = new Vector3( xSize == 1 ? -1f   : xSize == 2 ? -1.5f : -2f, 0, zSize == 2 ? 0.5f  : 0                        );
+        offsets["NW"] = new Vector3( xSize == 1 ? -1f   : xSize == 2 ? -1.5f : -2f, 0, zSize == 1 ? 1f    : zSize == 2 ? 1.5f  : 2f  );
     }
 
     /// <summary>
@@ -141,7 +176,45 @@ public class Building : MonoBehaviour
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
-
+    /// <summary>
+    ///  Gets the offset appropriate at any angle for this building, given its xSize and zSize.
+    ///  <param name="angle">The player's rotation on the y-axis in degrees clockwise from due North.</param>
+    /// </summary>
+    public Vector3 GetOffset(float angle)
+    {
+        if (angle >= 337.5 || angle < 22.5)
+        {
+            return offsets["N"];
+        }
+        else if (angle < 67.5)
+        {
+            return offsets["NE"];
+        }
+        else if (angle < 112.5) 
+        {
+            return offsets["E"];
+        }
+        else if (angle < 157.5)
+        {
+            return offsets["SE"];
+        }
+        else if (angle < 202.5)
+        {
+            return offsets["S"];
+        }
+        else if (angle < 247.5)
+        {
+            return offsets["SW"];
+        }
+        else if (angle < 292.5)
+        {
+            return offsets["W"];
+        }
+        else
+        {
+            return offsets["NW"];
+        }
+    }
 
     //Utility Methods--------------------------------------------------------------------------------------------------------------------------------  
 

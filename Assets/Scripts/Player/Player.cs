@@ -175,10 +175,18 @@ public class Player : MonoBehaviour
     private void Move()
     {
         //Player wants to move? Move the drone.
-        if (movement != Vector3.zero && heldBuilding == null)
+        if (heldBuilding == null)
         {
-            drone.transform.Translate(new Vector3(0, 0, movementSpeed * movement.magnitude * Time.deltaTime), Space.Self);
-            cameraTarget.transform.position = drone.transform.position;
+            if (movement != Vector3.zero)
+            {
+                drone.transform.Translate(new Vector3(0, 0, movementSpeed * movement.magnitude * Time.deltaTime), Space.Self);
+                cameraTarget.transform.position = drone.transform.position;
+            }
+        }
+        else
+        {
+            //TODO: if x and z position values don't place the drone squarely on a square, move it to the centre of the nearest square.
+            //If x or z is an even distance between one square and another, favour reversing to the right.
         }
     }
 
@@ -186,14 +194,14 @@ public class Player : MonoBehaviour
     /// Checks if the player wants to spawn a building.
     /// </summary>
     private void CheckTerraformerSpawning()
-    {
+    {        
         if (!shooting || laserBattery.Count == 0)
         {
             if (heldBuilding == null)
             {
                 if (spawnBuilding)
                 {
-                    heldBuilding = BuildingFactory.Instance.GetBuilding(heldBuildingType, terraformerHoldPoint.position, terraformerHoldPoint.rotation);
+                    heldBuilding = BuildingFactory.Instance.GetBuilding(heldBuildingType, terraformerHoldPoint.position);
                     spawnBuilding = false;
                 }
             }
@@ -202,22 +210,24 @@ public class Player : MonoBehaviour
                 if (heldBuildingType != EBuilding.None && heldBuilding.BuildingType != heldBuildingType)
                 {
                     BuildingFactory.Instance.DestroyBuilding(heldBuilding);
-                    heldBuilding = BuildingFactory.Instance.GetBuilding(heldBuildingType, terraformerHoldPoint.position, terraformerHoldPoint.rotation);
+                    heldBuilding = BuildingFactory.Instance.GetBuilding(heldBuildingType, terraformerHoldPoint.position);
                 }
             }
         }
 
         if (heldBuilding != null)
         {
-            heldBuilding.transform.rotation = terraformerHoldPoint.rotation;
+            float rotationAngle = transform.rotation.eulerAngles.y;
+            Vector3 offset = heldBuilding.GetOffset(rotationAngle);
 
             if (holdingBuilding && (!shooting || laserBattery.Count == 0))
             {
-                heldBuilding.transform.position = terraformerHoldPoint.position;
+                //TODO: snap to grid based on player's snap to grid position, not their actual position.
+                heldBuilding.transform.position = transform.position + offset;
             }
             else
             {
-                Vector3 spawnPos = terraformerHoldPoint.position;
+                Vector3 spawnPos = transform.position + offset;
                 spawnPos.y = 0.5f;
                 heldBuilding.transform.position = spawnPos;
                 //heldBuilding.Terraforming = Planet.Instance.TerraformingProgress < 1;
