@@ -12,11 +12,13 @@ public class Enemy : MonoBehaviour
     //Serialized Fields----------------------------------------------------------------------------
 
     [Header("Enemy Stats")] 
+    [SerializeField] private int id;
     [SerializeField] private float speed;
     [SerializeField] private float damage;
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
+    
     private Health health;
     private Transform target;
     private Vector3 movement;
@@ -31,6 +33,11 @@ public class Enemy : MonoBehaviour
     /// Enemy's Health component.
     /// </summary>
     public Health Health { get => health; }
+
+    /// <summary>
+    /// The Enemy's unique ID number. Should only be set in EnemyController.
+    /// </summary>
+    public int Id { get => id; set => id = value; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -53,7 +60,7 @@ public class Enemy : MonoBehaviour
     {
         if (Planet.Instance.Terraformers.Count == 0)
         {
-            target = HumanPod.Instance.transform;
+            target = Planet.Instance.CryoEgg.transform;
             targetRadius = target.GetComponent<SphereCollider>().radius;
         }
         else if (Planet.Instance.Terraformers.Count == 1)

@@ -11,7 +11,7 @@ public class BuildingController : MonoBehaviour
 
     //Serialized Fields----------------------------------------------------------------------------                                                    
 
-
+    [SerializeField] private Building cryoEgg;
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
@@ -55,10 +55,10 @@ public class BuildingController : MonoBehaviour
     /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
     /// Start() runs after Awake().
     /// </summary>
-    //private void Start()
-    //{
-
-    //}
+    private void Start()
+    {
+        buildings.Add(cryoEgg);
+    }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -69,6 +69,7 @@ public class BuildingController : MonoBehaviour
     {
         foreach (Building b in buildings)
         {
+            ExecuteBuildingBehaviour(b);
             CheckBuildingHealth(b);
         }
 
@@ -84,6 +85,18 @@ public class BuildingController : MonoBehaviour
     //}
 
     //Recurring Methods (Update())------------------------------------------------------------------------------------------------------------------  
+
+    private void ExecuteBuildingBehaviour(Building building)
+    {
+        switch (building.BuildingType)
+        {
+            case EBuilding.CryoEgg:
+                CryoEggBehaviour.Instance.Execute(building);
+                break;
+            default:
+                return;
+        }
+    }
 
     /// <summary>
     /// Checks the building's health, and passes it to BuildingFactory to be destroyed if it falls below 0.

@@ -33,6 +33,8 @@ public class EnemyController : MonoBehaviour
     /// </summary>
     public List<Enemy> Enemies { get => enemies; }
 
+    //Complex Public Properties--------------------------------------------------------------------
+
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
@@ -91,7 +93,9 @@ public class EnemyController : MonoBehaviour
                     break;
             }
 
-            enemies.Add(Instantiate<Enemy>(enemyPrefab, spawnPoint, new Quaternion()));
+            Enemy newEnemy = Instantiate<Enemy>(enemyPrefab, spawnPoint, new Quaternion());
+            newEnemy.Id = IdGenerator.Instance.GetNextId();
+            enemies.Add(newEnemy);
         }
     }
 }

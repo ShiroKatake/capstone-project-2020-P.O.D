@@ -11,11 +11,11 @@ public class BuildingFactory : MonoBehaviour
 
     //Serialized Fields----------------------------------------------------------------------------                                                    
 
-    [Header("Cryo Egg Prefab")]
-    [SerializeField] private Building cryoEggPrefab;
+    //[Header("Cryo Egg Prefab")]
+    //[SerializeField] private Building cryoEggPrefab;
 
     [Header("Resource Building Prefabs")]
-    [SerializeField] private Building solarPanelsPrefab;
+    [SerializeField] private Building solarPanelPrefab;
     [SerializeField] private Building windTurbinePrefab;
     [SerializeField] private Building waterDrillPrefab;
 
@@ -68,8 +68,8 @@ public class BuildingFactory : MonoBehaviour
             //case EBuilding.CryoEgg:
             //    building = Instantiate(cryoEggPrefab);
             //    break;
-            case EBuilding.SolarPanels:
-                building = Instantiate(solarPanelsPrefab);
+            case EBuilding.SolarPanel:
+                building = Instantiate(solarPanelPrefab);
                 break;
             case EBuilding.WindTurbine:
                 building = Instantiate(windTurbinePrefab);
@@ -94,6 +94,7 @@ public class BuildingFactory : MonoBehaviour
                 return null;
         }
 
+        building.Id = IdGenerator.Instance.GetNextId();
         BuildingController.Instance.RegisterBuilding(building);
         return building;
     }

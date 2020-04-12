@@ -15,6 +15,9 @@ public class Planet : MonoBehaviour
     [SerializeField] private Material grassMaterial;
     [SerializeField] private Material dirtMaterial;
 
+    [Header("The Cryo Egg")]
+    [SerializeField] private Building cryoEgg;
+
     //Non-Serialized Fields------------------------------------------------------------------------
     
     //Colours
@@ -37,6 +40,11 @@ public class Planet : MonoBehaviour
     public static Planet Instance { get; protected set; }
 
     //Basic Public Properties----------------------------------------------------------------------
+
+    /// <summary>
+    /// The cryo egg.
+    /// </summary>
+    public Building CryoEgg { get => cryoEgg; }
 
     /// <summary>
     /// The list of terraformers terraforming the planet.

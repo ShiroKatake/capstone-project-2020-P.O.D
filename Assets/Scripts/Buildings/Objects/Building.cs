@@ -24,13 +24,14 @@ public class Building : MonoBehaviour
     [SerializeField] private int waterUsage;
 
     [Header("Other Stats")]
+    [SerializeField] private int id;
     [SerializeField] private int gridSize;
     [SerializeField] private float buildSpeed;
     [SerializeField] private float barSpeed;
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
-
+    private BuildingBehaviour buildingBehaviour;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -65,6 +66,11 @@ public class Building : MonoBehaviour
     /// The Building's Health component.
     /// </summary>
     public Health Health { get => health; }
+
+    /// <summary>
+    /// The Building's unique ID number. Should only be set in BuildingFactory.
+    /// </summary>
+    public int Id { get => id; set => id = value; }
 
     /// <summary>
     /// How much ore it costs to build this building.

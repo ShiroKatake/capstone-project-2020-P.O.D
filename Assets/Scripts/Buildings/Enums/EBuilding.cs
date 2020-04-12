@@ -8,7 +8,7 @@ using UnityEngine;
 public enum EBuilding
 {
     CryoEgg,
-    SolarPanels,
+    SolarPanel,
     WindTurbine,
     WaterDrill,
     GasDiffuser,
