@@ -11,9 +11,6 @@ public class Building : MonoBehaviour
 
     //Serialized Fields----------------------------------------------------------------------------                                                    
 
-    [Header("Other Components")]
-    [SerializeField] private Health health;
-
     [Header("Building Category")]
     [SerializeField] private EBuildingCategory buildingCategory;
     [SerializeField] private EBuilding buildingType;
@@ -32,6 +29,7 @@ public class Building : MonoBehaviour
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
     private BuildingBehaviour buildingBehaviour;
+    private Health health;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -97,10 +95,10 @@ public class Building : MonoBehaviour
     /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
     /// Awake() runs before Start().
     /// </summary>
-    //private void Awake()
-    //{
-
-    //}
+    private void Awake()
+    {
+        health = GetComponent<Health>();
+    }
 
     /// <summary>
     /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
