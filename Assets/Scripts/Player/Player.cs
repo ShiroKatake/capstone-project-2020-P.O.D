@@ -37,9 +37,11 @@ public class Player : MonoBehaviour
     private Quaternion oldRotation;
     private float slerpProgress = 1;
 
-    //Variables for Terraformer Spawning
+    //Variables for Building Spawning
     private EBuilding selectedBuildingType;
     private Building heldBuilding;
+    private Vector3 rawBuildingOffset;
+    private Vector3 rawBuildingMovement;
     private bool cycleBuildingSelection = false;
     private bool cyclingBuildingSelection = false;
     private bool spawnBuilding = false;
@@ -116,6 +118,7 @@ public class Player : MonoBehaviour
     {
         //Movement Input
         movement = new Vector3(InputController.Instance.GetAxis("MoveLeftRight"), 0, InputController.Instance.GetAxis("MoveForwardsBackwards"));
+        rawBuildingMovement = new Vector3(InputController.Instance.GetAxis("LookLeftRight"), 0, InputController.Instance.GetAxis("LookUpDown"));
 
         //Building Selection Input
         if (!cyclingBuildingSelection && InputController.Instance.ButtonPressed("CycleBuilding"))
@@ -138,21 +141,6 @@ public class Player : MonoBehaviour
             placeBuilding = InputController.Instance.ButtonPressed("PlaceBuilding");
             cancelBuilding = InputController.Instance.ButtonPressed("CancelBuilding");
         }        
-        
-        Debug.Log($"Selected building type: {selectedBuildingType}, spawning: {spawnBuilding}, placing: {placeBuilding}, canceling: {cancelBuilding}.");
-
-        //if (heldBuildingType != EBuilding.None)
-        //{
-        //    if (!holdingBuilding)
-        //    {
-        //        holdingBuilding = true;
-        //        spawnBuilding = true;
-        //    }
-        //}
-        //else if (holdingBuilding)
-        //{
-        //    holdingBuilding = false;
-        //}
 
         //Shooting Input
         shooting = InputController.Instance.ButtonHeld("Shoot");
@@ -168,7 +156,6 @@ public class Player : MonoBehaviour
         CheckBuildingSpawning();
         CheckShooting();
     }
-
 
     /// <summary>
     /// Changes where the player is looking based on their input.
@@ -192,7 +179,7 @@ public class Player : MonoBehaviour
     }
 
     /// <summary>
-    /// Moves the player based on their input.
+    /// Moves the player forward based on their input.
     /// </summary>
     private void Move()
     {
@@ -204,27 +191,28 @@ public class Player : MonoBehaviour
     }
 
     /// <summary>
-    /// Checks if the player wants to spawn a building.
+    /// Checks if the player wants to spawn a building, and spawns and moves it if they do.
     /// </summary>
     private void CheckBuildingSpawning()
     {
         if (spawnBuilding)
         {
-            //Instantiate the appropriate building
+            //Instantiate the appropriate building, positioning it properly.
             if (heldBuilding == null)
             {
                 heldBuilding = BuildingFactory.Instance.GetBuilding(selectedBuildingType);
-                Vector3 offsetPosition = transform.position + heldBuilding.GetOffset(transform.rotation.eulerAngles.y);
 
                 if (InputController.Instance.Gamepad == EGamepad.MouseAndKeyboard)
                 {
-                    heldBuilding.transform.position = MousePositionToBuildingPosition(offsetPosition, heldBuilding.XSize, heldBuilding.ZSize);
+                    heldBuilding.transform.position = MousePositionToBuildingPosition(transform.position + heldBuilding.GetOffset(transform.rotation.eulerAngles.y), heldBuilding.XSize, heldBuilding.ZSize);
                 }
                 else
                 {
-                    heldBuilding.transform.position = offsetPosition;//TODO: snap to grid based on player's snap to grid position, not their actual position.
+                    rawBuildingOffset = heldBuilding.GetOffset(transform.rotation.eulerAngles.y);
+                    heldBuilding.transform.position = RawBuildingPositionToBuildingPosition(heldBuilding.XSize, heldBuilding.ZSize);
                 }
             }
+            //Instantiate the appropriate building and postion it properly, replacing the old one.
             else if (heldBuilding.BuildingType != selectedBuildingType)
             {
                 Vector3 pos;
@@ -235,31 +223,26 @@ public class Player : MonoBehaviour
                 }
                 else
                 {
-                    pos = heldBuilding.transform.position /* plus movement according to the right analog stick*/;//TODO: snap to grid based on player's snap to grid position, not their actual position.
+                    pos = RawBuildingPositionToBuildingPosition(heldBuilding.XSize, heldBuilding.ZSize);
                 }
 
                 BuildingFactory.Instance.DestroyBuilding(heldBuilding);
                 heldBuilding = BuildingFactory.Instance.GetBuilding(selectedBuildingType);
                 heldBuilding.transform.position = pos;
             }
-            else //Move it where you want it
+            else //Move the building where you want it
             {
-                //TODO: snap to grid based on player's snap to grid position, not their actual position.
                 if (InputController.Instance.Gamepad == EGamepad.MouseAndKeyboard)
                 {
                     heldBuilding.transform.position = MousePositionToBuildingPosition(heldBuilding.transform.position, heldBuilding.XSize, heldBuilding.ZSize);
                 }
                 else
                 {
-                    heldBuilding.transform.position = transform.position + heldBuilding.GetOffset(transform.rotation.eulerAngles.y);//TODO: snap to grid based on player's snap to grid position, not their actual position.
-                }
-
-                //TODO: differentiate between mouse and keyboard positioning and controller positioning
-                //Mouse and keyboard: follow the mouse, but keep within the screen bounds
-                //Controller: move according to the right analog stick, but keep within the screen bounds
-
-                //TODO: check for building collisions with drone / other buildings / enemies.
+                    heldBuilding.transform.position = RawBuildingPositionToBuildingPosition(heldBuilding.XSize, heldBuilding.ZSize);
+                }                
             }
+
+            //TODO: check for building collisions with drone / other buildings / enemies.
 
             //Place it or cancel building it
             if (placeBuilding) //and there's not a collision
@@ -284,6 +267,63 @@ public class Player : MonoBehaviour
     }
 
     /// <summary>
+    /// Gets the position of the mouse in the scene based on its on-screen position, and uses that and the building's size to determine the building's position.
+    /// </summary>
+    /// <param name="backup">The value to return if the mouse is off the screen or something else fails.</param>
+    /// <param name="xSize">The building's size along the x-axis (Building.XSize).</param>
+    /// <param name="zSize">The building's size along the z-axis (Building.ZSize).</param>
+    /// <returns>Snapped-to-grid building position.</returns>
+    private Vector3 MousePositionToBuildingPosition(Vector3 backup, int xSize, int zSize)
+    {
+        RaycastHit hit;
+        Ray ray = camera.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("Ground")))
+        {            
+            return SnapBuildingToGrid(hit.point, xSize, zSize);
+        }
+
+        return backup;
+    }
+
+    /// <summary>
+    /// Gets the position of the building based on the player's position and the offset according to the right analog stick's movement input, while keeping it within the player's field of view.
+    /// </summary>
+    /// <param name="xSize">The building's size along the x-axis (Building.XSize).</param>
+    /// <param name="zSize">The building's size along the z-axis (Building.ZSize).</param>
+    /// <returns>Snapped-to-grid building position.</returns>
+    private Vector3 RawBuildingPositionToBuildingPosition(int xSize, int zSize)
+    {
+        Vector3 worldPos = transform.position + rawBuildingOffset;
+        Vector3 newOffset = rawBuildingOffset + rawBuildingMovement * movementSpeed * Time.deltaTime;
+        Vector3 newWorldPos = transform.position + newOffset;
+        Vector3 newScreenPos = Camera.main.WorldToViewportPoint(newWorldPos);
+
+        if (newScreenPos.x > 0 && newScreenPos.x < 1 && newScreenPos.y > 0 && newScreenPos.y < 1)
+        {
+            rawBuildingOffset = newOffset;
+            worldPos = newWorldPos;
+        }
+
+        return SnapBuildingToGrid(worldPos, xSize, zSize);
+    }
+
+    /// <summary>
+    /// Snaps the building's position to the grid of integer positions by rounding the X and Z values, and adjusting depending on the building's dimensions.
+    /// </summary>
+    /// <param name="pos">The position to be snapped-to-grid from.</param>
+    /// <param name="xSize">The building's size along the x-axis (Building.XSize).</param>
+    /// <param name="zSize">The building's size along the z-axis (Building.ZSize).</param>
+    /// <returns>Snapped-to-grid building position.</returns>
+    private Vector3 SnapBuildingToGrid(Vector3 pos, int xSize, int zSize)
+    {
+        pos.x = Mathf.Round(pos.x) + (xSize == 2 ? 0.5f : 0);
+        pos.y = 0.67f;
+        pos.z = Mathf.Round(pos.z) + (zSize == 2 ? 0.5f : 0);
+        return pos;
+    }
+
+    /// <summary>
     /// Checks if the player wants to shoot based on their input, and fires laser bolts if they do.
     /// </summary>
     private void CheckShooting()
@@ -295,27 +335,5 @@ public class Player : MonoBehaviour
             laserBolt.transform.position = laserCannonTip.position;
             laserBolt.Shoot((transform.forward * 2 - transform.up).normalized);
         }
-    }
-
-    /// <summary>
-    /// Gets the position of the mouse in the scene based on its on-screen position, and uses that and the building's size to determine the building's position.
-    /// </summary>
-    /// <param name="backup">The value to return if the mouse is off the screen or something else fails.</param>
-    /// <returns></returns>
-    private Vector3 MousePositionToBuildingPosition(Vector3 backup, int xSize, int zSize)
-    {
-        RaycastHit hit;
-        Ray ray = camera.ScreenPointToRay(Input.mousePosition);
-
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("Ground")))
-        {
-            Vector3 pos = hit.point;
-            pos.x = Mathf.Round(pos.x) + (xSize == 2 ? 0.5f : 0);
-            pos.y = 0.67f;
-            pos.z = Mathf.Round(pos.z) + (zSize == 2 ? 0.5f : 0);
-            return pos;
-        }
-
-        return backup;
     }
 }
