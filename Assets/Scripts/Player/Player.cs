@@ -196,19 +196,10 @@ public class Player : MonoBehaviour
     /// </summary>
     private void Move()
     {
-        //Player wants to move? Move the drone.
-        if (heldBuilding == null)
+        if (movement != Vector3.zero)
         {
-            if (movement != Vector3.zero)
-            {
-                drone.transform.Translate(new Vector3(0, 0, movementSpeed * movement.magnitude * Time.deltaTime), Space.Self);
-                cameraTarget.transform.position = drone.transform.position;
-            }
-        }
-        else
-        {
-            //TODO: if x and z position values don't place the drone squarely on a square, move it to the centre of the nearest square.
-            //If x or z is an even distance between one square and another, favour reversing to the right.
+            drone.transform.Translate(new Vector3(0, 0, movementSpeed * movement.magnitude * Time.deltaTime), Space.Self);
+            cameraTarget.transform.position = drone.transform.position;
         }
     }
 
@@ -223,14 +214,15 @@ public class Player : MonoBehaviour
             if (heldBuilding == null)
             {
                 heldBuilding = BuildingFactory.Instance.GetBuilding(selectedBuildingType);
+                Vector3 offsetPosition = transform.position + heldBuilding.GetOffset(transform.rotation.eulerAngles.y);
 
                 if (InputController.Instance.Gamepad == EGamepad.MouseAndKeyboard)
                 {
-                    heldBuilding.transform.position = GetMousePositionInWorld();
+                    heldBuilding.transform.position = MousePositionToBuildingPosition(offsetPosition, heldBuilding.XSize, heldBuilding.ZSize);
                 }
                 else
                 {
-                    heldBuilding.transform.position = transform.position + heldBuilding.GetOffset(transform.rotation.eulerAngles.y);//TODO: snap to grid based on player's snap to grid position, not their actual position.
+                    heldBuilding.transform.position = offsetPosition;//TODO: snap to grid based on player's snap to grid position, not their actual position.
                 }
             }
             else if (heldBuilding.BuildingType != selectedBuildingType)
@@ -239,7 +231,7 @@ public class Player : MonoBehaviour
 
                 if (InputController.Instance.Gamepad == EGamepad.MouseAndKeyboard)
                 {
-                    pos = GetMousePositionInWorld();
+                    pos = MousePositionToBuildingPosition(heldBuilding.transform.position, heldBuilding.XSize, heldBuilding.ZSize);
                 }
                 else
                 {
@@ -255,7 +247,7 @@ public class Player : MonoBehaviour
                 //TODO: snap to grid based on player's snap to grid position, not their actual position.
                 if (InputController.Instance.Gamepad == EGamepad.MouseAndKeyboard)
                 {
-                    heldBuilding.transform.position = GetMousePositionInWorld();
+                    heldBuilding.transform.position = MousePositionToBuildingPosition(heldBuilding.transform.position, heldBuilding.XSize, heldBuilding.ZSize);
                 }
                 else
                 {
@@ -305,30 +297,25 @@ public class Player : MonoBehaviour
         }
     }
 
-    private Vector3 GetMousePositionInWorld()
+    /// <summary>
+    /// Gets the position of the mouse in the scene based on its on-screen position, and uses that and the building's size to determine the building's position.
+    /// </summary>
+    /// <param name="backup">The value to return if the mouse is off the screen or something else fails.</param>
+    /// <returns></returns>
+    private Vector3 MousePositionToBuildingPosition(Vector3 backup, int xSize, int zSize)
     {
-        //RaycastHit hit;
-        //Ray ray = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
-
-        //if (Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("Default")))
-        //{
-        //    return hit.point;
-        //}
-        //    return Vector3.zero;
-
         RaycastHit hit;
         Ray ray = camera.ScreenPointToRay(Input.mousePosition);
 
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("Ground")))
         {
-            return hit.point;
+            Vector3 pos = hit.point;
+            pos.x = Mathf.Round(pos.x) + (xSize == 2 ? 0.5f : 0);
+            pos.y = 0.67f;
+            pos.z = Mathf.Round(pos.z) + (zSize == 2 ? 0.5f : 0);
+            return pos;
         }
 
-        return Vector3.zero;
-
-        //Vector3 worldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        //worldPos.y = 0.67f;
-        //Debug.Log($"Mouse position in world is {worldPos}");
-        //return worldPos;
+        return backup;
     }
 }
