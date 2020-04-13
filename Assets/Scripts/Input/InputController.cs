@@ -94,11 +94,10 @@ public class InputController : MonoBehaviour
             //Always a button for MK, XB and DS
             case "CycleWeapon":
             case "Pause":
-            //case "MoveUpDown":
                 return Input.GetButtonDown(gamepadPrefix + requestedInput);
 
             //Button for MK, axis for XB and DS
-            case "Shoot":       //TODO: check if XB/DS trigger buttons are buttons or axes
+            case "Shoot":
             case "MoveLeftRight":
             case "MoveForwardsBackwards":
                 if (gamepad == EGamepad.MouseAndKeyboard)
@@ -114,6 +113,46 @@ public class InputController : MonoBehaviour
             case "LookUpDown":
             case "LookLeftRight":
                 return GetAxis(requestedInput) != 0;
+
+            //Aliased
+            case "PlaceBuilding":
+                return Input.GetButtonDown(gamepadPrefix + "Submit");
+            case "CancelBuilding":
+                return Input.GetButtonDown(gamepadPrefix + "Cancel");
+
+            //Custom
+            case "CycleBuilding":
+                if (gamepad == EGamepad.MouseAndKeyboard)
+                {
+                    return Input.GetButtonDown("MKSpawnSolarPanel")
+                        || Input.GetButtonDown("MKSpawnWindTurbine")
+                        || Input.GetButtonDown("MKSpawnWaterDrill")
+                        || Input.GetButtonDown("MKSpawnGasDiffuser")
+                        || Input.GetButtonDown("MKSpawnHumidifier")
+                        || Input.GetButtonDown("MKSpawnGreenhouse")
+                        || Input.GetButtonDown("MKSpawnTurret");
+                }
+                else
+                {
+                    return Input.GetButtonDown(gamepadPrefix + "CycleBuildingLeft")
+                        || Input.GetButtonDown(gamepadPrefix + "CycleBuildingRight");
+                }
+
+            case "SpawnBuilding":
+                if (gamepad == EGamepad.MouseAndKeyboard)
+                {
+                    return Input.GetButtonDown("MKSpawnSolarPanel")
+                        || Input.GetButtonDown("MKSpawnWindTurbine")
+                        || Input.GetButtonDown("MKSpawnWaterDrill")
+                        || Input.GetButtonDown("MKSpawnGasDiffuser")
+                        || Input.GetButtonDown("MKSpawnHumidifier")
+                        || Input.GetButtonDown("MKSpawnGreenhouse")
+                        || Input.GetButtonDown("MKSpawnTurret");
+                }
+                else
+                {
+                    return Input.GetButtonDown(gamepadPrefix + "SpawnBuilding");
+                }            
 
             //Unknown input
             default:
@@ -141,7 +180,7 @@ public class InputController : MonoBehaviour
                 return Input.GetButton(gamepadPrefix + requestedInput);
 
             //Button for MK, axis for XB and DS
-            case "Shoot":       //TODO: check if XB/DS trigger buttons are buttons or axes
+            case "Shoot":
             case "MoveLeftRight":
             case "MoveForwardsBackwards":
                 if (gamepad == EGamepad.MouseAndKeyboard)
@@ -157,6 +196,46 @@ public class InputController : MonoBehaviour
             case "LookUpDown":
             case "LookLeftRight":
                 return GetAxis(requestedInput) != 0;
+
+            //Aliased
+            case "PlaceBuilding":
+                return Input.GetButton(gamepadPrefix + "Submit");
+            case "CancelBuilding":
+                return Input.GetButton(gamepadPrefix + "Cancel");
+
+            //Custom
+            case "CycleBuilding":
+                if (gamepad == EGamepad.MouseAndKeyboard)
+                {
+                    return Input.GetButton("MKSpawnSolarPanel")
+                        || Input.GetButton("MKSpawnWindTurbine")
+                        || Input.GetButton("MKSpawnWaterDrill")
+                        || Input.GetButton("MKSpawnGasDiffuser")
+                        || Input.GetButton("MKSpawnHumidifier")
+                        || Input.GetButton("MKSpawnGreenhouse")
+                        || Input.GetButton("MKSpawnTurret");
+                }
+                else
+                {
+                    return Input.GetButton(gamepadPrefix + "CycleBuildingLeft")
+                        || Input.GetButton(gamepadPrefix + "CycleBuildingRight");
+                }
+
+            case "SpawnBuilding":
+                if (gamepad == EGamepad.MouseAndKeyboard)
+                {
+                    return Input.GetButton("MKSpawnSolarPanel")
+                        || Input.GetButton("MKSpawnWindTurbine")
+                        || Input.GetButton("MKSpawnWaterDrill")
+                        || Input.GetButton("MKSpawnGasDiffuser")
+                        || Input.GetButton("MKSpawnHumidifier")
+                        || Input.GetButton("MKSpawnGreenhouse")
+                        || Input.GetButton("MKSpawnTurret");
+                }
+                else
+                {
+                    return Input.GetButton(gamepadPrefix + "SpawnBuilding");
+                }
 
             //Unknown input
             default:
@@ -193,91 +272,104 @@ public class InputController : MonoBehaviour
         }
     }
 
+    //Building Type Selection------------------------------------------------------------------------------------------------------------------------
+
     /// <summary>
-    /// Checks if the player is holding a button to spawn a building.
+    /// Checks the inputs for selecting a building type.
     /// </summary>
     /// <returns></returns>
-    public EBuilding SpawnBuilding()
+    public EBuilding SelectBuilding(EBuilding currentSelection)
     {
-        if (gamepad == EGamepad.MouseAndKeyboard)
+        switch (gamepad)
         {
-            if (Input.GetButton("MKBuildSolarPanel"))
-            {
-                return EBuilding.SolarPanel;
-            }
-
-            if (Input.GetButton("MKBuildWindTurbine"))
-            {
-                return EBuilding.WindTurbine;
-            }
-
-            if (Input.GetButton("MKBuildWaterDrill"))
-            {
-                return EBuilding.WaterDrill;
-            }
-
-            if (Input.GetButton("MKBuildGasDiffuser"))
-            {
-                return EBuilding.GasDiffuser;
-            }
-
-            if (Input.GetButton("MKBuildHumidifier"))
-            {
-                return EBuilding.Humidifier;
-            }
-
-            if (Input.GetButton("MKBuildGreenhouse"))
-            {
-                return EBuilding.Greenhouse;
-            }
-
-            if (Input.GetButton("MKBuildTurret"))
-            {
-                return EBuilding.Turret;
-            }
+            case EGamepad.XboxController:
+            case EGamepad.DualShockController:
+                return ControllerSelectBuilding(currentSelection);
+            case EGamepad.MouseAndKeyboard:
+                return MKSelectBuilding(currentSelection);
+            default:
+                return EBuilding.None;
         }
-        else if (gamepad == EGamepad.XboxController)
-        {
-            if (Input.GetAxis("XBBuildBuilding") > 0.01)
-            {
-                Vector3 rightAnalogStick = new Vector3(Input.GetAxis("XBLookLeftRight"), 0, Input.GetAxis("XBLookUpDown"));
-                float angle = Quaternion.LookRotation(rightAnalogStick).eulerAngles.y;
+    }
 
-                if (angle >= 334.285714 || angle < 25.7142857)
-                {
-                    return EBuilding.Turret;
-                }
-                else if (angle < 77.1428571)
-                {
-                    return EBuilding.GasDiffuser;
-                }
-                else if (angle < 128.571429)
-                {
-                    return EBuilding.Humidifier;
-                }
-                else if (angle < 180)
-                {
-                    return EBuilding.Greenhouse;
-                }
-                else if (angle < 231.428571)
-                {
-                    return EBuilding.SolarPanel;
-                }
-                else if (angle < 282.857143)
-                {
-                    return EBuilding.WindTurbine;
-                }
-                else
-                {
-                    return EBuilding.WaterDrill;
-                }
-            }
-        }
-        else if (gamepad == EGamepad.DualShockController)
+    /// <summary>
+    /// Check the inputs for selecting a building type when the player is using a mouse and keyboard.
+    /// </summary>
+    /// <returns></returns>
+    private EBuilding MKSelectBuilding(EBuilding currentSelection)
+    {
+        if (Input.GetButton("MKSpawnSolarPanel"))
         {
-            //TODO: implement dualshock controller support
+            return EBuilding.SolarPanel;
         }
 
-        return EBuilding.None;
+        if (Input.GetButton("MKSpawnWindTurbine"))
+        {
+            return EBuilding.WindTurbine;
+        }
+
+        if (Input.GetButton("MKSpawnWaterDrill"))
+        {
+            return EBuilding.WaterDrill;
+        }
+
+        if (Input.GetButton("MKSpawnGasDiffuser"))
+        {
+            return EBuilding.GasDiffuser;
+        }
+
+        if (Input.GetButton("MKSpawnHumidifier"))
+        {
+            return EBuilding.Humidifier;
+        }
+
+        if (Input.GetButton("MKSpawnGreenhouse"))
+        {
+            return EBuilding.Greenhouse;
+        }
+
+        if (Input.GetButton("MKSpawnTurret"))
+        {
+            return EBuilding.Turret;
+        }
+
+        return currentSelection;
+    }
+
+    /// <summary>
+    /// Checks the inputs for selecting a building type when the player is using an Xbox or DualShock controller.
+    /// </summary>
+    /// <returns></returns>
+    private EBuilding ControllerSelectBuilding(EBuilding currentSelection)
+    {
+        int cycle = 0;
+
+        if (Input.GetButtonDown(gamepadPrefix + "CycleBuildingRight"))
+        {
+            cycle++;
+        }
+
+        if (Input.GetButtonDown(gamepadPrefix + "CycleBuildingLeft"))
+        {
+            cycle--;
+        }
+
+        if (cycle != 0)
+        {
+            int result = (int)currentSelection + cycle;
+
+            if (result > (int)EBuilding.Turret)
+            {
+                result = 2;
+            }
+            else if (result < (int)EBuilding.SolarPanel)
+            {
+                result = 8;
+            }
+
+            return (EBuilding)result;
+        }
+
+        return currentSelection;
     }
 }

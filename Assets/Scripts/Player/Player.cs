@@ -12,6 +12,7 @@ public class Player : MonoBehaviour
 
     [Header("Player Objects")]
     [SerializeField] private GameObject drone;
+    [SerializeField] private Camera camera;
     [SerializeField] private GameObject cameraTarget;
     [SerializeField] private Transform terraformerHoldPoint;
     [SerializeField] private Transform laserCannonTip;
@@ -37,10 +38,13 @@ public class Player : MonoBehaviour
     private float slerpProgress = 1;
 
     //Variables for Terraformer Spawning
+    private EBuilding selectedBuildingType;
     private Building heldBuilding;
-    private EBuilding heldBuildingType;
-    private bool holdingBuilding;
-    private bool spawnBuilding;
+    private bool cycleBuildingSelection = false;
+    private bool cyclingBuildingSelection = false;
+    private bool spawnBuilding = false;
+    private bool placeBuilding = false;
+    private bool cancelBuilding = false;
 
     //Laser Bolt Variables
 
@@ -87,6 +91,8 @@ public class Player : MonoBehaviour
         {
             laserBattery.Add(Instantiate<LaserBolt>(laserBoltPrefab, laserBatteryPoint.position, laserBoltPrefab.transform.rotation));
         }
+
+        selectedBuildingType = EBuilding.SolarPanel;
     }
 
 
@@ -110,25 +116,42 @@ public class Player : MonoBehaviour
     {
         //Movement Input
         movement = new Vector3(InputController.Instance.GetAxis("MoveLeftRight"), 0, InputController.Instance.GetAxis("MoveForwardsBackwards"));
-        heldBuildingType = InputController.Instance.SpawnBuilding();
 
-        //Terraformer Input
-        if (heldBuildingType != EBuilding.None)
+        //Building Selection Input
+        if (!cyclingBuildingSelection && InputController.Instance.ButtonPressed("CycleBuilding"))
         {
-            if (!holdingBuilding)
-            {
-                holdingBuilding = true;
-                spawnBuilding = true;
-            }
+            cyclingBuildingSelection = true;
+            selectedBuildingType = InputController.Instance.SelectBuilding(selectedBuildingType);
         }
-        else if (holdingBuilding)
+        else if (cyclingBuildingSelection && !InputController.Instance.ButtonPressed("CycleBuilding"))
         {
-            holdingBuilding = false;
+            cyclingBuildingSelection = false;
         }
+        
+        //Building Placement Input
+        if (!spawnBuilding)
+        {
+            spawnBuilding = InputController.Instance.ButtonPressed("SpawnBuilding");
+        }
+        else
+        {
+            placeBuilding = InputController.Instance.ButtonPressed("PlaceBuilding");
+            cancelBuilding = InputController.Instance.ButtonPressed("CancelBuilding");
+        }        
+        
+        Debug.Log($"Selected building type: {selectedBuildingType}, spawning: {spawnBuilding}, placing: {placeBuilding}, canceling: {cancelBuilding}.");
 
-        //if (InputController.Instance.ButtonPressed("HoldTerraformer"))
+        //if (heldBuildingType != EBuilding.None)
         //{
-        //    spawnTerraformer = true;
+        //    if (!holdingBuilding)
+        //    {
+        //        holdingBuilding = true;
+        //        spawnBuilding = true;
+        //    }
+        //}
+        //else if (holdingBuilding)
+        //{
+        //    holdingBuilding = false;
         //}
 
         //Shooting Input
@@ -142,7 +165,7 @@ public class Player : MonoBehaviour
     {
         Look();
         Move();
-        CheckTerraformerSpawning();
+        CheckBuildingSpawning();
         CheckShooting();
     }
 
@@ -168,7 +191,6 @@ public class Player : MonoBehaviour
         }
     }
 
-
     /// <summary>
     /// Moves the player based on their input.
     /// </summary>
@@ -193,47 +215,78 @@ public class Player : MonoBehaviour
     /// <summary>
     /// Checks if the player wants to spawn a building.
     /// </summary>
-    private void CheckTerraformerSpawning()
-    {        
-        if (!shooting || laserBattery.Count == 0)
+    private void CheckBuildingSpawning()
+    {
+        if (spawnBuilding)
         {
+            //Instantiate the appropriate building
             if (heldBuilding == null)
             {
-                if (spawnBuilding)
+                heldBuilding = BuildingFactory.Instance.GetBuilding(selectedBuildingType);
+
+                if (InputController.Instance.Gamepad == EGamepad.MouseAndKeyboard)
                 {
-                    heldBuilding = BuildingFactory.Instance.GetBuilding(heldBuildingType, terraformerHoldPoint.position);
-                    spawnBuilding = false;
+                    heldBuilding.transform.position = GetMousePositionInWorld();
+                }
+                else
+                {
+                    heldBuilding.transform.position = transform.position + heldBuilding.GetOffset(transform.rotation.eulerAngles.y);//TODO: snap to grid based on player's snap to grid position, not their actual position.
                 }
             }
-            else
+            else if (heldBuilding.BuildingType != selectedBuildingType)
             {
-                if (heldBuildingType != EBuilding.None && heldBuilding.BuildingType != heldBuildingType)
+                Vector3 pos;
+
+                if (InputController.Instance.Gamepad == EGamepad.MouseAndKeyboard)
                 {
-                    BuildingFactory.Instance.DestroyBuilding(heldBuilding);
-                    heldBuilding = BuildingFactory.Instance.GetBuilding(heldBuildingType, terraformerHoldPoint.position);
+                    pos = GetMousePositionInWorld();
                 }
+                else
+                {
+                    pos = heldBuilding.transform.position /* plus movement according to the right analog stick*/;//TODO: snap to grid based on player's snap to grid position, not their actual position.
+                }
+
+                BuildingFactory.Instance.DestroyBuilding(heldBuilding);
+                heldBuilding = BuildingFactory.Instance.GetBuilding(selectedBuildingType);
+                heldBuilding.transform.position = pos;
             }
-        }
-
-        if (heldBuilding != null)
-        {
-            float rotationAngle = transform.rotation.eulerAngles.y;
-            Vector3 offset = heldBuilding.GetOffset(rotationAngle);
-
-            if (holdingBuilding && (!shooting || laserBattery.Count == 0))
+            else //Move it where you want it
             {
                 //TODO: snap to grid based on player's snap to grid position, not their actual position.
-                heldBuilding.transform.position = transform.position + offset;
+                if (InputController.Instance.Gamepad == EGamepad.MouseAndKeyboard)
+                {
+                    heldBuilding.transform.position = GetMousePositionInWorld();
+                }
+                else
+                {
+                    heldBuilding.transform.position = transform.position + heldBuilding.GetOffset(transform.rotation.eulerAngles.y);//TODO: snap to grid based on player's snap to grid position, not their actual position.
+                }
+
+                //TODO: differentiate between mouse and keyboard positioning and controller positioning
+                //Mouse and keyboard: follow the mouse, but keep within the screen bounds
+                //Controller: move according to the right analog stick, but keep within the screen bounds
+
+                //TODO: check for building collisions with drone / other buildings / enemies.
             }
-            else
+
+            //Place it or cancel building it
+            if (placeBuilding) //and there's not a collision
             {
-                Vector3 spawnPos = transform.position + offset;
+                Vector3 spawnPos = heldBuilding.transform.position;
                 spawnPos.y = 0.5f;
                 heldBuilding.transform.position = spawnPos;
-                //heldBuilding.Terraforming = Planet.Instance.TerraformingProgress < 1;
-                //Planet.Instance.Terraformers.Add(heldBuilding);
                 heldBuilding = null;
-                heldBuildingType = EBuilding.None;
+                spawnBuilding = false;
+                placeBuilding = false;
+                cancelBuilding = false;
+            }
+            else if (cancelBuilding) // or place building but there's a collision
+            {
+                BuildingFactory.Instance.DestroyBuilding(heldBuilding);
+                heldBuilding = null;
+                spawnBuilding = false;
+                placeBuilding = false;
+                cancelBuilding = false;
             }
         }
     }
@@ -250,5 +303,32 @@ public class Player : MonoBehaviour
             laserBolt.transform.position = laserCannonTip.position;
             laserBolt.Shoot((transform.forward * 2 - transform.up).normalized);
         }
+    }
+
+    private Vector3 GetMousePositionInWorld()
+    {
+        //RaycastHit hit;
+        //Ray ray = camera.ScreenPointToRay(Mouse.current.position.ReadValue());
+
+        //if (Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("Default")))
+        //{
+        //    return hit.point;
+        //}
+        //    return Vector3.zero;
+
+        RaycastHit hit;
+        Ray ray = camera.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("Ground")))
+        {
+            return hit.point;
+        }
+
+        return Vector3.zero;
+
+        //Vector3 worldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        //worldPos.y = 0.67f;
+        //Debug.Log($"Mouse position in world is {worldPos}");
+        //return worldPos;
     }
 }
