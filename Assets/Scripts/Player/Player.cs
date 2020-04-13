@@ -161,7 +161,7 @@ public class Player : MonoBehaviour
         }
 
         //Still turning? Rotate towards direction player wants to move in, but smoothly.
-        if (slerpProgress < 1/* && movement != Vector3.zero*/)
+        if (slerpProgress < 1 && movement != Vector3.zero)
         {
             slerpProgress = Mathf.Min(1, slerpProgress + rotationSpeed * Time.deltaTime);
             drone.transform.rotation = Quaternion.Slerp(oldRotation, newRotation, slerpProgress);
