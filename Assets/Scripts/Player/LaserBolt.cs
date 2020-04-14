@@ -27,8 +27,15 @@ public class LaserBolt : MonoBehaviour
 
     //Basic Public Properties----------------------------------------------------------------------
 
-    //public Rigidbody Rigidbody { get => rigidbody; }
-    //public float Speed { get => speed; }
+    /// <summary>
+    /// Whether or not the laser bolt is active (i.e. has it been fired and is it currently moving).
+    /// </summary>
+    public bool Active { get => active; set => active = value; }
+
+    /// <summary>
+    /// The laser bolt's rigidbody component.
+    /// </summary>
+    public Rigidbody Rigidbody { get => rigidbody; }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -43,7 +50,7 @@ public class LaserBolt : MonoBehaviour
 
             if (transform.position.y < 0)
             {
-                LaserBoltCollision();
+                Player.Instance.DestroyLaserBolt(this);
             }
         }
     }
@@ -84,17 +91,6 @@ public class LaserBolt : MonoBehaviour
             enemy.Health.Value -= damage;
         }
 
-        LaserBoltCollision();
-    }
-
-    /// <summary>
-    /// Cleans up the laser bolt after it collides with something.
-    /// </summary>
-    private void LaserBoltCollision()
-    {
-        rigidbody.isKinematic = true;
-        Player.Instance.LaserBattery.Add(this);
-        transform.position = Player.Instance.LaserBatteryPoint.position;
-        active = false;
+        Player.Instance.DestroyLaserBolt(this);
     }
 }

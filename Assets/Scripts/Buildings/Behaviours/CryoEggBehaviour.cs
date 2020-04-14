@@ -75,6 +75,8 @@ public class CryoEggBehaviour : BuildingBehaviour
                 MeshRenderer meshRenderer = building.gameObject.GetComponent<MeshRenderer>();
                 meshRenderer.material = new Material(meshRenderer.material);
                 material = meshRenderer.material;
+                setup = true;
+                Debug.Log("CryoEggBehaviour.Setup, !setup()");
             }
 
             if (colourLerpProgress != building.Health.Value * 0.01)

@@ -11,7 +11,7 @@ public class EnemyController : MonoBehaviour
 
     //Serialized Fields----------------------------------------------------------------------------
 
-    [SerializeField] private Enemy enemyPrefab;
+
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
@@ -72,30 +72,15 @@ public class EnemyController : MonoBehaviour
     {
         while (enemies.Count < 4)
         {
-            Vector3 spawnPoint;
+            enemies.Add(EnemyFactory.Instance.GetEnemy());
+        }
+    }
 
-            switch (Random.Range(0, 4))
-            {
-                case 0:
-                    spawnPoint = new Vector3(Random.Range(-24, 24), 0.5f, Random.Range(-24, -18));
-                    break;
-                case 1:
-                    spawnPoint = new Vector3(Random.Range(-24, 24), 0.5f, Random.Range(18, 24));
-                    break;
-                case 2:
-                    spawnPoint = new Vector3(Random.Range(-24, -18), 0.5f, Random.Range(-24, 24));
-                    break;
-                case 3:
-                    spawnPoint = new Vector3(Random.Range(18, 24), 0.5f, Random.Range(-24, 24));
-                    break;
-                default:
-                    spawnPoint = Vector3.zero;
-                    break;
-            }
-
-            Enemy newEnemy = Instantiate<Enemy>(enemyPrefab, spawnPoint, new Quaternion());
-            newEnemy.Id = IdGenerator.Instance.GetNextId();
-            enemies.Add(newEnemy);
+    public void DeRegisterEnemy(Enemy enemy)
+    {
+        if (enemies.Contains(enemy))
+        {
+            enemies.Remove(enemy);
         }
     }
 }

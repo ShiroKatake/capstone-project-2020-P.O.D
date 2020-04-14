@@ -18,12 +18,12 @@ public class Enemy : MonoBehaviour
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
-    
     private Health health;
     private Transform target;
     private Vector3 movement;
     private float radius;
     private float targetRadius;
+    private bool moving;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -35,9 +35,14 @@ public class Enemy : MonoBehaviour
     public Health Health { get => health; }
 
     /// <summary>
-    /// The Enemy's unique ID number. Should only be set in EnemyController.
+    /// The Enemy's unique ID number.
     /// </summary>
-    public int Id { get => id; set => id = value; }
+    public int Id { get => id;}
+
+    /// <summary>
+    /// Whether or not the Enemy is moving.
+    /// </summary>
+    public bool Moving { get => moving; set => moving = value; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -48,6 +53,14 @@ public class Enemy : MonoBehaviour
     void Awake()
     {
         health = GetComponent<Health>();
+    }
+
+    /// <summary>
+    /// Prepares the Enemy to chase its targets when EnemyFactory puts it in the world. 
+    /// </summary>
+    public void Setup(int id)
+    {
+        this.id = id;
         SelectTarget();
         GetRadius();
         CalculateMovement();
@@ -145,8 +158,7 @@ public class Enemy : MonoBehaviour
     {
         if (health.IsDead())
         {
-            EnemyController.Instance.Enemies.Remove(this);
-            health.Die();
+            EnemyFactory.Instance.DestroyEnemy(this);
         }
     }
 

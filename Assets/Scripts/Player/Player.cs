@@ -91,7 +91,9 @@ public class Player : MonoBehaviour
 
         for (int i = 0; i < laserBatteryCapacity; i++)
         {
-            laserBattery.Add(Instantiate<LaserBolt>(laserBoltPrefab, laserBatteryPoint.position, laserBoltPrefab.transform.rotation));
+            LaserBolt l = Instantiate<LaserBolt>(laserBoltPrefab, laserBatteryPoint.position, laserBoltPrefab.transform.rotation);
+            l.transform.parent = laserBatteryPoint;
+            laserBattery.Add(l);
         }
 
         selectedBuildingType = EBuilding.SolarPanel;
@@ -338,8 +340,24 @@ public class Player : MonoBehaviour
         {
             LaserBolt laserBolt = laserBattery[0];
             laserBattery.Remove(laserBolt);
+            laserBolt.transform.parent = null;
             laserBolt.transform.position = laserCannonTip.position;
             laserBolt.Shoot((transform.forward * 2 - transform.up).normalized);
         }
+    }
+
+    //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Handles the destruction of laser bolts.
+    /// </summary>
+    /// <param name="laserBolt">The laser bolt to destroy.</param>
+    public void DestroyLaserBolt(LaserBolt laserBolt)
+    {
+        laserBolt.Active = false;
+        laserBolt.Rigidbody.isKinematic = true;
+        laserBolt.transform.position = laserBatteryPoint.position;
+        laserBolt.transform.parent = laserBatteryPoint;
+        laserBattery.Add(laserBolt);
     }
 }
