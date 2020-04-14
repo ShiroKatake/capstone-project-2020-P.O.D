@@ -3,128 +3,177 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EnvironmentalController : MonoBehaviour
 {
-    /// <summary>
-    /// Enum contains list of parameters
-    /// </summary>
-    public enum environmentalParameters {
+
+    public Text var;
+
+    public enum environmentParameters {
         Atmosphere,
         Humidity,
-        Biodiversity,
-    };
-
-    /// <summary>
-    /// List of the types of buildings in the game
-    /// </summary>
-    public enum buildingTypes {
-        AtmosphericCondenser,
-        WaterDrill,
-        Greenhouse
+        Biodiversity
     }
 
-    /// <summary>
-    /// Values for each of the parameters.
-    /// </summary>
-    private Dictionary<environmentalParameters, float> environmentalParameterValues = new Dictionary<environmentalParameters, float>() {
-        { environmentalParameters.Atmosphere, 0.0f },
-        { environmentalParameters.Humidity, 0.0f },
-        { environmentalParameters.Biodiversity, 0.0f }
-    };
+    float atmosphereVal = 0.00001f;
+    float humidityVal = 0.00001f;
+    float biodiversityVal = 0.00001f;
+
+    float atmoMalice = 1.0f;
+    float humMalice = 1.0f;
+    float bioMalice = 1.0f;
+
+    float totalVal = 0.0f;
 
 
-    /// <summary>
-    /// Sets the ideal ratio between buildings
-    /// </summary>
-    private Dictionary<buildingTypes, int> idealRatio = new Dictionary<buildingTypes, int>() {
-        { buildingTypes.AtmosphericCondenser, 3 },
-        { buildingTypes.WaterDrill, 2 },
-        { buildingTypes.Greenhouse, 1 }
-    };
-
-    /// <summary>
-    /// Current quantities for buildings
-    /// </summary>
-    private Dictionary<buildingTypes, int> buildingQuantities = new Dictionary<buildingTypes, int>() {
-        { buildingTypes.AtmosphericCondenser, 0 },
-        { buildingTypes.WaterDrill, 0 },
-        { buildingTypes.Greenhouse, 0 }
-    };
-
-    /// <summary>
-    /// Total calculated environment progress
-    /// </summary>
-    private float environmentTotal;
-
-
-
-
+    public List<(string, environmentParameters, float)> constructedBuildings = new List<(string, environmentParameters, float)>();
+    
     // Start is called before the first frame update
     void Start()
     {
-        PrintEnvironmentValues();
+        
     }
+
+    float counter = 0;
 
     // Update is called once per frame
     void Update()
     {
-        UpdateEnvironmentTotals();
+        float tpf = Time.deltaTime;
+
+        UpdateParameters();
+        TempBuildingConstruction();
+        CalculateBuildingDeltas(tpf);
+
+        
+
+
+        
+
+        counter += tpf;
+
+        if (counter > 1) {
+
+            //atmosphereVal += 0.5f * atmoMalice;
+
+            PrintEnvironmentValues();
+
+            counter = 0;
+        }
     }
+    public void CalculateBuildingDeltas(float tpf) {
 
-    public void RegisterBuilding() {
+        float atmoDelta = 0;
+        float humDelta = 0;
+        float bioDelta = 0;
 
-    }
-
-    /// <summary>
-    /// Sums up the individual parameters to the total values
-    /// </summary>
-    public void UpdateEnvironmentTotals() {
-        var temp = environmentalParameterValues.Values;
-
-        foreach (buildingTypes firstParam in Enum.GetValues(typeof(buildingTypes))) {
-            foreach (buildingTypes secondParam in Enum.GetValues(typeof(buildingTypes))) {
-                if (firstParam != secondParam) {
-                    int numStructures = buildingQuantities[firstParam];
-
-                    
-                }
+        foreach (var building in constructedBuildings) {
+            switch(building.Item2) {
+                case environmentParameters.Atmosphere:
+                    atmoDelta += building.Item3;
+                    break;
+                case environmentParameters.Humidity:
+                    humDelta += building.Item3;
+                    break;
+                case environmentParameters.Biodiversity:
+                    bioDelta += building.Item3;
+                    break;
             }
         }
 
-        float val = temp.Sum();
+        atmosphereVal = Mathf.Min(atmosphereVal + atmoDelta * atmoMalice * tpf, 100);
+        humidityVal = Mathf.Min(humidityVal + humDelta * humMalice * tpf, 100);
+        biodiversityVal = Mathf.Min(biodiversityVal + bioDelta * bioMalice * tpf,100);
+
+    }
+
+    public void TempBuildingConstruction() {
+        if (Input.GetKeyDown(KeyCode.Keypad1)) {
+            constructedBuildings.Add(("Building",environmentParameters.Atmosphere, 0.5f));
+        }
+        if (Input.GetKeyDown(KeyCode.Keypad2)) {
+            constructedBuildings.Add(("Building",environmentParameters.Humidity, 0.5f));
+        }
+        if (Input.GetKeyDown(KeyCode.Keypad3)) {
+            constructedBuildings.Add(("Building", environmentParameters.Biodiversity, 0.5f));
+        }
+    }
+
+    public void UpdateParameters() {
+
+        float baseSum = atmosphereVal + humidityVal + biodiversityVal;
+
+        string outputText = "";
+
+        float atmosRatio = atmosphereVal / baseSum;
+        float humRatio = humidityVal / baseSum;
+        float bioRatio = biodiversityVal / baseSum;
+        //Debug.Log("AtmosphereRatio: " + atmosRatio);
+
+        outputText += "Atmosphere Ratio: " + atmosRatio;
+        outputText += "\nHumidity Ratio: " + humRatio;
+        outputText += "\nBiodiversity Ratio: " + bioRatio;
+
+        float minthresh = 4f;
+
+        if (atmosphereVal > minthresh || humidityVal > minthresh || biodiversityVal > minthresh) {
+            outputText += "\n";
+
+            float atmoMaliceT = Mathf.Abs( 1 - Math.Max(0, (atmosRatio - 0.3333f)));
+            float humMaliceT = Mathf.Abs(1 - Math.Max(0, (humRatio - 0.3333f)));
+            float bioMaliceT = Mathf.Abs(1 - Math.Max(0, (bioRatio - 0.3333f)));
+
+            atmoMalice = MaliceFunction(atmoMaliceT);
+            humMalice = MaliceFunction(humMaliceT);
+            bioMalice = MaliceFunction(bioMaliceT);
+
+            outputText += "\nAtmos Malice: " +atmoMaliceT +"    :    " + atmoMalice;
+            outputText += "\nHumidity Malice: " + MaliceFunction(humMaliceT);
+            outputText += "\nBiodiversity Malice: " + MaliceFunction(bioMaliceT);
+
+        }
+
+
+        var.text = outputText;
+
+    }
+    private float MaliceFunction(float input) {
+        float normalised = 1 / 0.66666f * input - 0.5f;
+
+        if (normalised > 0.8)
+            return normalised;
+
+        float output = Mathf.Max(0, 10 * normalised - 7.25f);
+        return output;
+    }
+
+    public void RegisterBuilding(string buildingName, environmentParameters param, float affectMagnitude) {
+        constructedBuildings.Add((buildingName, param, affectMagnitude));
+    }
+
+    public void RemoveBuilding(string buildingName) {
+        for (int i = 0; i < constructedBuildings.Count; i++) {
+            if (constructedBuildings[i].Item1 == buildingName) {
+                constructedBuildings.RemoveAt(i);
+                break;
+            }
+        }
     }
 
     /// <summary>
-    /// Print the current environment values to the console
+    /// Print current values to console
     /// </summary>
     public void PrintEnvironmentValues() {
 
-        string debug = "";
 
-        foreach (string name in Enum.GetNames(typeof(environmentalParameters))) {
-            debug += name + ": "+ environmentalParameterValues[(environmentalParameters)Enum.Parse(typeof(environmentalParameters), name)] + "\t";
-        }
 
-        debug += "\nTotal:\t" + environmentTotal;
+        string debug = "Atmosphere: " + atmosphereVal + "\tHumidity: " + humidityVal + "\tBiodiversity: " + biodiversityVal;
+
+        
 
         Debug.Log(debug);
 
-        //Enum.GetName
+        
     }
-
-    /// <summary>
-    /// Calculated total for the environment calculation.
-    /// </summary>
-    public float EnvironmentTotal {
-        get { return environmentTotal; }
-    }
-
-    /// <summary>
-    /// Dictionary containing the parameter values.
-    /// </summary>
-    public Dictionary<environmentalParameters, float> EnvironmentalParameterValues {
-        get { return environmentalParameterValues; }
-    }
-
 }
