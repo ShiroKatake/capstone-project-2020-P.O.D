@@ -22,6 +22,8 @@ public class EnvironmentalController : MonoBehaviour
 
     public static EnvironmentalController Instance { get; protected set; }
 
+    public List<Terraformer> Terraformers { get => terraformers; }
+
     private void Awake()
     {
         if (Instance != null)

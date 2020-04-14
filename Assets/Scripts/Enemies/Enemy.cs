@@ -58,44 +58,44 @@ public class Enemy : MonoBehaviour
     /// </summary>
     private void SelectTarget()
     {
-        if (Planet.Instance.Terraformers.Count == 0)
-        {
-            target = Planet.Instance.CryoEgg.transform;
+        //if (EnvironmentalController.Instance.Terraformers.Count == 0)
+        //{
+            target = BuildingController.Instance.CryoEgg.transform;
             targetRadius = target.GetComponent<SphereCollider>().radius;
-        }
-        else if (Planet.Instance.Terraformers.Count == 1)
-        {
-            target = Planet.Instance.Terraformers[0].transform;
-            targetRadius = target.GetComponent<CapsuleCollider>().radius;
-        }
-        else
-        {
-            float distance = 0;
-            float closestDistance = 99999999;
-            Transform closestTarget = null;
+        //}
+        //else if (EnvironmentalController.Instance.Terraformers.Count == 1)
+        //{
+        //    target = EnvironmentalController.Instance.Terraformers[0].transform;
+        //    targetRadius = target.GetComponent<CapsuleCollider>().radius;
+        //}
+        //else
+        //{
+        //    float distance = 0;
+        //    float closestDistance = 99999999;
+        //    Transform closestTarget = null;
 
-            foreach (Terraformer t in Planet.Instance.Terraformers)
-            {
-                distance = Vector3.Distance(transform.position, t.transform.position);
+        //    foreach (Terraformer t in EnvironmentalController.Instance.Terraformers)
+        //    {
+        //        distance = Vector3.Distance(transform.position, t.transform.position);
 
-                if (closestTarget == null)
-                {
-                    closestTarget = t.transform;
-                    closestDistance = distance;
-                }
-                else
-                {
-                    if (distance < closestDistance)
-                    {
-                        closestTarget = t.transform;
-                        closestDistance = distance;
-                    }
-                }
-            }
+        //        if (closestTarget == null)
+        //        {
+        //            closestTarget = t.transform;
+        //            closestDistance = distance;
+        //        }
+        //        else
+        //        {
+        //            if (distance < closestDistance)
+        //            {
+        //                closestTarget = t.transform;
+        //                closestDistance = distance;
+        //            }
+        //        }
+        //    }
 
-            target = closestTarget;
-            targetRadius = target.GetComponent<CapsuleCollider>().radius;
-        }
+        //    target = closestTarget;
+        //    targetRadius = target.GetComponent<CapsuleCollider>().radius;
+        //}
     }
 
     /// <summary>

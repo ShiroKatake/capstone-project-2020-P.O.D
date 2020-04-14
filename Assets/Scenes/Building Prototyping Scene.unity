@@ -23952,7 +23952,6 @@ GameObject:
   - component: {fileID: 732019716}
   - component: {fileID: 732019715}
   - component: {fileID: 732019714}
-  - component: {fileID: 732019718}
   m_Layer: 8
   m_Name: Planet
   m_TagString: Untagged
@@ -24776,21 +24775,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &732019718
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 732019713}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eeae59c0fc1a95d49bdf86080ad4a0fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  grassMaterial: {fileID: 2100000, guid: efd4948e95278f84facb26840a6c6f71, type: 2}
-  dirtMaterial: {fileID: 2100000, guid: ccf5bd5253e5cca4daa94fcd3efee0c4, type: 2}
-  cryoEgg: {fileID: 1170871704}
 --- !u!1 &732824938
 GameObject:
   m_ObjectHideFlags: 0
@@ -53671,6 +53655,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   var: {fileID: 174349648}
+  terraformers: []
 --- !u!1 &1625396031
 GameObject:
   m_ObjectHideFlags: 0

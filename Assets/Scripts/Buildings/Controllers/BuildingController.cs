@@ -29,7 +29,10 @@ public class BuildingController : MonoBehaviour
 
     //Basic Public Properties----------------------------------------------------------------------                                                                                                                          
 
-
+    /// <summary>
+    /// The cryo egg.
+    /// </summary>
+    public Building CryoEgg { get => cryoEgg; }
 
     //Complex Public Properties--------------------------------------------------------------------                                                    
 
