@@ -2,6 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// An example class for how to go about grouping fields, properties and methods using comments.
+/// Note: does not demonstrate triple-slash summary comments for properties and methods, but use those too.
+/// See CommentsTemplate for copy-and-paste examples. If CommentsExample clashes with CommentsTemplate,
+/// assume CommentsTemplate is correct.
+/// </summary>
 public class CommentsExample : MonoBehaviour
 {
     //Note: the comments here are just the organisational ones separating methods and fields and whatnot.                                              //You don't need to put all your comments out here. I just put the
@@ -35,7 +41,7 @@ public class CommentsExample : MonoBehaviour
 
     public static CommentsExample Instance { get; protected set; }
 
-    //Basic Public Properties                                                                                                                          //Public properties that are just get and/or set properties; listed in alphabetical order
+    //Basic Public Properties----------------------------------------------------------------------                                                                                                                          //Public properties that are just get and/or set properties; listed in alphabetical order
 
     public string SomeOtherSerializedVariable { get => someOtherSerializedVariable; set => someOtherSerializedVariable = value; }
     public string SomeSerializedVariable { get => someSerializedVariable; }
@@ -165,7 +171,7 @@ public class CommentsExample : MonoBehaviour
         }
     }
 
-    //Recurring Methods (Framerate)------------------------------------------------------------------------------------------------------------------  //Methods used by Update()
+    //Recurring Methods (Update())-------------------------------------------------------------------------------------------------------------------  //Methods used by Update()
 
     //Method summary comment
     private void RegularThingA()
@@ -192,7 +198,7 @@ public class CommentsExample : MonoBehaviour
         //Stuff
     }
 
-    //Recurring Methods (Fixed Rate)-----------------------------------------------------------------------------------------------------------------  //Methods used by FixedUpdate() (which runs at a fixed rate independent of framerate, used for  
+    //Recurring Methods (FixedUpdate())--------------------------------------------------------------------------------------------------------------  //Methods used by FixedUpdate() (which runs at a fixed rate independent of framerate, used for  
                                                                                                                                                        //physics stuff)
     //Method summary comment
     private void FixedRegularThingA()
