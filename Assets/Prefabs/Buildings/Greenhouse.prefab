@@ -104,6 +104,7 @@ GameObject:
   - component: {fileID: 701136541000889738}
   - component: {fileID: 9054559055595012424}
   - component: {fileID: 3752192069620436707}
+  - component: {fileID: -2579203448979226937}
   m_Layer: 0
   m_Name: Greenhouse
   m_TagString: Untagged
@@ -147,7 +148,6 @@ MonoBehaviour:
   xSize: 3
   zSize: 2
   buildSpeed: 0
-  barSpeed: 0
 --- !u!114 &3752192069620436707
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -161,3 +161,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 100
+--- !u!114 &-2579203448979226937
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4273049605349681512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7da6b4e325fa95643b7194a5738d7265, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  environmentParameter: 3
+  environmentalAffect: 0.5

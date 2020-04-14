@@ -7,14 +7,8 @@ using UnityEngine.UI;
 
 public class EnvironmentalController : MonoBehaviour
 {
-
-    public Text var;
-
-    public enum environmentParameters {
-        Atmosphere,
-        Humidity,
-        Biodiversity
-    }
+    [SerializeField] private Text var;
+    [SerializeField] List<Terraformer> terraformers = new List<Terraformer>();
 
     float atmosphereVal = 0.00001f;
     float humidityVal = 0.00001f;
@@ -24,15 +18,18 @@ public class EnvironmentalController : MonoBehaviour
     float humMalice = 1.0f;
     float bioMalice = 1.0f;
 
-    float totalVal = 0.0f;
+    float totalVal = 0.0f;    
 
+    public static EnvironmentalController Instance { get; protected set; }
 
-    public List<(string, environmentParameters, float)> constructedBuildings = new List<(string, environmentParameters, float)>();
-    
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
-        
+        if (Instance != null)
+        {
+            Debug.LogError("There should never be more than one EnvironmentalController.");
+        }
+
+        Instance = this;
     }
 
     float counter = 0;
@@ -41,44 +38,40 @@ public class EnvironmentalController : MonoBehaviour
     void Update()
     {
         float tpf = Time.deltaTime;
-
         UpdateParameters();
-        TempBuildingConstruction();
+        //TempBuildingConstruction();
         CalculateBuildingDeltas(tpf);
-
-        
-
-
-        
-
         counter += tpf;
 
         if (counter > 1) {
 
             //atmosphereVal += 0.5f * atmoMalice;
-
-            PrintEnvironmentValues();
-
+            //PrintEnvironmentValues();
             counter = 0;
         }
     }
+
     public void CalculateBuildingDeltas(float tpf) {
 
         float atmoDelta = 0;
         float humDelta = 0;
         float bioDelta = 0;
 
-        foreach (var building in constructedBuildings) {
-            switch(building.Item2) {
-                case environmentParameters.Atmosphere:
-                    atmoDelta += building.Item3;
-                    break;
-                case environmentParameters.Humidity:
-                    humDelta += building.Item3;
-                    break;
-                case environmentParameters.Biodiversity:
-                    bioDelta += building.Item3;
-                    break;
+        foreach (Terraformer t in terraformers) {
+            if (t.Operational) {
+                switch (t.EnvironmentParameter) {
+                    case EEnvironmentParameter.Atmosphere:
+                        atmoDelta += t.EnvironmentalAffect;
+                        break;
+                    case EEnvironmentParameter.Humidity:
+                        humDelta += t.EnvironmentalAffect;
+                        break;
+                    case EEnvironmentParameter.Biodiversity:
+                        bioDelta += t.EnvironmentalAffect;
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
@@ -88,17 +81,17 @@ public class EnvironmentalController : MonoBehaviour
 
     }
 
-    public void TempBuildingConstruction() {
-        if (Input.GetKeyDown(KeyCode.Keypad1)) {
-            constructedBuildings.Add(("Building",environmentParameters.Atmosphere, 0.5f));
-        }
-        if (Input.GetKeyDown(KeyCode.Keypad2)) {
-            constructedBuildings.Add(("Building",environmentParameters.Humidity, 0.5f));
-        }
-        if (Input.GetKeyDown(KeyCode.Keypad3)) {
-            constructedBuildings.Add(("Building", environmentParameters.Biodiversity, 0.5f));
-        }
-    }
+    //public void TempBuildingConstruction() {
+    //    if (Input.GetKeyDown(KeyCode.Keypad1)) {
+    //        constructedBuildings.Add(("Building",EEnvironmentParameter.Atmosphere, 0.5f));
+    //    }
+    //    if (Input.GetKeyDown(KeyCode.Keypad2)) {
+    //        constructedBuildings.Add(("Building",EEnvironmentParameter.Humidity, 0.5f));
+    //    }
+    //    if (Input.GetKeyDown(KeyCode.Keypad3)) {
+    //        constructedBuildings.Add(("Building", EEnvironmentParameter.Biodiversity, 0.5f));
+    //    }
+    //}
 
     public void UpdateParameters() {
 
@@ -138,6 +131,7 @@ public class EnvironmentalController : MonoBehaviour
         var.text = outputText;
 
     }
+
     private float MaliceFunction(float input) {
         float normalised = 1 / 0.66666f * input - 0.5f;
 
@@ -148,14 +142,14 @@ public class EnvironmentalController : MonoBehaviour
         return output;
     }
 
-    public void RegisterBuilding(string buildingName, environmentParameters param, float affectMagnitude) {
-        constructedBuildings.Add((buildingName, param, affectMagnitude));
+    public void RegisterBuilding(Terraformer terraformer) {
+        terraformers.Add(terraformer);
     }
 
-    public void RemoveBuilding(string buildingName) {
-        for (int i = 0; i < constructedBuildings.Count; i++) {
-            if (constructedBuildings[i].Item1 == buildingName) {
-                constructedBuildings.RemoveAt(i);
+    public void RemoveBuilding(int id) {
+        for (int i = 0; i < terraformers.Count; i++) {
+            if (terraformers[i].BuildingId == id) {
+                terraformers.RemoveAt(i);
                 break;
             }
         }
@@ -165,15 +159,7 @@ public class EnvironmentalController : MonoBehaviour
     /// Print current values to console
     /// </summary>
     public void PrintEnvironmentValues() {
-
-
-
         string debug = "Atmosphere: " + atmosphereVal + "\tHumidity: " + humidityVal + "\tBiodiversity: " + biodiversityVal;
-
-        
-
         Debug.Log(debug);
-
-        
     }
 }

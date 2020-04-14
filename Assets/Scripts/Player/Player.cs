@@ -250,6 +250,12 @@ public class Player : MonoBehaviour
                 Vector3 spawnPos = heldBuilding.transform.position;
                 spawnPos.y = 0.5f;
                 heldBuilding.transform.position = spawnPos;
+
+                if (heldBuilding.Terraformer != null)
+                {
+                    heldBuilding.Terraformer.Operational = true;
+                }
+
                 heldBuilding = null;
                 spawnBuilding = false;
                 placeBuilding = false;

@@ -61,7 +61,6 @@ public class BuildingFactory : MonoBehaviour
     /// <returns></returns>
     public Building GetBuilding(EBuilding buildingType)
     {
-        Debug.Log("Getting Building");
         Building building;
         Vector3 position = Vector3.zero;
         Quaternion rotation = new Quaternion();
@@ -100,6 +99,12 @@ public class BuildingFactory : MonoBehaviour
 
         building.Id = IdGenerator.Instance.GetNextId();
         BuildingController.Instance.RegisterBuilding(building);
+
+        if (building.Terraformer != null)
+        {
+            EnvironmentalController.Instance.RegisterBuilding(building.Terraformer);
+        }
+
         return building;
     }
 
@@ -110,6 +115,12 @@ public class BuildingFactory : MonoBehaviour
     public void DestroyBuilding(Building building)
     {
         BuildingController.Instance.DeRegisterBuilding(building);
+
+        if (building.Terraformer != null)
+        {
+            EnvironmentalController.Instance.RemoveBuilding(building.Id);
+        }
+
         building.Health.Die();
     }
 }

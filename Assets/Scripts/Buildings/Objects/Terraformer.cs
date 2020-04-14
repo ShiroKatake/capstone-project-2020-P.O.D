@@ -11,92 +11,34 @@ public class Terraformer : MonoBehaviour
 
     //Serialized Fields----------------------------------------------------------------------------
 
-    [Header("Terraformer Stats")]
-    [SerializeField] private float terraformingSpeed;
-
-    [Header("Colours")]
-    [SerializeField] private Material activeMaterial;
-    [SerializeField] private Material inactiveMaterial;
+    [SerializeField] private EEnvironmentParameter environmentParameter;
+    [SerializeField] private float environmentalAffect;
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
-    private bool terraforming = false;
-    private Health health;
-    
-    private Material terraformerMaterial;
-    private Color activeColour;
-    private Color inactiveColour;
+    private int buildingId;
+    private bool operational;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    //Complex Public Properties--------------------------------------------------------------------
+    /// <summary>
+    /// The ID of the building this terraformer class is a component of. Should only be set by Building.Id, which in turn should
+    /// only be set by BuildingFactory.GetBuilding().
+    /// </summary>
+    public int BuildingId { get => buildingId; set => buildingId = value; }
 
     /// <summary>
-    /// Is the terraformer active and terraforming the planet?
+    /// How quickly this building affects the environment.
     /// </summary>
-    public bool Terraforming
-    {
-        get
-        {
-            return terraforming;
-        }
-
-        set
-        {
-            terraforming = value;
-            terraformerMaterial.color = terraforming ? activeColour : inactiveColour;
-        } 
-    }
-
-    //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
+    public float EnvironmentalAffect { get => environmentalAffect; }
 
     /// <summary>
-    /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
-    /// Awake() runs before Start().
+    /// The aspect of the environment this buildng affects, if any.
     /// </summary>
-    private void Awake()
-    {
-        activeColour = activeMaterial.color;
-        inactiveColour = inactiveMaterial.color;
-        MeshRenderer meshRenderer = gameObject.GetComponent <MeshRenderer> () as MeshRenderer;
-        meshRenderer.material = new Material(inactiveMaterial);
-        terraformerMaterial = meshRenderer.material;
-        health = GetComponent<Health>();
-    }
-
-    //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
+    public EEnvironmentParameter EnvironmentParameter { get => environmentParameter; }
 
     /// <summary>
-    /// Update() is run every frame.
+    /// Is the building currently operational?
     /// </summary>
-    private void Update()
-    {
-        CheckHealth();
-        Terraform();
-    }
-
-    //Recurring Methods(Update())--------------------------------------------------------------------------------------------------------------------
-
-    /// <summary>
-    /// Checks if the terraformer is dead or not, and destroys it if it is.
-    /// </summary>
-    private void CheckHealth()
-    {
-        if (health.IsDead())
-        {
-            Planet.Instance.Terraformers.Remove(this);
-            health.Die();
-        }
-    }
-
-    /// <summary>
-    /// Checks if the terraformer is active, and if so, terraforms the planet.
-    /// </summary>
-    private void Terraform()
-    {
-        if (terraforming)
-        {
-            Planet.Instance.Terraform(terraformingSpeed * Time.deltaTime);
-        }
-    }
+    public bool Operational { get => operational; set => operational = value; }
 }

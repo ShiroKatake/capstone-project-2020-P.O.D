@@ -82,25 +82,25 @@ public class Planet : MonoBehaviour
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
-    /// <summary>
-    /// Called by terraformers to progress how much the planet has been terraformed.
-    /// </summary>
-    /// <param name="additionalProgress"></param>
-    public void Terraform(float additionalProgress)
-    {
-        if (terraformingProgress < 1)
-        {
-            terraformingProgress = Mathf.Min(1, terraformingProgress + additionalProgress);
-            planetMaterial.color = Color.Lerp(dirtColour, grassColour, terraformingProgress);
-        }
-        else if (!disabledTerraformers)
-        {
-            disabledTerraformers = true;
+    ///// <summary>
+    ///// Called by terraformers to progress how much the planet has been terraformed.
+    ///// </summary>
+    ///// <param name="additionalProgress"></param>
+    //public void Terraform(float additionalProgress)
+    //{
+    //    if (terraformingProgress < 1)
+    //    {
+    //        terraformingProgress = Mathf.Min(1, terraformingProgress + additionalProgress);
+    //        planetMaterial.color = Color.Lerp(dirtColour, grassColour, terraformingProgress);
+    //    }
+    //    else if (!disabledTerraformers)
+    //    {
+    //        disabledTerraformers = true;
 
-            foreach (Terraformer t in terraformers)
-            {
-                t.Terraforming = false;
-            }
-        }
-    }
+    //        foreach (Terraformer t in terraformers)
+    //        {
+    //            t.Terraforming = false;
+    //        }
+    //    }
+    //}
 }

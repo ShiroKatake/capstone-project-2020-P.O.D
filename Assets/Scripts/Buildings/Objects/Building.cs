@@ -25,22 +25,18 @@ public class Building : MonoBehaviour
     [SerializeField] [Range(1, 3)] private int xSize;
     [SerializeField] [Range(1, 3)] private int zSize;
     [SerializeField] private float buildSpeed;
-    [SerializeField] private float barSpeed;
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
     private BuildingBehaviour buildingBehaviour;
     private Health health;
+    private Terraformer terraformer;
+
     private Dictionary<string, Vector3> offsets;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
     //Basic Public Properties----------------------------------------------------------------------
-
-    /// <summary>
-    /// How quickly this building fills up terraforming bars.
-    /// </summary>
-    public float BarSpeed { get => barSpeed; }
 
     /// <summary>
     /// The broad category of building (cryo egg, resources, terraforming, defence) that this building falls under.
@@ -63,11 +59,6 @@ public class Building : MonoBehaviour
     public Health Health { get => health; }
 
     /// <summary>
-    /// The Building's unique ID number. Should only be set in BuildingFactory.
-    /// </summary>
-    public int Id { get => id; set => id = value; }
-
-    /// <summary>
     /// How much ore it costs to build this building.
     /// </summary>
     public int OreCost { get => oreCost; }
@@ -76,6 +67,11 @@ public class Building : MonoBehaviour
     /// How much power this building requires per second to function.
     /// </summary>
     public int PowerUsage { get => powerUsage; }
+
+    /// <summary>
+    /// The building's terraformer component, if it has one.
+    /// </summary>
+    public Terraformer Terraformer { get => terraformer; }
 
     /// <summary>
     /// How much water this building requires per second to function.
@@ -94,7 +90,26 @@ public class Building : MonoBehaviour
 
     //Complex Public Properties--------------------------------------------------------------------                                                    
 
+    /// <summary>
+    /// The Building's unique ID number. Should only be set in BuildingFactory.
+    /// </summary>
+    public int Id
+    {
+        get
+        {
+            return id;
+        }
 
+        set
+        {
+            id = value;
+            
+            if (terraformer != null)
+            {
+                terraformer.BuildingId = id;
+            }
+        }
+    }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -105,6 +120,7 @@ public class Building : MonoBehaviour
     private void Awake()
     {
         health = GetComponent<Health>();
+        terraformer = GetComponent<Terraformer>();
 
         if (xSize < 1 || xSize > 3)
         {
