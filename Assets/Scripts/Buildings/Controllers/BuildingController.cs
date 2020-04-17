@@ -93,8 +93,29 @@ public class BuildingController : MonoBehaviour
     {
         switch (building.BuildingType)
         {
-            case EBuilding.CryoEgg:
-                CryoEggBehaviour.Instance.Execute(building);
+            //case EBuilding.CryoEgg:
+            //    CryoEggBehaviour.Instance.Execute(building);
+            //    break;
+            //case EBuilding.SolarPanel:
+            //    SolarPanelBehaviour.Instance.Execute(building);
+            //    break;
+            //case EBuilding.WindTurbine:
+            //    WindTurbineBehaviour.Instance.Execute(building);
+            //    break;
+            //case EBuilding.WaterDrill:
+            //    WaterDrillBehaviour.Instance.Execute(building);
+            //    break;
+            //case EBuilding.GasDiffuser:
+            //    GasDiffuserBehaviour.Instance.Execute(building);
+            //    break;
+            //case EBuilding.Humidifier:
+            //    HumidifierBehaviour.Instance.Execute(building);
+            //    break;
+            //case EBuilding.Greenhouse:
+            //    GreenhouseBehaviour.Instance.Execute(building);
+            //    break;
+            case EBuilding.Turret:
+                TurretBehaviour.Instance.Execute(building);
                 break;
             default:
                 return;
@@ -123,7 +144,7 @@ public class BuildingController : MonoBehaviour
         {
             Building b = destroyedBuildings[0];
             destroyedBuildings.RemoveAt(0);
-            BuildingFactory.Instance.DestroyBuilding(b);
+            BuildingFactory.Instance.DestroyBuilding(b, true);
         }
     }
 
@@ -159,6 +180,26 @@ public class BuildingController : MonoBehaviour
         {
             buildings.Remove(building);
         }
+    }
+
+    /// <summary>
+    /// Shutdown buildings depending on which resources are overtaxed.
+    /// </summary>
+    /// <param name="power">Is there sufficient power to supply all buildings?</param>
+    /// <param name="water">Is there sufficient water to supply all buildings?</param>
+    public void ShutdownBuildings(bool power, bool water)
+    {
+        //TODO: shutdown buildings that consume power and/or water, depending on which has been overloaded.
+    }
+
+    /// <summary>
+    /// Restore buildings depending on which resources are available.
+    /// </summary>
+    /// <param name="power">Is there sufficient power to supply all buildings?</param>
+    /// <param name="water">Is there sufficient water to supply all buildings?</param>
+    public void RestoreBuildings(bool power, bool water)
+    {
+        //TODO: restore buildings that consume power and/or water, depending on which is available.
     }
 
     //Utility Methods--------------------------------------------------------------------------------------------------------------------------------  

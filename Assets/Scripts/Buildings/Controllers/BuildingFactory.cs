@@ -112,13 +112,21 @@ public class BuildingFactory : MonoBehaviour
     /// Destroy a building.
     /// </summary>
     /// <param name="building">The building to be destroyed.</param>
-    public void DestroyBuilding(Building building)
+    /// <param name="consumingResources">Is the building consuming resources and does that consumption need to be cancelled now that it's being destroyed?</param>
+    public void DestroyBuilding(Building building, bool consumingResources)
     {
+        building.Operational = false;
         BuildingController.Instance.DeRegisterBuilding(building);
 
         if (building.Terraformer != null)
         {
             EnvironmentalController.Instance.RemoveBuilding(building.Id);
+        }
+
+        if (consumingResources)
+        {
+            ResourceController.Instance.PowerSupply += building.PowerConsumption;
+            ResourceController.Instance.WaterSupply += building.WaterConsumption;
         }
 
         building.Health.Die();

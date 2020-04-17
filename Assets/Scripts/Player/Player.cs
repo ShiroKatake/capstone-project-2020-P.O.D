@@ -228,7 +228,7 @@ public class Player : MonoBehaviour
                     pos = RawBuildingPositionToBuildingPosition(heldBuilding.XSize, heldBuilding.ZSize);
                 }
 
-                BuildingFactory.Instance.DestroyBuilding(heldBuilding);
+                BuildingFactory.Instance.DestroyBuilding(heldBuilding, false);
                 heldBuilding = BuildingFactory.Instance.GetBuilding(selectedBuildingType);
                 heldBuilding.transform.position = pos;
             }
@@ -247,29 +247,30 @@ public class Player : MonoBehaviour
             //TODO: check for building collisions with drone / other buildings / enemies.
 
             //Place it or cancel building it
-            if (placeBuilding) //and there's not a collision
-            {
+            if (placeBuilding && ResourceController.Instance.Ore >= heldBuilding.OreCost) //and there's not a collision
+            {              
                 Vector3 spawnPos = heldBuilding.transform.position;
                 spawnPos.y = 0.5f;
-                heldBuilding.transform.position = spawnPos;
-
-                if (heldBuilding.Terraformer != null)
-                {
-                    heldBuilding.Terraformer.Operational = true;
-                }
-
+                heldBuilding.Place(spawnPos);    
                 heldBuilding = null;
                 spawnBuilding = false;
                 placeBuilding = false;
                 cancelBuilding = false;
             }
-            else if (cancelBuilding) // or place building but there's a collision
+            else if (cancelBuilding || (placeBuilding && ResourceController.Instance.Ore < heldBuilding.OreCost)) // or place building but there's a collision
             {
-                BuildingFactory.Instance.DestroyBuilding(heldBuilding);
+                if (placeBuilding && ResourceController.Instance.Ore < heldBuilding.OreCost)
+                {
+                    Debug.Log("You have insufficient ore to build this building.");
+                }
+
+                //Debug.Log about building where something else has already been built.
+
+                BuildingFactory.Instance.DestroyBuilding(heldBuilding, false);
                 heldBuilding = null;
                 spawnBuilding = false;
                 placeBuilding = false;
-                cancelBuilding = false;
+                cancelBuilding = false;                
             }
         }
     }

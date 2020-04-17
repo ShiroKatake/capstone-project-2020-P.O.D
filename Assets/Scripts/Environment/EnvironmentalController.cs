@@ -60,7 +60,7 @@ public class EnvironmentalController : MonoBehaviour
         float bioDelta = 0;
 
         foreach (Terraformer t in terraformers) {
-            if (t.Operational) {
+            if (t.Building.Operational) {
                 switch (t.EnvironmentParameter) {
                     case EEnvironmentParameter.Atmosphere:
                         atmoDelta += t.EnvironmentalAffect;
@@ -150,7 +150,7 @@ public class EnvironmentalController : MonoBehaviour
 
     public void RemoveBuilding(int id) {
         for (int i = 0; i < terraformers.Count; i++) {
-            if (terraformers[i].BuildingId == id) {
+            if (terraformers[i].Building.Id == id) {
                 terraformers.RemoveAt(i);
                 break;
             }

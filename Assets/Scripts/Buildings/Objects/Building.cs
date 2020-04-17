@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -17,20 +16,21 @@ public class Building : MonoBehaviour
 
     [Header("Resource Requirements")]
     [SerializeField] private int oreCost;
-    [SerializeField] private int powerUsage;
-    [SerializeField] private int waterUsage;
+    [SerializeField] private int powerConsumption;
+    [SerializeField] private int waterConsumption;
 
     [Header("Other Stats")]
     [SerializeField] private int id;
     [SerializeField] [Range(1, 3)] private int xSize;
     [SerializeField] [Range(1, 3)] private int zSize;
-    [SerializeField] private float buildSpeed;
+    [SerializeField] private float buildTime;
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
-    private BuildingBehaviour buildingBehaviour;
     private Health health;
     private Terraformer terraformer;
+    private ResourceCollector resourceCollector;
+    private bool operational = false;
 
     private Dictionary<string, Vector3> offsets;
 
@@ -49,14 +49,19 @@ public class Building : MonoBehaviour
     public EBuilding BuildingType { get => buildingType; }     
     
     /// <summary>
-    /// How quickly this building builds itself when the player places it in the scene.
+    /// How long this building takes to builds itself when the player places it in the scene.
     /// </summary>
-    public float BuildSpeed { get => buildSpeed; }
+    public float BuildTime { get => buildTime; }
 
     /// <summary>
     /// The Building's Health component.
     /// </summary>
     public Health Health { get => health; }
+
+    /// <summary>
+    /// The Building's unique ID number. Should only be set in BuildingFactory.
+    /// </summary>
+    public int Id { get => id; set => id = value; }
 
     /// <summary>
     /// How much ore it costs to build this building.
@@ -66,7 +71,12 @@ public class Building : MonoBehaviour
     /// <summary>
     /// How much power this building requires per second to function.
     /// </summary>
-    public int PowerUsage { get => powerUsage; }
+    public int PowerConsumption { get => powerConsumption; }
+
+    /// <summary>
+    /// The building's resource collector component, if it has one.
+    /// </summary>
+    public ResourceCollector ResourceCollector { get => resourceCollector; }
 
     /// <summary>
     /// The building's terraformer component, if it has one.
@@ -76,7 +86,7 @@ public class Building : MonoBehaviour
     /// <summary>
     /// How much water this building requires per second to function.
     /// </summary>
-    public int WaterUsage { get => waterUsage; }
+    public int WaterConsumption { get => waterConsumption; }
 
     /// <summary>
     /// How many squares this building occupies along the x-axis.
@@ -91,22 +101,32 @@ public class Building : MonoBehaviour
     //Complex Public Properties--------------------------------------------------------------------                                                    
 
     /// <summary>
-    /// The Building's unique ID number. Should only be set in BuildingFactory.
+    /// Whether or not the building is operational and doing its job. When set, also triggers any appropriate resource collector state changes.
     /// </summary>
-    public int Id
+    public bool Operational
     {
         get
         {
-            return id;
+            return operational;
         }
 
         set
         {
-            id = value;
-            
-            if (terraformer != null)
+            if (operational != value)
             {
-                terraformer.BuildingId = id;
+                operational = value;
+
+                if (resourceCollector != null)
+                {
+                    if (operational)
+                    {
+                        resourceCollector.Activate();
+                    }
+                    else
+                    {
+                        resourceCollector.Deactivate();
+                    }
+                }
             }
         }
     }
@@ -120,6 +140,7 @@ public class Building : MonoBehaviour
     private void Awake()
     {
         health = GetComponent<Health>();
+        resourceCollector = GetComponent<ResourceCollector>();
         terraformer = GetComponent<Terraformer>();
 
         if (xSize < 1 || xSize > 3)
@@ -230,6 +251,19 @@ public class Building : MonoBehaviour
         {
             return offsets["NW"];
         }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="position"></param>
+    public void Place(Vector3 position)
+    {
+        ResourceController.Instance.Ore -= oreCost;
+        ResourceController.Instance.PowerSupply -= powerConsumption;
+        ResourceController.Instance.WaterSupply -= waterConsumption;
+        transform.position = position;
+        Operational = true; //Using property to trigger activation of any resource collector component attached.
     }
 
     //Utility Methods--------------------------------------------------------------------------------------------------------------------------------  

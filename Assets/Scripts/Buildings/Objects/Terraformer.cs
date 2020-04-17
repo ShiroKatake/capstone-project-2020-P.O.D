@@ -17,15 +17,14 @@ public class Terraformer : MonoBehaviour
     //Non-Serialized Fields------------------------------------------------------------------------
 
     private int buildingId;
-    private bool operational;
+    private Building building;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
-    /// The ID of the building this terraformer class is a component of. Should only be set by Building.Id, which in turn should
-    /// only be set by BuildingFactory.GetBuilding().
+    /// The building this terraformer class is a component of.
     /// </summary>
-    public int BuildingId { get => buildingId; set => buildingId = value; }
+    public Building Building { get => building; }
 
     /// <summary>
     /// How quickly this building affects the environment.
@@ -37,8 +36,10 @@ public class Terraformer : MonoBehaviour
     /// </summary>
     public EEnvironmentParameter EnvironmentParameter { get => environmentParameter; }
 
-    /// <summary>
-    /// Is the building currently operational?
-    /// </summary>
-    public bool Operational { get => operational; set => operational = value; }
+    //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
+
+    private void Awake()
+    {
+        building = gameObject.GetComponent<Building>();
+    }
 }

@@ -104,6 +104,7 @@ GameObject:
   - component: {fileID: 5709118874323206403}
   - component: {fileID: 6356630498027900237}
   - component: {fileID: 5375039924950147421}
+  - component: {fileID: -3601512462432550777}
   m_Layer: 0
   m_Name: Water Drill
   m_TagString: Untagged
@@ -140,14 +141,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buildingCategory: 1
   buildingType: 4
-  oreCost: 0
-  powerUsage: 0
-  waterUsage: 0
+  oreCost: 1
+  powerConsumption: 0
+  waterConsumption: 0
   id: 0
   xSize: 2
   zSize: 2
-  buildSpeed: 0
-  barSpeed: 0
+  buildTime: 10
 --- !u!114 &5375039924950147421
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -161,3 +161,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 100
+--- !u!114 &-3601512462432550777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 841309495929802148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4843e1d8770be5e458983c570cbb6784, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  resource: 2
+  collectionRate: 1
