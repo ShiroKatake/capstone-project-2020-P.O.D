@@ -30,7 +30,7 @@ public class Building : MonoBehaviour
     private Health health;
     private Terraformer terraformer;
     private ResourceCollector resourceCollector;
-    private bool operational = false;
+    [SerializeField] private bool operational = false;
 
     private Dictionary<string, Vector3> offsets;
 

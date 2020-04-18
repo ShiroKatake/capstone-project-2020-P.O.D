@@ -62,35 +62,29 @@ public class BuildingFactory : MonoBehaviour
     public Building GetBuilding(EBuilding buildingType)
     {
         Building building;
-        Vector3 position = Vector3.zero;
-        Quaternion rotation = new Quaternion();
 
         switch(buildingType)
         {
-            //TODO: remove redundant instantiation details, test if it still works.
-            //case EBuilding.CryoEgg:
-            //    building = Instantiate(cryoEggPrefab);
-            //    break;
             case EBuilding.SolarPanel:
-                building = Instantiate<Building>(solarPanelPrefab, position, rotation) ;
+                building = Instantiate(solarPanelPrefab) ;
                 break;
             case EBuilding.WindTurbine:
-                building = Instantiate<Building>(windTurbinePrefab, position, rotation);
+                building = Instantiate(windTurbinePrefab);
                 break;
             case EBuilding.WaterDrill:
-                building = Instantiate<Building>(waterDrillPrefab, position, rotation);
+                building = Instantiate(waterDrillPrefab);
                 break;
             case EBuilding.GasDiffuser:
-                building = Instantiate<Building>(gasDiffuserPrefab, position, rotation);
+                building = Instantiate(gasDiffuserPrefab);
                 break;
             case EBuilding.Humidifier:
-                building = Instantiate<Building>(humidifierPrefab, position, rotation);
+                building = Instantiate(humidifierPrefab);
                 break;
             case EBuilding.Greenhouse:
-                building = Instantiate<Building>(greenhousePrefab, position, rotation);
+                building = Instantiate(greenhousePrefab);
                 break;
             case EBuilding.Turret:
-                building = Instantiate<Building>(turretPrefab, position, rotation);
+                building = Instantiate(turretPrefab);
                 break;
             default:
                 Debug.LogError("Invalid EBuildingType value passed to BuildingFactory.GetBuilding().");

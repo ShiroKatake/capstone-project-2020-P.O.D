@@ -139,7 +139,6 @@ public class BuildingController : MonoBehaviour
     /// </summary>
     private void CleanupBuildings()
     {
-        //TODO: Test that cleaning up buildings this way doesn't break when the building is removed from any lists mid-loop.
         while (destroyedBuildings.Count > 0)
         {
             Building b = destroyedBuildings[0];
@@ -189,7 +188,13 @@ public class BuildingController : MonoBehaviour
     /// <param name="water">Is there sufficient water to supply all buildings?</param>
     public void ShutdownBuildings(bool power, bool water)
     {
-        //TODO: shutdown buildings that consume power and/or water, depending on which has been overloaded.
+        foreach (Building b in buildings)
+        {
+            if (b.Operational && ((!power && b.PowerConsumption > 0) || (!water && b.WaterConsumption > 0)))
+            {
+                b.Operational = false;
+            }
+        }
     }
 
     /// <summary>
@@ -199,7 +204,13 @@ public class BuildingController : MonoBehaviour
     /// <param name="water">Is there sufficient water to supply all buildings?</param>
     public void RestoreBuildings(bool power, bool water)
     {
-        //TODO: restore buildings that consume power and/or water, depending on which is available.
+        foreach (Building b in buildings)
+        {
+            if (!b.Operational && (power || b.PowerConsumption == 0) && (water || b.WaterConsumption == 0))
+            {
+                b.Operational = true;
+            }
+        }
     }
 
     //Utility Methods--------------------------------------------------------------------------------------------------------------------------------  

@@ -17,8 +17,8 @@ public class ResourceController : MonoBehaviour
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
-    private bool powerAvailable = false;
-    private bool waterAvailable = false;
+    private bool powerAvailable = true;
+    private bool waterAvailable = true;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -36,19 +36,42 @@ public class ResourceController : MonoBehaviour
     /// </summary>
     public int Ore { get => ore; set => ore = value; }
 
+    //Complex Public Properties--------------------------------------------------------------------                                                    
+
+
     /// <summary>
     /// How much power the player is generating per second.
     /// </summary>
-    public int PowerSupply { get => powerSupply; set => powerSupply = value; }
+    public int PowerSupply
+    {
+        get
+        {
+            return powerSupply;
+        }
+
+        set
+        {
+            powerSupply = value;
+            CheckResourceSupply();
+        }
+    }
 
     /// <summary>
     /// How much water the player is collecting per second.
     /// </summary>
-    public int WaterSupply { get => waterSupply; set => waterSupply = value; }
+    public int WaterSupply
+    {
+        get
+        {
+            return waterSupply;
+        }
 
-    //Complex Public Properties--------------------------------------------------------------------                                                    
-
-
+        set
+        {
+            waterSupply = value;
+            CheckResourceSupply();
+        }
+    }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -82,6 +105,7 @@ public class ResourceController : MonoBehaviour
     /// </summary>
     private void Update()
     {
+        //For testing by changing resource values in the inspector.
         CheckResourceSupply();
     }
 
@@ -105,13 +129,13 @@ public class ResourceController : MonoBehaviour
         bool initialWaterStatus = waterAvailable;
 
         //Check if power needs to be updated
-        if ((powerAvailable && powerSupply >= 0) || (!powerAvailable && powerSupply < 0))
+        if ((powerAvailable && powerSupply < 0) || (!powerAvailable && powerSupply >= 0))
         {
             powerAvailable = !powerAvailable;
         }
 
         //Check if water needs to be updated
-        if ((waterAvailable && waterSupply >= 0) || (!waterAvailable && waterSupply < 0))
+        if ((waterAvailable && waterSupply < 0) || (!waterAvailable && waterSupply >= 0))
         {
             waterAvailable = !waterAvailable;
         }
@@ -122,12 +146,14 @@ public class ResourceController : MonoBehaviour
             //Check if buildings need to be shutdown
             if (!powerAvailable || !waterAvailable)
             {
+                Debug.Log("Shutdown Buildings.");
                 BuildingController.Instance.ShutdownBuildings(powerAvailable, waterAvailable);
             }
 
             //Check if buildings can be restored
             if (powerAvailable || waterAvailable)
             {
+                Debug.Log("Restore Buildings");
                 BuildingController.Instance.RestoreBuildings(powerAvailable, waterAvailable);
             }
         }
