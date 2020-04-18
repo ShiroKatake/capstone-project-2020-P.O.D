@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// A building placed by the player.
 /// </summary>
-public class Building : MonoBehaviour
+public class Building : MonoBehaviour, ICollisionListener
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
@@ -27,12 +27,21 @@ public class Building : MonoBehaviour
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
+    //Components
+    private Collider collider;
     private Health health;
-    private Terraformer terraformer;
     private ResourceCollector resourceCollector;
-    [SerializeField] private bool operational = false;
+    private Terraformer terraformer;
 
+    //Positioning
     private Dictionary<string, Vector3> offsets;
+    private Material material;
+    private Color translucentColour;
+    private Color solidColour;
+    private Color errorColour;
+
+    //Other
+    [SerializeField] private bool operational = false;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -139,9 +148,15 @@ public class Building : MonoBehaviour
     /// </summary>
     private void Awake()
     {
+        collider = GetComponentInChildren<Collider>();
         health = GetComponent<Health>();
         resourceCollector = GetComponent<ResourceCollector>();
         terraformer = GetComponent<Terraformer>();
+
+        material = GetComponentInChildren<MeshRenderer>().material;
+        solidColour = new Color(material.color.r, material.color.g, material.color.b, 1f);
+        translucentColour = new Color(solidColour.r, solidColour.g, solidColour.b, 0.5f);
+        errorColour = new Color(0.5f, 0.5f, 0.5f, 0.5f); //Gray
 
         if (xSize < 1 || xSize > 3)
         {
@@ -213,6 +228,8 @@ public class Building : MonoBehaviour
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
+    //Building Triggered Methods-------------------------------------------------------------------
+
     /// <summary>
     ///  Gets the offset appropriate at any angle for this building, given its xSize and zSize.
     ///  <param name="angle">The player's rotation on the y-axis in degrees clockwise from due North.</param>
@@ -253,6 +270,30 @@ public class Building : MonoBehaviour
         }
     }
 
+    public bool CheckForCollision()
+    {
+        bool collision = false;
+
+        //TODO: check for collision
+
+        if (collision)
+        {
+            if (material.color != errorColour)
+            {
+                material.color = errorColour;
+            }
+        }
+        else
+        {
+            if (material.color != translucentColour)
+            {
+                material.color = translucentColour;
+            }
+        }
+
+        return collision;
+    }
+
     /// <summary>
     /// 
     /// </summary>
@@ -263,7 +304,64 @@ public class Building : MonoBehaviour
         ResourceController.Instance.PowerSupply -= powerConsumption;
         ResourceController.Instance.WaterSupply -= waterConsumption;
         transform.position = position;
+        material.color = solidColour;
         Operational = true; //Using property to trigger activation of any resource collector component attached.
+    }
+
+    //ICollisionListener Triggered Methods---------------------------------------------------------
+
+    /// <summary>
+    /// OnCollisionEnter is called when this collider/rigidbody has begun touching another rigidbody/collider.
+    /// </summary>
+    /// <param name="collision">The collision data associated with this event.</param>
+    public void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log($"Building {id} OnCollisionEnter()");
+    }
+
+    /// <summary>
+    /// OnCollisionExit is called when this collider/rigidbody has stopped touching another rigidbody/collider.
+    /// </summary>
+    /// <param name="collision">The collision data associated with this event.</param>
+    public void OnCollisionExit(Collision collision)
+    {
+        Debug.Log($"Building {id} OnCollisionExit()");
+    }
+
+    /// <summary>
+    /// OnCollisionStay is called once per frame for every collider/rigidbody that is touching rigidbody/collider.
+    /// </summary>
+    /// <param name="collision">The collision data associated with this event.</param>
+    public void OnCollisionStay(Collision collision)
+    {
+        Debug.Log($"Building {id} OnCollisionStay()");
+    }
+
+    /// <summary>
+    /// When a GameObject collides with another GameObject, Unity calls OnTriggerEnter.
+    /// </summary>
+    /// <param name="other">The other Collider involved in this collision.</param>
+    public void OnTriggerEnter(Collider other)
+    {
+        Debug.Log($"Building {id} OnTriggerEnter()");
+    }
+
+    /// <summary>
+    /// OnTriggerExit is called when the Collider other has stopped touching the trigger.
+    /// </summary>
+    /// <param name="other">The other Collider involved in this collision.</param>
+    public void OnTriggerExit(Collider other)
+    {
+        Debug.Log($"Building {id} OnTriggerExit()");
+    }
+
+    /// <summary>
+    /// OnTriggerStay is called almost all the frames for every Collider other that is touching the trigger. The function is on the physics timer so it won't necessarily run every frame.
+    /// </summary>
+    /// <param name="other">The other Collider involved in this collision.</param>
+    public void OnTriggerStay(Collider other)
+    {
+        Debug.Log($"Building {id} OnTriggerStay()");
     }
 
     //Utility Methods--------------------------------------------------------------------------------------------------------------------------------  
