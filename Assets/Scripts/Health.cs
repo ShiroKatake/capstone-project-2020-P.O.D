@@ -27,7 +27,7 @@ public class Health : MonoBehaviour
     /// <summary>
     /// Checks if health is 0 or less.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Is the object this health class is a component of dead?</returns>
     public bool IsDead()
     {
         return health <= 0;

@@ -11,6 +11,9 @@ public class Building : MonoBehaviour, ICollisionListener
 
     //Serialized Fields----------------------------------------------------------------------------                                                    
 
+    [Header("ID")]
+    [SerializeField] private int id;
+
     [Header("Building Category")]
     [SerializeField] private EBuildingCategory buildingCategory;
     [SerializeField] private EBuilding buildingType;
@@ -20,11 +23,15 @@ public class Building : MonoBehaviour, ICollisionListener
     [SerializeField] private int powerConsumption;
     [SerializeField] private int waterConsumption;
 
-    [Header("Other Stats")]
-    [SerializeField] private int id;
+    [Header("Size")]
     [SerializeField] [Range(1, 3)] private int xSize;
     [SerializeField] [Range(1, 3)] private int zSize;
+
+    [Header("Building")]
     [SerializeField] private float buildTime;
+    [SerializeField] private float boingInterval;
+    [SerializeField] private float smallBoingMultiplier;
+    [SerializeField] private float largeBoingMultiplier;
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
@@ -40,6 +47,8 @@ public class Building : MonoBehaviour, ICollisionListener
     private Color solidColour;
     private Color errorColour;
     private bool colliding = false;
+    private Collider otherCollider = null;
+    private List<CollisionReporter> collisionReporters;
 
     //Other
     private bool placed = false;
@@ -153,6 +162,7 @@ public class Building : MonoBehaviour, ICollisionListener
         health = GetComponent<Health>();
         resourceCollector = GetComponent<ResourceCollector>();
         terraformer = GetComponent<Terraformer>();
+        collisionReporters = new List<CollisionReporter>(GetComponentsInChildren<CollisionReporter>());
 
         material = GetComponentInChildren<MeshRenderer>().material;
         solidColour = new Color(material.color.r, material.color.g, material.color.b, 1f);
@@ -188,55 +198,21 @@ public class Building : MonoBehaviour, ICollisionListener
         offsets["NW"] = new Vector3( xSize == 1 ? -1f   : xSize == 2 ? -1.5f : -2f, 0, zSize == 1 ? 1f    : zSize == 2 ? 1.5f  : 2f  );
     }
 
-    /// <summary>
-    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
-    /// Start() runs after Awake().
-    /// </summary>
-    //private void Start()
-    //{
-
-    //}
-
-    //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
-
-    /// <summary>
-    /// Update() is run every frame.
-    /// </summary>
-    //private void Update()
-    //{
-
-    //}
-
-    /// <summary>
-    /// FixedUpdate() is run at a fixed interval independant of framerate.
-    /// </summary>
-    //private void FixedUpdate()
-    //{
-
-    //}
-
-    //Recurring Methods (Update())------------------------------------------------------------------------------------------------------------------  
-
-
-
-    //Recurring Methods (FixedUpdate())--------------------------------------------------------------------------------------------------------------
-
-
-
     //Recurring Methods (Other)----------------------------------------------------------------------------------------------------------------------
 
+    /// <summary>
+    /// Handles a visual effect of the building rising from the ground when it's placed, before going "boing" and then triggering the public property Operational.
+    /// </summary>
     public IEnumerator Build()
     {
-        //TODO: switch from local scale to world scale? It doesn't go boing, although it does rise out of the ground well enough.
         Vector3 startPos = new Vector3(transform.position.x, -0.5f, transform.position.z);
         Vector3 endPos = new Vector3(transform.position.x, 0.5f, transform.position.z);
         float buildTimeElapsed = 0;
 
-        Vector3 normalScale = new Vector3(transform.localScale.x, transform.localScale.y, transform.localScale.z);
-        Vector3 smallScale = new Vector3(normalScale.x, normalScale.y, normalScale.z) * 0.8f;
-        Vector3 largeScale = new Vector3(normalScale.x, normalScale.y, normalScale.z) * 1.2f;
+        Vector3 normalScale = transform.localScale;
+        Vector3 smallScale = normalScale * smallBoingMultiplier;
+        Vector3 largeScale = normalScale * largeBoingMultiplier;
         float boingTimeElapsed = 0;
-        float boingTime = 0.1667f;
 
         while (buildTimeElapsed < buildTime)
         {
@@ -245,27 +221,30 @@ public class Building : MonoBehaviour, ICollisionListener
             yield return null;
         }
 
-        while (boingTimeElapsed < boingTime)
+        while (boingTimeElapsed < boingInterval)
         {
-            transform.localScale = Vector3.Lerp(normalScale, smallScale, boingTimeElapsed / boingTime);
+            boingTimeElapsed += Time.deltaTime;
+            transform.localScale = Vector3.Lerp(normalScale, smallScale, boingTimeElapsed / boingInterval);
             yield return null;
         }
 
-        boingTimeElapsed -= boingTime;
+        boingTimeElapsed -= boingInterval;
 
-        while (boingTimeElapsed < boingTime)
+        while (boingTimeElapsed < boingInterval)
         {
-            transform.localScale = Vector3.Lerp(smallScale, largeScale, boingTimeElapsed / boingTime);
+            boingTimeElapsed += Time.deltaTime;
+            transform.localScale = Vector3.Lerp(smallScale, largeScale, boingTimeElapsed / boingInterval);
             yield return null;
         }
 
-        boingTimeElapsed -= boingTime;
+        boingTimeElapsed -= boingInterval;
 
-        while (boingTimeElapsed < boingTime)
+        while (boingTimeElapsed < boingInterval)
         {
-            transform.localScale = Vector3.Lerp(largeScale, normalScale, boingTimeElapsed / boingTime);
+            boingTimeElapsed += Time.deltaTime;
+            transform.localScale = Vector3.Lerp(largeScale, normalScale, boingTimeElapsed / boingInterval);
             yield return null;
-        }
+        }       
 
         Operational = true; //Using property to trigger activation of any resource collector component attached.
     }
@@ -322,8 +301,16 @@ public class Building : MonoBehaviour, ICollisionListener
     {
         if (!placed)
         {
-            if (colliding)
+            //Weird quirk of destroying one object and then instantating another and moving it to the same position: it triggers boths' OnTriggerEnter(),
+            //even though one doesn't exist, and then the other doesn't have OnTriggerExit() triggered in the next frame. This checks for the existence of
+            //the other collider and corrects the value of colliding if the other collider no longer exists.
+            if (colliding && otherCollider == null)
             {
+                colliding = false;
+            }
+
+            if (colliding)
+            {              
                 if (material.color != errorColour)
                 {
                     material.color = errorColour;
@@ -346,9 +333,9 @@ public class Building : MonoBehaviour, ICollisionListener
     }
 
     /// <summary>
-    /// 
+    /// Places the building, using up the appropriate resources, positioning and solidifying it, and triggering Build().
     /// </summary>
-    /// <param name="position"></param>
+    /// <param name="position">Where the building is to be placed.</param>
     public void Place(Vector3 position)
     {
         ResourceController.Instance.Ore -= oreCost;
@@ -357,6 +344,13 @@ public class Building : MonoBehaviour, ICollisionListener
         transform.position = position;
         material.color = solidColour;
         placed = true;
+
+        foreach (CollisionReporter c in collisionReporters)
+        {
+            c.ReportOnTriggerEnter = false;
+            c.ReportOnTriggerExit = false;
+        }
+
         StartCoroutine(Build());
     }
 
@@ -395,8 +389,9 @@ public class Building : MonoBehaviour, ICollisionListener
     /// <param name="other">The other Collider involved in this collision.</param>
     public void OnTriggerEnter(Collider other)
     {
-        //Debug.Log($"Building {id} OnTriggerEnter()");
+        //Debug.Log($"Building {id} OnTriggerEnter(). Other is {other}");
         colliding = true;
+        otherCollider = other;
     }
 
     /// <summary>
@@ -405,8 +400,9 @@ public class Building : MonoBehaviour, ICollisionListener
     /// <param name="other">The other Collider involved in this collision.</param>
     public void OnTriggerExit(Collider other)
     {
-        //Debug.Log($"Building {id} OnTriggerExit()");
+        //Debug.Log($"Building {id} OnTriggerExit(). Other is {other}");
         colliding = false;
+        otherCollider = null;
     }
 
     /// <summary>
@@ -417,8 +413,4 @@ public class Building : MonoBehaviour, ICollisionListener
     {
         Debug.Log($"Building {id} OnTriggerStay()");
     }
-
-    //Utility Methods--------------------------------------------------------------------------------------------------------------------------------  
-
-
 }

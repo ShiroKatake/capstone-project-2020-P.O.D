@@ -11,16 +11,48 @@ public class CollisionReporter : MonoBehaviour
 
     //Serialized Fields----------------------------------------------------------------------------
 
-    [SerializeField] private bool onCollisionEnter;
-    [SerializeField] private bool onCollisionExit;
-    [SerializeField] private bool onCollisionStay;
-    [SerializeField] private bool onTriggerEnter;
-    [SerializeField] private bool onTriggerExit;
-    [SerializeField] private bool onTriggerStay;
+    [SerializeField] private bool reportOnCollisionEnter;
+    [SerializeField] private bool reportOnCollisionExit;
+    [SerializeField] private bool reportOnCollisionStay;
+    [SerializeField] private bool reportOnTriggerEnter;
+    [SerializeField] private bool reportOnTriggerExit;
+    [SerializeField] private bool reportOnTriggerStay;
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
     private List<ICollisionListener> collisionListeners;
+
+    //Public Properties------------------------------------------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Should CollisionReporter report OnCollisionEnter messages to its ICollisionListeners?
+    /// </summary>
+    public bool ReportOnCollisionEnter { get => reportOnCollisionEnter; set => reportOnCollisionExit = value; }
+
+    /// <summary>
+    /// Should CollisionReporter report OnCollisionExit messages to its ICollisionListeners?
+    /// </summary>
+    public bool ReportOnCollisionExit { get => reportOnCollisionExit; set => reportOnCollisionExit = value; }
+
+    /// <summary>
+    /// Should CollisionReporter report OnCollisionStay messages to its ICollisionListeners?
+    /// </summary>
+    public bool ReportOnCollisionStay { get => reportOnCollisionStay; set => reportOnCollisionStay = value; }
+
+    /// <summary>
+    /// Should CollisionReporter report OnTriggerEnter messages to its ICollisionListeners?
+    /// </summary>
+    public bool ReportOnTriggerEnter { get => reportOnTriggerEnter; set => reportOnTriggerEnter = value; }
+
+    /// <summary>
+    /// Should CollisionReporter report OnTriggerExit messages to its ICollisionListeners?
+    /// </summary>
+    public bool ReportOnTriggerExit { get => reportOnTriggerExit; set => reportOnTriggerExit = value; }
+
+    /// <summary>
+    /// Should CollisionReporter report OnTriggerStay messages to its ICollisionListeners?
+    /// </summary>
+    public bool ReportOnTriggerStay { get => reportOnTriggerStay; set => reportOnTriggerStay = value; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -41,9 +73,9 @@ public class CollisionReporter : MonoBehaviour
     /// <param name="collision">The collision data associated with this event.</param>
     void OnCollisionEnter(Collision collision)
     {
-        if (onCollisionEnter)
+        if (reportOnCollisionEnter)
         {
-            Debug.Log("CollisionReporter.OnCollisionEnter()");
+            //Debug.Log("CollisionReporter.OnCollisionEnter()");
             foreach (ICollisionListener l in collisionListeners)
             {
                 l.OnCollisionEnter(collision);
@@ -57,9 +89,9 @@ public class CollisionReporter : MonoBehaviour
     /// <param name="collision">The collision data associated with this event.</param>
     void OnCollisionExit(Collision collision)
     {
-        if (onCollisionExit)
+        if (reportOnCollisionExit)
         {
-            Debug.Log("CollisionReporter.OnCollisionExit()");
+            //Debug.Log("CollisionReporter.OnCollisionExit()");
             foreach (ICollisionListener l in collisionListeners)
             {
                 l.OnCollisionExit(collision);
@@ -73,9 +105,9 @@ public class CollisionReporter : MonoBehaviour
     /// <param name="collision">The collision data associated with this event.</param>
     void OnCollisionStay(Collision collision)
     {
-        if (onCollisionStay)
+        if (reportOnCollisionStay)
         {
-            Debug.Log("CollisionReporter.OnCollisionStay()");
+            //Debug.Log("CollisionReporter.OnCollisionStay()");
             foreach (ICollisionListener l in collisionListeners)
             {
                 l.OnCollisionStay(collision);
@@ -89,9 +121,9 @@ public class CollisionReporter : MonoBehaviour
     /// <param name="other">The other Collider involved in this collision.</param>
     void OnTriggerEnter(Collider other)
     {
-        if (onTriggerEnter)
+        if (reportOnTriggerEnter)
         {
-            Debug.Log("CollisionReporter.OnTriggerEnter()");
+            //Debug.Log("CollisionReporter.OnTriggerEnter()");
             foreach (ICollisionListener l in collisionListeners)
             {
                 l.OnTriggerEnter(other);
@@ -105,9 +137,9 @@ public class CollisionReporter : MonoBehaviour
     /// <param name="other">The other Collider involved in this collision.</param>
     void OnTriggerExit(Collider other)
     {
-        if (onTriggerExit)
+        if (reportOnTriggerExit)
         {
-            Debug.Log("CollisionReporter.OnTriggerExit()");
+            //Debug.Log("CollisionReporter.OnTriggerExit()");
             foreach (ICollisionListener l in collisionListeners)
             {
                 l.OnTriggerExit(other);
@@ -121,9 +153,9 @@ public class CollisionReporter : MonoBehaviour
     /// <param name="other">The other Collider involved in this collision.</param>
     void OnTriggerStay(Collider other)
     {
-        if (onTriggerStay)
+        if (reportOnTriggerStay)
         {
-            Debug.Log("CollisionReporter.OnTriggerStay()");
+            //Debug.Log("CollisionReporter.OnTriggerStay()");
             foreach (ICollisionListener l in collisionListeners)
             {
                 l.OnTriggerStay(other);

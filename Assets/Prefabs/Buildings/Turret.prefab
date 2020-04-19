@@ -123,12 +123,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 122c182bf36096746af88abc3d48308c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onCollisionEnter: 0
-  onCollisionExit: 0
-  onCollisionStay: 0
-  onTriggerEnter: 1
-  onTriggerExit: 1
-  onTriggerStay: 0
+  reportOnCollisionEnter: 0
+  reportOnCollisionExit: 0
+  reportOnCollisionStay: 0
+  reportOnTriggerEnter: 1
+  reportOnTriggerExit: 1
+  reportOnTriggerStay: 0
 --- !u!1 &2740937295730065718
 GameObject:
   m_ObjectHideFlags: 0
@@ -174,15 +174,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fc4c47b30ac0644e9720df61d64f2ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  id: 0
   buildingCategory: 3
   buildingType: 8
   oreCost: 1
   powerConsumption: 2
   waterConsumption: 2
-  id: 0
   xSize: 1
   zSize: 1
   buildTime: 10
+  boingInterval: 0.1667
+  smallBoingMultiplier: 0.8
+  largeBoingMultiplier: 1.2
   operational: 0
 --- !u!114 &1219818938998714957
 MonoBehaviour:
