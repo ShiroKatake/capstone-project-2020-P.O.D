@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -224,7 +225,50 @@ public class Building : MonoBehaviour, ICollisionListener
 
     //Recurring Methods (Other)----------------------------------------------------------------------------------------------------------------------
 
+    public IEnumerator Build()
+    {
+        //TODO: switch from local scale to world scale? It doesn't go boing, although it does rise out of the ground well enough.
+        Vector3 startPos = new Vector3(transform.position.x, -0.5f, transform.position.z);
+        Vector3 endPos = new Vector3(transform.position.x, 0.5f, transform.position.z);
+        float buildTimeElapsed = 0;
 
+        Vector3 normalScale = new Vector3(transform.localScale.x, transform.localScale.y, transform.localScale.z);
+        Vector3 smallScale = new Vector3(normalScale.x, normalScale.y, normalScale.z) * 0.8f;
+        Vector3 largeScale = new Vector3(normalScale.x, normalScale.y, normalScale.z) * 1.2f;
+        float boingTimeElapsed = 0;
+        float boingTime = 0.1667f;
+
+        while (buildTimeElapsed < buildTime)
+        {
+            buildTimeElapsed += Time.deltaTime;
+            transform.position = Vector3.Lerp(startPos, endPos, buildTimeElapsed / buildTime);
+            yield return null;
+        }
+
+        while (boingTimeElapsed < boingTime)
+        {
+            transform.localScale = Vector3.Lerp(normalScale, smallScale, boingTimeElapsed / boingTime);
+            yield return null;
+        }
+
+        boingTimeElapsed -= boingTime;
+
+        while (boingTimeElapsed < boingTime)
+        {
+            transform.localScale = Vector3.Lerp(smallScale, largeScale, boingTimeElapsed / boingTime);
+            yield return null;
+        }
+
+        boingTimeElapsed -= boingTime;
+
+        while (boingTimeElapsed < boingTime)
+        {
+            transform.localScale = Vector3.Lerp(largeScale, normalScale, boingTimeElapsed / boingTime);
+            yield return null;
+        }
+
+        Operational = true; //Using property to trigger activation of any resource collector component attached.
+    }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
@@ -313,7 +357,7 @@ public class Building : MonoBehaviour, ICollisionListener
         transform.position = position;
         material.color = solidColour;
         placed = true;
-        Operational = true; //Using property to trigger activation of any resource collector component attached.
+        StartCoroutine(Build());
     }
 
     //ICollisionListener Triggered Methods---------------------------------------------------------
