@@ -243,7 +243,7 @@ public class Player : MonoBehaviour
                 }                
             }
 
-            bool collision = heldBuilding.CheckForCollision();
+            bool collision = heldBuilding.CollisionUpdate();
 
             //Place it or cancel building it
             if (placeBuilding && ResourceController.Instance.Ore >= heldBuilding.OreCost && !collision)

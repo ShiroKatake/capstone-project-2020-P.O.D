@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 1778988679635676560}
   - component: {fileID: 27381021119241185}
   m_Layer: 0
-  m_Name: Cube (4)
+  m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -123,6 +123,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 122c182bf36096746af88abc3d48308c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onCollisionEnter: 0
+  onCollisionExit: 0
+  onCollisionStay: 0
+  onTriggerEnter: 1
+  onTriggerExit: 1
+  onTriggerStay: 0
 --- !u!1 &2740937295730065718
 GameObject:
   m_ObjectHideFlags: 0

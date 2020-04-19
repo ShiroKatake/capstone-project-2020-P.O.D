@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 403112267500756665}
   - component: {fileID: 403112267500756664}
   - component: {fileID: 403112267500756671}
-  - component: {fileID: 403112267500756670}
+  - component: {fileID: 1960391120923663085}
   m_Layer: 0
   m_Name: DroneModel
   m_TagString: Untagged
@@ -82,8 +82,8 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!136 &403112267500756670
-CapsuleCollider:
+--- !u!64 &1960391120923663085
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -92,10 +92,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.7554445
-  m_Height: 1.6297406
-  m_Direction: 1
-  m_Center: {x: 0.31638455, y: 0.28244737, z: 0.44851398}
+  serializedVersion: 3
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4057577946846465200, guid: 673544f48fcd75e41b3f0cf83cdc3092, type: 3}
 --- !u!1 &403112268726757337
 GameObject:
   m_ObjectHideFlags: 0

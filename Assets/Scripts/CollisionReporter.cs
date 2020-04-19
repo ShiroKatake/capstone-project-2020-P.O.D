@@ -9,9 +9,17 @@ public class CollisionReporter : MonoBehaviour
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
+    //Serialized Fields----------------------------------------------------------------------------
+
+    [SerializeField] private bool onCollisionEnter;
+    [SerializeField] private bool onCollisionExit;
+    [SerializeField] private bool onCollisionStay;
+    [SerializeField] private bool onTriggerEnter;
+    [SerializeField] private bool onTriggerExit;
+    [SerializeField] private bool onTriggerStay;
+
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
-    private Collider collider;
     private List<ICollisionListener> collisionListeners;
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
@@ -22,9 +30,7 @@ public class CollisionReporter : MonoBehaviour
     /// </summary>
     private void Awake()
     {
-        collider = GetComponent<Collider>();
         collisionListeners = new List<ICollisionListener>(GetComponentsInParent<ICollisionListener>());
-        Debug.Log($"CollisionReporter found {collisionListeners.Count} ICollisionListeners.");
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
@@ -35,10 +41,13 @@ public class CollisionReporter : MonoBehaviour
     /// <param name="collision">The collision data associated with this event.</param>
     void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("CollisionReporter.OnCollisionEnter()");
-        foreach (ICollisionListener l in collisionListeners)
+        if (onCollisionEnter)
         {
-            l.OnCollisionEnter(collision);
+            Debug.Log("CollisionReporter.OnCollisionEnter()");
+            foreach (ICollisionListener l in collisionListeners)
+            {
+                l.OnCollisionEnter(collision);
+            }
         }
     }
 
@@ -48,10 +57,13 @@ public class CollisionReporter : MonoBehaviour
     /// <param name="collision">The collision data associated with this event.</param>
     void OnCollisionExit(Collision collision)
     {
-        Debug.Log("CollisionReporter.OnCollisionExit()");
-        foreach (ICollisionListener l in collisionListeners)
+        if (onCollisionExit)
         {
-            l.OnCollisionExit(collision);
+            Debug.Log("CollisionReporter.OnCollisionExit()");
+            foreach (ICollisionListener l in collisionListeners)
+            {
+                l.OnCollisionExit(collision);
+            }
         }
     }
 
@@ -61,10 +73,13 @@ public class CollisionReporter : MonoBehaviour
     /// <param name="collision">The collision data associated with this event.</param>
     void OnCollisionStay(Collision collision)
     {
-        Debug.Log("CollisionReporter.OnCollisionStay()");
-        foreach (ICollisionListener l in collisionListeners)
+        if (onCollisionStay)
         {
-            l.OnCollisionStay(collision);
+            Debug.Log("CollisionReporter.OnCollisionStay()");
+            foreach (ICollisionListener l in collisionListeners)
+            {
+                l.OnCollisionStay(collision);
+            }
         }
     }
 
@@ -74,10 +89,13 @@ public class CollisionReporter : MonoBehaviour
     /// <param name="other">The other Collider involved in this collision.</param>
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log("CollisionReporter.OnTriggerEnter()");
-        foreach (ICollisionListener l in collisionListeners)
+        if (onTriggerEnter)
         {
-            l.OnTriggerEnter(other);
+            Debug.Log("CollisionReporter.OnTriggerEnter()");
+            foreach (ICollisionListener l in collisionListeners)
+            {
+                l.OnTriggerEnter(other);
+            }
         }
     }
 
@@ -87,10 +105,13 @@ public class CollisionReporter : MonoBehaviour
     /// <param name="other">The other Collider involved in this collision.</param>
     void OnTriggerExit(Collider other)
     {
-        Debug.Log("CollisionReporter.OnTriggerExit()");
-        foreach (ICollisionListener l in collisionListeners)
+        if (onTriggerExit)
         {
-            l.OnTriggerExit(other);
+            Debug.Log("CollisionReporter.OnTriggerExit()");
+            foreach (ICollisionListener l in collisionListeners)
+            {
+                l.OnTriggerExit(other);
+            }
         }
     }
 
@@ -100,10 +121,13 @@ public class CollisionReporter : MonoBehaviour
     /// <param name="other">The other Collider involved in this collision.</param>
     void OnTriggerStay(Collider other)
     {
-        Debug.Log("CollisionReporter.OnTriggerStay()");
-        foreach (ICollisionListener l in collisionListeners)
+        if (onTriggerStay)
         {
-            l.OnTriggerStay(other);
+            Debug.Log("CollisionReporter.OnTriggerStay()");
+            foreach (ICollisionListener l in collisionListeners)
+            {
+                l.OnTriggerStay(other);
+            }
         }
     }
 }

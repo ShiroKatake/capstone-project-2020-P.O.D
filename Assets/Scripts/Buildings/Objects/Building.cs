@@ -28,7 +28,6 @@ public class Building : MonoBehaviour, ICollisionListener
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
     //Components
-    private Collider collider;
     private Health health;
     private ResourceCollector resourceCollector;
     private Terraformer terraformer;
@@ -39,8 +38,10 @@ public class Building : MonoBehaviour, ICollisionListener
     private Color translucentColour;
     private Color solidColour;
     private Color errorColour;
+    private bool colliding = false;
 
     //Other
+    private bool placed = false;
     [SerializeField] private bool operational = false;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
@@ -148,7 +149,6 @@ public class Building : MonoBehaviour, ICollisionListener
     /// </summary>
     private void Awake()
     {
-        collider = GetComponentInChildren<Collider>();
         health = GetComponent<Health>();
         resourceCollector = GetComponent<ResourceCollector>();
         terraformer = GetComponent<Terraformer>();
@@ -270,28 +270,35 @@ public class Building : MonoBehaviour, ICollisionListener
         }
     }
 
-    public bool CheckForCollision()
+    /// <summary>
+    /// Checks if the building is colliding while being placed, and updates colour appropriately.
+    /// </summary>
+    /// <returns>Is this building colliding with something?</returns>
+    public bool CollisionUpdate()
     {
-        bool collision = false;
-
-        //TODO: check for collision
-
-        if (collision)
+        if (!placed)
         {
-            if (material.color != errorColour)
+            if (colliding)
             {
-                material.color = errorColour;
+                if (material.color != errorColour)
+                {
+                    material.color = errorColour;
+                }
             }
+            else
+            {
+                if (material.color != translucentColour)
+                {
+                    material.color = translucentColour;
+                }
+            }        
         }
         else
         {
-            if (material.color != translucentColour)
-            {
-                material.color = translucentColour;
-            }
+            Debug.Log($"Building {id} ran CollisionsUpdate(), though it's already placed.");
         }
 
-        return collision;
+        return colliding;
     }
 
     /// <summary>
@@ -305,6 +312,7 @@ public class Building : MonoBehaviour, ICollisionListener
         ResourceController.Instance.WaterSupply -= waterConsumption;
         transform.position = position;
         material.color = solidColour;
+        placed = true;
         Operational = true; //Using property to trigger activation of any resource collector component attached.
     }
 
@@ -343,7 +351,8 @@ public class Building : MonoBehaviour, ICollisionListener
     /// <param name="other">The other Collider involved in this collision.</param>
     public void OnTriggerEnter(Collider other)
     {
-        Debug.Log($"Building {id} OnTriggerEnter()");
+        //Debug.Log($"Building {id} OnTriggerEnter()");
+        colliding = true;
     }
 
     /// <summary>
@@ -352,7 +361,8 @@ public class Building : MonoBehaviour, ICollisionListener
     /// <param name="other">The other Collider involved in this collision.</param>
     public void OnTriggerExit(Collider other)
     {
-        Debug.Log($"Building {id} OnTriggerExit()");
+        //Debug.Log($"Building {id} OnTriggerExit()");
+        colliding = false;
     }
 
     /// <summary>
