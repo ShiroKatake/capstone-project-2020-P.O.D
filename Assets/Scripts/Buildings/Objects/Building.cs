@@ -37,6 +37,7 @@ public class Building : MonoBehaviour, ICollisionListener
 
     //Components
     private Health health;
+    private MeshRenderer renderer;
     private ResourceCollector resourceCollector;
     private Terraformer terraformer;
 
@@ -160,6 +161,7 @@ public class Building : MonoBehaviour, ICollisionListener
     private void Awake()
     {
         health = GetComponent<Health>();
+        renderer = GetComponentInChildren<MeshRenderer>();
         resourceCollector = GetComponent<ResourceCollector>();
         terraformer = GetComponent<Terraformer>();
         collisionReporters = new List<CollisionReporter>(GetComponentsInChildren<CollisionReporter>());
@@ -205,8 +207,8 @@ public class Building : MonoBehaviour, ICollisionListener
     /// </summary>
     public IEnumerator Build()
     {
-        Vector3 startPos = new Vector3(transform.position.x, -0.5f, transform.position.z);
-        Vector3 endPos = new Vector3(transform.position.x, 0.5f, transform.position.z);
+        Vector3 startPos = new Vector3(0, -1, 0);
+        Vector3 endPos = Vector3.zero;
         float buildTimeElapsed = 0;
 
         Vector3 normalScale = transform.localScale;
@@ -217,7 +219,7 @@ public class Building : MonoBehaviour, ICollisionListener
         while (buildTimeElapsed < buildTime)
         {
             buildTimeElapsed += Time.deltaTime;
-            transform.position = Vector3.Lerp(startPos, endPos, buildTimeElapsed / buildTime);
+            renderer.transform.localPosition = Vector3.Lerp(startPos, endPos, buildTimeElapsed / buildTime);
             yield return null;
         }
 

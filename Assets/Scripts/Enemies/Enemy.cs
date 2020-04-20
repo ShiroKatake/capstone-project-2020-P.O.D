@@ -74,7 +74,7 @@ public class Enemy : MonoBehaviour
         //if (EnvironmentalController.Instance.Terraformers.Count == 0)
         //{
             target = BuildingController.Instance.CryoEgg.transform;
-            targetRadius = target.GetComponent<SphereCollider>().radius;
+            targetRadius = target.GetComponentInChildren<SphereCollider>().radius;
         //}
         //else if (EnvironmentalController.Instance.Terraformers.Count == 1)
         //{
