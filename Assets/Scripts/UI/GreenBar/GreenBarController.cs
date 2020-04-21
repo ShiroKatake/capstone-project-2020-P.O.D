@@ -30,6 +30,6 @@ public class GreenBarController : MonoBehaviour
 
     void ChangeGreen(int val){
         curVal += val;
-        greenBar.SetGreenBarValue(curVal);
+        greenBar.setGreenBarValue(curVal);
     }
 }
