@@ -11,7 +11,7 @@ public class GreenBar : MonoBehaviour
         slider.maxValue = value;
         slider.value = value;
     }
-    public void SetGreenBarValue(int value){
+    public void setGreenBarValue(int value){
         slider.value = value;
     }
 }
