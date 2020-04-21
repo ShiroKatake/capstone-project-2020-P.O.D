@@ -2818,6 +2818,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 69806912}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &70460043 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3795931554327447064, guid: 5d3b6c79b977dc84f8a0ef83d26f7819,
+    type: 3}
+  m_PrefabInstance: {fileID: 2632974256811651307}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0223bfc7eeea004bbab78e371866f6b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &71519994
 GameObject:
   m_ObjectHideFlags: 0
@@ -30634,6 +30646,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 900579339}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &908039208 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7558997169058601508, guid: 5d3b6c79b977dc84f8a0ef83d26f7819,
+    type: 3}
+  m_PrefabInstance: {fileID: 2632974256811651307}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0223bfc7eeea004bbab78e371866f6b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &909447959
 GameObject:
   m_ObjectHideFlags: 0
@@ -53549,7 +53573,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c1df4cf0eb94a245b7cfc71ef1e06b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  greenBar: {fileID: 519088831}
+  greenBarPrimary: {fileID: 519088831}
+  greenBarSmall1: {fileID: 908039208}
+  greenBarSmall2: {fileID: 1833301386}
+  greenBarSmall3: {fileID: 70460043}
 --- !u!114 &1623106995
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -59919,6 +59946,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1832366033}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1833301386 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8654787094050331822, guid: 5d3b6c79b977dc84f8a0ef83d26f7819,
+    type: 3}
+  m_PrefabInstance: {fileID: 2632974256811651307}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0223bfc7eeea004bbab78e371866f6b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1833644531
 GameObject:
   m_ObjectHideFlags: 0
@@ -70526,6 +70565,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3795931554391265660, guid: 5d3b6c79b977dc84f8a0ef83d26f7819,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3795931554391265660, guid: 5d3b6c79b977dc84f8a0ef83d26f7819,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6117938633069169344, guid: 5d3b6c79b977dc84f8a0ef83d26f7819,
+        type: 3}
+      propertyPath: m_Name
+      value: GreenBarPrimary
+      objectReference: {fileID: 0}
     - target: {fileID: 6117938633407749542, guid: 5d3b6c79b977dc84f8a0ef83d26f7819,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -70645,6 +70699,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 7558997168585542976, guid: 5d3b6c79b977dc84f8a0ef83d26f7819,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7558997168585542976, guid: 5d3b6c79b977dc84f8a0ef83d26f7819,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8654787094257011658, guid: 5d3b6c79b977dc84f8a0ef83d26f7819,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8654787094257011658, guid: 5d3b6c79b977dc84f8a0ef83d26f7819,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5d3b6c79b977dc84f8a0ef83d26f7819, type: 3}
