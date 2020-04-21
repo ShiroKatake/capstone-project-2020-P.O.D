@@ -12,7 +12,7 @@ public class GreenBarController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        greenBar.SetGreenBarValue(curVal);
+        greenBar.setGreenBarValue(curVal);
         greenBar.setMaxBarValue(barVal);
     }
 
