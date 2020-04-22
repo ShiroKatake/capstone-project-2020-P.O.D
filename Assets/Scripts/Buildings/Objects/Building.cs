@@ -5,11 +5,14 @@ using UnityEngine;
 /// <summary>
 /// A building placed by the player.
 /// </summary>
-public class Building : MonoBehaviour
+public class Building : MonoBehaviour, ICollisionListener
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
     //Serialized Fields----------------------------------------------------------------------------                                                    
+
+    [Header("ID")]
+    [SerializeField] private int id;
 
     [Header("Building Category")]
     [SerializeField] private EBuildingCategory buildingCategory;
@@ -17,22 +20,40 @@ public class Building : MonoBehaviour
 
     [Header("Resource Requirements")]
     [SerializeField] private int oreCost;
-    [SerializeField] private int powerUsage;
-    [SerializeField] private int waterUsage;
+    [SerializeField] private int powerConsumption;
+    [SerializeField] private int waterConsumption;
 
-    [Header("Other Stats")]
-    [SerializeField] private int id;
+    [Header("Size")]
     [SerializeField] [Range(1, 3)] private int xSize;
     [SerializeField] [Range(1, 3)] private int zSize;
-    [SerializeField] private float buildSpeed;
+
+    [Header("Building")]
+    [SerializeField] private float buildTime;
+    [SerializeField] private float boingInterval;
+    [SerializeField] private float smallBoingMultiplier;
+    [SerializeField] private float largeBoingMultiplier;
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
-    private BuildingBehaviour buildingBehaviour;
+    //Components
     private Health health;
+    private MeshRenderer renderer;
+    private ResourceCollector resourceCollector;
     private Terraformer terraformer;
 
+    //Positioning
     private Dictionary<string, Vector3> offsets;
+    private Material material;
+    private Color translucentColour;
+    private Color solidColour;
+    private Color errorColour;
+    private bool colliding = false;
+    private Collider otherCollider = null;
+    private List<CollisionReporter> collisionReporters;
+
+    //Other
+    private bool placed = false;
+    [SerializeField] private bool operational = false;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -49,14 +70,19 @@ public class Building : MonoBehaviour
     public EBuilding BuildingType { get => buildingType; }     
     
     /// <summary>
-    /// How quickly this building builds itself when the player places it in the scene.
+    /// How long this building takes to builds itself when the player places it in the scene.
     /// </summary>
-    public float BuildSpeed { get => buildSpeed; }
+    public float BuildTime { get => buildTime; }
 
     /// <summary>
     /// The Building's Health component.
     /// </summary>
     public Health Health { get => health; }
+
+    /// <summary>
+    /// The Building's unique ID number. Should only be set in BuildingFactory.
+    /// </summary>
+    public int Id { get => id; set => id = value; }
 
     /// <summary>
     /// How much ore it costs to build this building.
@@ -66,7 +92,12 @@ public class Building : MonoBehaviour
     /// <summary>
     /// How much power this building requires per second to function.
     /// </summary>
-    public int PowerUsage { get => powerUsage; }
+    public int PowerConsumption { get => powerConsumption; }
+
+    /// <summary>
+    /// The building's resource collector component, if it has one.
+    /// </summary>
+    public ResourceCollector ResourceCollector { get => resourceCollector; }
 
     /// <summary>
     /// The building's terraformer component, if it has one.
@@ -76,7 +107,7 @@ public class Building : MonoBehaviour
     /// <summary>
     /// How much water this building requires per second to function.
     /// </summary>
-    public int WaterUsage { get => waterUsage; }
+    public int WaterConsumption { get => waterConsumption; }
 
     /// <summary>
     /// How many squares this building occupies along the x-axis.
@@ -91,22 +122,32 @@ public class Building : MonoBehaviour
     //Complex Public Properties--------------------------------------------------------------------                                                    
 
     /// <summary>
-    /// The Building's unique ID number. Should only be set in BuildingFactory.
+    /// Whether or not the building is operational and doing its job. When set, also triggers any appropriate resource collector state changes.
     /// </summary>
-    public int Id
+    public bool Operational
     {
         get
         {
-            return id;
+            return operational;
         }
 
         set
         {
-            id = value;
-            
-            if (terraformer != null)
+            if (operational != value)
             {
-                terraformer.BuildingId = id;
+                operational = value;
+
+                if (resourceCollector != null)
+                {
+                    if (operational)
+                    {
+                        resourceCollector.Activate();
+                    }
+                    else
+                    {
+                        resourceCollector.Deactivate();
+                    }
+                }
             }
         }
     }
@@ -120,7 +161,15 @@ public class Building : MonoBehaviour
     private void Awake()
     {
         health = GetComponent<Health>();
+        renderer = GetComponentInChildren<MeshRenderer>();
+        resourceCollector = GetComponent<ResourceCollector>();
         terraformer = GetComponent<Terraformer>();
+        collisionReporters = new List<CollisionReporter>(GetComponentsInChildren<CollisionReporter>());
+
+        material = GetComponentInChildren<MeshRenderer>().material;
+        solidColour = new Color(material.color.r, material.color.g, material.color.b, 1f);
+        translucentColour = new Color(solidColour.r, solidColour.g, solidColour.b, 0.5f);
+        errorColour = new Color(0.5f, 0.5f, 0.5f, 0.5f); //Gray
 
         if (xSize < 1 || xSize > 3)
         {
@@ -151,46 +200,60 @@ public class Building : MonoBehaviour
         offsets["NW"] = new Vector3( xSize == 1 ? -1f   : xSize == 2 ? -1.5f : -2f, 0, zSize == 1 ? 1f    : zSize == 2 ? 1.5f  : 2f  );
     }
 
-    /// <summary>
-    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
-    /// Start() runs after Awake().
-    /// </summary>
-    //private void Start()
-    //{
-
-    //}
-
-    //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
-
-    /// <summary>
-    /// Update() is run every frame.
-    /// </summary>
-    //private void Update()
-    //{
-
-    //}
-
-    /// <summary>
-    /// FixedUpdate() is run at a fixed interval independant of framerate.
-    /// </summary>
-    //private void FixedUpdate()
-    //{
-
-    //}
-
-    //Recurring Methods (Update())------------------------------------------------------------------------------------------------------------------  
-
-
-
-    //Recurring Methods (FixedUpdate())--------------------------------------------------------------------------------------------------------------
-
-
-
     //Recurring Methods (Other)----------------------------------------------------------------------------------------------------------------------
 
+    /// <summary>
+    /// Handles a visual effect of the building rising from the ground when it's placed, before going "boing" and then triggering the public property Operational.
+    /// </summary>
+    public IEnumerator Build()
+    {
+        Vector3 startPos = new Vector3(0, -1, 0);
+        Vector3 endPos = Vector3.zero;
+        float buildTimeElapsed = 0;
 
+        Vector3 normalScale = transform.localScale;
+        Vector3 smallScale = normalScale * smallBoingMultiplier;
+        Vector3 largeScale = normalScale * largeBoingMultiplier;
+        float boingTimeElapsed = 0;
+
+        while (buildTimeElapsed < buildTime)
+        {
+            buildTimeElapsed += Time.deltaTime;
+            renderer.transform.localPosition = Vector3.Lerp(startPos, endPos, buildTimeElapsed / buildTime);
+            yield return null;
+        }
+
+        while (boingTimeElapsed < boingInterval)
+        {
+            boingTimeElapsed += Time.deltaTime;
+            transform.localScale = Vector3.Lerp(normalScale, smallScale, boingTimeElapsed / boingInterval);
+            yield return null;
+        }
+
+        boingTimeElapsed -= boingInterval;
+
+        while (boingTimeElapsed < boingInterval)
+        {
+            boingTimeElapsed += Time.deltaTime;
+            transform.localScale = Vector3.Lerp(smallScale, largeScale, boingTimeElapsed / boingInterval);
+            yield return null;
+        }
+
+        boingTimeElapsed -= boingInterval;
+
+        while (boingTimeElapsed < boingInterval)
+        {
+            boingTimeElapsed += Time.deltaTime;
+            transform.localScale = Vector3.Lerp(largeScale, normalScale, boingTimeElapsed / boingInterval);
+            yield return null;
+        }       
+
+        Operational = true; //Using property to trigger activation of any resource collector component attached.
+    }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
+
+    //Building Triggered Methods-------------------------------------------------------------------
 
     /// <summary>
     ///  Gets the offset appropriate at any angle for this building, given its xSize and zSize.
@@ -232,7 +295,124 @@ public class Building : MonoBehaviour
         }
     }
 
-    //Utility Methods--------------------------------------------------------------------------------------------------------------------------------  
+    /// <summary>
+    /// Checks if the building is colliding while being placed, and updates colour appropriately.
+    /// </summary>
+    /// <returns>Is this building colliding with something?</returns>
+    public bool CollisionUpdate()
+    {
+        if (!placed)
+        {
+            //Weird quirk of destroying one object and then instantating another and moving it to the same position: it triggers boths' OnTriggerEnter(),
+            //even though one doesn't exist, and then the other doesn't have OnTriggerExit() triggered in the next frame. This checks for the existence of
+            //the other collider and corrects the value of colliding if the other collider no longer exists.
+            if (colliding && otherCollider == null)
+            {
+                colliding = false;
+            }
 
+            if (colliding)
+            {              
+                if (material.color != errorColour)
+                {
+                    material.color = errorColour;
+                }
+            }
+            else
+            {
+                if (material.color != translucentColour)
+                {
+                    material.color = translucentColour;
+                }
+            }        
+        }
+        else
+        {
+            Debug.Log($"Building {id} ran CollisionsUpdate(), though it's already placed.");
+        }
 
+        return colliding;
+    }
+
+    /// <summary>
+    /// Places the building, using up the appropriate resources, positioning and solidifying it, and triggering Build().
+    /// </summary>
+    /// <param name="position">Where the building is to be placed.</param>
+    public void Place(Vector3 position)
+    {
+        ResourceController.Instance.Ore -= oreCost;
+        ResourceController.Instance.PowerSupply -= powerConsumption;
+        ResourceController.Instance.WaterSupply -= waterConsumption;
+        transform.position = position;
+        material.color = solidColour;
+        placed = true;
+
+        foreach (CollisionReporter c in collisionReporters)
+        {
+            c.ReportOnTriggerEnter = false;
+            c.ReportOnTriggerExit = false;
+        }
+
+        StartCoroutine(Build());
+    }
+
+    //ICollisionListener Triggered Methods---------------------------------------------------------
+
+    /// <summary>
+    /// OnCollisionEnter is called when this collider/rigidbody has begun touching another rigidbody/collider.
+    /// </summary>
+    /// <param name="collision">The collision data associated with this event.</param>
+    public void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log($"Building {id} OnCollisionEnter()");
+    }
+
+    /// <summary>
+    /// OnCollisionExit is called when this collider/rigidbody has stopped touching another rigidbody/collider.
+    /// </summary>
+    /// <param name="collision">The collision data associated with this event.</param>
+    public void OnCollisionExit(Collision collision)
+    {
+        Debug.Log($"Building {id} OnCollisionExit()");
+    }
+
+    /// <summary>
+    /// OnCollisionStay is called once per frame for every collider/rigidbody that is touching rigidbody/collider.
+    /// </summary>
+    /// <param name="collision">The collision data associated with this event.</param>
+    public void OnCollisionStay(Collision collision)
+    {
+        Debug.Log($"Building {id} OnCollisionStay()");
+    }
+
+    /// <summary>
+    /// When a GameObject collides with another GameObject, Unity calls OnTriggerEnter.
+    /// </summary>
+    /// <param name="other">The other Collider involved in this collision.</param>
+    public void OnTriggerEnter(Collider other)
+    {
+        //Debug.Log($"Building {id} OnTriggerEnter(). Other is {other}");
+        colliding = true;
+        otherCollider = other;
+    }
+
+    /// <summary>
+    /// OnTriggerExit is called when the Collider other has stopped touching the trigger.
+    /// </summary>
+    /// <param name="other">The other Collider involved in this collision.</param>
+    public void OnTriggerExit(Collider other)
+    {
+        //Debug.Log($"Building {id} OnTriggerExit(). Other is {other}");
+        colliding = false;
+        otherCollider = null;
+    }
+
+    /// <summary>
+    /// OnTriggerStay is called almost all the frames for every Collider other that is touching the trigger. The function is on the physics timer so it won't necessarily run every frame.
+    /// </summary>
+    /// <param name="other">The other Collider involved in this collision.</param>
+    public void OnTriggerStay(Collider other)
+    {
+        Debug.Log($"Building {id} OnTriggerStay()");
+    }
 }

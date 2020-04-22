@@ -1,0 +1,165 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8337738344923657300
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8337738344923657298}
+  - component: {fileID: 8337738344923657296}
+  - component: {fileID: 8337738344923657295}
+  - component: {fileID: 8337738344923657297}
+  - component: {fileID: 8337738344923657292}
+  - component: {fileID: 8337738344923657294}
+  - component: {fileID: 8337738344923657293}
+  - component: {fileID: 8337738344923657299}
+  - component: {fileID: 1182461914613764985}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8337738344923657298
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8337738344923657300}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.6611955, y: 0.17134714, z: 2.7717838}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8337738344923657296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8337738344923657300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3c05046c54acfd4f9708df36e0e81fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cryoEgg: {fileID: 0}
+--- !u!114 &8337738344923657295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8337738344923657300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d3aff46ccea6cf46a5548ffc2b50ebd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  solarPanelPrefab: {fileID: 7989155517478719925, guid: 24cf1029333088241ba2e0353577d9d1,
+    type: 3}
+  windTurbinePrefab: {fileID: 197265517754488293, guid: 4a5cc535ea56f774c95c7058de1b6d40,
+    type: 3}
+  waterDrillPrefab: {fileID: 6356630498027900237, guid: 2863a907b049ebd4b92f73a71635ec1d,
+    type: 3}
+  gasDiffuserPrefab: {fileID: 6057790016772902916, guid: a1ed15bf36ab48b499fe23ef5ceb8ca6,
+    type: 3}
+  humidifierPrefab: {fileID: 2427136214263755661, guid: 0332084ab57deef4aa60fa1089c3c8cb,
+    type: 3}
+  greenhousePrefab: {fileID: 9054559055595012424, guid: 588682734d3c4d347bd6ed96a5858e1a,
+    type: 3}
+  turretPrefab: {fileID: 276844957512759736, guid: fe3216872c494ae44b9d51b193f93c9d,
+    type: 3}
+--- !u!114 &8337738344923657297
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8337738344923657300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b339f3ae52348242844769182c55c03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8337738344923657292
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8337738344923657300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b7e2fda8e5699243a6ced0a90519911, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyPrefab: {fileID: 130242450852513669, guid: 65e2d9413bdfaa8499dd94fda9573c1c,
+    type: 3}
+  enemyPoolParent: {fileID: 0}
+--- !u!114 &8337738344923657294
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8337738344923657300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82548c590736cd2438ed6451685a0151, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  var: {fileID: 0}
+  terraformers: []
+--- !u!114 &8337738344923657293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8337738344923657300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c1df4cf0eb94a245b7cfc71ef1e06b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  greenBarPrimary: {fileID: 0}
+  greenBarSmall1: {fileID: 0}
+  greenBarSmall2: {fileID: 0}
+  greenBarSmall3: {fileID: 0}
+--- !u!114 &8337738344923657299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8337738344923657300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e45559ce62b3d72469b093e76e863f90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gamepad: 0
+  operatingSystem: 0
+--- !u!114 &1182461914613764985
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8337738344923657300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d131939d7065e54d8ad9015902b6b68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ore: 999999999
+  powerSupply: 999999999
+  waterSupply: 999999999

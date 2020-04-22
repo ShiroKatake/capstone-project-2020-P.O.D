@@ -49,7 +49,6 @@ public class Player : MonoBehaviour
     private bool cancelBuilding = false;
 
     //Laser Bolt Variables
-
     private bool shooting;
     private List<LaserBolt> laserBattery = new List<LaserBolt>();
 
@@ -228,7 +227,7 @@ public class Player : MonoBehaviour
                     pos = RawBuildingPositionToBuildingPosition(heldBuilding.XSize, heldBuilding.ZSize);
                 }
 
-                BuildingFactory.Instance.DestroyBuilding(heldBuilding);
+                BuildingFactory.Instance.DestroyBuilding(heldBuilding, false);
                 heldBuilding = BuildingFactory.Instance.GetBuilding(selectedBuildingType);
                 heldBuilding.transform.position = pos;
             }
@@ -244,32 +243,39 @@ public class Player : MonoBehaviour
                 }                
             }
 
-            //TODO: check for building collisions with drone / other buildings / enemies.
+            bool collision = heldBuilding.CollisionUpdate();
 
             //Place it or cancel building it
-            if (placeBuilding) //and there's not a collision
-            {
+            if (placeBuilding && ResourceController.Instance.Ore >= heldBuilding.OreCost && !collision)
+            {              
                 Vector3 spawnPos = heldBuilding.transform.position;
                 spawnPos.y = 0.5f;
-                heldBuilding.transform.position = spawnPos;
-
-                if (heldBuilding.Terraformer != null)
-                {
-                    heldBuilding.Terraformer.Operational = true;
-                }
-
+                heldBuilding.Place(spawnPos);    
                 heldBuilding = null;
                 spawnBuilding = false;
                 placeBuilding = false;
                 cancelBuilding = false;
             }
-            else if (cancelBuilding) // or place building but there's a collision
+            else if (cancelBuilding || (placeBuilding && (collision || ResourceController.Instance.Ore < heldBuilding.OreCost)))
             {
-                BuildingFactory.Instance.DestroyBuilding(heldBuilding);
+                if (placeBuilding)
+                {
+                    if (ResourceController.Instance.Ore < heldBuilding.OreCost)
+                    {
+                        Debug.Log("You have insufficient ore to build this building.");
+                    }
+                    
+                    if (collision)
+                    {
+                        Debug.Log("You cannot place a building there; it would occupy the same space as something else.");
+                    }
+                }
+
+                BuildingFactory.Instance.DestroyBuilding(heldBuilding, false);
                 heldBuilding = null;
                 spawnBuilding = false;
                 placeBuilding = false;
-                cancelBuilding = false;
+                cancelBuilding = false;                
             }
         }
     }

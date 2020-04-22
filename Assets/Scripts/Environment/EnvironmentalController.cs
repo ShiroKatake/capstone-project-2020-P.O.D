@@ -5,20 +5,19 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class EnvironmentalController : MonoBehaviour
-{
+public class EnvironmentalController : MonoBehaviour {
     [SerializeField] private Text var;
     [SerializeField] List<Terraformer> terraformers = new List<Terraformer>();
 
-    float atmosphereVal = 0.00001f;
-    float humidityVal = 0.00001f;
-    float biodiversityVal = 0.00001f;
+    public float AtmosphereVal { get; private set; } = 0.00001f;
+    public float HumidityVal { get; private set; } = 0.00001f;
+    public float BiodiversityVal { get; private set; } = 0.00001f;
 
-    float atmoMalice = 1.0f;
-    float humMalice = 1.0f;
-    float bioMalice = 1.0f;
+    public float TotalVal { get; private set; } = 0.0f;
 
-    float totalVal = 0.0f;    
+    private float atmoMalice = 1.0f;
+    private float humMalice = 1.0f;
+    private float bioMalice = 1.0f;
 
     public static EnvironmentalController Instance { get; protected set; }
 
@@ -34,23 +33,21 @@ public class EnvironmentalController : MonoBehaviour
         Instance = this;
     }
 
-    float counter = 0;
-
     // Update is called once per frame
     void Update()
     {
         float tpf = Time.deltaTime;
         UpdateParameters();
-        //TempBuildingConstruction();
         CalculateBuildingDeltas(tpf);
-        counter += tpf;
 
-        if (counter > 1) {
+        UpdateTotalValue();
 
-            //atmosphereVal += 0.5f * atmoMalice;
-            //PrintEnvironmentValues();
-            counter = 0;
-        }
+    }
+
+    private void UpdateTotalValue() {
+        TotalVal = 0.3334f * AtmosphereVal +
+                   0.3334f * HumidityVal +
+                   0.3334f * BiodiversityVal;
     }
 
     public void CalculateBuildingDeltas(float tpf) {
@@ -60,7 +57,7 @@ public class EnvironmentalController : MonoBehaviour
         float bioDelta = 0;
 
         foreach (Terraformer t in terraformers) {
-            if (t.Operational) {
+            if (t.Building.Operational) {
                 switch (t.EnvironmentParameter) {
                     case EEnvironmentParameter.Atmosphere:
                         atmoDelta += t.EnvironmentalAffect;
@@ -77,33 +74,22 @@ public class EnvironmentalController : MonoBehaviour
             }
         }
 
-        atmosphereVal = Mathf.Min(atmosphereVal + atmoDelta * atmoMalice * tpf, 100);
-        humidityVal = Mathf.Min(humidityVal + humDelta * humMalice * tpf, 100);
-        biodiversityVal = Mathf.Min(biodiversityVal + bioDelta * bioMalice * tpf,100);
+        AtmosphereVal = Mathf.Min(AtmosphereVal + atmoDelta * atmoMalice * tpf, 100);
+        HumidityVal = Mathf.Min(HumidityVal + humDelta * humMalice * tpf, 100);
+        BiodiversityVal = Mathf.Min(BiodiversityVal + bioDelta * bioMalice * tpf,100);
 
     }
 
-    //public void TempBuildingConstruction() {
-    //    if (Input.GetKeyDown(KeyCode.Keypad1)) {
-    //        constructedBuildings.Add(("Building",EEnvironmentParameter.Atmosphere, 0.5f));
-    //    }
-    //    if (Input.GetKeyDown(KeyCode.Keypad2)) {
-    //        constructedBuildings.Add(("Building",EEnvironmentParameter.Humidity, 0.5f));
-    //    }
-    //    if (Input.GetKeyDown(KeyCode.Keypad3)) {
-    //        constructedBuildings.Add(("Building", EEnvironmentParameter.Biodiversity, 0.5f));
-    //    }
-    //}
 
     public void UpdateParameters() {
 
-        float baseSum = atmosphereVal + humidityVal + biodiversityVal;
+        float baseSum = AtmosphereVal + HumidityVal + BiodiversityVal;
 
         string outputText = "";
 
-        float atmosRatio = atmosphereVal / baseSum;
-        float humRatio = humidityVal / baseSum;
-        float bioRatio = biodiversityVal / baseSum;
+        float atmosRatio = AtmosphereVal / baseSum;
+        float humRatio = HumidityVal / baseSum;
+        float bioRatio = BiodiversityVal / baseSum;
         //Debug.Log("AtmosphereRatio: " + atmosRatio);
 
         outputText += "Atmosphere Ratio: " + atmosRatio;
@@ -112,7 +98,7 @@ public class EnvironmentalController : MonoBehaviour
 
         float minthresh = 4f;
 
-        if (atmosphereVal > minthresh || humidityVal > minthresh || biodiversityVal > minthresh) {
+        if (AtmosphereVal > minthresh || HumidityVal > minthresh || BiodiversityVal > minthresh) {
             outputText += "\n";
 
             float atmoMaliceT = Mathf.Abs( 1 - Math.Max(0, (atmosRatio - 0.3333f)));
@@ -150,7 +136,7 @@ public class EnvironmentalController : MonoBehaviour
 
     public void RemoveBuilding(int id) {
         for (int i = 0; i < terraformers.Count; i++) {
-            if (terraformers[i].BuildingId == id) {
+            if (terraformers[i].Building.Id == id) {
                 terraformers.RemoveAt(i);
                 break;
             }
@@ -161,7 +147,7 @@ public class EnvironmentalController : MonoBehaviour
     /// Print current values to console
     /// </summary>
     public void PrintEnvironmentValues() {
-        string debug = "Atmosphere: " + atmosphereVal + "\tHumidity: " + humidityVal + "\tBiodiversity: " + biodiversityVal;
+        string debug = "Atmosphere: " + AtmosphereVal + "\tHumidity: " + HumidityVal + "\tBiodiversity: " + BiodiversityVal;
         Debug.Log(debug);
     }
 }
