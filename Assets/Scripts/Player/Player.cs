@@ -136,12 +136,25 @@ public class Player : MonoBehaviour
         if (!spawnBuilding)
         {
             spawnBuilding = InputController.Instance.ButtonPressed("SpawnBuilding");
+
+            if (InputController.Instance.ButtonPressed("SpawnBuilding")) {
+                Debug.Log("Spawn Building");
+            }
         }
         else
         {
             placeBuilding = InputController.Instance.ButtonPressed("PlaceBuilding");
             cancelBuilding = InputController.Instance.ButtonPressed("CancelBuilding");
-        }        
+
+
+            if (placeBuilding) {
+                Debug.Log("Place Building");
+            }
+
+        }
+
+        
+        
 
         //Shooting Input
         shooting = InputController.Instance.ButtonHeld("Shoot");
