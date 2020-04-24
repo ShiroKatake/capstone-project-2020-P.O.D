@@ -222,6 +222,8 @@ public class Player : MonoBehaviour
                     rawBuildingOffset = heldBuilding.GetOffset(transform.rotation.eulerAngles.y);
                     heldBuilding.transform.position = RawBuildingPositionToBuildingPosition(heldBuilding.XSize, heldBuilding.ZSize);
                 }
+
+                heldBuilding.Collider.enabled = true;
             }
             //Instantiate the appropriate building and postion it properly, replacing the old one.
             else if (heldBuilding.BuildingType != selectedBuildingType)
@@ -240,6 +242,7 @@ public class Player : MonoBehaviour
                 BuildingFactory.Instance.DestroyBuilding(heldBuilding, false);
                 heldBuilding = BuildingFactory.Instance.GetBuilding(selectedBuildingType);
                 heldBuilding.transform.position = pos;
+                heldBuilding.Collider.enabled = true;
             }
             else //Move the building where you want it
             {

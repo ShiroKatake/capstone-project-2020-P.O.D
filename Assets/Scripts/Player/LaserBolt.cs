@@ -17,6 +17,7 @@ public class LaserBolt : MonoBehaviour
 
     [Header("Laser Bolt Components")]
     [SerializeField] private Rigidbody rigidbody;
+    //TODO: disable trigger collider while pooled.
 
     //Non-Serialized Fields------------------------------------------------------------------------
 

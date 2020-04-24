@@ -186,8 +186,9 @@ public class Enemy : MonoBehaviour
         if (Vector3.Distance(transform.position, target.position) < radius + targetRadius)
         {
             target.GetComponent<Health>().Value -= damage;
-            EnemyController.Instance.Enemies.Remove(this);
-            health.Die();
+            EnemyFactory.Instance.DestroyEnemy(this);
         }
     }
+
+    //TODO: disable trigger collider while pooled?
 }

@@ -14,8 +14,7 @@ public class Building : MonoBehaviour, ICollisionListener
     [Header("ID")]
     [SerializeField] private int id;
 
-    [Header("Building Category")]
-    [SerializeField] private EBuildingCategory buildingCategory;
+    [Header("Building Type")]
     [SerializeField] private EBuilding buildingType;
 
     [Header("Resource Requirements")]
@@ -36,6 +35,7 @@ public class Building : MonoBehaviour, ICollisionListener
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
     //Components
+    private Collider collider;
     private Health health;
     private MeshRenderer renderer;
     private ResourceCollector resourceCollector;
@@ -50,8 +50,10 @@ public class Building : MonoBehaviour, ICollisionListener
     private bool colliding = false;
     private Collider otherCollider = null;
     private List<CollisionReporter> collisionReporters;
+    Vector3 normalScale;
 
     //Other
+    [SerializeField] private bool active = false;
     private bool placed = false;
     [SerializeField] private bool operational = false;
 
@@ -60,9 +62,9 @@ public class Building : MonoBehaviour, ICollisionListener
     //Basic Public Properties----------------------------------------------------------------------
 
     /// <summary>
-    /// The broad category of building (cryo egg, resources, terraforming, defence) that this building falls under.
+    /// Whether the building is active and in the scene, or has been pooled and is inactive. Active should only be set in BuildingFactory.
     /// </summary>
-    public EBuildingCategory BuildingCategory { get => buildingCategory; }
+    public bool Active { get => active; set => active = value; }
 
     /// <summary>
     /// The type of building this building is.
@@ -70,9 +72,14 @@ public class Building : MonoBehaviour, ICollisionListener
     public EBuilding BuildingType { get => buildingType; }     
     
     /// <summary>
-    /// How long this building takes to builds itself when the player places it in the scene.
+    /// How long this building takes to builds itself when the player places it in the scene. Should only be set by BuildingFactory.
     /// </summary>
-    public float BuildTime { get => buildTime; }
+    public float BuildTime { get => buildTime; set => buildTime = value; }
+
+    /// <summary>
+    /// The building's collider component.
+    /// </summary>
+    public Collider Collider { get => collider; }
 
     /// <summary>
     /// The Building's Health component.
@@ -135,7 +142,7 @@ public class Building : MonoBehaviour, ICollisionListener
         {
             if (operational != value)
             {
-                operational = value;
+                operational = value && active;
 
                 if (resourceCollector != null)
                 {
@@ -160,6 +167,7 @@ public class Building : MonoBehaviour, ICollisionListener
     /// </summary>
     private void Awake()
     {
+        collider = GetComponentInChildren<Collider>();
         health = GetComponent<Health>();
         renderer = GetComponentInChildren<MeshRenderer>();
         resourceCollector = GetComponent<ResourceCollector>();
@@ -170,6 +178,7 @@ public class Building : MonoBehaviour, ICollisionListener
         solidColour = new Color(material.color.r, material.color.g, material.color.b, 1f);
         translucentColour = new Color(solidColour.r, solidColour.g, solidColour.b, 0.5f);
         errorColour = new Color(0.5f, 0.5f, 0.5f, 0.5f); //Gray
+        normalScale = transform.localScale;
 
         if (xSize < 1 || xSize > 3)
         {
@@ -211,7 +220,6 @@ public class Building : MonoBehaviour, ICollisionListener
         Vector3 endPos = Vector3.zero;
         float buildTimeElapsed = 0;
 
-        Vector3 normalScale = transform.localScale;
         Vector3 smallScale = normalScale * smallBoingMultiplier;
         Vector3 largeScale = normalScale * largeBoingMultiplier;
         float boingTimeElapsed = 0;
@@ -301,37 +309,44 @@ public class Building : MonoBehaviour, ICollisionListener
     /// <returns>Is this building colliding with something?</returns>
     public bool CollisionUpdate()
     {
-        if (!placed)
+        if (active)
         {
-            //Weird quirk of destroying one object and then instantating another and moving it to the same position: it triggers boths' OnTriggerEnter(),
-            //even though one doesn't exist, and then the other doesn't have OnTriggerExit() triggered in the next frame. This checks for the existence of
-            //the other collider and corrects the value of colliding if the other collider no longer exists.
-            if (colliding && otherCollider == null)
+            if (!placed)
             {
-                colliding = false;
-            }
-
-            if (colliding)
-            {              
-                if (material.color != errorColour)
+                //Weird quirk of destroying one object and then instantating another and moving it to the same position: it triggers boths' OnTriggerEnter(),
+                //even though one doesn't exist, and then the other doesn't have OnTriggerExit() triggered in the next frame. This checks for the existence of
+                //the other collider and corrects the value of colliding if the other collider no longer exists.
+                if (colliding && otherCollider == null)
                 {
-                    material.color = errorColour;
+                    colliding = false;
+                }
+
+                if (colliding)
+                {
+                    if (material.color != errorColour)
+                    {
+                        material.color = errorColour;
+                    }
+                }
+                else
+                {
+                    if (material.color != translucentColour)
+                    {
+                        material.color = translucentColour;
+                    }
                 }
             }
             else
             {
-                if (material.color != translucentColour)
-                {
-                    material.color = translucentColour;
-                }
-            }        
+                Debug.Log($"Building {id} ran CollisionsUpdate(), though it's already placed.");
+            }
+
+            return colliding;
         }
         else
         {
-            Debug.Log($"Building {id} ran CollisionsUpdate(), though it's already placed.");
+            return false;
         }
-
-        return colliding;
     }
 
     /// <summary>
@@ -356,6 +371,26 @@ public class Building : MonoBehaviour, ICollisionListener
         StartCoroutine(Build());
     }
 
+    /// <summary>
+    /// Resets Building to its initial values when it is returned to the building pool.
+    /// </summary>
+    public void Reset()
+    {
+        StopCoroutine(Build());
+        health.Reset();
+        Operational = false;
+
+        active = false;
+        colliding = false;
+        placed = false;
+        
+        otherCollider = null;
+        renderer.transform.localPosition = Vector3.zero;
+        transform.localScale = normalScale;
+        material.color = translucentColour;
+        collider.enabled = false;
+    }
+
     //ICollisionListener Triggered Methods---------------------------------------------------------
 
     /// <summary>
@@ -364,7 +399,10 @@ public class Building : MonoBehaviour, ICollisionListener
     /// <param name="collision">The collision data associated with this event.</param>
     public void OnCollisionEnter(Collision collision)
     {
-        Debug.Log($"Building {id} OnCollisionEnter()");
+        if (active)
+        {
+            Debug.Log($"Building {id} OnCollisionEnter()");
+        }
     }
 
     /// <summary>
@@ -373,7 +411,10 @@ public class Building : MonoBehaviour, ICollisionListener
     /// <param name="collision">The collision data associated with this event.</param>
     public void OnCollisionExit(Collision collision)
     {
-        Debug.Log($"Building {id} OnCollisionExit()");
+        if (active)
+        {
+            Debug.Log($"Building {id} OnCollisionExit()");
+        }
     }
 
     /// <summary>
@@ -382,7 +423,10 @@ public class Building : MonoBehaviour, ICollisionListener
     /// <param name="collision">The collision data associated with this event.</param>
     public void OnCollisionStay(Collision collision)
     {
-        Debug.Log($"Building {id} OnCollisionStay()");
+        if (active)
+        {
+            Debug.Log($"Building {id} OnCollisionStay()");
+        }
     }
 
     /// <summary>
@@ -391,9 +435,12 @@ public class Building : MonoBehaviour, ICollisionListener
     /// <param name="other">The other Collider involved in this collision.</param>
     public void OnTriggerEnter(Collider other)
     {
-        //Debug.Log($"Building {id} OnTriggerEnter(). Other is {other}");
-        colliding = true;
-        otherCollider = other;
+        if (active)
+        {
+            //Debug.Log($"Building {id} OnTriggerEnter(). Other is {other}");
+            colliding = true;
+            otherCollider = other;
+        }
     }
 
     /// <summary>
@@ -402,9 +449,12 @@ public class Building : MonoBehaviour, ICollisionListener
     /// <param name="other">The other Collider involved in this collision.</param>
     public void OnTriggerExit(Collider other)
     {
-        //Debug.Log($"Building {id} OnTriggerExit(). Other is {other}");
-        colliding = false;
-        otherCollider = null;
+        if (active)
+        {            
+            //Debug.Log($"Building {id} OnTriggerExit(). Other is {other}");
+            colliding = false;
+            otherCollider = null;
+        }
     }
 
     /// <summary>
@@ -413,6 +463,9 @@ public class Building : MonoBehaviour, ICollisionListener
     /// <param name="other">The other Collider involved in this collision.</param>
     public void OnTriggerStay(Collider other)
     {
-        Debug.Log($"Building {id} OnTriggerStay()");
+        if (active)
+        {
+            Debug.Log($"Building {id} OnTriggerStay()");
+        }
     }
 }
