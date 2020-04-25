@@ -11,6 +11,7 @@ public class ConstructionController : MonoBehaviour
     [SerializeField] Text materialPrint;
     [SerializeField] GameObject hoverStructure;
     [SerializeField] GridRendering placeGrid;
+    [SerializeField] PipeManager pipeManager;
 
     int layermask = 0b100000000;
 
@@ -39,12 +40,17 @@ public class ConstructionController : MonoBehaviour
         
 
         if (Input.GetMouseButtonDown(0)) {
-            tempHover = null;
-            hovering = false;
+            if (hovering) {
+                pipeManager.RegisterPipeBuilding(tempHover.GetComponent<PipeBuilding>());
+                tempHover = null;
+                ResetBuildingHover();
+            } else {
+                StartBuildingHover();
+            }
         }
             
 
-        if (Input.GetKeyDown(KeyCode.KeypadPlus)) {
+        if (Input.GetKeyDown(KeyCode.KeypadPlus) || Input.GetKeyDown(KeyCode.F)) {
             CycleSelectedMaterial();
             UpdateSelectedMaterialText();
         }
@@ -72,22 +78,32 @@ public class ConstructionController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Return)) {
             if (hovering) {
-                tempOutputs.Clear();
-                tempInputs.Clear();
+                ResetBuildingHover();
                 Destroy(tempHover);
-
             } else {
-                tempHover = Instantiate(hoverStructure, placeGrid.transform);
-                tempHover.transform.localScale = new Vector3(placeGrid.scale, placeGrid.scale, placeGrid.scale);
+                StartBuildingHover();
             }
 
-            hovering = !hovering;
         }
 
         if (hovering && mouseCast.Item1) {
             UpdateHoverPosition(mouseCast.Item2);
         }
 
+    }
+
+    private void ResetBuildingHover() {
+        tempOutputs.Clear();
+        tempInputs.Clear();
+        UpdateSelectedMaterialText();
+
+        hovering = false;
+    }
+    private void StartBuildingHover() {
+        tempHover = Instantiate(hoverStructure, placeGrid.transform);
+        tempHover.transform.localScale = new Vector3(placeGrid.scale, placeGrid.scale, placeGrid.scale);
+
+        hovering = true;
     }
 
     private void UpdateHoverPosition(Vector3 position) {
