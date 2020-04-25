@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3534098194738441244}
   m_Layer: 0
   m_Name: Model
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -93,7 +93,7 @@ GameObject:
   - component: {fileID: -6203622737719408024}
   m_Layer: 0
   m_Name: Gas Diffuser
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -136,6 +136,16 @@ MonoBehaviour:
   boingInterval: 0.1667
   smallBoingMultiplier: 0.8
   largeBoingMultiplier: 1.2
+  buildingFoundationOffsets:
+  - {x: 1, y: -0.45, z: -1}
+  - {x: 1, y: -0.45, z: 0}
+  - {x: 1, y: -0.45, z: 1}
+  - {x: 0, y: -0.45, z: -1}
+  - {x: 0, y: -0.45, z: 0}
+  - {x: 0, y: -0.45, z: 1}
+  - {x: -1, y: -0.45, z: -1}
+  - {x: -1, y: -0.45, z: 0}
+  - {x: -1, y: -0.45, z: 1}
   active: 0
   operational: 0
 --- !u!114 &6966758408912711267
@@ -179,7 +189,7 @@ GameObject:
   - component: {fileID: 3274467733255014075}
   m_Layer: 0
   m_Name: Collider
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

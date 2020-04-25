@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6892513646643712801}
   m_Layer: 0
   m_Name: Model
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -93,7 +93,7 @@ GameObject:
   - component: {fileID: -5340766545175857894}
   m_Layer: 0
   m_Name: Humidifier
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -136,6 +136,11 @@ MonoBehaviour:
   boingInterval: 0.1667
   smallBoingMultiplier: 0.8
   largeBoingMultiplier: 1.2
+  buildingFoundationOffsets:
+  - {x: 0.5, y: -0.45, z: -0.5}
+  - {x: 0.5, y: -0.45, z: 0.5}
+  - {x: -0.5, y: -0.45, z: -0.5}
+  - {x: -0.5, y: -0.45, z: 0.5}
   active: 0
   operational: 0
 --- !u!114 &1528181348652726579
@@ -179,7 +184,7 @@ GameObject:
   - component: {fileID: 3615240620241860045}
   m_Layer: 0
   m_Name: Collider
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

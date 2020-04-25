@@ -32,6 +32,9 @@ public class Building : MonoBehaviour, ICollisionListener
     [SerializeField] private float smallBoingMultiplier;
     [SerializeField] private float largeBoingMultiplier;
 
+    [Header("Offsets of Foundations from Position")]
+    [SerializeField] private List<Vector3> buildingFoundationOffsets;
+
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
     //Components
@@ -56,6 +59,8 @@ public class Building : MonoBehaviour, ICollisionListener
     [SerializeField] private bool active = false;
     private bool placed = false;
     [SerializeField] private bool operational = false;
+    private float normalBuildTime;
+    private bool boinging = false;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -65,6 +70,16 @@ public class Building : MonoBehaviour, ICollisionListener
     /// Whether the building is active and in the scene, or has been pooled and is inactive. Active should only be set in BuildingFactory.
     /// </summary>
     public bool Active { get => active; set => active = value; }
+
+    /// <summary>
+    /// Is the building going "boing" to indicate that it has finished building?
+    /// </summary>
+    public bool Boinging { get => boinging; }
+
+    /// <summary>
+    /// The position of building foundations relative to the building's transform.position value.
+    /// </summary>
+    public List<Vector3> BuildingFoundationOffsets { get => buildingFoundationOffsets; }
 
     /// <summary>
     /// The type of building this building is.
@@ -85,11 +100,6 @@ public class Building : MonoBehaviour, ICollisionListener
     /// The Building's Health component.
     /// </summary>
     public Health Health { get => health; }
-
-    /// <summary>
-    /// The Building's unique ID number. Should only be set in BuildingFactory.
-    /// </summary>
-    public int Id { get => id; set => id = value; }
 
     /// <summary>
     /// How much ore it costs to build this building.
@@ -127,6 +137,23 @@ public class Building : MonoBehaviour, ICollisionListener
     public int ZSize { get => zSize; }
 
     //Complex Public Properties--------------------------------------------------------------------                                                    
+
+    /// <summary>
+    /// The Building's unique ID number. Id should only be set by BuildingFactory.GetBuilding().
+    /// </summary>
+    public int Id
+    {
+        get
+        {
+            return id;
+        }
+
+        set
+        {
+            id = value;
+            gameObject.name = $"{buildingType} {id}";            
+        }
+    }
 
     /// <summary>
     /// Whether or not the building is operational and doing its job. When set, also triggers any appropriate resource collector state changes.
@@ -179,6 +206,7 @@ public class Building : MonoBehaviour, ICollisionListener
         translucentColour = new Color(solidColour.r, solidColour.g, solidColour.b, 0.5f);
         errorColour = new Color(0.5f, 0.5f, 0.5f, 0.5f); //Gray
         normalScale = transform.localScale;
+        normalBuildTime = buildTime;
 
         if (xSize < 1 || xSize > 3)
         {
@@ -231,6 +259,8 @@ public class Building : MonoBehaviour, ICollisionListener
             yield return null;
         }
 
+        boinging = true;
+
         while (boingTimeElapsed < boingInterval)
         {
             boingTimeElapsed += Time.deltaTime;
@@ -254,8 +284,9 @@ public class Building : MonoBehaviour, ICollisionListener
             boingTimeElapsed += Time.deltaTime;
             transform.localScale = Vector3.Lerp(largeScale, normalScale, boingTimeElapsed / boingInterval);
             yield return null;
-        }       
+        }
 
+        boinging = false;
         Operational = true; //Using property to trigger activation of any resource collector component attached.
     }
 
@@ -387,6 +418,7 @@ public class Building : MonoBehaviour, ICollisionListener
         otherCollider = null;
         renderer.transform.localPosition = Vector3.zero;
         transform.localScale = normalScale;
+        buildTime = normalBuildTime;
         material.color = translucentColour;
         collider.enabled = false;
     }
