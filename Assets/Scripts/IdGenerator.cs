@@ -41,7 +41,6 @@ public class IdGenerator
     /// </summary>
     private IdGenerator()
     {
-        Debug.Log("ID Generator is generating a new ID.");
         nextId = -1;
     }
 
@@ -52,6 +51,7 @@ public class IdGenerator
     /// </summary>
     public int GetNextId()
     {
+        //Debug.Log("ID Generator is generating a new ID.");
         nextId++;
         return nextId;
     }

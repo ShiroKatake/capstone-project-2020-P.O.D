@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1960391120923663085}
   m_Layer: 0
   m_Name: DroneModel
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -109,7 +109,7 @@ GameObject:
   - component: {fileID: 896588547581440063}
   m_Layer: 0
   m_Name: Drone
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -152,6 +152,7 @@ MonoBehaviour:
   movementSpeed: 10
   rotationSpeed: 3
   laserBatteryCapacity: 200
+  shootCooldown: 0.1
 --- !u!114 &896588547581440063
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -176,7 +177,7 @@ GameObject:
   - component: {fileID: 7818702405539167804}
   m_Layer: 0
   m_Name: TerraformerHoldPoint
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -206,7 +207,7 @@ GameObject:
   - component: {fileID: 1935910673708830645}
   m_Layer: 0
   m_Name: LaserCannonTip
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -218,10 +219,10 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7714345189961572185}
-  m_LocalRotation: {x: 0.7009034, y: -0.09345819, z: -0.09345819, w: 0.7009034}
-  m_LocalPosition: {x: -0.40708914, y: -0.36053035, z: 1.6040001}
+  m_LocalRotation: {x: 0.6940004, y: -0.08978138, z: -0.09707186, w: 0.7077286}
+  m_LocalPosition: {x: -0.45, y: -0.517, z: 1.581}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children: []
   m_Father: {fileID: 403112267500756665}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 74.774, y: -85.5, z: -86.096}

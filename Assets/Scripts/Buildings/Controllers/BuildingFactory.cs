@@ -194,8 +194,6 @@ public class BuildingFactory : MonoBehaviour
                 return null;
         }
 
-        building.Id = IdGenerator.Instance.GetNextId();
-
         if (pooling)
         {
             building.transform.position = objectPool.transform.position;
@@ -210,10 +208,10 @@ public class BuildingFactory : MonoBehaviour
     /// </summary>
     /// <param name="building">The building to be destroyed.</param>
     /// <param name="consumingResources">Is the building consuming resources and does that consumption need to be cancelled now that it's being destroyed?</param>
-    public void DestroyBuilding(Building building, bool consumingResources)
+    /// <param name="consumingResources">Was the building destroyed while placed, and therefore needs to leave behind foundations?</param>
+    public void DestroyBuilding(Building building, bool consumingResources, bool killed)
     {
-        Debug.Log($"Destroy Building. BuildingFactory.Buildings[{building.BuildingType}].Count pre-pooling is {buildings[building.BuildingType].Count}");
-        //TODO: create building foundations if the building was killed.
+        //Debug.Log($"Destroy Building. BuildingFactory.Buildings[{building.BuildingType}].Count pre-pooling is {buildings[building.BuildingType].Count}");
         BuildingController.Instance.DeRegisterBuilding(building);
 
         if (building.Terraformer != null)
@@ -226,13 +224,21 @@ public class BuildingFactory : MonoBehaviour
             ResourceController.Instance.PowerSupply += building.PowerConsumption;
             ResourceController.Instance.WaterSupply += building.WaterConsumption;
         }
-        
+
+        if (killed)
+        {
+            foreach (Vector3 offset in building.BuildingFoundationOffsets)
+            {
+                GetBuildingFoundation().transform.position = building.transform.position + offset;
+            }
+        }
+
         building.Reset();
         building.Collider.enabled = false;
         building.transform.position = objectPool.position;
         building.transform.parent = objectPool;
         buildings[building.BuildingType].Add(building);
-        Debug.Log($"Destroy Building. BuildingFactory.Buildings[{building.BuildingType}].Count post-pooling is {buildings[building.BuildingType].Count}");
+        //Debug.Log($"Destroy Building. BuildingFactory.Buildings[{building.BuildingType}].Count post-pooling is {buildings[building.BuildingType].Count}");
     }
 
     //Triggered Methods (Building Foundations)-------------------------------------------------------------------------------------------------------
@@ -257,6 +263,7 @@ public class BuildingFactory : MonoBehaviour
         }
 
         buildingFoundation.Id = IdGenerator.Instance.GetNextId();
+        buildingFoundation.Activate();
         return buildingFoundation;
     }
 
@@ -284,6 +291,7 @@ public class BuildingFactory : MonoBehaviour
     /// <param name="buildingFoundation">The building foundation to be destroyed.</param>
     public void DestroyBuildingFoundation(BuildingFoundation buildingFoundation)
     {
+        buildingFoundation.Collider.enabled = false;
         buildingFoundation.transform.position = objectPool.position;
         buildingFoundation.transform.parent = objectPool;
         buildingFoundations.Add(buildingFoundation);

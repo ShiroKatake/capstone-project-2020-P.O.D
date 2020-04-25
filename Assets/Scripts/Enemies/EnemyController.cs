@@ -72,10 +72,15 @@ public class EnemyController : MonoBehaviour
     {
         while (enemies.Count < 4)
         {
+            //Debug.Log($"EnemyController.enemies.Count is {enemies.Count}; spawning a new enemy.");
             enemies.Add(EnemyFactory.Instance.GetEnemy());
         }
     }
 
+    /// <summary>
+    /// Removes the enemy from EnemyController's list of enemies.
+    /// </summary>
+    /// <param name="enemy">The enemy to be removed from EnemyController's list of enemies.</param>
     public void DeRegisterEnemy(Enemy enemy)
     {
         if (enemies.Contains(enemy))

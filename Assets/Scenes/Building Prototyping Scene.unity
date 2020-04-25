@@ -70303,14 +70303,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 403112268726757339, guid: c59556a7ef07f27488ad22ca85e6db1c,
         type: 3}
-      propertyPath: cameraTarget
-      value: 
-      objectReference: {fileID: 1858808679}
-    - target: {fileID: 403112268726757339, guid: c59556a7ef07f27488ad22ca85e6db1c,
-        type: 3}
       propertyPath: camera
       value: 
       objectReference: {fileID: 963194227}
+    - target: {fileID: 403112268726757339, guid: c59556a7ef07f27488ad22ca85e6db1c,
+        type: 3}
+      propertyPath: cameraTarget
+      value: 
+      objectReference: {fileID: 1858808679}
     - target: {fileID: 403112268726757339, guid: c59556a7ef07f27488ad22ca85e6db1c,
         type: 3}
       propertyPath: laserBatteryPoint
@@ -70466,7 +70466,7 @@ PrefabInstance:
     - target: {fileID: 6094249779575662618, guid: 701537750ff06cf4e87099996e3e14b2,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -7.121
+      value: -7
       objectReference: {fileID: 0}
     - target: {fileID: 6094249779575662618, guid: 701537750ff06cf4e87099996e3e14b2,
         type: 3}
@@ -70522,6 +70522,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Building Foundation
+      objectReference: {fileID: 0}
+    - target: {fileID: 6094249779575663079, guid: 701537750ff06cf4e87099996e3e14b2,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 701537750ff06cf4e87099996e3e14b2, type: 3}
