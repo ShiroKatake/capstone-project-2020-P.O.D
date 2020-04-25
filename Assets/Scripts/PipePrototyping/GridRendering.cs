@@ -8,13 +8,8 @@ public class GridRendering : MonoBehaviour
 {
 
     [SerializeField] private (int, int) gridSize = (20, 20);
-    [SerializeField] private float scale = 0.5f;
-    [SerializeField] private Camera cam;
-    [SerializeField] Text materialPrint;
-
-    int layermask = 0b100000000;
-
-    private EMaterials selectedMaterial;
+    [SerializeField] public float scale = 0.5f;
+    
 
 
     // Start is called before the first frame update
@@ -26,56 +21,18 @@ public class GridRendering : MonoBehaviour
             child.localScale = Vector3.one * 0.5f;
         }
 
-        selectedMaterial = EMaterials.Water;
-
-        CycleSelectedMaterial();
     }
 
     // Update is called once per frame
     void Update()
     {
 
-        if (Input.GetMouseButtonDown(0))
-            RaycastMouse();
-
-        if (Input.GetKeyDown(KeyCode.KeypadPlus)) {
-            CycleSelectedMaterial();
-        }
-
     }
 
-    private void RaycastMouse() {
-
-        RaycastHit hit;
-
-        if (Physics.Raycast(cam.ScreenPointToRay(Input.mousePosition),out hit, Mathf.Infinity, layermask)) {
-            Debug.Log(hit.point);
-        }
-    }
-
-    private void CycleSelectedMaterial() {
-
-        EMaterials[] vals = (EMaterials[])Enum.GetValues(typeof(EMaterials));
-
-        for (int i = 0; i < vals.Length; i ++) {
-            if (vals[i] == selectedMaterial) {
-                int nextSelect = i + 1;
-                if (nextSelect >= vals.Length)
-                    nextSelect = 0;
-                selectedMaterial = vals[nextSelect];
-                break;
-            }
-        }
-
-        
-
-        materialPrint.text = Enum.GetName(typeof(EMaterials), selectedMaterial);
-    }
+    
 
 
-    public (int,int) PointToGrid(Vector3 point) {
-        return (0,0);
-    }
+    
 
     private void OnDrawGizmos() {
         Gizmos.color = Color.black;
