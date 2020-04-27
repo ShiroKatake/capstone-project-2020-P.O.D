@@ -143,7 +143,7 @@ public class BuildingController : MonoBehaviour
         {
             Building b = destroyedBuildings[0];
             destroyedBuildings.RemoveAt(0);
-            BuildingFactory.Instance.DestroyBuilding(b, true);
+            BuildingFactory.Instance.DestroyBuilding(b, true, true);
         }
     }
 

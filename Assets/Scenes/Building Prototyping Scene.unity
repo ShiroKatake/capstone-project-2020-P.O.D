@@ -70303,14 +70303,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 403112268726757339, guid: c59556a7ef07f27488ad22ca85e6db1c,
         type: 3}
-      propertyPath: cameraTarget
-      value: 
-      objectReference: {fileID: 1858808679}
-    - target: {fileID: 403112268726757339, guid: c59556a7ef07f27488ad22ca85e6db1c,
-        type: 3}
       propertyPath: camera
       value: 
       objectReference: {fileID: 963194227}
+    - target: {fileID: 403112268726757339, guid: c59556a7ef07f27488ad22ca85e6db1c,
+        type: 3}
+      propertyPath: cameraTarget
+      value: 
+      objectReference: {fileID: 1858808679}
     - target: {fileID: 403112268726757339, guid: c59556a7ef07f27488ad22ca85e6db1c,
         type: 3}
       propertyPath: laserBatteryPoint
@@ -70456,6 +70456,80 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5778567ec991d6b43be9e63c26d48713, type: 3}
+--- !u!1001 &6094249780173888794
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 6094249779575662618, guid: 701537750ff06cf4e87099996e3e14b2,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6094249779575662618, guid: 701537750ff06cf4e87099996e3e14b2,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 6094249779575662618, guid: 701537750ff06cf4e87099996e3e14b2,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6094249779575662618, guid: 701537750ff06cf4e87099996e3e14b2,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6094249779575662618, guid: 701537750ff06cf4e87099996e3e14b2,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6094249779575662618, guid: 701537750ff06cf4e87099996e3e14b2,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6094249779575662618, guid: 701537750ff06cf4e87099996e3e14b2,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6094249779575662618, guid: 701537750ff06cf4e87099996e3e14b2,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6094249779575662618, guid: 701537750ff06cf4e87099996e3e14b2,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6094249779575662618, guid: 701537750ff06cf4e87099996e3e14b2,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6094249779575662618, guid: 701537750ff06cf4e87099996e3e14b2,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6094249779575663078, guid: 701537750ff06cf4e87099996e3e14b2,
+        type: 3}
+      propertyPath: m_Name
+      value: Building Foundation
+      objectReference: {fileID: 0}
+    - target: {fileID: 6094249779575663079, guid: 701537750ff06cf4e87099996e3e14b2,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 701537750ff06cf4e87099996e3e14b2, type: 3}
 --- !u!1001 &8337738343323095551
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -70493,6 +70567,11 @@ PrefabInstance:
       propertyPath: var
       value: 
       objectReference: {fileID: 710952429}
+    - target: {fileID: 8337738344923657295, guid: 9620c728b220f2e47adbd85dd9ac4899,
+        type: 3}
+      propertyPath: objectPool
+      value: 
+      objectReference: {fileID: 1628873039}
     - target: {fileID: 8337738344923657296, guid: 9620c728b220f2e47adbd85dd9ac4899,
         type: 3}
       propertyPath: cryoEgg

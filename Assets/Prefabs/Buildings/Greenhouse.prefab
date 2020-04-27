@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2203777157340861769}
   m_Layer: 0
   m_Name: Collider
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -43,7 +43,7 @@ BoxCollider:
   m_GameObject: {fileID: 1287917234659449172}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: -2579203448979226937}
   m_Layer: 0
   m_Name: Greenhouse
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -128,7 +128,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 0
-  buildingCategory: 2
   buildingType: 7
   oreCost: 1
   powerConsumption: 2
@@ -139,6 +138,14 @@ MonoBehaviour:
   boingInterval: 0.1667
   smallBoingMultiplier: 0.8
   largeBoingMultiplier: 1.2
+  buildingFoundationOffsets:
+  - {x: -1, y: -0.45, z: -0.5}
+  - {x: 0, y: -0.45, z: -0.5}
+  - {x: 1, y: -0.45, z: -0.5}
+  - {x: -1, y: -0.45, z: 0.5}
+  - {x: 0, y: -0.45, z: 0.5}
+  - {x: 1, y: -0.45, z: 0.5}
+  active: 0
   operational: 0
 --- !u!114 &3752192069620436707
 MonoBehaviour:
@@ -180,7 +187,7 @@ GameObject:
   - component: {fileID: 1481022138148425450}
   m_Layer: 0
   m_Name: Model
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

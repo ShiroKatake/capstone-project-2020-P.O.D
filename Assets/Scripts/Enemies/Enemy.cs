@@ -37,12 +37,30 @@ public class Enemy : MonoBehaviour
     /// <summary>
     /// The Enemy's unique ID number.
     /// </summary>
-    public int Id { get => id;}
 
     /// <summary>
     /// Whether or not the Enemy is moving.
     /// </summary>
     public bool Moving { get => moving; set => moving = value; }
+
+    //Complex Public Properties--------------------------------------------------------------------
+
+    /// <summary>
+    /// Enemy's unique ID number. Id should only be set by Enemy.Setup().
+    /// </summary>
+    public int Id
+    {
+        get
+        {
+            return id;
+        }
+
+        set
+        {
+            id = value;
+            gameObject.name = $"Enemy {id}";
+        }
+    }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -60,7 +78,8 @@ public class Enemy : MonoBehaviour
     /// </summary>
     public void Setup(int id)
     {
-        this.id = id;
+        Id = id;
+        health.Reset();
         SelectTarget();
         GetRadius();
         CalculateMovement();
@@ -186,8 +205,9 @@ public class Enemy : MonoBehaviour
         if (Vector3.Distance(transform.position, target.position) < radius + targetRadius)
         {
             target.GetComponent<Health>().Value -= damage;
-            EnemyController.Instance.Enemies.Remove(this);
-            health.Die();
+            EnemyFactory.Instance.DestroyEnemy(this);
         }
     }
+
+    //TODO: if eventually checking for collisions using collider, disable trigger collider while pooled, and re-enable when it's active in the game
 }

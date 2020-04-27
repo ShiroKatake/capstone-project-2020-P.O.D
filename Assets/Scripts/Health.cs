@@ -13,6 +13,10 @@ public class Health : MonoBehaviour
 
     [SerializeField] private float health;
 
+    //Non-Serialized Fields------------------------------------------------------------------------
+
+    private float startingHealth;
+
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
     //Basic Public Properties----------------------------------------------------------------------
@@ -21,6 +25,13 @@ public class Health : MonoBehaviour
     /// How much health, durability, etc. something currently has.
     /// </summary>
     public float Value { get => health; set => health = value; }
+
+    //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
+
+    private void Awake()
+    {
+        startingHealth = health;
+    }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
@@ -36,8 +47,16 @@ public class Health : MonoBehaviour
     /// <summary>
     /// Destroys the game object Health is attached to.
     /// </summary>
-    public void Die()
+    //public void Die()
+    //{
+    //    Destroy(gameObject);
+    //}
+
+    /// <summary>
+    /// Resets health to its starting value.
+    /// </summary>
+    public void Reset()
     {
-        Destroy(gameObject);
+        health = startingHealth;
     }
 }
