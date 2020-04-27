@@ -384,4 +384,9 @@ public class Player : MonoBehaviour
         laserBolt.transform.parent = laserBatteryPoint;
         laserBattery.Add(laserBolt);
     }
+
+    //getter for movementspeed
+    public float GetMovementSpeed(){
+        return movementSpeed;
+    }
 }
