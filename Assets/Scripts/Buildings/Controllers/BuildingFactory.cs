@@ -14,39 +14,41 @@ public class BuildingFactory : MonoBehaviour
     //[Header("Cryo Egg Prefab")]
     //[SerializeField] private Building cryoEggPrefab;
 
-    [Header("Resource Building Prefabs")]
-    [SerializeField] private Building solarPanelPrefab;
-    [SerializeField] private Building windTurbinePrefab;
-    [SerializeField] private Building waterDrillPrefab;
-
-    [Header("Terraforming Building Prefabs")]
-    [SerializeField] private Building gasDiffuserPrefab;
-    [SerializeField] private Building humidifierPrefab;
+    [Header("Building Prefabs")]
+    [SerializeField] private Building fusionReactorPrefab;
+    [SerializeField] private Building iceDrillPrefab;
+    [SerializeField] private Building boilerPrefab;
     [SerializeField] private Building greenhousePrefab;
-
-    [Header("Defence Building Prefabs")]
-    [SerializeField] private Building turretPrefab;
+    [SerializeField] private Building incineratorPrefab;
+    [SerializeField] private Building shortRangeTurretPrefab;
+    [SerializeField] private Building longRangeTurretPrefab;
 
     [Header("Other Prefabs")]
     [SerializeField] private BuildingFoundation buildingFoundationPrefab;
+    //[SerializeField] private GameObject pipePrefab;
+    //[SerializeField] private GameObject pipeBoxPrefab;
 
     [Header("Other Objects")]
     [SerializeField] private Transform objectPool;
 
     [Header("Initially Pooled Buildings")]
-    [SerializeField] private int pooledSolarPanels;
-    [SerializeField] private int pooledWindTurbines;
-    [SerializeField] private int pooledWaterDrills;
-    [SerializeField] private int pooledGasDiffusers;
-    [SerializeField] private int pooledHumidifiers;
+    [SerializeField] private int pooledFusionReactors;
+    [SerializeField] private int pooledIceDrills;
+    [SerializeField] private int pooledBoilers;
     [SerializeField] private int pooledGreenhouses;
-    [SerializeField] private int pooledTurrets;
+    [SerializeField] private int pooledIncinerators;
+    [SerializeField] private int pooledShortRangeTurrets;
+    [SerializeField] private int pooledLongRangeTurrets;
     [SerializeField] private int pooledBuildingFoundations;
+    //[SerializeField] private int pooledPipes;
+    //[SerializeField] private int pooledPipeBoxes;
 
     //Non-Serialized Fields
 
     private Dictionary<EBuilding, List<Building>> buildings;
     private List<BuildingFoundation> buildingFoundations;
+    //private List<GameObject> pipes;
+    //private List<GameObject> pipeBoxes;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -72,39 +74,29 @@ public class BuildingFactory : MonoBehaviour
 
         Instance = this;
         buildings = new Dictionary<EBuilding, List<Building>>();
-        buildings[EBuilding.SolarPanel] = new List<Building>();
-        buildings[EBuilding.WindTurbine] = new List<Building>();
-        buildings[EBuilding.WaterDrill] = new List<Building>();
-        buildings[EBuilding.GasDiffuser] = new List<Building>();
-        buildings[EBuilding.Humidifier] = new List<Building>();
+        buildings[EBuilding.FusionReactor] = new List<Building>();
+        buildings[EBuilding.IceDrill] = new List<Building>();
+        buildings[EBuilding.Boiler] = new List<Building>();
         buildings[EBuilding.Greenhouse] = new List<Building>();
-        buildings[EBuilding.Turret] = new List<Building>();
+        buildings[EBuilding.Incinerator] = new List<Building>();
+        buildings[EBuilding.ShortRangeTurret] = new List<Building>();
+        buildings[EBuilding.LongRangeTurret] = new List<Building>();
         buildingFoundations = new List<BuildingFoundation>();
         IdGenerator idGenerator = IdGenerator.Instance;
 
-        for (int i = 0; i < pooledSolarPanels; i++)
+        for (int i = 0; i < pooledFusionReactors; i++)
         {
-            buildings[EBuilding.SolarPanel].Add(CreateBuilding(EBuilding.SolarPanel, true));
+            buildings[EBuilding.FusionReactor].Add(CreateBuilding(EBuilding.FusionReactor, true));
         }
 
-        for (int i = 0; i < pooledWindTurbines; i++)
+        for (int i = 0; i < pooledIceDrills; i++)
         {
-            buildings[EBuilding.WindTurbine].Add(CreateBuilding(EBuilding.WindTurbine, true));
+            buildings[EBuilding.IceDrill].Add(CreateBuilding(EBuilding.IceDrill, true));
         }
 
-        for (int i = 0; i < pooledWaterDrills; i++)
+        for (int i = 0; i < pooledBoilers; i++)
         {
-            buildings[EBuilding.WaterDrill].Add(CreateBuilding(EBuilding.WaterDrill, true));
-        }
-
-        for (int i = 0; i < pooledGasDiffusers; i++)
-        {
-            buildings[EBuilding.GasDiffuser].Add(CreateBuilding(EBuilding.GasDiffuser, true));
-        }
-
-        for (int i = 0; i < pooledHumidifiers; i++)
-        {
-            buildings[EBuilding.Humidifier].Add(CreateBuilding(EBuilding.Humidifier, true));
+            buildings[EBuilding.Boiler].Add(CreateBuilding(EBuilding.Boiler, true));
         }
 
         for (int i = 0; i < pooledGreenhouses; i++)
@@ -112,9 +104,19 @@ public class BuildingFactory : MonoBehaviour
             buildings[EBuilding.Greenhouse].Add(CreateBuilding(EBuilding.Greenhouse, true));
         }
 
-        for (int i = 0; i < pooledTurrets; i++)
+        for (int i = 0; i < pooledIncinerators; i++)
         {
-            buildings[EBuilding.Turret].Add(CreateBuilding(EBuilding.Turret, true));
+            buildings[EBuilding.Incinerator].Add(CreateBuilding(EBuilding.Incinerator, true));
+        }
+
+        for (int i = 0; i < pooledShortRangeTurrets; i++)
+        {
+            buildings[EBuilding.ShortRangeTurret].Add(CreateBuilding(EBuilding.ShortRangeTurret, true));
+        }
+
+        for (int i = 0; i < pooledLongRangeTurrets; i++)
+        {
+            buildings[EBuilding.LongRangeTurret].Add(CreateBuilding(EBuilding.LongRangeTurret, true));
         }
         
         for (int i = 0; i < pooledBuildingFoundations; i++)
@@ -168,26 +170,26 @@ public class BuildingFactory : MonoBehaviour
 
         switch (buildingType)
         {
-            case EBuilding.SolarPanel:
-                building = Instantiate(solarPanelPrefab);
+            case EBuilding.FusionReactor:
+                building = Instantiate(fusionReactorPrefab);
                 break;
-            case EBuilding.WindTurbine:
-                building = Instantiate(windTurbinePrefab);
+            case EBuilding.IceDrill:
+                building = Instantiate(iceDrillPrefab);
                 break;
-            case EBuilding.WaterDrill:
-                building = Instantiate(waterDrillPrefab);
-                break;
-            case EBuilding.GasDiffuser:
-                building = Instantiate(gasDiffuserPrefab);
-                break;
-            case EBuilding.Humidifier:
-                building = Instantiate(humidifierPrefab);
+            case EBuilding.Boiler:
+                building = Instantiate(boilerPrefab);
                 break;
             case EBuilding.Greenhouse:
                 building = Instantiate(greenhousePrefab);
                 break;
-            case EBuilding.Turret:
-                building = Instantiate(turretPrefab);
+            case EBuilding.Incinerator:
+                building = Instantiate(incineratorPrefab);
+                break;
+            case EBuilding.ShortRangeTurret:
+                building = Instantiate(shortRangeTurretPrefab);
+                break;
+            case EBuilding.LongRangeTurret:
+                building = Instantiate(longRangeTurretPrefab);
                 break;
             default:
                 Debug.LogError("Invalid EBuildingType value passed to BuildingFactory.CreateBuilding().");
@@ -221,8 +223,9 @@ public class BuildingFactory : MonoBehaviour
 
         if (consumingResources)
         {
-            ResourceController.Instance.PowerSupply += building.PowerConsumption;
-            ResourceController.Instance.WaterSupply += building.WaterConsumption;
+            ResourceController.Instance.PowerConsumption -= building.PowerConsumption;
+            ResourceController.Instance.WaterConsumption -= building.WaterConsumption;
+            ResourceController.Instance.WasteConsumption -= building.WasteConsumption;
         }
 
         if (killed)

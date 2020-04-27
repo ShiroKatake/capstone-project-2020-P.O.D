@@ -96,6 +96,9 @@ public class ResourceCollector : MonoBehaviour
             case EResource.Water:
                 ResourceController.Instance.WaterSupply += collectionRate;
                 break;
+            case EResource.Waste:
+                ResourceController.Instance.WasteSupply += collectionRate;
+                break;
         }
     }
 
@@ -111,6 +114,9 @@ public class ResourceCollector : MonoBehaviour
                 break;
             case EResource.Water:
                 ResourceController.Instance.WaterSupply -= collectionRate;
+                break;
+            case EResource.Waste:
+                ResourceController.Instance.WasteSupply -= collectionRate;
                 break;
         }
     }

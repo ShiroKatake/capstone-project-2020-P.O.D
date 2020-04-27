@@ -97,7 +97,7 @@ public class Player : MonoBehaviour
             laserBattery.Add(l);
         }
 
-        selectedBuildingType = EBuilding.SolarPanel;
+        selectedBuildingType = EBuilding.FusionReactor;
         timeOfLastShot = shootCooldown * -1;
     }
 

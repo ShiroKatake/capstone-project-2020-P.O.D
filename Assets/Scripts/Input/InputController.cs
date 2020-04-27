@@ -124,13 +124,13 @@ public class InputController : MonoBehaviour
             case "CycleBuilding":
                 if (gamepad == EGamepad.MouseAndKeyboard)
                 {
-                    return Input.GetButtonDown("MKSpawnSolarPanel")
-                        || Input.GetButtonDown("MKSpawnWindTurbine")
-                        || Input.GetButtonDown("MKSpawnWaterDrill")
-                        || Input.GetButtonDown("MKSpawnGasDiffuser")
-                        || Input.GetButtonDown("MKSpawnHumidifier")
+                    return Input.GetButtonDown("MKSpawnFusionReactor")
+                        || Input.GetButtonDown("MKSpawnIceDrill")
+                        || Input.GetButtonDown("MKSpawnBoiler")
                         || Input.GetButtonDown("MKSpawnGreenhouse")
-                        || Input.GetButtonDown("MKSpawnTurret");
+                        || Input.GetButtonDown("MKSpawnIncinerator")
+                        || Input.GetButtonDown("MKSpawnShortRangeTurret")
+                        || Input.GetButtonDown("MKSpawnLongRangeTurret");
                 }
                 else
                 {
@@ -141,13 +141,13 @@ public class InputController : MonoBehaviour
             case "SpawnBuilding":
                 if (gamepad == EGamepad.MouseAndKeyboard)
                 {
-                    return Input.GetButtonDown("MKSpawnSolarPanel")
-                        || Input.GetButtonDown("MKSpawnWindTurbine")
-                        || Input.GetButtonDown("MKSpawnWaterDrill")
-                        || Input.GetButtonDown("MKSpawnGasDiffuser")
-                        || Input.GetButtonDown("MKSpawnHumidifier")
+                    return Input.GetButtonDown("MKSpawnFusionReactor")
+                        || Input.GetButtonDown("MKSpawnIceDrill")
+                        || Input.GetButtonDown("MKSpawnBoiler")
                         || Input.GetButtonDown("MKSpawnGreenhouse")
-                        || Input.GetButtonDown("MKSpawnTurret");
+                        || Input.GetButtonDown("MKSpawnIncinerator")
+                        || Input.GetButtonDown("MKSpawnShortRangeTurret")
+                        || Input.GetButtonDown("MKSpawnLongRangeTurret");
                 }
                 else
                 {
@@ -207,13 +207,13 @@ public class InputController : MonoBehaviour
             case "CycleBuilding":
                 if (gamepad == EGamepad.MouseAndKeyboard)
                 {
-                    return Input.GetButton("MKSpawnSolarPanel")
-                        || Input.GetButton("MKSpawnWindTurbine")
-                        || Input.GetButton("MKSpawnWaterDrill")
-                        || Input.GetButton("MKSpawnGasDiffuser")
-                        || Input.GetButton("MKSpawnHumidifier")
+                    return Input.GetButton("MKSpawnFusionReactor")
+                        || Input.GetButton("MKSpawnIceDrill")
+                        || Input.GetButton("MKSpawnBoiler")
                         || Input.GetButton("MKSpawnGreenhouse")
-                        || Input.GetButton("MKSpawnTurret");
+                        || Input.GetButton("MKSpawnIncinerator")
+                        || Input.GetButton("MKSpawnShortRangeTurret")
+                        || Input.GetButton("MKSpawnLongRangeTurret");
                 }
                 else
                 {
@@ -224,13 +224,13 @@ public class InputController : MonoBehaviour
             case "SpawnBuilding":
                 if (gamepad == EGamepad.MouseAndKeyboard)
                 {
-                    return Input.GetButton("MKSpawnSolarPanel")
-                        || Input.GetButton("MKSpawnWindTurbine")
-                        || Input.GetButton("MKSpawnWaterDrill")
-                        || Input.GetButton("MKSpawnGasDiffuser")
-                        || Input.GetButton("MKSpawnHumidifier")
+                    return Input.GetButton("MKSpawnFusionReactor")
+                        || Input.GetButton("MKSpawnIceDrill")
+                        || Input.GetButton("MKSpawnBoiler")
                         || Input.GetButton("MKSpawnGreenhouse")
-                        || Input.GetButton("MKSpawnTurret");
+                        || Input.GetButton("MKSpawnIncinerator")
+                        || Input.GetButton("MKSpawnShortRangeTurret")
+                        || Input.GetButton("MKSpawnLongRangeTurret");
                 }
                 else
                 {
@@ -298,29 +298,19 @@ public class InputController : MonoBehaviour
     /// <returns></returns>
     private EBuilding MKSelectBuilding(EBuilding currentSelection)
     {
-        if (Input.GetButton("MKSpawnSolarPanel"))
+        if (Input.GetButton("MKSpawnFusionReactor"))
         {
-            return EBuilding.SolarPanel;
+            return EBuilding.FusionReactor;
         }
 
-        if (Input.GetButton("MKSpawnWindTurbine"))
+        if (Input.GetButton("MKSpawnIceDrill"))
         {
-            return EBuilding.WindTurbine;
+            return EBuilding.IceDrill;
         }
 
-        if (Input.GetButton("MKSpawnWaterDrill"))
+        if (Input.GetButton("MKSpawnBoiler"))
         {
-            return EBuilding.WaterDrill;
-        }
-
-        if (Input.GetButton("MKSpawnGasDiffuser"))
-        {
-            return EBuilding.GasDiffuser;
-        }
-
-        if (Input.GetButton("MKSpawnHumidifier"))
-        {
-            return EBuilding.Humidifier;
+            return EBuilding.Boiler;
         }
 
         if (Input.GetButton("MKSpawnGreenhouse"))
@@ -328,9 +318,19 @@ public class InputController : MonoBehaviour
             return EBuilding.Greenhouse;
         }
 
-        if (Input.GetButton("MKSpawnTurret"))
+        if (Input.GetButton("MKSpawnIncinerator"))
         {
-            return EBuilding.Turret;
+            return EBuilding.Incinerator;
+        }
+
+        if (Input.GetButton("MKSpawnShortRangeTurret"))
+        {
+            return EBuilding.ShortRangeTurret;
+        }
+
+        if (Input.GetButton("MKSpawnLongRangeTurret"))
+        {
+            return EBuilding.LongRangeTurret;
         }
 
         return currentSelection;
@@ -358,11 +358,11 @@ public class InputController : MonoBehaviour
         {
             int result = (int)currentSelection + cycle;
 
-            if (result > (int)EBuilding.Turret)
+            if (result > (int)EBuilding.LongRangeTurret)
             {
                 result = 2;
             }
-            else if (result < (int)EBuilding.SolarPanel)
+            else if (result < (int)EBuilding.FusionReactor)
             {
                 result = 8;
             }

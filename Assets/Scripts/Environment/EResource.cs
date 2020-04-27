@@ -9,5 +9,6 @@ public enum EResource
 {
     Ore,
     Power,
-    Water
+    Water,
+    Waste
 }

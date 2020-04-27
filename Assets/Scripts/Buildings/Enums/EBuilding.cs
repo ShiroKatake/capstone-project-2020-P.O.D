@@ -9,11 +9,11 @@ public enum EBuilding
 {
     None,
     CryoEgg,
-    SolarPanel,
-    WindTurbine,
-    WaterDrill,
-    GasDiffuser,
-    Humidifier,
+    FusionReactor,
+    IceDrill,
+    Boiler,
     Greenhouse,
-    Turret
+    Incinerator,
+    ShortRangeTurret,
+    LongRangeTurret
 }
