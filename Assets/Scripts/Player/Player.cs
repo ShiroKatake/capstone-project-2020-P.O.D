@@ -25,6 +25,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float movementSpeed;
     [SerializeField] private float rotationSpeed;
     [SerializeField] private int laserBatteryCapacity;
+    [SerializeField] private float shootCooldown;
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
@@ -50,6 +51,7 @@ public class Player : MonoBehaviour
 
     //Laser Bolt Variables
     private bool shooting;
+    private float timeOfLastShot;
     private List<LaserBolt> laserBattery = new List<LaserBolt>();
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
@@ -95,7 +97,8 @@ public class Player : MonoBehaviour
             laserBattery.Add(l);
         }
 
-        selectedBuildingType = EBuilding.SolarPanel;
+        selectedBuildingType = EBuilding.FusionReactor;
+        timeOfLastShot = shootCooldown * -1;
     }
 
 
@@ -222,6 +225,8 @@ public class Player : MonoBehaviour
                     rawBuildingOffset = heldBuilding.GetOffset(transform.rotation.eulerAngles.y);
                     heldBuilding.transform.position = RawBuildingPositionToBuildingPosition(heldBuilding.XSize, heldBuilding.ZSize);
                 }
+
+                heldBuilding.Collider.enabled = true;
             }
             //Instantiate the appropriate building and postion it properly, replacing the old one.
             else if (heldBuilding.BuildingType != selectedBuildingType)
@@ -237,9 +242,10 @@ public class Player : MonoBehaviour
                     pos = RawBuildingPositionToBuildingPosition(heldBuilding.XSize, heldBuilding.ZSize);
                 }
 
-                BuildingFactory.Instance.DestroyBuilding(heldBuilding, false);
+                BuildingFactory.Instance.DestroyBuilding(heldBuilding, false, false);
                 heldBuilding = BuildingFactory.Instance.GetBuilding(selectedBuildingType);
                 heldBuilding.transform.position = pos;
+                heldBuilding.Collider.enabled = true;
             }
             else //Move the building where you want it
             {
@@ -281,7 +287,7 @@ public class Player : MonoBehaviour
                     }
                 }
 
-                BuildingFactory.Instance.DestroyBuilding(heldBuilding, false);
+                BuildingFactory.Instance.DestroyBuilding(heldBuilding, false, false);
                 heldBuilding = null;
                 spawnBuilding = false;
                 placeBuilding = false;
@@ -352,8 +358,9 @@ public class Player : MonoBehaviour
     /// </summary>
     private void CheckShooting()
     {
-        if (shooting && laserBattery.Count > 0)
+        if (shooting && laserBattery.Count > 0 && Time.time - timeOfLastShot > shootCooldown)
         {
+            timeOfLastShot = Time.time;
             LaserBolt laserBolt = laserBattery[0];
             laserBattery.Remove(laserBolt);
             laserBolt.transform.parent = null;
@@ -371,6 +378,7 @@ public class Player : MonoBehaviour
     public void DestroyLaserBolt(LaserBolt laserBolt)
     {
         laserBolt.Active = false;
+        laserBolt.Collider.enabled = false;
         laserBolt.Rigidbody.isKinematic = true;
         laserBolt.transform.position = laserBatteryPoint.position;
         laserBolt.transform.parent = laserBatteryPoint;

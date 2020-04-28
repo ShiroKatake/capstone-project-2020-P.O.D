@@ -63,20 +63,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d3aff46ccea6cf46a5548ffc2b50ebd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  solarPanelPrefab: {fileID: 7989155517478719925, guid: 24cf1029333088241ba2e0353577d9d1,
+  fusionReactorPrefab: {fileID: 7989155517478719925, guid: 24cf1029333088241ba2e0353577d9d1,
     type: 3}
-  windTurbinePrefab: {fileID: 197265517754488293, guid: 4a5cc535ea56f774c95c7058de1b6d40,
+  iceDrillPrefab: {fileID: 6356630498027900237, guid: 2863a907b049ebd4b92f73a71635ec1d,
     type: 3}
-  waterDrillPrefab: {fileID: 6356630498027900237, guid: 2863a907b049ebd4b92f73a71635ec1d,
-    type: 3}
-  gasDiffuserPrefab: {fileID: 6057790016772902916, guid: a1ed15bf36ab48b499fe23ef5ceb8ca6,
-    type: 3}
-  humidifierPrefab: {fileID: 2427136214263755661, guid: 0332084ab57deef4aa60fa1089c3c8cb,
+  boilerPrefab: {fileID: 2427136214263755661, guid: 0332084ab57deef4aa60fa1089c3c8cb,
     type: 3}
   greenhousePrefab: {fileID: 9054559055595012424, guid: 588682734d3c4d347bd6ed96a5858e1a,
     type: 3}
-  turretPrefab: {fileID: 276844957512759736, guid: fe3216872c494ae44b9d51b193f93c9d,
+  incineratorPrefab: {fileID: 6057790016772902916, guid: a1ed15bf36ab48b499fe23ef5ceb8ca6,
     type: 3}
+  shortRangeTurretPrefab: {fileID: 276844957512759736, guid: c70a812886afc7d40ac547ba1ec4bc8a,
+    type: 3}
+  longRangeTurretPrefab: {fileID: 276844957512759736, guid: fa376f85c4e268445b5be711efbccc8a,
+    type: 3}
+  buildingFoundationPrefab: {fileID: 7603203994333413329, guid: 701537750ff06cf4e87099996e3e14b2,
+    type: 3}
+  objectPool: {fileID: 0}
+  pooledFusionReactors: 20
+  pooledIceDrills: 20
+  pooledBoilers: 20
+  pooledGreenhouses: 20
+  pooledIncinerators: 20
+  pooledShortRangeTurrets: 20
+  pooledLongRangeTurrets: 20
+  pooledBuildingFoundations: 20
 --- !u!114 &8337738344923657297
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -161,5 +172,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ore: 999999999
+  powerConsumption: 0
   powerSupply: 999999999
+  waterConsumption: 0
   waterSupply: 999999999
+  wasteConsumption: 0
+  wasteSupply: 999999999

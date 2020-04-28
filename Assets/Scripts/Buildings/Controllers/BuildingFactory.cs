@@ -14,18 +14,41 @@ public class BuildingFactory : MonoBehaviour
     //[Header("Cryo Egg Prefab")]
     //[SerializeField] private Building cryoEggPrefab;
 
-    [Header("Resource Building Prefabs")]
-    [SerializeField] private Building solarPanelPrefab;
-    [SerializeField] private Building windTurbinePrefab;
-    [SerializeField] private Building waterDrillPrefab;
-
-    [Header("Terraforming Building Prefabs")]
-    [SerializeField] private Building gasDiffuserPrefab;
-    [SerializeField] private Building humidifierPrefab;
+    [Header("Building Prefabs")]
+    [SerializeField] private Building fusionReactorPrefab;
+    [SerializeField] private Building iceDrillPrefab;
+    [SerializeField] private Building boilerPrefab;
     [SerializeField] private Building greenhousePrefab;
+    [SerializeField] private Building incineratorPrefab;
+    [SerializeField] private Building shortRangeTurretPrefab;
+    [SerializeField] private Building longRangeTurretPrefab;
 
-    [Header("Defence Building Prefabs")]
-    [SerializeField] private Building turretPrefab;
+    [Header("Other Prefabs")]
+    [SerializeField] private BuildingFoundation buildingFoundationPrefab;
+    //[SerializeField] private GameObject pipePrefab;
+    //[SerializeField] private GameObject pipeBoxPrefab;
+
+    [Header("Other Objects")]
+    [SerializeField] private Transform objectPool;
+
+    [Header("Initially Pooled Buildings")]
+    [SerializeField] private int pooledFusionReactors;
+    [SerializeField] private int pooledIceDrills;
+    [SerializeField] private int pooledBoilers;
+    [SerializeField] private int pooledGreenhouses;
+    [SerializeField] private int pooledIncinerators;
+    [SerializeField] private int pooledShortRangeTurrets;
+    [SerializeField] private int pooledLongRangeTurrets;
+    [SerializeField] private int pooledBuildingFoundations;
+    //[SerializeField] private int pooledPipes;
+    //[SerializeField] private int pooledPipeBoxes;
+
+    //Non-Serialized Fields
+
+    private Dictionary<EBuilding, List<Building>> buildings;
+    private List<BuildingFoundation> buildingFoundations;
+    //private List<GameObject> pipes;
+    //private List<GameObject> pipeBoxes;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -50,48 +73,82 @@ public class BuildingFactory : MonoBehaviour
         }
 
         Instance = this;
+        buildings = new Dictionary<EBuilding, List<Building>>();
+        buildings[EBuilding.FusionReactor] = new List<Building>();
+        buildings[EBuilding.IceDrill] = new List<Building>();
+        buildings[EBuilding.Boiler] = new List<Building>();
+        buildings[EBuilding.Greenhouse] = new List<Building>();
+        buildings[EBuilding.Incinerator] = new List<Building>();
+        buildings[EBuilding.ShortRangeTurret] = new List<Building>();
+        buildings[EBuilding.LongRangeTurret] = new List<Building>();
+        buildingFoundations = new List<BuildingFoundation>();
+        IdGenerator idGenerator = IdGenerator.Instance;
+
+        for (int i = 0; i < pooledFusionReactors; i++)
+        {
+            buildings[EBuilding.FusionReactor].Add(CreateBuilding(EBuilding.FusionReactor, true));
+        }
+
+        for (int i = 0; i < pooledIceDrills; i++)
+        {
+            buildings[EBuilding.IceDrill].Add(CreateBuilding(EBuilding.IceDrill, true));
+        }
+
+        for (int i = 0; i < pooledBoilers; i++)
+        {
+            buildings[EBuilding.Boiler].Add(CreateBuilding(EBuilding.Boiler, true));
+        }
+
+        for (int i = 0; i < pooledGreenhouses; i++)
+        {
+            buildings[EBuilding.Greenhouse].Add(CreateBuilding(EBuilding.Greenhouse, true));
+        }
+
+        for (int i = 0; i < pooledIncinerators; i++)
+        {
+            buildings[EBuilding.Incinerator].Add(CreateBuilding(EBuilding.Incinerator, true));
+        }
+
+        for (int i = 0; i < pooledShortRangeTurrets; i++)
+        {
+            buildings[EBuilding.ShortRangeTurret].Add(CreateBuilding(EBuilding.ShortRangeTurret, true));
+        }
+
+        for (int i = 0; i < pooledLongRangeTurrets; i++)
+        {
+            buildings[EBuilding.LongRangeTurret].Add(CreateBuilding(EBuilding.LongRangeTurret, true));
+        }
+        
+        for (int i = 0; i < pooledBuildingFoundations; i++)
+        {
+            buildingFoundations.Add(CreateBuildingFoundation(true));
+        }
     }
 
-    //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
+    //Triggered Methods (Buildings)------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
     /// Get buildings of a specified type from BuildingFactory.
     /// </summary>
     /// <param name="buildingType">The type of building you want BuildingFactory to get for you.</param>
-    /// <returns></returns>
+    /// <returns>A building of the specified type.</returns>
     public Building GetBuilding(EBuilding buildingType)
     {
         Building building;
 
-        switch(buildingType)
+        if (buildings[buildingType].Count > 0)
         {
-            case EBuilding.SolarPanel:
-                building = Instantiate(solarPanelPrefab) ;
-                break;
-            case EBuilding.WindTurbine:
-                building = Instantiate(windTurbinePrefab);
-                break;
-            case EBuilding.WaterDrill:
-                building = Instantiate(waterDrillPrefab);
-                break;
-            case EBuilding.GasDiffuser:
-                building = Instantiate(gasDiffuserPrefab);
-                break;
-            case EBuilding.Humidifier:
-                building = Instantiate(humidifierPrefab);
-                break;
-            case EBuilding.Greenhouse:
-                building = Instantiate(greenhousePrefab);
-                break;
-            case EBuilding.Turret:
-                building = Instantiate(turretPrefab);
-                break;
-            default:
-                Debug.LogError("Invalid EBuildingType value passed to BuildingFactory.GetBuilding().");
-                return null;
+            building = buildings[buildingType][0];
+            buildings[buildingType].RemoveAt(0);
+            building.transform.parent = null;
+        }
+        else
+        {
+            building = CreateBuilding(buildingType, false);
         }
 
         building.Id = IdGenerator.Instance.GetNextId();
+        building.Active = true;
         BuildingController.Instance.RegisterBuilding(building);
 
         if (building.Terraformer != null)
@@ -103,13 +160,60 @@ public class BuildingFactory : MonoBehaviour
     }
 
     /// <summary>
+    /// Creates buildings of a specified type.
+    /// </summary>
+    /// <param name="buildingType">The type of building you want to create.</param>
+    /// <returns>A building of the specified type.</returns>
+    private Building CreateBuilding(EBuilding buildingType, bool pooling)
+    {
+        Building building;
+
+        switch (buildingType)
+        {
+            case EBuilding.FusionReactor:
+                building = Instantiate(fusionReactorPrefab);
+                break;
+            case EBuilding.IceDrill:
+                building = Instantiate(iceDrillPrefab);
+                break;
+            case EBuilding.Boiler:
+                building = Instantiate(boilerPrefab);
+                break;
+            case EBuilding.Greenhouse:
+                building = Instantiate(greenhousePrefab);
+                break;
+            case EBuilding.Incinerator:
+                building = Instantiate(incineratorPrefab);
+                break;
+            case EBuilding.ShortRangeTurret:
+                building = Instantiate(shortRangeTurretPrefab);
+                break;
+            case EBuilding.LongRangeTurret:
+                building = Instantiate(longRangeTurretPrefab);
+                break;
+            default:
+                Debug.LogError("Invalid EBuildingType value passed to BuildingFactory.CreateBuilding().");
+                return null;
+        }
+
+        if (pooling)
+        {
+            building.transform.position = objectPool.transform.position;
+            building.transform.parent = objectPool;
+        }
+
+        return building;
+    }
+
+    /// <summary>
     /// Destroy a building.
     /// </summary>
     /// <param name="building">The building to be destroyed.</param>
     /// <param name="consumingResources">Is the building consuming resources and does that consumption need to be cancelled now that it's being destroyed?</param>
-    public void DestroyBuilding(Building building, bool consumingResources)
+    /// <param name="consumingResources">Was the building destroyed while placed, and therefore needs to leave behind foundations?</param>
+    public void DestroyBuilding(Building building, bool consumingResources, bool killed)
     {
-        building.Operational = false;
+        //Debug.Log($"Destroy Building. BuildingFactory.Buildings[{building.BuildingType}].Count pre-pooling is {buildings[building.BuildingType].Count}");
         BuildingController.Instance.DeRegisterBuilding(building);
 
         if (building.Terraformer != null)
@@ -119,10 +223,80 @@ public class BuildingFactory : MonoBehaviour
 
         if (consumingResources)
         {
-            ResourceController.Instance.PowerSupply += building.PowerConsumption;
-            ResourceController.Instance.WaterSupply += building.WaterConsumption;
+            ResourceController.Instance.PowerConsumption -= building.PowerConsumption;
+            ResourceController.Instance.WaterConsumption -= building.WaterConsumption;
+            ResourceController.Instance.WasteConsumption -= building.WasteConsumption;
         }
 
-        building.Health.Die();
+        if (killed)
+        {
+            foreach (Vector3 offset in building.BuildingFoundationOffsets)
+            {
+                GetBuildingFoundation().transform.position = building.transform.position + offset;
+            }
+        }
+
+        building.Reset();
+        building.Collider.enabled = false;
+        building.transform.position = objectPool.position;
+        building.transform.parent = objectPool;
+        buildings[building.BuildingType].Add(building);
+        //Debug.Log($"Destroy Building. BuildingFactory.Buildings[{building.BuildingType}].Count post-pooling is {buildings[building.BuildingType].Count}");
+    }
+
+    //Triggered Methods (Building Foundations)-------------------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Get a building foundation from BuildingFactory.
+    /// </summary>
+    /// <returns>A building foundation.</returns>
+    public BuildingFoundation GetBuildingFoundation()
+    {
+        BuildingFoundation buildingFoundation;
+
+        if (buildingFoundations.Count > 0)
+        {
+            buildingFoundation = buildingFoundations[0];
+            buildingFoundations.RemoveAt(0);
+            buildingFoundation.transform.parent = null;
+        }
+        else
+        {
+            buildingFoundation = CreateBuildingFoundation(false);
+        }
+
+        buildingFoundation.Id = IdGenerator.Instance.GetNextId();
+        buildingFoundation.Activate();
+        return buildingFoundation;
+    }
+
+    /// <summary>
+    /// Creates a building foundation.
+    /// </summary>
+    /// <param name="pooling">The created building foundation.</param>
+    /// <returns></returns>
+    private BuildingFoundation CreateBuildingFoundation(bool pooling)
+    {
+        BuildingFoundation buildingFoundation = Instantiate(buildingFoundationPrefab);
+
+        if (pooling)
+        {
+            buildingFoundation.transform.position = objectPool.transform.position;
+            buildingFoundation.transform.parent = objectPool;
+        }
+
+        return buildingFoundation;
+    }
+
+    /// <summary>
+    /// Destroy a building foundation.
+    /// </summary>
+    /// <param name="buildingFoundation">The building foundation to be destroyed.</param>
+    public void DestroyBuildingFoundation(BuildingFoundation buildingFoundation)
+    {
+        buildingFoundation.Collider.enabled = false;
+        buildingFoundation.transform.position = objectPool.position;
+        buildingFoundation.transform.parent = objectPool;
+        buildingFoundations.Add(buildingFoundation);
     }
 }

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6104976022102713221}
   m_Layer: 0
   m_Name: Collider
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 880952307760529664}
   m_Layer: 0
   m_Name: CryoEgg
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -127,17 +127,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 0
-  buildingCategory: 0
   buildingType: 1
   oreCost: 0
   powerConsumption: 0
   waterConsumption: 0
+  wasteConsumption: 0
   xSize: 3
   zSize: 3
   buildTime: 0
   boingInterval: 0
   smallBoingMultiplier: 0
   largeBoingMultiplier: 0
+  buildingFoundationOffsets: []
+  opaqueMaterial: {fileID: 2100000, guid: 671f12d8f6c7b6e4eb39b7b9534197ba, type: 2}
+  transparentMaterial: {fileID: 2100000, guid: 101275a717e4a1c4fb89e563e095dfd7, type: 2}
+  buildingErrorMaterial: {fileID: 2100000, guid: 101275a717e4a1c4fb89e563e095dfd7,
+    type: 2}
+  active: 0
   operational: 1
 --- !u!114 &880952307760529664
 MonoBehaviour:
@@ -165,7 +171,7 @@ GameObject:
   - component: {fileID: 8654491235114785109}
   m_Layer: 0
   m_Name: Model
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

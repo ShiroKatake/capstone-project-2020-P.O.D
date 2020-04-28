@@ -15,13 +15,15 @@ public class LaserBolt : MonoBehaviour
     [SerializeField] private float speed;
     [SerializeField] private float damage;
 
-    [Header("Laser Bolt Components")]
-    [SerializeField] private Rigidbody rigidbody;
-
     //Non-Serialized Fields------------------------------------------------------------------------
 
-    //private Vector3 vector;
+    //Components
+    private Collider collider;
+    private Rigidbody rigidbody;
+
+    //Other
     private bool active = false;
+    private bool leftPlayerCollider;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -33,9 +35,26 @@ public class LaserBolt : MonoBehaviour
     public bool Active { get => active; set => active = value; }
 
     /// <summary>
+    /// The laser bolt's collider component.
+    /// </summary>
+    public Collider Collider { get => collider; }
+
+    /// <summary>
     /// The laser bolt's rigidbody component.
     /// </summary>
     public Rigidbody Rigidbody { get => rigidbody; }
+
+    //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
+    /// Awake() runs before Start().
+    /// </summary>
+    private void Awake()
+    {
+        collider = GetComponent<Collider>();
+        rigidbody = GetComponent<Rigidbody>();
+    }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -58,15 +77,29 @@ public class LaserBolt : MonoBehaviour
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
-    /// Activates a laser bolt, applying a velocity to it.
+    /// Starts the coroutine that activates the laser bolt in the next frame.
     /// </summary>
     /// <param name="vector">The normalised direction of the laser bolt's velocity.</param>
     public void Shoot(Vector3 vector)
     {
+        //Debug.Log($"Shooting laser bolt with vector {vector}");
+        StartCoroutine(Shooting(vector));
+    }
+
+    /// <summary>
+    /// Activates a laser bolt, applying a velocity to it.
+    /// </summary>
+    /// <param name="vector">The normalised direction of the laser bolt's velocity.</param>
+    IEnumerator Shooting(Vector3 vector)
+    {
+        yield return null;
+
         active = true;
         rigidbody.isKinematic = false;
+        collider.enabled = true;
         //rigidbody.AddForce(vector * speed, ForceMode.VelocityChange);
         rigidbody.velocity = vector * speed;
+        leftPlayerCollider = false;
     }
 
     /// <summary>
@@ -75,6 +108,7 @@ public class LaserBolt : MonoBehaviour
     /// <param name="other">The collider of the other object the laser bolt collided with.</param>
     public void OnTriggerEnter(Collider other)
     {
+        //Debug.Log("LaserBolt.OnTriggerEnter()");
         LaserBoltCollision(other);
     }
 
@@ -84,13 +118,15 @@ public class LaserBolt : MonoBehaviour
     /// <param name="collidedWith">The collider of the other object the laser bolt collided with.</param>
     private void LaserBoltCollision(Collider collidedWith)
     {
-        Enemy enemy = collidedWith.gameObject.GetComponent<Enemy>();
-
-        if (enemy != null)
+        if (collidedWith.CompareTag("Enemy"))
         {
-            enemy.Health.Value -= damage;
+            collidedWith.gameObject.GetComponent<Enemy>().Health.Value -= damage;
         }
 
-        Player.Instance.DestroyLaserBolt(this);
+        if (!collidedWith.CompareTag("Player") && !collidedWith.CompareTag("Laser Bolt"))
+        {
+            //Debug.Log($"Destroying laser bolt that collided with {collidedWith.gameObject.name}");
+            Player.Instance.DestroyLaserBolt(this);
+        }
     }
 }
