@@ -21,6 +21,7 @@ public class Building : MonoBehaviour, ICollisionListener
     [SerializeField] private int oreCost;
     [SerializeField] private int powerConsumption;
     [SerializeField] private int waterConsumption;
+    [SerializeField] private int wasteConsumption;
 
     [Header("Size")]
     [SerializeField] [Range(1, 3)] private int xSize;
@@ -35,6 +36,11 @@ public class Building : MonoBehaviour, ICollisionListener
     [Header("Offsets of Foundations from Position")]
     [SerializeField] private List<Vector3> buildingFoundationOffsets;
 
+    [Header("Materials")]
+    [SerializeField] private Material opaqueMaterial;
+    [SerializeField] private Material transparentMaterial;
+    [SerializeField] private Material buildingErrorMaterial;
+
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
     //Components
@@ -46,12 +52,8 @@ public class Building : MonoBehaviour, ICollisionListener
 
     //Positioning
     private Dictionary<string, Vector3> offsets;
-    private Material material;
-    private Color translucentColour;
-    private Color solidColour;
-    private Color errorColour;
     private bool colliding = false;
-    private Collider otherCollider = null;
+    [SerializeField] private List<Collider> otherColliders;
     private List<CollisionReporter> collisionReporters;
     Vector3 normalScale;
 
@@ -120,6 +122,11 @@ public class Building : MonoBehaviour, ICollisionListener
     /// The building's terraformer component, if it has one.
     /// </summary>
     public Terraformer Terraformer { get => terraformer; }
+
+    /// <summary>
+    /// How much waste this building requires per second to function.
+    /// </summary>
+    public int WasteConsumption { get => wasteConsumption; }
 
     /// <summary>
     /// How much water this building requires per second to function.
@@ -200,11 +207,8 @@ public class Building : MonoBehaviour, ICollisionListener
         resourceCollector = GetComponent<ResourceCollector>();
         terraformer = GetComponent<Terraformer>();
         collisionReporters = new List<CollisionReporter>(GetComponentsInChildren<CollisionReporter>());
+        otherColliders = new List<Collider>();
 
-        material = GetComponentInChildren<MeshRenderer>().material;
-        solidColour = new Color(material.color.r, material.color.g, material.color.b, 1f);
-        translucentColour = new Color(solidColour.r, solidColour.g, solidColour.b, 0.5f);
-        errorColour = new Color(0.5f, 0.5f, 0.5f, 0.5f); //Gray
         normalScale = transform.localScale;
         normalBuildTime = buildTime;
 
@@ -347,23 +351,45 @@ public class Building : MonoBehaviour, ICollisionListener
                 //Weird quirk of destroying one object and then instantating another and moving it to the same position: it triggers boths' OnTriggerEnter(),
                 //even though one doesn't exist, and then the other doesn't have OnTriggerExit() triggered in the next frame. This checks for the existence of
                 //the other collider and corrects the value of colliding if the other collider no longer exists.
-                if (colliding && otherCollider == null)
+                if (colliding )
                 {
-                    colliding = false;
+                    if (otherColliders.Count == 0)
+                    {
+                        colliding = false;
+                    }
+                    else
+                    {
+                        colliding = false;
+
+                        for (int i = 0, j = otherColliders.Count; i < j; i++)
+                        {
+                            if (otherColliders[i] == null)  
+                            {
+                                otherColliders.RemoveAt(i);
+                                i--;
+                                j--;
+                            }
+                            else
+                            {
+                                colliding = true;
+                                break;
+                            }
+                        }
+                    }
                 }
 
                 if (colliding)
                 {
-                    if (material.color != errorColour)
+                    if (renderer.material != buildingErrorMaterial)
                     {
-                        material.color = errorColour;
+                        renderer.material = buildingErrorMaterial;
                     }
                 }
                 else
                 {
-                    if (material.color != translucentColour)
+                    if (renderer.material != transparentMaterial)
                     {
-                        material.color = translucentColour;
+                        renderer.material = transparentMaterial;
                     }
                 }
             }
@@ -387,10 +413,11 @@ public class Building : MonoBehaviour, ICollisionListener
     public void Place(Vector3 position)
     {
         ResourceController.Instance.Ore -= oreCost;
-        ResourceController.Instance.PowerSupply -= powerConsumption;
-        ResourceController.Instance.WaterSupply -= waterConsumption;
+        ResourceController.Instance.PowerConsumption += powerConsumption;
+        ResourceController.Instance.WaterConsumption += waterConsumption;
+        ResourceController.Instance.WasteConsumption += wasteConsumption;
         transform.position = position;
-        material.color = solidColour;
+        renderer.material = opaqueMaterial;
         placed = true;
 
         foreach (CollisionReporter c in collisionReporters)
@@ -415,11 +442,11 @@ public class Building : MonoBehaviour, ICollisionListener
         colliding = false;
         placed = false;
         
-        otherCollider = null;
+        otherColliders.Clear();
         renderer.transform.localPosition = Vector3.zero;
         transform.localScale = normalScale;
         buildTime = normalBuildTime;
-        material.color = translucentColour;
+        renderer.material = transparentMaterial;
         collider.enabled = false;
     }
 
@@ -471,7 +498,11 @@ public class Building : MonoBehaviour, ICollisionListener
         {
             //Debug.Log($"Building {id} OnTriggerEnter(). Other is {other}");
             colliding = true;
-            otherCollider = other;
+
+            if (!otherColliders.Contains(collider))
+            {
+                otherColliders.Add(other);
+            }
         }
     }
 
@@ -484,8 +515,15 @@ public class Building : MonoBehaviour, ICollisionListener
         if (active)
         {            
             //Debug.Log($"Building {id} OnTriggerExit(). Other is {other}");
-            colliding = false;
-            otherCollider = null;
+            if (otherColliders.Contains(other))
+            {
+                otherColliders.Remove(other);
+            }
+
+            if (otherColliders.Count == 0)
+            {
+                colliding = false;
+            }
         }
     }
 

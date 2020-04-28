@@ -26,7 +26,7 @@ public class BuildingSelectionHUD : MonoBehaviour
 
     void Awake(){
 
-        selectedBuildingType = EBuilding.SolarPanel;
+        selectedBuildingType = EBuilding.FusionReactor;
     }
 
     // Update is called once per frame

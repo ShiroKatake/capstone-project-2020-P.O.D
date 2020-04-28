@@ -2,7 +2,7 @@
 using UnityEngine;
 
 /// <summary>
-/// The player.
+/// The player. Player controls the player's movement and shooting. For building spawning, see BuildingSpawningController.
 /// </summary>
 public class Player : MonoBehaviour
 {
@@ -101,7 +101,7 @@ public class Player : MonoBehaviour
             laserBattery.Add(l);
         }
 
-        //selectedBuildingType = EBuilding.SolarPanel;
+        //selectedBuildingType = EBuilding.FusionReactor;
         timeOfLastShot = shootCooldown * -1;
     }
 
@@ -271,8 +271,13 @@ public class Player : MonoBehaviour
             if (placeBuilding && ResourceController.Instance.Ore >= heldBuilding.OreCost && !collision)
             {              
                 Vector3 spawnPos = heldBuilding.transform.position;
+                spawnPos.y = 0.02f;
+                PipeManager.Instance.RegisterPipeBuilding(spawnPos);
                 spawnPos.y = 0.5f;
-                heldBuilding.Place(spawnPos);    
+                heldBuilding.Place(spawnPos);
+
+                
+
                 heldBuilding = null;
                 spawnBuilding = false;
                 placeBuilding = false;
