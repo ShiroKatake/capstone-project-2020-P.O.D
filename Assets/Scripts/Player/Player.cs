@@ -38,6 +38,7 @@ public class Player : MonoBehaviour
     private Quaternion oldRotation;
     private float slerpProgress = 1;
 
+/*
     //Variables for Building Spawning
     private EBuilding selectedBuildingType;
     private Building heldBuilding;
@@ -48,6 +49,7 @@ public class Player : MonoBehaviour
     private bool spawnBuilding = false;
     private bool placeBuilding = false;
     private bool cancelBuilding = false;
+*/
 
     //Laser Bolt Variables
     private bool shooting;
@@ -55,6 +57,8 @@ public class Player : MonoBehaviour
     private List<LaserBolt> laserBattery = new List<LaserBolt>();
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
+
+    public float GetMovementSpeed {get => movementSpeed;}
 
     //Singleton Public Property--------------------------------------------------------------------
 
@@ -97,7 +101,7 @@ public class Player : MonoBehaviour
             laserBattery.Add(l);
         }
 
-        selectedBuildingType = EBuilding.SolarPanel;
+        //selectedBuildingType = EBuilding.SolarPanel;
         timeOfLastShot = shootCooldown * -1;
     }
 
@@ -130,6 +134,7 @@ public class Player : MonoBehaviour
     {
         //Movement Input
         movement = new Vector3(InputController.Instance.GetAxis("MoveLeftRight"), 0, InputController.Instance.GetAxis("MoveForwardsBackwards"));
+/*
         rawBuildingMovement = new Vector3(InputController.Instance.GetAxis("LookLeftRight"), 0, InputController.Instance.GetAxis("LookUpDown"));
 
         //Building Selection Input
@@ -153,7 +158,7 @@ public class Player : MonoBehaviour
             placeBuilding = InputController.Instance.ButtonPressed("PlaceBuilding");
             cancelBuilding = InputController.Instance.ButtonPressed("CancelBuilding");
         }
-
+*/
         //Shooting Input
         shooting = InputController.Instance.ButtonHeld("Shoot");
     }
@@ -167,7 +172,7 @@ public class Player : MonoBehaviour
     {
         Look();
         Move();
-        CheckBuildingSpawning();
+        //CheckBuildingSpawning();
         CheckShooting();
     }
 
@@ -207,6 +212,7 @@ public class Player : MonoBehaviour
     /// <summary>
     /// Checks if the player wants to spawn a building, and spawns and moves it if they do.
     /// </summary>
+/*
     private void CheckBuildingSpawning()
     {
         if (spawnBuilding)
@@ -295,7 +301,8 @@ public class Player : MonoBehaviour
             }
         }
     }
-
+*/
+/*
     /// <summary>
     /// Gets the position of the mouse in the scene based on its on-screen position, and uses that and the building's size to determine the building's position.
     /// </summary>
@@ -352,7 +359,7 @@ public class Player : MonoBehaviour
         pos.z = Mathf.Round(pos.z) + (zSize == 2 ? 0.5f : 0);
         return pos;
     }
-
+*/
     /// <summary>
     /// Checks if the player wants to shoot based on their input, and fires laser bolts if they do.
     /// </summary>
@@ -383,10 +390,5 @@ public class Player : MonoBehaviour
         laserBolt.transform.position = laserBatteryPoint.position;
         laserBolt.transform.parent = laserBatteryPoint;
         laserBattery.Add(laserBolt);
-    }
-
-    //getter for movementspeed
-    public float GetMovementSpeed(){
-        return movementSpeed;
     }
 }

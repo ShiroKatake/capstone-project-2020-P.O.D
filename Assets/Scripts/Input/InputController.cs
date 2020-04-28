@@ -14,10 +14,14 @@ public class InputController : MonoBehaviour
     [SerializeField] private EGamepad gamepad;
     [SerializeField] private EOperatingSystem operatingSystem;
 
+    [Header("Buttons")]
+    [SerializeField] private ButtonClickEventManager[] buttons;
+
     //Non-Serialized Fields------------------------------------------------------------------------
 
     private string gamepadPrefix;
     private string osPrefix;
+    private ButtonClickEventManager tmpBtn;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -130,7 +134,8 @@ public class InputController : MonoBehaviour
                         || Input.GetButtonDown("MKSpawnGasDiffuser")
                         || Input.GetButtonDown("MKSpawnHumidifier")
                         || Input.GetButtonDown("MKSpawnGreenhouse")
-                        || Input.GetButtonDown("MKSpawnTurret");
+                        || Input.GetButtonDown("MKSpawnTurret")
+                        || CheckForUIButtonPress();
                 }
                 else
                 {
@@ -147,7 +152,8 @@ public class InputController : MonoBehaviour
                         || Input.GetButtonDown("MKSpawnGasDiffuser")
                         || Input.GetButtonDown("MKSpawnHumidifier")
                         || Input.GetButtonDown("MKSpawnGreenhouse")
-                        || Input.GetButtonDown("MKSpawnTurret");
+                        || Input.GetButtonDown("MKSpawnTurret")
+                        || CheckForUIButtonPress();
                 }
                 else
                 {
@@ -158,6 +164,17 @@ public class InputController : MonoBehaviour
             default:
                 return false;
         }
+    }
+
+    private bool CheckForUIButtonPress(){
+        foreach (ButtonClickEventManager btn in buttons){
+            if (btn.IsClicked){
+                tmpBtn = btn;
+                return true;
+            }
+        }
+        tmpBtn = null;
+        return false;
     }
 
     /// <summary>
@@ -298,11 +315,16 @@ public class InputController : MonoBehaviour
     /// <returns></returns>
     private EBuilding MKSelectBuilding(EBuilding currentSelection)
     {
+        if (tmpBtn != null)
+        {
+            return tmpBtn.GetBuildingType;
+        }
+
         if (Input.GetButton("MKSpawnSolarPanel"))
         {
             return EBuilding.SolarPanel;
         }
-
+        
         if (Input.GetButton("MKSpawnWindTurbine"))
         {
             return EBuilding.WindTurbine;

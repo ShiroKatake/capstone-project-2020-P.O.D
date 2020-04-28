@@ -1,19 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class BuildingSelectionHUD : MonoBehaviour
+public class BuildingSpawningController : MonoBehaviour
 {
-//    [Header("Camera")]
-//    [SerializeField] private Camera camera;
+    [SerializeField] private Camera camera;
 
-    [Header("Buttons")]
-    [SerializeField] private ButtonClickEventManager[] buttons;
 
-    private ButtonClickEventManager button;
-
-    // Variables for spawning buildings minus the vector movement ones
     private EBuilding selectedBuildingType;
     private Building heldBuilding;
     private Vector3 rawBuildingOffset;
@@ -24,93 +17,78 @@ public class BuildingSelectionHUD : MonoBehaviour
     private bool placeBuilding = false;
     private bool cancelBuilding = false;
 
-    void Awake(){
-
+    // Start is called before the first frame update
+    private void Awake()
+    {
         selectedBuildingType = EBuilding.SolarPanel;
     }
 
     // Update is called once per frame
-    //use array for buttons to make their calling simpler
     void Update()
     {
-        foreach (ButtonClickEventManager btn in buttons){
-            btn.AssociatedKeyPressed();
-        }
-        //GetInput();
-        //CheckBuildingSpawn();
+        GetInput();
+        CheckBuildingSpawning();
     }
 
-//use array to quickly do every buttons cleanup function
-    private void LateUpdate()
+    private void GetInput()
     {
-        foreach (ButtonClickEventManager btn in buttons){
-            btn.AfterUpdateCleanup();
-        }
-    }
-
-/*
-    private void GetInput(){
-
         rawBuildingMovement = new Vector3(InputController.Instance.GetAxis("LookLeftRight"), 0, InputController.Instance.GetAxis("LookUpDown"));
 
-        //building selection input
-        //button.IsClicked is causing errors, need to investigate
-        if (!cyclingBuildingSelection && InputController.Instance.ButtonPressed("CycleBuilding")){
+        //Building Selection Input
+        if (!cyclingBuildingSelection && InputController.Instance.ButtonPressed("CycleBuilding"))
+        {
             cyclingBuildingSelection = true;
             selectedBuildingType = InputController.Instance.SelectBuilding(selectedBuildingType);
-            //print("Alpha Key Pressed: " + selectedBuildingType.ToString());
-        } else if (!cyclingBuildingSelection && CheckForUIButtonPress()){
-            cyclingBuildingSelection = true;
-            selectedBuildingType = button.GetBuildingType;
-            //print("Button Pressed: " + selectedBuildingType.ToString());
-        } else if (cyclingBuildingSelection && (!InputController.Instance.ButtonPressed("CycleBuilding") || !button.IsClicked)){
+        }
+        else if (cyclingBuildingSelection && !InputController.Instance.ButtonPressed("CycleBuilding"))
+        {
             cyclingBuildingSelection = false;
         }
 
-        //building placement input
-        //is this redundant?? i need explaination
-        //need to put something in here... not sure what
-        if (!spawnBuilding){
-            if (button.IsClicked){
-                spawnBuilding = button.IsClicked;
-            } else {
-                spawnBuilding = InputController.Instance.ButtonPressed("SpawnBuilding");
-            }
-            //print("Check Spawn: " + spawnBuilding);
-        } else {
+        //Building Placement Input
+        if (!spawnBuilding)
+        {
+            spawnBuilding = InputController.Instance.ButtonPressed("SpawnBuilding");
+        }
+        else
+        {
             placeBuilding = InputController.Instance.ButtonPressed("PlaceBuilding");
             cancelBuilding = InputController.Instance.ButtonPressed("CancelBuilding");
         }
-
     }
 
-    private bool CheckForUIButtonPress(){
-        foreach (ButtonClickEventManager btn in buttons){
-            if (btn.IsClicked){
-                button = btn;
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private void CheckBuildingSpawn(){
-        if (spawnBuilding){
-            //print("Spawning Building now");
-            if (heldBuilding == null){
+    private void CheckBuildingSpawning()
+    {
+        if (spawnBuilding)
+        {
+            //Instantiate the appropriate building, positioning it properly.
+            if (heldBuilding == null)
+            {
                 heldBuilding = BuildingFactory.Instance.GetBuilding(selectedBuildingType);
-                if (InputController.Instance.Gamepad == EGamepad.MouseAndKeyboard){
+
+                if (InputController.Instance.Gamepad == EGamepad.MouseAndKeyboard)
+                {
                     heldBuilding.transform.position = MousePositionToBuildingPosition(transform.position + heldBuilding.GetOffset(transform.rotation.eulerAngles.y), heldBuilding.XSize, heldBuilding.ZSize);
-                } else {
+                }
+                else
+                {
                     rawBuildingOffset = heldBuilding.GetOffset(transform.rotation.eulerAngles.y);
                     heldBuilding.transform.position = RawBuildingPositionToBuildingPosition(heldBuilding.XSize, heldBuilding.ZSize);
                 }
+
                 heldBuilding.Collider.enabled = true;
-            } else if (heldBuilding.BuildingType != selectedBuildingType){
+            }
+            //Instantiate the appropriate building and postion it properly, replacing the old one.
+            else if (heldBuilding.BuildingType != selectedBuildingType)
+            {
                 Vector3 pos;
-                if (InputController.Instance.Gamepad == EGamepad.MouseAndKeyboard){
+
+                if (InputController.Instance.Gamepad == EGamepad.MouseAndKeyboard)
+                {
                     pos = MousePositionToBuildingPosition(heldBuilding.transform.position, heldBuilding.XSize, heldBuilding.ZSize);
-                } else {
+                }
+                else
+                {
                     pos = RawBuildingPositionToBuildingPosition(heldBuilding.XSize, heldBuilding.ZSize);
                 }
 
@@ -118,32 +96,44 @@ public class BuildingSelectionHUD : MonoBehaviour
                 heldBuilding = BuildingFactory.Instance.GetBuilding(selectedBuildingType);
                 heldBuilding.transform.position = pos;
                 heldBuilding.Collider.enabled = true;
-            } else {
-                if (InputController.Instance.Gamepad == EGamepad.MouseAndKeyboard){
+            }
+            else //Move the building where you want it
+            {
+                if (InputController.Instance.Gamepad == EGamepad.MouseAndKeyboard)
+                {
                     heldBuilding.transform.position = MousePositionToBuildingPosition(heldBuilding.transform.position, heldBuilding.XSize, heldBuilding.ZSize);
-                } else {
-                    heldBuilding.transform.position = RawBuildingPositionToBuildingPosition(heldBuilding.XSize, heldBuilding.ZSize);
                 }
+                else
+                {
+                    heldBuilding.transform.position = RawBuildingPositionToBuildingPosition(heldBuilding.XSize, heldBuilding.ZSize);
+                }                
             }
 
             bool collision = heldBuilding.CollisionUpdate();
 
-            if (placeBuilding && ResourceController.Instance.Ore >= heldBuilding.OreCost && !collision){
+            //Place it or cancel building it
+            if (placeBuilding && ResourceController.Instance.Ore >= heldBuilding.OreCost && !collision)
+            {              
                 Vector3 spawnPos = heldBuilding.transform.position;
                 spawnPos.y = 0.5f;
-                heldBuilding.Place(spawnPos);
+                heldBuilding.Place(spawnPos);    
                 heldBuilding = null;
                 spawnBuilding = false;
                 placeBuilding = false;
                 cancelBuilding = false;
-            } else if (cancelBuilding || (placeBuilding && (collision || ResourceController.Instance.Ore < heldBuilding.OreCost))){
-                if (placeBuilding){
-                    if (ResourceController.Instance.Ore < heldBuilding.OreCost){
-                        Debug.Log("You Have Insufficient ore to build this building.");
+            }
+            else if (cancelBuilding || (placeBuilding && (collision || ResourceController.Instance.Ore < heldBuilding.OreCost)))
+            {
+                if (placeBuilding)
+                {
+                    if (ResourceController.Instance.Ore < heldBuilding.OreCost)
+                    {
+                        Debug.Log("You have insufficient ore to build this building.");
                     }
-
-                    if (collision){
-                        Debug.Log("You cannot place a building there; it would occupy the same area as something else");
+                    
+                    if (collision)
+                    {
+                        Debug.Log("You cannot place a building there; it would occupy the same space as something else.");
                     }
                 }
 
@@ -151,7 +141,7 @@ public class BuildingSelectionHUD : MonoBehaviour
                 heldBuilding = null;
                 spawnBuilding = false;
                 placeBuilding = false;
-                cancelBuilding = false;
+                cancelBuilding = false;                
             }
         }
     }
@@ -184,7 +174,6 @@ public class BuildingSelectionHUD : MonoBehaviour
 
         return SnapBuildingToGrid(worldPos, xSize, zSize);
     }
-    
 
     private Vector3 SnapBuildingToGrid(Vector3 pos, int xSize, int zSize)
     {
@@ -193,6 +182,7 @@ public class BuildingSelectionHUD : MonoBehaviour
         pos.z = Mathf.Round(pos.z) + (zSize == 2 ? 0.5f : 0);
         return pos;
     }
-*/
+
+
 
 }
