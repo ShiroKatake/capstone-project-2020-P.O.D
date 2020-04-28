@@ -102,15 +102,23 @@ public class Player : MonoBehaviour
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
+    /// Update() is run every frame.
+    /// </summary>
+    private void Update()
+    {
+        //Input manager checks every frame, not at fixed update's rate, so calls to input manager should be made every frame
+        GetInput();
+    }
+
+    /// <summary>
     /// FixedUpdate() is run at a fixed interval independant of framerate.
     /// </summary>
     private void FixedUpdate()
     {
-        GetInput();
         UpdateDrone();
     }
 
-    //Recurring Methods (FixedUpdate())--------------------------------------------------------------------------------------------------------------
+    //Recurring Methods (Update())-------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
     /// Gets the player's input from the keyboard and mouse / gamepad they're using.
@@ -131,34 +139,23 @@ public class Player : MonoBehaviour
         {
             cyclingBuildingSelection = false;
         }
-        
+
         //Building Placement Input
         if (!spawnBuilding)
         {
             spawnBuilding = InputController.Instance.ButtonPressed("SpawnBuilding");
-
-            if (InputController.Instance.ButtonPressed("SpawnBuilding")) {
-                Debug.Log("Spawn Building");
-            }
         }
         else
         {
             placeBuilding = InputController.Instance.ButtonPressed("PlaceBuilding");
             cancelBuilding = InputController.Instance.ButtonPressed("CancelBuilding");
-
-
-            if (placeBuilding) {
-                Debug.Log("Place Building");
-            }
-
         }
-
-        
-        
 
         //Shooting Input
         shooting = InputController.Instance.ButtonHeld("Shoot");
     }
+
+    //Recurring Methods (FixedUpdate())--------------------------------------------------------------------------------------------------------------
 
     /// <summary>
     /// Updates the player based on their input.
