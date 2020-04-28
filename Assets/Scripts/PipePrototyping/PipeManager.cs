@@ -8,6 +8,8 @@ using UnityEngine;
 
 public class PipeManager : MonoBehaviour {
 
+    public static PipeManager Instance { get; protected set; }
+
     List<PipeBuilding> buildings = new List<PipeBuilding>();
     List<PipeNode> nodes = new List<PipeNode>();
 
@@ -15,6 +17,14 @@ public class PipeManager : MonoBehaviour {
     List<Label> labels = new List<Label>();
 
     MeshFilter meshFilter;
+
+    private void Awake() {
+        if (Instance != null) {
+            Debug.LogError("There should never be more than one Pipe manager");
+        }
+
+        Instance = this;
+    }
 
     // Start is called before the first frame update
     void Start() {
@@ -28,12 +38,17 @@ public class PipeManager : MonoBehaviour {
 
     }
 
-
     public void RegisterPipeBuilding(PipeBuilding pipeBuilding) {
+        Vector3 fromPos = pipeBuilding.transform.position;
+
+        RegisterPipeBuilding(fromPos);
+    }
+
+    public void RegisterPipeBuilding(Vector3 pos) {
 
         //nodes.Add(new PipeNode(pipeBuilding.transform.position));
-
-        Vector3 fromPos = pipeBuilding.transform.position;
+        Vector3 fromPos = pos;
+        
 
         List<LineSegment> tempLines = new List<LineSegment>();
 
@@ -83,7 +98,7 @@ public class PipeManager : MonoBehaviour {
             labels.Add(distances[0].Item4);
         }
 
-        buildings.Add(pipeBuilding);
+        //buildings.Add(pipeBuilding);
         nodes.Add(new PipeNode(fromPos));
 
         UpdateMesh();

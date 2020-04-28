@@ -259,8 +259,13 @@ public class Player : MonoBehaviour
             if (placeBuilding && ResourceController.Instance.Ore >= heldBuilding.OreCost && !collision)
             {              
                 Vector3 spawnPos = heldBuilding.transform.position;
+                spawnPos.y = 0.02f;
+                PipeManager.Instance.RegisterPipeBuilding(spawnPos);
                 spawnPos.y = 0.5f;
-                heldBuilding.Place(spawnPos);    
+                heldBuilding.Place(spawnPos);
+
+                
+
                 heldBuilding = null;
                 spawnBuilding = false;
                 placeBuilding = false;
