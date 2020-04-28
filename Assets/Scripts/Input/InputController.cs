@@ -407,7 +407,7 @@ public class InputController : MonoBehaviour
     {
         foreach (ButtonClickEventManager b in buttons)
         {
-            if (b.IsClicked)
+            if (b.Clicked)
             {
                 clickedButton = b;
                 return true;

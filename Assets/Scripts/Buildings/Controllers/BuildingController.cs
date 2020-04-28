@@ -34,10 +34,6 @@ public class BuildingController : MonoBehaviour
     /// </summary>
     public Building CryoEgg { get => cryoEgg; }
 
-    //Complex Public Properties--------------------------------------------------------------------                                                    
-
-
-
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
@@ -79,38 +75,12 @@ public class BuildingController : MonoBehaviour
         CleanupBuildings();
     }
 
-    /// <summary>
-    /// FixedUpdate() is run at a fixed interval independant of framerate.
-    /// </summary>
-    //private void FixedUpdate()
-    //{
-    //If having building controller execute building behaviour, for each building in list "buildings", check its type and execute behaviour for it using the value of its public properties
-    //}
-
     //Recurring Methods (Update())------------------------------------------------------------------------------------------------------------------  
 
     private void ExecuteBuildingBehaviour(Building building)
     {
         switch (building.BuildingType)
         {
-            //case EBuilding.CryoEgg:
-            //    CryoEggBehaviour.Instance.Execute(building);
-            //    break;
-            //case EBuilding.FusionReactor:
-            //    SolarPanelBehaviour.Instance.Execute(building);
-            //    break;
-            //case EBuilding.IceDrill:
-            //    IceDrillBehaviour.Instance.Execute(building);
-            //    break;
-            //case EBuilding.Boiler:
-            //    GasDiffuserBehaviour.Instance.Execute(building);
-            //    break;
-            //case EBuilding.Greenhouse:
-            //    GreenhouseBehaviour.Instance.Execute(building);
-            //    break;
-            //case EBuilding.Incinerator:
-            //    HumidifierBehaviour.Instance.Execute(building);
-            //    break;
             case EBuilding.ShortRangeTurret:
                 ShortRangeTurretBehaviour.Instance.Execute(building);
                 break;
@@ -146,14 +116,6 @@ public class BuildingController : MonoBehaviour
             BuildingFactory.Instance.DestroyBuilding(b, true, true);
         }
     }
-
-    //Recurring Methods (FixedUpdate())--------------------------------------------------------------------------------------------------------------
-
-
-
-    //Recurring Methods (Other)----------------------------------------------------------------------------------------------------------------------
-
-
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
@@ -214,8 +176,4 @@ public class BuildingController : MonoBehaviour
             }
         }
     }
-
-    //Utility Methods--------------------------------------------------------------------------------------------------------------------------------  
-
-
 }

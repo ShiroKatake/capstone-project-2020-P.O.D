@@ -164,15 +164,6 @@ public class ResourceController : MonoBehaviour
         Instance = this;
     }
 
-    /// <summary>
-    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
-    /// Start() runs after Awake().
-    /// </summary>
-    //private void Start()
-    //{
-
-    //}
-
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
@@ -183,14 +174,6 @@ public class ResourceController : MonoBehaviour
         //For testing by changing resource values in the inspector.
         CheckResourceSupply();
     }
-
-    /// <summary>
-    /// FixedUpdate() is run at a fixed interval independant of framerate.
-    /// </summary>
-    //private void FixedUpdate()
-    //{
-
-    //}
 
     //Recurring Methods (Update())------------------------------------------------------------------------------------------------------------------  
 
@@ -240,20 +223,4 @@ public class ResourceController : MonoBehaviour
             }
         }
     }
-
-    //Recurring Methods (FixedUpdate())--------------------------------------------------------------------------------------------------------------
-
-
-
-    //Recurring Methods (Other)----------------------------------------------------------------------------------------------------------------------
-
-
-
-    //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
-
-
-
-    //Utility Methods--------------------------------------------------------------------------------------------------------------------------------  
-
-
 }

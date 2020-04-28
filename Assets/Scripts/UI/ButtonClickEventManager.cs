@@ -5,20 +5,19 @@ using UnityEngine.UI;
 
 public class ButtonClickEventManager : MonoBehaviour
 {
-
     [SerializeField] private EBuilding buildingType;
     [SerializeField] private KeyCode key;
+
     private Button button;
     private bool clicked = false;
-    public bool IsClicked { get => clicked; }
+
+    public bool Clicked { get => clicked; }
     public EBuilding GetBuildingType { get => buildingType; }
 
     // Start is called before the first frame update
     void Awake()
     {
-        button = GetComponent<Button>();
-        //buildingType = /*EBuilding.SolarPanel;*/ GetComponent<EBuilding>();
-        
+        button = GetComponent<Button>();        
     }
 
     // Update is called once per frame
@@ -46,6 +45,5 @@ public class ButtonClickEventManager : MonoBehaviour
 
     public void OnClick(){
         clicked = true;
-        //print("I have been clicked: " + clicked.ToString());
     }
 }
