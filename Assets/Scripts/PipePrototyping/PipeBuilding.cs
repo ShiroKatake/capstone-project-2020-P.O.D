@@ -5,8 +5,8 @@ using UnityEngine;
 public class PipeBuilding : MonoBehaviour
 {
 
-    [SerializeField] public List<EMaterials> inputs;
-    [SerializeField] public List<EMaterials> outputs;
+    [SerializeField] public Dictionary<EMaterials, float> inputs = new Dictionary<EMaterials, float>();
+    [SerializeField] public Dictionary<EMaterials, float> outputs = new Dictionary<EMaterials, float>();
 
     Transform waterIcon, powerIcon, oreIcon, wasteIcon;
 
@@ -47,16 +47,16 @@ public class PipeBuilding : MonoBehaviour
             // Production indicators
             {
                 Gizmos.color = Color.green;
-                if (outputs.Contains(EMaterials.Water)) {
+                if (outputs.ContainsKey(EMaterials.Water)) {
                     Gizmos.DrawSphere(waterIcon.position + new Vector3(0.12f * scale, -0.05f, 0), 0.05f * scale);
                 }
-                if (outputs.Contains(EMaterials.Ore)) {
+                if (outputs.ContainsKey(EMaterials.Ore)) {
                     Gizmos.DrawSphere(oreIcon.position + new Vector3(0.12f * scale, -0.05f, 0), 0.05f * scale);
                 }
-                if (outputs.Contains(EMaterials.Power)) {
+                if (outputs.ContainsKey(EMaterials.Power)) {
                     Gizmos.DrawSphere(powerIcon.position + new Vector3(0.12f * scale, -0.05f, 0), 0.05f * scale);
                 }
-                if (outputs.Contains(EMaterials.Waste)) {
+                if (outputs.ContainsKey(EMaterials.Waste)) {
                     Gizmos.DrawSphere(wasteIcon.position + new Vector3(0.12f * scale, -0.05f, 0), 0.05f * scale);
                 }
             }
@@ -64,16 +64,16 @@ public class PipeBuilding : MonoBehaviour
             // Consumption indicators
             {
                 Gizmos.color = Color.red;
-                if (inputs.Contains(EMaterials.Water)) {
+                if (inputs.ContainsKey(EMaterials.Water)) {
                     Gizmos.DrawSphere(waterIcon.position + new Vector3(-0.12f * scale, -0.05f, 0), 0.05f * scale);
                 }
-                if (inputs.Contains(EMaterials.Ore)) {
+                if (inputs.ContainsKey(EMaterials.Ore)) {
                     Gizmos.DrawSphere(oreIcon.position + new Vector3(-0.12f * scale, -0.05f, 0), 0.05f * scale);
                 }
-                if (inputs.Contains(EMaterials.Power)) {
+                if (inputs.ContainsKey(EMaterials.Power)) {
                     Gizmos.DrawSphere(powerIcon.position + new Vector3(-0.12f * scale, -0.05f, 0), 0.05f * scale);
                 }
-                if (inputs.Contains(EMaterials.Waste)) {
+                if (inputs.ContainsKey(EMaterials.Waste)) {
                     Gizmos.DrawSphere(wasteIcon.position + new Vector3(-0.12f * scale, -0.05f, 0), 0.05f * scale);
                 }
             }

@@ -17,8 +17,8 @@ public class ConstructionController : MonoBehaviour
 
     private EMaterials selectedMaterial;
 
-    private List<EMaterials> tempInputs = new List<EMaterials>();
-    private List<EMaterials> tempOutputs = new List<EMaterials>();
+    private Dictionary<EMaterials, float> tempInputs = new Dictionary<EMaterials, float>();
+    private Dictionary<EMaterials, float> tempOutputs = new Dictionary<EMaterials, float>();
 
     private GameObject tempHover;
 
@@ -56,8 +56,8 @@ public class ConstructionController : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.Q) && hovering) {
-            if (!tempInputs.Contains(selectedMaterial)) {
-                tempInputs.Add(selectedMaterial);
+            if (!tempInputs.ContainsKey(selectedMaterial)) {
+                tempInputs[selectedMaterial] = 1;
             } else {
                 tempInputs.Remove(selectedMaterial);
             }
@@ -66,8 +66,8 @@ public class ConstructionController : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.E) && hovering) {
-            if (!tempOutputs.Contains(selectedMaterial)) {
-                tempOutputs.Add(selectedMaterial);
+            if (!tempOutputs.ContainsKey(selectedMaterial)) {
+                tempOutputs[selectedMaterial] = 1;
             }
             else {
                 tempOutputs.Remove(selectedMaterial);
@@ -119,8 +119,8 @@ public class ConstructionController : MonoBehaviour
 
     private void UpdateHoverIOs() {
         PipeBuilding pipeBuilding = tempHover.GetComponent<PipeBuilding>();
-        pipeBuilding.inputs = new List<EMaterials>(tempInputs);
-        pipeBuilding.outputs = new List<EMaterials>(tempOutputs);
+        pipeBuilding.inputs = new Dictionary<EMaterials, float>(tempInputs);
+        pipeBuilding.outputs = new Dictionary<EMaterials, float>(tempOutputs);
     }
 
     private (bool,Vector3) RaycastMouse() {
@@ -159,10 +159,10 @@ public class ConstructionController : MonoBehaviour
     private void UpdateSelectedMaterialText() {
         string debugText = Enum.GetName(typeof(EMaterials), selectedMaterial) + "\n";
 
-        if (tempInputs.Contains(selectedMaterial)) {
+        if (tempInputs.ContainsKey(selectedMaterial)) {
             debugText += "(IN)";
         }
-        if (tempOutputs.Contains(selectedMaterial)) {
+        if (tempOutputs.ContainsKey(selectedMaterial)) {
             debugText += "\t(OUT)";
         }
 

@@ -9,12 +9,15 @@ public class GridRendering : MonoBehaviour
 
     [SerializeField] private (int, int) gridSize = (20, 20);
     [SerializeField] public float scale = 0.5f;
-    
 
+
+    bool renderGrid = true;
 
     // Start is called before the first frame update
     void Start()
     {
+
+        
         
         for (int i = 0; i < transform.childCount; i++) {
             Transform child = transform.GetChild(i);
@@ -26,7 +29,9 @@ public class GridRendering : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (Input.GetKeyDown(KeyCode.F1)) {
+            renderGrid = !renderGrid;
+        }
     }
 
     
@@ -35,22 +40,26 @@ public class GridRendering : MonoBehaviour
     
 
     private void OnDrawGizmos() {
-        Gizmos.color = Color.black;
+        if (renderGrid) {
+            Gizmos.color = Color.black;
 
-        float width = gridSize.Item1;
-        float height = gridSize.Item2;
+            float width = gridSize.Item1;
+            float height = gridSize.Item2;
 
-        for (int xx = 0; xx < gridSize.Item1+1; xx++) {
 
-            Vector3 startH = new Vector3(-width / 2 + xx, 0.01f, -height / 2) * scale;
-            Vector3 endH = new Vector3(-width / 2 + xx, 0.01f, height / 2) * scale;
-            Gizmos.DrawLine(startH, endH);
-            for (int yy = 0; yy < gridSize.Item2+1; yy++) {
 
-                Vector3 startV = new Vector3(-width / 2, 0.01f, -height / 2 + yy) * scale;
-                Vector3 endV = new Vector3(width / 2, 0.01f, -height / 2 + yy) * scale;
+            for (int xx = 0; xx < gridSize.Item1 + 1; xx++) {
 
-                Gizmos.DrawLine(startV, endV);
+                Vector3 startH = new Vector3(-width / 2 + xx, 0.01f, -height / 2) * scale;
+                Vector3 endH = new Vector3(-width / 2 + xx, 0.01f, height / 2) * scale;
+                Gizmos.DrawLine(startH, endH);
+                for (int yy = 0; yy < gridSize.Item2 + 1; yy++) {
+
+                    Vector3 startV = new Vector3(-width / 2, 0.01f, -height / 2 + yy) * scale;
+                    Vector3 endV = new Vector3(width / 2, 0.01f, -height / 2 + yy) * scale;
+
+                    Gizmos.DrawLine(startV, endV);
+                }
             }
         }
     }
