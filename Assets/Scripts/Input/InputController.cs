@@ -11,13 +11,22 @@ public class InputController : MonoBehaviour
 
     //Serialized Fields----------------------------------------------------------------------------
 
+    [Header("Settings")]
     [SerializeField] private EGamepad gamepad;
     [SerializeField] private EOperatingSystem operatingSystem;
 
+    [Header("Buttons")]
+    [SerializeField] private List<ButtonClickEventManager> buttons;
+    [SerializeField] private GameObject buildingUIParent;
+
     //Non-Serialized Fields------------------------------------------------------------------------
 
+    //Prefixes
     private string gamepadPrefix;
     private string osPrefix;
+
+    //ClickedButton
+    private ButtonClickEventManager clickedButton;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -74,14 +83,17 @@ public class InputController : MonoBehaviour
                 osPrefix = "W";
                 break;
         }
+
+        buttons = new List<ButtonClickEventManager>(buildingUIParent.GetComponentsInChildren<ButtonClickEventManager>());
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
     ///  Checks if the player has pressed the specified button.
-    ///  <param name="requestedInput">The input or button to check.</param>
     /// </summary>
+    /// <param name="requestedInput">The input or button to check.</param>
+    /// <returns>Was a button pressed?</returns>
     public bool ButtonPressed(string requestedInput)
     {
         if (gamepadPrefix == "")
@@ -130,7 +142,8 @@ public class InputController : MonoBehaviour
                         || Input.GetButtonDown("MKSpawnGreenhouse")
                         || Input.GetButtonDown("MKSpawnIncinerator")
                         || Input.GetButtonDown("MKSpawnShortRangeTurret")
-                        || Input.GetButtonDown("MKSpawnLongRangeTurret");
+                        || Input.GetButtonDown("MKSpawnLongRangeTurret")
+                        || CheckUIButtonClicked();
                 }
                 else
                 {
@@ -147,7 +160,8 @@ public class InputController : MonoBehaviour
                         || Input.GetButtonDown("MKSpawnGreenhouse")
                         || Input.GetButtonDown("MKSpawnIncinerator")
                         || Input.GetButtonDown("MKSpawnShortRangeTurret")
-                        || Input.GetButtonDown("MKSpawnLongRangeTurret");
+                        || Input.GetButtonDown("MKSpawnLongRangeTurret")
+                        || CheckUIButtonClicked();
                 }
                 else
                 {
@@ -162,8 +176,9 @@ public class InputController : MonoBehaviour
 
     /// <summary>
     ///  Checks if the player is holding the specified button or input down.
-    ///  <param name="requestedInput">The input or button to check.</param>
     /// </summary>
+    /// <param name="requestedInput">The input or button to check.</param>
+    /// <returns>Was a button held?</returns>
     public bool ButtonHeld(string requestedInput)
     {
         if (gamepadPrefix == "")
@@ -246,8 +261,9 @@ public class InputController : MonoBehaviour
     /// <summary>
     ///  Check if player is moving or looking; if axes are button pairs, returns integer value of -1, 0 or 1; 
     ///  if axes are mouse / analog stick axes, returns float value between -1 and 1
-    ///  <param name="requestedInput">The input or axis to check.</param>
     /// </summary>
+    /// <param name="requestedInput">The input or axis to check.</param>
+    /// <returns>The magnitude of any input on the requested axis.</returns>
     public float GetAxis(string requestedInput)
     {
         if (gamepadPrefix == "")
@@ -277,7 +293,8 @@ public class InputController : MonoBehaviour
     /// <summary>
     /// Checks the inputs for selecting a building type.
     /// </summary>
-    /// <returns></returns>
+    /// <param name="currentSelection">The currently-selected building type in case no other building type has been selected.</param>
+    /// <returns>The selected building type, or the current selection if none.</returns>
     public EBuilding SelectBuilding(EBuilding currentSelection)
     {
         switch (gamepad)
@@ -295,9 +312,15 @@ public class InputController : MonoBehaviour
     /// <summary>
     /// Check the inputs for selecting a building type when the player is using a mouse and keyboard.
     /// </summary>
-    /// <returns></returns>
+    /// <param name="currentSelection"> The currently-selected building type in case no other building type has been selected.</param>
+    /// <returns>The selected building type, or the current selection if none.</returns>
     private EBuilding MKSelectBuilding(EBuilding currentSelection)
     {
+        if (clickedButton != null)
+        {
+            return clickedButton.GetBuildingType;
+        }
+
         if (Input.GetButton("MKSpawnFusionReactor"))
         {
             return EBuilding.FusionReactor;
@@ -339,7 +362,8 @@ public class InputController : MonoBehaviour
     /// <summary>
     /// Checks the inputs for selecting a building type when the player is using an Xbox or DualShock controller.
     /// </summary>
-    /// <returns></returns>
+    /// <param name="currentSelection">The current-currently-selected building type in case no other building type has been selected.</param>
+    /// <returns>The selected building type, or the current selection if none.</returns>
     private EBuilding ControllerSelectBuilding(EBuilding currentSelection)
     {
         int cycle = 0;
@@ -371,5 +395,26 @@ public class InputController : MonoBehaviour
         }
 
         return currentSelection;
+    }
+
+    //Utility Methods--------------------------------------------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Checks if a UI button for building was clicked by the player.
+    /// </summary>
+    /// <returns>Was a UI button for building clicked by the player?</returns>
+    private bool CheckUIButtonClicked()
+    {
+        foreach (ButtonClickEventManager b in buttons)
+        {
+            if (b.Clicked)
+            {
+                clickedButton = b;
+                return true;
+            }
+        }
+
+        clickedButton = null;
+        return false;
     }
 }

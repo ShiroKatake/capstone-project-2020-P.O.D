@@ -11,9 +11,6 @@ public class BuildingFactory : MonoBehaviour
 
     //Serialized Fields----------------------------------------------------------------------------                                                    
 
-    //[Header("Cryo Egg Prefab")]
-    //[SerializeField] private Building cryoEggPrefab;
-
     [Header("Building Prefabs")]
     [SerializeField] private Building fusionReactorPrefab;
     [SerializeField] private Building iceDrillPrefab;
@@ -213,7 +210,6 @@ public class BuildingFactory : MonoBehaviour
     /// <param name="consumingResources">Was the building destroyed while placed, and therefore needs to leave behind foundations?</param>
     public void DestroyBuilding(Building building, bool consumingResources, bool killed)
     {
-        //Debug.Log($"Destroy Building. BuildingFactory.Buildings[{building.BuildingType}].Count pre-pooling is {buildings[building.BuildingType].Count}");
         BuildingController.Instance.DeRegisterBuilding(building);
 
         if (building.Terraformer != null)
@@ -241,7 +237,6 @@ public class BuildingFactory : MonoBehaviour
         building.transform.position = objectPool.position;
         building.transform.parent = objectPool;
         buildings[building.BuildingType].Add(building);
-        //Debug.Log($"Destroy Building. BuildingFactory.Buildings[{building.BuildingType}].Count post-pooling is {buildings[building.BuildingType].Count}");
     }
 
     //Triggered Methods (Building Foundations)-------------------------------------------------------------------------------------------------------

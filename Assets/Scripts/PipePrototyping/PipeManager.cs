@@ -187,21 +187,21 @@ public class PipeManager : MonoBehaviour {
 
     }
 
-    private void OnDrawGizmos() {
-        if (Application.isPlaying) {
+    //private void OnDrawGizmos() {
+    //    if (Application.isPlaying) {
 
-            foreach (LineSegment line in lines) {
-                Gizmos.color = line.col;
-                Gizmos.DrawLine(line.from, line.to);
-            }
+    //        foreach (LineSegment line in lines) {
+    //            Gizmos.color = line.col;
+    //            Gizmos.DrawLine(line.from, line.to);
+    //        }
 
-            foreach (var label in labels) {
-                Handles.color = label.col;
-                Handles.Label(label.loc, label.label);
-            }
+    //        foreach (var label in labels) {
+    //            Handles.color = label.col;
+    //            Handles.Label(label.loc, label.label);
+    //        }
 
-        }
-    }
+    //    }
+    //}
 
     private enum MajorAxis {
         X,
