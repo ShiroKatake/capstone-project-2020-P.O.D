@@ -48,6 +48,7 @@ public class Building : MonoBehaviour, ICollisionListener
     private Health health;
     private MeshRenderer renderer;
     private ResourceCollector resourceCollector;
+    private Rigidbody rigidbody;
     private Terraformer terraformer;
 
     //Positioning
@@ -204,6 +205,7 @@ public class Building : MonoBehaviour, ICollisionListener
         collider = GetComponentInChildren<Collider>();
         health = GetComponent<Health>();
         renderer = GetComponentInChildren<MeshRenderer>();
+        rigidbody = GetComponentInChildren<Rigidbody>();
         resourceCollector = GetComponent<ResourceCollector>();
         terraformer = GetComponent<Terraformer>();
         collisionReporters = new List<CollisionReporter>(GetComponentsInChildren<CollisionReporter>());
@@ -418,6 +420,8 @@ public class Building : MonoBehaviour, ICollisionListener
         ResourceController.Instance.WasteConsumption += wasteConsumption;
         transform.position = position;
         renderer.material = opaqueMaterial;
+        rigidbody.isKinematic = true;
+        collider.isTrigger = false;
         placed = true;
 
         foreach (CollisionReporter c in collisionReporters)
@@ -447,7 +451,9 @@ public class Building : MonoBehaviour, ICollisionListener
         transform.localScale = normalScale;
         buildTime = normalBuildTime;
         renderer.material = transparentMaterial;
+        collider.isTrigger = true;
         collider.enabled = false;
+        rigidbody.isKinematic = false;
     }
 
     //ICollisionListener Triggered Methods---------------------------------------------------------
