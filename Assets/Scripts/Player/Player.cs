@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
 
     [Header("Player Objects")]
     [SerializeField] private Transform drone;
-    [SerializeField] private Transform droneModel;
+    //[SerializeField] private Transform droneModel;
     [SerializeField] private Camera camera;
     [SerializeField] private Transform cameraTarget;
     [SerializeField] private Transform terraformerHoldPoint;
@@ -40,8 +40,6 @@ public class Player : MonoBehaviour
     private float slerpProgress = 1;
 
     private Rigidbody rigidbody;
-    private Vector3 droneModelStartPosition;
-    private float hoverHeight;
 
     //Laser Bolt Variables
     private bool shooting;
@@ -94,9 +92,7 @@ public class Player : MonoBehaviour
         }
 
         timeOfLastShot = shootCooldown * -1;
-        droneModelStartPosition = droneModel.localPosition;
         rigidbody = GetComponent<Rigidbody>();
-        hoverHeight = transform.position.y;
     }
 
 
@@ -152,7 +148,7 @@ public class Player : MonoBehaviour
         {
             slerpProgress = 0;
             oldRotation = drone.rotation;
-            newRotation = Quaternion.Euler(new Vector3(oldRotation.eulerAngles.x, Quaternion.LookRotation(movement).eulerAngles.y + 15.162f, oldRotation.eulerAngles.z));
+            newRotation = Quaternion.LookRotation(movement);
         }
 
         //Still turning? Rotate towards direction player wants to move in, but smoothly.
@@ -174,11 +170,7 @@ public class Player : MonoBehaviour
     {
         if (movement != Vector3.zero)
         {
-            //Vector3 rotation = drone.rotation.eulerAngles;
-            drone.Translate(new Vector3(-2.037126f * Time.deltaTime, movementSpeed * movement.magnitude * Time.deltaTime * -1, 0), Space.Self);
-            //drone.position = drone.position + drone.up * movementSpeed * movement.magnitude * Time.deltaTime * -1;
-            //drone.rotation = Quaternion.Euler(rotation);
-            //droneModel.localPosition = droneModelStartPosition;
+            drone.Translate(new Vector3(0, 0, movementSpeed * movement.magnitude * Time.deltaTime), Space.Self);
             cameraTarget.position = drone.position;
         }
     }
