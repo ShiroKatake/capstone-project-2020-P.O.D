@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2402142173451452879}
-  - component: {fileID: 3705757789323202442}
   - component: {fileID: 6110940945186930376}
   - component: {fileID: 6104976022102713221}
+  - component: {fileID: 3644815927315467059}
   m_Layer: 0
   m_Name: Collider
   m_TagString: Building
@@ -34,19 +34,6 @@ Transform:
   m_Father: {fileID: 880952307760529668}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &3705757789323202442
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 734502946623350325}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &6110940945186930376
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -81,6 +68,20 @@ MonoBehaviour:
   reportOnTriggerEnter: 0
   reportOnTriggerExit: 0
   reportOnTriggerStay: 0
+--- !u!136 &3644815927315467059
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 734502946623350325}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!1 &880952307760529665
 GameObject:
   m_ObjectHideFlags: 0
