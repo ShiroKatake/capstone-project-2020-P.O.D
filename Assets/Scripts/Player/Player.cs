@@ -152,7 +152,7 @@ public class Player : MonoBehaviour
         {
             slerpProgress = 0;
             oldRotation = drone.rotation;
-            newRotation = Quaternion.LookRotation(movement);
+            newRotation = Quaternion.Euler(new Vector3(oldRotation.eulerAngles.x, Quaternion.LookRotation(movement).eulerAngles.y + 15.162f, oldRotation.eulerAngles.z));
         }
 
         //Still turning? Rotate towards direction player wants to move in, but smoothly.
@@ -174,7 +174,10 @@ public class Player : MonoBehaviour
     {
         if (movement != Vector3.zero)
         {
-            drone.Translate(new Vector3(0, 0, movementSpeed * movement.magnitude * Time.deltaTime), Space.Self);
+            //Vector3 rotation = drone.rotation.eulerAngles;
+            drone.Translate(new Vector3(-2.037126f * Time.deltaTime, movementSpeed * movement.magnitude * Time.deltaTime * -1, 0), Space.Self);
+            //drone.position = drone.position + drone.up * movementSpeed * movement.magnitude * Time.deltaTime * -1;
+            //drone.rotation = Quaternion.Euler(rotation);
             //droneModel.localPosition = droneModelStartPosition;
             cameraTarget.position = drone.position;
         }
