@@ -40,6 +40,7 @@ public class Player : MonoBehaviour
     private float slerpProgress = 1;
 
     private Rigidbody rigidbody;
+    private float hoverHeight;
 
     //Laser Bolt Variables
     private bool shooting;
@@ -93,6 +94,7 @@ public class Player : MonoBehaviour
 
         timeOfLastShot = shootCooldown * -1;
         rigidbody = GetComponent<Rigidbody>();
+        hoverHeight = drone.position.y;
     }
 
 
@@ -171,8 +173,27 @@ public class Player : MonoBehaviour
         if (movement != Vector3.zero)
         {
             drone.Translate(new Vector3(0, 0, movementSpeed * movement.magnitude * Time.deltaTime), Space.Self);
-            cameraTarget.position = drone.position;
         }
+
+        //Toggle gravity if something has pushed the player up above hoverHeight
+        if (rigidbody.useGravity)
+        {
+            if (drone.position.y <= hoverHeight)
+            {
+                drone.position = new Vector3(drone.position.x, hoverHeight, drone.position.z);
+                rigidbody.useGravity = false;
+            }
+        }
+        else
+        {
+            if (drone.position.y > hoverHeight)   //TODO: account for terrain pushing the player up
+            {
+                rigidbody.useGravity = true;
+            }
+        }
+
+        //Positioning this line here accounts for the player having been moved by an external force (e.g. pushed by enemies)
+        cameraTarget.position = drone.position;     
     }
 
     /// <summary>
