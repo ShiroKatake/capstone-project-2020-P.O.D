@@ -500,7 +500,7 @@ public class Building : MonoBehaviour, ICollisionListener
     /// <param name="other">The other Collider involved in this collision.</param>
     public void OnTriggerEnter(Collider other)
     {
-        if (active)
+        if (active && !collider.isTrigger)
         {
             //Debug.Log($"Building {id} OnTriggerEnter(). Other is {other}");
             colliding = true;
@@ -518,7 +518,7 @@ public class Building : MonoBehaviour, ICollisionListener
     /// <param name="other">The other Collider involved in this collision.</param>
     public void OnTriggerExit(Collider other)
     {
-        if (active)
+        if (active && !collider.isTrigger)
         {            
             //Debug.Log($"Building {id} OnTriggerExit(). Other is {other}");
             if (otherColliders.Contains(other))
