@@ -59,16 +59,16 @@ public class EnemyFactory : MonoBehaviour
         switch (Random.Range(0, 4))
         {
             case 0:
-                spawnPoint = new Vector3(Random.Range(-24, 24), 0.5f, Random.Range(-24, -18));
+                spawnPoint = new Vector3(Random.Range(-24, 24), 0.25f, Random.Range(-24, -18));
                 break;
             case 1:
-                spawnPoint = new Vector3(Random.Range(-24, 24), 0.5f, Random.Range(18, 24));
+                spawnPoint = new Vector3(Random.Range(-24, 24), 0.25f, Random.Range(18, 24));
                 break;
             case 2:
-                spawnPoint = new Vector3(Random.Range(-24, -18), 0.5f, Random.Range(-24, 24));
+                spawnPoint = new Vector3(Random.Range(-24, -18), 0.25f, Random.Range(-24, 24));
                 break;
             case 3:
-                spawnPoint = new Vector3(Random.Range(18, 24), 0.5f, Random.Range(-24, 24));
+                spawnPoint = new Vector3(Random.Range(18, 24), 0.25f, Random.Range(-24, 24));
                 break;
             default:
                 spawnPoint = Vector3.zero;

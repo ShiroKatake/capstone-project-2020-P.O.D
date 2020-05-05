@@ -14,16 +14,26 @@ public class Enemy : MonoBehaviour
     [Header("Enemy Stats")] 
     [SerializeField] private int id;
     [SerializeField] private float speed;
+    [SerializeField] private float turningSpeed;
     [SerializeField] private float damage;
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
+    private Collider collider;
     private Health health;
-    private Transform target;
-    private Vector3 movement;
-    private float radius;
-    private float targetRadius;
+    private Rigidbody rigidbody;
+
     private bool moving;
+    private float groundHeight;
+
+    private Building cryoEgg;
+    private List<Transform> visibleAliens;
+    private List<Transform> visibleTargets;
+    private Transform target;
+
+    private Quaternion oldRotation;
+    private Quaternion targetRotation;
+    private float slerpProgress;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -33,10 +43,6 @@ public class Enemy : MonoBehaviour
     /// Enemy's Health component.
     /// </summary>
     public Health Health { get => health; }
-
-    /// <summary>
-    /// The Enemy's unique ID number.
-    /// </summary>
 
     /// <summary>
     /// Whether or not the Enemy is moving.
@@ -71,6 +77,11 @@ public class Enemy : MonoBehaviour
     void Awake()
     {
         health = GetComponent<Health>();
+        rigidbody = GetComponent<Rigidbody>();
+
+        cryoEgg = BuildingController.Instance.CryoEgg;
+
+        groundHeight = transform.position.y;
     }
 
     /// <summary>
@@ -80,73 +91,11 @@ public class Enemy : MonoBehaviour
     {
         Id = id;
         health.Reset();
-        SelectTarget();
-        GetRadius();
-        CalculateMovement();
-    }
+        target = cryoEgg.transform;
 
-    /// <summary>
-    /// Chooses a target for Enemy.
-    /// </summary>
-    private void SelectTarget()
-    {
-        //if (EnvironmentalController.Instance.Terraformers.Count == 0)
-        //{
-            target = BuildingController.Instance.CryoEgg.transform;
-            targetRadius = target.GetComponentInChildren<CapsuleCollider>().radius;
-        //}
-        //else if (EnvironmentalController.Instance.Terraformers.Count == 1)
-        //{
-        //    target = EnvironmentalController.Instance.Terraformers[0].transform;
-        //    targetRadius = target.GetComponent<CapsuleCollider>().radius;
-        //}
-        //else
-        //{
-        //    float distance = 0;
-        //    float closestDistance = 99999999;
-        //    Transform closestTarget = null;
-
-        //    foreach (Terraformer t in EnvironmentalController.Instance.Terraformers)
-        //    {
-        //        distance = Vector3.Distance(transform.position, t.transform.position);
-
-        //        if (closestTarget == null)
-        //        {
-        //            closestTarget = t.transform;
-        //            closestDistance = distance;
-        //        }
-        //        else
-        //        {
-        //            if (distance < closestDistance)
-        //            {
-        //                closestTarget = t.transform;
-        //                closestDistance = distance;
-        //            }
-        //        }
-        //    }
-
-        //    target = closestTarget;
-        //    targetRadius = target.GetComponent<CapsuleCollider>().radius;
-        //}
-    }
-
-    /// <summary>
-    /// Gets Enemy's radius.
-    /// </summary>
-    private void GetRadius()
-    {
-        SphereCollider sphereCollider = GetComponent<SphereCollider>();
-        radius = sphereCollider.radius /** transform.localScale.magnitude*/;
-    }
-
-    /// <summary>
-    /// Calculates the vector for Enemy's movement, multiplies it by its speed.
-    /// </summary>
-    private void CalculateMovement()
-    {
-        movement = target.position - transform.position;
-        movement.Normalize();
-        movement *= speed;
+        //Rotate to face the cryo egg
+        //Vector3 targetRotation = cryoEgg.transform.position - transform.position;
+        //transform.rotation = Quaternion.LookRotation(targetRotation);
     }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
@@ -156,7 +105,7 @@ public class Enemy : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        CheckHealth();
+        
     }
 
     /// <summary>
@@ -164,11 +113,13 @@ public class Enemy : MonoBehaviour
     /// </summary>
     private void FixedUpdate()
     {
+        CheckHealth();
+        //TODO: swarm-based behaviour
+        Look();
         Move();
-        CheckTarget();
     }
 
-    //Recurring Methods (Update())-------------------------------------------------------------------------------------------------------------------
+    //Recurring Methods (FixedUpdate())-------------------------------------------------------------------------------------------------------------  
 
     /// <summary>
     /// Checks if Enemy has 0 health, destroying it if it has.
@@ -181,33 +132,92 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    //Recurring Methods (FixedUpdate())-------------------------------------------------------------------------------------------------------------  
+    /// <summary>
+    /// Alien uses input information to determine which direction it should be facing
+    /// </summary>
+    private void Look()
+    {
+        Vector3 newRotation = target.position - transform.position;
+
+        if (newRotation != targetRotation.eulerAngles)
+        {
+            oldRotation = transform.rotation;
+            targetRotation = Quaternion.LookRotation(newRotation);
+            slerpProgress = 0f;
+        }
+
+        if (slerpProgress < 1)
+        {
+            slerpProgress = Mathf.Min(1, slerpProgress + turningSpeed * Time.fixedDeltaTime);
+            transform.rotation = Quaternion.Slerp(oldRotation, targetRotation, slerpProgress);
+        }
+    }
 
     /// <summary>
     /// Moves Enemy.
     /// </summary>
     private void Move()
     {
-        transform.Translate(movement * Time.fixedDeltaTime);
+        transform.Translate(new Vector3(0, 0, speed * Time.fixedDeltaTime));
+
+        //Toggle gravity if something has pushed the enemy up above groundHeight
+        if (rigidbody.useGravity)
+        {
+            if (transform.position.y <= groundHeight)
+            {
+                transform.position = new Vector3(transform.position.x, groundHeight, transform.position.z);
+                rigidbody.useGravity = false;
+            }
+        }
+        else
+        {
+            if (transform.position.y > groundHeight)   //TODO: account for terrain pushing the enemy up, if it can move up hills?
+            {
+                rigidbody.useGravity = true;
+            }
+        }
+    }
+
+    //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// When a GameObject collides with another GameObject, Unity calls OnTriggerEnter.
+    /// </summary>
+    /// <param name="other">The other Collider involved in this collision.</param>
+    private void OnTriggerEnter(Collider collider)
+    {
+        if (collider.CompareTag("Enemy"))
+        {
+            visibleAliens.Add(collider.transform);
+        }
+        else if (collider.CompareTag("Building"))
+        {
+            visibleTargets.Add(collider.transform.parent);
+        }
+        else if (collider.CompareTag("Player"))
+        {
+            visibleTargets.Add(collider.transform);
+        }
     }
 
     /// <summary>
-    /// Checks if the target has died and reassigns it, and deals damage to the target if touching it.
+    /// OnTriggerExit is called when the Collider other has stopped touching the trigger.
     /// </summary>
-    private void CheckTarget()
+    /// <param name="other">The other Collider involved in this collision.</param>
+    private void OnTriggerExit(Collider collider)
     {
-        if (target == null)
+        if (visibleAliens.Contains(collider.transform))
         {
-            SelectTarget();
-            CalculateMovement();
+            visibleAliens.Remove(collider.transform);
+            return;
         }
 
-        if (Vector3.Distance(transform.position, target.position) < radius + targetRadius)
+        if (visibleTargets.Contains(collider.transform))
         {
-            target.GetComponent<Health>().Value -= damage;
-            EnemyFactory.Instance.DestroyEnemy(this);
+            visibleTargets.Remove(collider.transform);
+            //return;
         }
     }
 
-    //TODO: if eventually checking for collisions using collider, disable trigger collider while pooled, and re-enable when it's active in the game
+    //TODO: if collides with and damaged by a laser bolt, target the shooter if visible.
 }
