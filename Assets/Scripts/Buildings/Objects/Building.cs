@@ -29,6 +29,7 @@ public class Building : MonoBehaviour, ICollisionListener
 
     [Header("Building")]
     [SerializeField] private float buildTime;
+    [SerializeField] private float buildStartHeight;
     [SerializeField] private float boingInterval;
     [SerializeField] private float smallBoingMultiplier;
     [SerializeField] private float largeBoingMultiplier;
@@ -248,7 +249,7 @@ public class Building : MonoBehaviour, ICollisionListener
     /// </summary>
     public IEnumerator Build()
     {
-        Vector3 startPos = new Vector3(0, -1, 0);
+        Vector3 startPos = new Vector3(0, 0, buildStartHeight);
         Vector3 endPos = Vector3.zero;
         float buildTimeElapsed = 0;
 
