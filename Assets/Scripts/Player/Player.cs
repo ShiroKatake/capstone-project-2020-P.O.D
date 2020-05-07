@@ -11,9 +11,10 @@ public class Player : MonoBehaviour
     //Serialized Fields----------------------------------------------------------------------------
 
     [Header("Player Objects")]
-    [SerializeField] private GameObject drone;
+    [SerializeField] private Transform drone;
+    //[SerializeField] private Transform droneModel;
     [SerializeField] private Camera camera;
-    [SerializeField] private GameObject cameraTarget;
+    [SerializeField] private Transform cameraTarget;
     [SerializeField] private Transform terraformerHoldPoint;
     [SerializeField] private Transform laserCannonTip;
     [SerializeField] private Transform laserBatteryPoint;
@@ -37,6 +38,9 @@ public class Player : MonoBehaviour
     private Quaternion newRotation;
     private Quaternion oldRotation;
     private float slerpProgress = 1;
+
+    private Rigidbody rigidbody;
+    private float hoverHeight;
 
     //Laser Bolt Variables
     private bool shooting;
@@ -89,6 +93,8 @@ public class Player : MonoBehaviour
         }
 
         timeOfLastShot = shootCooldown * -1;
+        rigidbody = GetComponent<Rigidbody>();
+        hoverHeight = drone.position.y;
     }
 
 
@@ -143,15 +149,19 @@ public class Player : MonoBehaviour
         if (movement != previousMovement)
         {
             slerpProgress = 0;
-            oldRotation = drone.transform.rotation;
+            oldRotation = drone.rotation;
             newRotation = Quaternion.LookRotation(movement);
         }
 
         //Still turning? Rotate towards direction player wants to move in, but smoothly.
-        if (slerpProgress < 1 && movement != Vector3.zero)
+        if (movement == Vector3.zero)
+        {
+            rigidbody.velocity = movement;
+        }
+        else if (slerpProgress < 1)
         {
             slerpProgress = Mathf.Min(1, slerpProgress + rotationSpeed * Time.deltaTime);
-            drone.transform.rotation = Quaternion.Slerp(oldRotation, newRotation, slerpProgress);
+            drone.rotation = Quaternion.Slerp(oldRotation, newRotation, slerpProgress);
         }
     }
 
@@ -162,9 +172,28 @@ public class Player : MonoBehaviour
     {
         if (movement != Vector3.zero)
         {
-            drone.transform.Translate(new Vector3(0, 0, movementSpeed * movement.magnitude * Time.deltaTime), Space.Self);
-            cameraTarget.transform.position = drone.transform.position;
+            drone.Translate(new Vector3(0, 0, movementSpeed * movement.magnitude * Time.deltaTime), Space.Self);
         }
+
+        //Toggle gravity if something has pushed the player up above hoverHeight
+        if (rigidbody.useGravity)
+        {
+            if (drone.position.y <= hoverHeight)
+            {
+                drone.position = new Vector3(drone.position.x, hoverHeight, drone.position.z);
+                rigidbody.useGravity = false;
+            }
+        }
+        else
+        {
+            if (drone.position.y > hoverHeight)   //TODO: account for terrain pushing the player up
+            {
+                rigidbody.useGravity = true;
+            }
+        }
+
+        //Positioning this line here accounts for the player having been moved by an external force (e.g. pushed by enemies)
+        cameraTarget.position = drone.position;     
     }
 
     /// <summary>

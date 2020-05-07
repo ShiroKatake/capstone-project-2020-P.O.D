@@ -11,7 +11,8 @@ public class EnemyController : MonoBehaviour
 
     //Serialized Fields----------------------------------------------------------------------------
 
-
+    [Header("For Testing")]
+    [SerializeField] private bool spawnEnemies;
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
@@ -70,7 +71,7 @@ public class EnemyController : MonoBehaviour
     /// </summary>
     private void SpawnEnemies()
     {
-        while (enemies.Count < 4)
+        while (enemies.Count < 4 && spawnEnemies)
         {
             //Debug.Log($"EnemyController.enemies.Count is {enemies.Count}; spawning a new enemy.");
             enemies.Add(EnemyFactory.Instance.GetEnemy());

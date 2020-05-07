@@ -29,6 +29,7 @@ public class Building : MonoBehaviour, ICollisionListener
 
     [Header("Building")]
     [SerializeField] private float buildTime;
+    [SerializeField] private float buildStartHeight;
     [SerializeField] private float boingInterval;
     [SerializeField] private float smallBoingMultiplier;
     [SerializeField] private float largeBoingMultiplier;
@@ -48,6 +49,7 @@ public class Building : MonoBehaviour, ICollisionListener
     private Health health;
     private MeshRenderer renderer;
     private ResourceCollector resourceCollector;
+    private Rigidbody rigidbody;
     private Terraformer terraformer;
 
     //Positioning
@@ -204,6 +206,7 @@ public class Building : MonoBehaviour, ICollisionListener
         collider = GetComponentInChildren<Collider>();
         health = GetComponent<Health>();
         renderer = GetComponentInChildren<MeshRenderer>();
+        rigidbody = GetComponentInChildren<Rigidbody>();
         resourceCollector = GetComponent<ResourceCollector>();
         terraformer = GetComponent<Terraformer>();
         collisionReporters = new List<CollisionReporter>(GetComponentsInChildren<CollisionReporter>());
@@ -248,7 +251,7 @@ public class Building : MonoBehaviour, ICollisionListener
     /// </summary>
     public IEnumerator Build()
     {
-        Vector3 startPos = new Vector3(0, -1, 0);
+        Vector3 startPos = new Vector3(0, 0, buildStartHeight);
         Vector3 endPos = Vector3.zero;
         float buildTimeElapsed = 0;
 
@@ -418,6 +421,8 @@ public class Building : MonoBehaviour, ICollisionListener
         ResourceController.Instance.WasteConsumption += wasteConsumption;
         transform.position = position;
         renderer.material = opaqueMaterial;
+        rigidbody.isKinematic = true;
+        collider.isTrigger = false;
         placed = true;
 
         foreach (CollisionReporter c in collisionReporters)
@@ -447,7 +452,9 @@ public class Building : MonoBehaviour, ICollisionListener
         transform.localScale = normalScale;
         buildTime = normalBuildTime;
         renderer.material = transparentMaterial;
+        collider.isTrigger = true;
         collider.enabled = false;
+        rigidbody.isKinematic = false;
     }
 
     //ICollisionListener Triggered Methods---------------------------------------------------------
@@ -494,7 +501,7 @@ public class Building : MonoBehaviour, ICollisionListener
     /// <param name="other">The other Collider involved in this collision.</param>
     public void OnTriggerEnter(Collider other)
     {
-        if (active)
+        if (active && !collider.isTrigger)
         {
             //Debug.Log($"Building {id} OnTriggerEnter(). Other is {other}");
             colliding = true;
@@ -512,7 +519,7 @@ public class Building : MonoBehaviour, ICollisionListener
     /// <param name="other">The other Collider involved in this collision.</param>
     public void OnTriggerExit(Collider other)
     {
-        if (active)
+        if (active && !collider.isTrigger)
         {            
             //Debug.Log($"Building {id} OnTriggerExit(). Other is {other}");
             if (otherColliders.Contains(other))
