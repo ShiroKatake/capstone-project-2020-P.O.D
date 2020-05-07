@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using Rewired;
 
 /// <summary>
 /// The player. Player controls the player's movement and shooting. For building spawning, see BuildingSpawningController.
@@ -26,6 +27,11 @@ public class Player : MonoBehaviour
     [SerializeField] private float rotationSpeed;
     [SerializeField] private int laserBatteryCapacity;
     [SerializeField] private float shootCooldown;
+
+    [Header("Player Inputs")]
+    [SerializeField] private int playerID = 0;
+    [SerializeField] private Rewired.Player player;
+
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
@@ -91,6 +97,11 @@ public class Player : MonoBehaviour
         timeOfLastShot = shootCooldown * -1;
     }
 
+    void Start()
+    {
+        player = ReInput.players.GetPlayer(playerID);
+    }
+
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -118,7 +129,10 @@ public class Player : MonoBehaviour
     /// </summary>
     private void GetInput()
     {
-        movement = new Vector3(InputController.Instance.GetAxis("MoveLeftRight"), 0, InputController.Instance.GetAxis("MoveForwardsBackwards"));
+        float moveHorizontal = player.GetAxis("Horizontal");
+        float moveVertical = player.GetAxis("Vertical");
+
+        movement = new Vector3(moveHorizontal, 0, -moveVertical);
         shooting = InputController.Instance.ButtonHeld("Shoot");
     }
 
