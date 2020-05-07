@@ -97,7 +97,8 @@ public class Enemy : MonoBehaviour
     {
         Id = id;
         health.Reset();
-        target = cryoEgg.transform;
+        target = cryoEgg.GetComponentInChildren<Collider>().transform;
+        targetHealth = cryoEgg.Health;
         timeOfLastAttack = attackCooldown * -1;
 
         //Rotate to face the cryo egg
@@ -165,24 +166,13 @@ public class Enemy : MonoBehaviour
             if (target != closestTarget)
             {
                 target = closestTarget;
-                targetHealth = target.GetComponent<Health>();
-
-                while (targetHealth == null && target.parent != null)
-                {
-                    target = target.parent;
-                    targetHealth = target.GetComponent<Health>();
-                }
-
-                if (targetHealth == null)
-                {
-                    Debug.LogError($"Enemy.SelectTarget cannot find {target}'s Health component.");
-                }
+                targetHealth = target.GetComponentInParent<Health>();   //Gets Health from target or any of its parents that has it.
             }
         }
         else if (target != cryoEgg.transform)
         {
-            target = cryoEgg.transform;
-            targetHealth = target.GetComponent<Health>();
+            target = cryoEgg.GetComponentInChildren<Collider>().transform;
+            targetHealth = cryoEgg.Health;
         }
     }
 
@@ -259,7 +249,7 @@ public class Enemy : MonoBehaviour
                 }
                 Debug.Log($"Enemy Attack on {target.gameObject}");
                 timeOfLastAttack = Time.time;
-                //targetHealth.Value -= damage;
+                targetHealth.Value -= damage;
             }
         }
         //TODO: else if the colliding thing is a laser bolt, target the shooter
