@@ -259,7 +259,7 @@ public class Enemy : MonoBehaviour
                 }
                 Debug.Log($"Enemy Attack on {target.gameObject}");
                 timeOfLastAttack = Time.time;
-                targetHealth.Value -= damage;
+                //targetHealth.Value -= damage;
             }
         }
         //TODO: else if the colliding thing is a laser bolt, target the shooter
