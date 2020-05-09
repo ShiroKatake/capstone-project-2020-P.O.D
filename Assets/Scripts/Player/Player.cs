@@ -158,7 +158,8 @@ public class Player : MonoBehaviour
         {
             slerpProgress = 0;
             oldRotation = drone.transform.rotation;
-            newRotation = Quaternion.LookRotation(movement);
+            //newRotation = Quaternion.LookRotation(movement);
+            newRotation = Quaternion.LookRotation(ReInput.controllers.Mouse.screenPosition);
         }
 
         //Still turning? Rotate towards direction player wants to move in, but smoothly.
