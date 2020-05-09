@@ -153,21 +153,27 @@ public class Player : MonoBehaviour
     /// </summary>
     private void Look()
     {
+        /*
         //Player wants to move in a new direction? Update Slerp variables.
         if (movement != previousMovement)
         {
             slerpProgress = 0;
             oldRotation = drone.transform.rotation;
             //newRotation = Quaternion.LookRotation(movement);
-            newRotation = Quaternion.LookRotation(ReInput.controllers.Mouse.screenPosition);
+            //newRotation = Quaternion.LookRotation(ReInput.controllers.Mouse.screenPosition);
+            //newRotation = Quaternion.LookRotation(MousePositionOnTerrain.Instance.GetWorldPosition);
+            //print("World Position from Player: " + MousePositionOnTerrain.Instance.GetWorldPosition);
+            drone.transform.LookAt(MousePositionOnTerrain.Instance.GetWorldPosition);
         }
 
         //Still turning? Rotate towards direction player wants to move in, but smoothly.
-        if (slerpProgress < 1 && movement != Vector3.zero)
+        /*if (slerpProgress < 1 && movement != Vector3.zero)
         {
             slerpProgress = Mathf.Min(1, slerpProgress + rotationSpeed * Time.deltaTime);
             drone.transform.rotation = Quaternion.Slerp(oldRotation, newRotation, slerpProgress);
-        }
+        }*/
+        drone.transform.LookAt(MousePositionOnTerrain.Instance.GetWorldPosition);
+
     }
 
     /// <summary>
@@ -177,7 +183,7 @@ public class Player : MonoBehaviour
     {
         if (movement != Vector3.zero)
         {
-            drone.transform.Translate(new Vector3(0, 0, movementSpeed * movement.magnitude * Time.deltaTime), Space.Self);
+            drone.transform.Translate(movement * movementSpeed * Time.deltaTime, Space.World);
             cameraTarget.transform.position = drone.transform.position;
         }
     }
