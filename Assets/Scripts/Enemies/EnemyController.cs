@@ -11,12 +11,17 @@ public class EnemyController : MonoBehaviour
 
     //Serialized Fields----------------------------------------------------------------------------
 
+    [Header("Enemy Stats")]
+    [SerializeField] private float respawnDelay;
+
     [Header("For Testing")]
     [SerializeField] private bool spawnEnemies;
+    [SerializeField] private bool ignoreDayNightCycle;
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
     private List<Enemy> enemies;
+    private float timeOfLastDeath;
 
     //PublicProperties-------------------------------------------------------------------------------------------------------------------------------
 
@@ -50,8 +55,8 @@ public class EnemyController : MonoBehaviour
         }
 
         Instance = this;
-
         enemies = new List<Enemy>();
+        timeOfLastDeath = respawnDelay * -1;
     }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
@@ -71,10 +76,30 @@ public class EnemyController : MonoBehaviour
     /// </summary>
     private void SpawnEnemies()
     {
-        while (enemies.Count < 4 && spawnEnemies)
+        if (spawnEnemies)
         {
-            //Debug.Log($"EnemyController.enemies.Count is {enemies.Count}; spawning a new enemy.");
-            enemies.Add(EnemyFactory.Instance.GetEnemy());
+            if (ignoreDayNightCycle)
+            {
+                while (enemies.Count < 4)
+                {
+                    enemies.Add(EnemyFactory.Instance.GetEnemy());
+                }
+            }
+            else
+            {
+                if (!DayNightCycleController.Instance.Daytime && enemies.Count == 0 && Time.time - timeOfLastDeath > respawnDelay)
+                {
+                    Debug.Log("Nighttime? No enemies? Spawning time!");
+                    int spawnCount = 4; //TODO: derive spawn count from number of buildings and delay since last defence/non-defence built.
+
+                    //TODO: spawning in a cluster without overlapping
+
+                    for (int i = 0; i < spawnCount; i++)
+                    {
+                        enemies.Add(EnemyFactory.Instance.GetEnemy());
+                    }
+                }
+            }
         }
     }
 
@@ -87,6 +112,7 @@ public class EnemyController : MonoBehaviour
         if (enemies.Contains(enemy))
         {
             enemies.Remove(enemy);
+            timeOfLastDeath = Time.time;
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// A template for organising comments that can be copied and pasted into a new class.
+/// Reports collisions to entity classes on parent transforms.
 /// </summary>
 public class CollisionReporter : MonoBehaviour
 {
@@ -17,6 +17,8 @@ public class CollisionReporter : MonoBehaviour
     [SerializeField] private bool reportOnTriggerEnter;
     [SerializeField] private bool reportOnTriggerExit;
     [SerializeField] private bool reportOnTriggerStay;
+    
+    //TODO: check if reportX switches are turned off when no longer needed AND reportX switches are reset properly when a building is pooled
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 

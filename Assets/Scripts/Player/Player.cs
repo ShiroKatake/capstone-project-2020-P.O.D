@@ -17,15 +17,10 @@ public class Player : MonoBehaviour
     [SerializeField] private Transform cameraTarget;
     [SerializeField] private Transform terraformerHoldPoint;
     [SerializeField] private Transform laserCannonTip;
-    [SerializeField] private Transform laserBatteryPoint;
-
-    [Header("Prefabs")]
-    [SerializeField] private LaserBolt laserBoltPrefab;
 
     [Header("Player Stats")]
     [SerializeField] private float movementSpeed;
     [SerializeField] private float rotationSpeed;
-    [SerializeField] private int laserBatteryCapacity;
     [SerializeField] private float shootCooldown;
 
     //Non-Serialized Fields------------------------------------------------------------------------
@@ -42,10 +37,9 @@ public class Player : MonoBehaviour
     private Rigidbody rigidbody;
     private float hoverHeight;
 
-    //Laser Bolt Variables
+    //Projectile Variables
     private bool shooting;
     private float timeOfLastShot;
-    private List<LaserBolt> laserBattery = new List<LaserBolt>();
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -57,18 +51,6 @@ public class Player : MonoBehaviour
     /// Singleton public property for the player.
     /// </summary>
     public static Player Instance { get; protected set; }
-
-    //Basic Public Properties----------------------------------------------------------------------
-
-    /// <summary>
-    /// A pool for laser bolts that aren't in use.
-    /// </summary>
-    public List<LaserBolt> LaserBattery { get => laserBattery; }
-
-    /// <summary>
-    /// The physical location of the pool of laser bolts in-scene.
-    /// </summary>
-    public Transform LaserBatteryPoint { get => laserBatteryPoint; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -84,16 +66,8 @@ public class Player : MonoBehaviour
         }
 
         Instance = this;
-
-        for (int i = 0; i < laserBatteryCapacity; i++)
-        {
-            LaserBolt l = Instantiate<LaserBolt>(laserBoltPrefab, laserBatteryPoint.position, laserBoltPrefab.transform.rotation);
-            l.transform.parent = laserBatteryPoint;
-            laserBattery.Add(l);
-        }
-
-        timeOfLastShot = shootCooldown * -1;
         rigidbody = GetComponent<Rigidbody>();
+        timeOfLastShot = shootCooldown * -1;
         hoverHeight = drone.position.y;
     }
 
@@ -197,34 +171,15 @@ public class Player : MonoBehaviour
     }
 
     /// <summary>
-    /// Checks if the player wants to shoot based on their input, and fires laser bolts if they do.
+    /// Checks if the player wants to shoot based on their input, and fires projectiles if they do.
     /// </summary>
     private void CheckShooting()
     {
-        if (shooting && laserBattery.Count > 0 && Time.time - timeOfLastShot > shootCooldown)
+        if (shooting && Time.time - timeOfLastShot > shootCooldown)
         {
             timeOfLastShot = Time.time;
-            LaserBolt laserBolt = laserBattery[0];
-            laserBattery.Remove(laserBolt);
-            laserBolt.transform.parent = null;
-            laserBolt.transform.position = laserCannonTip.position;
-            laserBolt.Shoot((transform.forward * 2 - transform.up).normalized);
+            Projectile projectile = ProjectileFactory.Instance.GetProjectile(transform, laserCannonTip.position);
+            projectile.Shoot((transform.forward * 2 - transform.up).normalized);
         }
-    }
-
-    //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
-
-    /// <summary>
-    /// Handles the destruction of laser bolts.
-    /// </summary>
-    /// <param name="laserBolt">The laser bolt to destroy.</param>
-    public void DestroyLaserBolt(LaserBolt laserBolt)
-    {
-        laserBolt.Active = false;
-        laserBolt.Collider.enabled = false;
-        laserBolt.Rigidbody.isKinematic = true;
-        laserBolt.transform.position = laserBatteryPoint.position;
-        laserBolt.transform.parent = laserBatteryPoint;
-        laserBattery.Add(laserBolt);
     }
 }

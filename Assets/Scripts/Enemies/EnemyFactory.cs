@@ -104,7 +104,7 @@ public class EnemyFactory : MonoBehaviour
     /// Retrieves Enemies from a pool if there's any available, and instantiates a new Enemy if there isn't one.
     /// </summary>
     /// <param name="position">The position the Enemy should be instantiated at.</param>
-    /// <returns></returns>
+    /// <returns>A new enemy.</returns>
     public Enemy GetEnemy()
     {
         Enemy enemy;

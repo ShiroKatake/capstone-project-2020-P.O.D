@@ -237,22 +237,23 @@ public class Enemy : MonoBehaviour
     {
         if (!collision.collider.isTrigger && (collision.collider.CompareTag("Building") || collision.collider.CompareTag("Player")))
         {
-            Debug.Log($"Enemy.OnCollisionStay, non-trigger targetable. Collider: {collision.collider.gameObject}, target: {target.gameObject}, time: {Time.time}, timeOfLastAttack: {timeOfLastAttack}, attack cooldown: {attackCooldown}");
+            //Debug.Log($"Enemy.OnCollisionStay, non-trigger targetable. Collider: {collision.collider.gameObject}, target: {target.gameObject}, time: {Time.time}, timeOfLastAttack: {timeOfLastAttack}, attack cooldown: {attackCooldown}");
             if (Time.time - timeOfLastAttack > attackCooldown)
             {
                 Transform temp = collision.collider.transform;
 
 
-                if (temp.gameObject.GetComponent<Health>() == null)
-                {
-                    //TODO: damage targetHealth; when finding target health, keep target as the transform with the solid collider, but make targetHealth the health component somewhere in its hierarchy.
-                }
-                Debug.Log($"Enemy Attack on {target.gameObject}");
+                //if (temp.gameObject.GetComponent<Health>() == null)
+                //{
+                //    //TODO: damage targetHealth; when finding target health, keep target as the transform with the solid collider, but make targetHealth the health component somewhere in its hierarchy.
+                //}
+                //Debug.Log($"Enemy Attack on {target.gameObject}");
                 timeOfLastAttack = Time.time;
                 targetHealth.Value -= damage;
             }
         }
-        //TODO: else if the colliding thing is a laser bolt, target the shooter
+        //TODO: else if the colliding thing is a projectile, target the shooter (look at Projectile.Owner).
+        //TODO: if made contact with target and target is a building, step back a smidge and attack, so that OnCollisionStay is not called every single frame. For player, check if within attack range to verify that the enemy can still attack them?
     }
 
     /// <summary>
@@ -300,5 +301,5 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    //TODO: if collides with and damaged by a laser bolt, target the shooter if visible.
+    //TODO: if collides with and damaged by a projectile, target the shooter if visible.
 }

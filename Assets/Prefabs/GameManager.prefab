@@ -11,11 +11,13 @@ GameObject:
   - component: {fileID: 8337738344923657298}
   - component: {fileID: 8337738344923657296}
   - component: {fileID: 8337738344923657295}
+  - component: {fileID: 6634618325735705565}
   - component: {fileID: 8337738344923657297}
   - component: {fileID: 8337738344923657292}
   - component: {fileID: 8337738344923657294}
   - component: {fileID: 8337738344923657293}
   - component: {fileID: 8337738344923657299}
+  - component: {fileID: 4898790345369863515}
   - component: {fileID: 1182461914613764985}
   m_Layer: 0
   m_Name: GameManager
@@ -88,6 +90,19 @@ MonoBehaviour:
   pooledShortRangeTurrets: 20
   pooledLongRangeTurrets: 20
   pooledBuildingFoundations: 20
+--- !u!114 &6634618325735705565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8337738344923657300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c726ccb10547304cb13fd02b274303e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cycleDuration: 30
 --- !u!114 &8337738344923657297
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -100,6 +115,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b339f3ae52348242844769182c55c03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  respawnDelay: 30
+  spawnEnemies: 1
+  ignoreDayNightCycle: 0
 --- !u!114 &8337738344923657292
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -115,6 +133,10 @@ MonoBehaviour:
   enemyPrefab: {fileID: 130242450852513669, guid: 65e2d9413bdfaa8499dd94fda9573c1c,
     type: 3}
   enemyPoolParent: {fileID: 0}
+  outerTopLeft: {fileID: 0}
+  outerBottomRight: {fileID: 0}
+  innerTopLeft: {fileID: 0}
+  innerBottomRight: {fileID: 0}
 --- !u!114 &8337738344923657294
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -159,6 +181,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gamepad: 0
   operatingSystem: 0
+  buttons: []
+  buildingUIParent: {fileID: 0}
+--- !u!114 &4898790345369863515
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8337738344923657300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ced650d805923324ea132ed606689792, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectilePoolParent: {fileID: 0}
+  projectilePrefab: {fileID: 7263093150868635065, guid: 496aae763b28c0941aee53c7530873a3,
+    type: 3}
 --- !u!114 &1182461914613764985
 MonoBehaviour:
   m_ObjectHideFlags: 0
