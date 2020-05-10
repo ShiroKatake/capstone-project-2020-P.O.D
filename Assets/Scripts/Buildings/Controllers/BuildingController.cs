@@ -18,6 +18,9 @@ public class BuildingController : MonoBehaviour
     private List<Building> buildings = new List<Building>();
     private List<Building> destroyedBuildings = new List<Building>();
 
+    private float timeLastDefenceWasBuilt;
+    private float timeLastNonDefenceWasBuilt;
+
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
     //Singleton Public Property--------------------------------------------------------------------                                                    
@@ -30,9 +33,24 @@ public class BuildingController : MonoBehaviour
     //Basic Public Properties----------------------------------------------------------------------                                                                                                                          
 
     /// <summary>
+    /// The number of buildings that are registered with BuildingController.
+    /// </summary>
+    public int BuildingCount { get => buildings.Count; }
+
+    /// <summary>
     /// The cryo egg.
     /// </summary>
     public Building CryoEgg { get => cryoEgg; }
+
+    /// <summary>
+    /// The time in seconds that the last defensive building was built.
+    /// </summary>
+    public float TimeLastDefenceWasBuilt { get => timeLastDefenceWasBuilt; }
+
+    /// <summary>
+    /// The time in seconds that the last non-defensive building was built.
+    /// </summary>
+    public float TimeLastNonDefenceWasBuilt { get => timeLastNonDefenceWasBuilt; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -128,6 +146,15 @@ public class BuildingController : MonoBehaviour
         if (!buildings.Contains(building))
         {
             buildings.Add(building);
+
+            if (building.BuildingType == EBuilding.ShortRangeTurret || building.BuildingType == EBuilding.LongRangeTurret)
+            {
+                timeLastDefenceWasBuilt = Time.time;
+            }
+            else
+            {
+                timeLastNonDefenceWasBuilt = Time.time;
+            }
         }
     }
 

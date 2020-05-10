@@ -13,6 +13,10 @@ public class EnemyController : MonoBehaviour
 
     [Header("Enemy Stats")]
     [SerializeField] private float respawnDelay;
+    [SerializeField] private float defencePenaltyThreshold;
+    [SerializeField] private float nonDefencePenaltyThreshold;
+    [SerializeField] private int penaltyIncrement;
+    [SerializeField] private float penaltyCooldown;
 
     [Header("For Testing")]
     [SerializeField] private bool spawnEnemies;
@@ -20,8 +24,13 @@ public class EnemyController : MonoBehaviour
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
+    //Enemy Spawning
     private List<Enemy> enemies;
     private float timeOfLastDeath;
+
+    //Penalty Incrementation
+    private int spawnCountPenalty;
+    private float timeOfLastPenalty;
 
     //PublicProperties-------------------------------------------------------------------------------------------------------------------------------
 
@@ -57,6 +66,8 @@ public class EnemyController : MonoBehaviour
         Instance = this;
         enemies = new List<Enemy>();
         timeOfLastDeath = respawnDelay * -1;
+        timeOfLastPenalty = penaltyCooldown * -1;
+        spawnCountPenalty = 0;
     }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
@@ -90,9 +101,19 @@ public class EnemyController : MonoBehaviour
                 if (!DayNightCycleController.Instance.Daytime && enemies.Count == 0 && Time.time - timeOfLastDeath > respawnDelay)
                 {
                     Debug.Log("Nighttime? No enemies? Spawning time!");
-                    int spawnCount = 4; //TODO: derive spawn count from number of buildings and delay since last defence/non-defence built.
 
-                    //TODO: spawning in a cluster without overlapping
+                    //Check and increment penalty
+                    if (Time.time - timeOfLastPenalty > penaltyCooldown && (Time.time - BuildingController.Instance.TimeLastDefenceWasBuilt > defencePenaltyThreshold || Time.time - BuildingController.Instance.TimeLastNonDefenceWasBuilt > nonDefencePenaltyThreshold))
+                    {
+                        spawnCountPenalty += penaltyIncrement;
+                        timeOfLastPenalty = Time.time;
+                        Debug.Log($"EnemyController.spawnCountPenalty incremented to {spawnCountPenalty}");
+                    }
+
+                    //Spawn enemies
+                    int spawnCount = BuildingController.Instance.BuildingCount * 3 + spawnCountPenalty; 
+                    
+                    //TODO: spawning in a cluster without overlapping.
 
                     for (int i = 0; i < spawnCount; i++)
                     {
