@@ -24,10 +24,23 @@ public class Health : MonoBehaviour
     /// <summary>
     /// How much health, durability, etc. something currently has.
     /// </summary>
-    public float Value { get => health; set => health = value; }
+    public float Value
+    {
+        get => health; //set => health = value;
+
+        set
+        {
+            health = value;
+            Debug.Log($"{gameObject.name}'s health updated to {health}");
+        }
+    }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
+    /// <summary>
+    /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
+    /// Awake() runs before Start().
+    /// </summary>
     private void Awake()
     {
         startingHealth = health;
@@ -43,14 +56,6 @@ public class Health : MonoBehaviour
     {
         return health <= 0;
     }
-
-    /// <summary>
-    /// Destroys the game object Health is attached to.
-    /// </summary>
-    //public void Die()
-    //{
-    //    Destroy(gameObject);
-    //}
 
     /// <summary>
     /// Resets health to its starting value.

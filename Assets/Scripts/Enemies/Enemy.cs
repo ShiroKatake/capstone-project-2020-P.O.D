@@ -19,24 +19,28 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float attackCooldown;
 
     //Non-Serialized Fields------------------------------------------------------------------------
-
+    [Header("Testing")]
+    //Componenets
     private Health health;
     private Rigidbody rigidbody;
 
+    //Movement
     private bool moving;
     private float groundHeight;
 
+    //Turning
+    private Quaternion oldRotation;
+    private Quaternion targetRotation;
+    private float slerpProgress;
+    
+    //Targeting
     private Building cryoEgg;
     private List<Transform> visibleAliens;
     private List<Transform> visibleTargets;
     [SerializeField] private Transform target;
     [SerializeField] private Health targetHealth;
-    private Transform shooter;
+    [SerializeField] private Transform shotBy;
     private float timeOfLastAttack;
-
-    private Quaternion oldRotation;
-    private Quaternion targetRotation;
-    private float slerpProgress;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -51,6 +55,11 @@ public class Enemy : MonoBehaviour
     /// Whether or not the Enemy is moving.
     /// </summary>
     public bool Moving { get => moving; set => moving = value; }
+
+    /// <summary>
+    /// The player or building the enemy was shot by most recently.
+    /// </summary>
+    public Transform ShotBy { get => shotBy; set => shotBy = value; }
 
     //Complex Public Properties--------------------------------------------------------------------
 
@@ -102,8 +111,8 @@ public class Enemy : MonoBehaviour
         timeOfLastAttack = attackCooldown * -1;
 
         //Rotate to face the cryo egg
-        //Vector3 targetRotation = cryoEgg.transform.position - transform.position;
-        //transform.rotation = Quaternion.LookRotation(targetRotation);
+        Vector3 targetRotation = cryoEgg.transform.position - transform.position;
+        transform.rotation = Quaternion.LookRotation(targetRotation);
     }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
@@ -111,10 +120,10 @@ public class Enemy : MonoBehaviour
     /// <summary>
     /// Update() is run every frame.
     /// </summary>
-    private void Update()
-    {
+    //private void Update()
+    //{
         
-    }
+    //}
 
     /// <summary>
     /// FixedUpdate() is run at a fixed interval independant of framerate.
@@ -122,7 +131,6 @@ public class Enemy : MonoBehaviour
     private void FixedUpdate()
     {
         CheckHealth();
-        //TODO: swarm-based behaviour
         SelectTarget();
         Look();
         Move();
@@ -148,6 +156,13 @@ public class Enemy : MonoBehaviour
     {
         if (visibleTargets.Count > 0)
         {
+            if (shotBy != null && visibleTargets.Contains(shotBy))
+            {
+                target = shotBy;
+                targetHealth = target.GetComponentInParent<Health>();   //Gets Health from target or any of its parents that has it.
+                return;
+            }
+
             float distance = 99999999999;
             float closestDistance = 9999999999999999;
             Transform closestTarget = null;
@@ -181,11 +196,7 @@ public class Enemy : MonoBehaviour
     /// </summary>
     private void Look()
     {
-
-
-
-
-
+        //TODO: swarm-based looking behaviour
         Vector3 newRotation = target.position - transform.position;
 
         if (newRotation != targetRotation.eulerAngles)
@@ -237,22 +248,12 @@ public class Enemy : MonoBehaviour
     {
         if (!collision.collider.isTrigger && (collision.collider.CompareTag("Building") || collision.collider.CompareTag("Player")))
         {
-            //Debug.Log($"Enemy.OnCollisionStay, non-trigger targetable. Collider: {collision.collider.gameObject}, target: {target.gameObject}, time: {Time.time}, timeOfLastAttack: {timeOfLastAttack}, attack cooldown: {attackCooldown}");
             if (Time.time - timeOfLastAttack > attackCooldown)
             {
-                Transform temp = collision.collider.transform;
-
-
-                //if (temp.gameObject.GetComponent<Health>() == null)
-                //{
-                //    //TODO: damage targetHealth; when finding target health, keep target as the transform with the solid collider, but make targetHealth the health component somewhere in its hierarchy.
-                //}
-                //Debug.Log($"Enemy Attack on {target.gameObject}");
                 timeOfLastAttack = Time.time;
                 targetHealth.Value -= damage;
             }
         }
-        //TODO: else if the colliding thing is a projectile, target the shooter (look at Projectile.Owner).
         //TODO: if made contact with target and target is a building, step back a smidge and attack, so that OnCollisionStay is not called every single frame. For player, check if within attack range to verify that the enemy can still attack them?
     }
 
@@ -275,6 +276,12 @@ public class Enemy : MonoBehaviour
             else if (collider.CompareTag("Player"))
             {
                 visibleTargets.Add(collider.transform);
+            }
+            else if (collider.CompareTag("Projectile"))
+            {
+                Debug.Log("Enemy.OnTriggerEnter; Enemy hit by a projectile");
+                Projectile projectile = collider.GetComponent<Projectile>();
+                shotBy = projectile.Owner.GetComponentInChildren<Collider>().transform;
             }
         }
     }
@@ -300,6 +307,4 @@ public class Enemy : MonoBehaviour
             }
         }
     }
-
-    //TODO: if collides with and damaged by a projectile, target the shooter if visible.
 }

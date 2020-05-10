@@ -112,7 +112,6 @@ public class Projectile : MonoBehaviour
     /// <param name="other">The collider of the other object the projectile collided with.</param>
     public void OnTriggerEnter(Collider other)
     {
-
         ProjectileCollision(other);
     }
 
@@ -128,7 +127,10 @@ public class Projectile : MonoBehaviour
         if (collidedWith.CompareTag("Enemy"))
         {
             //Debug.Log("ProjectileCollision, Enemy");
-            collidedWith.gameObject.GetComponent<Enemy>().Health.Value -= damage;
+            Enemy e = collidedWith.gameObject.GetComponent<Enemy>();
+            e.Health.Value -= damage;
+            e.ShotBy = owner.GetComponentInChildren<Collider>().transform;
+            Debug.Log($"{gameObject.name} reduced {e.gameObject.name}'s health to {e.Health.Value}; {e.gameObject.name}.ShotBy is now {owner.name}");
         }
 
         if (!collidedWith.CompareTag("Player") && !collidedWith.CompareTag("Projectile"))
