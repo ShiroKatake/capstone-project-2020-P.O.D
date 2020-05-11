@@ -12,9 +12,8 @@ public class MapController : MonoBehaviour
     //Serialized Fields----------------------------------------------------------------------------                                                    
 
     [Header("Map Size")]
-    [SerializeField] private Vector3 centre;
-    [SerializeField] private Vector3 outerTopLeft;
-    [SerializeField] private Vector3 outerBottomRight;
+    [SerializeField] private int xMax;
+    [SerializeField] private int zMax;
 
     [Header("No Alien Spawning Area")]
     [SerializeField] private Vector3 innerTopLeft;
@@ -22,11 +21,8 @@ public class MapController : MonoBehaviour
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
-    private bool[,] positions;
+    private bool[,] availablePositions;
     private bool[,] enemySpawnablePositions;
-
-    [SerializeField] private float xOffset;
-    [SerializeField] private float zOffset;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -59,21 +55,31 @@ public class MapController : MonoBehaviour
         }
 
         Instance = this;
+        availablePositions = new bool[xMax + 1 , zMax + 1];
+        enemySpawnablePositions = new bool[xMax + 1, zMax + 1];
 
-        xOffset = outerTopLeft.x;
-        zOffset = outerBottomRight.z;
+        int noEnemyXMin = (int)Mathf.Round(innerTopLeft.x);
+        int noEnemyXMax = (int)Mathf.Round(innerBottomRight.x);
+        int noEnemyZMin = (int)Mathf.Round(innerBottomRight.z);
+        int noEnemyZMax = (int)Mathf.Round(innerTopLeft.z);
 
-        int xMax = (int)Mathf.Round(outerBottomRight.x - xOffset);
-        int zMax = (int)Mathf.Round(outerTopLeft.z - zOffset);
+        Debug.Log($"Enemies cannot spawn within ({noEnemyXMin}, {noEnemyZMin}) to ({noEnemyXMax}, {noEnemyZMax})");
 
-        positions = new bool[xMax , zMax];
-        enemySpawnablePositions = new bool[xMax , zMax];
-
-        Debug.Log($"Map ranges from {outerTopLeft} to {outerBottomRight}. Offset is ({xOffset}, {zOffset}. If start at 0, max is at ({xMax}, {zMax})");
+        for (int i = 0; i < xMax; i++)
+        {
+            for (int j = 0; j < zMax; j++)
+            {
+                availablePositions[i, j] = true;
+                enemySpawnablePositions[i, j] = (i < noEnemyXMin && i > noEnemyXMax && j < noEnemyZMin && j > noEnemyZMax);
+            }
+        }
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
+    //TODO: have buildings make use of PositionAvailableforBuilding() to make sure they're spawning within the bounds of the map
+    //TODO: set xMax and zMax in the inspector both to 201, so that map spans (0,0) to (200, 200); 201 accounts for starting at 0, not 1.
+    //TODO: make sure other values are set properly in the inspector for this.
     public bool PositionAvailableForBuilding(Building building)
     {
         Vector3 buildingPos = building.transform.position;
@@ -81,23 +87,33 @@ public class MapController : MonoBehaviour
 
         foreach (Vector3 offset in building.BuildingFoundationOffsets)
         {
-            Vector2 position = new Vector2(buildingPos.x + offset.x - xOffset, buildingPos.z + offset.z - zOffset);
-            bool result;
-
-            try
-            {
-                Debug.Log($"Foundation offset of {offset}; occupuies world space pos of {buildingPos + offset}; offset by ({xOffset},{zOffset}) to occupy positions[{position.x},{position.y}]");
-                result = positions[(int)Mathf.Round(position.x), (int)Mathf.Round(position.y)];
-            }
-            catch
-            {
-                result = false;
-            }
-            
-            if (result == false)
+            if (!PositionAvailableForSpawning(buildingPos + offset))
             {
                 return false;
             }
+        }
+
+        return true;
+    }
+
+    //TODO: triple-slash comments
+    //TODO: have enemies make use of PositionAvailableForSpawning()
+    public bool PositionAvailableForSpawning(Vector3 position)
+    {
+        Debug.Log($"Verifying for spawnable at {position}");
+        position.x = Mathf.Round(position.x);
+        position.z = Mathf.Round(position.z);
+
+        if (position.x < 0 || position.x > xMax || position.z < 0 || position.z > zMax)
+        {
+            Debug.Log($"Can't spawn at {position}, which is outside the bounds of (0,0) to ({xMax},{zMax})");
+            return false;
+        }
+
+        if (!availablePositions[(int)position.x, (int)position.z])
+        {
+            Debug.Log($"Can't spawn at {position}, which is already occupied.");
+            return false;
         }
 
         return true;
@@ -116,21 +132,22 @@ public class MapController : MonoBehaviour
     private void UpdateAvailablePositions(Building building, bool available)
     {
         Vector3 buildingPos = building.transform.position;
-        Debug.Log($"Building building at {buildingPos}");
+        Debug.Log($"Updating availability of positions for building at {buildingPos}");
 
         foreach (Vector3 offset in building.BuildingFoundationOffsets)
         {
-            Vector2 position = new Vector2(buildingPos.x + offset.x - xOffset, buildingPos.z + offset.z - zOffset);
-            Debug.Log($"Foundation offset of {offset}; occupuies world space pos of {buildingPos + offset}; offset by ({xOffset},{zOffset}) to occupy positions[{position.x},{position.y}]");
+            Vector3 foundationPos = buildingPos + offset;
+            foundationPos.x = Mathf.Round(foundationPos.x);
+            foundationPos.z = Mathf.Round(foundationPos.z);
 
-            try
+            if (foundationPos.x >= 0 || foundationPos.x <= xMax || foundationPos.z >= 0 || foundationPos.z <= zMax)
             {
-                positions[(int)Mathf.Round(position.x), (int)Mathf.Round(position.y)] = available;
+                availablePositions[(int)foundationPos.x, (int)foundationPos.z] = available;
             }
-            catch
+            else
             {
-                Debug.LogError($"UpdateAvailablePositions tried to update the position availability regarding {building.gameObject.name}, but encountered an error.");
-            }
+                Debug.Log($"{building.gameObject.name} can't update the availability of position {foundationPos}, which is outside the bounds of (0,0) to ({xMax},{zMax})");
+            }            
         }
     }
 
