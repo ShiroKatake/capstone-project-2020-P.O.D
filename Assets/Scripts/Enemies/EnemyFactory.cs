@@ -108,41 +108,41 @@ public class EnemyFactory : MonoBehaviour
     public Enemy GetEnemy()
     {
         Enemy enemy;
-        Vector3 spawnPoint;
+        Vector3 spawnPoint = new Vector3(5, 0.25f, 5);
 
         float selection = Random.Range(0, accumulativeAreaBottomRight);
 
         if (selection <= accumulativeAreaTopLeft)
         {
-            spawnPoint = new Vector3(Random.Range(outerXMin, innerXMin), 0.5f, Random.Range(innerZMax, outerZMax));
+            spawnPoint = new Vector3(Mathf.Round(Random.Range(outerXMin, innerXMin)), 0.25f, Mathf.Round(Random.Range(innerZMax, outerZMax)));
         }
         else if (selection <= accumulativeAreaTopCentre)
         {
-            spawnPoint = new Vector3(Random.Range(innerXMin, innerXMax), 0.5f, Random.Range(innerZMax, outerZMax));
+            spawnPoint = new Vector3(Mathf.Round(Random.Range(innerXMin, innerXMax)), 0.25f, Mathf.Round(Random.Range(innerZMax, outerZMax)));
         }
         else if (selection <= accumulativeAreaTopRight)
         {
-            spawnPoint = new Vector3(Random.Range(innerXMax, outerXMax), 0.5f, Random.Range(innerZMax, outerZMax));
+            spawnPoint = new Vector3(Mathf.Round(Random.Range(innerXMax, outerXMax)), 0.25f, Mathf.Round(Random.Range(innerZMax, outerZMax)));
         }
         else if (selection <= accumulativeAreaCentreLeft)
         {
-            spawnPoint = new Vector3(Random.Range(outerXMin, innerXMin), 0.5f, Random.Range(innerZMin, innerZMax));
+            spawnPoint = new Vector3(Mathf.Round(Random.Range(outerXMin, innerXMin)), 0.25f, Mathf.Round(Random.Range(innerZMin, innerZMax)));
         }
         else if (selection <= accumulativeAreaCentreRight)
         {
-            spawnPoint = new Vector3(Random.Range(innerXMax, outerXMax), 0.5f, Random.Range(innerZMin, innerZMax));
+            spawnPoint = new Vector3(Mathf.Round(Random.Range(innerXMax, outerXMax)), 0.25f, Mathf.Round(Random.Range(innerZMin, innerZMax)));
         }
         else if (selection <= accumulativeAreaBottomLeft)
         {
-            spawnPoint = new Vector3(Random.Range(outerXMin, innerXMin), 0.5f, Random.Range(outerZMin, innerZMin));
+            spawnPoint = new Vector3(Mathf.Round(Random.Range(outerXMin, innerXMin)), 0.25f, Mathf.Round(Random.Range(outerZMin, innerZMin)));
         }
         else if (selection <= accumulativeAreaBottomCentre)
         {
-            spawnPoint = new Vector3(Random.Range(innerXMin, innerXMax), 0.5f, Random.Range(outerZMin, innerZMin));
+            spawnPoint = new Vector3(Mathf.Round(Random.Range(innerXMin, innerXMax)), 0.25f, Mathf.Round(Random.Range(outerZMin, innerZMin)));
         }
         else
         {
-            spawnPoint = new Vector3(Random.Range(innerXMax, outerXMax), 0.5f, Random.Range(outerZMin, innerZMin));
+            spawnPoint = new Vector3(Mathf.Round(Random.Range(innerXMax, outerXMax)), 0.25f, Mathf.Round(Random.Range(outerZMin, innerZMin)));
         }
 
         if (enemyPool.Count > 0)
@@ -154,7 +154,7 @@ public class EnemyFactory : MonoBehaviour
         }
         else
         {
-            enemy = Instantiate<Enemy>(enemyPrefab, spawnPoint, new Quaternion());
+            enemy = Instantiate(enemyPrefab, spawnPoint, new Quaternion());
         }
 
         enemy.Setup(IdGenerator.Instance.GetNextId());

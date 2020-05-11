@@ -74,7 +74,7 @@ public class BuildingController : MonoBehaviour
     /// </summary>
     private void Start()
     {
-        buildings.Add(cryoEgg);
+        RegisterBuilding(cryoEgg);
     }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
@@ -146,12 +146,13 @@ public class BuildingController : MonoBehaviour
         if (!buildings.Contains(building))
         {
             buildings.Add(building);
+            MapController.Instance.RegisterBuilding(building);
 
             if (building.BuildingType == EBuilding.ShortRangeTurret || building.BuildingType == EBuilding.LongRangeTurret)
             {
                 timeLastDefenceWasBuilt = Time.time;
             }
-            else
+            else if (building.BuildingType != EBuilding.CryoEgg)
             {
                 timeLastNonDefenceWasBuilt = Time.time;
             }
@@ -167,6 +168,7 @@ public class BuildingController : MonoBehaviour
         if (buildings.Contains(building))
         {
             buildings.Remove(building);
+            MapController.Instance.DeRegisterBuilding(building);
         }
     }
 
