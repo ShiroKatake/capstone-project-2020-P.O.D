@@ -17,6 +17,9 @@ public class ChangeColor : MonoBehaviour
     void Start()
     {
         targetAlpha = image.color.a;
+        curColor = image.color;
+        newColor = UnityEngine.Random.ColorHSV(0f,1f,1f,1f,0.5f,1f);
+        curColor = Color.Lerp(curColor, newColor, fadeRate*Time.deltaTime);
     }
 
     // Update is called once per frame
