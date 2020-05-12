@@ -4655,6 +4655,33 @@ MonoBehaviour:
       _behaviorId: 0
       _userAssignable: 1
       _categoryId: 4
+    - _id: 14
+      _name: DayMode
+      _type: 1
+      _descriptiveName: DayMode
+      _positiveDescriptiveName: 
+      _negativeDescriptiveName: 
+      _behaviorId: 0
+      _userAssignable: 1
+      _categoryId: 5
+    - _id: 15
+      _name: NightMode
+      _type: 1
+      _descriptiveName: NightMode
+      _positiveDescriptiveName: 
+      _negativeDescriptiveName: 
+      _behaviorId: 0
+      _userAssignable: 1
+      _categoryId: 5
+    - _id: 16
+      _name: EnemyAttack
+      _type: 1
+      _descriptiveName: Action0
+      _positiveDescriptiveName: 
+      _negativeDescriptiveName: 
+      _behaviorId: 0
+      _userAssignable: 1
+      _categoryId: 5
     actionCategories:
     - _name: Default
       _descriptiveName: Default
@@ -4681,6 +4708,11 @@ MonoBehaviour:
       _tag: 
       _id: 4
       _userAssignable: 1
+    - _name: UITesting
+      _descriptiveName: UITesting
+      _tag: 
+      _id: 5
+      _userAssignable: 1
     actionCategoryMap:
       list:
       - categoryId: 0
@@ -4693,6 +4725,8 @@ MonoBehaviour:
         actionIds: 090000000a0000000c000000
       - categoryId: 4
         actionIds: 0b0000000d000000
+      - categoryId: 5
+        actionIds: 0e0000000f00000010000000
     inputBehaviors:
     - _id: 0
       _name: Default
@@ -4933,6 +4967,39 @@ MonoBehaviour:
         _modifierKey1: 0
         _modifierKey2: 0
         _modifierKey3: 0
+      - _actionCategoryId: 0
+        _actionId: 14
+        _elementType: 1
+        _elementIdentifierId: -1
+        _axisRange: 0
+        _invert: 0
+        _axisContribution: 0
+        _keyboardKeyCode: 109
+        _modifierKey1: 0
+        _modifierKey2: 0
+        _modifierKey3: 0
+      - _actionCategoryId: 0
+        _actionId: 15
+        _elementType: 1
+        _elementIdentifierId: -1
+        _axisRange: 0
+        _invert: 0
+        _axisContribution: 0
+        _keyboardKeyCode: 110
+        _modifierKey1: 0
+        _modifierKey2: 0
+        _modifierKey3: 0
+      - _actionCategoryId: 0
+        _actionId: 16
+        _elementType: 1
+        _elementIdentifierId: -1
+        _axisRange: 0
+        _invert: 0
+        _axisContribution: 0
+        _keyboardKeyCode: 13
+        _modifierKey1: 0
+        _modifierKey2: 0
+        _modifierKey3: 0
     mouseMaps:
     - id: 0
       categoryId: 0
@@ -4968,8 +5035,8 @@ MonoBehaviour:
     controllerMapLayoutManagerRuleSets: []
     controllerMapEnablerRuleSets: []
     playerIdCounter: 2
-    actionIdCounter: 14
-    actionCategoryIdCounter: 5
+    actionIdCounter: 17
+    actionCategoryIdCounter: 6
     inputBehaviorIdCounter: 1
     mapCategoryIdCounter: 1
     joystickLayoutIdCounter: 1
@@ -7374,7 +7441,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 996744918}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -20513,7 +20580,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.2509804, g: 0.45882356, b: 0.5529412, a: 1}
+  m_Color: {r: 0.32623532, g: 0.5189353, b: 0.5529412, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -24041,7 +24108,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 996744918}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &672329927
 MonoBehaviour:
@@ -28477,6 +28544,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 759962061}
+  - component: {fileID: 759962062}
   m_Layer: 5
   m_Name: Resources
   m_TagString: Untagged
@@ -28508,6 +28576,22 @@ RectTransform:
   m_AnchoredPosition: {x: 476, y: 12}
   m_SizeDelta: {x: 120, y: 100}
   m_Pivot: {x: 0.5, y: 0}
+--- !u!114 &759962062
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 759962060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9443fc6be154de4459a67b0ddba829ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  metal: {fileID: 1632204510}
+  water: {fileID: 1937522818}
+  energyUsed: {fileID: 1791770918}
+  energyMax: {fileID: 979800959}
 --- !u!1 &761021138
 GameObject:
   m_ObjectHideFlags: 0
@@ -35821,6 +35905,7 @@ GameObject:
   - component: {fileID: 996744915}
   - component: {fileID: 996744920}
   - component: {fileID: 996744919}
+  - component: {fileID: 996744921}
   m_Layer: 5
   m_Name: UI
   m_TagString: Untagged
@@ -35906,8 +35991,8 @@ RectTransform:
   - {fileID: 154554968}
   - {fileID: 759962061}
   - {fileID: 2143937926}
-  - {fileID: 171777447}
   - {fileID: 672329925}
+  - {fileID: 171777447}
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -35972,6 +36057,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cursorTexture: {fileID: 2800000, guid: dfc02566e9e723a44b4e935004f3f27e, type: 3}
+--- !u!114 &996744921
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 996744914}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38b52ca42ffd82f4f99e0a8899d5d190, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UIBackground: {fileID: 539848120}
+  UIForeground: {fileID: 1123481001}
+  enemyAttackBackground: {r: 0.55, g: 0, b: 0, a: 1}
+  enemyAttackForeground: {r: 1, g: 0, b: 0, a: 1}
+  backgroundDay: {r: 0.3239216, g: 0.5139394, b: 0.54901963, a: 1}
+  backgroundNight: {r: 0.1801961, g: 0.16941176, b: 0.3764706, a: 1}
+  foregroundDay: {r: 0.5882353, g: 0.9568628, b: 1, a: 1}
+  foregroundNight: {r: 0.019607844, g: 0, b: 0.37647063, a: 1}
+  duration: 12
 --- !u!1 &1003562422
 GameObject:
   m_ObjectHideFlags: 0
@@ -58140,7 +58246,7 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 10
     m_MaxSize: 40
-    m_Alignment: 1
+    m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
@@ -67863,7 +67969,7 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 10
     m_MaxSize: 40
-    m_Alignment: 1
+    m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0

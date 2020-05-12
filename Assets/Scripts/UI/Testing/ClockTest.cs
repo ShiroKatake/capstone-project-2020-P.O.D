@@ -28,6 +28,8 @@ public class ClockTest : MonoBehaviour
     {
         checkClockReset();
         updateFill();
+        UIColorManager.Instance.ColorUpdate();
+
     }
 
     private void updateFill(){
@@ -43,12 +45,16 @@ public class ClockTest : MonoBehaviour
                 clockBG.color = day;
 
                 isDay = !isDay;
+
+                UIColorManager.Instance.SetNight();
             } else {
                 //place holder change color here
                 clock.color = day;
                 clockBG.color = night;
 
                 isDay = !isDay;
+
+                UIColorManager.Instance.SetDay();
             }
         }
     }

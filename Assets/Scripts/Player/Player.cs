@@ -56,6 +56,7 @@ public class Player : MonoBehaviour
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
     public float GetMovementSpeed {get => movementSpeed;}
+    public Rewired.Player GetRewiredPlayer {get => player;}
 
     //Singleton Public Property--------------------------------------------------------------------
 
