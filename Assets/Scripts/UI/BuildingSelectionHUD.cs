@@ -25,9 +25,9 @@ public class BuildingSelectionHUD : MonoBehaviour
     // Update is called once per frame
     //use array for buttons to make their calling simpler
     void Update(){
-        foreach (ButtonClickEventManager btn in buttons){
+        /*foreach (ButtonClickEventManager btn in buttons){
             btn.AssociatedKeyPressed();
-        }
+        }*/
     }
 
     //use array to quickly do every buttons cleanup function

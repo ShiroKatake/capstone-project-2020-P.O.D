@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Rewired;
 
 /// <summary>
 /// A manager class for getting the right input values from the player's current input device(s) without having to specify the device-specific input for what you're after.
@@ -12,15 +13,22 @@ public class InputController : MonoBehaviour
     //Serialized Fields----------------------------------------------------------------------------
 
     [Header("Settings")]
+    //dont think these fields are necessary anymore
     [SerializeField] private EGamepad gamepad;
     [SerializeField] private EOperatingSystem operatingSystem;
 
+    [Header("Player Selection Settings")]
+    [SerializeField] private int playerID = 0;
+    [SerializeField] private Rewired.Player player;
+
     [Header("Buttons")]
     [SerializeField] private List<ButtonClickEventManager> buttons;
+    // needs to be renamed...
     [SerializeField] private GameObject buildingUIParent;
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
+    // probably not needed with the new rewired system
     //Prefixes
     private string gamepadPrefix;
     private string osPrefix;
@@ -39,6 +47,7 @@ public class InputController : MonoBehaviour
 
     //Basic Public Properties----------------------------------------------------------------------
 
+    // probably not needed with rewired...
     /// <summary>
     /// The input device(s) the player is using.
     /// </summary>
@@ -85,6 +94,7 @@ public class InputController : MonoBehaviour
         }
 
         buttons = new List<ButtonClickEventManager>(buildingUIParent.GetComponentsInChildren<ButtonClickEventManager>());
+        player = ReInput.players.GetPlayer(playerID);
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
@@ -96,45 +106,60 @@ public class InputController : MonoBehaviour
     /// <returns>Was a button pressed?</returns>
     public bool ButtonPressed(string requestedInput)
     {
-        if (gamepadPrefix == "")
+        /*if (gamepadPrefix == "")
         {
             return false;
-        }
+        }*/
 
         switch (requestedInput)
         {
             //Always a button for MK, XB and DS
             case "CycleWeapon":
+                return player.GetButton("SwapWeapon");
             case "Pause":
-                return Input.GetButtonDown(gamepadPrefix + requestedInput);
+                return player.GetButton("Pause");
+                //return Input.GetButtonDown(gamepadPrefix + requestedInput);
 
             //Button for MK, axis for XB and DS
             case "Shoot":
+                return player.GetButton("Shoot");
             case "MoveLeftRight":
+                return player.GetButton("Horizontal");
             case "MoveForwardsBackwards":
-                if (gamepad == EGamepad.MouseAndKeyboard)
+                return player.GetButton("Vertical");
+                /*if (gamepad == EGamepad.MouseAndKeyboard)
                 {
                     return Input.GetButtonDown($"MK{requestedInput}");
                 }
                 else
                 {
                     return GetAxis(requestedInput) != 0;
-                }
+                }*/
 
             //Always an axis for MK, XB and DS
-            case "LookUpDown":
-            case "LookLeftRight":
-                return GetAxis(requestedInput) != 0;
+            //case "LookUpDown":
+            //case "LookLeftRight":
+            //    return GetAxis(requestedInput) != 0;
 
             //Aliased
             case "PlaceBuilding":
-                return Input.GetButtonDown(gamepadPrefix + "Submit");
+                return player.GetButton("Submit");
+                //return Input.GetButtonDown(gamepadPrefix + "Submit");
             case "CancelBuilding":
-                return Input.GetButtonDown(gamepadPrefix + "Cancel");
+                return player.GetButton("Cancel");
+                //return Input.GetButtonDown(gamepadPrefix + "Cancel");
 
             //Custom
             case "CycleBuilding":
-                if (gamepad == EGamepad.MouseAndKeyboard)
+                return player.GetButton("IceDrill")
+                    || player.GetButton("Reactor")
+                    || player.GetButton("Incinerator")
+                    || player.GetButton("Boiler")
+                    || player.GetButton("GreenHouse")
+                    || player.GetButton("Turret1")
+                    || player.GetButton("Turret2")
+                    || CheckUIButtonClicked();
+                /*if (gamepad == EGamepad.MouseAndKeyboard)
                 {
                     return Input.GetButtonDown("MKSpawnFusionReactor")
                         || Input.GetButtonDown("MKSpawnIceDrill")
@@ -149,10 +174,18 @@ public class InputController : MonoBehaviour
                 {
                     return Input.GetButtonDown(gamepadPrefix + "CycleBuildingLeft")
                         || Input.GetButtonDown(gamepadPrefix + "CycleBuildingRight");
-                }
+                }*/
 
             case "SpawnBuilding":
-                if (gamepad == EGamepad.MouseAndKeyboard)
+                return player.GetButton("IceDrill")
+                    || player.GetButton("Reactor")
+                    || player.GetButton("Incinerator")
+                    || player.GetButton("Boiler")
+                    || player.GetButton("GreenHouse")
+                    || player.GetButton("Turret1")
+                    || player.GetButton("Turret2")
+                    || CheckUIButtonClicked();
+                /*if (gamepad == EGamepad.MouseAndKeyboard)
                 {
                     return Input.GetButtonDown("MKSpawnFusionReactor")
                         || Input.GetButtonDown("MKSpawnIceDrill")
@@ -166,7 +199,7 @@ public class InputController : MonoBehaviour
                 else
                 {
                     return Input.GetButtonDown(gamepadPrefix + "SpawnBuilding");
-                }            
+                }    */        
 
             //Unknown input
             default:
@@ -181,46 +214,60 @@ public class InputController : MonoBehaviour
     /// <returns>Was a button held?</returns>
     public bool ButtonHeld(string requestedInput)
     {
-        if (gamepadPrefix == "")
+        /*if (gamepadPrefix == "")
         {
             return false;
-        }
+        }*/
 
         switch (requestedInput)
         {
             //Always a button for MK, XB and DS
             case "CycleWeapon":
+                return player.GetButton("SwapWeapon");
             case "Pause":
+                return player.GetButton("Pause");
             //case "MoveUpDown":
-                return Input.GetButton(gamepadPrefix + requestedInput);
 
             //Button for MK, axis for XB and DS
             case "Shoot":
+                return player.GetButton("Shoot");
             case "MoveLeftRight":
+                return player.GetButton("Horizontal");
             case "MoveForwardsBackwards":
-                if (gamepad == EGamepad.MouseAndKeyboard)
+                return player.GetButton("Vertical");
+                /*if (gamepad == EGamepad.MouseAndKeyboard)
                 {
                     return Input.GetButton($"MK{requestedInput}");
                 }
                 else
                 {
                     return GetAxis(requestedInput) != 0;
-                }
+                }*/
 
             //Always an axis for MK, XB and DS
-            case "LookUpDown":
-            case "LookLeftRight":
-                return GetAxis(requestedInput) != 0;
+            //case "LookUpDown":
+            //case "LookLeftRight":
+            //    return GetAxis(requestedInput) != 0;
 
             //Aliased
             case "PlaceBuilding":
-                return Input.GetButton(gamepadPrefix + "Submit");
+                return player.GetButton("Submit");
+                //return Input.GetButton(gamepadPrefix + "Submit");
             case "CancelBuilding":
-                return Input.GetButton(gamepadPrefix + "Cancel");
+                return player.GetButton("Cancel");
+                //return Input.GetButton(gamepadPrefix + "Cancel");
 
             //Custom
             case "CycleBuilding":
-                if (gamepad == EGamepad.MouseAndKeyboard)
+                return player.GetButton("IceDrill")
+                    || player.GetButton("Reactor")
+                    || player.GetButton("Incinerator")
+                    || player.GetButton("Boiler")
+                    || player.GetButton("GreenHouse")
+                    || player.GetButton("Turret1")
+                    || player.GetButton("Turret2")
+                    || CheckUIButtonClicked();
+                /*if (gamepad == EGamepad.MouseAndKeyboard)
                 {
                     return Input.GetButton("MKSpawnFusionReactor")
                         || Input.GetButton("MKSpawnIceDrill")
@@ -234,10 +281,18 @@ public class InputController : MonoBehaviour
                 {
                     return Input.GetButton(gamepadPrefix + "CycleBuildingLeft")
                         || Input.GetButton(gamepadPrefix + "CycleBuildingRight");
-                }
+                }*/
 
             case "SpawnBuilding":
-                if (gamepad == EGamepad.MouseAndKeyboard)
+                return player.GetButton("IceDrill")
+                    || player.GetButton("Reactor")
+                    || player.GetButton("Incinerator")
+                    || player.GetButton("Boiler")
+                    || player.GetButton("GreenHouse")
+                    || player.GetButton("Turret1")
+                    || player.GetButton("Turret2")
+                    || CheckUIButtonClicked();
+                /*if (gamepad == EGamepad.MouseAndKeyboard)
                 {
                     return Input.GetButton("MKSpawnFusionReactor")
                         || Input.GetButton("MKSpawnIceDrill")
@@ -250,7 +305,7 @@ public class InputController : MonoBehaviour
                 else
                 {
                     return Input.GetButton(gamepadPrefix + "SpawnBuilding");
-                }
+                }*/
 
             //Unknown input
             default:
@@ -258,6 +313,7 @@ public class InputController : MonoBehaviour
         }
     }
 
+    
     /// <summary>
     ///  Check if player is moving or looking; if axes are button pairs, returns integer value of -1, 0 or 1; 
     ///  if axes are mouse / analog stick axes, returns float value between -1 and 1
@@ -266,11 +322,11 @@ public class InputController : MonoBehaviour
     /// <returns>The magnitude of any input on the requested axis.</returns>
     public float GetAxis(string requestedInput)
     {
-        if (gamepadPrefix == "")
+        /*if (gamepadPrefix == "")
         {
             Debug.Log("No Gamepad Prefix Yet");
             return 0f;
-        }
+        }*/
 
         switch (requestedInput)
         {
@@ -279,8 +335,9 @@ public class InputController : MonoBehaviour
             case "MoveForwardsBackwards":
             case "MoveLeftRight":
             case "LookUpDown":
+                return player.GetAxis("Vertical");
             case "LookLeftRight":
-                return Input.GetAxis(gamepadPrefix + requestedInput);
+                return player.GetAxis("Horizontal");
 
             //Unknown input
             default:
@@ -297,7 +354,48 @@ public class InputController : MonoBehaviour
     /// <returns>The selected building type, or the current selection if none.</returns>
     public EBuilding SelectBuilding(EBuilding currentSelection)
     {
-        switch (gamepad)
+        if (clickedButton != null)
+        {
+            return clickedButton.GetBuildingType;
+        }
+
+        if (player.GetButton("Reactor"))
+        {
+            return EBuilding.FusionReactor;
+        }
+
+        if (player.GetButton("IceDrill"))
+        {
+            return EBuilding.IceDrill;
+        }
+
+        if (player.GetButton("Boiler"))
+        {
+            return EBuilding.Boiler;
+        }
+
+        if (player.GetButton("GreenHouse"))
+        {
+            return EBuilding.Greenhouse;
+        }
+
+        if (player.GetButton("Incinerator"))
+        {
+            return EBuilding.Incinerator;
+        }
+
+        if (player.GetButton("Turret1"))
+        {
+            return EBuilding.ShortRangeTurret;
+        }
+
+        if (player.GetButton("Turret2"))
+        {
+            return EBuilding.LongRangeTurret;
+        }
+
+        return currentSelection;
+        /*switch (gamepad)
         {
             case EGamepad.XboxController:
             case EGamepad.DualShockController:
@@ -306,10 +404,10 @@ public class InputController : MonoBehaviour
                 return MKSelectBuilding(currentSelection);
             default:
                 return EBuilding.None;
-        }
+        }*/
     }
 
-    /// <summary>
+    /*/// <summary>
     /// Check the inputs for selecting a building type when the player is using a mouse and keyboard.
     /// </summary>
     /// <param name="currentSelection"> The currently-selected building type in case no other building type has been selected.</param>
@@ -395,7 +493,7 @@ public class InputController : MonoBehaviour
         }
 
         return currentSelection;
-    }
+    }*/
 
     //Utility Methods--------------------------------------------------------------------------------------------------------------------------------
 

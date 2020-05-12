@@ -22,6 +22,8 @@ public class MousePositionOnTerrain : MonoBehaviour
         }
 
         Instance = this;
+        
+        plane = new Plane(/*Vector3.up*/ new Vector3(0,1,0), -0.5f);
     }
 
     // Start is called before the first frame update
@@ -47,7 +49,6 @@ public class MousePositionOnTerrain : MonoBehaviour
             Code for using a Plane, im pretty sure this needs to change to use the above Terrain object code
         */
 
-        plane = new Plane(/*Vector3.up*/ new Vector3(0,1,0), -0.5f);
         float dist;
         ray = camera.ScreenPointToRay(ReInput.controllers.Mouse.screenPosition);
         if (plane.Raycast(ray, out dist)){
