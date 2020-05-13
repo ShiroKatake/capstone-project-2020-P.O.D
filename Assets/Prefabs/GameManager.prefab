@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 8337738344923657293}
   - component: {fileID: 8337738344923657299}
   - component: {fileID: 1182461914613764985}
+  - component: {fileID: 557526140}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -100,6 +101,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b339f3ae52348242844769182c55c03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnEnemies: 1
 --- !u!114 &8337738344923657292
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -136,7 +138,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8337738344923657300}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0c1df4cf0eb94a245b7cfc71ef1e06b5, type: 3}
   m_Name: 
@@ -159,6 +161,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gamepad: 0
   operatingSystem: 0
+  playerID: 0
+  buttons:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  buildingUIParent: {fileID: 0}
 --- !u!114 &1182461914613764985
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -178,3 +190,16 @@ MonoBehaviour:
   waterSupply: 999999999
   wasteConsumption: 0
   wasteSupply: 999999999
+--- !u!114 &557526140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8337738344923657300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfd8e2edbc7d5044192dfaf55a5ed8b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  camera: {fileID: 0}

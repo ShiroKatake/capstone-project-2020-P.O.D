@@ -21212,25 +21212,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 557313310}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &557526129 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8337738344923657300, guid: 9620c728b220f2e47adbd85dd9ac4899,
-    type: 3}
-  m_PrefabInstance: {fileID: 8337738343323095551}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &557526140
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 557526129}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cfd8e2edbc7d5044192dfaf55a5ed8b8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  camera: {fileID: 963194227}
 --- !u!1 &558490994
 GameObject:
   m_ObjectHideFlags: 0
@@ -76195,36 +76176,15 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 557526140, guid: 9620c728b220f2e47adbd85dd9ac4899, type: 3}
+      propertyPath: camera
+      value: 
+      objectReference: {fileID: 963194227}
     - target: {fileID: 8337738344923657292, guid: 9620c728b220f2e47adbd85dd9ac4899,
         type: 3}
       propertyPath: enemyPoolParent
       value: 
       objectReference: {fileID: 1628873039}
-    - target: {fileID: 8337738344923657293, guid: 9620c728b220f2e47adbd85dd9ac4899,
-        type: 3}
-      propertyPath: greenBarPrimary
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 8337738344923657293, guid: 9620c728b220f2e47adbd85dd9ac4899,
-        type: 3}
-      propertyPath: greenBarSmall1
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 8337738344923657293, guid: 9620c728b220f2e47adbd85dd9ac4899,
-        type: 3}
-      propertyPath: greenBarSmall2
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 8337738344923657293, guid: 9620c728b220f2e47adbd85dd9ac4899,
-        type: 3}
-      propertyPath: greenBarSmall3
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 8337738344923657293, guid: 9620c728b220f2e47adbd85dd9ac4899,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8337738344923657294, guid: 9620c728b220f2e47adbd85dd9ac4899,
         type: 3}
       propertyPath: var
@@ -76240,11 +76200,6 @@ PrefabInstance:
       propertyPath: cryoEgg
       value: 
       objectReference: {fileID: 1170871704}
-    - target: {fileID: 8337738344923657297, guid: 9620c728b220f2e47adbd85dd9ac4899,
-        type: 3}
-      propertyPath: spawnEnemies
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 8337738344923657298, guid: 9620c728b220f2e47adbd85dd9ac4899,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -76299,11 +76254,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8337738344923657299, guid: 9620c728b220f2e47adbd85dd9ac4899,
-        type: 3}
-      propertyPath: buttons.Array.size
-      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 8337738344923657299, guid: 9620c728b220f2e47adbd85dd9ac4899,
         type: 3}

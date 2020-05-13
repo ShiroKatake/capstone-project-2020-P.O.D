@@ -21,7 +21,8 @@ public class ResourceTextManager : MonoBehaviour
 
     public static ResourceTextManager Instance {get; protected set;}
 
-    private void Awake() {
+    private void Awake()
+    {
         if (Instance != null)
         {
             Debug.Log("There should never be 2 or more Resource Text Managers in the scene.");
