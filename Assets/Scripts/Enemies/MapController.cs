@@ -16,13 +16,16 @@ public class MapController : MonoBehaviour
     [SerializeField] private int zMax;
 
     [Header("No Alien Spawning Area")]
-    [SerializeField] private Vector3 innerTopLeft;
-    [SerializeField] private Vector3 innerBottomRight;
+    [SerializeField] private Vector3 innerBottomLeft;
+    [SerializeField] private Vector3 innerTopRight;
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
-    private bool[,] availablePositions;
-    private bool[,] enemySpawnablePositions;
+    private bool[,] availableBuildingPositions;
+    private bool[,] enemyExclusionArea;
+    private bool[,] availableEnemyPositions;
+
+    [SerializeField] private List<Vector3> enemySpawnablePositions;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -55,31 +58,39 @@ public class MapController : MonoBehaviour
         }
 
         Instance = this;
-        availablePositions = new bool[xMax + 1 , zMax + 1];
-        enemySpawnablePositions = new bool[xMax + 1, zMax + 1];
+        availableBuildingPositions = new bool[xMax + 1 , zMax + 1];
+        availableEnemyPositions = new bool[xMax + 1, zMax + 1];
+        enemyExclusionArea = new bool[xMax + 1, zMax + 1];
+        enemySpawnablePositions = new List<Vector3>();
 
-        int noEnemyXMin = (int)Mathf.Round(innerTopLeft.x);
-        int noEnemyXMax = (int)Mathf.Round(innerBottomRight.x);
-        int noEnemyZMin = (int)Mathf.Round(innerBottomRight.z);
-        int noEnemyZMax = (int)Mathf.Round(innerTopLeft.z);
+        int noEnemyXMin = (int)Mathf.Round(innerBottomLeft.x);
+        int noEnemyXMax = (int)Mathf.Round(innerTopRight.x);
+        int noEnemyZMin = (int)Mathf.Round(innerBottomLeft.z);
+        int noEnemyZMax = (int)Mathf.Round(innerTopRight.z);
 
-        Debug.Log($"Enemies cannot spawn within ({noEnemyXMin}, {noEnemyZMin}) to ({noEnemyXMax}, {noEnemyZMax})");
+        //Debug.Log($"Enemies cannot spawn within ({noEnemyXMin}, {noEnemyZMin}) to ({noEnemyXMax}, {noEnemyZMax})");
 
         for (int i = 0; i < xMax; i++)
         {
             for (int j = 0; j < zMax; j++)
             {
-                availablePositions[i, j] = true;
-                enemySpawnablePositions[i, j] = (i < noEnemyXMin && i > noEnemyXMax && j < noEnemyZMin && j > noEnemyZMax);
+                //Debug.Log($"Assessing position ({i},{j})");
+                availableBuildingPositions[i, j] = true;
+                availableEnemyPositions[i, j] = ((i < noEnemyXMin || i > noEnemyXMax) && (j < noEnemyZMin || j > noEnemyZMax));
+                enemyExclusionArea[i, j] = !availableEnemyPositions[i, j];
+
+                //Debug.Log($"available for building: {availableBuildingPositions[i, j]}, available for enemies: {availableEnemyPositions[i, j]}, enemy exclusion area: {enemyExclusionArea[i, j]}");
+
+                if (availableEnemyPositions[i, j])
+                {
+                    enemySpawnablePositions.Add(new Vector3(i, 0.25f, j));
+                }
             }
         }
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
-    //TODO: have buildings make use of PositionAvailableforBuilding() to make sure they're spawning within the bounds of the map
-    //TODO: set xMax and zMax in the inspector both to 201, so that map spans (0,0) to (200, 200); 201 accounts for starting at 0, not 1.
-    //TODO: make sure other values are set properly in the inspector for this.
     public bool PositionAvailableForBuilding(Building building)
     {
         Vector3 buildingPos = building.transform.position;
@@ -87,7 +98,7 @@ public class MapController : MonoBehaviour
 
         foreach (Vector3 offset in building.BuildingFoundationOffsets)
         {
-            if (!PositionAvailableForSpawning(buildingPos + offset))
+            if (!PositionAvailableForSpawning(buildingPos + offset, false))
             {
                 return false;
             }
@@ -97,8 +108,7 @@ public class MapController : MonoBehaviour
     }
 
     //TODO: triple-slash comments
-    //TODO: have enemies make use of PositionAvailableForSpawning()
-    public bool PositionAvailableForSpawning(Vector3 position)
+    public bool PositionAvailableForSpawning(Vector3 position, bool enemy)
     {
         Debug.Log($"Verifying for spawnable at {position}");
         position.x = Mathf.Round(position.x);
@@ -110,23 +120,41 @@ public class MapController : MonoBehaviour
             return false;
         }
 
-        if (!availablePositions[(int)position.x, (int)position.z])
+        if (enemy && enemyExclusionArea[(int)position.x, (int)position.z])
         {
-            Debug.Log($"Can't spawn at {position}, which is already occupied.");
+            Debug.Log($"Can't spawn an enemy at {position}, which is within the enemy exclusion area.");
+        }
+
+        if (!availableBuildingPositions[(int)position.x, (int)position.z])
+        {
+            Debug.Log($"Can't spawn at {position}, which is already occupied by a building.");
             return false;
         }
 
         return true;
     }
 
+    public Vector2 RandomEnemySpawnablePos()
+    {
+        switch (enemySpawnablePositions.Count)
+        {
+            case 0:
+                return new Vector2 (-1, -1);
+            case 1:
+                return enemySpawnablePositions[0];
+            default:
+                return enemySpawnablePositions[Random.Range(0, enemySpawnablePositions.Count)];
+        }
+    }
+
     public void RegisterBuilding(Building building)
     {
-        UpdateAvailablePositions(building, true);
+        UpdateAvailablePositions(building, false);
     }
 
     public void DeRegisterBuilding(Building building)
     {
-        UpdateAvailablePositions(building, false);
+        UpdateAvailablePositions(building, true);
     }
 
     private void UpdateAvailablePositions(Building building, bool available)
@@ -137,12 +165,28 @@ public class MapController : MonoBehaviour
         foreach (Vector3 offset in building.BuildingFoundationOffsets)
         {
             Vector3 foundationPos = buildingPos + offset;
-            foundationPos.x = Mathf.Round(foundationPos.x);
-            foundationPos.z = Mathf.Round(foundationPos.z);
+            int x = (int)Mathf.Round(foundationPos.x);
+            int z = (int)Mathf.Round(foundationPos.z);
 
-            if (foundationPos.x >= 0 || foundationPos.x <= xMax || foundationPos.z >= 0 || foundationPos.z <= zMax)
-            {
-                availablePositions[(int)foundationPos.x, (int)foundationPos.z] = available;
+            if (x >= 0 || x <= xMax || z >= 0 || z <= zMax)
+            {                
+                bool startingEnemyAvailability = availableEnemyPositions[x, z];
+                availableBuildingPositions[x, z] = available;
+                availableEnemyPositions[x, z] = (availableBuildingPositions[x, z] && !enemyExclusionArea[x, z]);
+
+                if (availableEnemyPositions[x, z] != startingEnemyAvailability)
+                {
+                    Vector3 pos = new Vector3(x, 0.25f, z);
+
+                    if (availableEnemyPositions[x, z])
+                    {
+                        enemySpawnablePositions.Add(pos);
+                    }
+                    else
+                    {
+                        enemySpawnablePositions.Remove(pos);
+                    }
+                }
             }
             else
             {

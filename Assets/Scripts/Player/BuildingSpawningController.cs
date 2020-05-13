@@ -162,7 +162,7 @@ public class BuildingSpawningController : MonoBehaviour
             bool collision = heldBuilding.CollisionUpdate();
 
             //Place it or cancel building it
-            if (placeBuilding && ResourceController.Instance.Ore >= heldBuilding.OreCost && !collision)
+            if (placeBuilding && ResourceController.Instance.Ore >= heldBuilding.OreCost && !collision && MapController.Instance.PositionAvailableForBuilding(heldBuilding))
             {              
                 Vector3 spawnPos = heldBuilding.transform.position;
                 spawnPos.y = 0.02f;
@@ -175,7 +175,7 @@ public class BuildingSpawningController : MonoBehaviour
                 placeBuilding = false;
                 cancelBuilding = false;
             }
-            else if (cancelBuilding || (placeBuilding && (collision || ResourceController.Instance.Ore < heldBuilding.OreCost)))
+            else if (cancelBuilding || (placeBuilding && (ResourceController.Instance.Ore < heldBuilding.OreCost || collision || !MapController.Instance.PositionAvailableForBuilding(heldBuilding))))
             {
                 if (placeBuilding)
                 {
@@ -188,6 +188,11 @@ public class BuildingSpawningController : MonoBehaviour
                     {
                         Debug.Log("You cannot place a building there; it would occupy the same space as something else.");
                     }
+                    else if (!MapController.Instance.PositionAvailableForBuilding(heldBuilding))
+                    {
+                        Debug.Log("You cannot place a building there; it would either occupy the same space as something else, or exceed the bounds of the map.");
+                    }
+
                 }
 
                 BuildingFactory.Instance.DestroyBuilding(heldBuilding, false, false);

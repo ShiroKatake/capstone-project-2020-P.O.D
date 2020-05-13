@@ -111,6 +111,11 @@ public class Building : MonoBehaviour, ICollisionListener
     public int OreCost { get => oreCost; }
 
     /// <summary>
+    /// Whether the building has been placed or not.
+    /// </summary>
+    public bool Placed { get => placed; }
+
+    /// <summary>
     /// How much power this building requires per second to function.
     /// </summary>
     public int PowerConsumption { get => powerConsumption; }

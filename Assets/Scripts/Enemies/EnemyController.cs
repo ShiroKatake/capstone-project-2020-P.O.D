@@ -111,13 +111,14 @@ public class EnemyController : MonoBehaviour
                     }
 
                     //Spawn enemies
-                    int spawnCount = BuildingController.Instance.BuildingCount * 3 + spawnCountPenalty; 
-                    
-                    //TODO: spawning in a cluster without overlapping.
+                    int spawnCount = BuildingController.Instance.BuildingCount * 3 + spawnCountPenalty;
+
+                    Vector3 clusterPos = MapController.Instance.RandomEnemySpawnablePos();
+                    //Vector3 clusterPos = new Vector3(105, 0.25f, 105);
 
                     for (int i = 0; i < spawnCount; i++)
                     {
-                        enemies.Add(EnemyFactory.Instance.GetEnemy());
+                        enemies.Add(EnemyFactory.Instance.GetEnemy(clusterPos));
                     }
                 }
             }

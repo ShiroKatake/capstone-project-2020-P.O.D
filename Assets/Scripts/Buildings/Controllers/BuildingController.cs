@@ -168,7 +168,11 @@ public class BuildingController : MonoBehaviour
         if (buildings.Contains(building))
         {
             buildings.Remove(building);
-            MapController.Instance.DeRegisterBuilding(building);
+
+            if (building.Placed)
+            {
+                MapController.Instance.DeRegisterBuilding(building);
+            }
         }
     }
 
