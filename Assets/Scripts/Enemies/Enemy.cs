@@ -247,7 +247,7 @@ public class Enemy : MonoBehaviour
     {
         if (!collision.collider.isTrigger && (collision.collider.CompareTag("Building") || collision.collider.CompareTag("Player")))
         {
-            Debug.Log($"Enemy.OnCollisionStay, non-trigger targetable. Collider: {collision.collider.gameObject}, target: {target.gameObject}, time: {Time.time}, timeOfLastAttack: {timeOfLastAttack}, attack cooldown: {attackCooldown}");
+            //Debug.Log($"Enemy.OnCollisionStay, non-trigger targetable. Collider: {collision.collider.gameObject}, target: {target.gameObject}, time: {Time.time}, timeOfLastAttack: {timeOfLastAttack}, attack cooldown: {attackCooldown}");
             if (Time.time - timeOfLastAttack > attackCooldown)
             {
                 Transform temp = collision.collider.transform;
@@ -257,7 +257,7 @@ public class Enemy : MonoBehaviour
                 {
                     //TODO: damage targetHealth; when finding target health, keep target as the transform with the solid collider, but make targetHealth the health component somewhere in its hierarchy.
                 }
-                Debug.Log($"Enemy Attack on {target.gameObject}");
+                //Debug.Log($"Enemy Attack on {target.gameObject}");
                 timeOfLastAttack = Time.time;
                 //targetHealth.Value -= damage;
             }
