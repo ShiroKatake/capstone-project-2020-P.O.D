@@ -1,22 +1,33 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
-/// A class to control the day-night cycle.
+/// A class to control the clock in the UI and the day-night cycle.
 /// </summary>
-public class DayNightCycleController : MonoBehaviour
+public class ClockController : MonoBehaviour
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
     //Serialized Fields----------------------------------------------------------------------------                                                    
 
+    [Header("Time Stats")]
     [SerializeField] private float cycleDuration;
+    
+    [Header("UI Elements")]
+    [SerializeField] private Image clockTimer;
+    [SerializeField] private Image clockBackground;
+
+    [Header("UI Colours")]
+    [SerializeField] private Color day;
+    [SerializeField] private Color night;
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
     private bool daytime;
-    private float time;
+    private float time12hr;
+    private float time24hr;
     private float halfCycleDuration;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
@@ -26,7 +37,7 @@ public class DayNightCycleController : MonoBehaviour
     /// <summary>
     /// DayNightCycleController's singleton public property.
     /// </summary>
-    public static DayNightCycleController Instance { get; protected set; }
+    public static ClockController Instance { get; protected set; }
 
     //Basic Public Properties----------------------------------------------------------------------                                                                                                                          
 
@@ -46,13 +57,14 @@ public class DayNightCycleController : MonoBehaviour
     public float HalfCycleDuration { get => halfCycleDuration; }
 
     /// <summary>
-    /// The time elapsed in seconds since the start of the current day.
+    /// The time elapsed in seconds since the start of the current day or night. Equivalent to 12-hour time.
     /// </summary>
-    public float Time { get => time; }
+    public float Time12hr { get => time12hr; }
 
-    //Complex Public Properties--------------------------------------------------------------------                                                    
-
-
+    /// <summary>
+    /// The time elapsed in seconds since the start of the current day. Equivalent to 24-hour time.
+    /// </summary>
+    public float Time24hr { get => time24hr; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -70,16 +82,10 @@ public class DayNightCycleController : MonoBehaviour
         Instance = this;
         halfCycleDuration = cycleDuration * 0.5f;
         daytime = true;
+        clockTimer.fillAmount = 1;
+        clockTimer.color = day;
+        clockBackground.color = night;
     }
-
-    /// <summary>
-    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
-    /// Start() runs after Awake().
-    /// </summary>
-    //private void Start()
-    //{
-
-    //}
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -88,50 +94,58 @@ public class DayNightCycleController : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        time += UnityEngine.Time.deltaTime;
+        UpdateTime();
+        CheckDayNight();
+        UpdateClock();
+    }
 
+    //Recurring Methods (Update())------------------------------------------------------------------------------------------------------------------  
+
+    /// <summary>
+    /// Increment the time by Time.deltaTime;
+    /// </summary>
+    private void UpdateTime()
+    {
+        time12hr += UnityEngine.Time.deltaTime;
+        time24hr += UnityEngine.Time.deltaTime;
+    }
+
+    /// <summary>
+    /// Check if it should be daytime or nighttime.
+    /// </summary>
+    private void CheckDayNight()
+    {
         if (daytime)
         {
-            if (time >= halfCycleDuration)
+            if (time24hr >= halfCycleDuration)
             {
+                time12hr -= halfCycleDuration;
                 daytime = false;
+                clockTimer.color = night;
+                clockBackground.color = day;
+                UIColorManager.Instance.SetNight();
             }
         }
         else
         {
-            if (time >= cycleDuration)
+            if (time24hr >= cycleDuration)
             {
-                time -= cycleDuration;
+                time12hr -= halfCycleDuration;
+                time24hr -= cycleDuration;
                 daytime = true;
+                clockTimer.color = day;
+                clockBackground.color = night;
+                UIColorManager.Instance.SetDay();
             }
         }
     }
 
     /// <summary>
-    /// FixedUpdate() is run at a fixed interval independant of framerate.
+    /// Update the clock according to the time.
     /// </summary>
-    //private void FixedUpdate()
-    //{
-
-    //}
-
-    //Recurring Methods (Update())------------------------------------------------------------------------------------------------------------------  
-
-
-
-    //Recurring Methods (FixedUpdate())--------------------------------------------------------------------------------------------------------------
-
-
-
-    //Recurring Methods (Other)----------------------------------------------------------------------------------------------------------------------
-
-
-
-    //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
-
-
-
-    //Utility Methods--------------------------------------------------------------------------------------------------------------------------------  
-
-
+    private void UpdateClock()
+    {
+        clockTimer.fillAmount = 1 - (time12hr / halfCycleDuration);
+        UIColorManager.Instance.ColorUpdate();
+    }
 }

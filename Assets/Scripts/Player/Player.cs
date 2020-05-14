@@ -126,6 +126,7 @@ public class Player : MonoBehaviour
 
         movement = new Vector3(moveHorizontal, 0, -moveVertical);
         shooting = InputController.Instance.ButtonHeld("Shoot");
+        //Debug.Log($"Movement input: {movement}");
     }
 
     //Recurring Methods (FixedUpdate())--------------------------------------------------------------------------------------------------------------
@@ -145,6 +146,9 @@ public class Player : MonoBehaviour
     /// </summary>
     private void Look()
     {
+        //Vector3 mousePos = MousePositionOnTerrain.Instance.GetWorldPosition;
+        //Vector3 lookAtPos = new Vector3(mousePos.x, drone.transform.position.y, mousePos.z);
+        //drone.transform.LookAt(lookAtPos);
         drone.transform.LookAt(MousePositionOnTerrain.Instance.GetWorldPosition);
     }
 

@@ -98,7 +98,7 @@ public class EnemyController : MonoBehaviour
             }
             else
             {
-                if (!DayNightCycleController.Instance.Daytime && enemies.Count == 0 && Time.time - timeOfLastDeath > respawnDelay)
+                if (!ClockController.Instance.Daytime && enemies.Count == 0 && Time.time - timeOfLastDeath > respawnDelay)
                 {
                     Debug.Log("Nighttime? No enemies? Spawning time!");
 

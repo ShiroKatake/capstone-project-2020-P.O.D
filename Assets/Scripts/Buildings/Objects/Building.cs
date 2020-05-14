@@ -514,7 +514,7 @@ public class Building : MonoBehaviour, ICollisionListener
     {
         if (active && !other.isTrigger)
         {
-            Debug.Log($"Building {id} OnTriggerEnter(). Other is {other}");
+            //Debug.Log($"Building {id} OnTriggerEnter(). Other is {other}");
             colliding = true;
 
             if (!otherColliders.Contains(other))
@@ -532,7 +532,7 @@ public class Building : MonoBehaviour, ICollisionListener
     {
         if (active && !other.isTrigger)
         {            
-            Debug.Log($"Building {id} OnTriggerExit(). Other is {other}");
+            //Debug.Log($"Building {id} OnTriggerExit(). Other is {other}");
             if (otherColliders.Contains(other))
             {
                 otherColliders.Remove(other);
