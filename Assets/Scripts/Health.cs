@@ -31,7 +31,7 @@ public class Health : MonoBehaviour
         set
         {
             health = value;
-            Debug.Log($"{gameObject.name}'s health updated to {health}");
+            //Debug.Log($"{gameObject.name}'s health updated to {health}");
         }
     }
 

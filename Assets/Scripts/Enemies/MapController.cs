@@ -94,7 +94,7 @@ public class MapController : MonoBehaviour
     public bool PositionAvailableForBuilding(Building building)
     {
         Vector3 buildingPos = building.transform.position;
-        Debug.Log($"Verifying for building at {buildingPos}");
+        //Debug.Log($"Verifying for building at {buildingPos}");
 
         foreach (Vector3 offset in building.BuildingFoundationOffsets)
         {
@@ -110,7 +110,7 @@ public class MapController : MonoBehaviour
     //TODO: triple-slash comments
     public bool PositionAvailableForSpawning(Vector3 position, bool enemy)
     {
-        Debug.Log($"Verifying for spawnable at {position}");
+        //Debug.Log($"Verifying for spawnable at {position}");
         position.x = Mathf.Round(position.x);
         position.z = Mathf.Round(position.z);
 
@@ -160,7 +160,7 @@ public class MapController : MonoBehaviour
     private void UpdateAvailablePositions(Building building, bool available)
     {
         Vector3 buildingPos = building.transform.position;
-        Debug.Log($"Updating availability of positions for building at {buildingPos}");
+        //Debug.Log($"Updating availability of positions for building at {buildingPos}");
 
         foreach (Vector3 offset in building.BuildingFoundationOffsets)
         {

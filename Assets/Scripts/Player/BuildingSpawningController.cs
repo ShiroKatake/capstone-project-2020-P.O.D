@@ -18,7 +18,7 @@ public class BuildingSpawningController : MonoBehaviour
     //Building fields
     private EBuilding selectedBuildingType;
     private Building heldBuilding;
-    private Vector3 rawBuildingOffset;
+    //private Vector3 rawBuildingOffset;
     private Vector3 rawBuildingMovement;
 
     //Spawning bools
@@ -118,11 +118,11 @@ public class BuildingSpawningController : MonoBehaviour
 
                 if (InputController.Instance.Gamepad == EGamepad.MouseAndKeyboard)
                 {
-                    heldBuilding.transform.position = MousePositionToBuildingPosition(transform.position + heldBuilding.GetOffset(transform.rotation.eulerAngles.y), heldBuilding.XSize, heldBuilding.ZSize);
+                    heldBuilding.transform.position = MousePositionToBuildingPosition(transform.position/* + heldBuilding.GetOffset(transform.rotation.eulerAngles.y)*/, heldBuilding.XSize, heldBuilding.ZSize);
                 }
                 else
                 {
-                    rawBuildingOffset = heldBuilding.GetOffset(transform.rotation.eulerAngles.y);
+                    //rawBuildingOffset = heldBuilding.GetOffset(transform.rotation.eulerAngles.y);
                     heldBuilding.transform.position = RawBuildingPositionToBuildingPosition(heldBuilding.XSize, heldBuilding.ZSize);
                 }
 
@@ -232,14 +232,14 @@ public class BuildingSpawningController : MonoBehaviour
     /// <returns>Snapped-to-grid building position.</returns>
     private Vector3 RawBuildingPositionToBuildingPosition(int xSize, int zSize)
     {
-        Vector3 worldPos = transform.position + rawBuildingOffset;
-        Vector3 newOffset = rawBuildingOffset + rawBuildingMovement * Player.Instance.MovementSpeed * Time.deltaTime;
+        Vector3 worldPos = transform.position;// + rawBuildingOffset;
+        Vector3 newOffset = /*rawBuildingOffset +*/ rawBuildingMovement * Player.Instance.MovementSpeed * Time.deltaTime;
         Vector3 newWorldPos = transform.position + newOffset;
         Vector3 newScreenPos = Camera.main.WorldToViewportPoint(newWorldPos);
 
         if (newScreenPos.x > 0 && newScreenPos.x < 1 && newScreenPos.y > 0 && newScreenPos.y < 1)
         {
-            rawBuildingOffset = newOffset;
+            //rawBuildingOffset = newOffset;
             worldPos = newWorldPos;
         }
 
