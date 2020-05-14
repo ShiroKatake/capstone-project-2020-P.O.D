@@ -7,9 +7,13 @@ using UnityEngine.UI;
 public class GreenBar : MonoBehaviour
 {
     public Slider slider;
-    private int barMax = 0;
-    private int curVal = 0;
+    [SerializeField] private int barMax = 0;
+    [SerializeField] private int curVal = 0;
 
+    private void Awake() {
+        slider.maxValue = barMax;
+        slider.value = curVal;
+    }
     public void SetMaxBarValue(int value){
         barMax = value;
         slider.maxValue = barMax;

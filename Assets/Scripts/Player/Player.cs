@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using Rewired;
 
 /// <summary>
 /// The player. Player controls the player's movement and shooting. For building spawning, see BuildingSpawningController.
@@ -23,6 +24,11 @@ public class Player : MonoBehaviour
     [SerializeField] private float rotationSpeed;
     [SerializeField] private float shootCooldown;
 
+    [Header("Player Inputs")]
+    [SerializeField] private int playerID = 0;
+    [SerializeField] private Rewired.Player player;
+
+
     //Non-Serialized Fields------------------------------------------------------------------------
 
     //Variables for moving & determining if rotation is necessary
@@ -44,6 +50,7 @@ public class Player : MonoBehaviour
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
     public float GetMovementSpeed {get => movementSpeed;}
+    public Rewired.Player GetRewiredPlayer {get => player;}
 
     //Singleton Public Property--------------------------------------------------------------------
 
@@ -69,6 +76,11 @@ public class Player : MonoBehaviour
         rigidbody = GetComponent<Rigidbody>();
         timeOfLastShot = shootCooldown * -1;
         hoverHeight = drone.position.y;
+    }
+
+    void Start()
+    {
+        player = ReInput.players.GetPlayer(playerID);
     }
 
 
@@ -98,7 +110,10 @@ public class Player : MonoBehaviour
     /// </summary>
     private void GetInput()
     {
-        movement = new Vector3(InputController.Instance.GetAxis("MoveLeftRight"), 0, InputController.Instance.GetAxis("MoveForwardsBackwards"));
+        float moveHorizontal = player.GetAxis("Horizontal");
+        float moveVertical = player.GetAxis("Vertical");
+
+        movement = new Vector3(moveHorizontal, 0, -moveVertical);
         shooting = InputController.Instance.ButtonHeld("Shoot");
     }
 
@@ -119,24 +134,31 @@ public class Player : MonoBehaviour
     /// </summary>
     private void Look()
     {
+        /*
         //Player wants to move in a new direction? Update Slerp variables.
         if (movement != previousMovement)
         {
             slerpProgress = 0;
-            oldRotation = drone.rotation;
-            newRotation = Quaternion.LookRotation(movement);
+            oldRotation = drone.transform.rotation;
+            //newRotation = Quaternion.LookRotation(movement);
+            //newRotation = Quaternion.LookRotation(ReInput.controllers.Mouse.screenPosition);
+            //newRotation = Quaternion.LookRotation(MousePositionOnTerrain.Instance.GetWorldPosition);
+            //print("World Position from Player: " + MousePositionOnTerrain.Instance.GetWorldPosition);
+            drone.transform.LookAt(MousePositionOnTerrain.Instance.GetWorldPosition);
         }
 
         //Still turning? Rotate towards direction player wants to move in, but smoothly.
-        if (movement == Vector3.zero)
+        /*if (slerpProgress < 1 && movement != Vector3.zero)
         {
             rigidbody.velocity = movement;
         }
         else if (slerpProgress < 1)
         {
             slerpProgress = Mathf.Min(1, slerpProgress + rotationSpeed * Time.deltaTime);
-            drone.rotation = Quaternion.Slerp(oldRotation, newRotation, slerpProgress);
-        }
+            drone.transform.rotation = Quaternion.Slerp(oldRotation, newRotation, slerpProgress);
+        }*/
+        drone.transform.LookAt(MousePositionOnTerrain.Instance.GetWorldPosition);
+
     }
 
     /// <summary>
@@ -146,7 +168,8 @@ public class Player : MonoBehaviour
     {
         if (movement != Vector3.zero)
         {
-            drone.Translate(new Vector3(0, 0, movementSpeed * movement.magnitude * Time.deltaTime), Space.Self);
+            drone.transform.Translate(movement * movementSpeed * Time.deltaTime, Space.World);
+            cameraTarget.transform.position = drone.transform.position;
         }
 
         //Toggle gravity if something has pushed the player up above hoverHeight

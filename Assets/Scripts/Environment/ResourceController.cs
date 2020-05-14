@@ -164,6 +164,14 @@ public class ResourceController : MonoBehaviour
         Instance = this;
     }
 
+    private void Start()
+    {
+        ResourceTextManager.Instance.SetMetalText(ore.ToString());
+        ResourceTextManager.Instance.SetWaterText(waterSupply.ToString());
+        ResourceTextManager.Instance.SetEnergyUsedText(PowerConsumption.ToString());
+        ResourceTextManager.Instance.SetEnergyMaxText(PowerSupply.ToString());
+    }
+
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>

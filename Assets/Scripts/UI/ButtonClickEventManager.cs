@@ -6,7 +6,6 @@ using UnityEngine.UI;
 public class ButtonClickEventManager : MonoBehaviour
 {
     [SerializeField] private EBuilding buildingType;
-    [SerializeField] private KeyCode key;
 
     private Button button;
     private bool clicked = false;
@@ -21,7 +20,7 @@ public class ButtonClickEventManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    public void AssociatedKeyPressed()
+    /*public void AssociatedKeyPressed()
     {
         if (Input.GetKeyDown(key)){
             FadeToColor(button.colors.pressedColor);
@@ -29,7 +28,7 @@ public class ButtonClickEventManager : MonoBehaviour
         } else if (Input.GetKeyUp(key)) {
             FadeToColor(button.colors.normalColor);
         }
-    }
+    }*/
 
     public void AfterUpdateCleanup()
     {
@@ -38,10 +37,10 @@ public class ButtonClickEventManager : MonoBehaviour
         }
     }
 
-    private void FadeToColor(Color color){
+    /*private void FadeToColor(Color color){
         Graphic graphic = GetComponent<Graphic>();
         graphic.CrossFadeColor(color, button.colors.fadeDuration, true, true);
-    }
+    }*/
 
     public void OnClick(){
         clicked = true;
