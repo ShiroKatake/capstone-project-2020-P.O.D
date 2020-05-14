@@ -13,7 +13,6 @@ public class Player : MonoBehaviour
 
     [Header("Player Objects")]
     [SerializeField] private Transform drone;
-    //[SerializeField] private Transform droneModel;
     [SerializeField] private Camera camera;
     [SerializeField] private Transform cameraTarget;
     [SerializeField] private Transform terraformerHoldPoint;
@@ -49,15 +48,24 @@ public class Player : MonoBehaviour
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    public float GetMovementSpeed {get => movementSpeed;}
-    public Rewired.Player GetRewiredPlayer {get => player;}
-
     //Singleton Public Property--------------------------------------------------------------------
 
     /// <summary>
     /// Singleton public property for the player.
     /// </summary>
     public static Player Instance { get; protected set; }
+
+    //Basic Public Properties----------------------------------------------------------------------
+
+    /// <summary>
+    /// POD's movement speed.
+    /// </summary>
+    public float MovementSpeed { get => movementSpeed; }
+
+    /// <summary>
+    /// POD's Rewired.Player.
+    /// </summary>
+    public Rewired.Player RewiredPlayer { get => player; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -78,11 +86,14 @@ public class Player : MonoBehaviour
         hoverHeight = drone.position.y;
     }
 
+    /// <summary>
+    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
+    /// Start() runs after Awake().
+    /// </summary>
     void Start()
     {
         player = ReInput.players.GetPlayer(playerID);
     }
-
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -134,31 +145,7 @@ public class Player : MonoBehaviour
     /// </summary>
     private void Look()
     {
-        /*
-        //Player wants to move in a new direction? Update Slerp variables.
-        if (movement != previousMovement)
-        {
-            slerpProgress = 0;
-            oldRotation = drone.transform.rotation;
-            //newRotation = Quaternion.LookRotation(movement);
-            //newRotation = Quaternion.LookRotation(ReInput.controllers.Mouse.screenPosition);
-            //newRotation = Quaternion.LookRotation(MousePositionOnTerrain.Instance.GetWorldPosition);
-            //print("World Position from Player: " + MousePositionOnTerrain.Instance.GetWorldPosition);
-            drone.transform.LookAt(MousePositionOnTerrain.Instance.GetWorldPosition);
-        }
-
-        //Still turning? Rotate towards direction player wants to move in, but smoothly.
-        /*if (slerpProgress < 1 && movement != Vector3.zero)
-        {
-            rigidbody.velocity = movement;
-        }
-        else if (slerpProgress < 1)
-        {
-            slerpProgress = Mathf.Min(1, slerpProgress + rotationSpeed * Time.deltaTime);
-            drone.transform.rotation = Quaternion.Slerp(oldRotation, newRotation, slerpProgress);
-        }*/
         drone.transform.LookAt(MousePositionOnTerrain.Instance.GetWorldPosition);
-
     }
 
     /// <summary>
@@ -170,6 +157,10 @@ public class Player : MonoBehaviour
         {
             drone.transform.Translate(movement * movementSpeed * Time.deltaTime, Space.World);
             cameraTarget.transform.position = drone.transform.position;
+        }
+        else if (rigidbody.velocity != Vector3.zero)
+        {
+            rigidbody.velocity = Vector3.zero;
         }
 
         //Toggle gravity if something has pushed the player up above hoverHeight

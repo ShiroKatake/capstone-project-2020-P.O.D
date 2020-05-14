@@ -53,7 +53,7 @@ public class UIColorManager : MonoBehaviour
     }
 
     public void ColorUpdate() {
-        if (Player.Instance.GetRewiredPlayer.GetButton("EnemyAttack") && !enemyPhaseOne && !enemyPhaseTwo){
+        if (Player.Instance.RewiredPlayer.GetButton("EnemyAttack") && !enemyPhaseOne && !enemyPhaseTwo){
             eBackgroundCurColor = backgroundCurColor;
             eForegroundCurColor = foregroundCurColor;
 
