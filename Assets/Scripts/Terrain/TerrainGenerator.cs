@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class TerrainGenerator : MonoBehaviour
 {
+
+    public Texture2D heightex;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -16,9 +19,51 @@ public class TerrainGenerator : MonoBehaviour
         
     }
 
+    public float[,] GenerateHeightmap(AnimationCurve curve, float noiseScale, float centreFlatRadius) {
+        Terrain terrain = GetTerrain();
+        TerrainData data = terrain.terrainData;
+
+        int heightmapRes = data.heightmapResolution;
+        Vector2 heightCentre = new Vector2(heightmapRes / 2, heightmapRes / 2);
+
+        float[,] heights = new float[heightmapRes, heightmapRes];
+        //heightex = new Texture2D(heightmapRes, heightmapRes);
+        for (int xx = 0; xx < heightmapRes; xx++) {
+            for (int yy = 0; yy < heightmapRes; yy++) {
+                Vector2 pos = new Vector2(xx, yy);
+                float height;
+
+
+
+                if ((heightCentre - pos).magnitude < centreFlatRadius) {
+                    height = curve.Evaluate(0.5f);
+                }
+                else {
+                    height = Mathf.PerlinNoise((float)xx * noiseScale + 0.1f, (float)yy * noiseScale + 0.1f);
+                    height = curve.Evaluate(height);
+
+                    //Random.Range(0,1);
+
+                }
+                heights[xx, yy] = height;
+                //heightex.SetPixel(xx, yy, new Color(height, height, height));
+            }
+        }
+
+        return heights;
+    }
+
+    public void SetHeightmap(float[,] heightmap) {
+        Terrain terrain = GetTerrain();
+        TerrainData data = terrain.terrainData;
+
+        data.SetHeights(0, 0, heightmap);
+    } 
+
     private Terrain GetTerrain() {
         return GetComponent<Terrain>();
     }
+
 
     public void GenerateTerrain(AnimationCurve curve, float noiseScale, float centreFlatRadius) {
         Terrain terrain = GetTerrain();
@@ -28,26 +73,45 @@ public class TerrainGenerator : MonoBehaviour
 
         float[,] heights = new float[heightmapRes, heightmapRes];
 
-        Vector2 centre = new Vector2(heightmapRes / 2, heightmapRes / 2);
+        List<int[,]> rockMaps = new List<int[,]>();
+        for (int i = 0; i < 3; i ++) {
+            rockMaps.Add(new int[data.detailWidth, data.detailHeight]);
+        }
 
-        for (int xx = 0; xx < heightmapRes; xx++) {
-            for (int yy = 0; yy < heightmapRes; yy++) {
-                Vector2 pos = new Vector2(xx, yy);
-                float height;
+        Vector2 heightCentre = new Vector2(heightmapRes / 2, heightmapRes / 2);
+        
 
-                if ((centre - pos).magnitude < centreFlatRadius) {
-                    height = curve.Evaluate(0.5f);
+        
+        Random rand = new Random();
+
+        for (int i = 0; i < 10; i ++) {
+            Debug.Log(Mathf.RoundToInt(Random.value));
+        }
+
+        AnimationCurve rockCurve = new AnimationCurve();
+        rockCurve.AddKey(0, 0);
+        rockCurve.AddKey(0.97f, 0);
+        rockCurve.AddKey(1, 1);
+
+        Vector2 detailCenter = new Vector2(data.detailResolution / 2, data.detailResolution / 2);
+
+        for (int xx = 0; xx < data.detailWidth; xx++) {
+            for (int yy = 0; yy < data.detailHeight; yy++) {
+
+                if ((detailCenter - new Vector2(xx, yy)).magnitude > centreFlatRadius/2) {
+                    int val = Mathf.RoundToInt(rockCurve.Evaluate(Random.value));
+                    rockMaps[Mathf.RoundToInt(Random.Range(0, 2))][xx, yy] = val;
                 }
-                else {
-                    height = Mathf.PerlinNoise((float)xx * noiseScale + 0.1f, (float)yy * noiseScale + 0.1f);
-                    height = curve.Evaluate(height);
-                }
-                heights[xx, yy] = height;
+                
             }
         }
 
         data.SetHeights(0, 0, heights);
-
+        for (int i = 0; i < 3; i++) {
+            data.SetDetailLayer(0, 0, i, rockMaps[i]);
+            //rockMaps.Add(new int[data.detailWidth, data.detailHeight]);
+        }
+        
     }
 
 }
