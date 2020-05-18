@@ -162,10 +162,10 @@ public class Player : MonoBehaviour
             drone.transform.Translate(movement * movementSpeed * Time.deltaTime, Space.World);
             cameraTarget.transform.position = drone.transform.position;
         }
-        else if (rigidbody.velocity != Vector3.zero)
-        {
-            rigidbody.velocity = Vector3.zero;
-        }
+        //else if (rigidbody.velocity != Vector3.zero)
+        //{
+        //    rigidbody.velocity = Vector3.zero;
+        //}
 
         //Toggle gravity if something has pushed the player up above hoverHeight
         if (rigidbody.useGravity)
