@@ -20,7 +20,8 @@ public class MapController : MonoBehaviour
     [SerializeField] private Vector3 innerTopRight;
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
-
+    
+    [Header("Testing")]
     private bool[,] availableBuildingPositions;
     private bool[,] alienExclusionArea;
     private bool[,] availableAlienPositions;
@@ -35,14 +36,6 @@ public class MapController : MonoBehaviour
     /// MapController's singleton public property.
     /// </summary>
     public static MapController Instance { get; protected set; }
-
-    //Basic Public Properties----------------------------------------------------------------------                                                                                                                          
-
-
-
-    //Complex Public Properties--------------------------------------------------------------------                                                    
-
-
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -91,6 +84,11 @@ public class MapController : MonoBehaviour
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
+    /// <summary>
+    /// Checks if a given building can legally be placed given its size and position and the spaces available.
+    /// </summary>
+    /// <param name="building">The building whose placement is being checked.</param>
+    /// <returns>Whether the building can legally be placed.</returns>
     public bool PositionAvailableForBuilding(Building building)
     {
         Vector3 buildingPos = building.transform.position;
@@ -107,7 +105,12 @@ public class MapController : MonoBehaviour
         return true;
     }
 
-    //TODO: triple-slash comments
+    /// <summary>
+    /// Checks if something can legally be spawned at a given position given the spaces available.
+    /// </summary>
+    /// <param name="position">The position the something would be spawned at.</param>
+    /// <param name="alien">Whether or not the something is an alien.</param>
+    /// <returns>Whether something can legally be spawned.</returns>
     public bool PositionAvailableForSpawning(Vector3 position, bool alien)
     {
         //Debug.Log($"Verifying for spawnable at {position}");
@@ -134,6 +137,10 @@ public class MapController : MonoBehaviour
         return true;
     }
 
+    /// <summary>
+    /// Gets a random position that an alien could legally be spawned at.
+    /// </summary>
+    /// <returns>A position for an alien to spawn at.</returns>
     public Vector2 RandomAlienSpawnablePos()
     {
         switch (alienSpawnablePositions.Count)
@@ -147,16 +154,29 @@ public class MapController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Registers a building with MapController so that it knows that the spaces it occupies are occupied.
+    /// </summary>
+    /// <param name="building">The building to be registered.</param>
     public void RegisterBuilding(Building building)
     {
         UpdateAvailablePositions(building, false);
     }
 
+    /// <summary>
+    /// Deregisters a building with MapController so that it knows that the spaces it occupied are unoccupied.
+    /// </summary>
+    /// <param name="building">The building to be deregistered.</param>
     public void DeRegisterBuilding(Building building)
     {
         UpdateAvailablePositions(building, true);
     }
 
+    /// <summary>
+    /// Updates the availability of the spaces occupied / to be occupied by a building.
+    /// </summary>
+    /// <param name="building">The building whose spaces are having their availability updated.</param>
+    /// <param name="available">Are the spaces now available, or are they now unavailable?</param>
     private void UpdateAvailablePositions(Building building, bool available)
     {
         Vector3 buildingPos = building.transform.position;
@@ -194,8 +214,4 @@ public class MapController : MonoBehaviour
             }            
         }
     }
-
-    //Utility Methods--------------------------------------------------------------------------------------------------------------------------------  
-
-
 }
