@@ -70,9 +70,9 @@ public class MapController : MonoBehaviour
 
         //Debug.Log($"Enemies cannot spawn within ({noEnemyXMin}, {noEnemyZMin}) to ({noEnemyXMax}, {noEnemyZMax})");
 
-        for (int i = 0; i < xMax; i++)
+        for (int i = 0; i <= xMax; i++)
         {
-            for (int j = 0; j < zMax; j++)
+            for (int j = 0; j <= zMax; j++)
             {
                 //Debug.Log($"Assessing position ({i},{j})");
                 availableBuildingPositions[i, j] = true;

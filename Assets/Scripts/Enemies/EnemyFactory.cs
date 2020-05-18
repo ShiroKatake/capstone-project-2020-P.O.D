@@ -15,33 +15,34 @@ public class EnemyFactory : MonoBehaviour
     [SerializeField] private Enemy enemyPrefab;
     [SerializeField] private Transform enemyPoolParent;
 
-    [Header("Spawning Bounds")]
-    [SerializeField] private Transform outerTopLeft;
-    [SerializeField] private Transform outerBottomRight;
-    [SerializeField] private Transform innerTopLeft;
-    [SerializeField] private Transform innerBottomRight;
+    //[Header("Spawning Bounds")]
+    //[SerializeField] private Transform outerTopLeft;
+    //[SerializeField] private Transform outerBottomRight;
+    //[SerializeField] private Transform innerTopLeft;
+    //[SerializeField] private Transform innerBottomRight;
+    ////TODO: remove transforms, and get map size and enemy spawn bounds from MapController, then use that information to calculate other values.
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
     private List<Enemy> enemyPool;
 
-    float outerXMin;
-    float outerXMax;
-    float outerZMin;
-    float outerZMax;
-    float innerXMin;
-    float innerXMax;
-    float innerZMin;
-    float innerZMax;
+    //float outerXMin;
+    //float outerXMax;
+    //float outerZMin;
+    //float outerZMax;
+    //float innerXMin;
+    //float innerXMax;
+    //float innerZMin;
+    //float innerZMax;
 
-    float accumulativeAreaTopLeft;
-    float accumulativeAreaTopCentre;
-    float accumulativeAreaTopRight;
-    float accumulativeAreaCentreLeft;
-    float accumulativeAreaCentreRight;
-    float accumulativeAreaBottomLeft;
-    float accumulativeAreaBottomCentre;
-    float accumulativeAreaBottomRight;
+    //float accumulativeAreaTopLeft;
+    //float accumulativeAreaTopCentre;
+    //float accumulativeAreaTopRight;
+    //float accumulativeAreaCentreLeft;
+    //float accumulativeAreaCentreRight;
+    //float accumulativeAreaBottomLeft;
+    //float accumulativeAreaBottomCentre;
+    //float accumulativeAreaBottomRight;
 
     //PublicProperties-------------------------------------------------------------------------------------------------------------------------------
 
@@ -68,34 +69,34 @@ public class EnemyFactory : MonoBehaviour
         Instance = this;
         enemyPool = new List<Enemy>();
 
-        outerXMin = outerTopLeft.position.x;
-        outerXMax = outerBottomRight.position.x;
-        outerZMin = outerBottomRight.position.z;
-        outerZMax = outerTopLeft.position.z;
-        innerXMin = innerTopLeft.position.x;
-        innerXMax = innerBottomRight.position.x;
-        innerZMin = innerBottomRight.position.z;
-        innerZMax = innerTopLeft.position.z;
-        //Debug.Log($"outerXMin: {outerXMin}, outerXMax: {outerXMax}");
-        //Debug.Log($"outerZMin: {outerZMin}, outerZMax: {outerZMax}");
-        //Debug.Log($"innerXMin: {innerXMin}, innerXMax: {innerXMax}");
-        //Debug.Log($"innerZMin: {innerZMin}, innerZMax: {innerZMax}");
+        //outerXMin = outerTopLeft.position.x;
+        //outerXMax = outerBottomRight.position.x;
+        //outerZMin = outerBottomRight.position.z;
+        //outerZMax = outerTopLeft.position.z;
+        //innerXMin = innerTopLeft.position.x;
+        //innerXMax = innerBottomRight.position.x;
+        //innerZMin = innerBottomRight.position.z;
+        //innerZMax = innerTopLeft.position.z;
+        ////Debug.Log($"outerXMin: {outerXMin}, outerXMax: {outerXMax}");
+        ////Debug.Log($"outerZMin: {outerZMin}, outerZMax: {outerZMax}");
+        ////Debug.Log($"innerXMin: {innerXMin}, innerXMax: {innerXMax}");
+        ////Debug.Log($"innerZMin: {innerZMin}, innerZMax: {innerZMax}");
 
-        float leftXLength = innerXMin - outerXMin;
-        float centreXLength = innerXMax - innerXMin;
-        float rightXLength = outerXMax - innerXMax;
-        float bottomZLength = innerZMin - outerZMin;
-        float centreZLength = innerZMax - innerZMin;
-        float topZLength = outerZMax - innerZMax;
+        //float leftXLength = innerXMin - outerXMin;
+        //float centreXLength = innerXMax - innerXMin;
+        //float rightXLength = outerXMax - innerXMax;
+        //float bottomZLength = innerZMin - outerZMin;
+        //float centreZLength = innerZMax - innerZMin;
+        //float topZLength = outerZMax - innerZMax;
 
-        accumulativeAreaTopLeft = leftXLength * topZLength;
-        accumulativeAreaTopCentre = centreXLength * topZLength + accumulativeAreaTopLeft;
-        accumulativeAreaTopRight = rightXLength * topZLength + accumulativeAreaTopCentre;
-        accumulativeAreaCentreLeft = leftXLength * centreZLength + accumulativeAreaTopRight;
-        accumulativeAreaCentreRight = rightXLength * centreZLength + accumulativeAreaCentreLeft;
-        accumulativeAreaBottomLeft = leftXLength * bottomZLength + accumulativeAreaCentreRight;
-        accumulativeAreaBottomCentre = centreXLength * bottomZLength + accumulativeAreaBottomLeft;
-        accumulativeAreaBottomRight = rightXLength * bottomZLength + accumulativeAreaBottomCentre;
+        //accumulativeAreaTopLeft = leftXLength * topZLength;
+        //accumulativeAreaTopCentre = centreXLength * topZLength + accumulativeAreaTopLeft;
+        //accumulativeAreaTopRight = rightXLength * topZLength + accumulativeAreaTopCentre;
+        //accumulativeAreaCentreLeft = leftXLength * centreZLength + accumulativeAreaTopRight;
+        //accumulativeAreaCentreRight = rightXLength * centreZLength + accumulativeAreaCentreLeft;
+        //accumulativeAreaBottomLeft = leftXLength * bottomZLength + accumulativeAreaCentreRight;
+        //accumulativeAreaBottomCentre = centreXLength * bottomZLength + accumulativeAreaBottomLeft;
+        //accumulativeAreaBottomRight = rightXLength * bottomZLength + accumulativeAreaBottomCentre;
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------

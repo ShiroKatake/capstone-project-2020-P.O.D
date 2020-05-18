@@ -112,9 +112,8 @@ public class EnemyController : MonoBehaviour
 
                     //Spawn enemies
                     int spawnCount = BuildingController.Instance.BuildingCount * 3 + spawnCountPenalty;
-
                     Vector3 clusterPos = MapController.Instance.RandomEnemySpawnablePos();
-                    //Vector3 clusterPos = new Vector3(105, 0.25f, 105);
+                    //Vector3 clusterPos = new Vector3(0, 0.25f, 0);
 
                     for (int i = 0; i < spawnCount; i++)
                     {
