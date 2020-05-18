@@ -111,8 +111,8 @@ GameObject:
   - component: {fileID: 130242450852513669}
   - component: {fileID: 5448622151791115966}
   m_Layer: 0
-  m_Name: Enemy
-  m_TagString: Enemy
+  m_Name: Alien
+  m_TagString: Alien
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -240,6 +240,7 @@ MonoBehaviour:
   attackCooldown: 1
   target: {fileID: 0}
   targetHealth: {fileID: 0}
+  shotBy: {fileID: 0}
 --- !u!114 &5448622151791115966
 MonoBehaviour:
   m_ObjectHideFlags: 0

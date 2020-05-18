@@ -9,11 +9,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 948949189687773390}
+  - component: {fileID: 948949189687773389}
+  - component: {fileID: 948949189687773392}
   - component: {fileID: 948949189687773388}
   - component: {fileID: 948949189687773395}
   - component: {fileID: 2489407218427492161}
-  - component: {fileID: 948949189687773389}
-  - component: {fileID: 948949189687773392}
   - component: {fileID: 948949189687773394}
   - component: {fileID: 948949189687773393}
   - component: {fileID: 948949189687773391}
@@ -42,6 +42,39 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &948949189687773389
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 948949189687773384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b339f3ae52348242844769182c55c03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  respawnDelay: 30
+  defencePenaltyThreshold: 300
+  nonDefencePenaltyThreshold: 300
+  penaltyIncrement: 3
+  penaltyCooldown: 90
+  spawnEnemies: 1
+  ignoreDayNightCycle: 0
+--- !u!114 &948949189687773392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 948949189687773384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b7e2fda8e5699243a6ced0a90519911, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  alienPrefab: {fileID: 0}
+  alienPoolParent: {fileID: 0}
 --- !u!114 &948949189687773388
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -109,44 +142,6 @@ MonoBehaviour:
   clockBackground: {fileID: 0}
   day: {r: 0.5882353, g: 0.95686275, b: 1, a: 1}
   night: {r: 0.019607844, g: 0, b: 0.3764706, a: 1}
---- !u!114 &948949189687773389
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 948949189687773384}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b339f3ae52348242844769182c55c03, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  respawnDelay: 30
-  defencePenaltyThreshold: 300
-  nonDefencePenaltyThreshold: 300
-  penaltyIncrement: 3
-  penaltyCooldown: 90
-  spawnEnemies: 1
-  ignoreDayNightCycle: 0
---- !u!114 &948949189687773392
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 948949189687773384}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b7e2fda8e5699243a6ced0a90519911, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyPrefab: {fileID: 130242450852513669, guid: 65e2d9413bdfaa8499dd94fda9573c1c,
-    type: 3}
-  enemyPoolParent: {fileID: 0}
-  outerTopLeft: {fileID: 0}
-  outerBottomRight: {fileID: 0}
-  innerTopLeft: {fileID: 0}
-  innerBottomRight: {fileID: 0}
 --- !u!114 &948949189687773394
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -217,7 +212,7 @@ MonoBehaviour:
   zMax: 200
   innerBottomLeft: {x: 60, y: 0, z: 60}
   innerTopRight: {x: 140, y: 0, z: 140}
-  enemySpawnablePositions: []
+  alienSpawnablePositions: []
 --- !u!114 &1565210319463471991
 MonoBehaviour:
   m_ObjectHideFlags: 0

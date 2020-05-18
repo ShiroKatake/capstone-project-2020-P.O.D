@@ -124,13 +124,13 @@ public class Projectile : MonoBehaviour
     private void ProjectileCollision(Collider collidedWith)
     {
         //Debug.Log("ProjectileCollision");
-        if (collidedWith.CompareTag("Enemy"))
+        if (collidedWith.CompareTag("Alien"))
         {
-            //Debug.Log("ProjectileCollision, Enemy");
-            Enemy e = collidedWith.gameObject.GetComponent<Enemy>();
+            //Debug.Log("ProjectileCollision, Alien");
+            Alien e = collidedWith.gameObject.GetComponent<Alien>();
             e.Health.Value -= damage;
             e.ShotBy = owner.GetComponentInChildren<Collider>().transform;
-            Debug.Log($"{gameObject.name} reduced {e.gameObject.name}'s health to {e.Health.Value}; {e.gameObject.name}.ShotBy is now {owner.name}");
+            //Debug.Log($"{gameObject.name} reduced {e.gameObject.name}'s health to {e.Health.Value}; {e.gameObject.name}.ShotBy is now {owner.name}");
         }
 
         if (!collidedWith.CompareTag("Player") && !collidedWith.CompareTag("Projectile"))

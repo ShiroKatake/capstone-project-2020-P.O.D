@@ -5,13 +5,13 @@ using UnityEngine;
 /// <summary>
 /// Demo class for enemies.
 /// </summary>
-public class Enemy : MonoBehaviour
+public class Alien : MonoBehaviour
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
     //Serialized Fields----------------------------------------------------------------------------
 
-    [Header("Enemy Stats")] 
+    [Header("Alien Stats")] 
     [SerializeField] private int id;
     [SerializeField] private float speed;
     [SerializeField] private float turningSpeed;
@@ -47,24 +47,24 @@ public class Enemy : MonoBehaviour
     //Basic Public Properties----------------------------------------------------------------------
 
     /// <summary>
-    /// Enemy's Health component.
+    /// Alien's Health component.
     /// </summary>
     public Health Health { get => health; }
 
     /// <summary>
-    /// Whether or not the Enemy is moving.
+    /// Whether or not the alien is moving.
     /// </summary>
     public bool Moving { get => moving; set => moving = value; }
 
     /// <summary>
-    /// The player or building the enemy was shot by most recently.
+    /// The player or building the alien was shot by most recently.
     /// </summary>
     public Transform ShotBy { get => shotBy; set => shotBy = value; }
 
     //Complex Public Properties--------------------------------------------------------------------
 
     /// <summary>
-    /// Enemy's unique ID number. Id should only be set by Enemy.Setup().
+    /// Alien's unique ID number. Id should only be set by Alien.Setup().
     /// </summary>
     public int Id
     {
@@ -76,7 +76,7 @@ public class Enemy : MonoBehaviour
         set
         {
             id = value;
-            gameObject.name = $"Enemy {id}";
+            gameObject.name = $"Alien {id}";
         }
     }
 
@@ -100,7 +100,7 @@ public class Enemy : MonoBehaviour
     }
 
     /// <summary>
-    /// Prepares the Enemy to chase its targets when EnemyFactory puts it in the world. 
+    /// Prepares the Alien to chase its targets when AlienFactory puts it in the world. 
     /// </summary>
     public void Setup(int id)
     {
@@ -139,18 +139,18 @@ public class Enemy : MonoBehaviour
     //Recurring Methods (FixedUpdate())-------------------------------------------------------------------------------------------------------------  
 
     /// <summary>
-    /// Checks if Enemy has 0 health, destroying it if it has.
+    /// Checks if alien has 0 health, destroying it if it has.
     /// </summary>
     private void CheckHealth()
     {
         if (health.IsDead())
         {
-            EnemyFactory.Instance.DestroyEnemy(this);
+            AlienFactory.Instance.DestroyAlien(this);
         }
     }
 
     /// <summary>
-    /// Selects the most appropriate target for the enemy.
+    /// Selects the most appropriate target for the alien.
     /// </summary>
     private void SelectTarget()
     {
@@ -214,13 +214,13 @@ public class Enemy : MonoBehaviour
     }
 
     /// <summary>
-    /// Moves Enemy.
+    /// Moves alien.
     /// </summary>
     private void Move()
     {
         transform.Translate(new Vector3(0, 0, speed * Time.fixedDeltaTime));
 
-        //Toggle gravity if something has pushed the enemy up above groundHeight
+        //Toggle gravity if something has pushed the alien up above groundHeight
         if (rigidbody.useGravity)
         {
             if (transform.position.y <= groundHeight)
@@ -231,7 +231,7 @@ public class Enemy : MonoBehaviour
         }
         else
         {
-            if (transform.position.y > groundHeight)   //TODO: account for terrain pushing the enemy up, if it can move up hills?
+            if (transform.position.y > groundHeight)   //TODO: account for terrain pushing the alien up, if it can move up hills?
             {
                 rigidbody.useGravity = true;
             }
@@ -254,7 +254,7 @@ public class Enemy : MonoBehaviour
                 targetHealth.Value -= damage;
             }
         }
-        //TODO: if made contact with target and target is a building, step back a smidge and attack, so that OnCollisionStay is not called every single frame. For player, check if within attack range to verify that the enemy can still attack them?
+        //TODO: if made contact with target and target is a building, step back a smidge and attack, so that OnCollisionStay is not called every single frame. For player, check if within attack range to verify that the alien can still attack them?
     }
 
     /// <summary>
@@ -265,7 +265,7 @@ public class Enemy : MonoBehaviour
     {
         if (!collider.isTrigger)
         {
-            if (collider.CompareTag("Enemy"))
+            if (collider.CompareTag("Alien"))
             {
                 visibleAliens.Add(collider.transform);
             }
@@ -279,7 +279,7 @@ public class Enemy : MonoBehaviour
             }
             else if (collider.CompareTag("Projectile"))
             {
-                Debug.Log("Enemy.OnTriggerEnter; Enemy hit by a projectile");
+                Debug.Log("Alien.OnTriggerEnter; Alien hit by a projectile");
                 Projectile projectile = collider.GetComponent<Projectile>();
                 shotBy = projectile.Owner.GetComponentInChildren<Collider>().transform;
             }

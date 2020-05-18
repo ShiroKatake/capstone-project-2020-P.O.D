@@ -22,10 +22,10 @@ public class MapController : MonoBehaviour
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
     private bool[,] availableBuildingPositions;
-    private bool[,] enemyExclusionArea;
-    private bool[,] availableEnemyPositions;
+    private bool[,] alienExclusionArea;
+    private bool[,] availableAlienPositions;
 
-    [SerializeField] private List<Vector3> enemySpawnablePositions;
+    [SerializeField] private List<Vector3> alienSpawnablePositions;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -59,16 +59,16 @@ public class MapController : MonoBehaviour
 
         Instance = this;
         availableBuildingPositions = new bool[xMax + 1 , zMax + 1];
-        availableEnemyPositions = new bool[xMax + 1, zMax + 1];
-        enemyExclusionArea = new bool[xMax + 1, zMax + 1];
-        enemySpawnablePositions = new List<Vector3>();
+        availableAlienPositions = new bool[xMax + 1, zMax + 1];
+        alienExclusionArea = new bool[xMax + 1, zMax + 1];
+        alienSpawnablePositions = new List<Vector3>();
 
-        int noEnemyXMin = (int)Mathf.Round(innerBottomLeft.x);
-        int noEnemyXMax = (int)Mathf.Round(innerTopRight.x);
-        int noEnemyZMin = (int)Mathf.Round(innerBottomLeft.z);
-        int noEnemyZMax = (int)Mathf.Round(innerTopRight.z);
+        int noAlienXMin = (int)Mathf.Round(innerBottomLeft.x);
+        int noAlienXMax = (int)Mathf.Round(innerTopRight.x);
+        int noAlienZMin = (int)Mathf.Round(innerBottomLeft.z);
+        int noAlienZMax = (int)Mathf.Round(innerTopRight.z);
 
-        //Debug.Log($"Enemies cannot spawn within ({noEnemyXMin}, {noEnemyZMin}) to ({noEnemyXMax}, {noEnemyZMax})");
+        //Debug.Log($"Enemies cannot spawn within ({noAlienXMin}, {noAlienXMax}) to ({noAlienZMin}, {noAlienZMax})");
 
         for (int i = 0; i <= xMax; i++)
         {
@@ -76,14 +76,14 @@ public class MapController : MonoBehaviour
             {
                 //Debug.Log($"Assessing position ({i},{j})");
                 availableBuildingPositions[i, j] = true;
-                availableEnemyPositions[i, j] = ((i < noEnemyXMin || i > noEnemyXMax) && (j < noEnemyZMin || j > noEnemyZMax));
-                enemyExclusionArea[i, j] = !availableEnemyPositions[i, j];
+                availableAlienPositions[i, j] = ((i < noAlienXMin || i > noAlienXMax) && (j < noAlienZMin || j > noAlienZMax));
+                alienExclusionArea[i, j] = !availableAlienPositions[i, j];
 
-                //Debug.Log($"available for building: {availableBuildingPositions[i, j]}, available for enemies: {availableEnemyPositions[i, j]}, enemy exclusion area: {enemyExclusionArea[i, j]}");
+                //Debug.Log($"available for building: {availableBuildingPositions[i, j]}, available for enemies: {availableAlienPositions[i, j]}, alien exclusion area: {alienExclusionArea[i, j]}");
 
-                if (availableEnemyPositions[i, j])
+                if (availableAlienPositions[i, j])
                 {
-                    enemySpawnablePositions.Add(new Vector3(i, 0.25f, j));
+                    alienSpawnablePositions.Add(new Vector3(i, 0.25f, j));
                 }
             }
         }
@@ -108,7 +108,7 @@ public class MapController : MonoBehaviour
     }
 
     //TODO: triple-slash comments
-    public bool PositionAvailableForSpawning(Vector3 position, bool enemy)
+    public bool PositionAvailableForSpawning(Vector3 position, bool alien)
     {
         //Debug.Log($"Verifying for spawnable at {position}");
         position.x = Mathf.Round(position.x);
@@ -120,9 +120,9 @@ public class MapController : MonoBehaviour
             return false;
         }
 
-        if (enemy && enemyExclusionArea[(int)position.x, (int)position.z])
+        if (alien && alienExclusionArea[(int)position.x, (int)position.z])
         {
-            Debug.Log($"Can't spawn an enemy at {position}, which is within the enemy exclusion area.");
+            Debug.Log($"Can't spawn an alien at {position}, which is within the alien exclusion area.");
         }
 
         if (!availableBuildingPositions[(int)position.x, (int)position.z])
@@ -134,16 +134,16 @@ public class MapController : MonoBehaviour
         return true;
     }
 
-    public Vector2 RandomEnemySpawnablePos()
+    public Vector2 RandomAlienSpawnablePos()
     {
-        switch (enemySpawnablePositions.Count)
+        switch (alienSpawnablePositions.Count)
         {
             case 0:
                 return new Vector2 (-1, -1);
             case 1:
-                return enemySpawnablePositions[0];
+                return alienSpawnablePositions[0];
             default:
-                return enemySpawnablePositions[Random.Range(0, enemySpawnablePositions.Count)];
+                return alienSpawnablePositions[Random.Range(0, alienSpawnablePositions.Count)];
         }
     }
 
@@ -170,21 +170,21 @@ public class MapController : MonoBehaviour
 
             if (x >= 0 || x <= xMax || z >= 0 || z <= zMax)
             {                
-                bool startingEnemyAvailability = availableEnemyPositions[x, z];
+                bool startingAlienAvailability = availableAlienPositions[x, z];
                 availableBuildingPositions[x, z] = available;
-                availableEnemyPositions[x, z] = (availableBuildingPositions[x, z] && !enemyExclusionArea[x, z]);
+                availableAlienPositions[x, z] = (availableBuildingPositions[x, z] && !alienExclusionArea[x, z]);
 
-                if (availableEnemyPositions[x, z] != startingEnemyAvailability)
+                if (availableAlienPositions[x, z] != startingAlienAvailability)
                 {
                     Vector3 pos = new Vector3(x, 0.25f, z);
 
-                    if (availableEnemyPositions[x, z])
+                    if (availableAlienPositions[x, z])
                     {
-                        enemySpawnablePositions.Add(pos);
+                        alienSpawnablePositions.Add(pos);
                     }
                     else
                     {
-                        enemySpawnablePositions.Remove(pos);
+                        alienSpawnablePositions.Remove(pos);
                     }
                 }
             }

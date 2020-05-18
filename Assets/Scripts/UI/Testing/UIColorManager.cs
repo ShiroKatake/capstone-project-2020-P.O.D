@@ -8,8 +8,8 @@ public class UIColorManager : MonoBehaviour
     [SerializeField] private Image UIBackground;
     [SerializeField] private Image UIForeground;
 
-    [SerializeField] private Color enemyAttackBackground;
-    [SerializeField] private Color enemyAttackForeground;
+    [SerializeField] private Color alienAttackBackground;
+    [SerializeField] private Color alienAttackForeground;
     [SerializeField] private Color backgroundDay;
     [SerializeField] private Color backgroundNight;
     [SerializeField] private Color foregroundDay;
@@ -27,8 +27,8 @@ public class UIColorManager : MonoBehaviour
     private Color foregroundNewColor;
     private Color eForegroundNewColor;
 
-    private bool enemyPhaseOne = false;
-    private bool enemyPhaseTwo = false;
+    private bool alienPhaseOne = false;
+    private bool alienPhaseTwo = false;
     private float t = 0;
     private float et = 0;
 
@@ -53,14 +53,14 @@ public class UIColorManager : MonoBehaviour
     }
 
     public void ColorUpdate() {
-        if (Player.Instance.RewiredPlayer.GetButton("EnemyAttack") && !enemyPhaseOne && !enemyPhaseTwo){
+        if (Player.Instance.RewiredPlayer.GetButton("EnemyAttack") && !alienPhaseOne && !alienPhaseTwo){
             eBackgroundCurColor = backgroundCurColor;
             eForegroundCurColor = foregroundCurColor;
 
-            eBackgroundNewColor = enemyAttackBackground;
-            eForegroundCurColor = enemyAttackForeground;
+            eBackgroundNewColor = alienAttackBackground;
+            eForegroundCurColor = alienAttackForeground;
 
-            enemyPhaseOne = true;
+            alienPhaseOne = true;
 
             print("ATTTTAACKKKKK!!!!");
         }
@@ -73,7 +73,7 @@ public class UIColorManager : MonoBehaviour
         backgroundCurColor = Color.Lerp(backgroundCurColor, backgroundNewColor, t);
         foregroundCurColor = Color.Lerp(foregroundCurColor, foregroundNewColor, t);
 
-        if (enemyPhaseOne || enemyPhaseTwo){
+        if (alienPhaseOne || alienPhaseTwo){
             if (et<1){
                 et += Time.deltaTime/eDuration;
             }
@@ -89,15 +89,15 @@ public class UIColorManager : MonoBehaviour
             UIForeground.GetComponent<Image>().color = foregroundCurColor;
         }
 
-        if (et >= 1 && enemyPhaseOne){
-            enemyPhaseOne = false;
-            enemyPhaseTwo = true;
+        if (et >= 1 && alienPhaseOne){
+            alienPhaseOne = false;
+            alienPhaseTwo = true;
             et = 0;
 
             eBackgroundNewColor = backgroundCurColor;
             eForegroundNewColor = foregroundNewColor;
-        } else if (et >= 1 && enemyPhaseTwo) {
-            enemyPhaseTwo = false;
+        } else if (et >= 1 && alienPhaseTwo) {
+            alienPhaseTwo = false;
             et = 0;
         }
 

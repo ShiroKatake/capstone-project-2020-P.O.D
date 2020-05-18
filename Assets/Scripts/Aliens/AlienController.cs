@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Controller class for Enemy.
+/// Controller class for aliens.
 /// </summary>
-public class EnemyController : MonoBehaviour
+public class AlienController : MonoBehaviour
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
     //Serialized Fields----------------------------------------------------------------------------
 
-    [Header("Enemy Stats")]
+    [Header("Alien Stats")]
     [SerializeField] private float respawnDelay;
     [SerializeField] private float defencePenaltyThreshold;
     [SerializeField] private float nonDefencePenaltyThreshold;
@@ -24,8 +24,8 @@ public class EnemyController : MonoBehaviour
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
-    //Enemy Spawning
-    private List<Enemy> enemies;
+    //Alien Spawning
+    private List<Alien> aliens;
     private float timeOfLastDeath;
 
     //Penalty Incrementation
@@ -37,16 +37,16 @@ public class EnemyController : MonoBehaviour
     //Singleton Public Property--------------------------------------------------------------------
 
     /// <summary>
-    /// EnemyController's singleton public property.
+    /// AlienController's singleton public property.
     /// </summary>
-    public static EnemyController Instance { get; protected set; }
+    public static AlienController Instance { get; protected set; }
 
     //Basic Public Properties----------------------------------------------------------------------
 
     /// <summary>
-    /// A list of all Enemies
+    /// A list of all aliens
     /// </summary>
-    public List<Enemy> Enemies { get => enemies; }
+    public List<Alien> Aliens { get => aliens; }
 
     //Complex Public Properties--------------------------------------------------------------------
 
@@ -60,11 +60,11 @@ public class EnemyController : MonoBehaviour
     {
         if (Instance != null)
         {
-            Debug.LogError("There should never be 2 or more EnemyControllers.");
+            Debug.LogError("There should never be 2 or more AlienControllers.");
         }
 
         Instance = this;
-        enemies = new List<Enemy>();
+        aliens = new List<Alien>();
         timeOfLastDeath = respawnDelay * -1;
         timeOfLastPenalty = penaltyCooldown * -1;
         spawnCountPenalty = 0;
@@ -91,33 +91,33 @@ public class EnemyController : MonoBehaviour
         {
             if (ignoreDayNightCycle)
             {
-                while (enemies.Count < 4)
+                while (aliens.Count < 4)
                 {
-                    enemies.Add(EnemyFactory.Instance.GetEnemy());
+                    aliens.Add(AlienFactory.Instance.GetAlien());
                 }
             }
             else
             {
-                if (!ClockController.Instance.Daytime && enemies.Count == 0 && Time.time - timeOfLastDeath > respawnDelay)
+                if (!ClockController.Instance.Daytime && aliens.Count == 0 && Time.time - timeOfLastDeath > respawnDelay)
                 {
-                    Debug.Log("Nighttime? No enemies? Spawning time!");
+                    //Debug.Log("Nighttime? No enemies? Spawning time!");
 
                     //Check and increment penalty
                     if (Time.time - timeOfLastPenalty > penaltyCooldown && (Time.time - BuildingController.Instance.TimeLastDefenceWasBuilt > defencePenaltyThreshold || Time.time - BuildingController.Instance.TimeLastNonDefenceWasBuilt > nonDefencePenaltyThreshold))
                     {
                         spawnCountPenalty += penaltyIncrement;
                         timeOfLastPenalty = Time.time;
-                        Debug.Log($"EnemyController.spawnCountPenalty incremented to {spawnCountPenalty}");
+                        Debug.Log($"AlienController.spawnCountPenalty incremented to {spawnCountPenalty}");
                     }
 
                     //Spawn enemies
                     int spawnCount = BuildingController.Instance.BuildingCount * 3 + spawnCountPenalty;
-                    Vector3 clusterPos = MapController.Instance.RandomEnemySpawnablePos();
+                    Vector3 clusterPos = MapController.Instance.RandomAlienSpawnablePos();
                     //Vector3 clusterPos = new Vector3(0, 0.25f, 0);
 
                     for (int i = 0; i < spawnCount; i++)
                     {
-                        enemies.Add(EnemyFactory.Instance.GetEnemy(clusterPos));
+                        aliens.Add(AlienFactory.Instance.GetAlien(clusterPos));
                     }
                 }
             }
@@ -125,14 +125,14 @@ public class EnemyController : MonoBehaviour
     }
 
     /// <summary>
-    /// Removes the enemy from EnemyController's list of enemies.
+    /// Removes the alien from AlienController's list of enemies.
     /// </summary>
-    /// <param name="enemy">The enemy to be removed from EnemyController's list of enemies.</param>
-    public void DeRegisterEnemy(Enemy enemy)
+    /// <param name="alien">The alien to be removed from AlienController's list of enemies.</param>
+    public void DeRegisterAlien(Alien alien)
     {
-        if (enemies.Contains(enemy))
+        if (aliens.Contains(alien))
         {
-            enemies.Remove(enemy);
+            aliens.Remove(alien);
             timeOfLastDeath = Time.time;
         }
     }
