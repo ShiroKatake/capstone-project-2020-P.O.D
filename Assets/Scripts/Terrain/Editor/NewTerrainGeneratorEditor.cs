@@ -27,7 +27,11 @@ public class NewTerrainGeneratorEditor : Editor
 
         if (GUILayout.Button("Generate Scripted Heightmap")) {
             RedoCurve();
+
+            script.SetHeightRes((int)Mathf.Pow(2, 7) + 1);
+
             script.RegenerateHeightmap(curve, noiseScale);
+            script.GenerateMesh();
         }
         var curveField = EditorGUI.CurveField(new Rect(10, 35, rightEdge, 100), curve);
         EditorGUILayout.Space(140);
