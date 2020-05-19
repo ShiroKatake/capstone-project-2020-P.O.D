@@ -194,6 +194,7 @@ public class Player : MonoBehaviour
             {
                 drone.position = new Vector3(drone.position.x, hoverHeight, drone.position.z);
                 rigidbody.useGravity = false;
+                rigidbody.drag = 100;
             }
         }
         else
@@ -201,6 +202,8 @@ public class Player : MonoBehaviour
             if (drone.position.y > hoverHeight)   //TODO: account for terrain pushing the player up
             {
                 rigidbody.useGravity = true;
+                rigidbody.drag = 0;
+                rigidbody.velocity = Vector3.zero;
             }
         }
 
