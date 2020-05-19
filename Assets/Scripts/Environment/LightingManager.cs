@@ -2,44 +2,68 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// A manager class for Day & Night cycle. 
+/// </summary>
 [ExecuteAlways]
 public class LightingManager : MonoBehaviour {
-	//References
+	//Private Fields---------------------------------------------------------------------------------------------------------------------------------
+
+	//Serialized Fields----------------------------------------------------------------------------
 	[SerializeField] private Light directionalLight;
 	[SerializeField] private LightingPreset preset;
-	//Variables
 
-	// Update is called once per frame
-	private void Update() {
+	//Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
+
+	/// <summary>
+	/// Update() is run every frame.
+	/// </summary>
+	private void Update()
+	{
 		float cycleDuration = ClockController.Instance.CycleDuration;
 		if (preset == null)
 			return;
 		UpdateLighting(ClockController.Instance.Time24hr / cycleDuration);
 	}
 
-	private void UpdateLighting(float timePercent) {
+	//Recurring Methods (Update())-------------------------------------------------------------------------------------------------------------------
+
+	/// <summary>
+	/// Change the colours in the lighting preset according to the time of day
+	/// </summary>
+	private void UpdateLighting(float timePercent)
+	{
 		RenderSettings.ambientLight = preset.AmbientColor.Evaluate(timePercent);
 		RenderSettings.fogColor = preset.FogColor.Evaluate(timePercent);
 
-		if (directionalLight != null) {
+		if (directionalLight != null)
+		{
 			directionalLight.color = preset.DirectionalColor.Evaluate(timePercent);
 			directionalLight.transform.localRotation = Quaternion.Euler(new Vector3((timePercent * 360f) - 90f, 170f, 0));
 		}
 	}
 
-	//Try to find a directional light to use if we haven't set one
-	private void OnValidate() {
+	//Recurring Methods (Other)----------------------------------------------------------------------------------------------------------------------
+
+	/// <summary>
+	/// OnValidate() is run every time the script is reloaded or something is changed in the inspector.
+	/// Check for a directional light and set as the sun to use. If there isn't any, find the first available directional light, 
+	/// </summary>
+	private void OnValidate()
+	{
 		if (directionalLight != null)
 			return;
-		//Search for directional light then set as sun
-		if (RenderSettings.sun != null) {
+		if (RenderSettings.sun != null)
+		{
 			directionalLight = RenderSettings.sun;
-		} 
-		//Search scene for light that fits criteria (directional)
-		else {
+		}
+		else
+		{
 			Light[] lights = FindObjectsOfType<Light>();
-			foreach (Light light in lights) {
-				if (light.type == LightType.Directional) {
+			foreach (Light light in lights)
+			{
+				if (light.type == LightType.Directional)
+				{
 					directionalLight = light;
 					return;
 				}
