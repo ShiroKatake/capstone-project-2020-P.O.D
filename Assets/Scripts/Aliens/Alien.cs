@@ -26,7 +26,8 @@ public class Alien : MonoBehaviour
 
     //Movement
     private bool moving;
-    private float groundHeight;
+    [SerializeField] private float hoverHeight;
+    [SerializeField] private float zRotation;
 
     //Turning
     private Quaternion oldRotation;
@@ -89,7 +90,8 @@ public class Alien : MonoBehaviour
 
         cryoEgg = BuildingController.Instance.CryoEgg;
 
-        groundHeight = transform.position.y;
+        hoverHeight = transform.position.y;
+        zRotation = transform.rotation.eulerAngles.z;
 
         visibleAliens = new List<Transform>();
         visibleTargets = new List<Transform>();
@@ -252,20 +254,31 @@ public class Alien : MonoBehaviour
     {
         transform.Translate(new Vector3(0, 0, speed * Time.fixedDeltaTime));
 
-        //Toggle gravity if something has pushed the alien up above groundHeight
-        if (rigidbody.useGravity)
+        //Fly up if below hover height
+        if (transform.position.y < hoverHeight)
         {
-            if (transform.position.y <= groundHeight)
+            if (rigidbody.useGravity)
             {
-                transform.position = new Vector3(transform.position.x, groundHeight, transform.position.z);
                 rigidbody.useGravity = false;
             }
+
+            transform.Translate(new Vector3(0, Mathf.Min(hoverHeight - transform.position.y, speed * 0.5f * Time.fixedDeltaTime, 0)));
         }
-        else
+        //Activate gravity if above hover height
+        else if (transform.position.y > hoverHeight)
         {
-            if (transform.position.y > groundHeight)   //TODO: account for terrain pushing the alien up, if it can move up hills?
+            if (!rigidbody.useGravity)   //TODO: account for terrain pushing the alien up, if it can move up hills?
             {
                 rigidbody.useGravity = true;
+            }
+        }
+        //Disable gravity if at hover height
+        else
+        {
+            if (rigidbody.useGravity)
+            {
+                transform.position = new Vector3(transform.position.x, hoverHeight, transform.position.z);
+                rigidbody.useGravity = false;
             }
         }
     }

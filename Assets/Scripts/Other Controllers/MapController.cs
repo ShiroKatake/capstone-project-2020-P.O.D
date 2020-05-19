@@ -55,7 +55,11 @@ public class MapController : MonoBehaviour
         availableAlienPositions = new bool[xMax + 1, zMax + 1];
         alienExclusionArea = new bool[xMax + 1, zMax + 1];
         alienSpawnablePositions = new List<Vector3>();
+    }
 
+    private void Start()
+    {
+        float alienHoverHeight = AlienFactory.Instance.AlienHoverHeight;
         int noAlienXMin = (int)Mathf.Round(innerBottomLeft.x);
         int noAlienXMax = (int)Mathf.Round(innerTopRight.x);
         int noAlienZMin = (int)Mathf.Round(innerBottomLeft.z);
@@ -76,7 +80,7 @@ public class MapController : MonoBehaviour
 
                 if (availableAlienPositions[i, j])
                 {
-                    alienSpawnablePositions.Add(new Vector3(i, 0.25f, j));
+                    alienSpawnablePositions.Add(new Vector3(i, alienHoverHeight, j));
                 }
             }
         }
@@ -141,12 +145,12 @@ public class MapController : MonoBehaviour
     /// Gets a random position that an alien could legally be spawned at.
     /// </summary>
     /// <returns>A position for an alien to spawn at.</returns>
-    public Vector2 RandomAlienSpawnablePos()
+    public Vector3 RandomAlienSpawnablePos()
     {
         switch (alienSpawnablePositions.Count)
         {
             case 0:
-                return new Vector2 (-1, -1);
+                return new Vector3 (-1, 0.5f, -1);
             case 1:
                 return alienSpawnablePositions[0];
             default:
