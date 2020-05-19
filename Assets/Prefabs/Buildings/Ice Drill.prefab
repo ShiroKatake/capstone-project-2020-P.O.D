@@ -143,8 +143,8 @@ MonoBehaviour:
   largeBoingMultiplier: 1.2
   buildingFoundationOffsets:
   - {x: 0, y: -0.45, z: 0}
-  opaqueMaterial: {fileID: 2100000, guid: 3721ed78e7b11554992495845ffa141c, type: 2}
-  transparentMaterial: {fileID: 2100000, guid: 3c0c722c6e0e38c42aef0715203ecde8, type: 2}
+  opaqueMaterial: {fileID: 2100000, guid: 42ff3d6ef021f274d81e8fd9ab5578e7, type: 2}
+  transparentMaterial: {fileID: 2100000, guid: 9baa05080f664a348a7f5182d05f16d6, type: 2}
   buildingErrorMaterial: {fileID: 2100000, guid: 101275a717e4a1c4fb89e563e095dfd7,
     type: 2}
   otherColliders: []
@@ -303,7 +303,7 @@ MeshCollider:
   serializedVersion: 3
   m_Convex: 1
   m_CookingOptions: 30
-  m_Mesh: {fileID: 8946768687910715881, guid: 518f9dfc28c18d544917f14459856d18, type: 3}
+  m_Mesh: {fileID: 8946768687910715881, guid: 47004135c4cf0604f8a58634ce45c401, type: 3}
 --- !u!54 &1193856135689541671
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -345,6 +345,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 608827809050590389}
     m_Modifications:
+    - target: {fileID: -5178661895559278292, guid: 518f9dfc28c18d544917f14459856d18,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 8946768687910715881, guid: 47004135c4cf0604f8a58634ce45c401,
+        type: 3}
     - target: {fileID: -4216859302048453862, guid: 518f9dfc28c18d544917f14459856d18,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -415,10 +421,15 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -1504981713932161579, guid: 518f9dfc28c18d544917f14459856d18,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 9baa05080f664a348a7f5182d05f16d6, type: 2}
     - target: {fileID: -927199367670048503, guid: 518f9dfc28c18d544917f14459856d18,
         type: 3}
       propertyPath: m_Name
-      value: Drill_2
+      value: Model
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 518f9dfc28c18d544917f14459856d18, type: 3}

@@ -29,10 +29,9 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 3222376917316379352}
+  m_Children: []
   m_Father: {fileID: 880952307760529668}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &6110940945186930376
 Rigidbody:
@@ -112,6 +111,7 @@ Transform:
   m_LocalScale: {x: 2.9, y: 2.9, z: 2.9}
   m_Children:
   - {fileID: 8586582078626057228}
+  - {fileID: 2402142173451452879}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -141,8 +141,8 @@ MonoBehaviour:
   smallBoingMultiplier: 0
   largeBoingMultiplier: 0
   buildingFoundationOffsets: []
-  opaqueMaterial: {fileID: 2100000, guid: 671f12d8f6c7b6e4eb39b7b9534197ba, type: 2}
-  transparentMaterial: {fileID: 2100000, guid: 101275a717e4a1c4fb89e563e095dfd7, type: 2}
+  opaqueMaterial: {fileID: 2100000, guid: 6ba909c9a60a28b4e87c25de78d50506, type: 2}
+  transparentMaterial: {fileID: 2100000, guid: 7a895dfacb466954c9d6d76e2323d836, type: 2}
   buildingErrorMaterial: {fileID: 2100000, guid: 101275a717e4a1c4fb89e563e095dfd7,
     type: 2}
   otherColliders: []
@@ -208,7 +208,7 @@ MeshCollider:
   serializedVersion: 3
   m_Convex: 1
   m_CookingOptions: 30
-  m_Mesh: {fileID: 6306869366474981079, guid: e2a9ff74997779d4a9fd7fa76275747f, type: 3}
+  m_Mesh: {fileID: 6306869366474981079, guid: 1f40daa4e3a975b4a82b2b186ea2c1d9, type: 3}
 --- !u!54 &3547622832239237036
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -250,6 +250,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8586582078626057228}
     m_Modifications:
+    - target: {fileID: -5178661895559278292, guid: e2a9ff74997779d4a9fd7fa76275747f,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 6306869366474981079, guid: 1f40daa4e3a975b4a82b2b186ea2c1d9,
+        type: 3}
     - target: {fileID: -4216859302048453862, guid: e2a9ff74997779d4a9fd7fa76275747f,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -324,11 +330,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 671f12d8f6c7b6e4eb39b7b9534197ba, type: 2}
+      objectReference: {fileID: 2100000, guid: 6ba909c9a60a28b4e87c25de78d50506, type: 2}
     - target: {fileID: -927199367670048503, guid: e2a9ff74997779d4a9fd7fa76275747f,
         type: 3}
       propertyPath: m_Name
-      value: pod
+      value: Model
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e2a9ff74997779d4a9fd7fa76275747f, type: 3}
