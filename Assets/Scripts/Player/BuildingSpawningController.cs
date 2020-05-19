@@ -18,7 +18,6 @@ public class BuildingSpawningController : MonoBehaviour
     //Building fields
     private EBuilding selectedBuildingType;
     private Building heldBuilding;
-    //private Vector3 rawBuildingOffset;
     private Vector3 rawBuildingMovement;
 
     //Spawning bools
@@ -47,7 +46,7 @@ public class BuildingSpawningController : MonoBehaviour
     {
         if (Instance != null)
         {
-            Debug.LogError("There should never be more than one [CLASSNAME].");
+            Debug.LogError("There should never be more than one BuildingSpawningController.");
         }
 
         Instance = this;
@@ -59,18 +58,33 @@ public class BuildingSpawningController : MonoBehaviour
         selectedBuildingType = EBuilding.FusionReactor;
     }
 
+    /// <summary>
+    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
+    /// Start() runs after Awake().
+    /// </summary>
+    private void Start()
+    {
+        StartCoroutine(UpdateBuildingSpawning());
+    }
+
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
-    /// Update() is run every frame.
+    /// UpdateBuildingSpawning() acts as an Update() method for BuildingSpawningController that doesn't run on the first frame, but runs every frame after that.
     /// </summary>
-    private void Update()
+    private IEnumerator UpdateBuildingSpawning()
     {
-        GetInput();
-        CheckBuildingSpawning();
+        yield return null;
+
+        while (true)
+        {
+            GetInput();
+            CheckBuildingSpawning();
+            yield return null;
+        }
     }
 
-    //Recurring Methods (Update())------------------------------------------------------------------------------------------------------------------  
+    //Recurring Methods (UpdateBuildingSpawning())--------------------------------------------------------------------------------------------------- 
 
 
     /// <summary>

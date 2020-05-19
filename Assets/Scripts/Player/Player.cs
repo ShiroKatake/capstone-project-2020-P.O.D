@@ -25,8 +25,6 @@ public class Player : MonoBehaviour
 
     [Header("Player Inputs")]
     [SerializeField] private int playerID = 0;
-    [SerializeField] private Rewired.Player player;
-
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
@@ -49,6 +47,7 @@ public class Player : MonoBehaviour
     private float timeOfLastShot;
 
     //Other
+    private Rewired.Player player;
     private bool gameOver;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
