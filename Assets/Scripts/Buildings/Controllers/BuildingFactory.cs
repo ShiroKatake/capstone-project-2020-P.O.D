@@ -237,7 +237,6 @@ public class BuildingFactory : MonoBehaviour
         }
 
         building.Reset();
-        building.Collider.enabled = false;
         building.transform.position = objectPool.position;
         building.transform.parent = objectPool;
         buildings[building.BuildingType].Add(building);

@@ -30,21 +30,26 @@ public class Player : MonoBehaviour
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
+    //Components
+    private Health health;
+    private Rigidbody rigidbody;
+
     //Variables for moving & determining if rotation is necessary
     private Vector3 movement;
     private Vector3 previousMovement = Vector3.zero;
+    private float hoverHeight;
 
     //Variables for rotating smoothly
     private Quaternion newRotation;
     private Quaternion oldRotation;
     private float slerpProgress = 1;
 
-    private Rigidbody rigidbody;
-    private float hoverHeight;
-
     //Projectile Variables
     private bool shooting;
     private float timeOfLastShot;
+
+    //Other
+    private bool gameOver;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -81,9 +86,11 @@ public class Player : MonoBehaviour
         }
 
         Instance = this;
+        health = GetComponent<Health>();
         rigidbody = GetComponent<Rigidbody>();
         timeOfLastShot = shootCooldown * -1;
         hoverHeight = drone.position.y;
+        gameOver = false;
     }
 
     /// <summary>
@@ -136,9 +143,27 @@ public class Player : MonoBehaviour
     /// </summary>
     private void UpdateDrone()
     {
+        CheckHealth();
         Look();
         Move();
         CheckShooting();
+    }
+
+    /// <summary>
+    /// Checks the player's health and if they're still alive.
+    /// </summary>
+    private void CheckHealth()
+    {
+        if (health.IsDead())
+        {
+            Debug.Log("The player's health has reached 0. GAME OVER!!!");
+
+            if (!gameOver)
+            {
+                MessageBoard.Instance.Add(new Message(gameObject.name, gameObject.tag, "Dead", 3));
+                gameOver = true;
+            }
+        }
     }
 
     /// <summary>
@@ -162,10 +187,6 @@ public class Player : MonoBehaviour
             drone.transform.Translate(movement * movementSpeed * Time.deltaTime, Space.World);
             cameraTarget.transform.position = drone.transform.position;
         }
-        //else if (rigidbody.velocity != Vector3.zero)
-        //{
-        //    rigidbody.velocity = Vector3.zero;
-        //}
 
         //Toggle gravity if something has pushed the player up above hoverHeight
         if (rigidbody.useGravity)

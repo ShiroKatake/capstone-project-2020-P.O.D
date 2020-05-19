@@ -229,25 +229,7 @@ public class Building : MonoBehaviour, ICollisionListener
         {
             Debug.LogError("zSize is invalid. It needs to be between 1 and 3.");
         }
-
-        //CalculateOffsets();
     }
-
-    /// <summary>
-    /// Calculates the offset this building will need when being placed in any given direction relative to the player.
-    /// </summary>
-    //private void CalculateOffsets()
-    //{
-    //    offsets = new Dictionary<string, Vector3>();
-    //    offsets["N"]  = new Vector3( xSize == 2 ? 0.5f  : 0                       , 0, zSize == 1 ? 1f    : zSize == 2 ? 1.5f  : 2f  );
-    //    offsets["NE"] = new Vector3( xSize == 1 ? 1f    : xSize == 2 ? 1.5f  : 2f , 0, zSize == 1 ? 1f    : zSize == 2 ? 1.5f  : 2f  );
-    //    offsets["E"]  = new Vector3( xSize == 1 ? 1f    : xSize == 2 ? 1.5f  : 2f , 0, zSize == 2 ? -0.5f : 0                        );
-    //    offsets["SE"] = new Vector3( xSize == 1 ? 1f    : xSize == 2 ? 1.5f  : 2f , 0, zSize == 1 ? -1f   : zSize == 2 ? -1.5f : -2f );
-    //    offsets["S"]  = new Vector3( xSize == 2 ? -0.5f : 0                       , 0, zSize == 1 ? -1f   : zSize == 2 ? -1.5f : -2f );
-    //    offsets["SW"] = new Vector3( xSize == 1 ? -1f   : xSize == 2 ? -1.5f : -2f, 0, zSize == 1 ? -1f   : zSize == 2 ? -1.5f : -2f );
-    //    offsets["W"]  = new Vector3( xSize == 1 ? -1f   : xSize == 2 ? -1.5f : -2f, 0, zSize == 2 ? 0.5f  : 0                        );
-    //    offsets["NW"] = new Vector3( xSize == 1 ? -1f   : xSize == 2 ? -1.5f : -2f, 0, zSize == 1 ? 1f    : zSize == 2 ? 1.5f  : 2f  );
-    //}
 
     //Recurring Methods (Other)----------------------------------------------------------------------------------------------------------------------
 
@@ -305,46 +287,6 @@ public class Building : MonoBehaviour, ICollisionListener
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
     //Building Triggered Methods-------------------------------------------------------------------
-
-    /// <summary>
-    ///  Gets the offset appropriate at any angle for this building, given its xSize and zSize.
-    ///  <param name="angle">The player's rotation on the y-axis in degrees clockwise from due North.</param>
-    /// </summary>
-    //public Vector3 GetOffset(float angle)
-    //{
-    //    if (angle >= 337.5 || angle < 22.5)
-    //    {
-    //        return offsets["N"];
-    //    }
-    //    else if (angle < 67.5)
-    //    {
-    //        return offsets["NE"];
-    //    }
-    //    else if (angle < 112.5) 
-    //    {
-    //        return offsets["E"];
-    //    }
-    //    else if (angle < 157.5)
-    //    {
-    //        return offsets["SE"];
-    //    }
-    //    else if (angle < 202.5)
-    //    {
-    //        return offsets["S"];
-    //    }
-    //    else if (angle < 247.5)
-    //    {
-    //        return offsets["SW"];
-    //    }
-    //    else if (angle < 292.5)
-    //    {
-    //        return offsets["W"];
-    //    }
-    //    else
-    //    {
-    //        return offsets["NW"];
-    //    }
-    //}
 
     /// <summary>
     /// Checks if the building is colliding while being placed, and updates colour appropriately.
@@ -444,6 +386,11 @@ public class Building : MonoBehaviour, ICollisionListener
     /// </summary>
     public void Reset()
     {
+        if (buildingType == EBuilding.ShortRangeTurret || buildingType == EBuilding.LongRangeTurret)
+        {
+            MessageBoard.Instance.Add(new Message(gameObject.name, gameObject.tag, "Dead", 3));
+        }        
+
         StopCoroutine(Build());
         health.Reset();
         Operational = false;

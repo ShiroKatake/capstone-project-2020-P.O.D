@@ -39,7 +39,8 @@ public class Alien : MonoBehaviour
     private List<Transform> visibleTargets;
     [SerializeField] private Transform target;
     [SerializeField] private Health targetHealth;
-    [SerializeField] private Transform shotBy;
+    [SerializeField] private string shotByName;
+    [SerializeField] private Transform shotByTransform;
     private float timeOfLastAttack;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
@@ -55,11 +56,6 @@ public class Alien : MonoBehaviour
     /// Whether or not the alien is moving.
     /// </summary>
     public bool Moving { get => moving; set => moving = value; }
-
-    /// <summary>
-    /// The player or building the alien was shot by most recently.
-    /// </summary>
-    public Transform ShotBy { get => shotBy; set => shotBy = value; }
 
     //Complex Public Properties--------------------------------------------------------------------
 
@@ -154,40 +150,76 @@ public class Alien : MonoBehaviour
     /// </summary>
     private void SelectTarget()
     {
-        if (visibleTargets.Count > 0)
+        //Check shooter is alive
+        if (shotByTransform != null)
         {
-            if (shotBy != null && visibleTargets.Contains(shotBy))
+            foreach (Message msg in MessageBoard.Instance.Messages)
             {
-                target = shotBy;
-                targetHealth = target.GetComponentInParent<Health>();   //Gets Health from target or any of its parents that has it.
-                return;
-            }
-
-            float distance = 99999999999;
-            float closestDistance = 9999999999999999;
-            Transform closestTarget = null;
-
-            foreach (Transform t in visibleTargets)
-            {
-                distance = Vector3.Distance(transform.position, t.position);
-
-                if (closestTarget == null || distance < closestDistance)
+                if (msg.SenderName == shotByName && msg.MessageContents == "Dead")
                 {
-                    closestTarget = t;
-                    closestDistance = distance;
+                    shotByName = "";
+                    shotByTransform = null;
                 }
             }
-
-            if (target != closestTarget)
-            {
-                target = closestTarget;
-                targetHealth = target.GetComponentInParent<Health>();   //Gets Health from target or any of its parents that has it.
-            }
         }
-        else if (target != cryoEgg.transform)
+        else if (shotByName != "")
         {
-            target = cryoEgg.GetComponentInChildren<Collider>().transform;
-            targetHealth = cryoEgg.Health;
+            shotByName = "";
+        }
+
+        switch (visibleTargets.Count)
+        {
+            case 0:
+                //Target cryo egg
+                if (target != cryoEgg.transform)
+                {
+                    target = cryoEgg.GetComponentInChildren<Collider>().transform;
+                    targetHealth = cryoEgg.Health;
+                }
+
+                break;
+            case 1:
+                //Get only visible target
+                if (target != visibleTargets[0])
+                {
+                    target = visibleTargets[0];
+                    targetHealth = target.GetComponentInParent<Health>();   //Gets Health from target or any of its parents that has it.
+                }
+
+                break;
+            default:
+                //Prioritise shooter
+                if (shotByTransform != null && visibleTargets.Contains(shotByTransform))
+                {
+                    target = shotByTransform;
+                    targetHealth = target.GetComponentInParent<Health>();   //Gets Health from target or any of its parents that has it.
+                }
+                else
+                {
+                    //Get closest visible target
+                    float distance = 99999999999;
+                    float closestDistance = 9999999999999999;
+                    Transform closestTarget = null;
+
+                    foreach (Transform t in visibleTargets)
+                    {
+                        distance = Vector3.Distance(transform.position, t.position);
+
+                        if (closestTarget == null || distance < closestDistance)
+                        {
+                            closestTarget = t;
+                            closestDistance = distance;
+                        }
+                    }
+
+                    if (target != closestTarget)
+                    {
+                        target = closestTarget;
+                        targetHealth = target.GetComponentInParent<Health>();   //Gets Health from target or any of its parents that has it.
+                    }
+                }
+
+                break;
         }
     }
 
@@ -241,6 +273,22 @@ public class Alien : MonoBehaviour
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
+    /// Registers with an alien the name and transform of an entity that shot it.
+    /// </summary>
+    /// <param name="name">The name of the entity that shot the alien.</param>
+    /// <param name="transform">The transform of the entity that shot the alien.</param>
+    public void ShotBy(string name, Transform transform)
+    {
+        shotByName = name;
+        shotByTransform = transform;
+    }
+
+    /// <summary>
+    /// The transform of the player or building the alien was shot by most recently.
+    /// </summary>
+    public Transform ShotByTransform { get => shotByTransform; set => shotByTransform = value; }
+
+    /// <summary>
     /// OnCollisionStay is called once per frame for every collider/rigidbody that is touching rigidbody/collider.
     /// </summary>
     /// <param name="collision">The collision data associated with this event.</param>
@@ -281,7 +329,7 @@ public class Alien : MonoBehaviour
             {
                 Debug.Log("Alien.OnTriggerEnter; Alien hit by a projectile");
                 Projectile projectile = collider.GetComponent<Projectile>();
-                shotBy = projectile.Owner.GetComponentInChildren<Collider>().transform;
+                shotByTransform = projectile.Owner.GetComponentInChildren<Collider>().transform;
             }
         }
     }
