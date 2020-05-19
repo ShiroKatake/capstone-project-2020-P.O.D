@@ -5,13 +5,13 @@ using UnityEngine;
 /// <summary>
 /// Demo class for enemies.
 /// </summary>
-public class Enemy : MonoBehaviour
+public class Alien : MonoBehaviour
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
     //Serialized Fields----------------------------------------------------------------------------
 
-    [Header("Enemy Stats")] 
+    [Header("Alien Stats")] 
     [SerializeField] private int id;
     [SerializeField] private float speed;
     [SerializeField] private float turningSpeed;
@@ -19,43 +19,48 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float attackCooldown;
 
     //Non-Serialized Fields------------------------------------------------------------------------
-
+    [Header("Testing")]
+    //Componenets
     private Health health;
     private Rigidbody rigidbody;
 
+    //Movement
     private bool moving;
     private float groundHeight;
 
+    //Turning
+    private Quaternion oldRotation;
+    private Quaternion targetRotation;
+    private float slerpProgress;
+    
+    //Targeting
     private Building cryoEgg;
     private List<Transform> visibleAliens;
     private List<Transform> visibleTargets;
     [SerializeField] private Transform target;
     [SerializeField] private Health targetHealth;
-    private Transform shooter;
+    [SerializeField] private string shotByName;
+    [SerializeField] private Transform shotByTransform;
     private float timeOfLastAttack;
-
-    private Quaternion oldRotation;
-    private Quaternion targetRotation;
-    private float slerpProgress;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
     //Basic Public Properties----------------------------------------------------------------------
 
     /// <summary>
-    /// Enemy's Health component.
+    /// Alien's Health component.
     /// </summary>
     public Health Health { get => health; }
 
     /// <summary>
-    /// Whether or not the Enemy is moving.
+    /// Whether or not the alien is moving.
     /// </summary>
     public bool Moving { get => moving; set => moving = value; }
 
     //Complex Public Properties--------------------------------------------------------------------
 
     /// <summary>
-    /// Enemy's unique ID number. Id should only be set by Enemy.Setup().
+    /// Alien's unique ID number. Id should only be set by Alien.Setup().
     /// </summary>
     public int Id
     {
@@ -67,7 +72,7 @@ public class Enemy : MonoBehaviour
         set
         {
             id = value;
-            gameObject.name = $"Enemy {id}";
+            gameObject.name = $"Alien {id}";
         }
     }
 
@@ -91,18 +96,19 @@ public class Enemy : MonoBehaviour
     }
 
     /// <summary>
-    /// Prepares the Enemy to chase its targets when EnemyFactory puts it in the world. 
+    /// Prepares the Alien to chase its targets when AlienFactory puts it in the world. 
     /// </summary>
     public void Setup(int id)
     {
         Id = id;
         health.Reset();
-        target = cryoEgg.transform;
+        target = cryoEgg.GetComponentInChildren<Collider>().transform;
+        targetHealth = cryoEgg.Health;
         timeOfLastAttack = attackCooldown * -1;
 
         //Rotate to face the cryo egg
-        //Vector3 targetRotation = cryoEgg.transform.position - transform.position;
-        //transform.rotation = Quaternion.LookRotation(targetRotation);
+        Vector3 targetRotation = cryoEgg.transform.position - transform.position;
+        transform.rotation = Quaternion.LookRotation(targetRotation);
     }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
@@ -110,10 +116,10 @@ public class Enemy : MonoBehaviour
     /// <summary>
     /// Update() is run every frame.
     /// </summary>
-    private void Update()
-    {
+    //private void Update()
+    //{
         
-    }
+    //}
 
     /// <summary>
     /// FixedUpdate() is run at a fixed interval independant of framerate.
@@ -121,7 +127,6 @@ public class Enemy : MonoBehaviour
     private void FixedUpdate()
     {
         CheckHealth();
-        //TODO: swarm-based behaviour
         SelectTarget();
         Look();
         Move();
@@ -130,59 +135,91 @@ public class Enemy : MonoBehaviour
     //Recurring Methods (FixedUpdate())-------------------------------------------------------------------------------------------------------------  
 
     /// <summary>
-    /// Checks if Enemy has 0 health, destroying it if it has.
+    /// Checks if alien has 0 health, destroying it if it has.
     /// </summary>
     private void CheckHealth()
     {
         if (health.IsDead())
         {
-            EnemyFactory.Instance.DestroyEnemy(this);
+            AlienFactory.Instance.DestroyAlien(this);
         }
     }
 
     /// <summary>
-    /// Selects the most appropriate target for the enemy.
+    /// Selects the most appropriate target for the alien.
     /// </summary>
     private void SelectTarget()
     {
-        if (visibleTargets.Count > 0)
+        //Check shooter is alive
+        if (shotByTransform != null)
         {
-            float distance = 99999999999;
-            float closestDistance = 9999999999999999;
-            Transform closestTarget = null;
-
-            foreach (Transform t in visibleTargets)
+            foreach (Message msg in MessageBoard.Instance.Messages)
             {
-                distance = Vector3.Distance(transform.position, t.position);
-
-                if (closestTarget == null || distance < closestDistance)
+                if (msg.SenderName == shotByName && msg.MessageContents == "Dead")
                 {
-                    closestTarget = t;
-                    closestDistance = distance;
-                }
-            }
-
-            if (target != closestTarget)
-            {
-                target = closestTarget;
-                targetHealth = target.GetComponent<Health>();
-
-                while (targetHealth == null && target.parent != null)
-                {
-                    target = target.parent;
-                    targetHealth = target.GetComponent<Health>();
-                }
-
-                if (targetHealth == null)
-                {
-                    Debug.LogError($"Enemy.SelectTarget cannot find {target}'s Health component.");
+                    shotByName = "";
+                    shotByTransform = null;
                 }
             }
         }
-        else if (target != cryoEgg.transform)
+        else if (shotByName != "")
         {
-            target = cryoEgg.transform;
-            targetHealth = target.GetComponent<Health>();
+            shotByName = "";
+        }
+
+        switch (visibleTargets.Count)
+        {
+            case 0:
+                //Target cryo egg
+                if (target != cryoEgg.transform)
+                {
+                    target = cryoEgg.GetComponentInChildren<Collider>().transform;
+                    targetHealth = cryoEgg.Health;
+                }
+
+                break;
+            case 1:
+                //Get only visible target
+                if (target != visibleTargets[0])
+                {
+                    target = visibleTargets[0];
+                    targetHealth = target.GetComponentInParent<Health>();   //Gets Health from target or any of its parents that has it.
+                }
+
+                break;
+            default:
+                //Prioritise shooter
+                if (shotByTransform != null && visibleTargets.Contains(shotByTransform))
+                {
+                    target = shotByTransform;
+                    targetHealth = target.GetComponentInParent<Health>();   //Gets Health from target or any of its parents that has it.
+                }
+                else
+                {
+                    //Get closest visible target
+                    float distance = 99999999999;
+                    float closestDistance = 9999999999999999;
+                    Transform closestTarget = null;
+
+                    foreach (Transform t in visibleTargets)
+                    {
+                        distance = Vector3.Distance(transform.position, t.position);
+
+                        if (closestTarget == null || distance < closestDistance)
+                        {
+                            closestTarget = t;
+                            closestDistance = distance;
+                        }
+                    }
+
+                    if (target != closestTarget)
+                    {
+                        target = closestTarget;
+                        targetHealth = target.GetComponentInParent<Health>();   //Gets Health from target or any of its parents that has it.
+                    }
+                }
+
+                break;
         }
     }
 
@@ -191,11 +228,7 @@ public class Enemy : MonoBehaviour
     /// </summary>
     private void Look()
     {
-
-
-
-
-
+        //TODO: swarm-based looking behaviour
         Vector3 newRotation = target.position - transform.position;
 
         if (newRotation != targetRotation.eulerAngles)
@@ -213,13 +246,13 @@ public class Enemy : MonoBehaviour
     }
 
     /// <summary>
-    /// Moves Enemy.
+    /// Moves alien.
     /// </summary>
     private void Move()
     {
         transform.Translate(new Vector3(0, 0, speed * Time.fixedDeltaTime));
 
-        //Toggle gravity if something has pushed the enemy up above groundHeight
+        //Toggle gravity if something has pushed the alien up above groundHeight
         if (rigidbody.useGravity)
         {
             if (transform.position.y <= groundHeight)
@@ -230,7 +263,7 @@ public class Enemy : MonoBehaviour
         }
         else
         {
-            if (transform.position.y > groundHeight)   //TODO: account for terrain pushing the enemy up, if it can move up hills?
+            if (transform.position.y > groundHeight)   //TODO: account for terrain pushing the alien up, if it can move up hills?
             {
                 rigidbody.useGravity = true;
             }
@@ -240,6 +273,22 @@ public class Enemy : MonoBehaviour
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
+    /// Registers with an alien the name and transform of an entity that shot it.
+    /// </summary>
+    /// <param name="name">The name of the entity that shot the alien.</param>
+    /// <param name="transform">The transform of the entity that shot the alien.</param>
+    public void ShotBy(string name, Transform transform)
+    {
+        shotByName = name;
+        shotByTransform = transform;
+    }
+
+    /// <summary>
+    /// The transform of the player or building the alien was shot by most recently.
+    /// </summary>
+    public Transform ShotByTransform { get => shotByTransform; set => shotByTransform = value; }
+
+    /// <summary>
     /// OnCollisionStay is called once per frame for every collider/rigidbody that is touching rigidbody/collider.
     /// </summary>
     /// <param name="collision">The collision data associated with this event.</param>
@@ -247,22 +296,13 @@ public class Enemy : MonoBehaviour
     {
         if (!collision.collider.isTrigger && (collision.collider.CompareTag("Building") || collision.collider.CompareTag("Player")))
         {
-            //Debug.Log($"Enemy.OnCollisionStay, non-trigger targetable. Collider: {collision.collider.gameObject}, target: {target.gameObject}, time: {Time.time}, timeOfLastAttack: {timeOfLastAttack}, attack cooldown: {attackCooldown}");
             if (Time.time - timeOfLastAttack > attackCooldown)
             {
-                Transform temp = collision.collider.transform;
-
-
-                if (temp.gameObject.GetComponent<Health>() == null)
-                {
-                    //TODO: damage targetHealth; when finding target health, keep target as the transform with the solid collider, but make targetHealth the health component somewhere in its hierarchy.
-                }
-                //Debug.Log($"Enemy Attack on {target.gameObject}");
                 timeOfLastAttack = Time.time;
-                //targetHealth.Value -= damage;
+                targetHealth.Value -= damage;
             }
         }
-        //TODO: else if the colliding thing is a laser bolt, target the shooter
+        //TODO: if made contact with target and target is a building, step back a smidge and attack, so that OnCollisionStay is not called every single frame. For player, check if within attack range to verify that the alien can still attack them?
     }
 
     /// <summary>
@@ -273,7 +313,7 @@ public class Enemy : MonoBehaviour
     {
         if (!collider.isTrigger)
         {
-            if (collider.CompareTag("Enemy"))
+            if (collider.CompareTag("Alien"))
             {
                 visibleAliens.Add(collider.transform);
             }
@@ -284,6 +324,12 @@ public class Enemy : MonoBehaviour
             else if (collider.CompareTag("Player"))
             {
                 visibleTargets.Add(collider.transform);
+            }
+            else if (collider.CompareTag("Projectile"))
+            {
+                Debug.Log("Alien.OnTriggerEnter; Alien hit by a projectile");
+                Projectile projectile = collider.GetComponent<Projectile>();
+                shotByTransform = projectile.Owner.GetComponentInChildren<Collider>().transform;
             }
         }
     }
@@ -309,6 +355,4 @@ public class Enemy : MonoBehaviour
             }
         }
     }
-
-    //TODO: if collides with and damaged by a laser bolt, target the shooter if visible.
 }

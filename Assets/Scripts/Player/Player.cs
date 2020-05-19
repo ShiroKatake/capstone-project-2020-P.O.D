@@ -13,50 +13,44 @@ public class Player : MonoBehaviour
 
     [Header("Player Objects")]
     [SerializeField] private Transform drone;
-    //[SerializeField] private Transform droneModel;
     [SerializeField] private Camera camera;
     [SerializeField] private Transform cameraTarget;
     [SerializeField] private Transform terraformerHoldPoint;
     [SerializeField] private Transform laserCannonTip;
-    [SerializeField] private Transform laserBatteryPoint;
-
-    [Header("Prefabs")]
-    [SerializeField] private LaserBolt laserBoltPrefab;
 
     [Header("Player Stats")]
     [SerializeField] private float movementSpeed;
     [SerializeField] private float rotationSpeed;
-    [SerializeField] private int laserBatteryCapacity;
     [SerializeField] private float shootCooldown;
 
     [Header("Player Inputs")]
     [SerializeField] private int playerID = 0;
-    [SerializeField] private Rewired.Player player;
-
 
     //Non-Serialized Fields------------------------------------------------------------------------
+
+    //Components
+    private Health health;
+    private Rigidbody rigidbody;
 
     //Variables for moving & determining if rotation is necessary
     private Vector3 movement;
     private Vector3 previousMovement = Vector3.zero;
+    private float hoverHeight;
 
     //Variables for rotating smoothly
     private Quaternion newRotation;
     private Quaternion oldRotation;
     private float slerpProgress = 1;
 
-    private Rigidbody rigidbody;
-    private float hoverHeight;
-
-    //Laser Bolt Variables
+    //Projectile Variables
     private bool shooting;
     private float timeOfLastShot;
-    private List<LaserBolt> laserBattery = new List<LaserBolt>();
+
+    //Other
+    private Rewired.Player player;
+    private bool gameOver;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
-
-    public float GetMovementSpeed {get => movementSpeed;}
-    public Rewired.Player GetRewiredPlayer {get => player;}
 
     //Singleton Public Property--------------------------------------------------------------------
 
@@ -68,14 +62,14 @@ public class Player : MonoBehaviour
     //Basic Public Properties----------------------------------------------------------------------
 
     /// <summary>
-    /// A pool for laser bolts that aren't in use.
+    /// POD's movement speed.
     /// </summary>
-    public List<LaserBolt> LaserBattery { get => laserBattery; }
+    public float MovementSpeed { get => movementSpeed; }
 
     /// <summary>
-    /// The physical location of the pool of laser bolts in-scene.
+    /// POD's Rewired.Player.
     /// </summary>
-    public Transform LaserBatteryPoint { get => laserBatteryPoint; }
+    public Rewired.Player RewiredPlayer { get => player; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -91,24 +85,21 @@ public class Player : MonoBehaviour
         }
 
         Instance = this;
-
-        for (int i = 0; i < laserBatteryCapacity; i++)
-        {
-            LaserBolt l = Instantiate<LaserBolt>(laserBoltPrefab, laserBatteryPoint.position, laserBoltPrefab.transform.rotation);
-            l.transform.parent = laserBatteryPoint;
-            laserBattery.Add(l);
-        }
-
-        timeOfLastShot = shootCooldown * -1;
+        health = GetComponent<Health>();
         rigidbody = GetComponent<Rigidbody>();
+        timeOfLastShot = shootCooldown * -1;
         hoverHeight = drone.position.y;
+        gameOver = false;
     }
 
+    /// <summary>
+    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
+    /// Start() runs after Awake().
+    /// </summary>
     void Start()
     {
         player = ReInput.players.GetPlayer(playerID);
     }
-
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -141,6 +132,7 @@ public class Player : MonoBehaviour
 
         movement = new Vector3(moveHorizontal, 0, -moveVertical);
         shooting = InputController.Instance.ButtonHeld("Shoot");
+        //Debug.Log($"Movement input: {movement}");
     }
 
     //Recurring Methods (FixedUpdate())--------------------------------------------------------------------------------------------------------------
@@ -150,9 +142,27 @@ public class Player : MonoBehaviour
     /// </summary>
     private void UpdateDrone()
     {
+        CheckHealth();
         Look();
         Move();
         CheckShooting();
+    }
+
+    /// <summary>
+    /// Checks the player's health and if they're still alive.
+    /// </summary>
+    private void CheckHealth()
+    {
+        if (health.IsDead())
+        {
+            Debug.Log("The player's health has reached 0. GAME OVER!!!");
+
+            if (!gameOver)
+            {
+                MessageBoard.Instance.Add(new Message(gameObject.name, gameObject.tag, "Dead", 3));
+                gameOver = true;
+            }
+        }
     }
 
     /// <summary>
@@ -160,31 +170,10 @@ public class Player : MonoBehaviour
     /// </summary>
     private void Look()
     {
-        /*
-        //Player wants to move in a new direction? Update Slerp variables.
-        if (movement != previousMovement)
-        {
-            slerpProgress = 0;
-            oldRotation = drone.transform.rotation;
-            //newRotation = Quaternion.LookRotation(movement);
-            //newRotation = Quaternion.LookRotation(ReInput.controllers.Mouse.screenPosition);
-            //newRotation = Quaternion.LookRotation(MousePositionOnTerrain.Instance.GetWorldPosition);
-            //print("World Position from Player: " + MousePositionOnTerrain.Instance.GetWorldPosition);
-            drone.transform.LookAt(MousePositionOnTerrain.Instance.GetWorldPosition);
-        }
-
-        //Still turning? Rotate towards direction player wants to move in, but smoothly.
-        /*if (slerpProgress < 1 && movement != Vector3.zero)
-        {
-            rigidbody.velocity = movement;
-        }
-        else if (slerpProgress < 1)
-        {
-            slerpProgress = Mathf.Min(1, slerpProgress + rotationSpeed * Time.deltaTime);
-            drone.transform.rotation = Quaternion.Slerp(oldRotation, newRotation, slerpProgress);
-        }*/
+        //Vector3 mousePos = MousePositionOnTerrain.Instance.GetWorldPosition;
+        //Vector3 lookAtPos = new Vector3(mousePos.x, drone.transform.position.y, mousePos.z);
+        //drone.transform.LookAt(lookAtPos);
         drone.transform.LookAt(MousePositionOnTerrain.Instance.GetWorldPosition);
-
     }
 
     /// <summary>
@@ -220,34 +209,15 @@ public class Player : MonoBehaviour
     }
 
     /// <summary>
-    /// Checks if the player wants to shoot based on their input, and fires laser bolts if they do.
+    /// Checks if the player wants to shoot based on their input, and fires projectiles if they do.
     /// </summary>
     private void CheckShooting()
     {
-        if (shooting && laserBattery.Count > 0 && Time.time - timeOfLastShot > shootCooldown)
+        if (shooting && Time.time - timeOfLastShot > shootCooldown)
         {
             timeOfLastShot = Time.time;
-            LaserBolt laserBolt = laserBattery[0];
-            laserBattery.Remove(laserBolt);
-            laserBolt.transform.parent = null;
-            laserBolt.transform.position = laserCannonTip.position;
-            laserBolt.Shoot((transform.forward * 2 - transform.up).normalized);
+            Projectile projectile = ProjectileFactory.Instance.GetProjectile(transform, laserCannonTip.position);
+            projectile.Shoot((transform.forward * 2 - transform.up).normalized);
         }
-    }
-
-    //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
-
-    /// <summary>
-    /// Handles the destruction of laser bolts.
-    /// </summary>
-    /// <param name="laserBolt">The laser bolt to destroy.</param>
-    public void DestroyLaserBolt(LaserBolt laserBolt)
-    {
-        laserBolt.Active = false;
-        laserBolt.Collider.enabled = false;
-        laserBolt.Rigidbody.isKinematic = true;
-        laserBolt.transform.position = laserBatteryPoint.position;
-        laserBolt.transform.parent = laserBatteryPoint;
-        laserBattery.Add(laserBolt);
     }
 }

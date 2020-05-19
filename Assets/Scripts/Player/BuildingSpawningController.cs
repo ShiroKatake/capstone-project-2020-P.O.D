@@ -18,7 +18,6 @@ public class BuildingSpawningController : MonoBehaviour
     //Building fields
     private EBuilding selectedBuildingType;
     private Building heldBuilding;
-    private Vector3 rawBuildingOffset;
     private Vector3 rawBuildingMovement;
 
     //Spawning bools
@@ -47,7 +46,7 @@ public class BuildingSpawningController : MonoBehaviour
     {
         if (Instance != null)
         {
-            Debug.LogError("There should never be more than one [CLASSNAME].");
+            Debug.LogError("There should never be more than one BuildingSpawningController.");
         }
 
         Instance = this;
@@ -59,18 +58,33 @@ public class BuildingSpawningController : MonoBehaviour
         selectedBuildingType = EBuilding.FusionReactor;
     }
 
+    /// <summary>
+    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
+    /// Start() runs after Awake().
+    /// </summary>
+    private void Start()
+    {
+        StartCoroutine(UpdateBuildingSpawning());
+    }
+
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
-    /// Update() is run every frame.
+    /// UpdateBuildingSpawning() acts as an Update() method for BuildingSpawningController that doesn't run on the first frame, but runs every frame after that.
     /// </summary>
-    private void Update()
+    private IEnumerator UpdateBuildingSpawning()
     {
-        GetInput();
-        CheckBuildingSpawning();
+        yield return null;
+
+        while (true)
+        {
+            GetInput();
+            CheckBuildingSpawning();
+            yield return null;
+        }
     }
 
-    //Recurring Methods (Update())------------------------------------------------------------------------------------------------------------------  
+    //Recurring Methods (UpdateBuildingSpawning())--------------------------------------------------------------------------------------------------- 
 
 
     /// <summary>
@@ -118,11 +132,11 @@ public class BuildingSpawningController : MonoBehaviour
 
                 if (InputController.Instance.Gamepad == EGamepad.MouseAndKeyboard)
                 {
-                    heldBuilding.transform.position = MousePositionToBuildingPosition(transform.position + heldBuilding.GetOffset(transform.rotation.eulerAngles.y), heldBuilding.XSize, heldBuilding.ZSize);
+                    heldBuilding.transform.position = MousePositionToBuildingPosition(transform.position/* + heldBuilding.GetOffset(transform.rotation.eulerAngles.y)*/, heldBuilding.XSize, heldBuilding.ZSize);
                 }
                 else
                 {
-                    rawBuildingOffset = heldBuilding.GetOffset(transform.rotation.eulerAngles.y);
+                    //rawBuildingOffset = heldBuilding.GetOffset(transform.rotation.eulerAngles.y);
                     heldBuilding.transform.position = RawBuildingPositionToBuildingPosition(heldBuilding.XSize, heldBuilding.ZSize);
                 }
 
@@ -162,7 +176,7 @@ public class BuildingSpawningController : MonoBehaviour
             bool collision = heldBuilding.CollisionUpdate();
 
             //Place it or cancel building it
-            if (placeBuilding && ResourceController.Instance.Ore >= heldBuilding.OreCost && !collision)
+            if (placeBuilding && ResourceController.Instance.Ore >= heldBuilding.OreCost && !collision && MapController.Instance.PositionAvailableForBuilding(heldBuilding))
             {              
                 Vector3 spawnPos = heldBuilding.transform.position;
                 spawnPos.y = 0.02f;
@@ -175,7 +189,7 @@ public class BuildingSpawningController : MonoBehaviour
                 placeBuilding = false;
                 cancelBuilding = false;
             }
-            else if (cancelBuilding || (placeBuilding && (collision || ResourceController.Instance.Ore < heldBuilding.OreCost)))
+            else if (cancelBuilding || (placeBuilding && (ResourceController.Instance.Ore < heldBuilding.OreCost || collision || !MapController.Instance.PositionAvailableForBuilding(heldBuilding))))
             {
                 if (placeBuilding)
                 {
@@ -188,6 +202,11 @@ public class BuildingSpawningController : MonoBehaviour
                     {
                         Debug.Log("You cannot place a building there; it would occupy the same space as something else.");
                     }
+                    else if (!MapController.Instance.PositionAvailableForBuilding(heldBuilding))
+                    {
+                        Debug.Log("You cannot place a building there; it would either occupy the same space as something else, or exceed the bounds of the map.");
+                    }
+
                 }
 
                 BuildingFactory.Instance.DestroyBuilding(heldBuilding, false, false);
@@ -227,14 +246,14 @@ public class BuildingSpawningController : MonoBehaviour
     /// <returns>Snapped-to-grid building position.</returns>
     private Vector3 RawBuildingPositionToBuildingPosition(int xSize, int zSize)
     {
-        Vector3 worldPos = transform.position + rawBuildingOffset;
-        Vector3 newOffset = rawBuildingOffset + rawBuildingMovement * Player.Instance.GetMovementSpeed * Time.deltaTime;
+        Vector3 worldPos = transform.position;// + rawBuildingOffset;
+        Vector3 newOffset = /*rawBuildingOffset +*/ rawBuildingMovement * Player.Instance.MovementSpeed * Time.deltaTime;
         Vector3 newWorldPos = transform.position + newOffset;
         Vector3 newScreenPos = Camera.main.WorldToViewportPoint(newWorldPos);
 
         if (newScreenPos.x > 0 && newScreenPos.x < 1 && newScreenPos.y > 0 && newScreenPos.y < 1)
         {
-            rawBuildingOffset = newOffset;
+            //rawBuildingOffset = newOffset;
             worldPos = newWorldPos;
         }
 
