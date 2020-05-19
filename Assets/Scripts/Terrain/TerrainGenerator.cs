@@ -38,7 +38,13 @@ public class TerrainGenerator : MonoBehaviour
                 if ((heightCentre - pos).magnitude < centreFlatRadius) {
                     height = curve.Evaluate(0.5f);
                 }
-                else {
+                else if ((heightCentre - pos).magnitude < centreFlatRadius + 30) {
+                    float delt = (heightCentre - pos).magnitude - centreFlatRadius;
+                    float noiseVal = Mathf.PerlinNoise((float)xx * noiseScale + 0.1f, (float)yy * noiseScale + 0.1f);
+
+                    height = Mathf.Max(curve.Evaluate(0.5f - delt/60f), curve.Evaluate(noiseVal));
+
+                } else {
                     height = Mathf.PerlinNoise((float)xx * noiseScale + 0.1f, (float)yy * noiseScale + 0.1f);
                     height = curve.Evaluate(height);
 

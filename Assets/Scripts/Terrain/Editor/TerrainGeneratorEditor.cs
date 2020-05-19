@@ -11,9 +11,9 @@ public class TerrainGeneratorEditor : Editor
     AnimationCurve curve = new AnimationCurve();
 
     static int layers = 3;
-    static float smoothness = 0.01f;
+    static float smoothness = 0.05f;
 
-    static float noiseScale = 2f/100f;
+    static float noiseScale = 6f/1000f;
     static float centreFlatRadius = 50;
 
     Texture2D heightTex;
@@ -29,48 +29,32 @@ public class TerrainGeneratorEditor : Editor
         TerrainGenerator script = (TerrainGenerator)target;
 
         float[,] heightmap = new float[0,0];
-
+        GUILayout.BeginHorizontal();
         if (GUILayout.Button("Generate Scripted Heightmap")) {
             RedoCurve();
             heightmap = script.GenerateHeightmap(curve, noiseScale, centreFlatRadius);
             script.SetHeightmap(heightmap);
             //script.GenerateTerrain(curve, noiseScale, centreFlatRadius);
             this.RedoHeightTexture(heightmap);
-            /*tex = new Texture2D(2, 2);
-            tex.name = "newtex";
-            tex.hideFlags = HideFlags.HideAndDontSave;
-            //tex.
-            tex.SetPixel(0, 0, new Color(1,1,1,1));*/
 
-            //tex.SetPixel(0, 0, Color.black);
-            //tex.SetPixel(0, 1, Color.red);
-
-            //tex.SetPixel(1, 1, Color.blue);
 
         }
-        //if (heightmap.GetLength(0) > 0 )
-        //RedoHeightTexture(heightmap);
+        if (GUILayout.Button("Generate Manual Heightmap")) {
+            //RedoCurve();
+            heightmap = script.GenerateHeightmap(curve, noiseScale, centreFlatRadius);
+            script.SetHeightmap(heightmap);
+            //script.GenerateTerrain(curve, noiseScale, centreFlatRadius);
+            this.RedoHeightTexture(heightmap);
 
-        var curveField = EditorGUI.CurveField(new Rect(10,35,rightEdge,100), curve);
+
+        }
+        GUILayout.EndHorizontal();
+
+
+        curve = EditorGUI.CurveField(new Rect(10,35,rightEdge,100), curve);
         Material mat = new Material(Shader.Find("Unlit/Texture"));
         mat.hideFlags = HideFlags.HideAndDontSave;
-        //script.hei
-        //if (heightTex)
-            //EditorGUI.DrawPreviewTexture(new Rect(10, 140, rightEdge, 100), heightTex, mat, ScaleMode.ScaleToFit, 0, -1, UnityEngine.Rendering.ColorWriteMask.All);
-          //  EditorGUI.DrawPreviewTexture(new Rect(10, 140, rightEdge, 100), heightTex);
-
-
-
-
-        //Texture2D texw = EditorGUIUtility.whiteTexture;
-        //texw.SetPixel(1, 0, Color.green);
-
-        /*if (tex) {
-            Rect outline = new Rect(10, 140, rightEdge, 100);
-            //EditorGUI.DrawPreviewTexture(outline, tex);
-            GUI.DrawTexture(outline, tex);
-        }*/
-
+        
 
         EditorGUILayout.Space(220);
 
@@ -97,19 +81,41 @@ public class TerrainGeneratorEditor : Editor
         curve.AddKey(0, 0);
 
         for (int i = 0; i < layers - 1; i++) {
-            Keyframe frame = new Keyframe((i + 1) * tSeperation - smoothVal, (i) * oDelta);
-            Keyframe frameUpper = new Keyframe((i + 1) * tSeperation + smoothVal, (i + 1) * oDelta);
 
-            curve.AddKey(frame);
-            curve.AddKey(frameUpper);
+            Vector2 leadInV = new Vector2((i + 1) * tSeperation - smoothVal * 4, (i) * oDelta);
+            Vector2 lowerSmoothV = new Vector2((i + 1) * tSeperation - smoothVal, (i) * oDelta + smoothVal * 4);
+            float inTangent = (lowerSmoothV.y - leadInV.y) / (lowerSmoothV.x - leadInV.x);
+            Vector2 upperSmoothV = new Vector2((i + 1) * tSeperation + smoothVal, (i + 1) * oDelta - smoothVal * 4);
+            float rampTangent = (lowerSmoothV.y - upperSmoothV.y) / (lowerSmoothV.x - upperSmoothV.x);
+            Vector2 leadOutV = new Vector2((i + 1) * tSeperation + smoothVal * 4, (i + 1) * oDelta);
+            float outTangent = (upperSmoothV.y - leadOutV.y) / (upperSmoothV.x - leadOutV.x);
+
+            Keyframe leadInF = new Keyframe(leadInV.x, leadInV.y, 0, inTangent/2);
+            Keyframe lowerSmoothF = new Keyframe(lowerSmoothV.x, lowerSmoothV.y, inTangent * 2, rampTangent);
+            Keyframe upperSmoothF = new Keyframe(upperSmoothV.x, upperSmoothV.y, rampTangent, outTangent * 2);
+            Keyframe leadOutF = new Keyframe(leadOutV.x, leadOutV.y, outTangent/2, 0);
+
+            curve.AddKey(leadInF);
+            curve.AddKey(lowerSmoothF);
+            curve.AddKey(upperSmoothF);
+            curve.AddKey(leadOutF);
+
+            /*Keyframe frame = new Keyframe((i + 1) * tSeperation - smoothVal * 4, (i) * oDelta, 0, 0);
+            Keyframe f = new Keyframe((i + 1) * tSeperation - smoothVal * 2, (i) * oDelta + smoothVal);
+            Keyframe frameUpper = new Keyframe((i + 1) * tSeperation + smoothVal * 2, (i + 1) * oDelta);
+            */
+            /*curve.AddKey(frame);
+            curve.AddKey(f);
+            curve.AddKey(frameUpper);*/
         }
-
         curve.AddKey(1, 1);
+        AnimationUtility.SetKeyRightTangentMode(curve, curve.keys.Length - 2, AnimationUtility.TangentMode.Linear);
+        
 
-        for (int i = 0; i < curve.keys.Length; i++) {
-            AnimationUtility.SetKeyLeftTangentMode(curve, i, AnimationUtility.TangentMode.Linear);
-            AnimationUtility.SetKeyRightTangentMode(curve, i, AnimationUtility.TangentMode.Linear);
-        }
+        /*for (int i = 0; i < curve.keys.Length; i++) {
+            AnimationUtility.SetKeyLeftTangentMode(curve, i, AnimationUtility.TangentMode.Free);
+            AnimationUtility.SetKeyRightTangentMode(curve, i, AnimationUtility.TangentMode.Free);
+        }*/
        
     }
 
