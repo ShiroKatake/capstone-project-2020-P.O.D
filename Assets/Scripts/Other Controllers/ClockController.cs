@@ -26,8 +26,8 @@ public class ClockController : MonoBehaviour
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
     private bool daytime;
-    private float time12hr;
-    private float time24hr;
+	[SerializeField] private float time12hr;
+    [SerializeField] private float time24hr;
     private float halfCycleDuration;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------

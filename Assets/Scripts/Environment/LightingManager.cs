@@ -2,24 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[ExecuteAlways]
 public class LightingManager : MonoBehaviour {
 	//References
 	[SerializeField] private Light directionalLight;
 	[SerializeField] private LightingPreset preset;
 	//Variables
-	[SerializeField, Range(0, 24)] private float timeOfDay;
 
 	// Update is called once per frame
 	private void Update() {
+		float cycleDuration = ClockController.Instance.CycleDuration;
 		if (preset == null)
 			return;
-		if (Application.isPlaying) {
-			timeOfDay += Time.deltaTime;
-			timeOfDay %= 24;
-			UpdateLighting(timeOfDay / 24f);
-		} else {
-			UpdateLighting(timeOfDay / 24f);
-		}
+		UpdateLighting(ClockController.Instance.Time24hr / cycleDuration);
 	}
 
 	private void UpdateLighting(float timePercent) {

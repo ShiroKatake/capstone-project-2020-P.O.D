@@ -15,16 +15,16 @@ RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
   m_Fog: 0
-  m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  m_FogColor: {r: 1, g: 1, b: 1, a: 1}
   m_FogMode: 3
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
+  m_AmbientSkyColor: {r: 0, g: 0.25325426, b: 0.6981132, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
-  m_AmbientMode: 0
+  m_AmbientMode: 3
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
   m_HaloStrength: 0.5
@@ -25773,7 +25773,7 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
+  m_Color: {r: 0.64784944, g: 0.64784944, b: 0.64784944, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
@@ -25830,7 +25830,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 705507993}
-  m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
+  m_LocalRotation: {x: -0.057142224, y: 0.7522064, z: 0.65313816, w: 0.06580958}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -36052,8 +36052,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UIBackground: {fileID: 539848120}
   UIForeground: {fileID: 1123481001}
-  enemyAttackBackground: {r: 0.55, g: 0, b: 0, a: 1}
-  enemyAttackForeground: {r: 1, g: 0, b: 0, a: 1}
+  alienAttackBackground: {r: 0, g: 0, b: 0, a: 0}
+  alienAttackForeground: {r: 0, g: 0, b: 0, a: 0}
   backgroundDay: {r: 0.3239216, g: 0.5139394, b: 0.54901963, a: 1}
   backgroundNight: {r: 0.1801961, g: 0.16941176, b: 0.3764706, a: 1}
   foregroundDay: {r: 0.5882353, g: 0.9568628, b: 1, a: 1}
@@ -70740,6 +70740,71 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2006130089}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &2009600146
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2009600147}
+  - component: {fileID: 2009600149}
+  - component: {fileID: 2009600148}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2009600147
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2009600146}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.6611955, y: 0.17134714, z: 2.7717838}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2009600148
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2009600146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c726ccb10547304cb13fd02b274303e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cycleDuration: 30
+  clockTimer: {fileID: 2023005697}
+  clockBackground: {fileID: 1797608033}
+  day: {r: 0.5882353, g: 0.95686275, b: 1, a: 1}
+  night: {r: 0.019607844, g: 0, b: 0.3764706, a: 1}
+  time12hr: 0
+  time24hr: 0
+--- !u!114 &2009600149
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2009600146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 038dffc0c0664b349952d8f97dfb18b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  directionalLight: {fileID: 705507994}
+  preset: {fileID: 11400000, guid: 62135e1be438def43b8dd884e79d8cfb, type: 2}
 --- !u!1 &2019382893
 GameObject:
   m_ObjectHideFlags: 0
@@ -76031,11 +76096,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64d26ee46564e794bb09926597f60c54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clock: {fileID: 2023005697}
-  clockBG: {fileID: 1797608033}
-  day: {r: 0.5882353, g: 0.9568628, b: 1, a: 1}
-  night: {r: 0.019607844, g: 0, b: 0.37647063, a: 1}
-  timmerSpeed: 0.001
 --- !u!1001 &880952307262742035
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -76185,6 +76245,11 @@ PrefabInstance:
       propertyPath: camera
       value: 
       objectReference: {fileID: 963194227}
+    - target: {fileID: 948949189687773384, guid: 9620c728b220f2e47adbd85dd9ac4899,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8337738344923657292, guid: 9620c728b220f2e47adbd85dd9ac4899,
         type: 3}
       propertyPath: enemyPoolParent
