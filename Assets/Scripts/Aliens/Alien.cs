@@ -322,26 +322,26 @@ public class Alien : MonoBehaviour
     /// When a GameObject collides with another GameObject, Unity calls OnTriggerEnter.
     /// </summary>
     /// <param name="other">The other Collider involved in this collision.</param>
-    private void OnTriggerEnter(Collider collider)
+    private void OnTriggerEnter(Collider other)
     {
-        if (!collider.isTrigger)
+        if (!other.isTrigger)
         {
-            if (collider.CompareTag("Alien"))
+            if (other.CompareTag("Alien"))
             {
-                visibleAliens.Add(collider.transform);
+                visibleAliens.Add(other.transform);
             }
-            else if (collider.CompareTag("Building"))
+            else if (other.CompareTag("Building"))
             {
-                visibleTargets.Add(collider.transform.parent);
+                visibleTargets.Add(other.transform.parent);
             }
-            else if (collider.CompareTag("Player"))
+            else if (other.CompareTag("Player"))
             {
-                visibleTargets.Add(collider.transform);
+                visibleTargets.Add(other.transform);
             }
-            else if (collider.CompareTag("Projectile"))
+            else if (other.CompareTag("Projectile"))
             {
                 Debug.Log("Alien.OnTriggerEnter; Alien hit by a projectile");
-                Projectile projectile = collider.GetComponent<Projectile>();
+                Projectile projectile = other.GetComponent<Projectile>();
                 shotByTransform = projectile.Owner.GetComponentInChildren<Collider>().transform;
             }
         }
@@ -351,19 +351,19 @@ public class Alien : MonoBehaviour
     /// OnTriggerExit is called when the Collider other has stopped touching the trigger.
     /// </summary>
     /// <param name="other">The other Collider involved in this collision.</param>
-    private void OnTriggerExit(Collider collider)
+    private void OnTriggerExit(Collider other)
     {
-        if (!collider.isTrigger)
+        if (!other.isTrigger)
         {
-            if (visibleAliens.Contains(collider.transform))
+            if (visibleAliens.Contains(other.transform))
             {
-                visibleAliens.Remove(collider.transform);
+                visibleAliens.Remove(other.transform);
                 return;
             }
 
-            if (visibleTargets.Contains(collider.transform))
+            if (visibleTargets.Contains(other.transform))
             {
-                visibleTargets.Remove(collider.transform);
+                visibleTargets.Remove(other.transform);
                 //return;
             }
         }
