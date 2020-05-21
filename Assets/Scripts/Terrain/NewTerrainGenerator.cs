@@ -19,7 +19,7 @@ public class NewTerrainGenerator : MonoBehaviour
     float[,] heights;
     List<Vector3> edgePoints;
     List<Line> lines;
-    List<Vector3> cubes;
+    List<(Vector3,Vector3)> cubes;
     private int heightRes;
     private float yScale = 3;
 
@@ -45,7 +45,7 @@ public class NewTerrainGenerator : MonoBehaviour
 
         List<Vector3> verts = new List<Vector3>();
         List<int> indices = new List<int>();
-        cubes = new List<Vector3>();
+        cubes = new List<(Vector3,Vector3)>();
 
         // Number of layers to check
         int layers = (int)Mathf.Log(heightRes - 1, 2) + 1;
@@ -67,10 +67,11 @@ public class NewTerrainGenerator : MonoBehaviour
 
                     quadStartX = xx * layerSize;
                     quadStartY = yy * layerSize;
+
                     bool isFilled = false;
-                    foreach (var field in filledQuads) {
-                        if (quadStartX >= field.Item1.Item1 && quadStartX + layerSize <= field.Item2.Item1) {
-                            if (quadStartY >= field.Item1.Item2 && quadStartY  + layerSize <= field.Item2.Item2) {
+                    foreach (var filled in filledQuads) {
+                        if (quadStartX >= filled.Item1.Item1 && quadStartX + layerSize <= filled.Item2.Item1) {
+                            if (quadStartY >= filled.Item1.Item2 && quadStartY  + layerSize <= filled.Item2.Item2) {
                                 isFilled = true;
                                 break;
                             }
@@ -85,6 +86,7 @@ public class NewTerrainGenerator : MonoBehaviour
                             int indexLength = verts.Count;
 
                             filledQuads.Add(((quadStartX, quadStartY), (quadStartX + layerSize, quadStartY + layerSize)));
+                            cubes.Add((new Vector3(quadStartX + layerSize / 2f, -1, quadStartY + layerSize / 2f), new Vector3(layerSize,0.1f,layerSize)));
 
                             verts.Add(new Vector3(quadStartX, heights[quadStartX, quadStartY] * yScale, quadStartY));
                             verts.Add(new Vector3(quadStartX + layerSize, heights[quadStartX + layerSize, quadStartY] * yScale, quadStartY));
@@ -103,7 +105,7 @@ public class NewTerrainGenerator : MonoBehaviour
                         }
 
                         /* SHOULD ONLY BE TRIGGERED AT SMALLEST CHUNK SIZE */
-                        if (!isPlane) {
+                        if (!isPlane && layerSize == 1) {
                             float[] corners = {heights[quadStartX, quadStartY],
                                             heights[quadStartX+1, quadStartY],
                                             heights[quadStartX+1, quadStartY+1],
@@ -271,6 +273,14 @@ public class NewTerrainGenerator : MonoBehaviour
     public void OnDrawGizmos() {
         Gizmos.color = Color.red;
         Gizmos.DrawSphere(Vector3.zero, 1);
+
+        if (cubes != null) {
+            Gizmos.color = Color.cyan;
+            foreach((Vector3, Vector3) cube in cubes) {
+                Gizmos.DrawCube(cube.Item1, cube.Item2);
+            }
+        }
+
         if (heights != null) {
 
 
