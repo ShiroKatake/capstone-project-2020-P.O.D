@@ -140,7 +140,8 @@ public class BuildingSpawningController : MonoBehaviour
                     heldBuilding.transform.position = RawBuildingPositionToBuildingPosition(heldBuilding.XSize, heldBuilding.ZSize);
                 }
 
-                heldBuilding.Collider.enabled = true;
+                //TODO: double check this doesn't break anything, because it looks like this is a duplicate of a call in BuildingFactory.GetBuilding.
+                //heldBuilding.Collider.enabled = true;
             }
             //Instantiate the appropriate building and postion it properly, replacing the old one.
             else if (heldBuilding.BuildingType != selectedBuildingType)
@@ -159,7 +160,8 @@ public class BuildingSpawningController : MonoBehaviour
                 BuildingFactory.Instance.DestroyBuilding(heldBuilding, false, false);
                 heldBuilding = BuildingFactory.Instance.GetBuilding(selectedBuildingType);
                 heldBuilding.transform.position = pos;
-                heldBuilding.Collider.enabled = true;
+                //TODO: double check this doesn't break anything, because it looks like this is a duplicate of a call in BuildingFactory.GetBuilding.
+                //heldBuilding.Collider.enabled = true;
             }
             else //Move the building where you want it
             {
