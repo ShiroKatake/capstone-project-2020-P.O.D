@@ -181,9 +181,10 @@ public class Building : MonoBehaviour, ICollisionListener
 
         set
         {
+            Debug.Log($"Pre-Setting: operational: {operational}, value: {value}, active: {active}");
             if (operational != value)
             {
-                operational = value && active;
+                operational = (value && active);
 
                 if (resourceCollector != null)
                 {
@@ -197,6 +198,8 @@ public class Building : MonoBehaviour, ICollisionListener
                     }
                 }
             }
+
+            Debug.Log($"Post-Setting: operational: {operational}, value: {value}, active: {active}");
         }
     }
 

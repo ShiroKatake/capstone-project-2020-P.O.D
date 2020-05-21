@@ -13,9 +13,8 @@ public class Turret : MonoBehaviour
 
     [Header("Game Objects")]
     [SerializeField] private Transform turretCollider;
-    [SerializeField] private Transform barrelCollider;
-    [SerializeField] private Transform turretModel;
-    [SerializeField] private Transform barrelModel;
+    [SerializeField] private Transform barrelColliderPivot;
+    [SerializeField] private Transform barrelModelPivot;
     [SerializeField] private Transform barrelTip;
 
     [Header("Shooting Stats")]
@@ -26,8 +25,8 @@ public class Turret : MonoBehaviour
     [SerializeField] private float turretRotationSpeed;
     [SerializeField] private bool pivotBarrel;
     [SerializeField] private float barrelPivotSpeed;
-    [SerializeField] private float barrelPivotMinAngle;
-    [SerializeField] private float barrelPivotMaxAngle;
+    [SerializeField] private float minBarrelPivotAngle;
+    [SerializeField] private float maxBarrelPivotAngle;
 
     [Header("Aiming Variance Stats")]
     [SerializeField] private bool scatteredShots;
@@ -35,15 +34,20 @@ public class Turret : MonoBehaviour
     [SerializeField] private float scatteredShotsYRange;
     [SerializeField] private float scatteredShotsZRange;
 
-    //Non-Serialized Fields------------------------------------------------------------------------                                                    
+    //Non-Serialized Fields------------------------------------------------------------------------      
+    
+    [Header("Testing")]
 
     private List<Alien> visibleTargets;
     private Alien target;
-    private Quaternion targetRotation;
-    private Quaternion oldRotation;
-    private float turretRotationSlerpProgress;
-    private float barrelPivotSlerpProgress;
+    [SerializeField] private bool aim;
+    //[SerializeField] private Vector3 targetPos;
+    [SerializeField] private float currentTurretRotation;
+    [SerializeField] private float targetTurretRotation;
+    [SerializeField] private float currentBarrelPivotAngle;
+    [SerializeField] private float targetBarrelPivotAngle;
     private float timeOfLastShot;
+    private Building building;
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -55,6 +59,12 @@ public class Turret : MonoBehaviour
     {
         visibleTargets = new List<Alien>();
         timeOfLastShot = shotCooldown * -1;
+        building = gameObject.GetComponent<Building>();
+        currentTurretRotation = 0;
+        currentBarrelPivotAngle = 0;
+        turretCollider.rotation = Quaternion.Euler(-90, 0, 0);
+        barrelColliderPivot.rotation = Quaternion.Euler(0, 0, 0);
+        barrelModelPivot.rotation = barrelColliderPivot.rotation;
     }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
@@ -64,9 +74,13 @@ public class Turret : MonoBehaviour
     /// </summary>
     private void FixedUpdate()
     {
-        SelectTarget();
-        Aim();
-        Shoot();
+        if (building.Operational && aim /*&& target != null*/)
+        {
+            //SelectTarget();
+            CalculateTargetRotationAndPivotAngle();
+            Aim();
+            //Shoot();
+        }
     }
 
     //Recurring Methods (FixedUpdate())--------------------------------------------------------------------------------------------------------------
@@ -144,52 +158,53 @@ public class Turret : MonoBehaviour
     }
 
     /// <summary>
+    /// Calculates the rotation the turret should have and the pivot angle the barrel should have to aim at the target.
+    /// </summary>
+    private void CalculateTargetRotationAndPivotAngle()
+    {
+        //TODO: calculate based on target position. Use angle from barrelColliderPivot? Is there a way to lock the x axis out of that calculation?
+        if (targetBarrelPivotAngle > maxBarrelPivotAngle)
+        {
+            targetBarrelPivotAngle = maxBarrelPivotAngle;
+        }
+        else if (targetBarrelPivotAngle < minBarrelPivotAngle)
+        {
+            targetBarrelPivotAngle = minBarrelPivotAngle;
+        }
+    }
+
+    /// <summary>
     /// Rotates the turret and pivots the barrel to aim at the target.
     /// </summary>
     private void Aim()
     {
-        if (target != null)
+        //Turret Rotation on turret base's z axis. All other values remain static.
+        if (currentTurretRotation != targetTurretRotation)
         {
-            Vector3 newRotation = target.transform.position - barrel.position;
+            float deltaAngle = Mathf.DeltaAngle(currentTurretRotation, targetTurretRotation);
+            float rotationDirection = Sign(deltaAngle);
+            deltaAngle = Magnitude(deltaAngle);
+            float fixedUpdateRotation = turretRotationSpeed * Time.fixedDeltaTime;
 
-            if (newRotation != targetRotation.eulerAngles)
-            {
-                oldRotation = transform.rotation;
-                targetRotation = Quaternion.LookRotation(newRotation);
-                turretRotationSlerpProgress = 0f;
-                barrelPivotSlerpProgress = 0f;
-            }
+            currentTurretRotation += rotationDirection * Mathf.Min(deltaAngle, fixedUpdateRotation);
+            currentTurretRotation = (
+                  currentTurretRotation > 360 ? currentTurretRotation - 360  
+                : currentTurretRotation < 0   ? currentTurretRotation + 360
+                :                               currentTurretRotation);
+            turretCollider.rotation = Quaternion.Euler(-90, 0, currentTurretRotation); 
+        }
 
-            //Turret Rotation
-            if (turretRotationSlerpProgress < 1)
-            {
-                turretRotationSlerpProgress = Mathf.Min(1, turretRotationSlerpProgress + turretRotationSpeed * Time.fixedDeltaTime);
-                transform.rotation = Quaternion.LookRotation(Vector3.Slerp(
-                    new Vector3(turret.rotation.eulerAngles.x, oldRotation.eulerAngles.y, turret.rotation.eulerAngles.z),
-                    new Vector3(turret.rotation.eulerAngles.x, targetRotation.eulerAngles.y, turret.rotation.eulerAngles.z),
-                    turretRotationSlerpProgress));
-            }
+        //Barrel Pivoting on barrel's y axis. All other values remain 0.
+        if (currentBarrelPivotAngle != targetBarrelPivotAngle)
+        {
+            float deltaAngle = Mathf.DeltaAngle(currentBarrelPivotAngle, targetBarrelPivotAngle);
+            float pivotDirection = Sign(deltaAngle);
+            deltaAngle = Magnitude(deltaAngle);
+            float fixedUpdatePivot = barrelPivotSpeed * Time.fixedDeltaTime;
 
-            //Barrel Pivoting
-            if (pivotBarrel && barrelPivotSlerpProgress < 1)
-            {
-                barrelPivotSlerpProgress = Mathf.Min(1, barrelPivotSlerpProgress + barrelPivotSpeed * Time.fixedDeltaTime);
-                Vector3 rotation = Vector3.Slerp(
-                    new Vector3(barrel.rotation.eulerAngles.x, oldRotation.eulerAngles.z, barrel.rotation.eulerAngles.z),
-                    new Vector3(barrel.rotation.eulerAngles.x, targetRotation.eulerAngles.z, barrel.rotation.eulerAngles.z),
-                    barrelPivotSlerpProgress);
-                
-                if (rotation.y < barrelPivotMinAngle)
-                {
-                    rotation.y = barrelPivotMinAngle;
-                }
-                else if (rotation.y > barrelPivotMaxAngle)
-                {
-                    rotation.y = barrelPivotMaxAngle;
-                }
-
-                transform.rotation = Quaternion.LookRotation(rotation);
-            }
+            currentBarrelPivotAngle += pivotDirection * Mathf.Min(deltaAngle, fixedUpdatePivot);
+            barrelColliderPivot.rotation = Quaternion.Euler(0, 0, -1 * currentBarrelPivotAngle);
+            barrelModelPivot.rotation = barrelColliderPivot.rotation;
         }
     }
 
@@ -230,5 +245,22 @@ public class Turret : MonoBehaviour
         {
             visibleTargets.Remove(other.GetComponentInParent<Alien>());
         }
+    }
+
+    //Utility Methods
+
+    private float Magnitude (float num)
+    {
+        if (num < 0)
+        {
+            num *= -1;
+        }
+
+        return num;
+    }
+
+    private float Sign(float num)
+    {
+        return (num < 0 ? -1 : 1);
     }
 }
