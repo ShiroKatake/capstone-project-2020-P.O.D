@@ -12,7 +12,6 @@ public class Turret : CollisionListener
     //Serialized Fields----------------------------------------------------------------------------                                                    
 
     [Header("Game Objects")]
-    [SerializeField] private Collider detectionCollider;
     [SerializeField] private Transform targeter;
     [SerializeField] private Transform turretCollider;
     [SerializeField] private Transform barrelColliderPivot;
@@ -40,7 +39,6 @@ public class Turret : CollisionListener
     
     //Components
     private Building building;
-    private List<CollisionReporter> collisionReporters;
 
     //Target Variables
     private List<Alien> visibleTargets;
@@ -73,17 +71,7 @@ public class Turret : CollisionListener
         turretCollider.rotation = Quaternion.Euler(-90, 0, 0);
         barrelColliderPivot.rotation = Quaternion.Euler(0, 0, 0);
         barrelModelPivot.rotation = barrelColliderPivot.rotation;
-
-        collisionReporters = new List<CollisionReporter>();
-        CollisionReporter[] allCollisionReporters = GetComponentsInChildren<CollisionReporter>();
-
-        foreach (CollisionReporter c in allCollisionReporters)
-        {
-            if (c.ReportsTo(this))
-            {
-                collisionReporters.Add(c);
-            }
-        }
+        collisionReporters = GetCollisionReporters();
     }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
@@ -272,41 +260,41 @@ public class Turret : CollisionListener
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
-    /// <summary>
-    /// OnCollisionEnter is called when this collider/rigidbody has begun touching another rigidbody/collider.
-    /// </summary>
-    /// <param name="collision">The collision data associated with this event.</param>
-    public override void OnCollisionEnter(Collision collision)
-    {
-        //if (active)
-        //{
-        //    Debug.Log($"Building {building.Id} OnCollisionEnter()");
-        //}
-    }
+    ///// <summary>
+    ///// OnCollisionEnter is called when this collider/rigidbody has begun touching another rigidbody/collider.
+    ///// </summary>
+    ///// <param name="collision">The collision data associated with this event.</param>
+    //public override void OnCollisionEnter(Collision collision)
+    //{
+    //    //if (active)
+    //    //{
+    //    //    Debug.Log($"Building {building.Id} OnCollisionEnter()");
+    //    //}
+    //}
 
-    /// <summary>
-    /// OnCollisionExit is called when this collider/rigidbody has stopped touching another rigidbody/collider.
-    /// </summary>
-    /// <param name="collision">The collision data associated with this event.</param>
-    public override void OnCollisionExit(Collision collision)
-    {
-        //if (active)
-        //{
-        //    Debug.Log($"Building {building.Id} OnCollisionExit()");
-        //}
-    }
+    ///// <summary>
+    ///// OnCollisionExit is called when this collider/rigidbody has stopped touching another rigidbody/collider.
+    ///// </summary>
+    ///// <param name="collision">The collision data associated with this event.</param>
+    //public override void OnCollisionExit(Collision collision)
+    //{
+    //    //if (active)
+    //    //{
+    //    //    Debug.Log($"Building {building.Id} OnCollisionExit()");
+    //    //}
+    //}
 
-    /// <summary>
-    /// OnCollisionStay is called once per frame for every collider/rigidbody that is touching rigidbody/collider.
-    /// </summary>
-    /// <param name="collision">The collision data associated with this event.</param>
-    public override void OnCollisionStay(Collision collision)
-    {
-        //if (active)
-        //{
-        //    Debug.Log($"Building {building.Id} OnCollisionStay()");
-        //}
-    }
+    ///// <summary>
+    ///// OnCollisionStay is called once per frame for every collider/rigidbody that is touching rigidbody/collider.
+    ///// </summary>
+    ///// <param name="collision">The collision data associated with this event.</param>
+    //public override void OnCollisionStay(Collision collision)
+    //{
+    //    //if (active)
+    //    //{
+    //    //    Debug.Log($"Building {building.Id} OnCollisionStay()");
+    //    //}
+    //}
 
     /// <summary>
     /// When a GameObject collides with another GameObject, Unity calls OnTriggerEnter.
@@ -314,8 +302,10 @@ public class Turret : CollisionListener
     /// <param name="other">The other Collider involved in this collision.</param>
     public override void OnTriggerEnter(Collider other)
     {
+        Debug.Log("Turret OnTriggerEnter");
         if (other.CompareTag("Alien"))
         {
+            Debug.Log("Alien entered turret trigger collider");
             visibleTargets.Add(other.GetComponentInParent<Alien>());
         }
     }
@@ -326,23 +316,25 @@ public class Turret : CollisionListener
     /// <param name="other">The other Collider involved in this collision.</param>
     public override void OnTriggerExit(Collider other)
     {
+        Debug.Log("Turret OnTriggerExit");
         if (other.CompareTag("Alien"))
         {
+            Debug.Log("Alien exited turret trigger collider");
             visibleTargets.Remove(other.GetComponentInParent<Alien>());
         }
     }
 
-    /// <summary>
-    /// OnTriggerStay is called almost all the frames for every Collider other that is touching the trigger. The function is on the physics timer so it won't necessarily run every frame.
-    /// </summary>
-    /// <param name="other">The other Collider involved in this collision.</param>
-    public override void OnTriggerStay(Collider other)
-    {
-        //if (active)
-        //{
-        //    Debug.Log($"Building {building.Id} OnTriggerStay()");
-        //}
-    }
+    ///// <summary>
+    ///// OnTriggerStay is called almost all the frames for every Collider other that is touching the trigger. The function is on the physics timer so it won't necessarily run every frame.
+    ///// </summary>
+    ///// <param name="other">The other Collider involved in this collision.</param>
+    //public override void OnTriggerStay(Collider other)
+    //{
+    //    //if (active)
+    //    //{
+    //    //    Debug.Log($"Building {building.Id} OnTriggerStay()");
+    //    //}
+    //}
 
     //Utility Methods--------------------------------------------------------------------------------------------------------------------------------
 

@@ -56,7 +56,6 @@ public class Building : CollisionListener
     //private Dictionary<string, Vector3> offsets;
     private bool colliding = false;
     [SerializeField] private List<Collider> otherColliders;
-    private List<CollisionReporter> collisionReporters;
     Vector3 normalScale;
 
     //Other
@@ -95,10 +94,10 @@ public class Building : CollisionListener
     /// </summary>
     public float BuildTime { get => buildTime; set => buildTime = value; }
 
-    /// <summary>
-    /// The building's collider component.
-    /// </summary>
-    public Collider Collider { get => collider; }
+    ///// <summary>
+    ///// The building's collider component.
+    ///// </summary>
+    //public Collider Collider { get => collider; }
 
     /// <summary>
     /// The Building's Health component.
@@ -181,7 +180,7 @@ public class Building : CollisionListener
 
         set
         {
-            Debug.Log($"Pre-Setting: operational: {operational}, value: {value}, active: {active}");
+            //Debug.Log($"Pre-Setting: operational: {operational}, value: {value}, active: {active}");
             if (operational != value)
             {
                 operational = (value && active);
@@ -199,7 +198,7 @@ public class Building : CollisionListener
                 }
             }
 
-            Debug.Log($"Post-Setting: operational: {operational}, value: {value}, active: {active}");
+            //Debug.Log($"Post-Setting: operational: {operational}, value: {value}, active: {active}");
         }
     }
 
@@ -217,19 +216,8 @@ public class Building : CollisionListener
         rigidbody = GetComponentInChildren<Rigidbody>();
         resourceCollector = GetComponent<ResourceCollector>();
         terraformer = GetComponent<Terraformer>();
-        collisionReporters = new List<CollisionReporter>();
+        collisionReporters = GetCollisionReporters();
         otherColliders = new List<Collider>();
-
-        CollisionReporter[] allCollisionReporters = GetComponentsInChildren<CollisionReporter>();
-
-        foreach (CollisionReporter c in allCollisionReporters)
-        {
-            if (c.ReportsTo(this))
-            {
-                collisionReporters.Add(c);
-            }
-        }
-
         normalScale = transform.localScale;
         normalBuildTime = buildTime;
 
@@ -300,6 +288,22 @@ public class Building : CollisionListener
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
     //Building Triggered Methods-------------------------------------------------------------------
+
+    public void EnableColliders()
+    {
+        foreach (CollisionReporter c in collisionReporters)
+        {
+            c.Collider.enabled = true;
+        }
+    }
+
+    public void DisableColliders()
+    {
+        foreach (CollisionReporter c in collisionReporters)
+        {
+            c.Collider.enabled = false;
+        }
+    }
 
     /// <summary>
     /// Checks if the building is colliding while being placed, and updates colour appropriately.
@@ -445,41 +449,41 @@ public class Building : CollisionListener
 
     //ICollisionListener Triggered Methods---------------------------------------------------------
 
-    /// <summary>
-    /// OnCollisionEnter is called when this collider/rigidbody has begun touching another rigidbody/collider.
-    /// </summary>
-    /// <param name="collision">The collision data associated with this event.</param>
-    public override void OnCollisionEnter(Collision collision)
-    {
-        if (active)
-        {
-            Debug.Log($"Building {id} OnCollisionEnter()");
-        }
-    }
+    ///// <summary>
+    ///// OnCollisionEnter is called when this collider/rigidbody has begun touching another rigidbody/collider.
+    ///// </summary>
+    ///// <param name="collision">The collision data associated with this event.</param>
+    //public override void OnCollisionEnter(Collision collision)
+    //{
+    //    if (active)
+    //    {
+    //        Debug.Log($"Building {id} OnCollisionEnter()");
+    //    }
+    //}
 
-    /// <summary>
-    /// OnCollisionExit is called when this collider/rigidbody has stopped touching another rigidbody/collider.
-    /// </summary>
-    /// <param name="collision">The collision data associated with this event.</param>
-    public override void OnCollisionExit(Collision collision)
-    {
-        if (active)
-        {
-            Debug.Log($"Building {id} OnCollisionExit()");
-        }
-    }
+    ///// <summary>
+    ///// OnCollisionExit is called when this collider/rigidbody has stopped touching another rigidbody/collider.
+    ///// </summary>
+    ///// <param name="collision">The collision data associated with this event.</param>
+    //public override void OnCollisionExit(Collision collision)
+    //{
+    //    if (active)
+    //    {
+    //        Debug.Log($"Building {id} OnCollisionExit()");
+    //    }
+    //}
 
-    /// <summary>
-    /// OnCollisionStay is called once per frame for every collider/rigidbody that is touching rigidbody/collider.
-    /// </summary>
-    /// <param name="collision">The collision data associated with this event.</param>
-    public override void OnCollisionStay(Collision collision)
-    {
-        if (active)
-        {
-            Debug.Log($"Building {id} OnCollisionStay()");
-        }
-    }
+    ///// <summary>
+    ///// OnCollisionStay is called once per frame for every collider/rigidbody that is touching rigidbody/collider.
+    ///// </summary>
+    ///// <param name="collision">The collision data associated with this event.</param>
+    //public override void OnCollisionStay(Collision collision)
+    //{
+    //    if (active)
+    //    {
+    //        Debug.Log($"Building {id} OnCollisionStay()");
+    //    }
+    //}
 
     /// <summary>
     /// When a GameObject collides with another GameObject, Unity calls OnTriggerEnter.
@@ -520,15 +524,15 @@ public class Building : CollisionListener
         }
     }
 
-    /// <summary>
-    /// OnTriggerStay is called almost all the frames for every Collider other that is touching the trigger. The function is on the physics timer so it won't necessarily run every frame.
-    /// </summary>
-    /// <param name="other">The other Collider involved in this collision.</param>
-    public override void OnTriggerStay(Collider other)
-    {
-        if (active)
-        {
-            Debug.Log($"Building {id} OnTriggerStay()");
-        }
-    }
+    ///// <summary>
+    ///// OnTriggerStay is called almost all the frames for every Collider other that is touching the trigger. The function is on the physics timer so it won't necessarily run every frame.
+    ///// </summary>
+    ///// <param name="other">The other Collider involved in this collision.</param>
+    //public override void OnTriggerStay(Collider other)
+    //{
+    //    if (active)
+    //    {
+    //        Debug.Log($"Building {id} OnTriggerStay()");
+    //    }
+    //}
 }

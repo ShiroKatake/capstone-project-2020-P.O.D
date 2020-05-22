@@ -139,9 +139,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fc4c47b30ac0644e9720df61d64f2ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collisionReporters: []
   id: 0
   buildingType: 7
-  collider: {fileID: 0}
   oreCost: 2
   powerConsumption: 2
   waterConsumption: 0
@@ -187,7 +187,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34d932f0839879649994915dc2d7419e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detectionCollider: {fileID: 7957987768113860427}
+  collisionReporters: []
   targeter: {fileID: 4760966743071291633}
   turretCollider: {fileID: 4847364633576071608}
   barrelColliderPivot: {fileID: 6578390048626754263}
@@ -196,10 +196,10 @@ MonoBehaviour:
   shotCooldown: 3
   targetClosest: 1
   turretRotationSpeed: 90
-  elevateBarrel: 0
-  barrelElevationSpeed: 0
-  minBarrelElevation: 0
-  maxBarrelElevation: 0
+  elevateBarrel: 1
+  barrelElevationSpeed: 90
+  minBarrelElevation: -25
+  maxBarrelElevation: 90
   scatteredShots: 0
   numProjectiles: 1
   scatteredShotsYRange: 0
@@ -244,7 +244,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5060476543200308584}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 0
   serializedVersion: 2
   m_Radius: 10
@@ -261,6 +261,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 122c182bf36096746af88abc3d48308c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collisionListeners:
+  - {fileID: 5814535936489597786}
   reportOnCollisionEnter: 0
   reportOnCollisionExit: 0
   reportOnCollisionStay: 0
@@ -344,6 +346,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 122c182bf36096746af88abc3d48308c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collisionListeners:
+  - {fileID: 276844957512759736}
   reportOnCollisionEnter: 0
   reportOnCollisionExit: 0
   reportOnCollisionStay: 0
@@ -425,6 +429,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 122c182bf36096746af88abc3d48308c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collisionListeners:
+  - {fileID: 276844957512759736}
   reportOnCollisionEnter: 0
   reportOnCollisionExit: 0
   reportOnCollisionStay: 0
