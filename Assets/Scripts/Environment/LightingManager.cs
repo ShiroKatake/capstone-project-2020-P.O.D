@@ -38,7 +38,7 @@ public class LightingManager : MonoBehaviour {
 		if (directionalLight != null)
 		{
 			directionalLight.color = preset.DirectionalColor.Evaluate(timePercent);
-			directionalLight.transform.localRotation = Quaternion.Euler(new Vector3((timePercent * 360f) - 90f, 170f, 0));
+			directionalLight.transform.localRotation = Quaternion.Euler(new Vector3((timePercent * 360f), 170f, 0));
 		}
 	}
 
