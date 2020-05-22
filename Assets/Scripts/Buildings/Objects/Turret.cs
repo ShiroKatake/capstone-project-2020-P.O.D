@@ -37,19 +37,21 @@ public class Turret : CollisionListener
 
     //Non-Serialized Fields------------------------------------------------------------------------      
     
+    [Header("Testing")]
+
     //Components
     private Building building;
 
     //Target Variables
-    private List<Alien> visibleTargets;
-    private Alien target;
+    [SerializeField] private List<Alien> visibleTargets;
+    [SerializeField] private Alien target;
 
     //Aiming Variables
-    private bool detecting;
-    private float currentTurretRotation;
-    private float targetTurretRotation;
-    private float currentBarrelElevation;
-    private float targetBarrelElevation;
+    [SerializeField] private bool detecting;
+    [SerializeField] private float currentTurretRotation;
+    [SerializeField] private float targetTurretRotation;
+    [SerializeField] private float currentBarrelElevation;
+    [SerializeField] private float targetBarrelElevation;
 
     //Shooting Variables
     private float timeOfLastShot;
@@ -84,10 +86,10 @@ public class Turret : CollisionListener
         if (building.Operational)
         {
             RegulateDetectionCollider();
+            SelectTarget();
 
             if (target != null)
             {
-                SelectTarget();
                 CalculateTargetRotationAndElevation();
                 Aim();
                 //Shoot();
@@ -118,6 +120,7 @@ public class Turret : CollisionListener
     /// </summary>
     private void SelectTarget()
     {
+        Debug.Log($"Visible targets: {visibleTargets.Count}");
         switch (visibleTargets.Count)
         {
             case 0:
@@ -160,7 +163,7 @@ public class Turret : CollisionListener
                 }
                 else
                 {
-                    //Get closest visible target
+                    //Get farthest visible target
                     distance = 0;
                     bestDistance = 0;
 
@@ -259,43 +262,7 @@ public class Turret : CollisionListener
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
-
-    ///// <summary>
-    ///// OnCollisionEnter is called when this collider/rigidbody has begun touching another rigidbody/collider.
-    ///// </summary>
-    ///// <param name="collision">The collision data associated with this event.</param>
-    //public override void OnCollisionEnter(Collision collision)
-    //{
-    //    //if (active)
-    //    //{
-    //    //    Debug.Log($"Building {building.Id} OnCollisionEnter()");
-    //    //}
-    //}
-
-    ///// <summary>
-    ///// OnCollisionExit is called when this collider/rigidbody has stopped touching another rigidbody/collider.
-    ///// </summary>
-    ///// <param name="collision">The collision data associated with this event.</param>
-    //public override void OnCollisionExit(Collision collision)
-    //{
-    //    //if (active)
-    //    //{
-    //    //    Debug.Log($"Building {building.Id} OnCollisionExit()");
-    //    //}
-    //}
-
-    ///// <summary>
-    ///// OnCollisionStay is called once per frame for every collider/rigidbody that is touching rigidbody/collider.
-    ///// </summary>
-    ///// <param name="collision">The collision data associated with this event.</param>
-    //public override void OnCollisionStay(Collision collision)
-    //{
-    //    //if (active)
-    //    //{
-    //    //    Debug.Log($"Building {building.Id} OnCollisionStay()");
-    //    //}
-    //}
-
+    
     /// <summary>
     /// When a GameObject collides with another GameObject, Unity calls OnTriggerEnter.
     /// </summary>
@@ -306,7 +273,13 @@ public class Turret : CollisionListener
         if (other.CompareTag("Alien"))
         {
             Debug.Log("Alien entered turret trigger collider");
-            visibleTargets.Add(other.GetComponentInParent<Alien>());
+            Alien a = other.GetComponentInParent<Alien>();
+
+            if (other == a.BodyCollider && !visibleTargets.Contains(a))
+            {
+                Debug.Log("Added alien body to visibleTargets");
+                visibleTargets.Add(a);
+            }
         }
     }
 
@@ -320,21 +293,15 @@ public class Turret : CollisionListener
         if (other.CompareTag("Alien"))
         {
             Debug.Log("Alien exited turret trigger collider");
-            visibleTargets.Remove(other.GetComponentInParent<Alien>());
+            Alien a = other.GetComponentInParent<Alien>();
+
+            if (other == a.BodyCollider && visibleTargets.Contains(a))
+            {
+                Debug.Log("Removed alien body from visibleTargets");
+                visibleTargets.Remove(a);
+            }
         }
     }
-
-    ///// <summary>
-    ///// OnTriggerStay is called almost all the frames for every Collider other that is touching the trigger. The function is on the physics timer so it won't necessarily run every frame.
-    ///// </summary>
-    ///// <param name="other">The other Collider involved in this collision.</param>
-    //public override void OnTriggerStay(Collider other)
-    //{
-    //    //if (active)
-    //    //{
-    //    //    Debug.Log($"Building {building.Id} OnTriggerStay()");
-    //    //}
-    //}
 
     //Utility Methods--------------------------------------------------------------------------------------------------------------------------------
 

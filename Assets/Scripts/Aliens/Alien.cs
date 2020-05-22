@@ -11,7 +11,10 @@ public class Alien : MonoBehaviour
 
     //Serialized Fields----------------------------------------------------------------------------
 
-    [Header("Alien Stats")] 
+    [Header("Components")]
+    [SerializeField] private Collider bodyCollider;
+
+    [Header("Stats")] 
     [SerializeField] private int id;
     [SerializeField] private float speed;
     [SerializeField] private float turningSpeed;
@@ -47,6 +50,11 @@ public class Alien : MonoBehaviour
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
     //Basic Public Properties----------------------------------------------------------------------
+
+    /// <summary>
+    /// The collider that comprises the alien's body.
+    /// </summary>
+    public Collider BodyCollider { get => bodyCollider; }
 
     /// <summary>
     /// Alien's Health component.
