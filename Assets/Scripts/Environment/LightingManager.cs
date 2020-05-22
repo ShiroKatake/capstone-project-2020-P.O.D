@@ -5,7 +5,6 @@ using UnityEngine;
 /// <summary>
 /// A manager class for Day & Night cycle. 
 /// </summary>
-[ExecuteAlways]
 public class LightingManager : MonoBehaviour {
 	//Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
