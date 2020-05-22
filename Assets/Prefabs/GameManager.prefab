@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 948949189687773394}
   - component: {fileID: 948949189687773393}
   - component: {fileID: 948949189687773391}
+  - component: {fileID: 2305175590661907152}
   - component: {fileID: 6946948897751858377}
   - component: {fileID: 1649684704180044530}
   - component: {fileID: 1565210319463471991}
@@ -141,9 +142,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cycleDuration: 30
   clockTimer: {fileID: 0}
-  clockBackground: {fileID: 0}
   day: {r: 0.5882353, g: 0.95686275, b: 1, a: 1}
   night: {r: 0.019607844, g: 0, b: 0.3764706, a: 1}
+  time12hr: 0
+  time24hr: 0
 --- !u!114 &948949189687773394
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -198,6 +200,20 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   buildingUIParent: {fileID: 0}
+--- !u!114 &2305175590661907152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 948949189687773384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 038dffc0c0664b349952d8f97dfb18b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  directionalLight: {fileID: 0}
+  preset: {fileID: 11400000, guid: 62135e1be438def43b8dd884e79d8cfb, type: 2}
 --- !u!114 &6946948897751858377
 MonoBehaviour:
   m_ObjectHideFlags: 0

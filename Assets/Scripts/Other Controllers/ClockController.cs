@@ -17,7 +17,7 @@ public class ClockController : MonoBehaviour
     
     [Header("UI Elements")]
     [SerializeField] private Image clockTimer;
-    [SerializeField] private Image clockBackground;
+    //[SerializeField] private Image clockBackground;
 
     [Header("UI Colours")]
     [SerializeField] private Color day;
@@ -26,9 +26,10 @@ public class ClockController : MonoBehaviour
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
     private bool daytime;
-    private float time12hr;
-    private float time24hr;
+	[SerializeField] private float time12hr;
+    [SerializeField] private float time24hr;
     private float halfCycleDuration;
+    private RectTransform rectTransform;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -82,9 +83,13 @@ public class ClockController : MonoBehaviour
         Instance = this;
         halfCycleDuration = cycleDuration * 0.5f;
         daytime = true;
-        clockTimer.fillAmount = 1;
-        clockTimer.color = day;
-        clockBackground.color = night;
+
+        //rectTransform = clockTimer.GetComponent<RectTransform>();
+
+        //rectTransform.Rotate(new Vector3(0,0,0));
+        //clockTimer.fillAmount = 1;
+        //clockTimer.color = day;
+        //clockBackground.color = day;
     }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
@@ -121,8 +126,8 @@ public class ClockController : MonoBehaviour
             {
                 time12hr -= halfCycleDuration;
                 daytime = false;
-                clockTimer.color = night;
-                clockBackground.color = day;
+                //clockTimer.color = night;
+                //clockBackground.color = night;
                 UIColorManager.Instance.SetNight();
             }
         }
@@ -133,8 +138,8 @@ public class ClockController : MonoBehaviour
                 time12hr -= halfCycleDuration;
                 time24hr -= cycleDuration;
                 daytime = true;
-                clockTimer.color = day;
-                clockBackground.color = night;
+                //clockTimer.color = day;
+                //clockBackground.color = day;
                 UIColorManager.Instance.SetDay();
             }
         }
@@ -145,7 +150,10 @@ public class ClockController : MonoBehaviour
     /// </summary>
     private void UpdateClock()
     {
-        clockTimer.fillAmount = 1 - (time12hr / halfCycleDuration);
+        //rectTransform.Rotate(new Vector3(0,0,360 * (time24hr / cycleDuration)));
+        //rectTransform.Rotate(new Vector3(0,0,180));
+        clockTimer.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, (360 * (time24hr / cycleDuration))));
+        //clockTimer.fillAmount = 1 - (time12hr / halfCycleDuration);
         UIColorManager.Instance.ColorUpdate();
     }
 }
