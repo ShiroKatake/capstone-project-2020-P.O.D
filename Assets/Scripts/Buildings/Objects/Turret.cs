@@ -120,7 +120,7 @@ public class Turret : CollisionListener
     /// </summary>
     private void SelectTarget()
     {
-        Debug.Log($"Visible targets: {visibleTargets.Count}");
+        //Debug.Log($"Visible targets: {visibleTargets.Count}");
         switch (visibleTargets.Count)
         {
             case 0:
@@ -269,15 +269,15 @@ public class Turret : CollisionListener
     /// <param name="other">The other Collider involved in this collision.</param>
     public override void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Turret OnTriggerEnter");
+        //Debug.Log("Turret OnTriggerEnter");
         if (other.CompareTag("Alien"))
         {
-            Debug.Log("Alien entered turret trigger collider");
+            //Debug.Log("Alien entered turret trigger collider");
             Alien a = other.GetComponentInParent<Alien>();
 
             if (other == a.BodyCollider && !visibleTargets.Contains(a))
             {
-                Debug.Log("Added alien body to visibleTargets");
+                //Debug.Log("Added alien body to visibleTargets");
                 visibleTargets.Add(a);
             }
         }
@@ -289,15 +289,15 @@ public class Turret : CollisionListener
     /// <param name="other">The other Collider involved in this collision.</param>
     public override void OnTriggerExit(Collider other)
     {
-        Debug.Log("Turret OnTriggerExit");
+        //Debug.Log("Turret OnTriggerExit");
         if (other.CompareTag("Alien"))
         {
-            Debug.Log("Alien exited turret trigger collider");
+            //Debug.Log("Alien exited turret trigger collider");
             Alien a = other.GetComponentInParent<Alien>();
 
             if (other == a.BodyCollider && visibleTargets.Contains(a))
             {
-                Debug.Log("Removed alien body from visibleTargets");
+                //Debug.Log("Removed alien body from visibleTargets");
                 visibleTargets.Remove(a);
             }
         }
