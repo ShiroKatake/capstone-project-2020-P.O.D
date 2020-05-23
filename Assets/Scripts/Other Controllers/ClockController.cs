@@ -152,7 +152,8 @@ public class ClockController : MonoBehaviour
     {
         //rectTransform.Rotate(new Vector3(0,0,360 * (time24hr / cycleDuration)));
         //rectTransform.Rotate(new Vector3(0,0,180));
-        clockTimer.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, (360 * (time24hr / cycleDuration))));
+        //clockTimer.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, (360 * (time24hr / cycleDuration))));
+        clockTimer.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, (180 - 360 * (time24hr / cycleDuration))));
         //clockTimer.fillAmount = 1 - (time12hr / halfCycleDuration);
         UIColorManager.Instance.ColorUpdate();
     }
