@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// A building placed by the player.
 /// </summary>
-public class Building : MonoBehaviour, ICollisionListener
+public class Building : CollisionListener
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
@@ -45,9 +45,9 @@ public class Building : MonoBehaviour, ICollisionListener
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
     //Components
-    private Collider collider;
     private Health health;
-    private MeshRenderer renderer;
+    private MeshRenderer parentRenderer;
+    private List<MeshRenderer> allRenderers;
     private ResourceCollector resourceCollector;
     private Rigidbody rigidbody;
     private Terraformer terraformer;
@@ -56,7 +56,6 @@ public class Building : MonoBehaviour, ICollisionListener
     //private Dictionary<string, Vector3> offsets;
     private bool colliding = false;
     [SerializeField] private List<Collider> otherColliders;
-    private List<CollisionReporter> collisionReporters;
     Vector3 normalScale;
 
     //Other
@@ -95,10 +94,10 @@ public class Building : MonoBehaviour, ICollisionListener
     /// </summary>
     public float BuildTime { get => buildTime; set => buildTime = value; }
 
-    /// <summary>
-    /// The building's collider component.
-    /// </summary>
-    public Collider Collider { get => collider; }
+    ///// <summary>
+    ///// The building's collider component.
+    ///// </summary>
+    //public Collider Collider { get => collider; }
 
     /// <summary>
     /// The Building's Health component.
@@ -181,9 +180,10 @@ public class Building : MonoBehaviour, ICollisionListener
 
         set
         {
+            //Debug.Log($"Pre-Setting: operational: {operational}, value: {value}, active: {active}");
             if (operational != value)
             {
-                operational = value && active;
+                operational = (value && active);
 
                 if (resourceCollector != null)
                 {
@@ -197,6 +197,8 @@ public class Building : MonoBehaviour, ICollisionListener
                     }
                 }
             }
+
+            //Debug.Log($"Post-Setting: operational: {operational}, value: {value}, active: {active}");
         }
     }
 
@@ -208,15 +210,14 @@ public class Building : MonoBehaviour, ICollisionListener
     /// </summary>
     private void Awake()
     {
-        collider = GetComponentInChildren<Collider>();
         health = GetComponent<Health>();
-        renderer = GetComponentInChildren<MeshRenderer>();
+        parentRenderer = GetComponentInChildren<MeshRenderer>();
+        allRenderers = new List<MeshRenderer>(parentRenderer.GetComponentsInChildren<MeshRenderer>());
         rigidbody = GetComponentInChildren<Rigidbody>();
         resourceCollector = GetComponent<ResourceCollector>();
         terraformer = GetComponent<Terraformer>();
-        collisionReporters = new List<CollisionReporter>(GetComponentsInChildren<CollisionReporter>());
+        collisionReporters = GetCollisionReporters();
         otherColliders = new List<Collider>();
-
         normalScale = transform.localScale;
         normalBuildTime = buildTime;
 
@@ -249,7 +250,7 @@ public class Building : MonoBehaviour, ICollisionListener
         while (buildTimeElapsed < buildTime)
         {
             buildTimeElapsed += Time.deltaTime;
-            renderer.transform.localPosition = Vector3.Lerp(startPos, endPos, buildTimeElapsed / buildTime);
+            parentRenderer.transform.localPosition = Vector3.Lerp(startPos, endPos, buildTimeElapsed / buildTime);
             yield return null;
         }
 
@@ -287,6 +288,22 @@ public class Building : MonoBehaviour, ICollisionListener
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
     //Building Triggered Methods-------------------------------------------------------------------
+
+    public void EnableColliders()
+    {
+        foreach (CollisionReporter c in collisionReporters)
+        {
+            c.Collider.enabled = true;
+        }
+    }
+
+    public void DisableColliders()
+    {
+        foreach (CollisionReporter c in collisionReporters)
+        {
+            c.Collider.enabled = false;
+        }
+    }
 
     /// <summary>
     /// Checks if the building is colliding while being placed, and updates colour appropriately.
@@ -330,16 +347,22 @@ public class Building : MonoBehaviour, ICollisionListener
 
                 if (colliding)
                 {
-                    if (renderer.material != buildingErrorMaterial)
+                    foreach (MeshRenderer r in allRenderers)
                     {
-                        renderer.material = buildingErrorMaterial;
+                        if (r.material != buildingErrorMaterial)
+                        {
+                            r.material = buildingErrorMaterial;
+                        }
                     }
                 }
                 else
                 {
-                    if (renderer.material != transparentMaterial)
+                    foreach (MeshRenderer r in allRenderers)
                     {
-                        renderer.material = transparentMaterial;
+                        if (r.material != transparentMaterial)
+                        {
+                            r.material = transparentMaterial;
+                        }
                     }
                 }
             }
@@ -367,13 +390,17 @@ public class Building : MonoBehaviour, ICollisionListener
         ResourceController.Instance.WaterConsumption += waterConsumption;
         ResourceController.Instance.WasteConsumption += wasteConsumption;
         transform.position = position;
-        renderer.material = opaqueMaterial;
+
+        foreach (MeshRenderer r in allRenderers)
+        {
+            r.material = opaqueMaterial;
+        }
         rigidbody.isKinematic = true;
-        collider.isTrigger = false;
         placed = true;
 
         foreach (CollisionReporter c in collisionReporters)
         {
+            c.Collider.isTrigger = false;
             c.ReportOnTriggerEnter = false;
             c.ReportOnTriggerExit = false;
         }
@@ -400,16 +427,21 @@ public class Building : MonoBehaviour, ICollisionListener
         placed = false;
         
         otherColliders.Clear();
-        renderer.transform.localPosition = Vector3.zero;
+        parentRenderer.transform.localPosition = Vector3.zero;
         transform.localScale = normalScale;
         buildTime = normalBuildTime;
-        renderer.material = transparentMaterial;
-        collider.isTrigger = true;
-        collider.enabled = false;
+
+        foreach (MeshRenderer r in allRenderers)
+        {
+            r.material = transparentMaterial;
+        }
+
         rigidbody.isKinematic = false;
 
         foreach (CollisionReporter c in collisionReporters)
         {
+            c.Collider.isTrigger = true;
+            c.Collider.enabled = false;
             c.ReportOnTriggerEnter = true;
             c.ReportOnTriggerExit = true;
         }
@@ -417,49 +449,49 @@ public class Building : MonoBehaviour, ICollisionListener
 
     //ICollisionListener Triggered Methods---------------------------------------------------------
 
-    /// <summary>
-    /// OnCollisionEnter is called when this collider/rigidbody has begun touching another rigidbody/collider.
-    /// </summary>
-    /// <param name="collision">The collision data associated with this event.</param>
-    public void OnCollisionEnter(Collision collision)
-    {
-        if (active)
-        {
-            Debug.Log($"Building {id} OnCollisionEnter()");
-        }
-    }
+    ///// <summary>
+    ///// OnCollisionEnter is called when this collider/rigidbody has begun touching another rigidbody/collider.
+    ///// </summary>
+    ///// <param name="collision">The collision data associated with this event.</param>
+    //public override void OnCollisionEnter(Collision collision)
+    //{
+    //    if (active)
+    //    {
+    //        Debug.Log($"Building {id} OnCollisionEnter()");
+    //    }
+    //}
 
-    /// <summary>
-    /// OnCollisionExit is called when this collider/rigidbody has stopped touching another rigidbody/collider.
-    /// </summary>
-    /// <param name="collision">The collision data associated with this event.</param>
-    public void OnCollisionExit(Collision collision)
-    {
-        if (active)
-        {
-            Debug.Log($"Building {id} OnCollisionExit()");
-        }
-    }
+    ///// <summary>
+    ///// OnCollisionExit is called when this collider/rigidbody has stopped touching another rigidbody/collider.
+    ///// </summary>
+    ///// <param name="collision">The collision data associated with this event.</param>
+    //public override void OnCollisionExit(Collision collision)
+    //{
+    //    if (active)
+    //    {
+    //        Debug.Log($"Building {id} OnCollisionExit()");
+    //    }
+    //}
 
-    /// <summary>
-    /// OnCollisionStay is called once per frame for every collider/rigidbody that is touching rigidbody/collider.
-    /// </summary>
-    /// <param name="collision">The collision data associated with this event.</param>
-    public void OnCollisionStay(Collision collision)
-    {
-        if (active)
-        {
-            Debug.Log($"Building {id} OnCollisionStay()");
-        }
-    }
+    ///// <summary>
+    ///// OnCollisionStay is called once per frame for every collider/rigidbody that is touching rigidbody/collider.
+    ///// </summary>
+    ///// <param name="collision">The collision data associated with this event.</param>
+    //public override void OnCollisionStay(Collision collision)
+    //{
+    //    if (active)
+    //    {
+    //        Debug.Log($"Building {id} OnCollisionStay()");
+    //    }
+    //}
 
     /// <summary>
     /// When a GameObject collides with another GameObject, Unity calls OnTriggerEnter.
     /// </summary>
     /// <param name="other">The other Collider involved in this collision.</param>
-    public void OnTriggerEnter(Collider other)
+    public override void OnTriggerEnter(Collider other)
     {
-        if (active && !other.isTrigger)
+        if (active && !operational && !other.isTrigger)
         {
             //Debug.Log($"Building {id} OnTriggerEnter(). Other is {other}");
             colliding = true;
@@ -475,9 +507,9 @@ public class Building : MonoBehaviour, ICollisionListener
     /// OnTriggerExit is called when the Collider other has stopped touching the trigger.
     /// </summary>
     /// <param name="other">The other Collider involved in this collision.</param>
-    public void OnTriggerExit(Collider other)
+    public override void OnTriggerExit(Collider other)
     {
-        if (active && !other.isTrigger)
+        if (active && !operational && !other.isTrigger)
         {            
             //Debug.Log($"Building {id} OnTriggerExit(). Other is {other}");
             if (otherColliders.Contains(other))
@@ -492,15 +524,15 @@ public class Building : MonoBehaviour, ICollisionListener
         }
     }
 
-    /// <summary>
-    /// OnTriggerStay is called almost all the frames for every Collider other that is touching the trigger. The function is on the physics timer so it won't necessarily run every frame.
-    /// </summary>
-    /// <param name="other">The other Collider involved in this collision.</param>
-    public void OnTriggerStay(Collider other)
-    {
-        if (active)
-        {
-            Debug.Log($"Building {id} OnTriggerStay()");
-        }
-    }
+    ///// <summary>
+    ///// OnTriggerStay is called almost all the frames for every Collider other that is touching the trigger. The function is on the physics timer so it won't necessarily run every frame.
+    ///// </summary>
+    ///// <param name="other">The other Collider involved in this collision.</param>
+    //public override void OnTriggerStay(Collider other)
+    //{
+    //    if (active)
+    //    {
+    //        Debug.Log($"Building {id} OnTriggerStay()");
+    //    }
+    //}
 }

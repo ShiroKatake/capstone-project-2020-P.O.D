@@ -113,7 +113,7 @@ public class AlienController : MonoBehaviour
                     //Spawn enemies
                     int spawnCount = BuildingController.Instance.BuildingCount * 3 + spawnCountPenalty;
                     Vector3 clusterPos = MapController.Instance.RandomAlienSpawnablePos();
-                    //Vector3 clusterPos = new Vector3(0, 0.25f, 0);
+                    //Vector3 clusterPos = new Vector3(95, 0.5f, 105);
 
                     for (int i = 0; i < spawnCount; i++)
                     {
