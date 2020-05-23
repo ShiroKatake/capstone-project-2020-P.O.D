@@ -140,7 +140,7 @@ public class BuildingFactory : MonoBehaviour
             building = buildings[buildingType][0];
             buildings[buildingType].RemoveAt(0);
             building.transform.parent = null;
-            building.Collider.enabled = true;
+            building.EnableColliders();
         }
         else
         {
@@ -200,7 +200,7 @@ public class BuildingFactory : MonoBehaviour
         {
             building.transform.position = objectPool.transform.position;
             building.transform.parent = objectPool;
-            building.Collider.enabled = false;
+            building.DisableColliders();
         }
 
         return building;
