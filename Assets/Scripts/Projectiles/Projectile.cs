@@ -12,6 +12,7 @@ public class Projectile : MonoBehaviour
     //Serialized Fields----------------------------------------------------------------------------
 
     [Header("Projectile Stats")]
+    [SerializeField] private EProjectileType type;
     [SerializeField] private float speed;
     [SerializeField] private float damage;
     [SerializeField] private float lifespan;
@@ -51,6 +52,11 @@ public class Projectile : MonoBehaviour
     /// The projectile's rigidbody component.
     /// </summary>
     public Rigidbody Rigidbody { get => rigidbody; }
+
+    /// <summary>
+    /// The type of projectile a projectile is.
+    /// </summary>
+    public EProjectileType Type { get => type; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -131,8 +137,6 @@ public class Projectile : MonoBehaviour
             leftOwnerCollider = true;
         }
     }
-
-    //TODO: on trigger exit check for the owner
 
     /// <summary>
     /// Deals damage to enemies upon collision, before cleaning the projectile up.

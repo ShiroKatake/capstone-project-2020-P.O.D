@@ -132,16 +132,12 @@ public class BuildingSpawningController : MonoBehaviour
 
                 if (InputController.Instance.Gamepad == EGamepad.MouseAndKeyboard)
                 {
-                    heldBuilding.transform.position = MousePositionToBuildingPosition(transform.position/* + heldBuilding.GetOffset(transform.rotation.eulerAngles.y)*/, heldBuilding.XSize, heldBuilding.ZSize);
+                    heldBuilding.transform.position = MousePositionToBuildingPosition(transform.position, heldBuilding.XSize, heldBuilding.ZSize);
                 }
                 else
                 {
-                    //rawBuildingOffset = heldBuilding.GetOffset(transform.rotation.eulerAngles.y);
                     heldBuilding.transform.position = RawBuildingPositionToBuildingPosition(heldBuilding.XSize, heldBuilding.ZSize);
                 }
-
-                //TODO: double check this doesn't break anything, because it looks like this is a duplicate of a call in BuildingFactory.GetBuilding.
-                //heldBuilding.Collider.enabled = true;
             }
             //Instantiate the appropriate building and postion it properly, replacing the old one.
             else if (heldBuilding.BuildingType != selectedBuildingType)
@@ -160,8 +156,6 @@ public class BuildingSpawningController : MonoBehaviour
                 BuildingFactory.Instance.DestroyBuilding(heldBuilding, false, false);
                 heldBuilding = BuildingFactory.Instance.GetBuilding(selectedBuildingType);
                 heldBuilding.transform.position = pos;
-                //TODO: double check this doesn't break anything, because it looks like this is a duplicate of a call in BuildingFactory.GetBuilding.
-                //heldBuilding.Collider.enabled = true;
             }
             else //Move the building where you want it
             {
@@ -248,14 +242,13 @@ public class BuildingSpawningController : MonoBehaviour
     /// <returns>Snapped-to-grid building position.</returns>
     private Vector3 RawBuildingPositionToBuildingPosition(int xSize, int zSize)
     {
-        Vector3 worldPos = transform.position;// + rawBuildingOffset;
-        Vector3 newOffset = /*rawBuildingOffset +*/ rawBuildingMovement * Player.Instance.MovementSpeed * Time.deltaTime;
+        Vector3 worldPos = transform.position;
+        Vector3 newOffset = rawBuildingMovement * Player.Instance.MovementSpeed * Time.deltaTime;
         Vector3 newWorldPos = transform.position + newOffset;
         Vector3 newScreenPos = Camera.main.WorldToViewportPoint(newWorldPos);
 
         if (newScreenPos.x > 0 && newScreenPos.x < 1 && newScreenPos.y > 0 && newScreenPos.y < 1)
         {
-            //rawBuildingOffset = newOffset;
             worldPos = newWorldPos;
         }
 

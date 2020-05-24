@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,11 +13,12 @@ public class ProjectileFactory : MonoBehaviour
     //Serialized Fields----------------------------------------------------------------------------                                                    
 
     [SerializeField] private Transform projectilePoolParent;
-    [SerializeField] private Projectile projectilePrefab;
+    [SerializeField] private List<Projectile> projectilePrefabs;
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
-    private List<Projectile> projectiles;
+    private Dictionary<EProjectileType, Projectile> prefabs;
+    private Dictionary<EProjectileType, List<Projectile>> projectiles;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -41,15 +43,22 @@ public class ProjectileFactory : MonoBehaviour
         }
 
         Instance = this;
-        projectiles = new List<Projectile>();
+        prefabs = new Dictionary<EProjectileType, Projectile>();
+        projectiles = new Dictionary<EProjectileType, List<Projectile>>();
 
-        for (int i = 0; i < 50; i++)
+        foreach (Projectile p in projectilePrefabs)
         {
-            Projectile p = CreateProjectile();
-            p.transform.SetPositionAndRotation(projectilePoolParent.position, projectilePrefab.transform.rotation);
-            p.transform.parent = projectilePoolParent;
-            projectiles.Add(p);
-        }
+            prefabs[p.Type] = p;
+            projectiles[p.Type] = new List<Projectile>();
+
+            for (int i = 0; i < 50; i++)
+            {
+                Projectile q = CreateProjectile(p.Type);
+                q.transform.SetPositionAndRotation(projectilePoolParent.position, q.transform.rotation);
+                q.transform.parent = projectilePoolParent;
+                projectiles[q.Type].Add(q);
+            }
+        }        
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
@@ -60,18 +69,18 @@ public class ProjectileFactory : MonoBehaviour
     /// <param name="owner">The player or turret firing the projectile from their weapon.</param>
     /// <param name="position">The position the Projectile should be instantiated at.</param>
     /// <returns>A new projectile.</returns>
-    public Projectile GetProjectile(Transform owner, Vector3 position)
+    public Projectile GetProjectile(EProjectileType type, Transform owner, Vector3 position)
     {
         Projectile projectile;
 
-        if (projectiles.Count > 0)
+        if (projectiles[type].Count > 0)
         {
-            projectile = projectiles[0];
-            projectiles.RemoveAt(0);
+            projectile = projectiles[type][0];
+            projectiles[type].RemoveAt(0);
         }
         else
         {
-            projectile = CreateProjectile();
+            projectile = CreateProjectile(type);
         }
 
         projectile.Owner = owner;
@@ -84,9 +93,9 @@ public class ProjectileFactory : MonoBehaviour
     /// Instantiates a new Projectile.
     /// </summary>
     /// <returns>A new Projectile.</returns>
-    private Projectile CreateProjectile()
+    private Projectile CreateProjectile(EProjectileType type)
     {
-        Projectile projectile = Instantiate(projectilePrefab);
+        Projectile projectile = Instantiate(prefabs[type]);
         projectile.Collider.enabled = false;
         return projectile;
     }
@@ -103,6 +112,6 @@ public class ProjectileFactory : MonoBehaviour
         projectile.Rigidbody.isKinematic = true;
         projectile.transform.position = projectilePoolParent.position;
         projectile.transform.parent = projectilePoolParent;
-        projectiles.Add(projectile);
+        projectiles[projectile.Type].Add(projectile);
     }
 }

@@ -273,6 +273,7 @@ MonoBehaviour:
   barrelModelPivot: {fileID: 632658674879905165}
   barrelBase: {fileID: 6578390048626754263}
   barrelTip: {fileID: 1873128266348440701}
+  projectileType: 2
   shotCooldown: 3
   targetClosest: 1
   turretRotationSpeed: 90
@@ -282,8 +283,8 @@ MonoBehaviour:
   maxBarrelElevation: 90
   scatteredShots: 0
   numProjectiles: 1
-  scatteredShotsYRange: 0
-  scatteredShotsZRange: 0
+  yAxisVariance: 0
+  zAxisVariance: 0
   shoot: 0
   visibleTargets: []
   target: {fileID: 0}

@@ -20,6 +20,7 @@ public class Turret : CollisionListener
     [SerializeField] private Transform barrelTip;
 
     [Header("Shooting Stats")]
+    [SerializeField] private EProjectileType projectileType;
     [SerializeField] private float shotCooldown;
     [SerializeField] private bool targetClosest;
 
@@ -33,8 +34,8 @@ public class Turret : CollisionListener
     [Header("Aiming Variance Stats")]
     [SerializeField] private bool scatteredShots;
     [SerializeField] private float numProjectiles;
-    [SerializeField] private float scatteredShotsYRange;
-    [SerializeField] private float scatteredShotsZRange;
+    [SerializeField] private float yAxisVariance;
+    [SerializeField] private float zAxisVariance;
 
     //Non-Serialized Fields------------------------------------------------------------------------      
 
@@ -88,19 +89,18 @@ public class Turret : CollisionListener
         {
             RegulateDetectionCollider();
             SelectTarget();
-            //Aim();
+            Aim();
 
             if (target != null)
             {
                 CalculateTargetRotationAndElevation();
-                Aim();
+                //Aim();
                 Shoot();
             }
-            //}
-            //else if (shoot)
-            //{                          
-            //    Shoot();
-            //}
+            else if (shoot)
+            {
+                Shoot();
+            }
         }
     }
 
@@ -260,11 +260,11 @@ public class Turret : CollisionListener
     /// </summary>
     private void Shoot()
     {
-        if (/*shoot ||*/ (target != null && Time.time - timeOfLastShot > shotCooldown))
+        if (shoot || (target != null && Time.time - timeOfLastShot > shotCooldown))
         {
-            //shoot = false;
+            shoot = false;
             timeOfLastShot = Time.time;
-            Projectile projectile = ProjectileFactory.Instance.GetProjectile(transform, barrelTip.position);
+            Projectile projectile = ProjectileFactory.Instance.GetProjectile(projectileType, transform, barrelTip.position);
             projectile.Shoot((barrelTip.position - barrelBase.position).normalized, 0);
         }
     }
