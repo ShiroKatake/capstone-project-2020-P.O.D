@@ -21,7 +21,9 @@ public class CollisionReporter : MonoBehaviour
     
     //Non-Serialized Fields------------------------------------------------------------------------
 
+    //Components
     private Collider collider;
+    private Rigidbody rigidbody;
 
     //TODO: check if reportX switches are turned off when no longer needed AND reportX switches are reset properly when a building is pooled
 
@@ -62,6 +64,11 @@ public class CollisionReporter : MonoBehaviour
     /// </summary>
     public bool ReportOnTriggerStay { get => reportOnTriggerStay; set => reportOnTriggerStay = value; }
 
+    /// <summary>
+    /// This collision reporter's rigidbody component.
+    /// </summary>
+    public Rigidbody Rigidbody { get => rigidbody; }
+
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
@@ -71,6 +78,7 @@ public class CollisionReporter : MonoBehaviour
     private void Awake()
     {
         collider = GetComponent<Collider>();
+        rigidbody = GetComponent<Rigidbody>();
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------

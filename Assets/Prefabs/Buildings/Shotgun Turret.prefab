@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5167881990852599044}
   m_Layer: 0
   m_Name: Barrel Model
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 4760966743071291633}
   m_Layer: 0
   m_Name: Targeter
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -120,7 +120,7 @@ GameObject:
   - component: {fileID: 632658674879905165}
   m_Layer: 0
   m_Name: Barrel Model Pivot
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -151,7 +151,7 @@ GameObject:
   - component: {fileID: 6578390048626754263}
   m_Layer: 0
   m_Name: Barrel Collider Pivot
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -271,6 +271,7 @@ MonoBehaviour:
   turretCollider: {fileID: 4847364633576071608}
   barrelColliderPivot: {fileID: 6578390048626754263}
   barrelModelPivot: {fileID: 632658674879905165}
+  barrelBase: {fileID: 6578390048626754263}
   barrelTip: {fileID: 1873128266348440701}
   shotCooldown: 3
   targetClosest: 1
@@ -283,6 +284,7 @@ MonoBehaviour:
   numProjectiles: 1
   scatteredShotsYRange: 0
   scatteredShotsZRange: 0
+  shoot: 0
   visibleTargets: []
   target: {fileID: 0}
   detecting: 0
@@ -301,7 +303,7 @@ GameObject:
   - component: {fileID: 1873128266348440701}
   m_Layer: 0
   m_Name: Barrel Tip
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -333,7 +335,7 @@ GameObject:
   - component: {fileID: 9191738382134233783}
   m_Layer: 0
   m_Name: Detection Collider
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -626,6 +628,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Base Model
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 22135eb99d7103f4383e8a2193353969,
+        type: 3}
+      propertyPath: m_TagString
+      value: Building
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 22135eb99d7103f4383e8a2193353969, type: 3}

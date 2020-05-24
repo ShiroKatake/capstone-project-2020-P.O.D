@@ -220,7 +220,9 @@ public class Player : MonoBehaviour
         {
             timeOfLastShot = Time.time;
             Projectile projectile = ProjectileFactory.Instance.GetProjectile(transform, laserCannonTip.position);
-            projectile.Shoot((transform.forward * 2 - transform.up).normalized);
+            projectile.Shoot((transform.forward * 2 - transform.up).normalized, 0);
+            //TODO: tweak POD so that the shot vector is calculated using transforms equivalent to Turret's
+            //TODO: use overload that incorporates shooter movement speed, and calculate current movement speed in the direction of the shot vector.
         }
     }
 }

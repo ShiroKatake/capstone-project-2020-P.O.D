@@ -16,6 +16,7 @@ public class Turret : CollisionListener
     [SerializeField] private Transform turretCollider;
     [SerializeField] private Transform barrelColliderPivot;
     [SerializeField] private Transform barrelModelPivot;
+    [SerializeField] private Transform barrelBase;
     [SerializeField] private Transform barrelTip;
 
     [Header("Shooting Stats")]
@@ -36,9 +37,9 @@ public class Turret : CollisionListener
     [SerializeField] private float scatteredShotsZRange;
 
     //Non-Serialized Fields------------------------------------------------------------------------      
-    
-    [Header("Testing")]
 
+    [Header("Testing")]
+    [SerializeField] private bool shoot;
     //Components
     private Building building;
 
@@ -87,13 +88,19 @@ public class Turret : CollisionListener
         {
             RegulateDetectionCollider();
             SelectTarget();
+            //Aim();
 
             if (target != null)
             {
                 CalculateTargetRotationAndElevation();
                 Aim();
-                //Shoot();
+                Shoot();
             }
+            //}
+            //else if (shoot)
+            //{                          
+            //    Shoot();
+            //}
         }
     }
 
@@ -253,11 +260,12 @@ public class Turret : CollisionListener
     /// </summary>
     private void Shoot()
     {
-        if (target != null && Time.time - timeOfLastShot > shotCooldown)
+        if (/*shoot ||*/ (target != null && Time.time - timeOfLastShot > shotCooldown))
         {
+            //shoot = false;
             timeOfLastShot = Time.time;
-
-            //Shoot
+            Projectile projectile = ProjectileFactory.Instance.GetProjectile(transform, barrelTip.position);
+            projectile.Shoot((barrelTip.position - barrelBase.position).normalized, 0);
         }
     }
 

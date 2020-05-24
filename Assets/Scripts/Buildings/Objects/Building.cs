@@ -395,15 +395,16 @@ public class Building : CollisionListener
         {
             r.material = opaqueMaterial;
         }
-        rigidbody.isKinematic = true;
-        placed = true;
 
         foreach (CollisionReporter c in collisionReporters)
         {
+            c.Rigidbody.isKinematic = true;
             c.Collider.isTrigger = false;
             c.ReportOnTriggerEnter = false;
             c.ReportOnTriggerExit = false;
         }
+
+        placed = true;
 
         StartCoroutine(Build());
     }
@@ -436,12 +437,11 @@ public class Building : CollisionListener
             r.material = transparentMaterial;
         }
 
-        rigidbody.isKinematic = false;
-
         foreach (CollisionReporter c in collisionReporters)
         {
             c.Collider.isTrigger = true;
             c.Collider.enabled = false;
+            c.Rigidbody.isKinematic = false;
             c.ReportOnTriggerEnter = true;
             c.ReportOnTriggerExit = true;
         }
