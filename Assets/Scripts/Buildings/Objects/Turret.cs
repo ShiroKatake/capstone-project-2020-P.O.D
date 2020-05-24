@@ -32,7 +32,6 @@ public class Turret : CollisionListener
     [SerializeField] private float maxBarrelElevation;
 
     [Header("Aiming Variance Stats")]
-    [SerializeField] private bool scatteredShots;
     [SerializeField] private float numProjectiles;
     [SerializeField] private float yAxisVariance;
     [SerializeField] private float zAxisVariance;
@@ -89,18 +88,18 @@ public class Turret : CollisionListener
         {
             RegulateDetectionCollider();
             SelectTarget();
-            Aim();
+            //Aim();
 
             if (target != null)
             {
                 CalculateTargetRotationAndElevation();
-                //Aim();
+                Aim();
                 Shoot();
             }
-            else if (shoot)
-            {
-                Shoot();
-            }
+            //else if (shoot)
+            //{
+            //    Shoot();
+            //}
         }
     }
 
@@ -260,12 +259,27 @@ public class Turret : CollisionListener
     /// </summary>
     private void Shoot()
     {
-        if (shoot || (target != null && Time.time - timeOfLastShot > shotCooldown))
+        if (/*shoot || */(target != null && Time.time - timeOfLastShot > shotCooldown))
         {
-            shoot = false;
+            //shoot = false;
             timeOfLastShot = Time.time;
-            Projectile projectile = ProjectileFactory.Instance.GetProjectile(projectileType, transform, barrelTip.position);
-            projectile.Shoot((barrelTip.position - barrelBase.position).normalized, 0);
+            
+            for(int i = 0; i < numProjectiles; i++)
+            {
+                Projectile projectile = ProjectileFactory.Instance.GetProjectile(projectileType, transform, barrelTip.position);
+                Vector3 vector = barrelTip.position - barrelBase.position;
+
+                if (yAxisVariance > 0 || zAxisVariance > 0)
+                {
+                    Vector3 rotationVariance = Vector3.zero;
+                    rotationVariance.y = (yAxisVariance > 0 ? Random.Range(-yAxisVariance, yAxisVariance) : 0);
+                    rotationVariance.z = (zAxisVariance > 0 ? Random.Range(-zAxisVariance, zAxisVariance) : 0);
+                    vector += rotationVariance;
+                    //Debug.Log($"Introducing variance of {rotationVariance}");               
+                }
+
+                projectile.Shoot((vector).normalized, 0);
+            }            
         }
     }
 
