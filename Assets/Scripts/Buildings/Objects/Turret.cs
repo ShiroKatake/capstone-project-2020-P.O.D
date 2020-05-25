@@ -12,29 +12,32 @@ public class Turret : CollisionListener
     //Serialized Fields----------------------------------------------------------------------------                                                    
 
     [Header("Game Objects")]
-    [SerializeField] private Transform targeter;
-    [SerializeField] private Transform turretCollider;
+    [SerializeField] private Transform rotationTargeter;
+    [SerializeField] private Transform elevationTargeter;
+    [SerializeField] private Transform barrelBaseColliderPivot;
+    [SerializeField] private Transform barrelBaseModelPivot;
     [SerializeField] private Transform barrelColliderPivot;
     [SerializeField] private Transform barrelModelPivot;
-    [SerializeField] private Transform barrelBase;
+    [SerializeField] private Transform barrelMagazine;
     [SerializeField] private Transform barrelTip;
 
     [Header("Shooting Stats")]
     [SerializeField] private EProjectileType projectileType;
-    [SerializeField] private float shotCooldown;
     [SerializeField] private bool targetClosest;
-
-    [Header("Aiming Stats")]
-    [SerializeField] private float turretRotationSpeed;
-    [SerializeField] private bool elevateBarrel;
-    [SerializeField] private float barrelElevationSpeed;
-    [SerializeField] private float minBarrelElevation;
-    [SerializeField] private float maxBarrelElevation;
-
-    [Header("Aiming Variance Stats")]
     [SerializeField] private float numProjectiles;
     [SerializeField] private float yAxisVariance;
     [SerializeField] private float zAxisVariance;
+    [SerializeField] private float shotCooldown;
+
+    [Header("Rotation Aiming Stats")]
+    [SerializeField] private float rotationSpeed;
+    [SerializeField] private Vector3 rotationOffset;
+
+    [Header("Elevation Aiming Stats")]
+    [SerializeField] private float elevationSpeed;
+    [SerializeField] private float minBarrelElevation;
+    [SerializeField] private float maxBarrelElevation;
+    [SerializeField] private Vector3 elevationOffset;
 
     //Non-Serialized Fields------------------------------------------------------------------------      
 
@@ -71,8 +74,9 @@ public class Turret : CollisionListener
         building = gameObject.GetComponent<Building>();
         currentTurretRotation = 0;
         currentBarrelElevation = 0;
-        turretCollider.rotation = Quaternion.Euler(-90, 0, 0);
-        barrelColliderPivot.rotation = Quaternion.Euler(0, 0, 0);
+        barrelBaseColliderPivot.rotation = Quaternion.Euler(rotationOffset);
+        barrelBaseModelPivot.rotation = barrelBaseColliderPivot.rotation;
+        barrelColliderPivot.rotation = Quaternion.Euler(elevationOffset);
         barrelModelPivot.rotation = barrelColliderPivot.rotation;
         collisionReporters = GetCollisionReporters();
     }
@@ -88,18 +92,18 @@ public class Turret : CollisionListener
         {
             RegulateDetectionCollider();
             SelectTarget();
-            //Aim();
+            Aim();
 
             if (target != null)
             {
                 CalculateTargetRotationAndElevation();
-                Aim();
+                //Aim();
                 Shoot();
             }
-            //else if (shoot)
-            //{
-            //    Shoot();
-            //}
+            else if (shoot)
+            {
+                Shoot();
+            }
         }
     }
 
@@ -199,15 +203,26 @@ public class Turret : CollisionListener
     /// </summary>
     private void CalculateTargetRotationAndElevation()
     {
-        //Raw Rotation
-        targeter.LookAt(target.transform.position);
-        float rawElevation = targeter.rotation.eulerAngles.x;
-        float rawRotation = targeter.rotation.eulerAngles.y;
+        //Variables
+        float rawRotation;
+        float rawElevation;
 
         //Rotation
+        rotationTargeter.LookAt(target.transform.position);
+        rawRotation = rotationTargeter.rotation.eulerAngles.y;
         targetTurretRotation = NormaliseAngle(rawRotation + 90);
 
         //Elevation
+        if (rotationTargeter == elevationTargeter)
+        {
+            rawElevation = rotationTargeter.rotation.eulerAngles.x;
+        }
+        else
+        {
+            elevationTargeter.LookAt(target.transform.position);
+            rawElevation = elevationTargeter.rotation.eulerAngles.x;
+        }
+
         targetBarrelElevation = (rawElevation > 90 ? 360 - rawElevation : rawElevation * -1);
 
         if (targetBarrelElevation > maxBarrelElevation)
@@ -233,11 +248,12 @@ public class Turret : CollisionListener
             float deltaAngle = Mathf.DeltaAngle(currentTurretRotation, targetTurretRotation);
             float rotationDirection = Sign(deltaAngle);
             deltaAngle = Magnitude(deltaAngle);
-            float fixedUpdateRotation = turretRotationSpeed * Time.fixedDeltaTime;
+            float fixedUpdateRotation = rotationSpeed * Time.fixedDeltaTime;
 
             currentTurretRotation += rotationDirection * Mathf.Min(deltaAngle, fixedUpdateRotation);
             currentTurretRotation = NormaliseAngle(currentTurretRotation);
-            turretCollider.localRotation = Quaternion.Euler(-90, 0, currentTurretRotation); 
+            barrelBaseColliderPivot.localRotation = Quaternion.Euler(rotationOffset.x, rotationOffset.y, currentTurretRotation + rotationOffset.z);
+            barrelBaseModelPivot.localRotation = barrelBaseColliderPivot.localRotation;
         }
 
         //Barrel pivoting on barrel pivot's local y axis. All other local values remain 0.
@@ -246,10 +262,10 @@ public class Turret : CollisionListener
             float deltaAngle = Mathf.DeltaAngle(currentBarrelElevation, targetBarrelElevation);
             float pivotDirection = Sign(deltaAngle);
             deltaAngle = Magnitude(deltaAngle);
-            float fixedUpdatePivot = barrelElevationSpeed * Time.fixedDeltaTime;
+            float fixedUpdatePivot = elevationSpeed * Time.fixedDeltaTime;
 
             currentBarrelElevation += pivotDirection * Mathf.Min(deltaAngle, fixedUpdatePivot);
-            barrelColliderPivot.localRotation = Quaternion.Euler(0, currentBarrelElevation, 0);
+            barrelColliderPivot.localRotation = Quaternion.Euler(elevationOffset.x, currentBarrelElevation + elevationOffset.y, elevationOffset.z);
             barrelModelPivot.localRotation = barrelColliderPivot.localRotation;
         }
     }
@@ -259,15 +275,15 @@ public class Turret : CollisionListener
     /// </summary>
     private void Shoot()
     {
-        if (/*shoot || */(target != null && Time.time - timeOfLastShot > shotCooldown))
+        if (shoot || (target != null && Time.time - timeOfLastShot > shotCooldown))
         {
-            //shoot = false;
+            shoot = false;
             timeOfLastShot = Time.time;
             
             for(int i = 0; i < numProjectiles; i++)
             {
                 Projectile projectile = ProjectileFactory.Instance.GetProjectile(projectileType, transform, barrelTip.position);
-                Vector3 vector = barrelTip.position - barrelBase.position;
+                Vector3 vector = barrelTip.position - barrelMagazine.position;
 
                 if (yAxisVariance > 0 || zAxisVariance > 0)
                 {

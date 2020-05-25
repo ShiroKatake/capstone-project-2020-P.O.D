@@ -267,24 +267,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   collisionReporters: []
-  targeter: {fileID: 4760966743071291633}
-  turretCollider: {fileID: 4847364633576071608}
+  rotationTargeter: {fileID: 4760966743071291633}
+  elevationTargeter: {fileID: 4760966743071291633}
+  barrelBaseColliderPivot: {fileID: 4847364633576071608}
+  barrelBaseModelPivot: {fileID: 6939182874317689528}
   barrelColliderPivot: {fileID: 6578390048626754263}
   barrelModelPivot: {fileID: 632658674879905165}
-  barrelBase: {fileID: 6578390048626754263}
+  barrelMagazine: {fileID: 6578390048626754263}
   barrelTip: {fileID: 1873128266348440701}
   projectileType: 2
-  shotCooldown: 3
   targetClosest: 1
-  turretRotationSpeed: 90
-  elevateBarrel: 1
-  barrelElevationSpeed: 90
-  minBarrelElevation: -25
-  maxBarrelElevation: 90
-  scatteredShots: 0
   numProjectiles: 10
   yAxisVariance: 0.1
   zAxisVariance: 0.1
+  shotCooldown: 3
+  rotationSpeed: 90
+  rotationOffset: {x: -90, y: 0, z: 0}
+  elevationSpeed: 90
+  minBarrelElevation: -25
+  maxBarrelElevation: 90
+  elevationOffset: {x: 0, y: 0, z: 0}
   shoot: 0
   visibleTargets: []
   target: {fileID: 0}
@@ -414,7 +416,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5255631894834438756}
-  m_LocalRotation: {x: -0.7071056, y: 0.0013084313, z: 0.0013084313, w: 0.7071056}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0.199, z: 0}
   m_LocalScale: {x: 0.065, y: 0.065, z: 0.065}
   m_Children:
@@ -423,7 +425,7 @@ Transform:
   - {fileID: 4760966743071291633}
   m_Father: {fileID: 2387721251791164881}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: -90.00001, y: 0, z: 0.21200001}
+  m_LocalEulerAnglesHint: {x: -90.00001, y: 0, z: 0}
 --- !u!64 &2481825182901768388
 MeshCollider:
   m_ObjectHideFlags: 0
