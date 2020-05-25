@@ -3,21 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// A turret component for buildings that shoot.
+/// A component for firing the gun part of buildings that shoot.
 /// </summary>
-public class Turret : CollisionListener
+public class TurretShooting : CollisionListener
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
     //Serialized Fields----------------------------------------------------------------------------                                                    
 
     [Header("Game Objects")]
-    [SerializeField] private Transform rotationTargeter;
-    [SerializeField] private Transform elevationTargeter;
-    [SerializeField] private Transform barrelBaseColliderPivot;
-    [SerializeField] private Transform barrelBaseModelPivot;
-    [SerializeField] private Transform barrelColliderPivot;
-    [SerializeField] private Transform barrelModelPivot;
     [SerializeField] private Transform barrelMagazine;
     [SerializeField] private Transform barrelTip;
 
@@ -29,36 +23,27 @@ public class Turret : CollisionListener
     [SerializeField] private float zAxisVariance;
     [SerializeField] private float shotCooldown;
 
-    [Header("Rotation Aiming Stats")]
-    [SerializeField] private float rotationSpeed;
-    [SerializeField] private Vector3 rotationOffset;
-
-    [Header("Elevation Aiming Stats")]
-    [SerializeField] private float elevationSpeed;
-    [SerializeField] private float minBarrelElevation;
-    [SerializeField] private float maxBarrelElevation;
-    [SerializeField] private Vector3 elevationOffset;
-
     //Non-Serialized Fields------------------------------------------------------------------------      
 
     [Header("Testing")]
-    [SerializeField] private bool shoot;
     //Components
     private Building building;
 
     //Target Variables
+    [SerializeField] private bool detecting;
     [SerializeField] private List<Alien> visibleTargets;
     [SerializeField] private Alien target;
-
-    //Aiming Variables
-    [SerializeField] private bool detecting;
-    [SerializeField] private float currentTurretRotation;
-    [SerializeField] private float targetTurretRotation;
-    [SerializeField] private float currentBarrelElevation;
-    [SerializeField] private float targetBarrelElevation;
-
+    
     //Shooting Variables
+    [SerializeField] private bool shoot;
     private float timeOfLastShot;
+
+    //Public Properties----------------------------------------------------------------------------
+
+    /// <summary>
+    /// The target that the turret has selected.
+    /// </summary>
+    public Alien Target { get => target; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -72,12 +57,6 @@ public class Turret : CollisionListener
         visibleTargets = new List<Alien>();
         timeOfLastShot = shotCooldown * -1;
         building = gameObject.GetComponent<Building>();
-        currentTurretRotation = 0;
-        currentBarrelElevation = 0;
-        barrelBaseColliderPivot.rotation = Quaternion.Euler(rotationOffset);
-        barrelBaseModelPivot.rotation = barrelBaseColliderPivot.rotation;
-        barrelColliderPivot.rotation = Quaternion.Euler(elevationOffset);
-        barrelModelPivot.rotation = barrelColliderPivot.rotation;
         collisionReporters = GetCollisionReporters();
     }
 
@@ -92,15 +71,8 @@ public class Turret : CollisionListener
         {
             RegulateDetectionCollider();
             SelectTarget();
-            Aim();
 
-            if (target != null)
-            {
-                CalculateTargetRotationAndElevation();
-                //Aim();
-                Shoot();
-            }
-            else if (shoot)
+            if (shoot || target != null)
             {
                 Shoot();
             }
@@ -199,78 +171,6 @@ public class Turret : CollisionListener
     }
 
     /// <summary>
-    /// Calculates the local rotation the turret should have and the local elevation the barrel should have to aim at the target.
-    /// </summary>
-    private void CalculateTargetRotationAndElevation()
-    {
-        //Variables
-        float rawRotation;
-        float rawElevation;
-
-        //Rotation
-        rotationTargeter.LookAt(target.transform.position);
-        rawRotation = rotationTargeter.rotation.eulerAngles.y;
-        targetTurretRotation = NormaliseAngle(rawRotation + 90);
-
-        //Elevation
-        if (rotationTargeter == elevationTargeter)
-        {
-            rawElevation = rotationTargeter.rotation.eulerAngles.x;
-        }
-        else
-        {
-            elevationTargeter.LookAt(target.transform.position);
-            rawElevation = elevationTargeter.rotation.eulerAngles.x;
-        }
-
-        targetBarrelElevation = (rawElevation > 90 ? 360 - rawElevation : rawElevation * -1);
-
-        if (targetBarrelElevation > maxBarrelElevation)
-        {
-            targetBarrelElevation = maxBarrelElevation;
-        }
-        else if (targetBarrelElevation < minBarrelElevation)
-        {
-            targetBarrelElevation = minBarrelElevation;
-        }
-
-        //Debug.Log($"Pos: {barrelColliderPivot}, target pos: {target.transform.position}, targeter rotation: {targeter.rotation.eulerAngles}, target elevation: {targetBarrelElevation}, target rotation: {targetTurretRotation}");
-    }
-
-    /// <summary>
-    /// Locally rotates the turret and elevates the barrel to aim at the target.
-    /// </summary>
-    private void Aim()
-    {
-        //Turret rotation on turret base's local z axis. All other local values remain static.
-        if (currentTurretRotation != targetTurretRotation)
-        {
-            float deltaAngle = Mathf.DeltaAngle(currentTurretRotation, targetTurretRotation);
-            float rotationDirection = Sign(deltaAngle);
-            deltaAngle = Magnitude(deltaAngle);
-            float fixedUpdateRotation = rotationSpeed * Time.fixedDeltaTime;
-
-            currentTurretRotation += rotationDirection * Mathf.Min(deltaAngle, fixedUpdateRotation);
-            currentTurretRotation = NormaliseAngle(currentTurretRotation);
-            barrelBaseColliderPivot.localRotation = Quaternion.Euler(rotationOffset.x, rotationOffset.y, currentTurretRotation + rotationOffset.z);
-            barrelBaseModelPivot.localRotation = barrelBaseColliderPivot.localRotation;
-        }
-
-        //Barrel pivoting on barrel pivot's local y axis. All other local values remain 0.
-        if (currentBarrelElevation != targetBarrelElevation)
-        {
-            float deltaAngle = Mathf.DeltaAngle(currentBarrelElevation, targetBarrelElevation);
-            float pivotDirection = Sign(deltaAngle);
-            deltaAngle = Magnitude(deltaAngle);
-            float fixedUpdatePivot = elevationSpeed * Time.fixedDeltaTime;
-
-            currentBarrelElevation += pivotDirection * Mathf.Min(deltaAngle, fixedUpdatePivot);
-            barrelColliderPivot.localRotation = Quaternion.Euler(elevationOffset.x, currentBarrelElevation + elevationOffset.y, elevationOffset.z);
-            barrelModelPivot.localRotation = barrelColliderPivot.localRotation;
-        }
-    }
-
-    /// <summary>
     /// Shoots at the target.
     /// </summary>
     private void Shoot()
@@ -339,52 +239,5 @@ public class Turret : CollisionListener
                 visibleTargets.Remove(a);
             }
         }
-    }
-
-    //Utility Methods--------------------------------------------------------------------------------------------------------------------------------
-
-    /// <summary>
-    /// Returns the magnitude of a number.
-    /// </summary>
-    /// <param name="num">The number to calculate the magnitude of.</param>
-    /// <returns>The magnitude of the number.</returns>
-    private float Magnitude (float num)
-    {
-        if (num < 0)
-        {
-            num *= -1;
-        }
-
-        return num;
-    }
-
-    /// <summary>
-    /// Converts the provided angle to an angle between 0 degrees and 360 degrees
-    /// </summary>
-    /// <param name="angle">The raw angle.</param>
-    /// <returns>The normalised angle.</returns>
-    private float NormaliseAngle(float angle)
-    {
-        while (angle > 360)
-        {
-            angle -= 360;
-        }
-
-        while (angle < 0)
-        {
-            angle += 360;
-        }
-
-        return angle;
-    }
-
-    /// <summary>
-    /// Returns the sign of a number, i.e. +1 if it's positive or 0, and -1 if it's negative.
-    /// </summary>
-    /// <param name="num">The number to determine the sign of.</param>
-    /// <returns>The sign (+1 or -1) of the number.</returns>
-    private float Sign(float num)
-    {
-        return (num < 0 ? -1 : 1);
     }
 }
