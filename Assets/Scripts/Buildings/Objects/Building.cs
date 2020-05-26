@@ -423,11 +423,6 @@ public class Building : CollisionListener
     /// </summary>
     public void Reset()
     {
-        if (buildingType == EBuilding.ShortRangeTurret || buildingType == EBuilding.LongRangeTurret)
-        {
-            MessageBoard.Instance.Add(new Message(gameObject.name, gameObject.tag, "Dead", 3));
-        }        
-
         StopCoroutine(Build());
         health.Reset();
         Operational = false;
@@ -440,16 +435,12 @@ public class Building : CollisionListener
         parentRenderer.transform.localPosition = Vector3.zero;
         transform.localScale = normalScale;
         buildTime = normalBuildTime;
-
-        if (turretAimer != null)
+        
+        if (buildingType == EBuilding.ShortRangeTurret || buildingType == EBuilding.LongRangeTurret)
         {
             turretAimer.Reset();
-        }
-
-        if (turretShooter != null)
-        {
             turretShooter.Reset();
-        }
+        }        
 
         foreach (MeshRenderer r in allRenderers)
         {

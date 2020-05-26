@@ -159,7 +159,7 @@ public class Player : MonoBehaviour
 
             if (!gameOver)
             {
-                MessageBoard.Instance.Add(new Message(gameObject.name, gameObject.tag, "Dead", 3));
+                MessageDispatcher.Instance.SendMessage("Alien", new Message(gameObject.name, "Player", this.gameObject, "Dead"));
                 gameOver = true;
             }
         }

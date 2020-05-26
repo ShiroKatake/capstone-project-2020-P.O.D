@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Demo class for enemies.
 /// </summary>
-public class Alien : MonoBehaviour
+public class Alien : MonoBehaviour, IMessenger
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
@@ -105,6 +105,7 @@ public class Alien : MonoBehaviour
         targetHealth = cryoEgg.Health;
         timeOfLastAttack = attackCooldown * -1;
         moving = true;
+        MessageDispatcher.Instance.Subscribe("Alien", this);
 
         //Rotate to face the cryo egg
         Vector3 targetRotation = cryoEgg.transform.position - transform.position;
@@ -155,23 +156,6 @@ public class Alien : MonoBehaviour
     /// </summary>
     private void SelectTarget()
     {
-        //Check shooter is alive
-        if (shotByTransform != null)
-        {
-            foreach (Message msg in MessageBoard.Instance.Messages)
-            {
-                if (msg.SenderName == shotByName && msg.MessageContents == "Dead")
-                {
-                    shotByName = "";
-                    shotByTransform = null;
-                }
-            }
-        }
-        else if (shotByName != "")
-        {
-            shotByName = "";
-        }
-
         switch (visibleTargets.Count)
         {
             case 0:
@@ -289,15 +273,25 @@ public class Alien : MonoBehaviour
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
-    /// Resets the alien to its inactive state.
+    /// Allows message-sending classes to deliver a message to this alien.
     /// </summary>
-    public void Reset()
+    /// <param name="message">The message to send to this messenger.</param>
+    public void Receive(Message message)
     {
-        moving = false;
-
-        foreach (Collider c in colliders)
+        if (message.SenderTag == "Turret" && message.MessageContents == "Dead")
         {
-            c.enabled = false;
+            Transform messenger = message.SenderObject.transform;
+
+            if (shotByTransform == messenger)
+            {
+                shotByName = "";
+                shotByTransform = null;
+            }
+
+            if (visibleTargets.Contains(messenger))
+            {
+                visibleTargets.Remove(messenger);
+            }
         }
     }
 
@@ -313,9 +307,23 @@ public class Alien : MonoBehaviour
     }
 
     /// <summary>
-    /// The transform of the player or building the alien was shot by most recently.
+    /// Resets the alien to its inactive state.
     /// </summary>
-    public Transform ShotByTransform { get => shotByTransform; set => shotByTransform = value; }
+    public void Reset()
+    {
+        MessageDispatcher.Instance.SendMessage("Turret", new Message(gameObject.name, "Alien", this.gameObject, "Dead"));
+        MessageDispatcher.Instance.Unsubscribe("Alien", this);
+        moving = false;
+        shotByName = "";
+        shotByTransform = null;
+        visibleTargets.Clear();
+        visibleAliens.Clear();
+
+        foreach (Collider c in colliders)
+        {
+            c.enabled = false;
+        }
+    }
 
     /// <summary>
     /// OnCollisionStay is called once per frame for every collider/rigidbody that is touching rigidbody/collider.

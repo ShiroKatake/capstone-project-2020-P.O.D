@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// A component for firing the gun part of buildings that shoot.
 /// </summary>
-public class TurretShooting : CollisionListener
+public class TurretShooting : CollisionListener, IMessenger
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
@@ -31,8 +31,8 @@ public class TurretShooting : CollisionListener
 
     //Target Variables
     //[SerializeField] private bool detecting;
-    /*[SerializeField]*/ private List<Alien> visibleTargets;
-    /*[SerializeField]*/ private Alien target;
+    [SerializeField] private List<Alien> visibleTargets;
+    [SerializeField] private Alien target;
     
     //Shooting Variables
     //[SerializeField] private bool shoot;
@@ -72,6 +72,8 @@ public class TurretShooting : CollisionListener
     public void Reset()
     {
         //Debug.Log("TurretShooting.Reset()");
+        MessageDispatcher.Instance.SendMessage("Alien", new Message(gameObject.name, "Turret", this.gameObject, "Dead"));
+        MessageDispatcher.Instance.Unsubscribe("Turret", this);
         visibleTargets = new List<Alien>();
         timeOfLastShot = shotCooldown * -1;
         ToggleDetectionCollider(false);
@@ -86,6 +88,7 @@ public class TurretShooting : CollisionListener
     {
         if (building.Operational)
         {
+            //CheckTargetDeaths();
             SelectTarget();
 
             if (/*shoot || */target != null)
@@ -95,8 +98,8 @@ public class TurretShooting : CollisionListener
         }
     }
 
-    //Recurring Methods (FixedUpdate())--------------------------------------------------------------------------------------------------------------
-    
+    //Recurring Methods (FixedUpdate())--------------------------------------------------------------------------------------------------------------  
+
     /// <summary>
     /// Selects a target for the turret.
     /// </summary>
@@ -207,6 +210,7 @@ public class TurretShooting : CollisionListener
     public void Place()
     {
         ToggleDetectionCollider(true);
+        MessageDispatcher.Instance.Subscribe("Turret", this);
     }
 
     /// <summary>
@@ -220,6 +224,28 @@ public class TurretShooting : CollisionListener
         foreach (CollisionReporter c in collisionReporters)
         {
             c.Collider.enabled = active;
+        }
+    }
+
+    /// <summary>
+    /// Allows message-sending classes to deliver a message to this turret.
+    /// </summary>
+    /// <param name="message">The message to send to this messenger.</param>
+    public void Receive(Message message)
+    {
+        if (message.SenderTag == "Alien" && message.MessageContents == "Dead")
+        {
+            Alien messenger = message.SenderObject.GetComponent<Alien>();
+
+            if (target == messenger)
+            {
+                target = null;
+            }
+
+            if (visibleTargets.Contains(messenger))
+            {
+                visibleTargets.Remove(messenger);
+            }
         }
     }
 
@@ -243,6 +269,8 @@ public class TurretShooting : CollisionListener
         }
     }
 
+    //TODO: have a look at what's going on here; this doesn't seem to be pulling its weight, necessitating messaging to ascertain if an alien has gone out of the turret's range once it dies.
+    //Keep it intact for now though, since it should still account for aliens that move out of range without dying.
     /// <summary>
     /// OnTriggerExit is called when the Collider other has stopped touching the trigger.
     /// </summary>

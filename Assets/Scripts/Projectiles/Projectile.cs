@@ -147,8 +147,8 @@ public class Projectile : MonoBehaviour
         if (collidedWith.CompareTag("Alien"))
         {           
             Alien a = collidedWith.gameObject.GetComponent<Alien>();
-            a.Health.Value -= damage;
             a.ShotBy(owner.name, owner.GetComponentInChildren<Collider>().transform);
+            a.Health.Value -= damage;
             //Debug.Log($"{gameObject.name} reduced {a.gameObject.name}'s health to {a.Health.Value}; {a.gameObject.name}.ShotBy is now {owner.name}");
         }
 
