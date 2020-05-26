@@ -51,6 +51,8 @@ public class Building : CollisionListener
     private ResourceCollector resourceCollector;
     private Rigidbody rigidbody;
     private Terraformer terraformer;
+    private TurretAiming turretAimer;
+    private TurretShooting turretShooter;
 
     //Positioning
     //private Dictionary<string, Vector3> offsets;
@@ -216,6 +218,8 @@ public class Building : CollisionListener
         rigidbody = GetComponentInChildren<Rigidbody>();
         resourceCollector = GetComponent<ResourceCollector>();
         terraformer = GetComponent<Terraformer>();
+        turretAimer = GetComponent<TurretAiming>();
+        turretShooter = GetComponent<TurretShooting>();
         collisionReporters = GetCollisionReporters();
         otherColliders = new List<Collider>();
         normalScale = transform.localScale;
@@ -283,6 +287,11 @@ public class Building : CollisionListener
 
         boinging = false;
         Operational = true; //Using property to trigger activation of any resource collector component attached.
+
+        if (turretShooter != null)
+        {
+            turretShooter.Place();
+        }
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
@@ -431,6 +440,16 @@ public class Building : CollisionListener
         parentRenderer.transform.localPosition = Vector3.zero;
         transform.localScale = normalScale;
         buildTime = normalBuildTime;
+
+        if (turretAimer != null)
+        {
+            turretAimer.Reset();
+        }
+
+        if (turretShooter != null)
+        {
+            turretShooter.Reset();
+        }
 
         foreach (MeshRenderer r in allRenderers)
         {

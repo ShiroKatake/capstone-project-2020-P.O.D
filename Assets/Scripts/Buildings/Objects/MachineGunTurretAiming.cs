@@ -25,10 +25,19 @@ public class MachineGunTurretAiming : TurretAiming
     /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
     /// Awake() runs before Start().
     /// </summary>
-    private void Awake()
+    protected override void Awake()
     {
-        Setup();
+        base.Awake();
+        Reset();
+    }
 
+    /// <summary>
+    /// Setup / reset code for the machine gun turret.
+    /// </summary>
+    public override void Reset()
+    {
+        //Debug.Log("MachineGunTurretAiming.Reset()");
+        base.Reset();
         armColliderPivot.localRotation = Quaternion.Euler(rotationColliderOffset);
         armModelPivot.localRotation = Quaternion.Euler(rotationColliderOffset + rotationModelCounterOffset);
         barrelColliderPivot.localRotation = Quaternion.Euler(elevationColliderOffset);
@@ -86,7 +95,7 @@ public class MachineGunTurretAiming : TurretAiming
     /// </summary>
     protected override void Aim()
     {
-        //Turret rotation on turret base's local z axis. All other local values remain static.
+        //Turret rotation on turret base's local horizontal axis. All other local values remain static.
         if (currentTurretRotation != targetTurretRotation)
         {
             float deltaAngle = Mathf.DeltaAngle(currentTurretRotation, targetTurretRotation);
@@ -103,7 +112,7 @@ public class MachineGunTurretAiming : TurretAiming
                 rotationColliderOffset.z + rotationModelCounterOffset.z);
         }
 
-        //Barrel pivoting on barrel pivot's local y axis. All other local values remain 0.
+        //Barrel pivoting on barrel pivot's local vertical axis. All other local values remain static.
         if (currentBarrelElevation != targetBarrelElevation)
         {
             float deltaAngle = Mathf.DeltaAngle(currentBarrelElevation, targetBarrelElevation);

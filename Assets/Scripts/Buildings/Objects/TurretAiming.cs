@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// A base component class for aiming the gun part of buildings that shoot.
 /// </summary>
-public class TurretAiming : CollisionListener
+public class TurretAiming : MonoBehaviour //CollisionListener
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
@@ -32,26 +32,37 @@ public class TurretAiming : CollisionListener
     protected TurretShooting shooter;
 
     //Aiming Variables
-    [Header("TurretAiming Testing")]
-    [SerializeField] protected bool detecting;
-    [SerializeField] protected float currentTurretRotation;
-    [SerializeField] protected float targetTurretRotation;
-    [SerializeField] protected float currentBarrelElevation;
-    [SerializeField] protected float targetBarrelElevation;
+    //[Header("TurretAiming Testing")]
+    //[SerializeField] protected bool detecting;
+    /*[SerializeField]*/ protected float currentTurretRotation;
+    /*[SerializeField]*/ protected float targetTurretRotation;
+    /*[SerializeField]*/ protected float currentBarrelElevation;
+    /*[SerializeField]*/ protected float targetBarrelElevation;
     //[SerializeField] protected Transform target;
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
-    /// Setup code used by TurretAiming and all of its child classes.
+    /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
+    /// Awake() runs before Start().
     /// </summary>
-    protected void Setup()
+    protected virtual void Awake()
     {
         building = gameObject.GetComponent<Building>();
         shooter = gameObject.GetComponent<TurretShooting>();
+        //collisionReporters = GetCollisionReporters();
+    }
+
+    /// <summary>
+    /// Setup / resetting code used by TurretAiming and all of its child classes.
+    /// </summary>
+    public virtual void Reset()
+    {
+        //Debug.Log("TurretAiming.Reset()");
         currentTurretRotation = 0;
         currentBarrelElevation = 0;
-        collisionReporters = GetCollisionReporters();
+        targetTurretRotation = 0;
+        targetBarrelElevation = 0;
     }
 
     //Recurring Methods (FixedUpdate())--------------------------------------------------------------------------------------------------------------
@@ -61,7 +72,7 @@ public class TurretAiming : CollisionListener
     /// </summary>
     protected virtual void CalculateRotationAndElevation()
     {
-
+        Debug.LogError("Not Implemented");
     }
 
     /// <summary>
@@ -69,7 +80,7 @@ public class TurretAiming : CollisionListener
     /// </summary>
     protected virtual void Aim()
     {
-
+        Debug.LogError("Not Implemented");
     }
 
     /// <summary>

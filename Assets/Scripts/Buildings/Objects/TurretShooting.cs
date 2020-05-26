@@ -30,12 +30,12 @@ public class TurretShooting : CollisionListener
     private Building building;
 
     //Target Variables
-    [SerializeField] private bool detecting;
-    [SerializeField] private List<Alien> visibleTargets;
-    [SerializeField] private Alien target;
+    //[SerializeField] private bool detecting;
+    /*[SerializeField]*/ private List<Alien> visibleTargets;
+    /*[SerializeField]*/ private Alien target;
     
     //Shooting Variables
-    [SerializeField] private bool shoot;
+    //[SerializeField] private bool shoot;
     private float timeOfLastShot;
 
     //Public Properties----------------------------------------------------------------------------
@@ -53,11 +53,28 @@ public class TurretShooting : CollisionListener
     /// </summary>
     private void Awake()
     {
-        detecting = false;
-        visibleTargets = new List<Alien>();
-        timeOfLastShot = shotCooldown * -1;
         building = gameObject.GetComponent<Building>();
         collisionReporters = GetCollisionReporters();
+    }
+
+    /// <summary>
+    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
+    /// Start() runs after Awake().
+    /// </summary>
+    private void Start()
+    {
+        Reset();
+    }
+
+    /// <summary>
+    /// Setup / reset code for TurretShooting.
+    /// </summary>
+    public void Reset()
+    {
+        //Debug.Log("TurretShooting.Reset()");
+        visibleTargets = new List<Alien>();
+        timeOfLastShot = shotCooldown * -1;
+        ToggleDetectionCollider(false);
     }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
@@ -69,10 +86,9 @@ public class TurretShooting : CollisionListener
     {
         if (building.Operational)
         {
-            RegulateDetectionCollider();
             SelectTarget();
 
-            if (shoot || target != null)
+            if (/*shoot || */target != null)
             {
                 Shoot();
             }
@@ -80,23 +96,7 @@ public class TurretShooting : CollisionListener
     }
 
     //Recurring Methods (FixedUpdate())--------------------------------------------------------------------------------------------------------------
-
-    /// <summary>
-    /// Toggles the detection trigger collider on and off according to whether the building is operational or not.
-    /// </summary>
-    private void RegulateDetectionCollider()
-    {
-        if (detecting != building.Operational)
-        {
-            detecting = building.Operational;
-
-            foreach (CollisionReporter c in collisionReporters)
-            {
-                c.Collider.enabled = detecting;
-            }
-        }
-    }
-
+    
     /// <summary>
     /// Selects a target for the turret.
     /// </summary>
@@ -175,9 +175,9 @@ public class TurretShooting : CollisionListener
     /// </summary>
     private void Shoot()
     {
-        if (shoot || (target != null && Time.time - timeOfLastShot > shotCooldown))
+        if (/*shoot || (*/target != null && Time.time - timeOfLastShot > shotCooldown)//)
         {
-            shoot = false;
+            //shoot = false;
             timeOfLastShot = Time.time;
             
             for(int i = 0; i < numProjectiles; i++)
@@ -200,7 +200,29 @@ public class TurretShooting : CollisionListener
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
-    
+
+    /// <summary>
+    /// Informs TurretShooting that it has been placed and can start shooting.
+    /// </summary>
+    public void Place()
+    {
+        ToggleDetectionCollider(true);
+    }
+
+    /// <summary>
+    /// Toggles the detection trigger collider on and off according to whether the building is operational or not.
+    /// </summary>
+    /// <param name="active">Whether the turret's detection collider should be enabled.</param>
+    private void ToggleDetectionCollider(bool active)
+    {
+        //detecting = active; //for testing
+
+        foreach (CollisionReporter c in collisionReporters)
+        {
+            c.Collider.enabled = active;
+        }
+    }
+
     /// <summary>
     /// When a GameObject collides with another GameObject, Unity calls OnTriggerEnter.
     /// </summary>
