@@ -15,7 +15,7 @@ public class NewTerrainGeneratorEditor : Editor
 
     static float noiseScale = 2f/100f;
     static float centreFlatRadius = 50;
-
+    static float meshSmoothness = 0.2f;
 
     public override void OnInspectorGUI() {
 
@@ -31,7 +31,7 @@ public class NewTerrainGeneratorEditor : Editor
             script.SetHeightRes((int)Mathf.Pow(2, 7) + 1);
 
             script.RegenerateHeightmap(curve, noiseScale);
-            script.GenerateMesh();
+            script.GenerateMesh(meshSmoothness);
         }
         var curveField = EditorGUI.CurveField(new Rect(10, 35, rightEdge, 100), curve);
         EditorGUILayout.Space(140);
@@ -39,6 +39,7 @@ public class NewTerrainGeneratorEditor : Editor
         smoothness = EditorGUILayout.FloatField("Smoothness: ", smoothness);
         noiseScale = EditorGUILayout.FloatField("Noise Scale: ", noiseScale);
         centreFlatRadius = EditorGUILayout.FloatField("Centre Flat: ", centreFlatRadius);
+        meshSmoothness = EditorGUILayout.FloatField("Mesh Smoothness: ", meshSmoothness);
     }
 
     private void RedoCurve() {
