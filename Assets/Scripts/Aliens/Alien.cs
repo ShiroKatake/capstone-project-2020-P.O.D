@@ -24,6 +24,7 @@ public class Alien : MonoBehaviour
     //Non-Serialized Fields------------------------------------------------------------------------
     [Header("Testing")]
     //Componenets
+    private List<Collider> colliders;
     private Health health;
     private Rigidbody rigidbody;
 
@@ -61,29 +62,15 @@ public class Alien : MonoBehaviour
     /// </summary>
     public Health Health { get => health; }
 
-    /// <summary>
-    /// Whether or not the alien is moving.
-    /// </summary>
-    public bool Moving { get => moving; set => moving = value; }
+    ///// <summary>
+    ///// Alien's unique ID number. Id should only be set by Alien.Setup().
+    ///// </summary>
+    //public int Id { get => id; }
 
-    //Complex Public Properties--------------------------------------------------------------------
-
-    /// <summary>
-    /// Alien's unique ID number. Id should only be set by Alien.Setup().
-    /// </summary>
-    public int Id
-    {
-        get
-        {
-            return id;
-        }
-
-        set
-        {
-            id = value;
-            gameObject.name = $"Alien {id}";
-        }
-    }
+    ///// <summary>
+    ///// Whether or not the alien is moving.
+    ///// </summary>
+    //public bool Moving { get => moving; set => moving = value; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -93,6 +80,7 @@ public class Alien : MonoBehaviour
     /// </summary>
     void Awake()
     {
+        colliders = new List<Collider>(GetComponents<Collider>());
         health = GetComponent<Health>();
         rigidbody = GetComponent<Rigidbody>();
 
@@ -110,15 +98,22 @@ public class Alien : MonoBehaviour
     /// </summary>
     public void Setup(int id)
     {
-        Id = id;
+        this.id = id;
+        gameObject.name = $"Alien {id}";
         health.Reset();
         target = cryoEgg.GetComponentInChildren<Collider>().transform;
         targetHealth = cryoEgg.Health;
         timeOfLastAttack = attackCooldown * -1;
+        moving = true;
 
         //Rotate to face the cryo egg
         Vector3 targetRotation = cryoEgg.transform.position - transform.position;
         transform.rotation = Quaternion.LookRotation(targetRotation);
+
+        foreach (Collider c in colliders)
+        {
+            c.enabled = true;
+        }
     }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
@@ -292,6 +287,19 @@ public class Alien : MonoBehaviour
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Resets the alien to its inactive state.
+    /// </summary>
+    public void Reset()
+    {
+        moving = false;
+
+        foreach (Collider c in colliders)
+        {
+            c.enabled = false;
+        }
+    }
 
     /// <summary>
     /// Registers with an alien the name and transform of an entity that shot it.
