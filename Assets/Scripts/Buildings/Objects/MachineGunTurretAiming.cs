@@ -11,15 +11,11 @@ public class MachineGunTurretAiming : TurretAiming
 
     //Serialized Fields----------------------------------------------------------------------------                                                    
 
-    [Header("Aiming Offsets")]
-    [SerializeField] private Vector3 rotationOffset;
-    [SerializeField] private Vector3 elevationOffset;
-
     [Header("Game Objects")]
     [SerializeField] private Transform rotationTargeter;
     [SerializeField] private Transform elevationTargeter;
-    [SerializeField] private Transform barrelBaseColliderPivot;
-    [SerializeField] private Transform barrelBaseModelPivot;
+    [SerializeField] private Transform armColliderPivot;
+    [SerializeField] private Transform armModelPivot;
     [SerializeField] private Transform barrelColliderPivot;
     [SerializeField] private Transform barrelModelPivot;
 
@@ -31,15 +27,12 @@ public class MachineGunTurretAiming : TurretAiming
     /// </summary>
     private void Awake()
     {
-        building = gameObject.GetComponent<Building>();
-        shooter = gameObject.GetComponent<TurretShooting>();
-        currentTurretRotation = 0;
-        currentBarrelElevation = 0;
-        barrelBaseColliderPivot.rotation = Quaternion.Euler(rotationOffset);
-        barrelBaseModelPivot.rotation = barrelBaseColliderPivot.rotation;
-        barrelColliderPivot.rotation = Quaternion.Euler(elevationOffset);
-        barrelModelPivot.rotation = barrelColliderPivot.rotation;
-        collisionReporters = GetCollisionReporters();
+        Setup();
+
+        armColliderPivot.localRotation = Quaternion.Euler(rotationColliderOffset);
+        armModelPivot.localRotation = Quaternion.Euler(rotationColliderOffset + rotationModelCounterOffset);
+        barrelColliderPivot.localRotation = Quaternion.Euler(elevationColliderOffset);
+        barrelModelPivot.localRotation = Quaternion.Euler(elevationColliderOffset + elevationModelCounterOffset);
     }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
@@ -51,8 +44,14 @@ public class MachineGunTurretAiming : TurretAiming
     {
         if (building.Operational)
         {
-            CalculateRotationAndElevation();
-            Aim();
+            if (shooter.Target != null)
+            {
+                CalculateRotationAndElevation();
+                Aim();
+            }
+
+            //ClampElevation();
+            //Aim();
         }
     }
 
@@ -63,38 +62,23 @@ public class MachineGunTurretAiming : TurretAiming
     /// </summary>
     protected override void CalculateRotationAndElevation()
     {
-        //Variables
-        float rawRotation;
-        float rawElevation;
+        //Setup
+        rotationTargeter.LookAt(shooter.Target.transform.position);
+        elevationTargeter.LookAt(shooter.Target.transform.position);
+        //rotationTargeter.LookAt(target.position);
+        //elevationTargeter.LookAt(target.position);
+        float rawRotation = rotationTargeter.rotation.eulerAngles.y;
+        float rawElevation = elevationTargeter.rotation.eulerAngles.x + elevationColliderOffset.z;
 
         //Rotation
-        rotationTargeter.LookAt(shooter.Target.transform.position);
-        rawRotation = rotationTargeter.rotation.eulerAngles.y;
-        targetTurretRotation = NormaliseAngle(rawRotation + 90);
+        targetTurretRotation = NormaliseAngle(rawRotation);
 
         //Elevation
-        if (rotationTargeter == elevationTargeter)
-        {
-            rawElevation = rotationTargeter.rotation.eulerAngles.x;
-        }
-        else
-        {
-            elevationTargeter.LookAt(shooter.Target.transform.position);
-            rawElevation = elevationTargeter.rotation.eulerAngles.x;
-        }
-
         targetBarrelElevation = (rawElevation > 90 ? 360 - rawElevation : rawElevation * -1);
 
-        if (targetBarrelElevation > maxBarrelElevation)
-        {
-            targetBarrelElevation = maxBarrelElevation;
-        }
-        else if (targetBarrelElevation < minBarrelElevation)
-        {
-            targetBarrelElevation = minBarrelElevation;
-        }
+        ClampElevation();
 
-        //Debug.Log($"Pos: {barrelColliderPivot}, target pos: {target.transform.position}, targeter rotation: {targeter.rotation.eulerAngles}, target elevation: {targetBarrelElevation}, target rotation: {targetTurretRotation}");
+        //Debug.Log($"Rotation targeter rotation: {rotationTargeter.rotation.eulerAngles}, Elevation targeter rotation: {elevationTargeter.rotation.eulerAngles}, rawElevation: {rawElevation}, target elevation: {targetBarrelElevation}, rawRotation: {rawRotation}, target rotation: {targetTurretRotation}");
     }
 
     /// <summary>
@@ -112,10 +96,11 @@ public class MachineGunTurretAiming : TurretAiming
 
             currentTurretRotation += rotationDirection * Mathf.Min(deltaAngle, fixedUpdateRotation);
             currentTurretRotation = NormaliseAngle(currentTurretRotation);
-            barrelBaseColliderPivot.localRotation = Quaternion.Euler(rotationOffset.x, rotationOffset.y, currentTurretRotation + rotationOffset.z);
-
-
-            barrelBaseModelPivot.localRotation = barrelBaseColliderPivot.localRotation;
+            armColliderPivot.localRotation = Quaternion.Euler(currentTurretRotation + rotationColliderOffset.x, rotationColliderOffset.y, rotationColliderOffset.z);
+            armModelPivot.localRotation = Quaternion.Euler(
+                currentTurretRotation + rotationColliderOffset.x + rotationModelCounterOffset.x,
+                rotationColliderOffset.y + rotationModelCounterOffset.y,
+                rotationColliderOffset.z + rotationModelCounterOffset.z);
         }
 
         //Barrel pivoting on barrel pivot's local y axis. All other local values remain 0.
@@ -127,8 +112,11 @@ public class MachineGunTurretAiming : TurretAiming
             float fixedUpdatePivot = elevationSpeed * Time.fixedDeltaTime;
 
             currentBarrelElevation += pivotDirection * Mathf.Min(deltaAngle, fixedUpdatePivot);
-            barrelColliderPivot.localRotation = Quaternion.Euler(elevationOffset.x, currentBarrelElevation + elevationOffset.y, elevationOffset.z);
-            barrelModelPivot.localRotation = barrelColliderPivot.localRotation;
+            barrelColliderPivot.localRotation = Quaternion.Euler(elevationColliderOffset.x, elevationColliderOffset.y, -currentBarrelElevation);
+            barrelModelPivot.localRotation = Quaternion.Euler(
+                elevationColliderOffset.x + elevationModelCounterOffset.x,
+                elevationColliderOffset.y + elevationModelCounterOffset.y,
+                -currentBarrelElevation + elevationModelCounterOffset.z);
         }
     }
 }

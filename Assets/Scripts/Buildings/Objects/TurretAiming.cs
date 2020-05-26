@@ -19,8 +19,14 @@ public class TurretAiming : CollisionListener
     [SerializeField] protected float minBarrelElevation;
     [SerializeField] protected float maxBarrelElevation;
 
+    [Header("Aiming Offsets")]
+    [SerializeField] protected Vector3 rotationColliderOffset;
+    [SerializeField] protected Vector3 rotationModelCounterOffset;
+    [SerializeField] protected Vector3 elevationColliderOffset;
+    [SerializeField] protected Vector3 elevationModelCounterOffset;
+
     //Non-Serialized Fields------------------------------------------------------------------------      
-    
+
     //Components
     protected Building building;
     protected TurretShooting shooter;
@@ -32,6 +38,21 @@ public class TurretAiming : CollisionListener
     [SerializeField] protected float targetTurretRotation;
     [SerializeField] protected float currentBarrelElevation;
     [SerializeField] protected float targetBarrelElevation;
+    //[SerializeField] protected Transform target;
+
+    //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Setup code used by TurretAiming and all of its child classes.
+    /// </summary>
+    protected void Setup()
+    {
+        building = gameObject.GetComponent<Building>();
+        shooter = gameObject.GetComponent<TurretShooting>();
+        currentTurretRotation = 0;
+        currentBarrelElevation = 0;
+        collisionReporters = GetCollisionReporters();
+    }
 
     //Recurring Methods (FixedUpdate())--------------------------------------------------------------------------------------------------------------
 
@@ -49,6 +70,21 @@ public class TurretAiming : CollisionListener
     protected virtual void Aim()
     {
 
+    }
+
+    /// <summary>
+    /// Restricts the elevation of the turret's barrel to within predefined limits.
+    /// </summary>
+    protected virtual void ClampElevation()
+    {
+        if (targetBarrelElevation > maxBarrelElevation)
+        {
+            targetBarrelElevation = maxBarrelElevation;
+        }
+        else if (targetBarrelElevation < minBarrelElevation)
+        {
+            targetBarrelElevation = minBarrelElevation;
+        }
     }
 
     //Utility Methods--------------------------------------------------------------------------------------------------------------------------------

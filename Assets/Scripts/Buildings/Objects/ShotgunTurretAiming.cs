@@ -10,12 +10,6 @@ public class ShotgunTurretAiming : TurretAiming
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
     //Serialized Fields----------------------------------------------------------------------------                                                    
-    
-    [Header("Aiming Offsets")]
-    [SerializeField] private Vector3 rotationColliderOffset;
-    [SerializeField] private Vector3 rotationModelCounterOffset;
-    [SerializeField] private Vector3 elevationColliderOffset;
-    [SerializeField] private Vector3 elevationModelCounterOffset;
 
     [Header("Game Objects")]
     [SerializeField] private Transform targeter;
@@ -23,11 +17,6 @@ public class ShotgunTurretAiming : TurretAiming
     [SerializeField] private Transform baseModel;
     [SerializeField] private Transform barrelColliderPivot;
     [SerializeField] private Transform barrelModelPivot;
-
-    //Non-Serialized Fields------------------------------------------------------------------------
-
-    //[Header("ShotgunTurretAiming Testing")]
-    //[SerializeField] private Transform target;
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -37,15 +26,12 @@ public class ShotgunTurretAiming : TurretAiming
     /// </summary>
     private void Awake()
     {
-        building = gameObject.GetComponent<Building>();
-        shooter = gameObject.GetComponent<TurretShooting>();
-        currentTurretRotation = 0;
-        currentBarrelElevation = 0;
+        Setup();
+
         baseCollider.localRotation = Quaternion.Euler(rotationColliderOffset);
         baseModel.localRotation = Quaternion.Euler(rotationColliderOffset + rotationModelCounterOffset);
         barrelColliderPivot.localRotation = Quaternion.Euler(elevationColliderOffset);
         barrelModelPivot.localRotation = Quaternion.Euler(elevationColliderOffset + elevationModelCounterOffset);
-        collisionReporters = GetCollisionReporters();
     }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
@@ -87,14 +73,7 @@ public class ShotgunTurretAiming : TurretAiming
         //Elevation
         targetBarrelElevation = (rawElevation > 90 ? 360 - rawElevation : rawElevation * -1);
 
-        if (targetBarrelElevation > maxBarrelElevation)
-        {
-            targetBarrelElevation = maxBarrelElevation;
-        }
-        else if (targetBarrelElevation < minBarrelElevation)
-        {
-            targetBarrelElevation = minBarrelElevation;
-        }
+        ClampElevation();
 
         //Debug.Log($"Targeter rotation: {targeter.rotation.eulerAngles}, rawElevation: {rawElevation}, target elevation: {targetBarrelElevation}, rawRotation: {rawRotation}, target rotation: {targetTurretRotation}");
     }
