@@ -1,6 +1,15 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+[Serializable]
+public struct RendererMaterialSet
+{
+    public MeshRenderer renderer;
+    public Material opaque;
+    public Material transparent;
+}
 
 /// <summary>
 /// A building placed by the player.
@@ -37,9 +46,8 @@ public class Building : CollisionListener
     [Header("Offsets of Foundations from Position")]
     [SerializeField] private List<Vector3> buildingFoundationOffsets;
 
-    [Header("Materials")]
-    [SerializeField] private Material opaqueMaterial;
-    [SerializeField] private Material transparentMaterial;
+    [Header("Renderers and Materials")]
+    [SerializeField] private List<RendererMaterialSet> rendererMaterialSets;
     [SerializeField] private Material buildingErrorMaterial;
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
@@ -356,21 +364,21 @@ public class Building : CollisionListener
 
                 if (colliding)
                 {
-                    foreach (MeshRenderer r in allRenderers)
+                    foreach (RendererMaterialSet r in rendererMaterialSets)
                     {
-                        if (r.material != buildingErrorMaterial)
+                        if (r.renderer.material != buildingErrorMaterial)
                         {
-                            r.material = buildingErrorMaterial;
+                            r.renderer.material = buildingErrorMaterial;
                         }
                     }
                 }
                 else
                 {
-                    foreach (MeshRenderer r in allRenderers)
+                    foreach (RendererMaterialSet r in rendererMaterialSets)
                     {
-                        if (r.material != transparentMaterial)
+                        if (r.renderer.material != r.transparent)
                         {
-                            r.material = transparentMaterial;
+                            r.renderer.material = r.transparent;
                         }
                     }
                 }
@@ -400,9 +408,9 @@ public class Building : CollisionListener
         ResourceController.Instance.WasteConsumption += wasteConsumption;
         transform.position = position;
 
-        foreach (MeshRenderer r in allRenderers)
+        foreach (RendererMaterialSet r in rendererMaterialSets)
         {
-            r.material = opaqueMaterial;
+            r.renderer.material = r.opaque;
         }
 
         foreach (CollisionReporter c in collisionReporters)
@@ -440,11 +448,11 @@ public class Building : CollisionListener
         {
             turretAimer.Reset();
             turretShooter.Reset();
-        }        
+        }
 
-        foreach (MeshRenderer r in allRenderers)
+        foreach (RendererMaterialSet r in rendererMaterialSets)
         {
-            r.material = transparentMaterial;
+            r.renderer.material = r.transparent;
         }
 
         foreach (CollisionReporter c in collisionReporters)
