@@ -422,8 +422,8 @@ MonoBehaviour:
   - {x: 0.5, y: -0.45, z: 0.5}
   rendererMaterialSets:
   - renderer: {fileID: 8998042049790244866}
-    opaque: {fileID: 2100000, guid: 859b87d9134471e43818d8d680c32c48, type: 2}
-    transparent: {fileID: 2100000, guid: aaa041906e33a4942bcf6be399770c89, type: 2}
+    opaque: {fileID: 2100000, guid: 55e790189f2feb7468cba7aa2fb3104a, type: 2}
+    transparent: {fileID: 2100000, guid: 1363d0610d4a2a04dbd7850cdd369690, type: 2}
   - renderer: {fileID: 4035820058908691400}
     opaque: {fileID: 2100000, guid: 859b87d9134471e43818d8d680c32c48, type: 2}
     transparent: {fileID: 2100000, guid: aaa041906e33a4942bcf6be399770c89, type: 2}
@@ -691,7 +691,7 @@ MeshCollider:
   serializedVersion: 3
   m_Convex: 1
   m_CookingOptions: 30
-  m_Mesh: {fileID: 800039398692781814, guid: 19b46225064d3304881e9378633495c0, type: 3}
+  m_Mesh: {fileID: 800039398692781814, guid: a7fba846e39a8b24b93663c0c441e31d, type: 3}
 --- !u!54 &3845462663364875076
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -875,6 +875,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7185075788765746384}
     m_Modifications:
+    - target: {fileID: -5178661895559278292, guid: 19b46225064d3304881e9378633495c0,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 800039398692781814, guid: a7fba846e39a8b24b93663c0c441e31d,
+        type: 3}
     - target: {fileID: -4216859302048453862, guid: 19b46225064d3304881e9378633495c0,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -934,7 +940,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: aaa041906e33a4942bcf6be399770c89, type: 2}
+      objectReference: {fileID: 2100000, guid: 1363d0610d4a2a04dbd7850cdd369690, type: 2}
     - target: {fileID: -927199367670048503, guid: 19b46225064d3304881e9378633495c0,
         type: 3}
       propertyPath: m_Name
