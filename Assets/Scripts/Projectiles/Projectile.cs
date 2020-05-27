@@ -12,8 +12,10 @@ public class Projectile : MonoBehaviour
     //Serialized Fields----------------------------------------------------------------------------
 
     [Header("Projectile Stats")]
+    [SerializeField] private EProjectileType type;
     [SerializeField] private float speed;
     [SerializeField] private float damage;
+    [SerializeField] private float lifespan;
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
@@ -23,8 +25,9 @@ public class Projectile : MonoBehaviour
 
     //Other
     private bool active = false;
-    private bool leftOwnerCollider;
     private Transform owner;
+    private bool leftOwnerCollider;
+    private float timeOfLastShot;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -50,6 +53,11 @@ public class Projectile : MonoBehaviour
     /// </summary>
     public Rigidbody Rigidbody { get => rigidbody; }
 
+    /// <summary>
+    /// The type of projectile a projectile is.
+    /// </summary>
+    public EProjectileType Type { get => type; }
+
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
@@ -69,53 +77,66 @@ public class Projectile : MonoBehaviour
     /// </summary>
     private void FixedUpdate()
     {
-        if (active)
+        if (active && (transform.position.y < 0 || Time.time - timeOfLastShot > lifespan))
         {
-            //transform.Translate(vector * speed * Time.fixedDeltaTime);
-
-            if (transform.position.y < 0)
-            {
-                ProjectileFactory.Instance.DestroyProjectile(this);
-            }
+            ProjectileFactory.Instance.DestroyProjectile(this);
         }
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
+    //Shooting-------------------------------------------------------------------------------------
+    
     /// <summary>
     /// Starts the coroutine that activates the projectile in the next frame.
     /// </summary>
     /// <param name="vector">The normalised direction of the projectile's velocity.</param>
-    public void Shoot(Vector3 vector)
+    /// <param name="movementSpeed">The speed of the shooter in the direction the projectile will travel.</param>
+    public void Shoot(Vector3 vector, float movementSpeed)
     {
-        StartCoroutine(Shooting(vector));
+        StartCoroutine(Shooting(vector, movementSpeed));
     }
 
     /// <summary>
     /// Activates a projectile, applying a velocity to it.
     /// </summary>
     /// <param name="vector">The normalised direction of the projectile's velocity.</param>
-    IEnumerator Shooting(Vector3 vector)
+    IEnumerator Shooting(Vector3 vector, float movementSpeed)
     {
         yield return null;
 
+        timeOfLastShot = Time.time;
         active = true;
         rigidbody.isKinematic = false;
         collider.enabled = true;
-        rigidbody.velocity = vector * speed;
+        rigidbody.velocity = vector * (speed + movementSpeed);
         leftOwnerCollider = false;
     }
 
+    //Collisions-----------------------------------------------------------------------------------
+
     /// <summary>
-    /// Triggered if a projectile collides with another object.
+    /// When a GameObject collides with another GameObject, Unity calls OnTriggerEnter.
     /// </summary>
-    /// <param name="other">The collider of the other object the projectile collided with.</param>
+    /// <param name="other">The other Collider involved in this collision.</param>
     public void OnTriggerEnter(Collider other)
     {
         ProjectileCollision(other);
     }
 
-    //TODO: on trigger exit check for the owner
+    /// <summary>
+    /// OnTriggerExit is called when the Collider other has stopped touching the trigger.
+    /// </summary>
+    /// <param name="other">The other Collider involved in this collision.</param>
+    public void OnTriggerExit(Collider other)
+    {
+        //Debug.Log("ProjectileCollision OnTriggerExit");
+        if (!leftOwnerCollider && other.CompareTag(owner.tag))
+        {
+            //Debug.Log("Left owner collider");
+            leftOwnerCollider = true;
+        }
+    }
 
     /// <summary>
     /// Deals damage to enemies upon collision, before cleaning the projectile up.
@@ -123,20 +144,17 @@ public class Projectile : MonoBehaviour
     /// <param name="collidedWith">The collider of the other object the projectile collided with.</param>
     private void ProjectileCollision(Collider collidedWith)
     {
-        //Debug.Log("ProjectileCollision");
         if (collidedWith.CompareTag("Alien"))
-        {
-            //Debug.Log("ProjectileCollision, Alien");
+        {           
             Alien a = collidedWith.gameObject.GetComponent<Alien>();
-            a.Health.Value -= damage;
             a.ShotBy(owner.name, owner.GetComponentInChildren<Collider>().transform);
-            //Debug.Log($"{gameObject.name} reduced {e.gameObject.name}'s health to {e.Health.Value}; {e.gameObject.name}.ShotBy is now {owner.name}");
+            a.Health.Value -= damage;
+            //Debug.Log($"{gameObject.name} reduced {a.gameObject.name}'s health to {a.Health.Value}; {a.gameObject.name}.ShotBy is now {owner.name}");
         }
 
-        if (!collidedWith.CompareTag("Player") && !collidedWith.CompareTag("Projectile"))
+        if (!collidedWith.CompareTag("Projectile") && (!collidedWith.CompareTag(owner.tag) || leftOwnerCollider))
         {
             //Debug.Log($"ProjectileCollision, not Player or Projectile; tag is {collidedWith.tag}; position is {transform.position}");
-            //TODO: once the projectile leaves the shooter's collider, it needs to be able to die on contact with said shooter; use leftOwnerCollider to indicate this.
             ProjectileFactory.Instance.DestroyProjectile(this);
         }
     }

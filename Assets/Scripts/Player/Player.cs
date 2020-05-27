@@ -159,7 +159,7 @@ public class Player : MonoBehaviour
 
             if (!gameOver)
             {
-                MessageBoard.Instance.Add(new Message(gameObject.name, gameObject.tag, "Dead", 3));
+                MessageDispatcher.Instance.SendMessage("Alien", new Message(gameObject.name, "Player", this.gameObject, "Dead"));
                 gameOver = true;
             }
         }
@@ -219,8 +219,10 @@ public class Player : MonoBehaviour
         if (shooting && Time.time - timeOfLastShot > shootCooldown)
         {
             timeOfLastShot = Time.time;
-            Projectile projectile = ProjectileFactory.Instance.GetProjectile(transform, laserCannonTip.position);
-            projectile.Shoot((transform.forward * 2 - transform.up).normalized);
+            Projectile projectile = ProjectileFactory.Instance.GetProjectile(EProjectileType.PODLaserBolt, transform, laserCannonTip.position);
+            projectile.Shoot((transform.forward * 2 - transform.up).normalized, 0);
+            //TODO: tweak POD so that the shot vector is calculated using transforms equivalent to Turret's
+            //TODO: use overload that incorporates shooter movement speed, and calculate current movement speed in the direction of the shot vector.
         }
     }
 }

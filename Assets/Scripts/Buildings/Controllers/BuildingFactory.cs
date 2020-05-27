@@ -24,9 +24,7 @@ public class BuildingFactory : MonoBehaviour
     [SerializeField] private BuildingFoundation buildingFoundationPrefab;
     //[SerializeField] private GameObject pipePrefab;
     //[SerializeField] private GameObject pipeBoxPrefab;
-
-    //TODO: disable colliders while pooled so they can shut up with the collision triggers and restore some performance
-
+    
     [Header("Other Objects")]
     [SerializeField] private Transform objectPool;
 

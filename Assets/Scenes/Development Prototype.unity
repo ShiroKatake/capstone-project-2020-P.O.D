@@ -242,7 +242,7 @@ PrefabInstance:
     - target: {fileID: 403112268726757337, guid: c59556a7ef07f27488ad22ca85e6db1c,
         type: 3}
       propertyPath: m_Name
-      value: Drone
+      value: POD
       objectReference: {fileID: 0}
     - target: {fileID: 403112268726757338, guid: c59556a7ef07f27488ad22ca85e6db1c,
         type: 3}
@@ -890,11 +890,6 @@ PrefabInstance:
       propertyPath: clockTimer
       value: 
       objectReference: {fileID: 1791195865}
-    - target: {fileID: 2489407218427492161, guid: 9620c728b220f2e47adbd85dd9ac4899,
-        type: 3}
-      propertyPath: clockBackground
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 4424011782776797639, guid: 9620c728b220f2e47adbd85dd9ac4899,
         type: 3}
       propertyPath: projectilePoolParent
@@ -983,6 +978,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 8777683414549083989, guid: 172bd19aa70452548bcdbc2cfdc6614a,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -15
+      objectReference: {fileID: 0}
     - target: {fileID: 8777683415735347739, guid: 172bd19aa70452548bcdbc2cfdc6614a,
         type: 3}
       propertyPath: m_Name

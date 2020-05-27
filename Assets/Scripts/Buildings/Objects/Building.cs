@@ -51,6 +51,8 @@ public class Building : CollisionListener
     private ResourceCollector resourceCollector;
     private Rigidbody rigidbody;
     private Terraformer terraformer;
+    private TurretAiming turretAimer;
+    private TurretShooting turretShooter;
 
     //Positioning
     //private Dictionary<string, Vector3> offsets;
@@ -216,6 +218,8 @@ public class Building : CollisionListener
         rigidbody = GetComponentInChildren<Rigidbody>();
         resourceCollector = GetComponent<ResourceCollector>();
         terraformer = GetComponent<Terraformer>();
+        turretAimer = GetComponent<TurretAiming>();
+        turretShooter = GetComponent<TurretShooting>();
         collisionReporters = GetCollisionReporters();
         otherColliders = new List<Collider>();
         normalScale = transform.localScale;
@@ -283,6 +287,11 @@ public class Building : CollisionListener
 
         boinging = false;
         Operational = true; //Using property to trigger activation of any resource collector component attached.
+
+        if (turretShooter != null)
+        {
+            turretShooter.Place();
+        }
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
@@ -395,15 +404,16 @@ public class Building : CollisionListener
         {
             r.material = opaqueMaterial;
         }
-        rigidbody.isKinematic = true;
-        placed = true;
 
         foreach (CollisionReporter c in collisionReporters)
         {
+            c.Rigidbody.isKinematic = true;
             c.Collider.isTrigger = false;
             c.ReportOnTriggerEnter = false;
             c.ReportOnTriggerExit = false;
         }
+
+        placed = true;
 
         StartCoroutine(Build());
     }
@@ -413,11 +423,6 @@ public class Building : CollisionListener
     /// </summary>
     public void Reset()
     {
-        if (buildingType == EBuilding.ShortRangeTurret || buildingType == EBuilding.LongRangeTurret)
-        {
-            MessageBoard.Instance.Add(new Message(gameObject.name, gameObject.tag, "Dead", 3));
-        }        
-
         StopCoroutine(Build());
         health.Reset();
         Operational = false;
@@ -430,18 +435,23 @@ public class Building : CollisionListener
         parentRenderer.transform.localPosition = Vector3.zero;
         transform.localScale = normalScale;
         buildTime = normalBuildTime;
+        
+        if (buildingType == EBuilding.ShortRangeTurret || buildingType == EBuilding.LongRangeTurret)
+        {
+            turretAimer.Reset();
+            turretShooter.Reset();
+        }        
 
         foreach (MeshRenderer r in allRenderers)
         {
             r.material = transparentMaterial;
         }
 
-        rigidbody.isKinematic = false;
-
         foreach (CollisionReporter c in collisionReporters)
         {
             c.Collider.isTrigger = true;
             c.Collider.enabled = false;
+            c.Rigidbody.isKinematic = false;
             c.ReportOnTriggerEnter = true;
             c.ReportOnTriggerExit = true;
         }

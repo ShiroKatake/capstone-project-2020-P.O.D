@@ -88,7 +88,6 @@ public class AlienFactory : MonoBehaviour
         }
 
         alien.Setup(IdGenerator.Instance.GetNextId());
-        alien.Moving = true;
         return alien;
     }
 
@@ -98,10 +97,10 @@ public class AlienFactory : MonoBehaviour
     /// <param name="alien">The alien to be destroyed.</param>
     public void DestroyAlien(Alien alien)
     {
+        alien.Reset();
         AlienController.Instance.DeRegisterAlien(alien);
-        alienPool.Add(alien);
-        alien.Moving = false;
         alien.transform.position = alienPoolParent.position;
         alien.transform.parent = alienPoolParent;
+        alienPool.Add(alien);
     }
 }
