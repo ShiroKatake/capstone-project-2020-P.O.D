@@ -420,8 +420,16 @@ MonoBehaviour:
   - {x: -0.5, y: -0.45, z: 0.5}
   - {x: 0.5, y: -0.45, z: -0.5}
   - {x: 0.5, y: -0.45, z: 0.5}
-  opaqueMaterial: {fileID: 2100000, guid: 859b87d9134471e43818d8d680c32c48, type: 2}
-  transparentMaterial: {fileID: 2100000, guid: aaa041906e33a4942bcf6be399770c89, type: 2}
+  rendererMaterialSets:
+  - renderer: {fileID: 8998042049790244866}
+    opaque: {fileID: 2100000, guid: 859b87d9134471e43818d8d680c32c48, type: 2}
+    transparent: {fileID: 2100000, guid: aaa041906e33a4942bcf6be399770c89, type: 2}
+  - renderer: {fileID: 4035820058908691400}
+    opaque: {fileID: 2100000, guid: 859b87d9134471e43818d8d680c32c48, type: 2}
+    transparent: {fileID: 2100000, guid: aaa041906e33a4942bcf6be399770c89, type: 2}
+  - renderer: {fileID: 8551197441184960373}
+    opaque: {fileID: 2100000, guid: 859b87d9134471e43818d8d680c32c48, type: 2}
+    transparent: {fileID: 2100000, guid: aaa041906e33a4942bcf6be399770c89, type: 2}
   buildingErrorMaterial: {fileID: 2100000, guid: 101275a717e4a1c4fb89e563e095dfd7,
     type: 2}
   otherColliders: []
@@ -461,10 +469,8 @@ MonoBehaviour:
   yAxisVariance: 0
   zAxisVariance: 0
   shotCooldown: 3
-  detecting: 0
   visibleTargets: []
   target: {fileID: 0}
-  shoot: 0
 --- !u!114 &-6100819924566361332
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -477,16 +483,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 860f746cc4b45fa4e8189e658bcab5ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collisionReporters: []
   rotationSpeed: 90
   elevationSpeed: 20
   minBarrelElevation: -6
   maxBarrelElevation: 6
-  detecting: 0
-  currentTurretRotation: 0
-  targetTurretRotation: 0
-  currentBarrelElevation: 0
-  targetBarrelElevation: 0
   rotationColliderOffset: {x: 180, y: -90, z: -90}
   rotationModelCounterOffset: {x: 0, y: 0, z: 0}
   elevationColliderOffset: {x: 0, y: 0, z: 0}
@@ -497,7 +497,6 @@ MonoBehaviour:
   armModelPivot: {fileID: 4031274663492664482}
   barrelColliderPivot: {fileID: 5451464881631675756}
   barrelModelPivot: {fileID: 5877666295754112639}
-  target: {fileID: 0}
 --- !u!1 &3018227449293362911
 GameObject:
   m_ObjectHideFlags: 0
@@ -951,6 +950,12 @@ PrefabInstance:
 --- !u!4 &5960787087593750221 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: 19b46225064d3304881e9378633495c0,
+    type: 3}
+  m_PrefabInstance: {fileID: 1712014958714885591}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &8998042049790244866 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -1504981713932161579, guid: 19b46225064d3304881e9378633495c0,
     type: 3}
   m_PrefabInstance: {fileID: 1712014958714885591}
   m_PrefabAsset: {fileID: 0}

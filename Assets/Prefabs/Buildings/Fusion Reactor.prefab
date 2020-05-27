@@ -62,8 +62,10 @@ MonoBehaviour:
   largeBoingMultiplier: 1.2
   buildingFoundationOffsets:
   - {x: 0, y: -0.45, z: 0}
-  opaqueMaterial: {fileID: 2100000, guid: 8e74e241847559b458861a9f3c102c66, type: 2}
-  transparentMaterial: {fileID: 2100000, guid: 2931791a576fff44d88efedb35faf862, type: 2}
+  rendererMaterialSets:
+  - renderer: {fileID: 1434847216883296504}
+    opaque: {fileID: 2100000, guid: 8e74e241847559b458861a9f3c102c66, type: 2}
+    transparent: {fileID: 2100000, guid: 2931791a576fff44d88efedb35faf862, type: 2}
   buildingErrorMaterial: {fileID: 2100000, guid: 101275a717e4a1c4fb89e563e095dfd7,
     type: 2}
   otherColliders: []
@@ -331,6 +333,12 @@ PrefabInstance:
 --- !u!4 &4435507032640826935 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: 516e3572be4dbbc4baa2b406f4ed02e8,
+    type: 3}
+  m_PrefabInstance: {fileID: 8715770312673985837}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &1434847216883296504 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -1504981713932161579, guid: 516e3572be4dbbc4baa2b406f4ed02e8,
     type: 3}
   m_PrefabInstance: {fileID: 8715770312673985837}
   m_PrefabAsset: {fileID: 0}

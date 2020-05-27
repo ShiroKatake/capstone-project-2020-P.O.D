@@ -155,8 +155,10 @@ MonoBehaviour:
   - {x: 1, y: -0.45, z: -1}
   - {x: 1, y: -0.45, z: 0}
   - {x: 1, y: -0.45, z: 1}
-  opaqueMaterial: {fileID: 2100000, guid: f8bdc195131f5624ea1e3307cf7aa6be, type: 2}
-  transparentMaterial: {fileID: 2100000, guid: b1c3fcd9233f07d4c896344f58213dab, type: 2}
+  rendererMaterialSets:
+  - renderer: {fileID: 5488100627774846517}
+    opaque: {fileID: 2100000, guid: f8bdc195131f5624ea1e3307cf7aa6be, type: 2}
+    transparent: {fileID: 2100000, guid: b1c3fcd9233f07d4c896344f58213dab, type: 2}
   buildingErrorMaterial: {fileID: 2100000, guid: 101275a717e4a1c4fb89e563e095dfd7,
     type: 2}
   otherColliders: []
@@ -295,6 +297,12 @@ PrefabInstance:
 --- !u!4 &7083645055769702650 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: 84ef7d7f6c7c6334d8847af0368ef092,
+    type: 3}
+  m_PrefabInstance: {fileID: 2825055950254332896}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &5488100627774846517 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -1504981713932161579, guid: 84ef7d7f6c7c6334d8847af0368ef092,
     type: 3}
   m_PrefabInstance: {fileID: 2825055950254332896}
   m_PrefabAsset: {fileID: 0}

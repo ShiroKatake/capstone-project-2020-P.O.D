@@ -266,8 +266,13 @@ MonoBehaviour:
   largeBoingMultiplier: 1.2
   buildingFoundationOffsets:
   - {x: 0, y: -0.45, z: 0}
-  opaqueMaterial: {fileID: 2100000, guid: d46f8670794254442987f8c3127bed2a, type: 2}
-  transparentMaterial: {fileID: 2100000, guid: 0384d8f2c070e5945a58d1b3c395d8bf, type: 2}
+  rendererMaterialSets:
+  - renderer: {fileID: 5632703353611539575}
+    opaque: {fileID: 2100000, guid: d46f8670794254442987f8c3127bed2a, type: 2}
+    transparent: {fileID: 2100000, guid: 0384d8f2c070e5945a58d1b3c395d8bf, type: 2}
+  - renderer: {fileID: 5167881990852599044}
+    opaque: {fileID: 2100000, guid: d46f8670794254442987f8c3127bed2a, type: 2}
+    transparent: {fileID: 2100000, guid: 0384d8f2c070e5945a58d1b3c395d8bf, type: 2}
   buildingErrorMaterial: {fileID: 2100000, guid: 101275a717e4a1c4fb89e563e095dfd7,
     type: 2}
   otherColliders: []
@@ -307,10 +312,8 @@ MonoBehaviour:
   yAxisVariance: 0.1
   zAxisVariance: 0.1
   shotCooldown: 3
-  detecting: 0
   visibleTargets: []
   target: {fileID: 0}
-  shoot: 0
 --- !u!114 &6505921446254889876
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -323,16 +326,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8cb3c79af9be6d4ab8ff603c9d66c1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collisionReporters: []
   rotationSpeed: 90
   elevationSpeed: 90
   minBarrelElevation: -25
   maxBarrelElevation: 90
-  detecting: 0
-  currentTurretRotation: 0
-  targetTurretRotation: 0
-  currentBarrelElevation: 0
-  targetBarrelElevation: 0
   rotationColliderOffset: {x: 0, y: 0, z: 90}
   rotationModelCounterOffset: {x: 0, y: 0, z: 0}
   elevationColliderOffset: {x: 0, y: 0, z: 0}
@@ -342,7 +339,6 @@ MonoBehaviour:
   baseModel: {fileID: 6939182874317689528}
   barrelColliderPivot: {fileID: 6578390048626754263}
   barrelModelPivot: {fileID: 632658674879905165}
-  target: {fileID: 0}
 --- !u!1 &2946983348710066453
 GameObject:
   m_ObjectHideFlags: 0
@@ -721,6 +717,12 @@ PrefabInstance:
 --- !u!4 &6939182874317689528 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: 22135eb99d7103f4383e8a2193353969,
+    type: 3}
+  m_PrefabInstance: {fileID: 2681430415515302306}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &5632703353611539575 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -1504981713932161579, guid: 22135eb99d7103f4383e8a2193353969,
     type: 3}
   m_PrefabInstance: {fileID: 2681430415515302306}
   m_PrefabAsset: {fileID: 0}
