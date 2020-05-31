@@ -6,18 +6,29 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class EnvironmentalController : MonoBehaviour {
-    [SerializeField] private Text var;
+    //testing variable
+    //[SerializeField] private Text var;
+    [SerializeField] private ProgressBar progress;
+    [SerializeField] private List<RatioBars> bars = new List<RatioBars>();
+    //[SerializeField] private RatioBars Bio;
+    //[SerializeField] private RatioBars O2;
+    //[SerializeField] private RatioBars GHG;
+    [SerializeField] private float WinAmount;
     [SerializeField] List<Terraformer> terraformers = new List<Terraformer>();
 
-    public float AtmosphereVal { get; private set; } = 0.00001f;
-    public float HumidityVal { get; private set; } = 0.00001f;
-    public float BiodiversityVal { get; private set; } = 0.00001f;
+    public float AtmosphereVal { get; private set; } = 0f;
+    public float HumidityVal { get; private set; } = 0f;
+    public float BiodiversityVal { get; private set; } = 0f;
 
     public float TotalVal { get; private set; } = 0.0f;
 
     private float atmoMalice = 1.0f;
     private float humMalice = 1.0f;
     private float bioMalice = 1.0f;
+
+    private float atmosRatio = 0f;
+    private float humRatio = 0f;
+    private float bioRatio = 0f;
 
     public static EnvironmentalController Instance { get; protected set; }
 
@@ -31,6 +42,15 @@ public class EnvironmentalController : MonoBehaviour {
         }
 
         Instance = this;
+
+        progress.SetMax(WinAmount);
+        progress.SetBarValue(TotalVal);
+        bars[0].SetMaxBarValue(1);
+        bars[0].SetBarValue(atmosRatio);
+        bars[1].SetMaxBarValue(1);
+        bars[1].SetBarValue(humRatio);
+        bars[2].SetMaxBarValue(1);
+        bars[2].SetBarValue(bioRatio);
     }
 
     // Update is called once per frame
@@ -42,12 +62,30 @@ public class EnvironmentalController : MonoBehaviour {
 
         UpdateTotalValue();
 
+        progress.SetBarValue(TotalVal);
+        bars[0].SetBarValue(atmosRatio);
+        bars[1].SetBarValue(humRatio);
+        bars[2].SetBarValue(bioRatio);
+        
+        float x = 0;
+        foreach (RatioBars r in bars){
+            print("Value: " + r.CurrentValue);
+            if (r.CurrentValue > x){
+                x = r.CurrentValue;
+            }
+        }
+        print("New Max: " + x);
+        foreach(RatioBars r in bars){
+            r.SetMaxRenderBarValue(x);
+        }
+
+
     }
 
     private void UpdateTotalValue() {
-        TotalVal = 0.3334f * AtmosphereVal +
-                   0.3334f * HumidityVal +
-                   0.3334f * BiodiversityVal;
+        TotalVal = (AtmosphereVal / 3f) +
+                   (HumidityVal / 3f) +
+                   (BiodiversityVal / 3f);
     }
 
     public void CalculateBuildingDeltas(float tpf) {
@@ -87,9 +125,12 @@ public class EnvironmentalController : MonoBehaviour {
 
         string outputText = "";
 
-        float atmosRatio = AtmosphereVal / baseSum;
-        float humRatio = HumidityVal / baseSum;
-        float bioRatio = BiodiversityVal / baseSum;
+
+        if (baseSum != 0){
+            atmosRatio = AtmosphereVal / baseSum;
+            humRatio = HumidityVal / baseSum;
+            bioRatio = BiodiversityVal / baseSum;
+        }
         //Debug.Log("AtmosphereRatio: " + atmosRatio);
 
         outputText += "Atmosphere Ratio: " + atmosRatio;
@@ -115,8 +156,7 @@ public class EnvironmentalController : MonoBehaviour {
 
         }
 
-
-        var.text = outputText;
+        //var.text = outputText;
 
     }
 
