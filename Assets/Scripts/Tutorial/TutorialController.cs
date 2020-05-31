@@ -49,6 +49,9 @@ public enum ButtonType
     Upgrades
 }
 
+//TODO: this shit needs cleaning up so that it's not a *check's Visual Studio* 2853-line wall of text.
+//Look at the GTFO post mortem PDF and check out the proposed restructure it mentions for the tutorial controller to get an idea of how it should look.
+
 public class TutorialController : DialogueBoxController
 {
     //Fields-----------------------------------------------------------------------------------------------------------------------------------------

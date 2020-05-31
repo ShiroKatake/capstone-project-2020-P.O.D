@@ -6,6 +6,9 @@ using UnityEngine;
 using TMPro;
 using DG.Tweening;
 
+/// <summary>
+/// An enum for the expressions the AI should display.
+/// </summary>
 public enum AIExpression
 {
     None,
@@ -16,41 +19,102 @@ public enum AIExpression
     Shocked
 }
 
+/// <summary>
+/// The definition of tags for colouring lines of dialogue differently to the standard dialogue box text colour.
+/// </summary>
 [Serializable]
 public class ColourTag
 {
+    //Private Fields---------------------------------------------------------------------------------------------------------------------------------
+
+    //Serialized Fields----------------------------------------------------------------------------
+
     [SerializeField] private char openingTag;
     [SerializeField] private char closingTag;
     [SerializeField] private Color colour;
+
+    //Non-Serialized Fields------------------------------------------------------------------------
+
     private string colourName;
 
+    //Public Properties------------------------------------------------------------------------------------------------------------------------------
+
+    //Basic Public Properties----------------------------------------------------------------------
+
+    /// <summary>
+    /// The character of the tag opening character, equivalent to XML's "<".
+    /// </summary>
     public char OpeningTag { get => openingTag; }
+
+    /// <summary>
+    /// The character of the tag closing character, equivalent to XML's ">".
+    /// </summary>
     public char ClosingTag { get => closingTag; }
+
+    /// <summary>
+    /// The colour that the text between the opening and closing tag characters should be.
+    /// </summary>
     public Color Colour { get => colour; }
+
+    /// <summary>
+    /// The name of the colour that the text should be.
+    /// </summary>
     public string ColourName { get => colourName; set => colourName = value; }
 }
 
+/// <summary>
+/// A serializable container for an AI expression and a line of dialogue.
+/// </summary>
 [Serializable]
 public class ExpressionDialoguePair
 {
-    //Serialized Fields
+    //Private Fields---------------------------------------------------------------------------------------------------------------------------------
+
+    //Serialized Fields----------------------------------------------------------------------------
+
     [SerializeField] private AIExpression aiExpression = AIExpression.Neutral;
     [SerializeField, TextArea(15, 20)] private string dialogue;
 
-    //Public Properties
+    //Public Properties------------------------------------------------------------------------------------------------------------------------------
+
+    //Basic Public Properties----------------------------------------------------------------------
+
+    /// <summary>
+    /// The expression that the AI should have when its matching line of dialogue is displayed.
+    /// </summary>
     public AIExpression AIExpression { get => aiExpression; }
+
+    /// <summary>
+    /// The line of dialogue to be displayed.
+    /// </summary>
     public string Dialogue { get => dialogue; }
 }
 
+/// <summary>
+/// A serializable key-value pair of a dialogue key and a set of ExpressionDialoguePairs, because Unity doesn't serialize dictionaries.
+/// </summary>
 [Serializable]
 public class DialogueSet
 {
-    //Serialized Fields
+    //Private Fields---------------------------------------------------------------------------------------------------------------------------------
+
+    //Serialized Fields----------------------------------------------------------------------------
+
     [SerializeField] private string key;
     [SerializeField] private List<ExpressionDialoguePair> expressionDialoguePairs;
 
-    //Public Properties
+    //Public Properties------------------------------------------------------------------------------------------------------------------------------
+
+    //Basic Public Properties----------------------------------------------------------------------
+
+    /// <summary>
+    /// The key of the dialogue set.
+    /// </summary>
     public string Key { get => key; }
+
+    /// <summary>
+    /// The list of expression-dialogue pairs that comprise the dialogue set.
+    /// </summary>
     public List<ExpressionDialoguePair> ExpressionDialoguePairs { get => expressionDialoguePairs; }
 }
 
