@@ -8,23 +8,21 @@ using TMPro;
 
 public class DialogueBoxController : MonoBehaviour
 {
-    //Fields-----------------------------------------------------------------------------------------------------------------------------------------
-
-    //Serialized Fields
+    //Serialized Fields------------------------------------------------------------------------------------------------------------------------------
     [Header("Objective UI Elements")]
     [SerializeField] GameObject objectiveWindow;
     [SerializeField] GameObject objectiveWindowOpenArrows;
     [SerializeField] protected DialogueBox dialogueBox;
 
-    //Non-Serialized fields
+    //Non-Serialized Fields
     protected bool dialogueRead = false;
     protected bool tileClicked = false;
     protected bool objWindowVisible = false;
 
-    //Public Properties
+    //Public Properties------------------------------------------------------------------------------------------------------------------------------
     public bool ObjWindowVisible { get => objWindowVisible; set => objWindowVisible = value; }
 
-    //Utility Methods--------------------------------------------------------------------------------------------------------------------------------
+    //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
     //Passes dialogue to the DialogueBox
     protected virtual void SendDialogue(string dialogueKey, float invokeDelay)
