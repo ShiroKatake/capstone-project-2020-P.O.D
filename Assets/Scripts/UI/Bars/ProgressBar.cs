@@ -7,22 +7,34 @@ using UnityEngine.UI;
 public class ProgressBar : MonoBehaviour
 {
     [SerializeField] private Image image;
-    private int barMax = 1;
+    private float barMax = 1;
     [SerializeField] private float curVal = 0;
 
     private void Awake() {
         image.fillAmount = curVal;
     }
 
-    public void ChangeValue(float value){
+    private void Update() {
+        image.fillAmount = curVal / barMax;
+    }
+
+    public void SetMax(float val){
+        barMax = val;
+    }
+
+    public void ChangeValueAdd(float value){
         if (IsBarWithinBounds(curVal + value)){
             curVal += value;
+        } else if (value > barMax){
+            curVal = barMax;
         }
     }
 
-    public void SetBarValue(int value){
-        if (IsBarWithinBounds(curVal + value)){
+    public void SetBarValue(float value){
+        if (IsBarWithinBounds(value)){
             curVal = value;
+        } else if (value > barMax){
+            curVal = barMax;
         }
     }
 

@@ -15,6 +15,9 @@ public class AlienFactory : MonoBehaviour
     [SerializeField] private Alien alienPrefab;
     [SerializeField] private Transform alienPoolParent;
 
+    [Header("Stats")]
+    [SerializeField] private float alienHoverHeight;
+
     //Non-Serialized Fields------------------------------------------------------------------------
 
     private List<Alien> alienPool;
@@ -27,6 +30,13 @@ public class AlienFactory : MonoBehaviour
     /// AlienController's singleton public property.
     /// </summary>
     public static AlienFactory Instance { get; protected set; }
+
+    //Basic Public Properties----------------------------------------------------------------------
+
+    /// <summary>
+    /// The height at which aliens hover.
+    /// </summary>
+    public float AlienHoverHeight { get => alienHoverHeight; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -53,9 +63,7 @@ public class AlienFactory : MonoBehaviour
     /// <returns>A new alien.</returns>
     public Alien GetAlien()
     {
-        Vector2 pos2 = MapController.Instance.RandomAlienSpawnablePos();
-        Vector3 pos3 = new Vector3(pos2.x, 0.25f, pos2.y);
-        return GetAlien(pos3);
+        return GetAlien(MapController.Instance.RandomAlienSpawnablePos());
     }
 
     /// <summary>
@@ -80,7 +88,6 @@ public class AlienFactory : MonoBehaviour
         }
 
         alien.Setup(IdGenerator.Instance.GetNextId());
-        alien.Moving = true;
         return alien;
     }
 
@@ -90,10 +97,10 @@ public class AlienFactory : MonoBehaviour
     /// <param name="alien">The alien to be destroyed.</param>
     public void DestroyAlien(Alien alien)
     {
+        alien.Reset();
         AlienController.Instance.DeRegisterAlien(alien);
-        alienPool.Add(alien);
-        alien.Moving = false;
         alien.transform.position = alienPoolParent.position;
         alien.transform.parent = alienPoolParent;
+        alienPool.Add(alien);
     }
 }

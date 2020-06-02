@@ -13,8 +13,8 @@ public class Message
 
     private string senderName;
     private string senderTag;
+    private GameObject senderObject;
     private string messageContents;
-    private int messageLifespan;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -26,10 +26,18 @@ public class Message
     public string MessageContents { get => messageContents; }
 
     /// <summary>
-    /// The lifespan of the message in frames.
+    /// The name of the game object that sent this message.
     /// </summary>
-    public int MessageLifespan { get => messageLifespan; }
     public string SenderName { get => senderName; }
+
+    /// <summary>
+    /// The game object of whatever class sent this message.
+    /// </summary>
+    public GameObject SenderObject { get => senderObject; }
+
+    /// <summary>
+    /// The tag of the game object that sent this message.
+    /// </summary>
     public string SenderTag { get => senderTag; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
@@ -40,27 +48,11 @@ public class Message
     /// <param name="name">The name of the sender of the message.</param>
     /// <param name="tag">The tag of the sender of the message.</param>
     /// <param name="contents">The contents of the message.</param>
-    /// <param name="lifespan">The lifespan of the message in frames.</param>
-    public Message(string name, string tag, string contents, int lifespan)
+    public Message(string name, string tag, GameObject gameObject, string contents)
     {
         senderName = name;
         senderTag = tag;
+        senderObject = gameObject;
         messageContents = contents;
-        messageLifespan = lifespan;
-    }
-
-    //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
-
-    /// <summary>
-    /// Decrements the lifespan of the message, and calls for MessageBoard to remove it if it's lifespan has reached 0.
-    /// </summary>
-    public void DecrementLifespan()
-    {
-        messageLifespan -= 1;
-
-        if (messageLifespan <= 0)
-        {
-            MessageBoard.Instance.Remove(this);
-        }
     }
 }

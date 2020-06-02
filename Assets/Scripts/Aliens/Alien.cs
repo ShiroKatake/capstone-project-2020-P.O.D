@@ -5,13 +5,16 @@ using UnityEngine;
 /// <summary>
 /// Demo class for enemies.
 /// </summary>
-public class Alien : MonoBehaviour
+public class Alien : MonoBehaviour, IMessenger
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
     //Serialized Fields----------------------------------------------------------------------------
 
-    [Header("Alien Stats")] 
+    [Header("Components")]
+    [SerializeField] private Collider bodyCollider;
+
+    [Header("Stats")] 
     [SerializeField] private int id;
     [SerializeField] private float speed;
     [SerializeField] private float turningSpeed;
@@ -21,12 +24,14 @@ public class Alien : MonoBehaviour
     //Non-Serialized Fields------------------------------------------------------------------------
     [Header("Testing")]
     //Componenets
+    private List<Collider> colliders;
     private Health health;
     private Rigidbody rigidbody;
 
     //Movement
     private bool moving;
-    private float groundHeight;
+    [SerializeField] private float hoverHeight;
+    [SerializeField] private float zRotation;
 
     //Turning
     private Quaternion oldRotation;
@@ -48,33 +53,24 @@ public class Alien : MonoBehaviour
     //Basic Public Properties----------------------------------------------------------------------
 
     /// <summary>
+    /// The collider that comprises the alien's body.
+    /// </summary>
+    public Collider BodyCollider { get => bodyCollider; }
+
+    /// <summary>
     /// Alien's Health component.
     /// </summary>
     public Health Health { get => health; }
 
-    /// <summary>
-    /// Whether or not the alien is moving.
-    /// </summary>
-    public bool Moving { get => moving; set => moving = value; }
+    ///// <summary>
+    ///// Alien's unique ID number. Id should only be set by Alien.Setup().
+    ///// </summary>
+    //public int Id { get => id; }
 
-    //Complex Public Properties--------------------------------------------------------------------
-
-    /// <summary>
-    /// Alien's unique ID number. Id should only be set by Alien.Setup().
-    /// </summary>
-    public int Id
-    {
-        get
-        {
-            return id;
-        }
-
-        set
-        {
-            id = value;
-            gameObject.name = $"Alien {id}";
-        }
-    }
+    ///// <summary>
+    ///// Whether or not the alien is moving.
+    ///// </summary>
+    //public bool Moving { get => moving; set => moving = value; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -84,12 +80,14 @@ public class Alien : MonoBehaviour
     /// </summary>
     void Awake()
     {
+        colliders = new List<Collider>(GetComponents<Collider>());
         health = GetComponent<Health>();
         rigidbody = GetComponent<Rigidbody>();
 
         cryoEgg = BuildingController.Instance.CryoEgg;
 
-        groundHeight = transform.position.y;
+        hoverHeight = transform.position.y;
+        zRotation = transform.rotation.eulerAngles.z;
 
         visibleAliens = new List<Transform>();
         visibleTargets = new List<Transform>();
@@ -100,15 +98,23 @@ public class Alien : MonoBehaviour
     /// </summary>
     public void Setup(int id)
     {
-        Id = id;
+        this.id = id;
+        gameObject.name = $"Alien {id}";
         health.Reset();
         target = cryoEgg.GetComponentInChildren<Collider>().transform;
         targetHealth = cryoEgg.Health;
         timeOfLastAttack = attackCooldown * -1;
+        moving = true;
+        MessageDispatcher.Instance.Subscribe("Alien", this);
 
         //Rotate to face the cryo egg
         Vector3 targetRotation = cryoEgg.transform.position - transform.position;
         transform.rotation = Quaternion.LookRotation(targetRotation);
+
+        foreach (Collider c in colliders)
+        {
+            c.enabled = true;
+        }
     }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
@@ -150,23 +156,6 @@ public class Alien : MonoBehaviour
     /// </summary>
     private void SelectTarget()
     {
-        //Check shooter is alive
-        if (shotByTransform != null)
-        {
-            foreach (Message msg in MessageBoard.Instance.Messages)
-            {
-                if (msg.SenderName == shotByName && msg.MessageContents == "Dead")
-                {
-                    shotByName = "";
-                    shotByTransform = null;
-                }
-            }
-        }
-        else if (shotByName != "")
-        {
-            shotByName = "";
-        }
-
         switch (visibleTargets.Count)
         {
             case 0:
@@ -252,25 +241,59 @@ public class Alien : MonoBehaviour
     {
         transform.Translate(new Vector3(0, 0, speed * Time.fixedDeltaTime));
 
-        //Toggle gravity if something has pushed the alien up above groundHeight
-        if (rigidbody.useGravity)
+        //Fly up if below hover height
+        if (transform.position.y < hoverHeight)
         {
-            if (transform.position.y <= groundHeight)
+            if (rigidbody.useGravity)
             {
-                transform.position = new Vector3(transform.position.x, groundHeight, transform.position.z);
                 rigidbody.useGravity = false;
             }
+
+            transform.Translate(new Vector3(0, Mathf.Min(hoverHeight - transform.position.y, speed * 0.5f * Time.fixedDeltaTime, 0)));
         }
-        else
+        //Activate gravity if above hover height
+        else if (transform.position.y > hoverHeight)
         {
-            if (transform.position.y > groundHeight)   //TODO: account for terrain pushing the alien up, if it can move up hills?
+            if (!rigidbody.useGravity)   //TODO: account for terrain pushing the alien up, if it can move up hills?
             {
                 rigidbody.useGravity = true;
+            }
+        }
+        //Disable gravity if at hover height
+        else
+        {
+            if (rigidbody.useGravity)
+            {
+                transform.position = new Vector3(transform.position.x, hoverHeight, transform.position.z);
+                rigidbody.useGravity = false;
             }
         }
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Allows message-sending classes to deliver a message to this alien.
+    /// </summary>
+    /// <param name="message">The message to send to this messenger.</param>
+    public void Receive(Message message)
+    {
+        if (message.SenderTag == "Turret" && message.MessageContents == "Dead")
+        {
+            Transform messenger = message.SenderObject.transform;
+
+            if (shotByTransform == messenger)
+            {
+                shotByName = "";
+                shotByTransform = null;
+            }
+
+            if (visibleTargets.Contains(messenger))
+            {
+                visibleTargets.Remove(messenger);
+            }
+        }
+    }
 
     /// <summary>
     /// Registers with an alien the name and transform of an entity that shot it.
@@ -284,9 +307,23 @@ public class Alien : MonoBehaviour
     }
 
     /// <summary>
-    /// The transform of the player or building the alien was shot by most recently.
+    /// Resets the alien to its inactive state.
     /// </summary>
-    public Transform ShotByTransform { get => shotByTransform; set => shotByTransform = value; }
+    public void Reset()
+    {
+        MessageDispatcher.Instance.SendMessage("Turret", new Message(gameObject.name, "Alien", this.gameObject, "Dead"));
+        MessageDispatcher.Instance.Unsubscribe("Alien", this);
+        moving = false;
+        shotByName = "";
+        shotByTransform = null;
+        visibleTargets.Clear();
+        visibleAliens.Clear();
+
+        foreach (Collider c in colliders)
+        {
+            c.enabled = false;
+        }
+    }
 
     /// <summary>
     /// OnCollisionStay is called once per frame for every collider/rigidbody that is touching rigidbody/collider.
@@ -309,26 +346,26 @@ public class Alien : MonoBehaviour
     /// When a GameObject collides with another GameObject, Unity calls OnTriggerEnter.
     /// </summary>
     /// <param name="other">The other Collider involved in this collision.</param>
-    private void OnTriggerEnter(Collider collider)
+    private void OnTriggerEnter(Collider other)
     {
-        if (!collider.isTrigger)
+        if (!other.isTrigger)
         {
-            if (collider.CompareTag("Alien"))
+            if (other.CompareTag("Alien"))
             {
-                visibleAliens.Add(collider.transform);
+                visibleAliens.Add(other.transform);
             }
-            else if (collider.CompareTag("Building"))
+            else if (other.CompareTag("Building"))
             {
-                visibleTargets.Add(collider.transform.parent);
+                visibleTargets.Add(other.transform.parent);
             }
-            else if (collider.CompareTag("Player"))
+            else if (other.CompareTag("Player"))
             {
-                visibleTargets.Add(collider.transform);
+                visibleTargets.Add(other.transform);
             }
-            else if (collider.CompareTag("Projectile"))
+            else if (other.CompareTag("Projectile"))
             {
                 Debug.Log("Alien.OnTriggerEnter; Alien hit by a projectile");
-                Projectile projectile = collider.GetComponent<Projectile>();
+                Projectile projectile = other.GetComponent<Projectile>();
                 shotByTransform = projectile.Owner.GetComponentInChildren<Collider>().transform;
             }
         }
@@ -338,19 +375,19 @@ public class Alien : MonoBehaviour
     /// OnTriggerExit is called when the Collider other has stopped touching the trigger.
     /// </summary>
     /// <param name="other">The other Collider involved in this collision.</param>
-    private void OnTriggerExit(Collider collider)
+    private void OnTriggerExit(Collider other)
     {
-        if (!collider.isTrigger)
+        if (!other.isTrigger)
         {
-            if (visibleAliens.Contains(collider.transform))
+            if (visibleAliens.Contains(other.transform))
             {
-                visibleAliens.Remove(collider.transform);
+                visibleAliens.Remove(other.transform);
                 return;
             }
 
-            if (visibleTargets.Contains(collider.transform))
+            if (visibleTargets.Contains(other.transform))
             {
-                visibleTargets.Remove(collider.transform);
+                visibleTargets.Remove(other.transform);
                 //return;
             }
         }

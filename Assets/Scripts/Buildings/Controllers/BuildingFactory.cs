@@ -24,9 +24,7 @@ public class BuildingFactory : MonoBehaviour
     [SerializeField] private BuildingFoundation buildingFoundationPrefab;
     //[SerializeField] private GameObject pipePrefab;
     //[SerializeField] private GameObject pipeBoxPrefab;
-
-    //TODO: disable colliders while pooled so they can shut up with the collision triggers and restore some performance
-
+    
     [Header("Other Objects")]
     [SerializeField] private Transform objectPool;
 
@@ -140,7 +138,7 @@ public class BuildingFactory : MonoBehaviour
             building = buildings[buildingType][0];
             buildings[buildingType].RemoveAt(0);
             building.transform.parent = null;
-            building.Collider.enabled = true;
+            building.EnableColliders();
         }
         else
         {
@@ -200,7 +198,7 @@ public class BuildingFactory : MonoBehaviour
         {
             building.transform.position = objectPool.transform.position;
             building.transform.parent = objectPool;
-            building.Collider.enabled = false;
+            building.DisableColliders();
         }
 
         return building;
