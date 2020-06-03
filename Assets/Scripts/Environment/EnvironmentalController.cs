@@ -69,12 +69,10 @@ public class EnvironmentalController : MonoBehaviour {
         
         float x = 0;
         foreach (RatioBars r in bars){
-            print("Value: " + r.CurrentValue);
             if (r.CurrentValue > x){
                 x = r.CurrentValue;
             }
         }
-        print("New Max: " + x);
         foreach(RatioBars r in bars){
             r.SetMaxRenderBarValue(x);
         }
