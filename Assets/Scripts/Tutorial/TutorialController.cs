@@ -63,10 +63,10 @@ public class TutorialController : DialogueBoxController
     [Header("Tutorial Game State")]
     [SerializeField] private TutorialStage stage = TutorialStage.ExplainSituation;
     [SerializeField] private int subStage = 1;
-    [SerializeField] private BuildingType currentlyBuilding = BuildingType.None;
+    [SerializeField] private EBuilding currentlyBuilding = EBuilding.None;
     [SerializeField] private ButtonType currentlyLerping;
-    [SerializeField] private TileData targetTile = null;
-    [SerializeField] private TileData lastTileChecked;
+    //[SerializeField] private TileData targetTile = null;
+    //[SerializeField] private TileData lastTileChecked;
     [SerializeField] private GameObject objectiveCompletePrefab;
 
     [Header("Goals")]
@@ -75,29 +75,9 @@ public class TutorialController : DialogueBoxController
     [SerializeField] private int builtGeneratorsGoal;
     [SerializeField] private int collectedMineralsGoal;
 
-    [Header("Cameras")]
-    [SerializeField] private CameraController cameraController;
-    [SerializeField] private CinemachineVirtualCamera sonarCamera;
-    [SerializeField] private CinemachineVirtualCamera activateSonarCamera;
-    [SerializeField] private CinemachineVirtualCamera artilleryCamera;
-    [SerializeField] private CinemachineVirtualCamera thrusterCamera;
-
-    [Header("Game Objects")]
-    [SerializeField] private Hub hub;
-    [SerializeField] public GameObject thruster;
-    [SerializeField] private ResourceNode harvesterResource;
-    [SerializeField] private Landmark extenderLandmark;
-    [SerializeField] private Landmark generatorLandmark;
-    [SerializeField] private Landmark sonarLandmark;
-    [SerializeField] private Landmark activateSonarLandmark;
-    [SerializeField] private Landmark fogExtenderNWLandmark;
-    [SerializeField] private Landmark mortarNWLandmark;
-    [SerializeField] private Landmark pulseDefenceNWLandmark;
-    [SerializeField] private Landmark fogExtenderSLandmark;
-    [SerializeField] private Landmark mortarSLandmark;
-    [SerializeField] private Landmark pulseDefenceSLandmark;
-    [SerializeField] private Locatable buildingTarget;
-    [SerializeField] private DamageIndicator arrowToTargetPrefab;
+    //[Header("Game Objects")]
+    //[SerializeField] private Locatable buildingTarget;
+    //[SerializeField] private DamageIndicator arrowToTargetPrefab;
 
     [Header("Fog Extender Landmark Constraints")]
     [SerializeField] private float felNorthWestInitialXMin;
@@ -105,53 +85,38 @@ public class TutorialController : DialogueBoxController
     [SerializeField] private float felSouthXMax;
     [SerializeField] private float felSouthZMax;
 
-    [Header("UI Elements")]
-    [SerializeField] private CameraInput wKey;
-    [SerializeField] private CameraInput aKey;
-    [SerializeField] private CameraInput sKey;
-    [SerializeField] private CameraInput dKey;
-    [SerializeField] private CameraInput rmb;
-    [SerializeField] private CameraInput mouse;
-    [SerializeField] private CameraInput zoomIn;
-    [SerializeField] private CameraInput zoomOut;
-    [SerializeField] private CanvasGroup buildMenuCanvasGroup;
-    [SerializeField] private Image harvesterHighlight;
-    [SerializeField] private Image extenderHighlight;
-    [SerializeField] private Image generatorHighlight;
-    [SerializeField] private Image mortarHighlight;
-    [SerializeField] private Image pulseDefenceHighlight;
-    [SerializeField] private Image sonarHighlight;
-    [SerializeField] private Image powerDiagram;
-    [SerializeField] private Image batteryIcon;
-    [SerializeField] private GameObject abilityUnlockCanvas;
-    [SerializeField] private Image abilityMenu;
-    [SerializeField] private RadialMenu abilitySelectorRadialMenu;
-    [SerializeField] private Image uiLerpTarget;
-    [SerializeField] private Slider tutProgressSlider;
+    //[Header("UI Elements")]
+    //[SerializeField] private CameraInput wKey;
+    //[SerializeField] private CameraInput aKey;
+    //[SerializeField] private CameraInput sKey;
+    //[SerializeField] private CameraInput dKey;
+    //[SerializeField] private CameraInput rmb;
+    //[SerializeField] private CameraInput mouse;
+    //[SerializeField] private CameraInput zoomIn;
+    //[SerializeField] private CameraInput zoomOut;
+    //[SerializeField] private Image uiLerpTarget;
+    //[SerializeField] private Slider tutProgressSlider;
 
-    [Header("UI Lerp Ranges")]
-    [SerializeField] private float decalMinLerp;
-    [SerializeField] private float decalMaxLerp;
-    [SerializeField] private float largeLerpMultiplier;
-    [SerializeField] private float batteryIconMinLerp;
-    [SerializeField] private bool multipleLerpRingsForBattery;
-    [SerializeField] private float abilityMenuMinLerp;
+    //[Header("UI Lerp Ranges")]
+    //[SerializeField] private float decalMinLerp;
+    //[SerializeField] private float decalMaxLerp;
+    //[SerializeField] private float largeLerpMultiplier;
 
-    [Header("UI Lerp Colours")]
-    [SerializeField] private Color minHarvesterColour;
-    [SerializeField] private Color maxHarvesterColour;
-    [SerializeField] private Color minPowerBuildingColour;
-    [SerializeField] private Color maxPowerBuildingColour;
-    [SerializeField] private Color minDefencesColour;
-    [SerializeField] private Color maxDefencesColour;
-    [SerializeField] private Color batteryEmptyColour;
-    [SerializeField] private Color batteryLowColour;
-    [SerializeField] private Color batteryHalfColour;
-    [SerializeField] private Color batteryHighColour;
-    [SerializeField] private Color batteryFullColour;
-    [SerializeField] private Color abilityMenuColour;
-    [SerializeField] private Color minSonarColour;
-    [SerializeField] private Color maxSonarColour;
+    //[Header("UI Lerp Colours")]
+    //[SerializeField] private Color minHarvesterColour;
+    //[SerializeField] private Color maxHarvesterColour;
+    //[SerializeField] private Color minPowerBuildingColour;
+    //[SerializeField] private Color maxPowerBuildingColour;
+    //[SerializeField] private Color minDefencesColour;
+    //[SerializeField] private Color maxDefencesColour;
+    //[SerializeField] private Color batteryEmptyColour;
+    //[SerializeField] private Color batteryLowColour;
+    //[SerializeField] private Color batteryHalfColour;
+    //[SerializeField] private Color batteryHighColour;
+    //[SerializeField] private Color batteryFullColour;
+    //[SerializeField] private Color abilityMenuColour;
+    //[SerializeField] private Color minSonarColour;
+    //[SerializeField] private Color maxSonarColour;
 
     //Non-Serialized Fields
     private MeshRenderer targetRenderer = null;
@@ -167,8 +132,8 @@ public class TutorialController : DialogueBoxController
     private TutorialStage savedTutorialStage;
     private int savedSubStage;
 
-    private TileData sonarLandmarkTile;
-    private DamageIndicator arrowToTarget = null;
+    //private TileData sonarLandmarkTile;
+    //private DamageIndicator arrowToTarget = null;
 
     private bool lerpUIScalingTarget = false;
     private Image currentUILerpFocus;
@@ -183,12 +148,8 @@ public class TutorialController : DialogueBoxController
     private bool uiTargetLerpForward = true;
     private bool lerpPaused = false;
 
-    private List<Locatable> lerpTargetsRemaining;
-    private bool lerpTargetLock = false;
-
-    private Landmark fogExtenderSelectedLandmark = null;
-    private Landmark mortarSelectedLandmark = null;
-    private Landmark pulseDefenceSelectedLandmark = null;
+    //private List<Locatable> lerpTargetsRemaining;
+    //private bool lerpTargetLock = false;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -198,13 +159,13 @@ public class TutorialController : DialogueBoxController
     public int BuiltHarvestersGoal { get => builtHarvestersGoal; }
     public int BuiltHarvestersExtendedGoal { get => builtHarvestersExtendedGoal; }
     public int CollectedMineralsGoal { get => collectedMineralsGoal; }
-    public TileData TargetTile { get => targetTile; }
-    public BuildingType CurrentlyBuilding { get => currentlyBuilding; }
+    //public TileData TargetTile { get => targetTile; }
+    public EBuilding CurrentlyBuilding { get => currentlyBuilding; }
     public ButtonType CurrentlyLerping { get => currentlyLerping; }
     public bool DefencesOn { get => defencesOn; }
     public bool SkipTutorial { get => skipTutorial; }
     public TutorialStage Stage { get => stage; }
-    public Image UILerpTarget { get => uiLerpTarget; }
+    //public Image UILerpTarget { get => uiLerpTarget; }
 
     //Start-Up Methods-------------------------------------------------------------------------------------------------------------------------------
 
