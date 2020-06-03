@@ -7,8 +7,11 @@ using UnityEngine;
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance {get; protected set;}
+
+    //gonna break these up later
     public enum Sound{
-        Test,
+        DayTimeLvlOne,
+        NightTime,
         Player_Hover
     }
 
@@ -39,6 +42,12 @@ public class AudioManager : MonoBehaviour
     private Dictionary<Sound, float> soundTimerDictionary;
     private GameObject oneShotGameObject;
     private AudioSource oneShotAudioSource;
+    private AudioSource currentBackgroundTrack;
+    private float timeStamp;
+    private float volumeControlBackground;
+    private float volumeControlTimer;
+    private bool bgSwitching, bgDown, bgUp, bgSwitchControl;
+    private Sound bgSoundSwitch;
 
     private void Awake() {
         if (Instance != null){
@@ -56,8 +65,22 @@ public class AudioManager : MonoBehaviour
             s.Source.loop = s.Loop;
         }
 
+        currentBackgroundTrack = Array.Find(BackGroundSounds, SoundClip => SoundClip.Sound == Sound.DayTimeLvlOne).Source;
+        currentBackgroundTrack.Play();
+
         soundTimerDictionary = new Dictionary<Sound, float>();
         soundTimerDictionary[Sound.Player_Hover] = 0f;
+
+        bgSwitching = false;
+        bgDown = false;
+        bgUp =false;
+        bgSwitchControl = false;
+    }
+
+    private void Update() {
+        if (bgSwitching){
+            CheckBackgroundSound();
+        }
     }
 
     public void PlayBackground(Sound sound){
@@ -109,20 +132,74 @@ public class AudioManager : MonoBehaviour
     }
 
     private bool CanPlaySound(Sound sound){
-        switch (sound){
-            default:
-                return true;
-            case Sound.Player_Hover:
-                if (soundTimerDictionary.ContainsKey(sound)){
-                    if (Time.time == 0f){
-                        return true;
-                    } else {
-                        return false;
-                    }
-                } else {
+        if (Array.Find(OneShotSounds, SoundClip => SoundClip.Sound == sound) != null){
+            switch (sound){
+                default:
                     return true;
-                }
+                case Sound.Player_Hover:
+                    if (soundTimerDictionary.ContainsKey(sound)){
+                        if (Time.time == 0f){
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    } else {
+                        return true;
+                    }
+            }
+        } else {
+            Debug.Log("Sound: " + sound.ToString() + " cannot be found");
+            return false;
         }
+    }
+
+    public void SwitchBackgroundTrack(Sound sound){
+        bgSoundSwitch = sound;
+        volumeControlTimer = 0;
+        timeStamp = Time.time;
+        volumeControlBackground = currentBackgroundTrack.volume;
+
+        bgDown = true;
+        bgSwitching = true;
+    }
+
+    private void CheckBackgroundSound(){
+        if (Time.time >= timeStamp + 1f && !bgSwitchControl){
+            bgSwitchControl = true;
+            currentBackgroundTrack.Stop();
+            currentBackgroundTrack.volume = volumeControlBackground;
+
+            currentBackgroundTrack = Array.Find(BackGroundSounds, SoundClip => SoundClip.Sound == bgSoundSwitch).Source;
+
+            bgDown = false;
+            bgUp = true;
+            volumeControlTimer = 0;
+            volumeControlBackground = currentBackgroundTrack.volume;
+            currentBackgroundTrack.volume = 0;
+
+            currentBackgroundTrack.Play();
+        } else if (Time.time >= timeStamp + 2f){
+            timeStamp = 0f;
+            bgSwitchControl = false;
+            bgUp = false;
+            bgSwitching = false;
+        }
+
+        if (bgDown) {
+            VolumeControlDown();
+        } else if (bgUp) {
+            VolumeControlUp();
+        }
+    }
+
+    private void VolumeControlDown(){
+        volumeControlTimer += Time.deltaTime;
+        currentBackgroundTrack.volume = Mathf.Lerp(volumeControlBackground, 0f, volumeControlTimer);
+    }
+
+    private void VolumeControlUp(){
+        volumeControlTimer += Time.deltaTime;
+        currentBackgroundTrack.volume = Mathf.Lerp(0f, volumeControlBackground, volumeControlTimer);
     }
 
 }
