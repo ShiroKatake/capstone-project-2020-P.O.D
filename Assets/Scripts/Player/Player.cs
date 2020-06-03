@@ -181,6 +181,7 @@ public class Player : MonoBehaviour
     /// </summary>
     private void Move()
     {
+        AudioManager.Instance.PlaySound(AudioManager.Sound.Player_Hover, this.transform.position);
         if (movement != Vector3.zero)
         {
             drone.transform.Translate(movement * movementSpeed * Time.deltaTime, Space.World);
