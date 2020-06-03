@@ -1,4 +1,12 @@
-﻿using Microsoft.Win32.SafeHandles;
+﻿/*
+file note:
+for the day time bg sound, make a dictionary/function with a link to the 3 sounds for the daytime
+this way the other classes and call a universal "daytime" enum and then the audio manager
+can play determin the correct daytime file to play 
+*/
+
+
+using Microsoft.Win32.SafeHandles;
 using System.Collections.Generic;
 using System;
 using UnityEngine.Audio;
