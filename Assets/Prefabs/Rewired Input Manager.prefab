@@ -369,9 +369,18 @@ MonoBehaviour:
       _userAssignable: 1
       _categoryId: 5
     - _id: 17
-      _name: GeneralAction
+      _name: GeneralActionOne
       _type: 1
-      _descriptiveName: GeneralAction
+      _descriptiveName: GeneralActionOne
+      _positiveDescriptiveName: 
+      _negativeDescriptiveName: 
+      _behaviorId: 0
+      _userAssignable: 1
+      _categoryId: 5
+    - _id: 18
+      _name: GeneralActionTwo
+      _type: 1
+      _descriptiveName: GeneralActionTwo
       _positiveDescriptiveName: 
       _negativeDescriptiveName: 
       _behaviorId: 0
@@ -421,7 +430,7 @@ MonoBehaviour:
       - categoryId: 4
         actionIds: 0b0000000d000000
       - categoryId: 5
-        actionIds: 0e0000000f0000001000000011000000
+        actionIds: 0e0000000f000000100000001100000012000000
     inputBehaviors:
     - _id: 0
       _name: Default
@@ -706,6 +715,17 @@ MonoBehaviour:
         _modifierKey1: 0
         _modifierKey2: 0
         _modifierKey3: 0
+      - _actionCategoryId: 0
+        _actionId: 18
+        _elementType: 1
+        _elementIdentifierId: -1
+        _axisRange: 0
+        _invert: 0
+        _axisContribution: 0
+        _keyboardKeyCode: 121
+        _modifierKey1: 0
+        _modifierKey2: 0
+        _modifierKey3: 0
     mouseMaps:
     - id: 0
       categoryId: 0
@@ -741,7 +761,7 @@ MonoBehaviour:
     controllerMapLayoutManagerRuleSets: []
     controllerMapEnablerRuleSets: []
     playerIdCounter: 2
-    actionIdCounter: 18
+    actionIdCounter: 19
     actionCategoryIdCounter: 7
     inputBehaviorIdCounter: 1
     mapCategoryIdCounter: 1

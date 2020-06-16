@@ -17,6 +17,7 @@ public class Player : MonoBehaviour
     [SerializeField] private Transform cameraTarget;
     [SerializeField] private Transform terraformerHoldPoint;
     [SerializeField] private Transform laserCannonTip;
+    [SerializeField] private HealthBar healthBar;
 
     [Header("Player Stats")]
     [SerializeField] private float movementSpeed;
@@ -133,6 +134,15 @@ public class Player : MonoBehaviour
         movement = new Vector3(moveHorizontal, 0, -moveVertical);
         shooting = InputController.Instance.ButtonHeld("Shoot");
         //Debug.Log($"Movement input: {movement}");
+
+        if (player.GetButton("GeneralActionOne")) {
+            health.ChangeHealthValue(10);
+            print("Ahhh... " + health.CurrentHealth);
+            //healthBar.Fader.StartFade(0, 1, 0.3f);
+        } else if (player.GetButton("GeneralActionTwo")){
+            health.ChangeHealthValue(-10);
+            print("OUCH! " + health.CurrentHealth);
+        }
     }
 
     //Recurring Methods (FixedUpdate())--------------------------------------------------------------------------------------------------------------
@@ -143,6 +153,7 @@ public class Player : MonoBehaviour
     private void UpdateDrone()
     {
         CheckHealth();
+        UpdateHeatlth();
         Look();
         Move();
         CheckShooting();
@@ -162,6 +173,20 @@ public class Player : MonoBehaviour
                 MessageDispatcher.Instance.SendMessage("Alien", new Message(gameObject.name, "Player", this.gameObject, "Dead"));
                 gameOver = true;
             }
+        }
+    }
+
+    private void UpdateHeatlth(){
+        healthBar.SetBarValue(health.CurrentHealth);
+        if (healthBar.Fader.IsFading()) {
+            healthBar.Fader.Fade();
+            //print("Fading");
+        } else if (health.CurrentHealth < health.MaxHealth && healthBar.isTransparent()){
+            //print("Fade In");
+            healthBar.Fader.StartFade(0, 1, 0.3f);
+        } else if (health.CurrentHealth == health.MaxHealth && !healthBar.isTransparent()) {
+            healthBar.Fader.StartFade(1, 0, 1f);
+            //print("Fade Out");
         }
     }
 

@@ -6,29 +6,29 @@ using UnityEngine.UI;
 
 public class HealthBar : MonoBehaviour
 {
-    public Slider slider;
-    [SerializeField] private float barMax = 0;
-    [SerializeField] private float curVal = 0;
-
-    private float renderBarMax = 0;
+    [SerializeField] private Slider slider;
+    [SerializeField] private Health health;
+    private float barMax = 0;
+    private float curVal = 0;
+    private UIFadeControl fader;
 
     public float CurrentValue {get => curVal;}
+    public UIFadeControl Fader {get => fader;}
 
     private void Awake() {
+        barMax = health.CurrentHealth;
+        curVal = barMax;
+        
         slider.maxValue = barMax;
         slider.value = curVal;
-        renderBarMax = barMax;
-    }
-    public void SetMaxBarValue(float value){
-        barMax = value;
-        renderBarMax = barMax;
-        slider.maxValue = barMax;
+
+        fader = new UIFadeControl(this.GetComponent<CanvasGroup>());
     }
 
-    public void SetMaxRenderBarValue(float value){
-        renderBarMax = value;
-        slider.maxValue = renderBarMax;
+    public void SetMaxBarValue(float value){
+        barMax = value;
     }
+
     public void SetBarValue(float value){
         if (IsBarWithinBounds(value)){
             curVal = value;
@@ -49,5 +49,9 @@ public class HealthBar : MonoBehaviour
         } else {
             return true;
         }
+    }
+
+    public bool isTransparent(){
+        return fader.isTransparent();
     }
 }

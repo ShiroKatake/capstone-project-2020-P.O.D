@@ -336,7 +336,7 @@ public class Alien : MonoBehaviour, IMessenger
             if (Time.time - timeOfLastAttack > attackCooldown)
             {
                 timeOfLastAttack = Time.time;
-                targetHealth.Value -= damage;
+                targetHealth.ChangeHealthValue(-damage);
             }
         }
         //TODO: if made contact with target and target is a building, step back a smidge and attack, so that OnCollisionStay is not called every single frame. For player, check if within attack range to verify that the alien can still attack them?

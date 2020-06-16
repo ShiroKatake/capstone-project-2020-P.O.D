@@ -24,16 +24,10 @@ public class Health : MonoBehaviour
     /// <summary>
     /// How much health, durability, etc. something currently has.
     /// </summary>
-    public float Value
-    {
-        get => health; //set => health = value;
+    public float CurrentHealth {get => health;}
 
-        set
-        {
-            health = value;
-            //Debug.Log($"{gameObject.name}'s health updated to {health}");
-        }
-    }
+    public float MaxHealth { get => startingHealth; }
+
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -63,5 +57,17 @@ public class Health : MonoBehaviour
     public void Reset()
     {
         health = startingHealth;
+    }
+
+    // var checking -----------------------------------------------------------------------------------------------------------------------------------
+
+    public void ChangeHealthValue(float val){
+        if (health + val > MaxHealth) {
+            health = MaxHealth;
+        } else if (health + val <= 0){
+            health = 0;
+        } else {
+            health += val;
+        }
     }
 }
