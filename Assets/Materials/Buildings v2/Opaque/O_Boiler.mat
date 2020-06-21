@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: DissolveMaterial
+  m_Name: O_Boiler
   m_Shader: {fileID: -6465566751694194690, guid: 6c90b2c70fb3d90498b005e035a56d0c,
     type: 3}
   m_ShaderKeywords: 
@@ -29,7 +29,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Base:
-        m_Texture: {fileID: 2800000, guid: f91a67575edd74e4abeac5463422f7bd, type: 3}
+        m_Texture: {fileID: 2800000, guid: 7eb13c04e1d160948a34f91b1ff6b7f5, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseMap:
@@ -48,6 +48,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _RAME:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Smoothness:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -56,15 +60,22 @@ Material:
     - Vector1_3620AB22: 1
     - Vector1_777330E7: 0.05
     - Vector1_85EEB32: 0
+    - Vector1_BE34AAC9: 0
     - _CutoffHeight: 2.2
     - _DissolveAmount: 1
-    - _EdgeWidth: 0.05
+    - _EdgeWidth: 0.3
+    - _End: 10.1
     - _Height: 1
+    - _Metallicness: 0
     - _NoiseScale: 75
-    - _NoiseStrength: 0.1
-    - _ObjectHeight: 2.28
+    - _NoiseStrength: 0.6
+    - _NormalStrength: 0
+    - _ObjectHeight: 4.46
     - _Offset: 0
+    - _Roughness: 0.5
+    - _Start: -4.93
     m_Colors:
     - Color_3B560143: {r: 0, g: 3.2, b: 4, a: 0}
     - Vector3_9A8406D3: {r: 0, g: 0, b: 0, a: 0}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EdgeColor: {r: 0, g: 1.336072, b: 2.297397, a: 0}
