@@ -97,6 +97,7 @@ GameObject:
   - component: {fileID: 3752192069620436707}
   - component: {fileID: 1120844386694136956}
   - component: {fileID: -2579203448979226937}
+  - component: {fileID: 6534556900469856335}
   m_Layer: 0
   m_Name: Greenhouse
   m_TagString: Building
@@ -208,6 +209,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   environmentParameter: 3
   environmentalAffect: 0.5
+--- !u!95 &6534556900469856335
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4273049605349681512}
+  m_Enabled: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 2172de4d0be35cc4db8ba17dc3b198ad, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &2825055950254332896
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -295,7 +315,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 308217a75504ed64ca4b581190ef85ae, type: 2}
+      objectReference: {fileID: 2100000, guid: b2d7c08f8d1d66f4cba675dbc814ef7b, type: 2}
     - target: {fileID: -927199367670048503, guid: 84ef7d7f6c7c6334d8847af0368ef092,
         type: 3}
       propertyPath: m_Name
@@ -402,7 +422,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 04d2a3197fd62e94e9220202e8f11df6, type: 2}
+      objectReference: {fileID: 2100000, guid: 1a888314dfaef1f4e9302834007f8a0c, type: 2}
     - target: {fileID: -927199367670048503, guid: 84ef7d7f6c7c6334d8847af0368ef092,
         type: 3}
       propertyPath: m_Name
