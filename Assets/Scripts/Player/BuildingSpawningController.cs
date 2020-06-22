@@ -110,6 +110,11 @@ public class BuildingSpawningController : MonoBehaviour
         if (!spawnBuilding)
         {
             spawnBuilding = InputController.Instance.ButtonPressed("SpawnBuilding");
+
+            if (spawnBuilding)
+            {
+                Debug.Log("BuildingSpawningController.GetInput.spawnBuilding has been set to true");
+            }
         }
         else
         {

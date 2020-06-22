@@ -102,10 +102,12 @@ public class MapController : MonoBehaviour
         {
             if (!PositionAvailableForSpawning(buildingPos + offset, false))
             {
+                Debug.Log("MapController.PositionAvailableForBuilding returned false");
                 return false;
             }
         }
 
+        Debug.Log("MapController.PositionAvailableForBuilding returned false");
         return true;
     }
 
