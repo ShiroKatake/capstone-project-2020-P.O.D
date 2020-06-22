@@ -12,7 +12,7 @@ public class Alien : MonoBehaviour, IMessenger
     //Serialized Fields----------------------------------------------------------------------------
 
     [Header("Components")]
-    [SerializeField] private Collider bodyCollider;
+    [SerializeField] private List<Collider> bodyColliders;
 
     [Header("Stats")] 
     [SerializeField] private int id;
@@ -30,7 +30,6 @@ public class Alien : MonoBehaviour, IMessenger
 
     //Movement
     private bool moving;
-    [SerializeField] private float hoverHeight;
     [SerializeField] private float zRotation;
 
     //Turning
@@ -53,9 +52,9 @@ public class Alien : MonoBehaviour, IMessenger
     //Basic Public Properties----------------------------------------------------------------------
 
     /// <summary>
-    /// The collider that comprises the alien's body.
+    /// The colliders that comprise the alien's body.
     /// </summary>
-    public Collider BodyCollider { get => bodyCollider; }
+    public List<Collider> BodyColliders { get => bodyColliders; }
 
     /// <summary>
     /// Alien's Health component.
@@ -83,8 +82,6 @@ public class Alien : MonoBehaviour, IMessenger
         colliders = new List<Collider>(GetComponents<Collider>());
         health = GetComponent<Health>();
         rigidbody = GetComponent<Rigidbody>();
-
-        hoverHeight = transform.position.y;
         zRotation = transform.rotation.eulerAngles.z;
 
         visibleAliens = new List<Transform>();
@@ -248,33 +245,33 @@ public class Alien : MonoBehaviour, IMessenger
     {
         transform.Translate(new Vector3(0, 0, speed * Time.fixedDeltaTime));
 
-        //Fly up if below hover height
-        if (transform.position.y < hoverHeight)
-        {
-            if (rigidbody.useGravity)
-            {
-                rigidbody.useGravity = false;
-            }
+        ////Fly up if below hover height
+        //if (transform.position.y < hoverHeight)
+        //{
+        //    if (rigidbody.useGravity)
+        //    {
+        //        rigidbody.useGravity = false;
+        //    }
 
-            transform.Translate(new Vector3(0, Mathf.Min(hoverHeight - transform.position.y, speed * 0.5f * Time.fixedDeltaTime, 0)));
-        }
-        //Activate gravity if above hover height
-        else if (transform.position.y > hoverHeight)
-        {
-            if (!rigidbody.useGravity)   //TODO: account for terrain pushing the alien up, if it can move up hills?
-            {
-                rigidbody.useGravity = true;
-            }
-        }
-        //Disable gravity if at hover height
-        else
-        {
-            if (rigidbody.useGravity)
-            {
-                transform.position = new Vector3(transform.position.x, hoverHeight, transform.position.z);
-                rigidbody.useGravity = false;
-            }
-        }
+        //    transform.Translate(new Vector3(0, Mathf.Min(hoverHeight - transform.position.y, speed * 0.5f * Time.fixedDeltaTime, 0)));
+        //}
+        ////Activate gravity if above hover height
+        //else if (transform.position.y > hoverHeight)
+        //{
+        //    if (!rigidbody.useGravity)   //TODO: account for terrain pushing the alien up, if it can move up hills?
+        //    {
+        //        rigidbody.useGravity = true;
+        //    }
+        //}
+        ////Disable gravity if at hover height
+        //else
+        //{
+        //    if (rigidbody.useGravity)
+        //    {
+        //        transform.position = new Vector3(transform.position.x, hoverHeight, transform.position.z);
+        //        rigidbody.useGravity = false;
+        //    }
+        //}
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------

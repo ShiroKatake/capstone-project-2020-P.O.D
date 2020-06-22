@@ -19,7 +19,9 @@ public class AlienController : MonoBehaviour
     [SerializeField] private float penaltyCooldown;
 
     [Header("For Testing")]
-    [SerializeField] private bool spawnEnemies;
+    [SerializeField] private bool spawnAliens;
+    [SerializeField] private bool spawnAlienNow;
+    [SerializeField] private Vector3 testSpawnPos;
     [SerializeField] private bool ignoreDayNightCycle;
 
     //Non-Serialized Fields------------------------------------------------------------------------
@@ -87,7 +89,13 @@ public class AlienController : MonoBehaviour
     /// </summary>
     private void SpawnAliens()
     {
-        if (spawnEnemies)
+        if (spawnAlienNow)
+        {
+            aliens.Add(AlienFactory.Instance.GetAlien(testSpawnPos));
+            spawnAlienNow = false;
+        }
+
+        if (spawnAliens)
         {
             if (ignoreDayNightCycle)
             {
