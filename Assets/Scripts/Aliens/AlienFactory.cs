@@ -57,9 +57,15 @@ public class AlienFactory : MonoBehaviour
 
         for (int i = 0; i < pooledAliens; i++)
         {
-            Alien a = Instantiate(alienPrefab, alienPoolParent.position, new Quaternion()); 
-            a.transform.parent = alienPoolParent;
-            alienPool.Add(a);
+            Alien alien = Instantiate(alienPrefab, alienPoolParent.position, new Quaternion()); 
+            alien.transform.parent = alienPoolParent;
+
+            foreach (Collider c in alien.GetComponents<Collider>())
+            {
+                c.enabled = false;
+            }
+
+            alienPool.Add(alien);
         }
     }
 
@@ -89,6 +95,11 @@ public class AlienFactory : MonoBehaviour
             alienPool.Remove(alien);
             alien.transform.parent = null;
             alien.transform.position = position;
+
+            foreach (Collider c in alien.GetComponents<Collider>())
+            {
+                c.enabled = true;
+            }
         }
         else
         {

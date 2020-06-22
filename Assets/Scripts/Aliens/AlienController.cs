@@ -77,7 +77,7 @@ public class AlienController : MonoBehaviour
     /// </summary>
     void Update()
     {
-        SpawnEnemies();
+        SpawnAliens();
     }
 
     //Recurring Methods (Update())-------------------------------------------------------------------------------------------------------------------
@@ -85,7 +85,7 @@ public class AlienController : MonoBehaviour
     /// <summary>
     /// Spawns more Enemies if there are less than 4 in the scene.
     /// </summary>
-    private void SpawnEnemies()
+    private void SpawnAliens()
     {
         if (spawnEnemies)
         {

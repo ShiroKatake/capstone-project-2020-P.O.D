@@ -84,13 +84,20 @@ public class Alien : MonoBehaviour, IMessenger
         health = GetComponent<Health>();
         rigidbody = GetComponent<Rigidbody>();
 
-        cryoEgg = BuildingController.Instance.CryoEgg;
-
         hoverHeight = transform.position.y;
         zRotation = transform.rotation.eulerAngles.z;
 
         visibleAliens = new List<Transform>();
         visibleTargets = new List<Transform>();
+    }
+
+    /// <summary>
+    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
+    /// Start() runs after Awake().
+    /// </summary>
+    void Start()
+    {
+        cryoEgg = BuildingController.Instance.CryoEgg;
     }
 
     /// <summary>
@@ -348,7 +355,7 @@ public class Alien : MonoBehaviour, IMessenger
     /// <param name="other">The other Collider involved in this collision.</param>
     private void OnTriggerEnter(Collider other)
     {
-        if (!other.isTrigger)
+        if (/*bodyCollider.enabled &&*/ !other.isTrigger)
         {
             if (other.CompareTag("Alien"))
             {
@@ -377,18 +384,15 @@ public class Alien : MonoBehaviour, IMessenger
     /// <param name="other">The other Collider involved in this collision.</param>
     private void OnTriggerExit(Collider other)
     {
-        if (!other.isTrigger)
+        if (/*bodyCollider.enabled && */!other.isTrigger)
         {
             if (visibleAliens.Contains(other.transform))
             {
                 visibleAliens.Remove(other.transform);
-                return;
             }
-
-            if (visibleTargets.Contains(other.transform))
+            else if (visibleTargets.Contains(other.transform))
             {
                 visibleTargets.Remove(other.transform);
-                //return;
             }
         }
     }
