@@ -15,8 +15,8 @@ public class Player : MonoBehaviour
     [SerializeField] private Transform drone;
     [SerializeField] private Camera camera;
     [SerializeField] private Transform cameraTarget;
-    [SerializeField] private Transform terraformerHoldPoint;
-    [SerializeField] private Transform laserCannonTip;
+    [SerializeField] private Transform barrelTip;
+    [SerializeField] private Transform barrelMagazine;
 
     [Header("Player Stats")]
     [SerializeField] private float movementSpeed;
@@ -220,8 +220,11 @@ public class Player : MonoBehaviour
         if (shooting && Time.time - timeOfLastShot > shootCooldown)
         {
             timeOfLastShot = Time.time;
-            Projectile projectile = ProjectileFactory.Instance.GetProjectile(EProjectileType.PODLaserBolt, transform, laserCannonTip.position);
-            projectile.Shoot((transform.forward * 2 - transform.up).normalized, 0);
+            Projectile projectile = ProjectileFactory.Instance.GetProjectile(EProjectileType.PODLaserBolt, transform, barrelTip.position);
+            Vector3 vector = barrelTip.position - barrelMagazine.position;
+
+            //projectile.Shoot((transform.forward * 2 - transform.up).normalized, 0);
+            projectile.Shoot(vector.normalized, 0);
             //TODO: tweak POD so that the shot vector is calculated using transforms equivalent to Turret's
             //TODO: use overload that incorporates shooter movement speed, and calculate current movement speed in the direction of the shot vector.
         }

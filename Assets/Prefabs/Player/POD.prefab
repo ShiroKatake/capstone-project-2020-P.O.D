@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 896588547581440063}
   - component: {fileID: 403112268726757339}
   m_Layer: 0
-  m_Name: Drone
+  m_Name: POD
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -106,42 +106,12 @@ MonoBehaviour:
   drone: {fileID: 403112268726757338}
   camera: {fileID: 0}
   cameraTarget: {fileID: 0}
-  terraformerHoldPoint: {fileID: 7818702405539167804}
-  laserCannonTip: {fileID: 1935910673708830645}
+  barrelTip: {fileID: 1935910673708830645}
+  barrelMagazine: {fileID: 6474693490154135395}
   movementSpeed: 10
   rotationSpeed: 3
   shootCooldown: 0.2
   playerID: 0
---- !u!1 &5056385230365494091
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7818702405539167804}
-  m_Layer: 0
-  m_Name: TerraformerHoldPoint
-  m_TagString: Player
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7818702405539167804
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5056385230365494091}
-  m_LocalRotation: {x: 0.7009034, y: -0.09345819, z: -0.09345819, w: 0.7009034}
-  m_LocalPosition: {x: -0.4476828, y: -2.5953746, z: 0.4520002}
-  m_LocalScale: {x: 2, y: 2, z: 2}
-  m_Children: []
-  m_Father: {fileID: 4056632263034783450}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7714345189961572185
 GameObject:
   m_ObjectHideFlags: 0
@@ -152,7 +122,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1935910673708830645}
   m_Layer: 0
-  m_Name: LaserCannonTip
+  m_Name: BarrelTip
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -167,6 +137,36 @@ Transform:
   m_GameObject: {fileID: 7714345189961572185}
   m_LocalRotation: {x: 0.69400036, y: -0.08978138, z: -0.09707184, w: 0.70772874}
   m_LocalPosition: {x: -0.45000017, y: -0.5170001, z: 1.5809999}
+  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_Children: []
+  m_Father: {fileID: 4056632263034783450}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 74.774, y: -85.5, z: -86.096}
+--- !u!1 &9061400599024481049
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6474693490154135395}
+  m_Layer: 0
+  m_Name: BarrelMagazine
+  m_TagString: Player
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6474693490154135395
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9061400599024481049}
+  m_LocalRotation: {x: 0.69400036, y: -0.08978138, z: -0.09707184, w: 0.70772874}
+  m_LocalPosition: {x: -0.098, y: 0.875, z: 1.877}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children: []
   m_Father: {fileID: 4056632263034783450}
