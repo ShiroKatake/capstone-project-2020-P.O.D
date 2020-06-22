@@ -16,6 +16,7 @@ public class AlienFactory : MonoBehaviour
     [SerializeField] private Transform alienPoolParent;
 
     [Header("Stats")]
+    [SerializeField] private int pooledAliens;
     [SerializeField] private float alienHoverHeight;
 
     //Non-Serialized Fields------------------------------------------------------------------------
@@ -53,6 +54,13 @@ public class AlienFactory : MonoBehaviour
 
         Instance = this;
         alienPool = new List<Alien>();
+
+        for (int i = 0; i < pooledAliens; i++)
+        {
+            Alien a = Instantiate(alienPrefab, alienPoolParent.position, new Quaternion()); 
+            a.transform.parent = alienPoolParent;
+            alienPool.Add(a);
+        }
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------

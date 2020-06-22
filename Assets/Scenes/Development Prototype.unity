@@ -701,18 +701,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 4529335743230054424}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1978729301 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4528282980556043272, guid: 9e7595dc8e91f594fb56c845983b5fac,
-    type: 3}
-  m_PrefabInstance: {fileID: 1445816504}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &2077680210 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4528282981401134451, guid: 9e7595dc8e91f594fb56c845983b5fac,
@@ -925,39 +913,9 @@ PrefabInstance:
       objectReference: {fileID: 1628873039}
     - target: {fileID: 948949189687773394, guid: 9620c728b220f2e47adbd85dd9ac4899,
         type: 3}
-      propertyPath: bars.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 948949189687773394, guid: 9620c728b220f2e47adbd85dd9ac4899,
-        type: 3}
-      propertyPath: var
-      value: 
-      objectReference: {fileID: 1978729301}
-    - target: {fileID: 948949189687773394, guid: 9620c728b220f2e47adbd85dd9ac4899,
-        type: 3}
       propertyPath: progress
       value: 
       objectReference: {fileID: 1848630857}
-    - target: {fileID: 948949189687773394, guid: 9620c728b220f2e47adbd85dd9ac4899,
-        type: 3}
-      propertyPath: Bio
-      value: 
-      objectReference: {fileID: 1712825057}
-    - target: {fileID: 948949189687773394, guid: 9620c728b220f2e47adbd85dd9ac4899,
-        type: 3}
-      propertyPath: O2
-      value: 
-      objectReference: {fileID: 2077680210}
-    - target: {fileID: 948949189687773394, guid: 9620c728b220f2e47adbd85dd9ac4899,
-        type: 3}
-      propertyPath: GHG
-      value: 
-      objectReference: {fileID: 1324127912}
-    - target: {fileID: 948949189687773394, guid: 9620c728b220f2e47adbd85dd9ac4899,
-        type: 3}
-      propertyPath: WinAmount
-      value: 50
-      objectReference: {fileID: 0}
     - target: {fileID: 948949189687773394, guid: 9620c728b220f2e47adbd85dd9ac4899,
         type: 3}
       propertyPath: bars.Array.data[0]

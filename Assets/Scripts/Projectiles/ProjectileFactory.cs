@@ -14,6 +14,7 @@ public class ProjectileFactory : MonoBehaviour
 
     [SerializeField] private Transform projectilePoolParent;
     [SerializeField] private List<Projectile> projectilePrefabs;
+    [SerializeField] private int pooledProjectiles;
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
@@ -51,7 +52,7 @@ public class ProjectileFactory : MonoBehaviour
             prefabs[p.Type] = p;
             projectiles[p.Type] = new List<Projectile>();
 
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < pooledProjectiles; i++)
             {
                 Projectile q = CreateProjectile(p.Type);
                 q.transform.SetPositionAndRotation(projectilePoolParent.position, q.transform.rotation);
