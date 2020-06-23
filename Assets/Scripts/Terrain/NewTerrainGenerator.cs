@@ -330,9 +330,9 @@ public class NewTerrainGenerator : MonoBehaviour
                 height = Mathf.PerlinNoise((float)xx * noiseScale + 0.1f, (float)yy * noiseScale + 0.1f);
                 height = curve.Evaluate(height);
                 float offset = 0;
-                if (Random.value > 0.95f) {
+                /*if (Random.value > 0.95f) {
                     offset = 0.25f;
-                }
+                }*/
                 heights[xx, yy] = height + offset;
             }
         }
