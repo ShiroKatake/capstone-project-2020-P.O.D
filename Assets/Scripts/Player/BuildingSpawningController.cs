@@ -137,11 +137,11 @@ public class BuildingSpawningController : MonoBehaviour
 
                 if (InputController.Instance.Gamepad == EGamepad.MouseAndKeyboard)
                 {
-                    heldBuilding.transform.position = MousePositionToBuildingPosition(transform.position, heldBuilding.XSize, heldBuilding.ZSize);
+                    heldBuilding.transform.position = MousePositionToBuildingPosition(transform.position, heldBuilding.Size.DiameterRoundedUp);// heldBuilding.XSize, heldBuilding.ZSize);
                 }
                 else
                 {
-                    heldBuilding.transform.position = RawBuildingPositionToBuildingPosition(heldBuilding.XSize, heldBuilding.ZSize);
+                    heldBuilding.transform.position = RawBuildingPositionToBuildingPosition(heldBuilding.Size.DiameterRoundedUp);// heldBuilding.XSize, heldBuilding.ZSize);
                 }
             }
             //Instantiate the appropriate building and postion it properly, replacing the old one.
@@ -151,11 +151,11 @@ public class BuildingSpawningController : MonoBehaviour
 
                 if (InputController.Instance.Gamepad == EGamepad.MouseAndKeyboard)
                 {
-                    pos = MousePositionToBuildingPosition(heldBuilding.transform.position, heldBuilding.XSize, heldBuilding.ZSize);
+                    pos = MousePositionToBuildingPosition(heldBuilding.transform.position, heldBuilding.Size.DiameterRoundedUp);// heldBuilding.XSize, heldBuilding.ZSize);
                 }
                 else
                 {
-                    pos = RawBuildingPositionToBuildingPosition(heldBuilding.XSize, heldBuilding.ZSize);
+                    pos = RawBuildingPositionToBuildingPosition(heldBuilding.Size.DiameterRoundedUp);// heldBuilding.XSize, heldBuilding.ZSize);
                 }
 
                 BuildingFactory.Instance.DestroyBuilding(heldBuilding, false, false);
@@ -166,11 +166,11 @@ public class BuildingSpawningController : MonoBehaviour
             {
                 if (InputController.Instance.Gamepad == EGamepad.MouseAndKeyboard)
                 {
-                    heldBuilding.transform.position = MousePositionToBuildingPosition(heldBuilding.transform.position, heldBuilding.XSize, heldBuilding.ZSize);
+                    heldBuilding.transform.position = MousePositionToBuildingPosition(heldBuilding.transform.position, heldBuilding.Size.DiameterRoundedUp);// heldBuilding.XSize, heldBuilding.ZSize);
                 }
                 else
                 {
-                    heldBuilding.transform.position = RawBuildingPositionToBuildingPosition(heldBuilding.XSize, heldBuilding.ZSize);
+                    heldBuilding.transform.position = RawBuildingPositionToBuildingPosition(heldBuilding.Size.DiameterRoundedUp);// heldBuilding.XSize, heldBuilding.ZSize);
                 }                
             }
 
@@ -226,14 +226,14 @@ public class BuildingSpawningController : MonoBehaviour
     /// <param name="xSize">The building's size along the x-axis (Building.XSize).</param>
     /// <param name="zSize">The building's size along the z-axis (Building.ZSize).</param>
     /// <returns>Snapped-to-grid building position.</returns>
-    private Vector3 MousePositionToBuildingPosition(Vector3 backup, int xSize, int zSize)
+    private Vector3 MousePositionToBuildingPosition(Vector3 backup, int radius)//int xSize, int zSize)
     {
         RaycastHit hit;
         Ray ray = camera.ScreenPointToRay(Input.mousePosition);
 
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("Ground")))
-        {            
-            return SnapBuildingToGrid(hit.point, xSize, zSize);
+        {
+            return SnapBuildingToGrid(hit.point, radius);// xSize, zSize);
         }
 
         return backup;
@@ -245,7 +245,7 @@ public class BuildingSpawningController : MonoBehaviour
     /// <param name="xSize">The building's size along the x-axis (Building.XSize).</param>
     /// <param name="zSize">The building's size along the z-axis (Building.ZSize).</param>
     /// <returns>Snapped-to-grid building position.</returns>
-    private Vector3 RawBuildingPositionToBuildingPosition(int xSize, int zSize)
+    private Vector3 RawBuildingPositionToBuildingPosition(int radius)//int xSize, int zSize)
     {
         Vector3 worldPos = transform.position;
         Vector3 newOffset = rawBuildingMovement * Player.Instance.MovementSpeed * Time.deltaTime;
@@ -257,7 +257,7 @@ public class BuildingSpawningController : MonoBehaviour
             worldPos = newWorldPos;
         }
 
-        return SnapBuildingToGrid(worldPos, xSize, zSize);
+        return SnapBuildingToGrid(worldPos, radius);// xSize, zSize);
     }
 
     /// <summary>
@@ -267,11 +267,11 @@ public class BuildingSpawningController : MonoBehaviour
     /// <param name="xSize">The building's size along the x-axis (Building.XSize).</param>
     /// <param name="zSize">The building's size along the z-axis (Building.ZSize).</param>
     /// <returns>Snapped-to-grid building position.</returns>
-    private Vector3 SnapBuildingToGrid(Vector3 pos, int xSize, int zSize)
+    private Vector3 SnapBuildingToGrid(Vector3 pos, int radius)//int xSize, int zSize)
     {
-        pos.x = Mathf.Round(pos.x) + (xSize == 2 ? 0.5f : 0);
+        pos.x = Mathf.Round(pos.x) + (radius == 2 ? 0.5f : 0);//(xSize == 2 ? 0.5f : 0);
         pos.y = 0.67f;
-        pos.z = Mathf.Round(pos.z) + (zSize == 2 ? 0.5f : 0);
+        pos.z = Mathf.Round(pos.z) + (radius == 2 ? 0.5f : 0);//(zSize == 2 ? 0.5f : 0);
         return pos;
     }
 }

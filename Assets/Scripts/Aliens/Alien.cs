@@ -45,6 +45,7 @@ public class Alien : MonoBehaviour, IMessenger
     private List<Transform> visibleTargets;
     [SerializeField] private Transform target;
     [SerializeField] private Health targetHealth;
+    [SerializeField] private Size targetSize;
     [SerializeField] private string shotByName;
     [SerializeField] private Transform shotByTransform;
     private float timeOfLastAttack;
@@ -108,7 +109,12 @@ public class Alien : MonoBehaviour, IMessenger
         this.id = id;
         gameObject.name = $"Alien {id}";
         health.Reset();
-        target = cryoEgg.GetComponentInChildren<Collider>().transform;
+
+        while (target == null)
+        {
+            target = cryoEgg.GetComponentInChildren<Collider>().transform;
+        }
+
         targetHealth = cryoEgg.Health;
         timeOfLastAttack = attackCooldown * -1;
         moving = true;
@@ -174,6 +180,7 @@ public class Alien : MonoBehaviour, IMessenger
                 {
                     target = cryoEgg.GetComponentInChildren<Collider>().transform;
                     targetHealth = cryoEgg.Health;
+                    targetSize = cryoEgg.Size;
                 }
 
                 break;
@@ -183,6 +190,7 @@ public class Alien : MonoBehaviour, IMessenger
                 {
                     target = visibleTargets[0];
                     targetHealth = target.GetComponentInParent<Health>();   //Gets Health from target or any of its parents that has it.
+                    targetSize = target.GetComponentInParent<Size>();   //Gets Radius from target or any of its parents that has it.
                 }
 
                 break;
@@ -192,6 +200,7 @@ public class Alien : MonoBehaviour, IMessenger
                 {
                     target = shotByTransform;
                     targetHealth = target.GetComponentInParent<Health>();   //Gets Health from target or any of its parents that has it.
+                    targetSize = target.GetComponentInParent<Size>();   //Gets Radius from target or any of its parents that has it.
                 }
                 else
                 {
@@ -215,6 +224,7 @@ public class Alien : MonoBehaviour, IMessenger
                     {
                         target = closestTarget;
                         targetHealth = target.GetComponentInParent<Health>();   //Gets Health from target or any of its parents that has it.
+                        targetSize = target.GetComponentInParent<Size>();   //Gets Radius from target or any of its parents that has it.
                     }
                 }
 
@@ -259,18 +269,38 @@ public class Alien : MonoBehaviour, IMessenger
     /// </summary>
     private void Move()
     {
-        if (Vector3.Distance(transform.position, PositionAtSameHeight(target.position)) > attackRange)  //TODO: account for target size when calculating distance, i.e. "attack range + approximate radius"
+        if (Vector3.Distance(transform.position, PositionAtSameHeight(target.position)) > attackRange + targetSize.Radius)
         {
-            //Vector3 oldPos = transform.position;
             RaycastHit hit;
-            transform.Translate(new Vector3(0, 0, speed * Time.fixedDeltaTime));
+            Vector3 oldPos = transform.position;
+            float movement = speed * Time.fixedDeltaTime;
+
+            if (rigidbody.SweepTest(transform.forward, out hit, movement)) //Check if would collide with another object
+            {
+                Debug.Log($"Alien sweep test, hit collider's game object is {hit.collider.gameObject}, tag is {hit.collider.tag}");
+
+                if (hit.collider.tag == "Alien" && hit.rigidbody != rigidbody)
+                {
+                    return;
+                }
+            }
+
+            transform.Translate(new Vector3(0, 0, movement));
             //Vector3 translatedPos = transform.position;
 
-            if (Physics.Raycast(transform.position + Vector3.up * 0.5f, Vector3.down, out hit, 999))
+            LayerMask mask = LayerMask.GetMask("Planet");
+
+            if (Physics.Raycast(transform.position + Vector3.up * 0.5f, Vector3.down, out hit, 999, mask))
             {
                 transform.position = hit.point + hit.normal * hoverHeight; //TODO: account for case of alien being above the ground and needing to fall back to the ground, rather than just snapping to the ground automatically
-                //Debug.Log($"oldPos: {oldPos}, translatedPos: {translatedPos}, hit.point: {hit.point}, newPos: {transform.position}");
+                                                                           //Debug.Log($"oldPos: {oldPos}, translatedPos: {translatedPos}, hit.point: {hit.point}, newPos: {transform.position}");
             }
+        }
+        else if (Time.time - timeOfLastAttack > attackCooldown)
+        {
+            timeOfLastAttack = Time.time;
+            targetHealth.Value -= damage;
+            //TODO: trigger attack animation
         }
 
         //rigidbody.velocity = Vector3.zero;
@@ -359,28 +389,12 @@ public class Alien : MonoBehaviour, IMessenger
         shotByTransform = null;
         visibleTargets.Clear();
         visibleAliens.Clear();
+        target = null;
 
         foreach (Collider c in colliders)
         {
             c.enabled = false;
         }
-    }
-
-    /// <summary>
-    /// OnCollisionStay is called once per frame for every collider/rigidbody that is touching rigidbody/collider.
-    /// </summary>
-    /// <param name="collision">The collision data associated with this event.</param>
-    private void OnCollisionStay(Collision collision)
-    {
-        if (!collision.collider.isTrigger && (collision.collider.CompareTag("Building") || collision.collider.CompareTag("Player")))
-        {
-            if (Time.time - timeOfLastAttack > attackCooldown)
-            {
-                timeOfLastAttack = Time.time;
-                targetHealth.Value -= damage;
-            }
-        }
-        //TODO: if made contact with target and target is a building, step back a smidge and attack, so that OnCollisionStay is not called every single frame. For player, check if within attack range to verify that the alien can still attack them?
     }
 
     /// <summary>
