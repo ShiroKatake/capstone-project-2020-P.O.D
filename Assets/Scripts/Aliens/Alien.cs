@@ -18,6 +18,8 @@ public class Alien : MonoBehaviour, IMessenger
     [SerializeField] private int id;
     [SerializeField] private float speed;
     [SerializeField] private float turningSpeed;
+    [SerializeField] private float hoverHeight;
+    [SerializeField] private float attackRange;
     [SerializeField] private float damage;
     [SerializeField] private float attackCooldown;
 
@@ -86,6 +88,7 @@ public class Alien : MonoBehaviour, IMessenger
 
         visibleAliens = new List<Transform>();
         visibleTargets = new List<Transform>();
+        moving = false;
     }
 
     /// <summary>
@@ -136,10 +139,13 @@ public class Alien : MonoBehaviour, IMessenger
     /// </summary>
     private void FixedUpdate()
     {
-        CheckHealth();
-        SelectTarget();
-        Look();
-        Move();
+        if (moving)
+        {
+            CheckHealth();
+            SelectTarget();
+            Look();
+            Move();
+        }
     }
 
     //Recurring Methods (FixedUpdate())-------------------------------------------------------------------------------------------------------------  
@@ -222,7 +228,7 @@ public class Alien : MonoBehaviour, IMessenger
     private void Look()
     {
         //TODO: swarm-based looking behaviour
-        Vector3 newRotation = target.position - transform.position;
+        Vector3 newRotation = PositionAtSameHeight(target.position) - transform.position;
 
         if (newRotation != targetRotation.eulerAngles)
         {
@@ -239,38 +245,69 @@ public class Alien : MonoBehaviour, IMessenger
     }
 
     /// <summary>
+    /// Gets the position of a target as if it were at the same height as the alien. 
+    /// </summary>
+    /// <param name="targetPos">The target's position.</param>
+    /// <returns>The target's position if it was at the same height as the alien.</returns>
+    private Vector3 PositionAtSameHeight(Vector3 targetPos)
+    {
+        return new Vector3(targetPos.x, transform.position.y, targetPos.z);
+    }
+
+    /// <summary>
     /// Moves alien.
     /// </summary>
     private void Move()
     {
-        transform.Translate(new Vector3(0, 0, speed * Time.fixedDeltaTime));
+        if (Vector3.Distance(transform.position, PositionAtSameHeight(target.position)) > attackRange)  //TODO: account for target size when calculating distance, i.e. "attack range + approximate radius"
+        {
+            //Vector3 oldPos = transform.position;
+            RaycastHit hit;
+            transform.Translate(new Vector3(0, 0, speed * Time.fixedDeltaTime));
+            //Vector3 translatedPos = transform.position;
+
+            if (Physics.Raycast(transform.position + Vector3.up * 0.5f, Vector3.down, out hit, 999))
+            {
+                transform.position = hit.point + hit.normal * hoverHeight; //TODO: account for case of alien being above the ground and needing to fall back to the ground, rather than just snapping to the ground automatically
+                //Debug.Log($"oldPos: {oldPos}, translatedPos: {translatedPos}, hit.point: {hit.point}, newPos: {transform.position}");
+            }
+        }
+
+        //rigidbody.velocity = Vector3.zero;
 
         ////Fly up if below hover height
         //if (transform.position.y < hoverHeight)
         //{
-        //    if (rigidbody.useGravity)
-        //    {
-        //        rigidbody.useGravity = false;
-        //    }
+        //    //if (rigidbody.useGravity)
+        //    //{
+        //    //    rigidbody.useGravity = false;
+        //    //}
 
-        //    transform.Translate(new Vector3(0, Mathf.Min(hoverHeight - transform.position.y, speed * 0.5f * Time.fixedDeltaTime, 0)));
+        //    transform.Translate(new Vector3(0, Mathf.Min(hoverHeight - transform.position.y, speed * Time.fixedDeltaTime), 0));
         //}
         ////Activate gravity if above hover height
         //else if (transform.position.y > hoverHeight)
         //{
-        //    if (!rigidbody.useGravity)   //TODO: account for terrain pushing the alien up, if it can move up hills?
-        //    {
-        //        rigidbody.useGravity = true;
-        //    }
+        //    //if (!rigidbody.useGravity)   //TODO: account for terrain pushing the alien up, if it can move up hills?
+        //    //{
+        //    //    rigidbody.useGravity = true;
+        //    //}
+
+        //    float heightSurplus = transform.position.y - hoverHeight;
+        //    float downSpeed = speed * Time.fixedDeltaTime;
+        //    Debug.Log($"heightSurplus: {heightSurplus}, downSpeed: {downSpeed}, Min: {Mathf.Min(heightSurplus, downSpeed)}");
+
+        //    transform.Translate(new Vector3(0, -5 * Mathf.Min(heightSurplus, downSpeed), 0));
         //}
         ////Disable gravity if at hover height
         //else
         //{
-        //    if (rigidbody.useGravity)
-        //    {
-        //        transform.position = new Vector3(transform.position.x, hoverHeight, transform.position.z);
-        //        rigidbody.useGravity = false;
-        //    }
+        //    //if (rigidbody.useGravity)
+        //    //{                
+        //    //    rigidbody.useGravity = false;
+        //    //}
+
+        //    transform.position = new Vector3(transform.position.x, hoverHeight, transform.position.z);
         //}
     }
 
