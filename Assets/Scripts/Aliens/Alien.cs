@@ -50,6 +50,8 @@ public class Alien : MonoBehaviour, IMessenger
     [SerializeField] private Transform shotByTransform;
     private float timeOfLastAttack;
 
+    //[SerializeField] private bool conductSweepTesting;
+
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
     //Basic Public Properties----------------------------------------------------------------------
@@ -131,14 +133,6 @@ public class Alien : MonoBehaviour, IMessenger
     }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
-
-    /// <summary>
-    /// Update() is run every frame.
-    /// </summary>
-    //private void Update()
-    //{
-        
-    //}
 
     /// <summary>
     /// FixedUpdate() is run at a fixed interval independant of framerate.
@@ -272,28 +266,48 @@ public class Alien : MonoBehaviour, IMessenger
         if (Vector3.Distance(transform.position, PositionAtSameHeight(target.position)) > attackRange + targetSize.Radius)
         {
             RaycastHit hit;
-            Vector3 oldPos = transform.position;
             float movement = speed * Time.fixedDeltaTime;
 
-            if (rigidbody.SweepTest(transform.forward, out hit, movement)) //Check if would collide with another object
-            {
-                Debug.Log($"Alien sweep test, hit collider's game object is {hit.collider.gameObject}, tag is {hit.collider.tag}");
+            //if (conductSweepTesting && rigidbody.SweepTest(transform.forward, out hit, movement)) //Check if would collide with another object
+            //{
+            //    Debug.Log($"{this}.Move() sweep test, hit collider's game object is {hit.collider.gameObject}, tag is {hit.collider.tag}");
 
-                if (hit.collider.tag == "Alien" && hit.rigidbody != rigidbody)
-                {
-                    return;
-                }
-            }
+            //    if (hit.collider.tag == "Alien" && hit.rigidbody != rigidbody)
+            //    {
+            //        return;
+            //    }
+            //}
 
             transform.Translate(new Vector3(0, 0, movement));
             //Vector3 translatedPos = transform.position;
 
             LayerMask mask = LayerMask.GetMask("Planet");
 
-            if (Physics.Raycast(transform.position + Vector3.up * 0.5f, Vector3.down, out hit, 999, mask))
+            if (Physics.Raycast(transform.position + Vector3.up * 0.5f, Vector3.down, out hit, 25, mask))
             {
-                transform.position = hit.point + hit.normal * hoverHeight; //TODO: account for case of alien being above the ground and needing to fall back to the ground, rather than just snapping to the ground automatically
-                                                                           //Debug.Log($"oldPos: {oldPos}, translatedPos: {translatedPos}, hit.point: {hit.point}, newPos: {transform.position}");
+                float height = (transform.position - hit.point).y;
+
+                //Toggle gravity if something has pushed the alien up above hoverHeight
+                if (rigidbody.useGravity)
+                {
+                    if (height <= hoverHeight)
+                    {
+                        transform.position = new Vector3(transform.position.x, hoverHeight, transform.position.z);
+                        rigidbody.useGravity = false;
+                        rigidbody.drag = 100;
+                        rigidbody.mass = 0;
+                    }
+                }
+                else
+                {
+                    if (height > hoverHeight)
+                    {
+                        rigidbody.useGravity = true;
+                        rigidbody.drag = 0;
+                        rigidbody.velocity = Vector3.zero;
+                        rigidbody.mass = 1000;
+                    }
+                }
             }
         }
         else if (Time.time - timeOfLastAttack > attackCooldown)
@@ -302,43 +316,6 @@ public class Alien : MonoBehaviour, IMessenger
             targetHealth.Value -= damage;
             //TODO: trigger attack animation
         }
-
-        //rigidbody.velocity = Vector3.zero;
-
-        ////Fly up if below hover height
-        //if (transform.position.y < hoverHeight)
-        //{
-        //    //if (rigidbody.useGravity)
-        //    //{
-        //    //    rigidbody.useGravity = false;
-        //    //}
-
-        //    transform.Translate(new Vector3(0, Mathf.Min(hoverHeight - transform.position.y, speed * Time.fixedDeltaTime), 0));
-        //}
-        ////Activate gravity if above hover height
-        //else if (transform.position.y > hoverHeight)
-        //{
-        //    //if (!rigidbody.useGravity)   //TODO: account for terrain pushing the alien up, if it can move up hills?
-        //    //{
-        //    //    rigidbody.useGravity = true;
-        //    //}
-
-        //    float heightSurplus = transform.position.y - hoverHeight;
-        //    float downSpeed = speed * Time.fixedDeltaTime;
-        //    Debug.Log($"heightSurplus: {heightSurplus}, downSpeed: {downSpeed}, Min: {Mathf.Min(heightSurplus, downSpeed)}");
-
-        //    transform.Translate(new Vector3(0, -5 * Mathf.Min(heightSurplus, downSpeed), 0));
-        //}
-        ////Disable gravity if at hover height
-        //else
-        //{
-        //    //if (rigidbody.useGravity)
-        //    //{                
-        //    //    rigidbody.useGravity = false;
-        //    //}
-
-        //    transform.position = new Vector3(transform.position.x, hoverHeight, transform.position.z);
-        //}
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
@@ -396,6 +373,14 @@ public class Alien : MonoBehaviour, IMessenger
             c.enabled = false;
         }
     }
+
+    //private void OnCollisionEnter(Collision collision)
+    //{
+    //    if (moving)
+    //    {
+    //        Debug.Log($"{this} collided with {collision.gameObject}, tag is {collision.gameObject.tag}, force applied is {collision.impulse}");
+    //    }
+    //}
 
     /// <summary>
     /// When a GameObject collides with another GameObject, Unity calls OnTriggerEnter.
