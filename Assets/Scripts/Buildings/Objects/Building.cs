@@ -410,6 +410,7 @@ public class Building : CollisionListener
     /// <param name="position">Where the building is to be placed.</param>
     public void Place(Vector3 position)
     {
+        placed = true; //Needs to occur before its position gets set to be on the ground so that it triggers the building Foundation at the proper time.
         ResourceController.Instance.Ore -= oreCost;
         ResourceController.Instance.PowerConsumption += powerConsumption;
         ResourceController.Instance.WaterConsumption += waterConsumption;
@@ -430,7 +431,6 @@ public class Building : CollisionListener
         }
 
         BuildingController.Instance.RegisterBuilding(this);
-        placed = true;
         StartCoroutine(Build());
     }
 
@@ -439,13 +439,13 @@ public class Building : CollisionListener
     /// </summary>
     public void Reset()
     {
+        placed = false; //Needs to occur first so that BuildingFoundations know to ignore this building
+        active = false;
+        colliding = false;
+
         StopCoroutine(Build());
         health.Reset();
         Operational = false;
-
-        active = false;
-        colliding = false;
-        placed = false;
         
         otherColliders.Clear();
         parentRenderer.transform.localPosition = Vector3.zero;
