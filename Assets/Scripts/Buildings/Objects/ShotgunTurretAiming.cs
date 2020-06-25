@@ -39,7 +39,7 @@ public class ShotgunTurretAiming : TurretAiming
         base.Reset();
         baseCollider.localRotation = Quaternion.Euler(rotationColliderOffset);
         baseModel.localRotation = Quaternion.Euler(rotationColliderOffset + rotationModelCounterOffset);
-        barrelColliderPivot.localRotation = Quaternion.Euler(elevationColliderOffset);
+        barrelColliderPivot.localRotation = Quaternion.Euler(elevationColliderOffset);  //TODO: add inspector-set initial elevation
         barrelModelPivot.localRotation = Quaternion.Euler(elevationColliderOffset + elevationModelCounterOffset);
     }
 

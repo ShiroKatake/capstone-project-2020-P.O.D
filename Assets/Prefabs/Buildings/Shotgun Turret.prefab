@@ -487,7 +487,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4847364633576071608}
-  - component: {fileID: 2481825182901768388}
+  - component: {fileID: 6375144007573283834}
   - component: {fileID: 1740587601337509806}
   - component: {fileID: 3519067798138725708}
   m_Layer: 0
@@ -513,8 +513,8 @@ Transform:
   m_Father: {fileID: 7345750986247059595}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -90.00001, y: 0, z: 0}
---- !u!64 &2481825182901768388
-MeshCollider:
+--- !u!136 &6375144007573283834
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -523,10 +523,10 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 2616784651231164177, guid: 22135eb99d7103f4383e8a2193353969, type: 3}
+  m_Radius: 6.5
+  m_Height: 140.06381
+  m_Direction: 2
+  m_Center: {x: 0, y: -2.1481569e-14, z: 57.718094}
 --- !u!54 &1740587601337509806
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -572,7 +572,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6434623972415049373}
-  - component: {fileID: 5007338536525091063}
+  - component: {fileID: 8042310140663732627}
   - component: {fileID: 5280111851617792403}
   - component: {fileID: 5929303774552152200}
   m_Layer: 0
@@ -597,8 +597,8 @@ Transform:
   m_Father: {fileID: 6578390048626754263}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -90, y: -90.00001, z: 180.00002}
---- !u!64 &5007338536525091063
-MeshCollider:
+--- !u!136 &8042310140663732627
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -607,10 +607,10 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &5280111851617792403
 Rigidbody:
   m_ObjectHideFlags: 0
