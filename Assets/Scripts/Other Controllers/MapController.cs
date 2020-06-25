@@ -194,8 +194,9 @@ public class MapController : MonoBehaviour
             int x = (int)Mathf.Round(foundationPos.x);
             int z = (int)Mathf.Round(foundationPos.z);
 
-            if (x >= 0 || x <= xMax || z >= 0 || z <= zMax)
-            {                
+            if (x >= 0 && x <= xMax && z >= 0 && z <= zMax)
+            {
+                Debug.Log($"MapController.UpdateAvailablePositions() offset loop for {building} at position {building.transform.position}, x is {x}, z is {z}, xMax is {xMax}, zMax is {zMax}");
                 bool startingAlienAvailability = availableAlienPositions[x, z];
                 availableBuildingPositions[x, z] = available;
                 availableAlienPositions[x, z] = (availableBuildingPositions[x, z] && !alienExclusionArea[x, z]);

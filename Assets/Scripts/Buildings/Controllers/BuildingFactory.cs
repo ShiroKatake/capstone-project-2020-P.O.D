@@ -148,7 +148,6 @@ public class BuildingFactory : MonoBehaviour
 
         building.Id = IdGenerator.Instance.GetNextId();
         building.Active = true;
-        BuildingController.Instance.RegisterBuilding(building);
 
         if (building.Terraformer != null)
         {

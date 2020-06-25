@@ -429,8 +429,8 @@ public class Building : CollisionListener
             c.ReportOnTriggerExit = false;
         }
 
+        BuildingController.Instance.RegisterBuilding(this);
         placed = true;
-
         StartCoroutine(Build());
     }
 
