@@ -364,8 +364,9 @@ GameObject:
   - component: {fileID: 2387721251791164881}
   - component: {fileID: 276844957512759736}
   - component: {fileID: 1219818938998714957}
-  - component: {fileID: 3380677155783403710}
+  - component: {fileID: 8965008406432620709}
   - component: {fileID: -6100819924566361332}
+  - component: {fileID: 3380677155783403710}
   m_Layer: 0
   m_Name: Machine Gun Turret
   m_TagString: Building
@@ -408,8 +409,6 @@ MonoBehaviour:
   powerConsumption: 1
   waterConsumption: 0
   wasteConsumption: 0
-  xSize: 2
-  zSize: 2
   buildTime: 10
   buildStartHeight: -18.9
   boingInterval: 0.1667
@@ -448,7 +447,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 10
---- !u!114 &3380677155783403710
+--- !u!114 &8965008406432620709
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -457,20 +456,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2740937295730065718}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 34d932f0839879649994915dc2d7419e, type: 3}
+  m_Script: {fileID: 11500000, guid: e087b4d1f91fcb941a830564ec25c878, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collisionReporters: []
-  barrelMagazine: {fileID: 6727844688691865855}
-  barrelTip: {fileID: 3455601484792482889}
-  projectileType: 3
-  targetClosest: 0
-  numProjectiles: 1
-  yAxisVariance: 0
-  zAxisVariance: 0
-  shotCooldown: 3
-  visibleTargets: []
-  target: {fileID: 0}
+  radius: 0.75
 --- !u!114 &-6100819924566361332
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -497,6 +486,29 @@ MonoBehaviour:
   armModelPivot: {fileID: 4031274663492664482}
   barrelColliderPivot: {fileID: 5451464881631675756}
   barrelModelPivot: {fileID: 5877666295754112639}
+--- !u!114 &3380677155783403710
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2740937295730065718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34d932f0839879649994915dc2d7419e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  collisionReporters: []
+  barrelMagazine: {fileID: 6727844688691865855}
+  barrelTip: {fileID: 3455601484792482889}
+  projectileType: 3
+  targetClosest: 0
+  numProjectiles: 1
+  yAxisVariance: 0
+  zAxisVariance: 0
+  shotCooldown: 3
+  visibleTargets: []
+  target: {fileID: 0}
 --- !u!1 &3018227449293362911
 GameObject:
   m_ObjectHideFlags: 0
