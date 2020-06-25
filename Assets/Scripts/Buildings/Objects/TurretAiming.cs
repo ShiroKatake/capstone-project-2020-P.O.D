@@ -20,6 +20,8 @@ public class TurretAiming : MonoBehaviour //CollisionListener
     [SerializeField] protected float maxBarrelElevation;
 
     [Header("Aiming Offsets")]
+    [SerializeField] protected Vector3 crawlerPositionOffset;
+    //[SerializeField] protected Vector3 targetHornetPositionOffset;
     [SerializeField] protected Vector3 rotationColliderOffset;
     [SerializeField] protected Vector3 rotationModelCounterOffset;
     [SerializeField] protected Vector3 elevationColliderOffset;

@@ -71,7 +71,7 @@ public class ShotgunTurretAiming : TurretAiming
     protected override void CalculateRotationAndElevation()
     {
         //Setup
-        targeter.LookAt(shooter.Target.transform.position);
+        targeter.LookAt(shooter.Target.transform.position + crawlerPositionOffset);
         //targeter.LookAt(target.position);
         float rawRotation = targeter.rotation.eulerAngles.y;
         float rawElevation = targeter.rotation.eulerAngles.x + elevationColliderOffset.y;
@@ -102,11 +102,11 @@ public class ShotgunTurretAiming : TurretAiming
 
             currentTurretRotation += rotationDirection * Mathf.Min(deltaAngle, fixedUpdateRotation);
             currentTurretRotation = MathUtility.Instance.NormaliseAngle(currentTurretRotation);
-            baseCollider.localRotation = Quaternion.Euler(rotationColliderOffset.x, rotationColliderOffset.y, currentTurretRotation + rotationColliderOffset.z);
+            baseCollider.localRotation = Quaternion.Euler(rotationColliderOffset.x, rotationColliderOffset.y, rotationColliderOffset.z + currentTurretRotation);
             baseModel.localRotation = Quaternion.Euler(
                 rotationColliderOffset.x + rotationModelCounterOffset.x, 
                 rotationColliderOffset.y + rotationModelCounterOffset.y, 
-                currentTurretRotation + rotationColliderOffset.z + rotationModelCounterOffset.z);
+                rotationColliderOffset.z + rotationModelCounterOffset.z + currentTurretRotation);
         }
 
         //Barrel pivoting on barrel pivot's local vertical axis. All other local values remain static.
@@ -118,10 +118,10 @@ public class ShotgunTurretAiming : TurretAiming
             float fixedUpdatePivot = elevationSpeed * Time.fixedDeltaTime;
 
             currentBarrelElevation += pivotDirection * Mathf.Min(deltaAngle, fixedUpdatePivot);
-            barrelColliderPivot.localRotation = Quaternion.Euler(elevationColliderOffset.x, currentBarrelElevation, elevationColliderOffset.z);
+            barrelColliderPivot.localRotation = Quaternion.Euler(elevationColliderOffset.x, elevationColliderOffset.y + currentBarrelElevation, elevationColliderOffset.z);
             barrelModelPivot.localRotation = Quaternion.Euler(
                 elevationColliderOffset.x + elevationModelCounterOffset.x, 
-                currentBarrelElevation + elevationModelCounterOffset.y, 
+                elevationColliderOffset.y + elevationModelCounterOffset.y + currentBarrelElevation, 
                 elevationColliderOffset.z + elevationModelCounterOffset.z);
         }
     }
