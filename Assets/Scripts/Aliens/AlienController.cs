@@ -150,14 +150,14 @@ public class AlienController : MonoBehaviour
 
                     //Spawn enemies
                     int spawnCount = BuildingController.Instance.BuildingCount * 3 + spawnCountPenalty;
-                    Vector3 clusterCentre = MapController.Instance.RandomAlienSpawnablePos();
-                    //Vector3 clusterCentre = new Vector3(95, 0, 105);
-                    Vector3 offset;
+                    //Vector3 clusterCentre = MapController.Instance.RandomAlienSpawnablePos();
+                    Vector3 clusterCentre = new Vector3(200, 0, 200);
                     int index;
                     int clusterRadius = 0;
                     List<Vector3> availableOffsets = new List<Vector3>();
 
-                    for (int i = 0; i < spawnCount; i++)
+                    //for (int i = 0; i < spawnCount; i++)
+                    for (int i = 0; i < 25; i++)
                     {
                         if (availableOffsets.Count == 0)
                         {
@@ -171,9 +171,17 @@ public class AlienController : MonoBehaviour
                         }
 
                         index = Random.Range(0, availableOffsets.Count);
-                        offset = availableOffsets[index];
+                        Vector3 spawnPos = clusterCentre + availableOffsets[index] * 2;
                         availableOffsets.RemoveAt(index);
-                        aliens.Add(AlienFactory.Instance.GetAlien(clusterCentre + offset * 2));
+
+                        if (MapController.Instance.PositionAvailableForSpawning(spawnPos, true))
+                        {
+                            aliens.Add(AlienFactory.Instance.GetAlien(spawnPos));
+                        }
+                        else
+                        {
+                            i--;
+                        }                        
                     }
                 }
             }
