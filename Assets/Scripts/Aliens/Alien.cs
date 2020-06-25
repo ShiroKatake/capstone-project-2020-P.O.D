@@ -40,7 +40,7 @@ public class Alien : MonoBehaviour, IMessenger
     private float slerpProgress;
     
     //Targeting
-    private Building cryoEgg;
+    //private CryoEgg CryoEgg;
     private List<Transform> visibleAliens;
     private List<Transform> visibleTargets;
     [SerializeField] private Transform target;
@@ -94,14 +94,14 @@ public class Alien : MonoBehaviour, IMessenger
         moving = false;
     }
 
-    /// <summary>
-    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
-    /// Start() runs after Awake().
-    /// </summary>
-    void Start()
-    {
-        cryoEgg = BuildingController.Instance.CryoEgg;
-    }
+    ///// <summary>
+    ///// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
+    ///// Start() runs after Awake().
+    ///// </summary>
+    //void Start()
+    //{
+    //    CryoEgg = CryoEgg.Instance;
+    //}
 
     /// <summary>
     /// Prepares the Alien to chase its targets when AlienFactory puts it in the world. 
@@ -112,18 +112,17 @@ public class Alien : MonoBehaviour, IMessenger
         gameObject.name = $"Alien {id}";
         health.Reset();
 
-        while (target == null)
-        {
-            target = cryoEgg.GetComponentInChildren<Collider>().transform;
-        }
+        //Debug.Log($"{this}.Setup(), CryoEgg is {CryoEgg.Instance}");
+        //Debug.Log($"CryoEgg.ColliderTransform is {CryoEgg.Instance.ColliderTransform}, CryoEgg.Health is {CryoEgg.Instance.Health}, CryoEgg.Size is {CryoEgg.Instance.Size}");
 
-        targetHealth = cryoEgg.Health;
+        target = CryoEgg.Instance.ColliderTransform;
+        targetHealth = CryoEgg.Instance.Health;
         timeOfLastAttack = attackCooldown * -1;
         moving = true;
         MessageDispatcher.Instance.Subscribe("Alien", this);
 
-        //Rotate to face the cryo egg
-        Vector3 targetRotation = cryoEgg.transform.position - transform.position;
+        //Rotate to face the Cryo egg
+        Vector3 targetRotation = CryoEgg.Instance.transform.position - transform.position;
         transform.rotation = Quaternion.LookRotation(targetRotation);
 
         foreach (Collider c in colliders)
@@ -169,12 +168,12 @@ public class Alien : MonoBehaviour, IMessenger
         switch (visibleTargets.Count)
         {
             case 0:
-                //Target cryo egg
-                if (target != cryoEgg.transform)
+                //Target Cryo egg
+                if (target != CryoEgg.Instance.transform)
                 {
-                    target = cryoEgg.GetComponentInChildren<Collider>().transform;
-                    targetHealth = cryoEgg.Health;
-                    targetSize = cryoEgg.Size;
+                    target = CryoEgg.Instance.ColliderTransform;
+                    targetHealth = CryoEgg.Instance.Health;
+                    targetSize = CryoEgg.Instance.Size;
                 }
 
                 break;

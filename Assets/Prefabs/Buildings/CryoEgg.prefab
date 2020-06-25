@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 880952307760529668}
   - component: {fileID: 880952308425214859}
+  - component: {fileID: 4025372026840351080}
   - component: {fileID: 880952307760529664}
   - component: {fileID: -2340967334442575925}
   m_Layer: 0
@@ -68,6 +69,21 @@ MonoBehaviour:
   otherColliders: []
   active: 0
   operational: 1
+--- !u!114 &4025372026840351080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 880952307760529665}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27ab674c5183c604e8a3a93089f79fef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  colliderTransform: {fileID: 8586582078626057228}
+  health: {fileID: 880952307760529664}
+  size: {fileID: -2340967334442575925}
 --- !u!114 &880952307760529664
 MonoBehaviour:
   m_ObjectHideFlags: 0
