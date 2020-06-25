@@ -77,7 +77,7 @@ public class ShotgunTurretAiming : TurretAiming
         float rawElevation = targeter.rotation.eulerAngles.x + elevationColliderOffset.y;
 
         //Rotation
-        targetTurretRotation = NormaliseAngle(rawRotation);
+        targetTurretRotation = MathUtility.Instance.NormaliseAngle(rawRotation);
 
         //Elevation
         targetBarrelElevation = (rawElevation > 90 ? 360 - rawElevation : rawElevation * -1);
@@ -96,12 +96,12 @@ public class ShotgunTurretAiming : TurretAiming
         if (currentTurretRotation != targetTurretRotation)
         {
             float deltaAngle = Mathf.DeltaAngle(currentTurretRotation, targetTurretRotation);
-            float rotationDirection = Sign(deltaAngle);
-            deltaAngle = Magnitude(deltaAngle);
+            float rotationDirection = MathUtility.Instance.Sign(deltaAngle);
+            deltaAngle = MathUtility.Instance.FloatMagnitude(deltaAngle);
             float fixedUpdateRotation = rotationSpeed * Time.fixedDeltaTime;
 
             currentTurretRotation += rotationDirection * Mathf.Min(deltaAngle, fixedUpdateRotation);
-            currentTurretRotation = NormaliseAngle(currentTurretRotation);
+            currentTurretRotation = MathUtility.Instance.NormaliseAngle(currentTurretRotation);
             baseCollider.localRotation = Quaternion.Euler(rotationColliderOffset.x, rotationColliderOffset.y, currentTurretRotation + rotationColliderOffset.z);
             baseModel.localRotation = Quaternion.Euler(
                 rotationColliderOffset.x + rotationModelCounterOffset.x, 
@@ -113,8 +113,8 @@ public class ShotgunTurretAiming : TurretAiming
         if (currentBarrelElevation != targetBarrelElevation)
         {
             float deltaAngle = Mathf.DeltaAngle(currentBarrelElevation, targetBarrelElevation);
-            float pivotDirection = Sign(deltaAngle);
-            deltaAngle = Magnitude(deltaAngle);
+            float pivotDirection = MathUtility.Instance.Sign(deltaAngle);
+            deltaAngle = MathUtility.Instance.FloatMagnitude(deltaAngle);
             float fixedUpdatePivot = elevationSpeed * Time.fixedDeltaTime;
 
             currentBarrelElevation += pivotDirection * Mathf.Min(deltaAngle, fixedUpdatePivot);

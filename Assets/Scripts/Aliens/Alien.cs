@@ -12,12 +12,14 @@ public class Alien : MonoBehaviour, IMessenger
     //Serialized Fields----------------------------------------------------------------------------
 
     [Header("Components")]
-    [SerializeField] private Collider bodyCollider;
+    [SerializeField] private List<Collider> bodyColliders;
 
     [Header("Stats")] 
     [SerializeField] private int id;
     [SerializeField] private float speed;
     [SerializeField] private float turningSpeed;
+    [SerializeField] private float hoverHeight;
+    [SerializeField] private float attackRange;
     [SerializeField] private float damage;
     [SerializeField] private float attackCooldown;
 
@@ -30,7 +32,6 @@ public class Alien : MonoBehaviour, IMessenger
 
     //Movement
     private bool moving;
-    [SerializeField] private float hoverHeight;
     [SerializeField] private float zRotation;
 
     //Turning
@@ -39,23 +40,26 @@ public class Alien : MonoBehaviour, IMessenger
     private float slerpProgress;
     
     //Targeting
-    private Building cryoEgg;
+    //private CryoEgg CryoEgg;
     private List<Transform> visibleAliens;
     private List<Transform> visibleTargets;
     [SerializeField] private Transform target;
     [SerializeField] private Health targetHealth;
+    [SerializeField] private Size targetSize;
     [SerializeField] private string shotByName;
     [SerializeField] private Transform shotByTransform;
     private float timeOfLastAttack;
+
+    //[SerializeField] private bool conductSweepTesting;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
     //Basic Public Properties----------------------------------------------------------------------
 
     /// <summary>
-    /// The collider that comprises the alien's body.
+    /// The colliders that comprise the alien's body.
     /// </summary>
-    public Collider BodyCollider { get => bodyCollider; }
+    public List<Collider> BodyColliders { get => bodyColliders; }
 
     /// <summary>
     /// Alien's Health component.
@@ -83,22 +87,21 @@ public class Alien : MonoBehaviour, IMessenger
         colliders = new List<Collider>(GetComponents<Collider>());
         health = GetComponent<Health>();
         rigidbody = GetComponent<Rigidbody>();
-
-        hoverHeight = transform.position.y;
         zRotation = transform.rotation.eulerAngles.z;
 
         visibleAliens = new List<Transform>();
         visibleTargets = new List<Transform>();
+        moving = false;
     }
 
-    /// <summary>
-    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
-    /// Start() runs after Awake().
-    /// </summary>
-    void Start()
-    {
-        cryoEgg = BuildingController.Instance.CryoEgg;
-    }
+    ///// <summary>
+    ///// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
+    ///// Start() runs after Awake().
+    ///// </summary>
+    //void Start()
+    //{
+    //    CryoEgg = CryoEgg.Instance;
+    //}
 
     /// <summary>
     /// Prepares the Alien to chase its targets when AlienFactory puts it in the world. 
@@ -108,14 +111,18 @@ public class Alien : MonoBehaviour, IMessenger
         this.id = id;
         gameObject.name = $"Alien {id}";
         health.Reset();
-        target = cryoEgg.GetComponentInChildren<Collider>().transform;
-        targetHealth = cryoEgg.Health;
+
+        //Debug.Log($"{this}.Setup(), CryoEgg is {CryoEgg.Instance}");
+        //Debug.Log($"CryoEgg.ColliderTransform is {CryoEgg.Instance.ColliderTransform}, CryoEgg.Health is {CryoEgg.Instance.Health}, CryoEgg.Size is {CryoEgg.Instance.Size}");
+
+        target = CryoEgg.Instance.ColliderTransform;
+        targetHealth = CryoEgg.Instance.Health;
         timeOfLastAttack = attackCooldown * -1;
         moving = true;
         MessageDispatcher.Instance.Subscribe("Alien", this);
 
-        //Rotate to face the cryo egg
-        Vector3 targetRotation = cryoEgg.transform.position - transform.position;
+        //Rotate to face the Cryo egg
+        Vector3 targetRotation = CryoEgg.Instance.transform.position - transform.position;
         transform.rotation = Quaternion.LookRotation(targetRotation);
 
         foreach (Collider c in colliders)
@@ -127,22 +134,17 @@ public class Alien : MonoBehaviour, IMessenger
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
-    /// Update() is run every frame.
-    /// </summary>
-    //private void Update()
-    //{
-        
-    //}
-
-    /// <summary>
     /// FixedUpdate() is run at a fixed interval independant of framerate.
     /// </summary>
     private void FixedUpdate()
     {
-        CheckHealth();
-        SelectTarget();
-        Look();
-        Move();
+        if (moving)
+        {
+            CheckHealth();
+            SelectTarget();
+            Look();
+            Move();
+        }
     }
 
     //Recurring Methods (FixedUpdate())-------------------------------------------------------------------------------------------------------------  
@@ -166,11 +168,12 @@ public class Alien : MonoBehaviour, IMessenger
         switch (visibleTargets.Count)
         {
             case 0:
-                //Target cryo egg
-                if (target != cryoEgg.transform)
+                //Target Cryo egg
+                if (target != CryoEgg.Instance.transform)
                 {
-                    target = cryoEgg.GetComponentInChildren<Collider>().transform;
-                    targetHealth = cryoEgg.Health;
+                    target = CryoEgg.Instance.ColliderTransform;
+                    targetHealth = CryoEgg.Instance.Health;
+                    targetSize = CryoEgg.Instance.Size;
                 }
 
                 break;
@@ -180,6 +183,7 @@ public class Alien : MonoBehaviour, IMessenger
                 {
                     target = visibleTargets[0];
                     targetHealth = target.GetComponentInParent<Health>();   //Gets Health from target or any of its parents that has it.
+                    targetSize = target.GetComponentInParent<Size>();   //Gets Radius from target or any of its parents that has it.
                 }
 
                 break;
@@ -189,6 +193,7 @@ public class Alien : MonoBehaviour, IMessenger
                 {
                     target = shotByTransform;
                     targetHealth = target.GetComponentInParent<Health>();   //Gets Health from target or any of its parents that has it.
+                    targetSize = target.GetComponentInParent<Size>();   //Gets Radius from target or any of its parents that has it.
                 }
                 else
                 {
@@ -212,6 +217,7 @@ public class Alien : MonoBehaviour, IMessenger
                     {
                         target = closestTarget;
                         targetHealth = target.GetComponentInParent<Health>();   //Gets Health from target or any of its parents that has it.
+                        targetSize = target.GetComponentInParent<Size>();   //Gets Radius from target or any of its parents that has it.
                     }
                 }
 
@@ -225,7 +231,7 @@ public class Alien : MonoBehaviour, IMessenger
     private void Look()
     {
         //TODO: swarm-based looking behaviour
-        Vector3 newRotation = target.position - transform.position;
+        Vector3 newRotation = PositionAtSameHeight(target.position) - transform.position;
 
         if (newRotation != targetRotation.eulerAngles)
         {
@@ -242,38 +248,72 @@ public class Alien : MonoBehaviour, IMessenger
     }
 
     /// <summary>
+    /// Gets the position of a target as if it were at the same height as the alien. 
+    /// </summary>
+    /// <param name="targetPos">The target's position.</param>
+    /// <returns>The target's position if it was at the same height as the alien.</returns>
+    private Vector3 PositionAtSameHeight(Vector3 targetPos)
+    {
+        return new Vector3(targetPos.x, transform.position.y, targetPos.z);
+    }
+
+    /// <summary>
     /// Moves alien.
     /// </summary>
     private void Move()
     {
-        transform.Translate(new Vector3(0, 0, speed * Time.fixedDeltaTime));
+        if (Vector3.Distance(transform.position, PositionAtSameHeight(target.position)) > attackRange + targetSize.Radius)
+        {
+            RaycastHit hit;
+            float movement = speed * Time.fixedDeltaTime;
 
-        //Fly up if below hover height
-        if (transform.position.y < hoverHeight)
-        {
-            if (rigidbody.useGravity)
-            {
-                rigidbody.useGravity = false;
-            }
+            //if (conductSweepTesting && rigidbody.SweepTest(transform.forward, out hit, movement)) //Check if would collide with another object
+            //{
+            //    Debug.Log($"{this}.Move() sweep test, hit collider's game object is {hit.collider.gameObject}, tag is {hit.collider.tag}");
 
-            transform.Translate(new Vector3(0, Mathf.Min(hoverHeight - transform.position.y, speed * 0.5f * Time.fixedDeltaTime, 0)));
-        }
-        //Activate gravity if above hover height
-        else if (transform.position.y > hoverHeight)
-        {
-            if (!rigidbody.useGravity)   //TODO: account for terrain pushing the alien up, if it can move up hills?
+            //    if (hit.collider.tag == "Alien" && hit.rigidbody != rigidbody)
+            //    {
+            //        return;
+            //    }
+            //}
+
+            transform.Translate(new Vector3(0, 0, movement));
+            //Vector3 translatedPos = transform.position;
+
+            LayerMask mask = LayerMask.GetMask("Planet");
+
+            if (Physics.Raycast(transform.position + Vector3.up * 0.5f, Vector3.down, out hit, 25, mask))
             {
-                rigidbody.useGravity = true;
+                float height = (transform.position - hit.point).y;
+
+                //Toggle gravity if something has pushed the alien up above hoverHeight
+                if (rigidbody.useGravity)
+                {
+                    if (height <= hoverHeight)
+                    {
+                        transform.position = new Vector3(transform.position.x, hoverHeight, transform.position.z);
+                        rigidbody.useGravity = false;
+                        rigidbody.drag = 100;
+                        rigidbody.mass = 0;
+                    }
+                }
+                else
+                {
+                    if (height > hoverHeight)
+                    {
+                        rigidbody.useGravity = true;
+                        rigidbody.drag = 0;
+                        rigidbody.velocity = Vector3.zero;
+                        rigidbody.mass = 1000;
+                    }
+                }
             }
         }
-        //Disable gravity if at hover height
-        else
+        else if (Time.time - timeOfLastAttack > attackCooldown)
         {
-            if (rigidbody.useGravity)
-            {
-                transform.position = new Vector3(transform.position.x, hoverHeight, transform.position.z);
-                rigidbody.useGravity = false;
-            }
+            timeOfLastAttack = Time.time;
+            targetHealth.Value -= damage;
+            //TODO: trigger attack animation
         }
     }
 
@@ -325,6 +365,7 @@ public class Alien : MonoBehaviour, IMessenger
         shotByTransform = null;
         visibleTargets.Clear();
         visibleAliens.Clear();
+        target = null;
 
         foreach (Collider c in colliders)
         {
@@ -332,22 +373,13 @@ public class Alien : MonoBehaviour, IMessenger
         }
     }
 
-    /// <summary>
-    /// OnCollisionStay is called once per frame for every collider/rigidbody that is touching rigidbody/collider.
-    /// </summary>
-    /// <param name="collision">The collision data associated with this event.</param>
-    private void OnCollisionStay(Collision collision)
-    {
-        if (!collision.collider.isTrigger && (collision.collider.CompareTag("Building") || collision.collider.CompareTag("Player")))
-        {
-            if (Time.time - timeOfLastAttack > attackCooldown)
-            {
-                timeOfLastAttack = Time.time;
-                targetHealth.Value -= damage;
-            }
-        }
-        //TODO: if made contact with target and target is a building, step back a smidge and attack, so that OnCollisionStay is not called every single frame. For player, check if within attack range to verify that the alien can still attack them?
-    }
+    //private void OnCollisionEnter(Collision collision)
+    //{
+    //    if (moving)
+    //    {
+    //        Debug.Log($"{this} collided with {collision.gameObject}, tag is {collision.gameObject.tag}, force applied is {collision.impulse}");
+    //    }
+    //}
 
     /// <summary>
     /// When a GameObject collides with another GameObject, Unity calls OnTriggerEnter.

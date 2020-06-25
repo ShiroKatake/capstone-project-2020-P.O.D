@@ -106,12 +106,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b339f3ae52348242844769182c55c03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxClusterRadius: 5
   respawnDelay: 30
   defencePenaltyThreshold: 300
   nonDefencePenaltyThreshold: 300
   penaltyIncrement: 3
   penaltyCooldown: 90
-  spawnEnemies: 1
+  spawnAliens: 1
   ignoreDayNightCycle: 0
 --- !u!114 &948949189687773392
 MonoBehaviour:
@@ -129,7 +130,7 @@ MonoBehaviour:
     type: 3}
   alienPoolParent: {fileID: 0}
   pooledAliens: 20
-  alienHoverHeight: 0.5
+  alienHoverHeight: 0
 --- !u!114 &2489407218427492161
 MonoBehaviour:
   m_ObjectHideFlags: 0

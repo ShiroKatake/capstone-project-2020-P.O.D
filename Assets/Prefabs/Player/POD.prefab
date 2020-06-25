@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1254351314858929259}
   - component: {fileID: 896588547581440063}
   - component: {fileID: 403112268726757339}
+  - component: {fileID: 1903319585361199757}
   m_Layer: 0
   m_Name: POD
   m_TagString: Player
@@ -112,6 +113,19 @@ MonoBehaviour:
   rotationSpeed: 3
   shootCooldown: 0.2
   playerID: 0
+--- !u!114 &1903319585361199757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 403112268726757337}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e087b4d1f91fcb941a830564ec25c878, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 0.475
 --- !u!1 &7714345189961572185
 GameObject:
   m_ObjectHideFlags: 0

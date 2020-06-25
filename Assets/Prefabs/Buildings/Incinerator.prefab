@@ -95,6 +95,7 @@ GameObject:
   - component: {fileID: 6754134058031210328}
   - component: {fileID: 6057790016772902916}
   - component: {fileID: 6966758408912711267}
+  - component: {fileID: -703308631334502526}
   - component: {fileID: -6203622737719408024}
   m_Layer: 0
   m_Name: Incinerator
@@ -137,8 +138,6 @@ MonoBehaviour:
   powerConsumption: 3
   waterConsumption: 0
   wasteConsumption: 4
-  xSize: 3
-  zSize: 3
   buildTime: 10
   buildStartHeight: -13
   boingInterval: 0.1667
@@ -176,6 +175,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 30
+--- !u!114 &-703308631334502526
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6754134058031210308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e087b4d1f91fcb941a830564ec25c878, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 1.5
 --- !u!114 &-6203622737719408024
 MonoBehaviour:
   m_ObjectHideFlags: 0

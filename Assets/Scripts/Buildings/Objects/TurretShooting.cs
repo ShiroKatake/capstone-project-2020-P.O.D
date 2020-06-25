@@ -261,7 +261,7 @@ public class TurretShooting : CollisionListener, IMessenger
             //Debug.Log("Alien entered turret trigger collider");
             Alien a = other.GetComponentInParent<Alien>();
 
-            if (other == a.BodyCollider && !visibleTargets.Contains(a))
+            if (a.BodyColliders.Contains(other) && !visibleTargets.Contains(a))
             {
                 //Debug.Log("Added alien body to visibleTargets");
                 visibleTargets.Add(a);
@@ -283,7 +283,7 @@ public class TurretShooting : CollisionListener, IMessenger
             //Debug.Log("Alien exited turret trigger collider");
             Alien a = other.GetComponentInParent<Alien>();
 
-            if (other == a.BodyCollider && visibleTargets.Contains(a))
+            if (a.BodyColliders.Contains(other) && visibleTargets.Contains(a))
             {
                 //Debug.Log("Removed alien body from visibleTargets");
                 visibleTargets.Remove(a);
