@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1187100249336798489}
-  - component: {fileID: 153334336407337548}
+  - component: {fileID: 1042165235641049379}
   - component: {fileID: 9142006181561205437}
   - component: {fileID: 2203777157340861769}
   m_Layer: 0
@@ -28,26 +28,26 @@ Transform:
   m_GameObject: {fileID: 1287917234659449172}
   m_LocalRotation: {x: -0.6890961, y: -0.15857665, z: -0.15857664, w: 0.6890962}
   m_LocalPosition: {x: 0.045, y: 0.683, z: -0.009}
-  m_LocalScale: {x: 38.850563, y: 38.850563, z: 38.850563}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7083645055769702650}
   m_Father: {fileID: 701136541000889738}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -90.00001, y: 0, z: -25.919}
---- !u!64 &153334336407337548
-MeshCollider:
+--- !u!136 &1042165235641049379
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1287917234659449172}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -718481312807276239, guid: 1eaf375e3e7f02c49904f5630a8d33d0, type: 3}
+  m_Radius: 1.36
+  m_Height: 11.028074
+  m_Direction: 2
+  m_Center: {x: -1.6433062e-15, y: 1.0779768e-14, z: 2.311812}
 --- !u!54 &9142006181561205437
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -140,7 +140,7 @@ MonoBehaviour:
   waterConsumption: 2
   wasteConsumption: 0
   buildTime: 10
-  buildStartHeight: -0.063
+  buildStartHeight: -2.45
   boingInterval: 0.1667
   smallBoingMultiplier: 0.8
   largeBoingMultiplier: 1.2
@@ -241,7 +241,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: 84ef7d7f6c7c6334d8847af0368ef092,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 84ef7d7f6c7c6334d8847af0368ef092,
         type: 3}
@@ -291,17 +291,17 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: 84ef7d7f6c7c6334d8847af0368ef092,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 1
+      value: 38.85056
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 84ef7d7f6c7c6334d8847af0368ef092,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 1
+      value: 38.85056
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 84ef7d7f6c7c6334d8847af0368ef092,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 1
+      value: 38.85056
       objectReference: {fileID: 0}
     - target: {fileID: -1504981713932161579, guid: 84ef7d7f6c7c6334d8847af0368ef092,
         type: 3}
