@@ -138,7 +138,7 @@ public class AlienController : MonoBehaviour
             {
                 if (!ClockController.Instance.Daytime && aliens.Count == 0 && Time.time - timeOfLastDeath > respawnDelay)
                 {
-                    Debug.Log("Nighttime? No enemies? Spawning time!");
+                    //Debug.Log("Nighttime? No enemies? Spawning time!");
 
                     //Check and increment penalty
                     if (Time.time - timeOfLastPenalty > penaltyCooldown && (Time.time - BuildingController.Instance.TimeLastDefenceWasBuilt > defencePenaltyThreshold || Time.time - BuildingController.Instance.TimeLastNonDefenceWasBuilt > nonDefencePenaltyThreshold))
@@ -150,14 +150,11 @@ public class AlienController : MonoBehaviour
 
                     //Spawn enemies
                     int spawnCount = BuildingController.Instance.BuildingCount * 3 + spawnCountPenalty;
-                    //Vector3 clusterCentre = MapController.Instance.RandomAlienSpawnablePos();
-                    Vector3 clusterCentre = new Vector3(200, 0, 200);
-                    int index;
+                    Vector3 clusterCentre = MapController.Instance.RandomAlienSpawnablePos();                    
                     int clusterRadius = 0;
                     List<Vector3> availableOffsets = new List<Vector3>();
 
-                    //for (int i = 0; i < spawnCount; i++)
-                    for (int i = 0; i < 25; i++)
+                    for (int i = 0; i < spawnCount; i++)
                     {
                         if (availableOffsets.Count == 0)
                         {
@@ -170,9 +167,9 @@ public class AlienController : MonoBehaviour
                             clusterRadius++;
                         }
 
-                        index = Random.Range(0, availableOffsets.Count);
-                        Vector3 spawnPos = clusterCentre + availableOffsets[index] * 2;
-                        availableOffsets.RemoveAt(index);
+                        int j = Random.Range(0, availableOffsets.Count);
+                        Vector3 spawnPos = clusterCentre + availableOffsets[j] * 2;
+                        availableOffsets.RemoveAt(j);
 
                         if (MapController.Instance.PositionAvailableForSpawning(spawnPos, true))
                         {
