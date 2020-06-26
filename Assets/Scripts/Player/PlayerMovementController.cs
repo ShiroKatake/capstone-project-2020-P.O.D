@@ -23,9 +23,6 @@ public class PlayerMovementController : MonoBehaviour
     [SerializeField] private float rotationSpeed;
     [SerializeField] private float shootCooldown;
 
-    [Header("Player Inputs")]
-    [SerializeField] private int playerID = 0;
-
     //Non-Serialized Fields------------------------------------------------------------------------
 
     //Components
@@ -47,7 +44,7 @@ public class PlayerMovementController : MonoBehaviour
     private float timeOfLastShot;
 
     //Other
-    private Rewired.Player player;
+    private Rewired.Player playerInputManager;
     private bool gameOver;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
@@ -67,9 +64,9 @@ public class PlayerMovementController : MonoBehaviour
     public float MovementSpeed { get => movementSpeed; }
 
     /// <summary>
-    /// POD's Rewired.Player.
+    /// POD's Rewired player input manager.
     /// </summary>
-    public Rewired.Player RewiredPlayer { get => player; }
+    public Player PlayerInputManager { get => playerInputManager; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -98,7 +95,7 @@ public class PlayerMovementController : MonoBehaviour
     /// </summary>
     void Start()
     {
-        player = ReInput.players.GetPlayer(playerID);
+        playerInputManager = ReInput.players.GetPlayer(GetComponent<PlayerID>().Value);
     }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
@@ -127,8 +124,8 @@ public class PlayerMovementController : MonoBehaviour
     /// </summary>
     private void GetInput()
     {
-        float moveHorizontal = player.GetAxis("Horizontal");
-        float moveVertical = player.GetAxis("Vertical");
+        float moveHorizontal = playerInputManager.GetAxis("Horizontal");
+        float moveVertical = playerInputManager.GetAxis("Vertical");
 
         movement = new Vector3(moveHorizontal, 0, -moveVertical);
         shooting = InputController.Instance.ButtonHeld("Shoot");

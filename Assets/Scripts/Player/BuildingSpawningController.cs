@@ -86,7 +86,6 @@ public class BuildingSpawningController : MonoBehaviour
 
     //Recurring Methods (UpdateBuildingSpawning())--------------------------------------------------------------------------------------------------- 
 
-
     /// <summary>
     /// Gets the player's input from the keyboard and mouse / gamepad they're using.
     /// </summary>

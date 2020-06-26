@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 1499966696702465745}
   - component: {fileID: 2871840583491186256}
   - component: {fileID: 1537798581470194828}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube 0.946
-  m_TagString: Untagged
+  m_TagString: Planet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -105,9 +105,9 @@ GameObject:
   - component: {fileID: 229645616431535947}
   - component: {fileID: 5848963417628637516}
   - component: {fileID: 4736563781328075290}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube 0.366 (1)
-  m_TagString: Untagged
+  m_TagString: Planet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -198,9 +198,9 @@ GameObject:
   - component: {fileID: 443503265238958238}
   - component: {fileID: 3847152659531446338}
   - component: {fileID: 5697137422768319105}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube 0.366
-  m_TagString: Untagged
+  m_TagString: Planet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -291,9 +291,9 @@ GameObject:
   - component: {fileID: 7094183807245280979}
   - component: {fileID: 3106585266197623888}
   - component: {fileID: 7382097882961608842}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube 0.687
-  m_TagString: Untagged
+  m_TagString: Planet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -384,9 +384,9 @@ GameObject:
   - component: {fileID: 6487840407715564491}
   - component: {fileID: 5900277272594790594}
   - component: {fileID: 921427794606101107}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube 0.366
-  m_TagString: Untagged
+  m_TagString: Planet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -477,9 +477,9 @@ GameObject:
   - component: {fileID: 270608089772745254}
   - component: {fileID: 5929178420255682621}
   - component: {fileID: 7290506009997941575}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube 0.807
-  m_TagString: Untagged
+  m_TagString: Planet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -570,9 +570,9 @@ GameObject:
   - component: {fileID: 4883711732942040498}
   - component: {fileID: 9164728160450364292}
   - component: {fileID: 8246240307785753439}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube 0.687
-  m_TagString: Untagged
+  m_TagString: Planet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -663,9 +663,9 @@ GameObject:
   - component: {fileID: 2140178178514397288}
   - component: {fileID: 1075609656612692620}
   - component: {fileID: 3301632855553412012}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube 0.546
-  m_TagString: Untagged
+  m_TagString: Planet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -756,9 +756,9 @@ GameObject:
   - component: {fileID: 4208274748123402014}
   - component: {fileID: 9152672460238782481}
   - component: {fileID: 2179394488274199515}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube 0.807
-  m_TagString: Untagged
+  m_TagString: Planet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -849,9 +849,9 @@ GameObject:
   - component: {fileID: 4319758508754357325}
   - component: {fileID: 1886433241209349797}
   - component: {fileID: 8030387121751729933}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube 0.946
-  m_TagString: Untagged
+  m_TagString: Planet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -942,9 +942,9 @@ GameObject:
   - component: {fileID: 7876233583848157222}
   - component: {fileID: 3882603374374370264}
   - component: {fileID: 2920538680945628930}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube 0.546
-  m_TagString: Untagged
+  m_TagString: Planet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1033,9 +1033,9 @@ GameObject:
   m_Component:
   - component: {fileID: 5136758428388025279}
   - component: {fileID: 6920960518473543034}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Mineral
-  m_TagString: Untagged
+  m_TagString: Planet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1077,4 +1077,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a453fd883c91b9a4590f866d99bccec5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  count: 0
+  count: 100
+  miningCooldown: 0.33
+  afkTimeout: 0.33
+  rotationSpeed: 10
