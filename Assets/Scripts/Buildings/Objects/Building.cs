@@ -308,6 +308,8 @@ public class Building : CollisionListener
         {
             turretShooter.Place();
         }
+
+        yield return null;
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------

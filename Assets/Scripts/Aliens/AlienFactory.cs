@@ -13,7 +13,6 @@ public class AlienFactory : MonoBehaviour
 
     [Header("Game Objects")]
     [SerializeField] private Alien alienPrefab;
-    [SerializeField] private Transform alienPoolParent;
 
     [Header("Stats")]
     [SerializeField] private int pooledAliens;
@@ -21,6 +20,7 @@ public class AlienFactory : MonoBehaviour
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
+    private Transform objectPoolParent;
     private List<Alien> alienPool;
 
     //PublicProperties-------------------------------------------------------------------------------------------------------------------------------
@@ -53,12 +53,13 @@ public class AlienFactory : MonoBehaviour
         }
 
         Instance = this;
+        objectPoolParent = ObjectPool.Instance.transform;
         alienPool = new List<Alien>();
 
         for (int i = 0; i < pooledAliens; i++)
         {
-            Alien alien = Instantiate(alienPrefab, alienPoolParent.position, new Quaternion()); 
-            alien.transform.parent = alienPoolParent;
+            Alien alien = Instantiate(alienPrefab, objectPoolParent.position, new Quaternion()); 
+            alien.transform.parent = objectPoolParent;
 
             foreach (Collider c in alien.GetComponents<Collider>())
             {
@@ -118,8 +119,8 @@ public class AlienFactory : MonoBehaviour
     {
         alien.Reset();
         AlienController.Instance.DeRegisterAlien(alien);
-        alien.transform.position = alienPoolParent.position;
-        alien.transform.parent = alienPoolParent;
+        alien.transform.position = objectPoolParent.position;
+        alien.transform.parent = objectPoolParent;
         alienPool.Add(alien);
     }
 }

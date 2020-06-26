@@ -248,7 +248,7 @@ public class BuildingSpawningController : MonoBehaviour
     private Vector3 RawBuildingPositionToBuildingPosition(int radius)//int xSize, int zSize)
     {
         Vector3 worldPos = transform.position;
-        Vector3 newOffset = rawBuildingMovement * Player.Instance.MovementSpeed * Time.deltaTime;
+        Vector3 newOffset = rawBuildingMovement * PlayerMovementController.Instance.MovementSpeed * Time.deltaTime;
         Vector3 newWorldPos = transform.position + newOffset;
         Vector3 newScreenPos = Camera.main.WorldToViewportPoint(newWorldPos);
 

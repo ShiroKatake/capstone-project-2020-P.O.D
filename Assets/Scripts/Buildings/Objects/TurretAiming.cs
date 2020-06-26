@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// A base component class for aiming the gun part of buildings that shoot.
 /// </summary>
-public class TurretAiming : MonoBehaviour //CollisionListener
+public class TurretAiming : MonoBehaviour
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 

@@ -24,9 +24,6 @@ public class BuildingFactory : MonoBehaviour
     [SerializeField] private BuildingFoundation buildingFoundationPrefab;
     //[SerializeField] private GameObject pipePrefab;
     //[SerializeField] private GameObject pipeBoxPrefab;
-    
-    [Header("Other Objects")]
-    [SerializeField] private Transform objectPool;
 
     [Header("Initially Pooled Buildings")]
     [SerializeField] private int pooledFusionReactors;
@@ -40,12 +37,13 @@ public class BuildingFactory : MonoBehaviour
     //[SerializeField] private int pooledPipes;
     //[SerializeField] private int pooledPipeBoxes;
 
-    //Non-Serialized Fields
+    //Non-Serialized Fields------------------------------------------------------------------------
 
     private Dictionary<EBuilding, List<Building>> buildings;
     private List<BuildingFoundation> buildingFoundations;
     //private List<GameObject> pipes;
     //private List<GameObject> pipeBoxes;
+    private Transform objectPool;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -70,6 +68,7 @@ public class BuildingFactory : MonoBehaviour
         }
 
         Instance = this;
+        objectPool = ObjectPool.Instance.transform;
         buildings = new Dictionary<EBuilding, List<Building>>();
         buildings[EBuilding.FusionReactor] = new List<Building>();
         buildings[EBuilding.IceDrill] = new List<Building>();
@@ -196,7 +195,7 @@ public class BuildingFactory : MonoBehaviour
 
         if (pooling)
         {
-            building.transform.position = objectPool.transform.position;
+            building.transform.position = objectPool.position;
             building.transform.parent = objectPool;
             building.DisableColliders();
         }

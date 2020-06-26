@@ -11,13 +11,13 @@ public class BackgroundMusicTest : MonoBehaviour
     [SerializeField] AudioManager.Sound soundToPlay;
 
     private void Start() {
-        player = Player.Instance.RewiredPlayer;
+        player = PlayerMovementController.Instance.RewiredPlayer;
     }
 
     void Update()
     {
         if (player == null){
-            player = Player.Instance.RewiredPlayer;
+            player = PlayerMovementController.Instance.RewiredPlayer;
         } else {
             if (player.GetButton("GeneralAction")) {
                 print("SWITCH!!");

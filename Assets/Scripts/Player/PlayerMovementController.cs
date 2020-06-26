@@ -5,7 +5,7 @@ using Rewired;
 /// <summary>
 /// The player. Player controls the player's movement and shooting. For building spawning, see BuildingSpawningController.
 /// </summary>
-public class Player : MonoBehaviour
+public class PlayerMovementController : MonoBehaviour
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
@@ -57,7 +57,7 @@ public class Player : MonoBehaviour
     /// <summary>
     /// Singleton public property for the player.
     /// </summary>
-    public static Player Instance { get; protected set; }
+    public static PlayerMovementController Instance { get; protected set; }
 
     //Basic Public Properties----------------------------------------------------------------------
 
@@ -182,6 +182,7 @@ public class Player : MonoBehaviour
     private void Move()
     {
         AudioManager.Instance.PlaySound(AudioManager.Sound.Player_Hover, this.transform.position);
+
         if (movement != Vector3.zero)
         {
             drone.transform.Translate(movement * movementSpeed * Time.deltaTime, Space.World);
@@ -222,10 +223,7 @@ public class Player : MonoBehaviour
             timeOfLastShot = Time.time;
             Projectile projectile = ProjectileFactory.Instance.GetProjectile(EProjectileType.PODLaserBolt, transform, barrelTip.position);
             Vector3 vector = barrelTip.position - barrelMagazine.position;
-
-            //projectile.Shoot((transform.forward * 2 - transform.up).normalized, 0);
             projectile.Shoot(vector.normalized, 0);
-            //TODO: tweak POD so that the shot vector is calculated using transforms equivalent to Turret's
             //TODO: use overload that incorporates shooter movement speed, and calculate current movement speed in the direction of the shot vector.
         }
     }
