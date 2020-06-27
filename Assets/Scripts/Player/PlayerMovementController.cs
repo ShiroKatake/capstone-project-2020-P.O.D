@@ -5,7 +5,7 @@ using Rewired;
 /// <summary>
 /// The player. Player controls the player's movement and shooting. For building spawning, see BuildingSpawningController.
 /// </summary>
-public class Player : MonoBehaviour
+public class PlayerMovementController : MonoBehaviour
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
@@ -15,16 +15,13 @@ public class Player : MonoBehaviour
     [SerializeField] private Transform drone;
     [SerializeField] private Camera camera;
     [SerializeField] private Transform cameraTarget;
-    [SerializeField] private Transform terraformerHoldPoint;
-    [SerializeField] private Transform laserCannonTip;
+    [SerializeField] private Transform barrelTip;
+    [SerializeField] private Transform barrelMagazine;
 
     [Header("Player Stats")]
     [SerializeField] private float movementSpeed;
     [SerializeField] private float rotationSpeed;
     [SerializeField] private float shootCooldown;
-
-    [Header("Player Inputs")]
-    [SerializeField] private int playerID = 0;
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
@@ -47,7 +44,7 @@ public class Player : MonoBehaviour
     private float timeOfLastShot;
 
     //Other
-    private Rewired.Player player;
+    private Rewired.Player playerInputManager;
     private bool gameOver;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
@@ -57,7 +54,7 @@ public class Player : MonoBehaviour
     /// <summary>
     /// Singleton public property for the player.
     /// </summary>
-    public static Player Instance { get; protected set; }
+    public static PlayerMovementController Instance { get; protected set; }
 
     //Basic Public Properties----------------------------------------------------------------------
 
@@ -67,9 +64,9 @@ public class Player : MonoBehaviour
     public float MovementSpeed { get => movementSpeed; }
 
     /// <summary>
-    /// POD's Rewired.Player.
+    /// POD's Rewired player input manager.
     /// </summary>
-    public Rewired.Player RewiredPlayer { get => player; }
+    public Player PlayerInputManager { get => playerInputManager; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -98,7 +95,7 @@ public class Player : MonoBehaviour
     /// </summary>
     void Start()
     {
-        player = ReInput.players.GetPlayer(playerID);
+        playerInputManager = ReInput.players.GetPlayer(GetComponent<PlayerID>().Value);
     }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
@@ -127,8 +124,8 @@ public class Player : MonoBehaviour
     /// </summary>
     private void GetInput()
     {
-        float moveHorizontal = player.GetAxis("Horizontal");
-        float moveVertical = player.GetAxis("Vertical");
+        float moveHorizontal = playerInputManager.GetAxis("Horizontal");
+        float moveVertical = playerInputManager.GetAxis("Vertical");
 
         movement = new Vector3(moveHorizontal, 0, -moveVertical);
         shooting = InputController.Instance.ButtonHeld("Shoot");
@@ -182,6 +179,7 @@ public class Player : MonoBehaviour
     private void Move()
     {
         AudioManager.Instance.PlaySound(AudioManager.Sound.Player_Hover, this.transform.position);
+
         if (movement != Vector3.zero)
         {
             drone.transform.Translate(movement * movementSpeed * Time.deltaTime, Space.World);
@@ -220,9 +218,9 @@ public class Player : MonoBehaviour
         if (shooting && Time.time - timeOfLastShot > shootCooldown)
         {
             timeOfLastShot = Time.time;
-            Projectile projectile = ProjectileFactory.Instance.GetProjectile(EProjectileType.PODLaserBolt, transform, laserCannonTip.position);
-            projectile.Shoot((transform.forward * 2 - transform.up).normalized, 0);
-            //TODO: tweak POD so that the shot vector is calculated using transforms equivalent to Turret's
+            Projectile projectile = ProjectileFactory.Instance.GetProjectile(EProjectileType.PODLaserBolt, transform, barrelTip.position);
+            Vector3 vector = barrelTip.position - barrelMagazine.position;
+            projectile.Shoot(vector.normalized, 0);
             //TODO: use overload that incorporates shooter movement speed, and calculate current movement speed in the direction of the shot vector.
         }
     }

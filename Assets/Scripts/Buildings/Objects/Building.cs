@@ -32,10 +32,6 @@ public class Building : CollisionListener
     [SerializeField] private int waterConsumption;
     [SerializeField] private int wasteConsumption;
 
-    [Header("Size")]
-    [SerializeField] [Range(1, 3)] private int xSize;
-    [SerializeField] [Range(1, 3)] private int zSize;
-
     [Header("Building")]
     [SerializeField] private float buildTime;
     [SerializeField] private float buildStartHeight;
@@ -57,6 +53,7 @@ public class Building : CollisionListener
     private MeshRenderer parentRenderer;
     private List<MeshRenderer> allRenderers;
     private ResourceCollector resourceCollector;
+    private Size size;
     private Rigidbody rigidbody;
     private Terraformer terraformer;
     private TurretAiming turretAimer;
@@ -130,6 +127,11 @@ public class Building : CollisionListener
     public int PowerConsumption { get => powerConsumption; }
 
     /// <summary>
+    /// Size information regarding this building.
+    /// </summary>
+    public Size Size { get => size; }
+
+    /// <summary>
     /// The building's resource collector component, if it has one.
     /// </summary>
     public ResourceCollector ResourceCollector { get => resourceCollector; }
@@ -149,15 +151,15 @@ public class Building : CollisionListener
     /// </summary>
     public int WaterConsumption { get => waterConsumption; }
 
-    /// <summary>
-    /// How many squares this building occupies along the x-axis.
-    /// </summary>
-    public int XSize { get => xSize; }
+    ///// <summary>
+    ///// How many squares this building occupies along the x-axis.
+    ///// </summary>
+    //public int XSize { get => xSize; }
 
-    /// <summary>
-    /// How many squares this building occupies along the z-axis.
-    /// </summary>
-    public int ZSize { get => zSize; }
+    ///// <summary>
+    ///// How many squares this building occupies along the z-axis.
+    ///// </summary>
+    //public int ZSize { get => zSize; }
 
     //Complex Public Properties--------------------------------------------------------------------                                                    
 
@@ -221,6 +223,7 @@ public class Building : CollisionListener
     private void Awake()
     {
         health = GetComponent<Health>();
+        size = GetComponent<Size>();
         parentRenderer = GetComponentInChildren<MeshRenderer>();
         allRenderers = new List<MeshRenderer>(parentRenderer.GetComponentsInChildren<MeshRenderer>());
         rigidbody = GetComponentInChildren<Rigidbody>();
@@ -233,15 +236,20 @@ public class Building : CollisionListener
         normalScale = transform.localScale;
         normalBuildTime = buildTime;
 
-        if (xSize < 1 || xSize > 3)
+        if (size.DiameterRoundedUp < 1 || size.DiameterRoundedUp > 3)
         {
-            Debug.LogError("xSize is invalid. It needs to be between 1 and 3.");
+            Debug.LogError("Building.Size.RadiusRoundedUp is invalid. It needs to be between 1 and 3.");
         }
 
-        if (zSize < 1 || zSize > 3)
-        {
-            Debug.LogError("zSize is invalid. It needs to be between 1 and 3.");
-        }
+        //if (xSize < 1 || xSize > 3)
+        //{
+        //    Debug.LogError("xSize is invalid. It needs to be between 1 and 3.");
+        //}
+
+        //if (zSize < 1 || zSize > 3)
+        //{
+        //    Debug.LogError("zSize is invalid. It needs to be between 1 and 3.");
+        //}
     }
 
     //Recurring Methods (Other)----------------------------------------------------------------------------------------------------------------------
@@ -300,6 +308,8 @@ public class Building : CollisionListener
         {
             turretShooter.Place();
         }
+
+        yield return null;
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
@@ -402,6 +412,7 @@ public class Building : CollisionListener
     /// <param name="position">Where the building is to be placed.</param>
     public void Place(Vector3 position)
     {
+        placed = true; //Needs to occur before its position gets set to be on the ground so that it triggers the building Foundation at the proper time.
         ResourceController.Instance.Ore -= oreCost;
         ResourceController.Instance.PowerConsumption += powerConsumption;
         ResourceController.Instance.WaterConsumption += waterConsumption;
@@ -421,8 +432,7 @@ public class Building : CollisionListener
             c.ReportOnTriggerExit = false;
         }
 
-        placed = true;
-
+        BuildingController.Instance.RegisterBuilding(this);
         StartCoroutine(Build());
     }
 
@@ -431,13 +441,13 @@ public class Building : CollisionListener
     /// </summary>
     public void Reset()
     {
+        placed = false; //Needs to occur first so that BuildingFoundations know to ignore this building
+        active = false;
+        colliding = false;
+
         StopCoroutine(Build());
         health.Reset();
         Operational = false;
-
-        active = false;
-        colliding = false;
-        placed = false;
         
         otherColliders.Clear();
         parentRenderer.transform.localPosition = Vector3.zero;
