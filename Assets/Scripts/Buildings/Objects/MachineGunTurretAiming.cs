@@ -72,15 +72,15 @@ public class MachineGunTurretAiming : TurretAiming
     protected override void CalculateRotationAndElevation()
     {
         //Setup
-        rotationTargeter.LookAt(shooter.Target.transform.position);
-        elevationTargeter.LookAt(shooter.Target.transform.position);
+        rotationTargeter.LookAt(shooter.Target.transform.position + crawlerPositionOffset);
+        elevationTargeter.LookAt(shooter.Target.transform.position + crawlerPositionOffset);
         //rotationTargeter.LookAt(target.position);
         //elevationTargeter.LookAt(target.position);
         float rawRotation = rotationTargeter.rotation.eulerAngles.y;
         float rawElevation = elevationTargeter.rotation.eulerAngles.x + elevationColliderOffset.z;
 
         //Rotation
-        targetTurretRotation = NormaliseAngle(rawRotation);
+        targetTurretRotation = MathUtility.Instance.NormaliseAngle(rawRotation);
 
         //Elevation
         targetBarrelElevation = (rawElevation > 90 ? 360 - rawElevation : rawElevation * -1);
@@ -97,15 +97,16 @@ public class MachineGunTurretAiming : TurretAiming
     {
         //Turret rotation on turret base's local horizontal axis. All other local values remain static.
         if (currentTurretRotation != targetTurretRotation)
+        //if (true)
         {
             float deltaAngle = Mathf.DeltaAngle(currentTurretRotation, targetTurretRotation);
-            float rotationDirection = Sign(deltaAngle);
-            deltaAngle = Magnitude(deltaAngle);
+            float rotationDirection = MathUtility.Instance.Sign(deltaAngle);
+            deltaAngle = MathUtility.Instance.FloatMagnitude(deltaAngle);
             float fixedUpdateRotation = rotationSpeed * Time.fixedDeltaTime;
 
             currentTurretRotation += rotationDirection * Mathf.Min(deltaAngle, fixedUpdateRotation);
-            currentTurretRotation = NormaliseAngle(currentTurretRotation);
-            armColliderPivot.localRotation = Quaternion.Euler(currentTurretRotation + rotationColliderOffset.x, rotationColliderOffset.y, rotationColliderOffset.z);
+            currentTurretRotation = MathUtility.Instance.NormaliseAngle(currentTurretRotation);
+            armColliderPivot.localRotation = Quaternion.Euler(rotationColliderOffset.x + currentTurretRotation, rotationColliderOffset.y, rotationColliderOffset.z);
             armModelPivot.localRotation = Quaternion.Euler(
                 currentTurretRotation + rotationColliderOffset.x + rotationModelCounterOffset.x,
                 rotationColliderOffset.y + rotationModelCounterOffset.y,
@@ -114,18 +115,19 @@ public class MachineGunTurretAiming : TurretAiming
 
         //Barrel pivoting on barrel pivot's local vertical axis. All other local values remain static.
         if (currentBarrelElevation != targetBarrelElevation)
+        //if (true)
         {
             float deltaAngle = Mathf.DeltaAngle(currentBarrelElevation, targetBarrelElevation);
-            float pivotDirection = Sign(deltaAngle);
-            deltaAngle = Magnitude(deltaAngle);
+            float pivotDirection = MathUtility.Instance.Sign(deltaAngle);
+            deltaAngle = MathUtility.Instance.FloatMagnitude(deltaAngle);
             float fixedUpdatePivot = elevationSpeed * Time.fixedDeltaTime;
 
             currentBarrelElevation += pivotDirection * Mathf.Min(deltaAngle, fixedUpdatePivot);
-            barrelColliderPivot.localRotation = Quaternion.Euler(elevationColliderOffset.x, elevationColliderOffset.y, -currentBarrelElevation);
+            barrelColliderPivot.localRotation = Quaternion.Euler(elevationColliderOffset.x, elevationColliderOffset.z, - elevationColliderOffset.y - currentBarrelElevation);
             barrelModelPivot.localRotation = Quaternion.Euler(
                 elevationColliderOffset.x + elevationModelCounterOffset.x,
-                elevationColliderOffset.y + elevationModelCounterOffset.y,
-                -currentBarrelElevation + elevationModelCounterOffset.z);
+                elevationColliderOffset.y + elevationModelCounterOffset.y + currentBarrelElevation,
+                elevationColliderOffset.z + elevationModelCounterOffset.z);
         }
     }
 }

@@ -88,6 +88,8 @@ public class MapController : MonoBehaviour
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
+    //Availabile Position Methods------------------------------------------------------------------
+
     /// <summary>
     /// Checks if a given building can legally be placed given its size and position and the spaces available.
     /// </summary>
@@ -102,10 +104,12 @@ public class MapController : MonoBehaviour
         {
             if (!PositionAvailableForSpawning(buildingPos + offset, false))
             {
+                Debug.Log("MapController.PositionAvailableForBuilding returned false");
                 return false;
             }
         }
 
+        Debug.Log("MapController.PositionAvailableForBuilding returned false");
         return true;
     }
 
@@ -158,64 +162,85 @@ public class MapController : MonoBehaviour
         }
     }
 
+    //Entity Registration Methods------------------------------------------------------------------
+
     /// <summary>
     /// Registers a building with MapController so that it knows that the spaces it occupies are occupied.
     /// </summary>
     /// <param name="building">The building to be registered.</param>
     public void RegisterBuilding(Building building)
     {
-        UpdateAvailablePositions(building, false);
+        foreach (Vector3 offset in building.BuildingFoundationOffsets)
+        {
+            UpdateAvailablePosition(building.gameObject, building.transform.position + offset, false);
+        }
     }
-
+    
+    /// <summary>
+    /// Registers a mineral with MapController so that it knows that the space it occupies is occupied.
+    /// </summary>
+    /// <param name="mineral">The mineral to be registered.</param>
+    public void RegisterMineral(Mineral mineral)
+    {
+        UpdateAvailablePosition(mineral.gameObject, mineral.transform.position, false);
+    }
+    
     /// <summary>
     /// Deregisters a building with MapController so that it knows that the spaces it occupied are unoccupied.
     /// </summary>
     /// <param name="building">The building to be deregistered.</param>
     public void DeRegisterBuilding(Building building)
     {
-        UpdateAvailablePositions(building, true);
+        foreach (Vector3 offset in building.BuildingFoundationOffsets)
+        {
+            UpdateAvailablePosition(building.gameObject, building.transform.position + offset, true);
+        }
+    }
+    
+    /// <summary>
+    /// Deregisters a mineral with MapController so that it knows that the space it occupied is unoccupied.
+    /// </summary>
+    /// <param name="mineral">The mineral to be deregistered.</param>
+    public void DeRegisterMineral(Mineral mineral)
+    {
+        UpdateAvailablePosition(mineral.gameObject, mineral.transform.position, true);
     }
 
     /// <summary>
-    /// Updates the availability of the spaces occupied / to be occupied by a building.
+    /// Updates the availability of the space(s) occupied / to be occupied by a building or mineral.
     /// </summary>
-    /// <param name="building">The building whose spaces are having their availability updated.</param>
-    /// <param name="available">Are the spaces now available, or are they now unavailable?</param>
-    private void UpdateAvailablePositions(Building building, bool available)
+    /// <param name="gameObject">The game object whose space(s) are having their availability updated.</param>
+    /// <param name="position">The position having its availability updated.</param>
+    /// <param name="available">Is the space now available, or is it now unavailable?</param>
+    private void UpdateAvailablePosition(GameObject gameObject, Vector3 position, bool available)
     {
-        Vector3 buildingPos = building.transform.position;
-        //Debug.Log($"Updating availability of positions for building at {buildingPos}");
+        int x = (int)Mathf.Round(position.x);
+        int z = (int)Mathf.Round(position.z);
 
-        foreach (Vector3 offset in building.BuildingFoundationOffsets)
+        if (x >= 0 && x <= xMax && z >= 0 && z <= zMax)
         {
-            Vector3 foundationPos = buildingPos + offset;
-            int x = (int)Mathf.Round(foundationPos.x);
-            int z = (int)Mathf.Round(foundationPos.z);
+            Debug.Log($"MapController.UpdateAvailablePositions() offset loop for {gameObject} at position {position}, x is {x}, z is {z}, xMax is {xMax}, zMax is {zMax}");
+            bool startingAlienAvailability = availableAlienPositions[x, z];
+            availableBuildingPositions[x, z] = available;
+            availableAlienPositions[x, z] = (availableBuildingPositions[x, z] && !alienExclusionArea[x, z]);
 
-            if (x >= 0 || x <= xMax || z >= 0 || z <= zMax)
-            {                
-                bool startingAlienAvailability = availableAlienPositions[x, z];
-                availableBuildingPositions[x, z] = available;
-                availableAlienPositions[x, z] = (availableBuildingPositions[x, z] && !alienExclusionArea[x, z]);
+            if (availableAlienPositions[x, z] != startingAlienAvailability)
+            {
+                Vector3 pos = new Vector3(x, 0.25f, z);
 
-                if (availableAlienPositions[x, z] != startingAlienAvailability)
+                if (availableAlienPositions[x, z])
                 {
-                    Vector3 pos = new Vector3(x, 0.25f, z);
-
-                    if (availableAlienPositions[x, z])
-                    {
-                        alienSpawnablePositions.Add(pos);
-                    }
-                    else
-                    {
-                        alienSpawnablePositions.Remove(pos);
-                    }
+                    alienSpawnablePositions.Add(pos);
+                }
+                else
+                {
+                    alienSpawnablePositions.Remove(pos);
                 }
             }
-            else
-            {
-                Debug.Log($"{building.gameObject.name} can't update the availability of position {foundationPos}, which is outside the bounds of (0,0) to ({xMax},{zMax})");
-            }            
+        }
+        else
+        {
+            Debug.Log($"{gameObject.name} can't update the availability of position {position}, which is outside the bounds of (0,0) to ({xMax},{zMax})");
         }
     }
 }

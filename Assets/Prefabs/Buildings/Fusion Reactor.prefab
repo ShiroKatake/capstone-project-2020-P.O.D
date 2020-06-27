@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2103360942000820280}
   - component: {fileID: 7989155517478719925}
   - component: {fileID: 8835600581987182225}
+  - component: {fileID: -6151874320592601714}
   - component: {fileID: -3725313067051829311}
   m_Layer: 0
   m_Name: Fusion Reactor
@@ -53,8 +54,6 @@ MonoBehaviour:
   powerConsumption: 0
   waterConsumption: 0
   wasteConsumption: 0
-  xSize: 1
-  zSize: 1
   buildTime: 10
   buildStartHeight: -11.35
   boingInterval: 0.1667
@@ -87,6 +86,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 15
+--- !u!114 &-6151874320592601714
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1531695208761868921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e087b4d1f91fcb941a830564ec25c878, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 0.325
 --- !u!114 &-3725313067051829311
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -110,7 +122,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3167873814941227850}
-  - component: {fileID: 3211820680895775670}
+  - component: {fileID: 2948313445381567454}
   - component: {fileID: 135830335532270725}
   - component: {fileID: 1196245590506013141}
   m_Layer: 0
@@ -135,8 +147,8 @@ Transform:
   m_Father: {fileID: 2103360942000820280}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -90, y: -5.8, z: 0}
---- !u!64 &3211820680895775670
-MeshCollider:
+--- !u!136 &2948313445381567454
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -145,10 +157,10 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -2211651822473485187, guid: 49a71f5b5bd76404aa1592c402f6824a, type: 3}
+  m_Radius: 2.13
+  m_Height: 60.69987
+  m_Direction: 2
+  m_Center: {x: 0, y: 0, z: 20.149374}
 --- !u!54 &135830335532270725
 Rigidbody:
   m_ObjectHideFlags: 0

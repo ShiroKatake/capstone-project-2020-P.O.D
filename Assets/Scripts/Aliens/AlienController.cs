@@ -11,15 +11,20 @@ public class AlienController : MonoBehaviour
 
     //Serialized Fields----------------------------------------------------------------------------
 
-    [Header("Alien Stats")]
+    [Header("Spawning Stats")]
+    [SerializeField] private int maxClusterRadius;
     [SerializeField] private float respawnDelay;
+
+    [Header("Penalty Stats")]
     [SerializeField] private float defencePenaltyThreshold;
     [SerializeField] private float nonDefencePenaltyThreshold;
     [SerializeField] private int penaltyIncrement;
     [SerializeField] private float penaltyCooldown;
 
     [Header("For Testing")]
-    [SerializeField] private bool spawnEnemies;
+    [SerializeField] private bool spawnAliens;
+    //[SerializeField] private bool spawnAlienNow;
+    //[SerializeField] private Vector3 testSpawnPos;
     [SerializeField] private bool ignoreDayNightCycle;
 
     //Non-Serialized Fields------------------------------------------------------------------------
@@ -27,6 +32,7 @@ public class AlienController : MonoBehaviour
     //Alien Spawning
     private List<Alien> aliens;
     private float timeOfLastDeath;
+    private Dictionary<int, List<Vector3>> clusterOffsets;
 
     //Penalty Incrementation
     private int spawnCountPenalty;
@@ -68,6 +74,32 @@ public class AlienController : MonoBehaviour
         timeOfLastDeath = respawnDelay * -1;
         timeOfLastPenalty = penaltyCooldown * -1;
         spawnCountPenalty = 0;
+
+        //Setting up position offsets that can be randomly selected from for cluster spawning 
+        clusterOffsets = new Dictionary<int, List<Vector3>>();
+
+        for (int i = 0; i <= maxClusterRadius; i++)
+        {
+            clusterOffsets[i] = new List<Vector3>();
+        }
+
+        for (int i = maxClusterRadius * -1; i <= maxClusterRadius; i++)
+        {
+            for (int j = maxClusterRadius * -1; j <= maxClusterRadius; j++)
+            {
+                int iMag = MathUtility.Instance.IntMagnitude(i);
+                int jMag = MathUtility.Instance.IntMagnitude(j);
+                Vector3 pos = new Vector3(i, 0, j);
+
+                foreach (KeyValuePair<int, List<Vector3>> p in clusterOffsets)
+                {
+                    if ((iMag == p.Key || jMag == p.Key) && iMag <= p.Key && jMag <= p.Key)
+                    {
+                        p.Value.Add(pos);
+                    }
+                }
+            }
+        }
     }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
@@ -77,7 +109,7 @@ public class AlienController : MonoBehaviour
     /// </summary>
     void Update()
     {
-        SpawnEnemies();
+        SpawnAliens();
     }
 
     //Recurring Methods (Update())-------------------------------------------------------------------------------------------------------------------
@@ -85,9 +117,15 @@ public class AlienController : MonoBehaviour
     /// <summary>
     /// Spawns more Enemies if there are less than 4 in the scene.
     /// </summary>
-    private void SpawnEnemies()
+    private void SpawnAliens()
     {
-        if (spawnEnemies)
+        //if (spawnAlienNow)
+        //{
+        //    aliens.Add(AlienFactory.Instance.GetAlien(testSpawnPos));
+        //    spawnAlienNow = false;
+        //}
+
+        if (spawnAliens)
         {
             if (ignoreDayNightCycle)
             {
@@ -112,12 +150,35 @@ public class AlienController : MonoBehaviour
 
                     //Spawn enemies
                     int spawnCount = BuildingController.Instance.BuildingCount * 3 + spawnCountPenalty;
-                    Vector3 clusterPos = MapController.Instance.RandomAlienSpawnablePos();
-                    //Vector3 clusterPos = new Vector3(95, 0.5f, 105);
+                    Vector3 clusterCentre = MapController.Instance.RandomAlienSpawnablePos();                    
+                    int clusterRadius = 0;
+                    List<Vector3> availableOffsets = new List<Vector3>();
 
                     for (int i = 0; i < spawnCount; i++)
                     {
-                        aliens.Add(AlienFactory.Instance.GetAlien(clusterPos));
+                        if (availableOffsets.Count == 0)
+                        {
+                            if (clusterRadius >= clusterOffsets.Count)
+                            {
+                                return;
+                            }
+
+                            availableOffsets.AddRange(clusterOffsets[clusterRadius]);
+                            clusterRadius++;
+                        }
+
+                        int j = Random.Range(0, availableOffsets.Count);
+                        Vector3 spawnPos = clusterCentre + availableOffsets[j] * 2;
+                        availableOffsets.RemoveAt(j);
+
+                        if (MapController.Instance.PositionAvailableForSpawning(spawnPos, true))
+                        {
+                            aliens.Add(AlienFactory.Instance.GetAlien(spawnPos));
+                        }
+                        else
+                        {
+                            i--;
+                        }                        
                     }
                 }
             }
