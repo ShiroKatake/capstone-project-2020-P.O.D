@@ -36,6 +36,13 @@ public class BuildingSpawningController : MonoBehaviour
     /// </summary>
     public static BuildingSpawningController Instance { get; protected set; }
 
+    //Basic Public Properties----------------------------------------------------------------------
+
+    /// <summary>
+    /// Is the player in the middle of spawning a building or not?
+    /// </summary>
+    public bool SpawningBuilding { get => spawnBuilding; }
+
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>

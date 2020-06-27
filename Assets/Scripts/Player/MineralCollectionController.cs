@@ -75,7 +75,7 @@ public class MineralCollectionController : MonoBehaviour
     /// </summary>
     private void CollectMinerals()
     {
-        if (collectMinerals)
+        if (collectMinerals && !BuildingSpawningController.Instance.SpawningBuilding)
         {
             //Debug.Log("Mining");
             RaycastHit hit;
