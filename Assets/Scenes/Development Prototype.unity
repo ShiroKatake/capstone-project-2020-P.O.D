@@ -1030,12 +1030,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b705665b84b8c454cb316691f484db8c, type: 3}
---- !u!4 &1628873039 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8777683414549083989, guid: 172bd19aa70452548bcdbc2cfdc6614a,
-    type: 3}
-  m_PrefabInstance: {fileID: 8777683415070643738}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1693633103 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4528282981183931577, guid: 9e7595dc8e91f594fb56c845983b5fac,
@@ -1242,11 +1236,6 @@ PrefabInstance:
       propertyPath: cryoEgg
       value: 
       objectReference: {fileID: 1170871704}
-    - target: {fileID: 948949189687773389, guid: 9620c728b220f2e47adbd85dd9ac4899,
-        type: 3}
-      propertyPath: spawnAliens
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 948949189687773390, guid: 9620c728b220f2e47adbd85dd9ac4899,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1342,11 +1331,6 @@ PrefabInstance:
       propertyPath: buildingUIParent
       value: 
       objectReference: {fileID: 127714202}
-    - target: {fileID: 948949189687773392, guid: 9620c728b220f2e47adbd85dd9ac4899,
-        type: 3}
-      propertyPath: alienPoolParent
-      value: 
-      objectReference: {fileID: 1628873039}
     - target: {fileID: 948949189687773394, guid: 9620c728b220f2e47adbd85dd9ac4899,
         type: 3}
       propertyPath: progress
@@ -1367,11 +1351,6 @@ PrefabInstance:
       propertyPath: bars.Array.data[2]
       value: 
       objectReference: {fileID: 1324127912}
-    - target: {fileID: 948949189687773395, guid: 9620c728b220f2e47adbd85dd9ac4899,
-        type: 3}
-      propertyPath: objectPool
-      value: 
-      objectReference: {fileID: 1628873039}
     - target: {fileID: 1565210319463471991, guid: 9620c728b220f2e47adbd85dd9ac4899,
         type: 3}
       propertyPath: camera
@@ -1382,16 +1361,6 @@ PrefabInstance:
       propertyPath: clockTimer
       value: 
       objectReference: {fileID: 1791195865}
-    - target: {fileID: 4424011782776797639, guid: 9620c728b220f2e47adbd85dd9ac4899,
-        type: 3}
-      propertyPath: projectilePoolParent
-      value: 
-      objectReference: {fileID: 1628873039}
-    - target: {fileID: 6220965196491737219, guid: 9620c728b220f2e47adbd85dd9ac4899,
-        type: 3}
-      propertyPath: objectPool
-      value: 
-      objectReference: {fileID: 1628873039}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9620c728b220f2e47adbd85dd9ac4899, type: 3}
 --- !u!1001 &1008005629457548284

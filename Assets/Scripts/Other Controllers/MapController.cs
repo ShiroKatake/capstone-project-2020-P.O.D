@@ -57,6 +57,10 @@ public class MapController : MonoBehaviour
         alienSpawnablePositions = new List<Vector3>();
     }
 
+    /// <summary>
+    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
+    /// Start() runs after Awake().
+    /// </summary>
     private void Start()
     {
         float alienHoverHeight = AlienFactory.Instance.AlienHoverHeight;
@@ -104,12 +108,12 @@ public class MapController : MonoBehaviour
         {
             if (!PositionAvailableForSpawning(buildingPos + offset, false))
             {
-                Debug.Log("MapController.PositionAvailableForBuilding returned false");
+                //Debug.Log("MapController.PositionAvailableForBuilding returned false");
                 return false;
             }
         }
 
-        Debug.Log("MapController.PositionAvailableForBuilding returned false");
+        //Debug.Log("MapController.PositionAvailableForBuilding returned false");
         return true;
     }
 
@@ -127,18 +131,19 @@ public class MapController : MonoBehaviour
 
         if (position.x < 0 || position.x > xMax || position.z < 0 || position.z > zMax)
         {
-            Debug.Log($"Can't spawn at {position}, which is outside the bounds of (0,0) to ({xMax},{zMax})");
+            //Debug.Log($"Can't spawn at {position}, which is outside the bounds of (0,0) to ({xMax},{zMax})");
             return false;
         }
 
         if (alien && alienExclusionArea[(int)position.x, (int)position.z])
         {
-            Debug.Log($"Can't spawn an alien at {position}, which is within the alien exclusion area.");
+            //Debug.Log($"Can't spawn an alien at {position}, which is within the alien exclusion area.");
+            return false;
         }
 
         if (!availableBuildingPositions[(int)position.x, (int)position.z])
         {
-            Debug.Log($"Can't spawn at {position}, which is already occupied by a building.");
+            //Debug.Log($"Can't spawn at {position}, which is already occupied by a building.");
             return false;
         }
 
@@ -161,7 +166,7 @@ public class MapController : MonoBehaviour
             }
         }
 
-        Debug.Log($"Getting alien spawnable position, available positions: {availablePositions.Count}");
+        //Debug.Log($"Getting alien spawnable position, available positions: {availablePositions.Count}");
 
         switch (availablePositions.Count)
         {
@@ -231,7 +236,7 @@ public class MapController : MonoBehaviour
 
         if (x >= 0 && x <= xMax && z >= 0 && z <= zMax)
         {
-            Debug.Log($"MapController.UpdateAvailablePositions() offset loop for {gameObject} at position {position}, x is {x}, z is {z}, xMax is {xMax}, zMax is {zMax}");
+            //Debug.Log($"MapController.UpdateAvailablePositions() offset loop for {gameObject} at position {position}, x is {x}, z is {z}, xMax is {xMax}, zMax is {zMax}");
             bool startingAlienAvailability = availableAlienPositions[x, z];
             availableBuildingPositions[x, z] = available;
             availableAlienPositions[x, z] = (availableBuildingPositions[x, z] && !alienExclusionArea[x, z]);
