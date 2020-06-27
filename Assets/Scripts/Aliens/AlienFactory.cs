@@ -73,15 +73,6 @@ public class AlienFactory : MonoBehaviour
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
-    /// Retrieves Enemies from a pool if there's any available, and instantiates a new alien if there isn't one. Provides a random position within the accepted bounds.
-    /// </summary>
-    /// <returns>A new alien.</returns>
-    public Alien GetAlien()
-    {
-        return GetAlien(MapController.Instance.RandomAlienSpawnablePos());
-    }
-
-    /// <summary>
     /// Retrieves Enemies from a pool if there's any available, and instantiates a new alien if there isn't one.
     /// </summary>
     /// <param name="position">The position the alien should be instantiated at.</param>
