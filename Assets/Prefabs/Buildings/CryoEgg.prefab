@@ -10,7 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 880952307760529668}
   - component: {fileID: 880952308425214859}
+  - component: {fileID: 4025372026840351080}
   - component: {fileID: 880952307760529664}
+  - component: {fileID: -2340967334442575925}
   m_Layer: 0
   m_Name: CryoEgg
   m_TagString: Building
@@ -52,8 +54,6 @@ MonoBehaviour:
   powerConsumption: 0
   waterConsumption: 0
   wasteConsumption: 0
-  xSize: 3
-  zSize: 3
   buildTime: 0
   buildStartHeight: 0
   boingInterval: 0
@@ -69,6 +69,21 @@ MonoBehaviour:
   otherColliders: []
   active: 0
   operational: 1
+--- !u!114 &4025372026840351080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 880952307760529665}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27ab674c5183c604e8a3a93089f79fef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  colliderTransform: {fileID: 8586582078626057228}
+  health: {fileID: 880952307760529664}
+  size: {fileID: -2340967334442575925}
 --- !u!114 &880952307760529664
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -82,6 +97,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 100
+--- !u!114 &-2340967334442575925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 880952307760529665}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e087b4d1f91fcb941a830564ec25c878, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 1.3
 --- !u!1 &6702033319860156753
 GameObject:
   m_ObjectHideFlags: 0
@@ -91,8 +119,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8586582078626057228}
-  - component: {fileID: 7181920262214151909}
   - component: {fileID: 2289122112919515551}
+  - component: {fileID: 2328156697569344516}
   - component: {fileID: 3547622832239237036}
   m_Layer: 0
   m_Name: Collider
@@ -116,20 +144,6 @@ Transform:
   m_Father: {fileID: 880952307760529668}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: -121.4}
---- !u!64 &7181920262214151909
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6702033319860156753}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 6306869366474981079, guid: 1f40daa4e3a975b4a82b2b186ea2c1d9, type: 3}
 --- !u!136 &2289122112919515551
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -140,10 +154,24 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 6.450508
-  m_Height: 38.82155
+  m_Radius: 6.6
+  m_Height: 43.25
   m_Direction: 2
-  m_Center: {x: -0.014458625, y: -0.008653903, z: 4.6274133}
+  m_Center: {x: 0, y: 0, z: 10}
+--- !u!136 &2328156697569344516
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6702033319860156753}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 2.70565
+  m_Height: 43.00721
+  m_Direction: 2
+  m_Center: {x: -1.2537365, y: -5.625741, z: 9.78874}
 --- !u!54 &3547622832239237036
 Rigidbody:
   m_ObjectHideFlags: 0

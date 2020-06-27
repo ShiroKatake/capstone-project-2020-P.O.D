@@ -39,7 +39,7 @@ public class ShotgunTurretAiming : TurretAiming
         base.Reset();
         baseCollider.localRotation = Quaternion.Euler(rotationColliderOffset);
         baseModel.localRotation = Quaternion.Euler(rotationColliderOffset + rotationModelCounterOffset);
-        barrelColliderPivot.localRotation = Quaternion.Euler(elevationColliderOffset);
+        barrelColliderPivot.localRotation = Quaternion.Euler(elevationColliderOffset);  //TODO: add inspector-set initial elevation
         barrelModelPivot.localRotation = Quaternion.Euler(elevationColliderOffset + elevationModelCounterOffset);
     }
 
@@ -71,13 +71,13 @@ public class ShotgunTurretAiming : TurretAiming
     protected override void CalculateRotationAndElevation()
     {
         //Setup
-        targeter.LookAt(shooter.Target.transform.position);
+        targeter.LookAt(shooter.Target.transform.position + crawlerPositionOffset);
         //targeter.LookAt(target.position);
         float rawRotation = targeter.rotation.eulerAngles.y;
         float rawElevation = targeter.rotation.eulerAngles.x + elevationColliderOffset.y;
 
         //Rotation
-        targetTurretRotation = NormaliseAngle(rawRotation);
+        targetTurretRotation = MathUtility.Instance.NormaliseAngle(rawRotation);
 
         //Elevation
         targetBarrelElevation = (rawElevation > 90 ? 360 - rawElevation : rawElevation * -1);
@@ -96,32 +96,32 @@ public class ShotgunTurretAiming : TurretAiming
         if (currentTurretRotation != targetTurretRotation)
         {
             float deltaAngle = Mathf.DeltaAngle(currentTurretRotation, targetTurretRotation);
-            float rotationDirection = Sign(deltaAngle);
-            deltaAngle = Magnitude(deltaAngle);
+            float rotationDirection = MathUtility.Instance.Sign(deltaAngle);
+            deltaAngle = MathUtility.Instance.FloatMagnitude(deltaAngle);
             float fixedUpdateRotation = rotationSpeed * Time.fixedDeltaTime;
 
             currentTurretRotation += rotationDirection * Mathf.Min(deltaAngle, fixedUpdateRotation);
-            currentTurretRotation = NormaliseAngle(currentTurretRotation);
-            baseCollider.localRotation = Quaternion.Euler(rotationColliderOffset.x, rotationColliderOffset.y, currentTurretRotation + rotationColliderOffset.z);
+            currentTurretRotation = MathUtility.Instance.NormaliseAngle(currentTurretRotation);
+            baseCollider.localRotation = Quaternion.Euler(rotationColliderOffset.x, rotationColliderOffset.y, rotationColliderOffset.z + currentTurretRotation);
             baseModel.localRotation = Quaternion.Euler(
                 rotationColliderOffset.x + rotationModelCounterOffset.x, 
                 rotationColliderOffset.y + rotationModelCounterOffset.y, 
-                currentTurretRotation + rotationColliderOffset.z + rotationModelCounterOffset.z);
+                rotationColliderOffset.z + rotationModelCounterOffset.z + currentTurretRotation);
         }
 
         //Barrel pivoting on barrel pivot's local vertical axis. All other local values remain static.
         if (currentBarrelElevation != targetBarrelElevation)
         {
             float deltaAngle = Mathf.DeltaAngle(currentBarrelElevation, targetBarrelElevation);
-            float pivotDirection = Sign(deltaAngle);
-            deltaAngle = Magnitude(deltaAngle);
+            float pivotDirection = MathUtility.Instance.Sign(deltaAngle);
+            deltaAngle = MathUtility.Instance.FloatMagnitude(deltaAngle);
             float fixedUpdatePivot = elevationSpeed * Time.fixedDeltaTime;
 
             currentBarrelElevation += pivotDirection * Mathf.Min(deltaAngle, fixedUpdatePivot);
-            barrelColliderPivot.localRotation = Quaternion.Euler(elevationColliderOffset.x, currentBarrelElevation, elevationColliderOffset.z);
+            barrelColliderPivot.localRotation = Quaternion.Euler(elevationColliderOffset.x, elevationColliderOffset.y + currentBarrelElevation, elevationColliderOffset.z);
             barrelModelPivot.localRotation = Quaternion.Euler(
                 elevationColliderOffset.x + elevationModelCounterOffset.x, 
-                currentBarrelElevation + elevationModelCounterOffset.y, 
+                elevationColliderOffset.y + elevationModelCounterOffset.y + currentBarrelElevation, 
                 elevationColliderOffset.z + elevationModelCounterOffset.z);
         }
     }

@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// A base component class for aiming the gun part of buildings that shoot.
 /// </summary>
-public class TurretAiming : MonoBehaviour //CollisionListener
+public class TurretAiming : MonoBehaviour
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
@@ -20,6 +20,8 @@ public class TurretAiming : MonoBehaviour //CollisionListener
     [SerializeField] protected float maxBarrelElevation;
 
     [Header("Aiming Offsets")]
+    [SerializeField] protected Vector3 crawlerPositionOffset;
+    //[SerializeField] protected Vector3 targetHornetPositionOffset;
     [SerializeField] protected Vector3 rotationColliderOffset;
     [SerializeField] protected Vector3 rotationModelCounterOffset;
     [SerializeField] protected Vector3 elevationColliderOffset;
@@ -96,52 +98,5 @@ public class TurretAiming : MonoBehaviour //CollisionListener
         {
             targetBarrelElevation = minBarrelElevation;
         }
-    }
-
-    //Utility Methods--------------------------------------------------------------------------------------------------------------------------------
-
-    /// <summary>
-    /// Returns the magnitude of a number.
-    /// </summary>
-    /// <param name="num">The number to calculate the magnitude of.</param>
-    /// <returns>The magnitude of the number.</returns>
-    protected float Magnitude(float num)
-    {
-        if (num < 0)
-        {
-            num *= -1;
-        }
-
-        return num;
-    }
-
-    /// <summary>
-    /// Converts the provided angle to an angle between 0 degrees and 360 degrees
-    /// </summary>
-    /// <param name="angle">The raw angle.</param>
-    /// <returns>The normalised angle.</returns>
-    protected float NormaliseAngle(float angle)
-    {
-        while (angle > 360)
-        {
-            angle -= 360;
-        }
-
-        while (angle < 0)
-        {
-            angle += 360;
-        }
-
-        return angle;
-    }
-
-    /// <summary>
-    /// Returns the sign of a number, i.e. +1 if it's positive or 0, and -1 if it's negative.
-    /// </summary>
-    /// <param name="num">The number to determine the sign of.</param>
-    /// <returns>The sign (+1 or -1) of the number.</returns>
-    protected float Sign(float num)
-    {
-        return (num < 0 ? -1 : 1);
     }
 }

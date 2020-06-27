@@ -57,6 +57,10 @@ public class MapController : MonoBehaviour
         alienSpawnablePositions = new List<Vector3>();
     }
 
+    /// <summary>
+    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
+    /// Start() runs after Awake().
+    /// </summary>
     private void Start()
     {
         float alienHoverHeight = AlienFactory.Instance.AlienHoverHeight;
@@ -88,6 +92,8 @@ public class MapController : MonoBehaviour
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
+    //Availabile Position Methods------------------------------------------------------------------
+
     /// <summary>
     /// Checks if a given building can legally be placed given its size and position and the spaces available.
     /// </summary>
@@ -102,10 +108,12 @@ public class MapController : MonoBehaviour
         {
             if (!PositionAvailableForSpawning(buildingPos + offset, false))
             {
+                //Debug.Log("MapController.PositionAvailableForBuilding returned false");
                 return false;
             }
         }
 
+        //Debug.Log("MapController.PositionAvailableForBuilding returned false");
         return true;
     }
 
@@ -123,18 +131,19 @@ public class MapController : MonoBehaviour
 
         if (position.x < 0 || position.x > xMax || position.z < 0 || position.z > zMax)
         {
-            Debug.Log($"Can't spawn at {position}, which is outside the bounds of (0,0) to ({xMax},{zMax})");
+            //Debug.Log($"Can't spawn at {position}, which is outside the bounds of (0,0) to ({xMax},{zMax})");
             return false;
         }
 
         if (alien && alienExclusionArea[(int)position.x, (int)position.z])
         {
-            Debug.Log($"Can't spawn an alien at {position}, which is within the alien exclusion area.");
+            //Debug.Log($"Can't spawn an alien at {position}, which is within the alien exclusion area.");
+            return false;
         }
 
         if (!availableBuildingPositions[(int)position.x, (int)position.z])
         {
-            Debug.Log($"Can't spawn at {position}, which is already occupied by a building.");
+            //Debug.Log($"Can't spawn at {position}, which is already occupied by a building.");
             return false;
         }
 
@@ -145,18 +154,32 @@ public class MapController : MonoBehaviour
     /// Gets a random position that an alien could legally be spawned at.
     /// </summary>
     /// <returns>A position for an alien to spawn at.</returns>
-    public Vector3 RandomAlienSpawnablePos()
+    public Vector3 RandomAlienSpawnablePos(List<Vector3> temporarilyUnavailablePositions)
     {
-        switch (alienSpawnablePositions.Count)
+        List<Vector3> availablePositions = new List<Vector3>(alienSpawnablePositions);
+
+        foreach (Vector3 p in temporarilyUnavailablePositions)
+        {
+            if (availablePositions.Contains(p))
+            {
+                availablePositions.Remove(p);
+            }
+        }
+
+        //Debug.Log($"Getting alien spawnable position, available positions: {availablePositions.Count}");
+
+        switch (availablePositions.Count)
         {
             case 0:
                 return new Vector3 (-1, 0.5f, -1);
             case 1:
-                return alienSpawnablePositions[0];
+                return availablePositions[0];
             default:
-                return alienSpawnablePositions[Random.Range(0, alienSpawnablePositions.Count)];
+                return availablePositions[Random.Range(0, availablePositions.Count)];
         }
     }
+
+    //Entity Registration Methods------------------------------------------------------------------
 
     /// <summary>
     /// Registers a building with MapController so that it knows that the spaces it occupies are occupied.
@@ -164,58 +187,77 @@ public class MapController : MonoBehaviour
     /// <param name="building">The building to be registered.</param>
     public void RegisterBuilding(Building building)
     {
-        UpdateAvailablePositions(building, false);
+        foreach (Vector3 offset in building.BuildingFoundationOffsets)
+        {
+            UpdateAvailablePosition(building.gameObject, building.transform.position + offset, false);
+        }
     }
-
+    
+    /// <summary>
+    /// Registers a mineral with MapController so that it knows that the space it occupies is occupied.
+    /// </summary>
+    /// <param name="mineral">The mineral to be registered.</param>
+    public void RegisterMineral(Mineral mineral)
+    {
+        UpdateAvailablePosition(mineral.gameObject, mineral.transform.position, false);
+    }
+    
     /// <summary>
     /// Deregisters a building with MapController so that it knows that the spaces it occupied are unoccupied.
     /// </summary>
     /// <param name="building">The building to be deregistered.</param>
     public void DeRegisterBuilding(Building building)
     {
-        UpdateAvailablePositions(building, true);
+        foreach (Vector3 offset in building.BuildingFoundationOffsets)
+        {
+            UpdateAvailablePosition(building.gameObject, building.transform.position + offset, true);
+        }
+    }
+    
+    /// <summary>
+    /// Deregisters a mineral with MapController so that it knows that the space it occupied is unoccupied.
+    /// </summary>
+    /// <param name="mineral">The mineral to be deregistered.</param>
+    public void DeRegisterMineral(Mineral mineral)
+    {
+        UpdateAvailablePosition(mineral.gameObject, mineral.transform.position, true);
     }
 
     /// <summary>
-    /// Updates the availability of the spaces occupied / to be occupied by a building.
+    /// Updates the availability of the space(s) occupied / to be occupied by a building or mineral.
     /// </summary>
-    /// <param name="building">The building whose spaces are having their availability updated.</param>
-    /// <param name="available">Are the spaces now available, or are they now unavailable?</param>
-    private void UpdateAvailablePositions(Building building, bool available)
+    /// <param name="gameObject">The game object whose space(s) are having their availability updated.</param>
+    /// <param name="position">The position having its availability updated.</param>
+    /// <param name="available">Is the space now available, or is it now unavailable?</param>
+    private void UpdateAvailablePosition(GameObject gameObject, Vector3 position, bool available)
     {
-        Vector3 buildingPos = building.transform.position;
-        //Debug.Log($"Updating availability of positions for building at {buildingPos}");
+        int x = (int)Mathf.Round(position.x);
+        int z = (int)Mathf.Round(position.z);
 
-        foreach (Vector3 offset in building.BuildingFoundationOffsets)
+        if (x >= 0 && x <= xMax && z >= 0 && z <= zMax)
         {
-            Vector3 foundationPos = buildingPos + offset;
-            int x = (int)Mathf.Round(foundationPos.x);
-            int z = (int)Mathf.Round(foundationPos.z);
+            //Debug.Log($"MapController.UpdateAvailablePositions() offset loop for {gameObject} at position {position}, x is {x}, z is {z}, xMax is {xMax}, zMax is {zMax}");
+            bool startingAlienAvailability = availableAlienPositions[x, z];
+            availableBuildingPositions[x, z] = available;
+            availableAlienPositions[x, z] = (availableBuildingPositions[x, z] && !alienExclusionArea[x, z]);
 
-            if (x >= 0 || x <= xMax || z >= 0 || z <= zMax)
-            {                
-                bool startingAlienAvailability = availableAlienPositions[x, z];
-                availableBuildingPositions[x, z] = available;
-                availableAlienPositions[x, z] = (availableBuildingPositions[x, z] && !alienExclusionArea[x, z]);
+            if (availableAlienPositions[x, z] != startingAlienAvailability)
+            {
+                Vector3 pos = new Vector3(x, 0.25f, z);
 
-                if (availableAlienPositions[x, z] != startingAlienAvailability)
+                if (availableAlienPositions[x, z])
                 {
-                    Vector3 pos = new Vector3(x, 0.25f, z);
-
-                    if (availableAlienPositions[x, z])
-                    {
-                        alienSpawnablePositions.Add(pos);
-                    }
-                    else
-                    {
-                        alienSpawnablePositions.Remove(pos);
-                    }
+                    alienSpawnablePositions.Add(pos);
+                }
+                else
+                {
+                    alienSpawnablePositions.Remove(pos);
                 }
             }
-            else
-            {
-                Debug.Log($"{building.gameObject.name} can't update the availability of position {foundationPos}, which is outside the bounds of (0,0) to ({xMax},{zMax})");
-            }            
+        }
+        else
+        {
+            Debug.Log($"{gameObject.name} can't update the availability of position {position}, which is outside the bounds of (0,0) to ({xMax},{zMax})");
         }
     }
 }

@@ -213,8 +213,9 @@ GameObject:
   - component: {fileID: 2387721251791164881}
   - component: {fileID: 276844957512759736}
   - component: {fileID: 1219818938998714957}
-  - component: {fileID: 5814535936489597786}
+  - component: {fileID: 7957306087969153787}
   - component: {fileID: 6505921446254889876}
+  - component: {fileID: 5814535936489597786}
   m_Layer: 0
   m_Name: Shotgun Turret
   m_TagString: Building
@@ -257,8 +258,6 @@ MonoBehaviour:
   powerConsumption: 2
   waterConsumption: 0
   wasteConsumption: 0
-  xSize: 1
-  zSize: 1
   buildTime: 10
   buildStartHeight: -25.6
   boingInterval: 0.1667
@@ -291,6 +290,45 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 10
+--- !u!114 &7957306087969153787
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2740937295730065718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e087b4d1f91fcb941a830564ec25c878, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 0.425
+--- !u!114 &6505921446254889876
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2740937295730065718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8cb3c79af9be6d4ab8ff603c9d66c1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotationSpeed: 90
+  elevationSpeed: 90
+  minBarrelElevation: -25
+  maxBarrelElevation: 90
+  crawlerPositionOffset: {x: 0, y: 0.75, z: 0}
+  rotationColliderOffset: {x: 0, y: 0, z: 90}
+  rotationModelCounterOffset: {x: 0, y: 0, z: 0}
+  elevationColliderOffset: {x: 0, y: 0, z: 0}
+  elevationModelCounterOffset: {x: 90, y: 0, z: 0}
+  targeter: {fileID: 4760966743071291633}
+  baseCollider: {fileID: 4847364633576071608}
+  baseModel: {fileID: 6939182874317689528}
+  barrelColliderPivot: {fileID: 6578390048626754263}
+  barrelModelPivot: {fileID: 632658674879905165}
 --- !u!114 &5814535936489597786
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -314,31 +352,6 @@ MonoBehaviour:
   shotCooldown: 3
   visibleTargets: []
   target: {fileID: 0}
---- !u!114 &6505921446254889876
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2740937295730065718}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a8cb3c79af9be6d4ab8ff603c9d66c1e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rotationSpeed: 90
-  elevationSpeed: 90
-  minBarrelElevation: -25
-  maxBarrelElevation: 90
-  rotationColliderOffset: {x: 0, y: 0, z: 90}
-  rotationModelCounterOffset: {x: 0, y: 0, z: 0}
-  elevationColliderOffset: {x: 0, y: 0, z: 0}
-  elevationModelCounterOffset: {x: 90, y: 0, z: 0}
-  targeter: {fileID: 4760966743071291633}
-  baseCollider: {fileID: 4847364633576071608}
-  baseModel: {fileID: 6939182874317689528}
-  barrelColliderPivot: {fileID: 6578390048626754263}
-  barrelModelPivot: {fileID: 632658674879905165}
 --- !u!1 &2946983348710066453
 GameObject:
   m_ObjectHideFlags: 0
@@ -475,7 +488,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4847364633576071608}
-  - component: {fileID: 2481825182901768388}
+  - component: {fileID: 6375144007573283834}
   - component: {fileID: 1740587601337509806}
   - component: {fileID: 3519067798138725708}
   m_Layer: 0
@@ -501,8 +514,8 @@ Transform:
   m_Father: {fileID: 7345750986247059595}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -90.00001, y: 0, z: 0}
---- !u!64 &2481825182901768388
-MeshCollider:
+--- !u!136 &6375144007573283834
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -511,10 +524,10 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 2616784651231164177, guid: 22135eb99d7103f4383e8a2193353969, type: 3}
+  m_Radius: 6.5
+  m_Height: 140.06381
+  m_Direction: 2
+  m_Center: {x: 0, y: -2.1481569e-14, z: 57.718094}
 --- !u!54 &1740587601337509806
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -560,7 +573,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6434623972415049373}
-  - component: {fileID: 5007338536525091063}
+  - component: {fileID: 8042310140663732627}
   - component: {fileID: 5280111851617792403}
   - component: {fileID: 5929303774552152200}
   m_Layer: 0
@@ -585,8 +598,8 @@ Transform:
   m_Father: {fileID: 6578390048626754263}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -90, y: -90.00001, z: 180.00002}
---- !u!64 &5007338536525091063
-MeshCollider:
+--- !u!136 &8042310140663732627
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -595,10 +608,10 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &5280111851617792403
 Rigidbody:
   m_ObjectHideFlags: 0
