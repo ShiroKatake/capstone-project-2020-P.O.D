@@ -149,16 +149,28 @@ public class MapController : MonoBehaviour
     /// Gets a random position that an alien could legally be spawned at.
     /// </summary>
     /// <returns>A position for an alien to spawn at.</returns>
-    public Vector3 RandomAlienSpawnablePos()
+    public Vector3 RandomAlienSpawnablePos(List<Vector3> temporarilyUnavailablePositions)
     {
-        switch (alienSpawnablePositions.Count)
+        List<Vector3> availablePositions = new List<Vector3>(alienSpawnablePositions);
+
+        foreach (Vector3 p in temporarilyUnavailablePositions)
+        {
+            if (availablePositions.Contains(p))
+            {
+                availablePositions.Remove(p);
+            }
+        }
+
+        Debug.Log($"Getting alien spawnable position, available positions: {availablePositions.Count}");
+
+        switch (availablePositions.Count)
         {
             case 0:
                 return new Vector3 (-1, 0.5f, -1);
             case 1:
-                return alienSpawnablePositions[0];
+                return availablePositions[0];
             default:
-                return alienSpawnablePositions[Random.Range(0, alienSpawnablePositions.Count)];
+                return availablePositions[Random.Range(0, availablePositions.Count)];
         }
     }
 
