@@ -280,7 +280,7 @@ public class Alien : MonoBehaviour, IMessenger
             transform.Translate(new Vector3(0, 0, movement));
             //Vector3 translatedPos = transform.position;
 
-            LayerMask mask = LayerMask.GetMask("Planet");
+            LayerMask mask = LayerMask.GetMask("Ground");
 
             if (Physics.Raycast(transform.position + Vector3.up * 0.5f, Vector3.down, out hit, 25, mask))
             {
