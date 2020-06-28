@@ -12,7 +12,10 @@ public class AudioManager : MonoBehaviour
     public enum Sound{
         DayTimeLvlOne,
         NightTime,
-        Player_Hover
+        Player_Hover,
+        Laser_POD,
+        Collected_Minerals,
+        Mining,
     }
 
     [System.Serializable]

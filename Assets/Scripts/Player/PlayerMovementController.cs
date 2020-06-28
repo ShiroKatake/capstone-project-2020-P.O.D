@@ -219,6 +219,7 @@ public class PlayerMovementController : MonoBehaviour
         {
             timeOfLastShot = Time.time;
             Projectile projectile = ProjectileFactory.Instance.GetProjectile(EProjectileType.PODLaserBolt, transform, barrelTip.position);
+            AudioManager.Instance.PlaySound(AudioManager.Sound.Laser_POD, this.transform.position);
             Vector3 vector = barrelTip.position - barrelMagazine.position;
             projectile.Shoot(vector.normalized, 0);
             //TODO: use overload that incorporates shooter movement speed, and calculate current movement speed in the direction of the shot vector.
