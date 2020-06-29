@@ -313,6 +313,7 @@ public class Alien : MonoBehaviour, IMessenger
         {
             timeOfLastAttack = Time.time;
             targetHealth.Value -= damage;
+            AudioManager.Instance.PlaySound(AudioManager.Sound.Damage_To_Building, this.transform.position); //need to add a check to see what it is attacking if we want to diversify sound portfolio, non essencial
             //TODO: trigger attack animation
         }
     }

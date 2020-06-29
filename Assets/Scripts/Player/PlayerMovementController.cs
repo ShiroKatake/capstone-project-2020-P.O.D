@@ -153,7 +153,7 @@ public class PlayerMovementController : MonoBehaviour
         if (health.IsDead())
         {
             Debug.Log("The player's health has reached 0. GAME OVER!!!");
-
+            AudioManager.Instance.PlaySound(AudioManager.Sound.Explosion, this.transform.position);
             if (!gameOver)
             {
                 MessageDispatcher.Instance.SendMessage("Alien", new Message(gameObject.name, "Player", this.gameObject, "Dead"));

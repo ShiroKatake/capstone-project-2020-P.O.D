@@ -16,6 +16,20 @@ public class AudioManager : MonoBehaviour
         Laser_POD,
         Collected_Minerals,
         Mining,
+        Damage_To_Player,
+        Damage_To_Building,
+        Explosion,
+        Negative_UI,
+        Building_Materialises,
+        Building_Completes,
+        ShotGun_Shoot,
+        MachineGun_Shoot,
+        WaterDrill_Idle,
+        Reactor_Idle,
+        Greenhouse_Idle,
+        Incinorator_Idle,
+        Boiler_Idle,
+        Turret_Idle
     }
 
     [System.Serializable]
@@ -73,6 +87,8 @@ public class AudioManager : MonoBehaviour
 
         soundTimerDictionary = new Dictionary<Sound, float>();
         soundTimerDictionary[Sound.Player_Hover] = 0f;
+        soundTimerDictionary[Sound.Mining] = 0f;
+        soundTimerDictionary[Sound.Damage_To_Building] = 0f;
 
         bgSwitching = false;
         bgDown = false;
@@ -140,16 +156,39 @@ public class AudioManager : MonoBehaviour
                 default:
                     return true;
                 case Sound.Player_Hover:
-                    if (soundTimerDictionary.ContainsKey(sound)){
-                        if (Time.time == 0f){
+                    if (soundTimerDictionary.ContainsKey(sound))
+                    {
+                        if (Time.time == 0f)
+                        {
                             return true;
-                        } else {
+                        }
+                        else
+                        {
                             return false;
                         }
-                    } else {
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                case Sound.Mining:
+                    if (soundTimerDictionary.ContainsKey(sound))
+                    {
+                        if (Time.time == 0f)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                    else
+                    {
                         return true;
                     }
             }
+
         } else {
             Debug.Log("Sound: " + sound.ToString() + " cannot be found");
             return false;

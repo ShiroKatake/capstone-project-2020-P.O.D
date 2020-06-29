@@ -211,6 +211,7 @@ public class BuildingFactory : MonoBehaviour
     /// <param name="consumingResources">Was the building destroyed while placed, and therefore needs to leave behind foundations?</param>
     public void DestroyBuilding(Building building, bool consumingResources, bool killed)
     {
+
         BuildingController.Instance.DeRegisterBuilding(building);
 
         if (building.Terraformer != null)
@@ -227,6 +228,7 @@ public class BuildingFactory : MonoBehaviour
 
         if (killed)
         {
+            AudioManager.Instance.PlaySound(AudioManager.Sound.Explosion, this.transform.position);
             foreach (Vector3 offset in building.BuildingFoundationOffsets)
             {
                 GetBuildingFoundation().transform.position = building.transform.position + offset;
