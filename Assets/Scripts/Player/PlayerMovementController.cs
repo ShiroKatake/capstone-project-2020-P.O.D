@@ -153,7 +153,7 @@ public class PlayerMovementController : MonoBehaviour
         if (health.IsDead())
         {
             Debug.Log("The player's health has reached 0. GAME OVER!!!");
-            AudioManager.Instance.PlaySound(AudioManager.Sound.Explosion, this.transform.position);
+            AudioManager.Instance.PlaySound(AudioManager.ESound.Explosion, this.transform.position);
             if (!gameOver)
             {
                 MessageDispatcher.Instance.SendMessage("Alien", new Message(gameObject.name, "Player", this.gameObject, "Dead"));
@@ -178,7 +178,7 @@ public class PlayerMovementController : MonoBehaviour
     /// </summary>
     private void Move()
     {
-        AudioManager.Instance.PlaySound(AudioManager.Sound.Player_Hover, this.transform.position);
+        AudioManager.Instance.PlaySound(AudioManager.ESound.Player_Hover, this.transform.position);
 
         if (movement != Vector3.zero)
         {
@@ -219,7 +219,7 @@ public class PlayerMovementController : MonoBehaviour
         {
             timeOfLastShot = Time.time;
             Projectile projectile = ProjectileFactory.Instance.GetProjectile(EProjectileType.PODLaserBolt, transform, barrelTip.position);
-            AudioManager.Instance.PlaySound(AudioManager.Sound.Laser_POD, this.transform.position);
+            AudioManager.Instance.PlaySound(AudioManager.ESound.Laser_POD, this.transform.position);
             Vector3 vector = barrelTip.position - barrelMagazine.position;
             projectile.Shoot(vector.normalized, 0);
             //TODO: use overload that incorporates shooter movement speed, and calculate current movement speed in the direction of the shot vector.

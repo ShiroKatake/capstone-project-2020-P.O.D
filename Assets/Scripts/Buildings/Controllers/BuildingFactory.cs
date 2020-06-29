@@ -228,7 +228,7 @@ public class BuildingFactory : MonoBehaviour
 
         if (killed)
         {
-            AudioManager.Instance.PlaySound(AudioManager.Sound.Explosion, this.transform.position);
+            AudioManager.Instance.PlaySound(AudioManager.ESound.Explosion, this.transform.position);
             foreach (Vector3 offset in building.BuildingFoundationOffsets)
             {
                 GetBuildingFoundation().transform.position = building.transform.position + offset;

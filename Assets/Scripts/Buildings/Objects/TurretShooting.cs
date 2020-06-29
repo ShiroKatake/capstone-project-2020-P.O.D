@@ -200,7 +200,7 @@ public class TurretShooting : CollisionListener, IMessenger
                 projectile.Shoot((vector).normalized, 0);
                
             }
-            AudioManager.Instance.PlaySound(AudioManager.Sound.MachineGun_Shoot, this.transform.position);
+            AudioManager.Instance.PlaySound(AudioManager.ESound.MachineGun_Shoot, this.transform.position);
         }
     }
 

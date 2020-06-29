@@ -9,7 +9,8 @@ public class AudioManager : MonoBehaviour
     public static AudioManager Instance {get; protected set;}
 
     //gonna break these up later
-    public enum Sound{
+    public enum ESound
+    {
         DayTimeLvlOne,
         NightTime,
         Player_Hover,
@@ -29,13 +30,16 @@ public class AudioManager : MonoBehaviour
         Greenhouse_Idle,
         Incinorator_Idle,
         Boiler_Idle,
-        Turret_Idle
+        Turret_Idle,
+        Alien_Moves,
+        Alien_Takes_Damage,
+        Alien_Dies,
     }
 
     [System.Serializable]
     public class SoundClip {
         [SerializeField] private string name;
-        [SerializeField] private AudioManager.Sound sound;
+        [SerializeField] private AudioManager.ESound sound;
         [SerializeField] private AudioClip clip;
         [SerializeField] private bool loop;
 
@@ -45,7 +49,7 @@ public class AudioManager : MonoBehaviour
         [HideInInspector] private AudioSource source;
 
         public string Name { get => name; }
-        public AudioManager.Sound Sound { get => sound; }
+        public AudioManager.ESound Sound { get => sound; }
         public AudioClip Clip { get => clip; }
         public float Volume { get => volume; }
         public float Pitch { get => pitch; }
@@ -56,7 +60,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private SoundClip[] OneShotSounds;
     [SerializeField] private SoundClip[] BackGroundSounds;
 
-    private Dictionary<Sound, float> soundTimerDictionary;
+    private Dictionary<ESound, float> soundTimerDictionary;
     private GameObject oneShotGameObject;
     private AudioSource oneShotAudioSource;
     private AudioSource currentBackgroundTrack;
@@ -64,7 +68,7 @@ public class AudioManager : MonoBehaviour
     private float volumeControlBackground;
     private float volumeControlTimer;
     private bool bgSwitching, bgDown, bgUp, bgSwitchControl;
-    private Sound bgSoundSwitch;
+    private ESound bgSoundSwitch;
 
     private void Awake() {
         if (Instance != null){
@@ -82,13 +86,13 @@ public class AudioManager : MonoBehaviour
             s.Source.loop = s.Loop;
         }
 
-        currentBackgroundTrack = Array.Find(BackGroundSounds, SoundClip => SoundClip.Sound == Sound.DayTimeLvlOne).Source;
+        currentBackgroundTrack = Array.Find(BackGroundSounds, SoundClip => SoundClip.Sound == ESound.DayTimeLvlOne).Source;
         currentBackgroundTrack.Play();
 
-        soundTimerDictionary = new Dictionary<Sound, float>();
-        soundTimerDictionary[Sound.Player_Hover] = 0f;
-        soundTimerDictionary[Sound.Mining] = 0f;
-        soundTimerDictionary[Sound.Damage_To_Building] = 0f;
+        soundTimerDictionary = new Dictionary<ESound, float>();
+        soundTimerDictionary[ESound.Player_Hover] = 0f;
+        soundTimerDictionary[ESound.Mining] = 0f;
+        soundTimerDictionary[ESound.Damage_To_Building] = 0f;
 
         bgSwitching = false;
         bgDown = false;
@@ -102,7 +106,7 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    public void PlayBackground(Sound sound){
+    public void PlayBackground(ESound sound){
         SoundClip s = Array.Find(BackGroundSounds, SoundClip => SoundClip.Sound == sound);
         if (s == null) {
             Debug.LogWarning("Sound: " + sound + " not found.");
@@ -111,7 +115,7 @@ public class AudioManager : MonoBehaviour
         s.Source.Play();
     }
 
-    public void PlaySound(Sound sound, Vector3 position){
+    public void PlaySound(ESound sound, Vector3 position){
         if (CanPlaySound(sound)){
             GameObject soundGameObject = new GameObject("Sound");
             soundGameObject.transform.position = position;
@@ -131,7 +135,7 @@ public class AudioManager : MonoBehaviour
     }
 
 
-    public void PlaySound(Sound sound){
+    public void PlaySound(ESound sound){
         if (CanPlaySound(sound)){
             if (oneShotGameObject == null){
                 oneShotGameObject = new GameObject("Sound");
@@ -141,7 +145,7 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    private SoundClip GetAudio(Sound sound){
+    private SoundClip GetAudio(ESound sound){
         SoundClip s = Array.Find(OneShotSounds, SoundClip => SoundClip.Sound == sound);
         if (s != null){
             return s;
@@ -150,12 +154,12 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    private bool CanPlaySound(Sound sound){
+    private bool CanPlaySound(ESound sound){
         if (Array.Find(OneShotSounds, SoundClip => SoundClip.Sound == sound) != null){
             switch (sound){
                 default:
                     return true;
-                case Sound.Player_Hover:
+                case ESound.Player_Hover:
                     if (soundTimerDictionary.ContainsKey(sound))
                     {
                         if (Time.time == 0f)
@@ -171,7 +175,7 @@ public class AudioManager : MonoBehaviour
                     {
                         return true;
                     }
-                case Sound.Mining:
+                case ESound.Mining:
                     if (soundTimerDictionary.ContainsKey(sound))
                     {
                         if (Time.time == 0f)
@@ -195,7 +199,7 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    public void SwitchBackgroundTrack(Sound sound){
+    public void SwitchBackgroundTrack(ESound sound){
         bgSoundSwitch = sound;
         volumeControlTimer = 0;
         timeStamp = Time.time;

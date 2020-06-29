@@ -1269,7 +1269,7 @@ PrefabInstance:
     - target: {fileID: 948949189687773389, guid: 9620c728b220f2e47adbd85dd9ac4899,
         type: 3}
       propertyPath: spawnAlienNow
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 948949189687773390, guid: 9620c728b220f2e47adbd85dd9ac4899,
         type: 3}
@@ -1414,6 +1414,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: AudioManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 1008005631251450810, guid: 6650ea0d512478c43a1daf70d68df5ef,
+        type: 3}
+      propertyPath: OneShotSounds.Array.data[17].loop
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1008005631251450810, guid: 6650ea0d512478c43a1daf70d68df5ef,
+        type: 3}
+      propertyPath: OneShotSounds.Array.data[17].volume
+      value: 0.009
       objectReference: {fileID: 0}
     - target: {fileID: 1008005631251450811, guid: 6650ea0d512478c43a1daf70d68df5ef,
         type: 3}
