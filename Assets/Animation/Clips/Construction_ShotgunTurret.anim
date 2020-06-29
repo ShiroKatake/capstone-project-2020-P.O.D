@@ -30,8 +30,36 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 9.5
+        time: 7
         value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: material._DissolveAmount
+    path: TowerCollider/Tower Model/Base Model
+    classID: 23
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 5
+        value: 0
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -51,15 +79,22 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: material._DissolveAmount
-    path: TowerCollider/Tower Model/Base Model
+    path: TowerCollider/Tower Model/Base Model/Barrel Model Pivot (1)/Barrel Model
     classID: 23
     script: {fileID: 0}
   m_PPtrCurves:
   - curve:
     - time: 0
-      value: {fileID: 2100000, guid: 48d9e9ccc07a1a540814daebfc0c3644, type: 2}
+      value: {fileID: 2100000, guid: 53c2ddfccaa112a4d97de760903cd330, type: 2}
     attribute: m_Materials.Array.data[0]
     path: TowerCollider/Tower Model/Base Model
+    classID: 23
+    script: {fileID: 0}
+  - curve:
+    - time: 0
+      value: {fileID: 2100000, guid: 2785de8e0da646c4db09adaa027b56ec, type: 2}
+    attribute: m_Materials.Array.data[0]
+    path: TowerCollider/Tower Model/Base Model/Barrel Model Pivot (1)/Barrel Model
     classID: 23
     script: {fileID: 0}
   m_SampleRate: 60
@@ -77,14 +112,29 @@ AnimationClip:
       customType: 22
       isPPtrCurve: 0
     - serializedVersion: 2
+      path: 2336210187
+      attribute: 2304829741
+      script: {fileID: 0}
+      typeID: 23
+      customType: 22
+      isPPtrCurve: 0
+    - serializedVersion: 2
       path: 502270161
       attribute: 0
       script: {fileID: 0}
       typeID: 23
       customType: 21
       isPPtrCurve: 1
+    - serializedVersion: 2
+      path: 2336210187
+      attribute: 0
+      script: {fileID: 0}
+      typeID: 23
+      customType: 21
+      isPPtrCurve: 1
     pptrCurveMapping:
-    - {fileID: 2100000, guid: 48d9e9ccc07a1a540814daebfc0c3644, type: 2}
+    - {fileID: 2100000, guid: 53c2ddfccaa112a4d97de760903cd330, type: 2}
+    - {fileID: 2100000, guid: 2785de8e0da646c4db09adaa027b56ec, type: 2}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
@@ -119,8 +169,36 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 9.5
+        time: 7
         value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: material._DissolveAmount
+    path: TowerCollider/Tower Model/Base Model
+    classID: 23
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 5
+        value: 0
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -140,7 +218,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: material._DissolveAmount
-    path: TowerCollider/Tower Model/Base Model
+    path: TowerCollider/Tower Model/Base Model/Barrel Model Pivot (1)/Barrel Model
     classID: 23
     script: {fileID: 0}
   m_EulerEditorCurves: []
