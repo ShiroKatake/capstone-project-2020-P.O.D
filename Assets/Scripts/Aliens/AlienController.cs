@@ -128,8 +128,8 @@ public class AlienController : MonoBehaviour
             //Debug.Log("Nighttime? No aliens? Spawning time!");
             if (spawnAlienNow)
             {
-                Debug.Log("Test position");
-                MapController.Instance.PositionAvailableForSpawning(new Vector3(10, 5, 10), true);
+                //Debug.Log("Test position");
+                //MapController.Instance.PositionAvailableForSpawning(new Vector3(10, 5, 10), true);
                 spawnAlienNow = false;
             }
 
@@ -151,8 +151,8 @@ public class AlienController : MonoBehaviour
             List<Vector3> availableOffsets = new List<Vector3>();
             Dictionary<Vector3, bool> unavailablePositions = new Dictionary<Vector3, bool>();
 
-            //for (int i = 0; i < spawnCount; i++)
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < spawnCount; i++)
+            //for (int i = 0; i < 100; i++)
             {
                 if (availableOffsets.Count == 0)
                 {
@@ -182,10 +182,12 @@ public class AlienController : MonoBehaviour
                 {
                     RaycastHit hit;
                     Physics.Raycast(spawnPos, Vector3.down, out hit, 25, LayerMask.GetMask("Ground"));
-                    aliens.Add(AlienFactory.Instance.GetAlien(new Vector3(spawnPos.x, hit.point.y + 0.1f, spawnPos.z)));
+                    Alien alien = AlienFactory.Instance.GetAlien(new Vector3(spawnPos.x, hit.point.y/* + 0.1f*/, spawnPos.z));
+                    alien.Setup(IdGenerator.Instance.GetNextId());
+                    aliens.Add(alien);
                     swarmSize++;
 
-                    Debug.Log($"Spawning at ({spawnPos.x}, {hit.point.y + 0.1f}, {spawnPos.z})");
+                    //Debug.Log($"Spawning at ({spawnPos.x}, {hit.point.y/* + 0.1f*/}, {spawnPos.z})");
 
                     int maxLeft = (int)(maxSwarmRadius * offsetMultiplier * -1);
                     int maxRight = Mathf.CeilToInt(maxSwarmRadius * offsetMultiplier);

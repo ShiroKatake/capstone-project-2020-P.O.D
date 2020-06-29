@@ -98,7 +98,6 @@ public class AlienFactory : MonoBehaviour
             alien = Instantiate(alienPrefab, position, new Quaternion());
         }
 
-        alien.Setup(IdGenerator.Instance.GetNextId());
         return alien;
     }
 

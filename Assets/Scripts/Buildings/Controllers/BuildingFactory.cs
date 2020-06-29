@@ -130,7 +130,7 @@ public class BuildingFactory : MonoBehaviour
     /// <returns>A building of the specified type.</returns>
     public Building GetBuilding(EBuilding buildingType)
     {
-        Debug.Log($"BuildingFactory.GetBuilding({buildingType})");
+        //Debug.Log($"BuildingFactory.GetBuilding({buildingType})");
         Building building;
 
         if (buildings[buildingType].Count > 0)
