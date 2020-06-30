@@ -64,6 +64,7 @@ public class Building : CollisionListener
     //Positioning
     //private Dictionary<string, Vector3> offsets;
     private bool colliding = false;
+    private bool validPlacement = true;
     [SerializeField] private List<Collider> otherColliders;
     Vector3 normalScale;
 
@@ -321,55 +322,21 @@ public class Building : CollisionListener
     /// Checks if the building is colliding while being placed, and updates colour appropriately.
     /// </summary>
     /// <returns>Is this building colliding with something?</returns>
-    public bool CollisionUpdate()
+    public bool IsPlacementValid()
     {
+        //DONE: turn into checking if the placement is valid
+        //DONE: split collision detection into own method and call it here.
+        //TODO: add method for cliff edge detection and call it here.
+        //TODO: factor both into determining positioning validity, and then change colour in this method from there.
         if (active)
         {
             if (!placed)
             {
-                //Weird quirk of destroying one object and then instantating another and moving it to the same position: it triggers boths' OnTriggerEnter(),
-                //even though one doesn't exist, and then the other doesn't have OnTriggerExit() triggered in the next frame. This checks for the existence of
-                //the other collider and corrects the value of colliding if the other collider no longer exists.
-                if (colliding)
-                {
-                    if (otherColliders.Count == 0)
-                    {
-                        colliding = false;
-                        //Debug.Log($"{this}.CollisionUpdate(), otherColliders.Count == 0");
-                    }
-                    else
-                    {
-                        colliding = false;
+                VerifyColliding();
 
-                        for (int i = 0, j = otherColliders.Count; i < j; i++)
-                        {
-                            if (otherColliders[i] == null)  
-                            {
-                                otherColliders.RemoveAt(i);
-                                i--;
-                                j--;
-                            }
-                            else
-                            {
-                                colliding = true;
-                                //Debug.Log($"{this}.CollisionUpdate(), otherColliders.Count != 0, detected {otherColliders[i]}");
-                                break;
-                            }
-                        }
-                    }
-                }
+                validPlacement = !colliding;
 
-                if (colliding)
-                {
-                    foreach (RendererMaterialSet r in rendererMaterialSets)
-                    {
-                        if (r.renderer.material != buildingErrorMaterial)
-                        {
-                            r.renderer.material = buildingErrorMaterial;
-                        }
-                    }
-                }
-                else
+                if (validPlacement)
                 {
                     foreach (RendererMaterialSet r in rendererMaterialSets)
                     {
@@ -379,17 +346,66 @@ public class Building : CollisionListener
                         }
                     }
                 }
+                else
+                {
+                    foreach (RendererMaterialSet r in rendererMaterialSets)
+                    {
+                        if (r.renderer.material != buildingErrorMaterial)
+                        {
+                            r.renderer.material = buildingErrorMaterial;
+                        }
+                    }
+                }
+
+                return validPlacement;
             }
             else
             {
-                Debug.Log($"Building {id} ran CollisionsUpdate(), though it's already placed.");
+                Debug.Log($"Building {id} ran IsPlacementValid(), even though it's already placed.");
+                return false;
             }
-
-            return colliding;
         }
         else
         {
-            return false;
+            return true;
+        }
+    }
+
+    /// <summary>
+    /// Verifies if this building should be considered to be colliding with another object.
+    /// </summary>
+    private void VerifyColliding()
+    {
+        //Weird quirk of destroying one object and then instantating another and moving it to the same position: it triggers boths' OnTriggerEnter(),
+        //even though one doesn't exist, and then the other doesn't have OnTriggerExit() triggered in the next frame. This checks for the existence of
+        //the other collider and corrects the value of colliding if the other collider no longer exists.
+        if (colliding)
+        {
+            if (otherColliders.Count == 0)
+            {
+                colliding = false;
+                //Debug.Log($"{this}.CollisionUpdate(), otherColliders.Count == 0");
+            }
+            else
+            {
+                colliding = false;
+
+                for (int i = 0, j = otherColliders.Count; i < j; i++)
+                {
+                    if (otherColliders[i] == null)
+                    {
+                        otherColliders.RemoveAt(i);
+                        i--;
+                        j--;
+                    }
+                    else
+                    {
+                        colliding = true;
+                        //Debug.Log($"{this}.CollisionUpdate(), otherColliders.Count != 0, detected {otherColliders[i]}");
+                        break;
+                    }
+                }
+            }
         }
     }
 

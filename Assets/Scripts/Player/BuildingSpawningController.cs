@@ -180,10 +180,10 @@ public class BuildingSpawningController : MonoBehaviour
                 }                
             }
 
-            bool collision = heldBuilding.CollisionUpdate();
+            bool placementValid = heldBuilding.IsPlacementValid();
 
             //Place it or cancel building it
-            if (placeBuilding && ResourceController.Instance.Ore >= heldBuilding.OreCost && !collision && MapController.Instance.PositionAvailableForBuilding(heldBuilding))
+            if (placeBuilding && ResourceController.Instance.Ore >= heldBuilding.OreCost && placementValid && MapController.Instance.PositionAvailableForBuilding(heldBuilding))
             {              
                 Vector3 spawnPos = heldBuilding.transform.position;
                 spawnPos.y = 0.02f;
@@ -196,7 +196,7 @@ public class BuildingSpawningController : MonoBehaviour
                 placeBuilding = false;
                 cancelBuilding = false;
             }
-            else if (cancelBuilding || (placeBuilding && (ResourceController.Instance.Ore < heldBuilding.OreCost || collision || !MapController.Instance.PositionAvailableForBuilding(heldBuilding))))
+            else if (cancelBuilding || (placeBuilding && (ResourceController.Instance.Ore < heldBuilding.OreCost || !placementValid || !MapController.Instance.PositionAvailableForBuilding(heldBuilding))))
             {
                 if (placeBuilding)
                 {
@@ -205,7 +205,7 @@ public class BuildingSpawningController : MonoBehaviour
                         Debug.Log("You have insufficient ore to build this building.");
                     }
                     
-                    if (collision)
+                    if (!placementValid)
                     {
                         Debug.Log("You cannot place a building there; it would occupy the same space as something else.");
                     }
