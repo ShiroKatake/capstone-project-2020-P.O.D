@@ -138,7 +138,7 @@ public class BuildingFactory : MonoBehaviour
             building = buildings[buildingType][0];
             buildings[buildingType].RemoveAt(0);
             building.transform.parent = null;
-            building.EnableColliders();
+            building.SetCollidersEnabled("Placement", true);
         }
         else
         {
@@ -197,7 +197,7 @@ public class BuildingFactory : MonoBehaviour
         {
             building.transform.position = objectPool.position;
             building.transform.parent = objectPool;
-            building.DisableColliders();
+            building.SetCollidersEnabled("Placement", false);
         }
 
         return building;
