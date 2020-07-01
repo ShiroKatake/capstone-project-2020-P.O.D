@@ -17,15 +17,15 @@ public class Alien : MonoBehaviour, IMessenger
 
     [Header("Stats")] 
     [SerializeField] private int id;
-    [SerializeField] private float speed;
-    [SerializeField] private float turningSpeed;
-    [SerializeField] private float hoverHeight;
+    //[SerializeField] private float hoverHeight;
     [SerializeField] private float attackRange;
     [SerializeField] private float damage;
     [SerializeField] private float attackCooldown;
 
     //Non-Serialized Fields------------------------------------------------------------------------
+
     [Header("Testing")]
+    
     //Componenets
     private List<Collider> colliders;
     private Health health;
@@ -34,12 +34,13 @@ public class Alien : MonoBehaviour, IMessenger
 
     //Movement
     private bool moving;
-    [SerializeField] private float zRotation;
+    private float speed;
+    //[SerializeField] private float zRotation;
 
     //Turning
-    private Quaternion oldRotation;
-    private Quaternion targetRotation;
-    private float slerpProgress;
+    //private Quaternion oldRotation;
+    //private Quaternion targetRotation;
+    //private float slerpProgress;
     
     //Targeting
     //private CryoEgg CryoEgg;
@@ -51,9 +52,7 @@ public class Alien : MonoBehaviour, IMessenger
     [SerializeField] private string shotByName;
     [SerializeField] private Transform shotByTransform;
     private float timeOfLastAttack;
-
-    //[SerializeField] private bool conductSweepTesting;
-
+    
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
     //Basic Public Properties----------------------------------------------------------------------
@@ -80,12 +79,13 @@ public class Alien : MonoBehaviour, IMessenger
         health = GetComponent<Health>();
         navMeshAgent = GetComponent<NavMeshAgent>();
         rigidbody = GetComponent<Rigidbody>();
-        zRotation = transform.rotation.eulerAngles.z;
+        //zRotation = transform.rotation.eulerAngles.z;
 
         visibleAliens = new List<Transform>();
         visibleTargets = new List<Transform>();
         moving = false;
         navMeshAgent.enabled = false;
+        speed = navMeshAgent.speed;
     }
 
     /// <summary>
@@ -217,28 +217,10 @@ public class Alien : MonoBehaviour, IMessenger
     /// </summary>
     private void Look()
     {
-        //TODO: swarm-based looking behaviour
         if (navMeshAgent.enabled && target.position != navMeshAgent.destination)
         {
-            //NavMeshPath path = null;
             navMeshAgent.destination = target.position;
-            //navMeshAgent.CalculatePath(target.position, path);
         }
-
-        //Vector3 newRotation = PositionAtSameHeight(target.position) - transform.position;
-
-        //if (newRotation != targetRotation.eulerAngles)
-        //{
-        //    oldRotation = transform.rotation;
-        //    targetRotation = Quaternion.LookRotation(newRotation);
-        //    slerpProgress = 0f;
-        //}
-
-        //if (slerpProgress < 1)
-        //{
-        //    slerpProgress = Mathf.Min(1, slerpProgress + turningSpeed * Time.fixedDeltaTime);
-        //    transform.rotation = Quaternion.Slerp(oldRotation, targetRotation, slerpProgress);
-        //}
     }
 
     /// <summary>
@@ -258,42 +240,17 @@ public class Alien : MonoBehaviour, IMessenger
     {
         if (Vector3.Distance(transform.position, PositionAtSameHeight(target.position)) > attackRange + targetSize.Radius)
         {
-            //TODO: if navMeshAgent.speed != speed, navMeshAgent.speed = speed
-
-            //RaycastHit hit;
-            //float movement = speed * Time.fixedDeltaTime;
-            //transform.Translate(new Vector3(0, 0, movement));     //Commented out to test nav mesh agent movement
-
-            //if (Physics.Raycast(transform.position + Vector3.up * 0.5f, Vector3.down, out hit, 25, LayerMask.GetMask("Ground")))
-            //{
-            //    float height = (transform.position - hit.point).y;
-
-            //    //Toggle gravity if something has pushed the alien up above hoverHeight
-            //    if (rigidbody.useGravity)
-            //    {
-            //        if (height <= hoverHeight)
-            //        {
-            //            transform.position = new Vector3(transform.position.x, hoverHeight, transform.position.z);
-            //            rigidbody.useGravity = false;
-            //            rigidbody.drag = 100;
-            //            rigidbody.mass = 0;
-            //        }
-            //    }
-            //    else
-            //    {
-            //        if (height > hoverHeight)
-            //        {
-            //            rigidbody.useGravity = true;
-            //            rigidbody.drag = 0;
-            //            rigidbody.velocity = Vector3.zero;
-            //            rigidbody.mass = 1000;
-            //        }
-            //    }
-            //}
+            if (navMeshAgent.speed != speed)
+            {
+                navMeshAgent.speed = speed;
+            }
         }
         else
         {
-            //TODO: if navMeshAgent.speed != 0, navMeshAgent.speed = 0
+            if (navMeshAgent.speed != 0)
+            {
+                navMeshAgent.speed = 0;
+            }
 
             if (Time.time - timeOfLastAttack > attackCooldown)
             {
@@ -361,21 +318,13 @@ public class Alien : MonoBehaviour, IMessenger
         }
     }
 
-    //private void OnCollisionEnter(Collision collision)
-    //{
-    //    if (moving)
-    //    {
-    //        Debug.Log($"{this} collided with {collision.gameObject}, tag is {collision.gameObject.tag}, force applied is {collision.impulse}");
-    //    }
-    //}
-
     /// <summary>
     /// When a GameObject collides with another GameObject, Unity calls OnTriggerEnter.
     /// </summary>
     /// <param name="other">The other Collider involved in this collision.</param>
     private void OnTriggerEnter(Collider other)
     {
-        if (/*bodyCollider.enabled &&*/ !other.isTrigger)
+        if (!other.isTrigger)
         {
             if (other.CompareTag("Alien"))
             {
@@ -404,7 +353,7 @@ public class Alien : MonoBehaviour, IMessenger
     /// <param name="other">The other Collider involved in this collision.</param>
     private void OnTriggerExit(Collider other)
     {
-        if (/*bodyCollider.enabled && */!other.isTrigger)
+        if (!other.isTrigger)
         {
             if (visibleAliens.Contains(other.transform))
             {
