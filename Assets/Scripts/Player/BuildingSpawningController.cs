@@ -178,7 +178,6 @@ public class BuildingSpawningController : MonoBehaviour
             }
 
             bool placementValid = heldBuilding.IsPlacementValid();
-            //TODO: put minerals on different layer and adjust code to include or exclude them from layer masks as is appropriate for whatever's doing a raycast.
             //TODO: check if all the methods below should be asking for "radius" or "diameter"
 
             //Place it or cancel building it

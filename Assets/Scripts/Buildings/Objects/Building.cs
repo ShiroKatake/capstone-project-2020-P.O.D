@@ -39,6 +39,9 @@ public class Building : CollisionListener
     [SerializeField] private float smallBoingMultiplier;
     [SerializeField] private float largeBoingMultiplier;
 
+    [Header("Offsets of Cliff Detection Raycasts from Position")]
+    [SerializeField] private List<Vector3> cliffRaycastOffsets;
+
     [Header("Offsets of Foundations from Position")]
     [SerializeField] private List<Vector3> buildingFoundationOffsets;
 
@@ -69,6 +72,7 @@ public class Building : CollisionListener
     private bool validPlacement = true;
     [SerializeField] private List<Collider> otherColliders;
     Vector3 normalScale;
+    LayerMask groundLayerMask;
 
     //Other
     [SerializeField] private bool active = false;
@@ -226,6 +230,7 @@ public class Building : CollisionListener
         otherColliders = new List<Collider>();
         normalScale = transform.localScale;
         normalBuildTime = buildTime;
+        groundLayerMask = LayerMask.GetMask("Ground");
 
         foreach (CollisionReporter c in collisionReporters)
         {
@@ -330,11 +335,11 @@ public class Building : CollisionListener
         {
             if (!placed)
             {
+                CheckInPit();
                 CheckColliding();
                 CheckOnCliff();
-                CheckInPit();
 
-                validPlacement = !colliding && !onCliff && !inPit;
+                validPlacement = !inPit && !colliding && !onCliff;
 
                 if (validPlacement)
                 {
@@ -372,9 +377,18 @@ public class Building : CollisionListener
     }
 
     /// <summary>
+    /// Checks if this building is currently in a pit.
+    /// </summary>
+    private bool CheckInPit()
+    {
+        inPit = transform.position.y < -0.1f;
+        return inPit;
+    }
+
+    /// <summary>
     /// Verifies if this building should be considered to be colliding with another object.
     /// </summary>
-    private void CheckColliding()
+    private bool CheckColliding()
     {
         //Weird quirk of destroying one object and then instantating another and moving it to the same position: it triggers boths' OnTriggerEnter(),
         //even though one doesn't exist, and then the other doesn't have OnTriggerExit() triggered in the next frame. This checks for the existence of
@@ -384,7 +398,6 @@ public class Building : CollisionListener
             if (otherColliders.Count == 0)
             {
                 colliding = false;
-                //Debug.Log($"{this}.CollisionUpdate(), otherColliders.Count == 0");
             }
             else
             {
@@ -401,7 +414,6 @@ public class Building : CollisionListener
                     else
                     {
                         colliding = true;
-                        //Debug.Log($"{this}.CollisionUpdate(), otherColliders.Count != 0, detected {otherColliders[i]}");
                         break;
                     }
                 }
@@ -412,18 +424,31 @@ public class Building : CollisionListener
     /// <summary>
     /// Verifies if this building is extending over a cliff edge.
     /// </summary>
-    private void CheckOnCliff()
+    private bool CheckOnCliff()
     {
+        RaycastHit hit;
+        float maxDistance = 0.18f;
         onCliff = false;
-        //TODO: implement method for cliff edge detection 
-    }
 
-    /// <summary>
-    /// Checks if this building is currently in a pit.
-    /// </summary>
-    private void CheckInPit()
-    {
-        inPit = transform.position.y < -0.1f;
+        foreach (Vector3 offset in cliffRaycastOffsets)
+        {
+            Vector3 raycastPos = transform.position + offset;
+
+            if (Physics.Raycast(raycastPos, Vector3.down, out hit, 20, groundLayerMask))
+            {
+                if (hit.distance > maxDistance)
+                {
+                    Debug.Log($"Building.CheckOnCliff() raycasted successfully from {raycastPos}, and hit {hit.point} at a distance of {hit.distance}, exceeding the max acceptable distance of {maxDistance}. Therefore, {this} is overlapping a cliff edge.");
+                    onCliff = true;
+                    break;
+                }
+            }
+            else
+            {
+                Debug.LogError($"Building.CheckOnCliff() raycasted from offset position {raycastPos} and failed");
+                onCliff = true;
+            }
+        }
     }
 
     /// <summary>
