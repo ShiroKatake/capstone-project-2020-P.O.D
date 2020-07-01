@@ -267,7 +267,8 @@ public class Alien : MonoBehaviour, IMessenger
         if (Vector3.Distance(transform.position, PositionAtSameHeight(target.position)) > attackRange + targetSize.Radius)
         {
             RaycastHit hit;
-            AudioManager.Instance.PlaySound(AudioManager.ESound.Alien_Moves, this.transform.position);
+            //AudioManager.Instance.PlaySound(AudioManager.ESound.Alien_Moves, this.transform.position);
+            AudioManager.Instance.PlaySound(AudioManager.ESound.Alien_Moves, this.gameObject);
             float movement = speed * Time.fixedDeltaTime;
             
 

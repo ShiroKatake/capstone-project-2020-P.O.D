@@ -134,6 +134,36 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    public void PlaySound(ESound sound, GameObject obj){
+        if (CanPlaySound(sound)){
+            //GameObject soundGameObject = new GameObject("Sound");
+            //soundGameObject.transform.position = obj.transform.position;
+            bool tmp = true;
+            AudioSource[] sources = obj.GetComponents<AudioSource>();
+            foreach(AudioSource source in sources){
+                if (source.clip == GetAudio(sound).Clip){
+                    tmp = false;
+                    break;
+                }
+            }
+            if (tmp) {
+                AudioSource audioSource = obj.AddComponent<AudioSource>();
+                SoundClip s = GetAudio(sound);
+                audioSource.clip = s.Clip;
+                audioSource.volume = s.Volume;
+                audioSource.pitch = s.Pitch;
+                audioSource.loop = s.Loop;
+            
+                audioSource.Play();
+            }
+            /*
+            if (!audioSource.loop){
+                UnityEngine.Object.Destroy(soundGameObject, audioSource.clip.length);
+            }
+            */
+        }
+    }
+
 
     public void PlaySound(ESound sound){
         if (CanPlaySound(sound)){
