@@ -64,6 +64,8 @@ public class Building : CollisionListener
     //Positioning
     //private Dictionary<string, Vector3> offsets;
     private bool colliding = false;
+    private bool onCliff = false;
+    private bool inPit = false;
     private bool validPlacement = true;
     [SerializeField] private List<Collider> otherColliders;
     Vector3 normalScale;
@@ -324,17 +326,15 @@ public class Building : CollisionListener
     /// <returns>Is this building colliding with something?</returns>
     public bool IsPlacementValid()
     {
-        //DONE: turn into checking if the placement is valid
-        //DONE: split collision detection into own method and call it here.
-        //TODO: add method for cliff edge detection and call it here.
-        //TODO: factor both into determining positioning validity, and then change colour in this method from there.
         if (active)
         {
             if (!placed)
             {
-                VerifyColliding();
+                CheckColliding();
+                CheckOnCliff();
+                CheckInPit();
 
-                validPlacement = !colliding;
+                validPlacement = !colliding && !onCliff && !inPit;
 
                 if (validPlacement)
                 {
@@ -374,7 +374,7 @@ public class Building : CollisionListener
     /// <summary>
     /// Verifies if this building should be considered to be colliding with another object.
     /// </summary>
-    private void VerifyColliding()
+    private void CheckColliding()
     {
         //Weird quirk of destroying one object and then instantating another and moving it to the same position: it triggers boths' OnTriggerEnter(),
         //even though one doesn't exist, and then the other doesn't have OnTriggerExit() triggered in the next frame. This checks for the existence of
@@ -410,6 +410,23 @@ public class Building : CollisionListener
     }
 
     /// <summary>
+    /// Verifies if this building is extending over a cliff edge.
+    /// </summary>
+    private void CheckOnCliff()
+    {
+        onCliff = false;
+        //TODO: implement method for cliff edge detection 
+    }
+
+    /// <summary>
+    /// Checks if this building is currently in a pit.
+    /// </summary>
+    private void CheckInPit()
+    {
+        inPit = transform.position.y < -0.1f;
+    }
+
+    /// <summary>
     /// Places the building, using up the appropriate resources, positioning and solidifying it, and triggering Build().
     /// </summary>
     /// <param name="position">Where the building is to be placed.</param>
@@ -423,14 +440,6 @@ public class Building : CollisionListener
 
         SetCollidersEnabled("Placement", false);
         SetCollidersEnabled("Body", true);
-
-        //foreach (CollisionReporter r in collisionReporters)
-        //{
-        //    r.Rigidbody.isKinematic = true;
-        //    r.SetCollidersIsTrigger(false);
-        //    r.ReportOnTriggerEnter = false;
-        //    r.ReportOnTriggerExit = false;
-        //}
 
         foreach (RendererMaterialSet r in rendererMaterialSets)
         {

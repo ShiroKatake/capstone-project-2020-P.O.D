@@ -26,6 +26,7 @@ public class BuildingSpawningController : MonoBehaviour
     private bool spawnBuilding;
     private bool placeBuilding;
     private bool cancelBuilding;
+    private LayerMask groundLayerMask;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -63,6 +64,7 @@ public class BuildingSpawningController : MonoBehaviour
         placeBuilding = false;
         cancelBuilding = false;
         selectedBuildingType = EBuilding.FusionReactor;
+        groundLayerMask = LayerMask.GetMask("Ground");
     }
 
     /// <summary>
@@ -181,6 +183,8 @@ public class BuildingSpawningController : MonoBehaviour
             }
 
             bool placementValid = heldBuilding.IsPlacementValid();
+            //TODO: put minerals on different layer and adjust code to include or exclude them from layer masks as is appropriate for whatever's doing a raycast.
+            //TODO: check if all the methods below should be asking for "radius" or "diameter"
 
             //Place it or cancel building it
             if (placeBuilding && ResourceController.Instance.Ore >= heldBuilding.OreCost && placementValid && MapController.Instance.PositionAvailableForBuilding(heldBuilding))
@@ -188,7 +192,7 @@ public class BuildingSpawningController : MonoBehaviour
                 Vector3 spawnPos = heldBuilding.transform.position;
                 spawnPos.y = 0.02f;
                 PipeManager.Instance.RegisterPipeBuilding(spawnPos);
-                spawnPos.y = 0.5f;
+                spawnPos.y = GetStandardisedPlacementHeight(spawnPos, true);
                 heldBuilding.Place(spawnPos);    
 
                 heldBuilding = null;
@@ -229,17 +233,16 @@ public class BuildingSpawningController : MonoBehaviour
     /// Gets the position of the mouse in the scene based on its on-screen position, and uses that and the building's size to determine the building's position.
     /// </summary>
     /// <param name="backup">The value to return if the mouse is off the screen or something else fails.</param>
-    /// <param name="xSize">The building's size along the x-axis (Building.XSize).</param>
-    /// <param name="zSize">The building's size along the z-axis (Building.ZSize).</param>
+    /// <param name="radius">The building's radius.</param>
     /// <returns>Snapped-to-grid building position.</returns>
-    private Vector3 MousePositionToBuildingPosition(Vector3 backup, int radius)//int xSize, int zSize)
+    private Vector3 MousePositionToBuildingPosition(Vector3 backup, int radius)
     {
         RaycastHit hit;
         Ray ray = camera.ScreenPointToRay(Input.mousePosition);
 
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("Ground")))
+        if (Physics.Raycast(ray, out hit, 200, groundLayerMask))
         {
-            return SnapBuildingToGrid(hit.point, radius);// xSize, zSize);
+            return SnapBuildingToGrid(hit.point, radius);
         }
 
         return backup;
@@ -248,10 +251,9 @@ public class BuildingSpawningController : MonoBehaviour
     /// <summary>
     /// Gets the position of the building based on the player's position and the offset according to the right analog stick's movement input, while keeping it within the player's field of view.
     /// </summary>
-    /// <param name="xSize">The building's size along the x-axis (Building.XSize).</param>
-    /// <param name="zSize">The building's size along the z-axis (Building.ZSize).</param>
+    /// <param name="radius">The building's radius.</param>
     /// <returns>Snapped-to-grid building position.</returns>
-    private Vector3 RawBuildingPositionToBuildingPosition(int radius)//int xSize, int zSize)
+    private Vector3 RawBuildingPositionToBuildingPosition(int radius)
     {
         Vector3 worldPos = transform.position;
         Vector3 newOffset = rawBuildingMovement * PlayerMovementController.Instance.MovementSpeed * Time.deltaTime;
@@ -270,14 +272,60 @@ public class BuildingSpawningController : MonoBehaviour
     /// Snaps the building's position to the grid of integer positions by rounding the X and Z values, and adjusting depending on the building's dimensions.
     /// </summary>
     /// <param name="pos">The position to be snapped-to-grid from.</param>
-    /// <param name="xSize">The building's size along the x-axis (Building.XSize).</param>
-    /// <param name="zSize">The building's size along the z-axis (Building.ZSize).</param>
+    /// <param name="radius">The building's "radius".</param>
     /// <returns>Snapped-to-grid building position.</returns>
     private Vector3 SnapBuildingToGrid(Vector3 pos, int radius)//int xSize, int zSize)
     {
         pos.x = Mathf.Round(pos.x) + (radius == 2 ? 0.5f : 0);//(xSize == 2 ? 0.5f : 0);
-        pos.y = 0.67f;
         pos.z = Mathf.Round(pos.z) + (radius == 2 ? 0.5f : 0);//(zSize == 2 ? 0.5f : 0);
+        pos.y = GetStandardisedPlacementHeight(pos, false);      
         return pos;
+    }
+
+    /// <summary>
+    /// Snaps the y component of the position to the height of the proper area of the terrain.
+    /// </summary>
+    /// <param name="pos">The building's un-snapped position.</param>
+    /// <param name="placed">Has the building been placed.</param>
+    /// <returns>The terrain-snapped y component of the building's position.</returns>
+    private float GetStandardisedPlacementHeight(Vector3 pos, bool placed)
+    {
+        float result = 3;
+        float errorMargin = 0.01f;
+        Vector3 raycastPos = new Vector3(pos.x, 3, pos.z);
+        RaycastHit hit;
+
+        if (Physics.Raycast(raycastPos, Vector3.down, out hit, 20, groundLayerMask))
+        {
+            //Debug.Log($"BuildingSpawningController.GetStandardisedPlacementHeight() raycast from {raycastPos} hit {hit.collider} at {hit.point}");
+
+            if (hit.point.y >= 2.5f - errorMargin)
+            {
+                result = 2.5f;
+            }
+            else if (hit.point.y >= -errorMargin)
+            {
+                result = 0;
+            }
+            else if (hit.point.y >= -2.5f - errorMargin)
+            {
+                result = -2.5f;
+            }
+            else
+            {
+                Debug.LogError($"{this}.SnapBuildingToGrid() cannot account for a screen-to-ground raycast of height-snapped position {raycastPos}. RaycastHit.point is {hit.point}");
+            }
+        }
+        else
+        {
+            Debug.LogError($"{this}.SnapBuildingToGrid() cannot account for a screen-to-ground raycast of non height-snapped hit position {pos}");
+        }
+
+        if (!placed)
+        {
+            result += 0.67f;
+        }
+
+        return result;
     }
 }
