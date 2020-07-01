@@ -25,6 +25,7 @@ public class MapController : MonoBehaviour
     private bool[,] availableBuildingPositions;
     private bool[,] alienExclusionArea;
     private bool[,] availableAlienPositions;
+    private LayerMask groundLayerMask;
 
     [SerializeField] private List<Vector3> alienSpawnablePositions;
 
@@ -55,6 +56,7 @@ public class MapController : MonoBehaviour
         availableAlienPositions = new bool[xMax + 1, zMax + 1];
         alienExclusionArea = new bool[xMax + 1, zMax + 1];
         alienSpawnablePositions = new List<Vector3>();
+        groundLayerMask = LayerMask.GetMask("Ground");
     }
 
     /// <summary>
@@ -162,7 +164,7 @@ public class MapController : MonoBehaviour
                     Vector3 testPos = new Vector3(position.x + i, position.y, position.z + j);
                     //Debug.Log($"TestPos {testPos}");  
 
-                    if (testPos.x < 0 || testPos.x > xMax || testPos.z < 0 || testPos.z > zMax || !Physics.Raycast(testPos, Vector3.down, out hit, 25, LayerMask.GetMask("Ground")))
+                    if (testPos.x < 0 || testPos.x > xMax || testPos.z < 0 || testPos.z > zMax || !Physics.Raycast(testPos, Vector3.down, out hit, 25, groundLayerMask))
                     {
                         //Debug.Log($"Out of bounds or failed to hit on raycast");
                         return false;

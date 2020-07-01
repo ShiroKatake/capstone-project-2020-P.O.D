@@ -12,6 +12,7 @@ public class Mineral : MonoBehaviour
 
     //Serialized Fields----------------------------------------------------------------------------
 
+    [SerializeField] private bool placed;
     [SerializeField] private int count;
     [SerializeField] private float miningCooldown;
     [SerializeField] private float afkTimeout;
@@ -66,6 +67,31 @@ public class Mineral : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Whether or not the mineral has been placed in the scene, or is pooled in the object pool.
+    /// </summary>
+    public bool Placed
+    {
+        get
+        {
+            return placed;
+        }
+
+        set
+        {
+            placed = value;
+
+            if (placed)
+            {
+                MapController.Instance.RegisterMineral(this);
+            }
+            else
+            {
+                MapController.Instance.DeRegisterMineral(this);
+            }
+        }
+    }
+
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
     private void Awake()
@@ -73,6 +99,11 @@ public class Mineral : MonoBehaviour
         colliders = new List<Collider>(GetComponentsInChildren<Collider>());
         initialCount = count;
         rotationUpdate = new Vector3(0, rotationSpeed, 0);
+
+        if (placed)
+        {
+            MapController.Instance.RegisterMineral(this);
+        }
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------

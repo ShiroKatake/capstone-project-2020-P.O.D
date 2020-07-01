@@ -37,6 +37,7 @@ public class AlienController : MonoBehaviour
     private List<Alien> aliens;
     private float timeOfLastDeath;
     private Dictionary<int, List<Vector3>> swarmOffsets;
+    private LayerMask groundLayerMask;
 
     //Penalty Incrementation
     private int spawnCountPenalty;
@@ -78,6 +79,7 @@ public class AlienController : MonoBehaviour
         timeOfLastDeath = respawnDelay * -1;
         timeOfLastPenalty = penaltyCooldown * -1;
         spawnCountPenalty = 0;
+        groundLayerMask = LayerMask.GetMask("Ground");
 
         //Setting up position offsets that can be randomly selected from for cluster spawning 
         swarmOffsets = new Dictionary<int, List<Vector3>>();
@@ -181,7 +183,7 @@ public class AlienController : MonoBehaviour
                 if (MapController.Instance.PositionAvailableForSpawning(spawnPos, true))
                 {
                     RaycastHit hit;
-                    Physics.Raycast(spawnPos, Vector3.down, out hit, 25, LayerMask.GetMask("Ground"));
+                    Physics.Raycast(spawnPos, Vector3.down, out hit, 25, groundLayerMask);
                     Alien alien = AlienFactory.Instance.GetAlien(new Vector3(spawnPos.x, hit.point.y/* + 0.1f*/, spawnPos.z));
                     alien.Setup(IdGenerator.Instance.GetNextId());
                     aliens.Add(alien);
