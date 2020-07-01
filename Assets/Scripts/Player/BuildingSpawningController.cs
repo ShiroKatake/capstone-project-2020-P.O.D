@@ -118,11 +118,6 @@ public class BuildingSpawningController : MonoBehaviour
         if (!spawnBuilding)
         {
             spawnBuilding = InputController.Instance.ButtonPressed("SpawnBuilding");
-
-            //if (spawnBuilding)
-            //{
-            //    Debug.Log("BuildingSpawningController.GetInput.spawnBuilding has been set to true");
-            //}
         }
         else
         {
@@ -145,11 +140,11 @@ public class BuildingSpawningController : MonoBehaviour
 
                 if (InputController.Instance.Gamepad == EGamepad.MouseAndKeyboard)
                 {
-                    heldBuilding.transform.position = MousePositionToBuildingPosition(transform.position, heldBuilding.Size.DiameterRoundedUp);// heldBuilding.XSize, heldBuilding.ZSize);
+                    heldBuilding.transform.position = MousePositionToBuildingPosition(transform.position, heldBuilding.Size.DiameterRoundedUp);
                 }
                 else
                 {
-                    heldBuilding.transform.position = RawBuildingPositionToBuildingPosition(heldBuilding.Size.DiameterRoundedUp);// heldBuilding.XSize, heldBuilding.ZSize);
+                    heldBuilding.transform.position = RawBuildingPositionToBuildingPosition(heldBuilding.Size.DiameterRoundedUp);
                 }
             }
             //Instantiate the appropriate building and postion it properly, replacing the old one.
@@ -159,11 +154,11 @@ public class BuildingSpawningController : MonoBehaviour
 
                 if (InputController.Instance.Gamepad == EGamepad.MouseAndKeyboard)
                 {
-                    pos = MousePositionToBuildingPosition(heldBuilding.transform.position, heldBuilding.Size.DiameterRoundedUp);// heldBuilding.XSize, heldBuilding.ZSize);
+                    pos = MousePositionToBuildingPosition(heldBuilding.transform.position, heldBuilding.Size.DiameterRoundedUp);
                 }
                 else
                 {
-                    pos = RawBuildingPositionToBuildingPosition(heldBuilding.Size.DiameterRoundedUp);// heldBuilding.XSize, heldBuilding.ZSize);
+                    pos = RawBuildingPositionToBuildingPosition(heldBuilding.Size.DiameterRoundedUp);
                 }
 
                 BuildingFactory.Instance.DestroyBuilding(heldBuilding, false, false);
@@ -174,11 +169,11 @@ public class BuildingSpawningController : MonoBehaviour
             {
                 if (InputController.Instance.Gamepad == EGamepad.MouseAndKeyboard)
                 {
-                    heldBuilding.transform.position = MousePositionToBuildingPosition(heldBuilding.transform.position, heldBuilding.Size.DiameterRoundedUp);// heldBuilding.XSize, heldBuilding.ZSize);
+                    heldBuilding.transform.position = MousePositionToBuildingPosition(heldBuilding.transform.position, heldBuilding.Size.DiameterRoundedUp);
                 }
                 else
                 {
-                    heldBuilding.transform.position = RawBuildingPositionToBuildingPosition(heldBuilding.Size.DiameterRoundedUp);// heldBuilding.XSize, heldBuilding.ZSize);
+                    heldBuilding.transform.position = RawBuildingPositionToBuildingPosition(heldBuilding.Size.DiameterRoundedUp);
                 }                
             }
 
@@ -265,7 +260,7 @@ public class BuildingSpawningController : MonoBehaviour
             worldPos = newWorldPos;
         }
 
-        return SnapBuildingToGrid(worldPos, radius);// xSize, zSize);
+        return SnapBuildingToGrid(worldPos, radius);
     }
 
     /// <summary>
@@ -274,10 +269,10 @@ public class BuildingSpawningController : MonoBehaviour
     /// <param name="pos">The position to be snapped-to-grid from.</param>
     /// <param name="radius">The building's "radius".</param>
     /// <returns>Snapped-to-grid building position.</returns>
-    private Vector3 SnapBuildingToGrid(Vector3 pos, int radius)//int xSize, int zSize)
+    private Vector3 SnapBuildingToGrid(Vector3 pos, int radius)
     {
-        pos.x = Mathf.Round(pos.x) + (radius == 2 ? 0.5f : 0);//(xSize == 2 ? 0.5f : 0);
-        pos.z = Mathf.Round(pos.z) + (radius == 2 ? 0.5f : 0);//(zSize == 2 ? 0.5f : 0);
+        pos.x = Mathf.Round(pos.x) + (radius == 2 ? 0.5f : 0);
+        pos.z = Mathf.Round(pos.z) + (radius == 2 ? 0.5f : 0);
         pos.y = GetStandardisedPlacementHeight(pos, false);      
         return pos;
     }
@@ -321,11 +316,7 @@ public class BuildingSpawningController : MonoBehaviour
             Debug.LogError($"{this}.SnapBuildingToGrid() cannot account for a screen-to-ground raycast of non height-snapped hit position {pos}");
         }
 
-        if (!placed)
-        {
-            result += 0.67f;
-        }
-
+        result += placed ? 0.5f : 0.67f;
         return result;
     }
 }
