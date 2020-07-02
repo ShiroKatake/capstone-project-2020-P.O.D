@@ -149,7 +149,7 @@ public class Projectile : MonoBehaviour
             Alien a = collidedWith.gameObject.GetComponent<Alien>();
             a.ShotBy(owner.name, owner.GetComponentInChildren<Collider>().transform);
             a.Health.Value -= damage;
-            AudioManager.Instance.PlaySound(AudioManager.ESound.Alien_Takes_Damage, this.transform.position);
+            AudioManager.Instance.PlaySound(AudioManager.ESound.Alien_Takes_Damage, this.gameObject);
             //Debug.Log($"{gameObject.name} reduced {a.gameObject.name}'s health to {a.Health.Value}; {a.gameObject.name}.ShotBy is now {owner.name}");
         }
 
