@@ -204,7 +204,7 @@ public class AudioManager : MonoBehaviour
 
 
     public void PlaySound(ESound sound){
-        if (CanPlaySound(sound)){
+        //if (CanPlaySound(sound)){
             if (!audioSourceReferenceDictionary.ContainsKey(sound)){
                 //oneShotGameObject = this.gameObject.AddComponent<AudioSource>();//new GameObject("Sound");
                 //oneShotAudioSource = this.gameObject.AddComponent<AudioSource>();
@@ -219,6 +219,7 @@ public class AudioManager : MonoBehaviour
             }
             //oneShotAudioSource.PlayOneShot(GetAudio(sound).Clip);
         audioSourceReferenceDictionary[sound].PlayOneShot(GetAudio(sound).Clip);
+        //}
         //}
     }
 
