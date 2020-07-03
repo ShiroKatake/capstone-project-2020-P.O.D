@@ -88,9 +88,9 @@ public class MineralCollectionController : MonoBehaviour
 
                 if (mineral != null)
                 {
-                    int mined = mineral.Mine();
+                    /*int mined = */mineral.Mine();
                     //Debug.Log($"Raycast hit mineral node. Mined {mined} minerals");
-                    ResourceController.Instance.Ore += mined;
+                    //ResourceController.Instance.Ore += mined; (Moved this function to Ore.cs)
                 }
             }
         }
