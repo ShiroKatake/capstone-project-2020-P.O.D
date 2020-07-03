@@ -148,7 +148,7 @@ public class MapController : MonoBehaviour
             //Check if in alien exclusion area
             if (alienExclusionArea[(int)position.x, (int)position.z])
             {
-                Debug.Log($"Can't spawn an alien at {position}, which is within the alien exclusion area.");
+                //Debug.Log($"Can't spawn an alien at {position}, which is within the alien exclusion area.");
                 return false;       
             }
 
@@ -160,22 +160,22 @@ public class MapController : MonoBehaviour
                 for (int j = -1; j <= 1; j++)
                 {
                     Vector3 testPos = new Vector3(position.x + i, position.y, position.z + j);
-                    Debug.Log($"TestPos {testPos}");  
+                    //Debug.Log($"TestPos {testPos}");  
 
                     if (testPos.x < 0 || testPos.x > xMax || testPos.z < 0 || testPos.z > zMax || !Physics.Raycast(testPos, Vector3.down, out hit, 25, LayerMask.GetMask("Ground")))
                     {
-                        Debug.Log($"Out of bounds or failed to hit on raycast");
+                        //Debug.Log($"Out of bounds or failed to hit on raycast");
                         return false;
                     }
                     else
                     {
                         float hitHeight = hit.point.y;
                         float errorMargin = 0.01f;
-                        Debug.Log($"Test modifier ({i}, {j}), adjusted position {position}, raycast down hit at height {hitHeight}, error margin {errorMargin}");
+                        //Debug.Log($"Test modifier ({i}, {j}), adjusted position {position}, raycast down hit at height {hitHeight}, error margin {errorMargin}");
 
                         if ((hitHeight < 0f - errorMargin || hitHeight > 0f + errorMargin) && (hitHeight < 2.5f - errorMargin || hitHeight > 2.5f + errorMargin))
                         {
-                            Debug.Log($"Point.y != 0 or 2.5, therefore pit or cliff, therefore not alien spawnable. Adding to alienExclusionArea.");
+                            //Debug.Log($"Point.y != 0 or 2.5, therefore pit or cliff, therefore not alien spawnable. Adding to alienExclusionArea.");
 
                             for (int k = -1; k <= 1; k++)
                             {

@@ -185,7 +185,7 @@ public class AlienController : MonoBehaviour
                     aliens.Add(AlienFactory.Instance.GetAlien(new Vector3(spawnPos.x, hit.point.y + 0.1f, spawnPos.z)));
                     swarmSize++;
 
-                    Debug.Log($"Spawning at ({spawnPos.x}, {hit.point.y + 0.1f}, {spawnPos.z})");
+                    //Debug.Log($"Spawning at ({spawnPos.x}, {hit.point.y + 0.1f}, {spawnPos.z})");
 
                     int maxLeft = (int)(maxSwarmRadius * offsetMultiplier * -1);
                     int maxRight = Mathf.CeilToInt(maxSwarmRadius * offsetMultiplier);
