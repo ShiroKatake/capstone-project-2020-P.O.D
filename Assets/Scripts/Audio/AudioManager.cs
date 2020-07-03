@@ -182,10 +182,17 @@ public class AudioManager : MonoBehaviour
 
     public void PlaySound(ESound sound){
         if (CanPlaySound(sound)){
-            if (audioSourceReferenceDictionary[sound] == null){
+            if (!audioSourceReferenceDictionary.ContainsKey(sound)){
                 //oneShotGameObject = this.gameObject.AddComponent<AudioSource>();//new GameObject("Sound");
                 //oneShotAudioSource = this.gameObject.AddComponent<AudioSource>();
-                audioSourceReferenceDictionary[sound] = this.gameObject.AddComponent<AudioSource>();
+                //audioSourceReferenceDictionary[sound] = this.gameObject.AddComponent<AudioSource>();
+                SoundClip s = GetAudio(sound);
+                s.Source = this.gameObject.AddComponent<AudioSource>();
+                s.Source.clip = s.Clip;
+                s.Source.volume = s.Volume;
+                s.Source.pitch = s.Pitch;
+                s.Source.loop = s.Loop;
+                audioSourceReferenceDictionary.Add(sound,s.Source);
             }
             //oneShotAudioSource.PlayOneShot(GetAudio(sound).Clip);
             audioSourceReferenceDictionary[sound].PlayOneShot(GetAudio(sound).Clip);
