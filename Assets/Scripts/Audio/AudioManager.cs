@@ -45,6 +45,9 @@ public class AudioManager : MonoBehaviour
 
         [SerializeField] [Range(0f, 1f)] private float volume;
         [SerializeField] [Range(0.3f, 3f)] private float pitch;
+        [SerializeField] [Range(0f, 500f)] private float minDistance;
+        [SerializeField] [Range(0f, 500f)] private float maxDistance;
+
 
         [HideInInspector] private AudioSource source;
 
@@ -54,6 +57,8 @@ public class AudioManager : MonoBehaviour
         public float Volume { get => volume; }
         public float Pitch { get => pitch; }
         public bool Loop { get => loop; }
+        public float MinDistance {get => minDistance;}
+        public float MaxDistance {get => maxDistance;}
         public AudioSource Source { get => source; set => source = value; }
     }
 
@@ -61,6 +66,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private SoundClip[] BackGroundSounds;
 
     private Dictionary<ESound, float> soundTimerDictionary;
+    private Dictionary<ESound, AudioSource> audioSourceReferenceDictionary;
     private GameObject oneShotGameObject;
     private AudioSource oneShotAudioSource;
     private AudioSource currentBackgroundTrack;
@@ -75,6 +81,7 @@ public class AudioManager : MonoBehaviour
             Debug.LogError("There should never be 2 or more Audio Managers.");
         }
         Instance = this;
+        audioSourceReferenceDictionary = new Dictionary<ESound, AudioSource>();
 
         foreach (SoundClip s in BackGroundSounds)
         {
@@ -115,7 +122,8 @@ public class AudioManager : MonoBehaviour
         s.Source.Play();
     }
 
-    public void PlaySound(ESound sound, Vector3 position){
+    // legacy code
+    /*public void PlaySound(ESound sound, Vector3 position){
         if (CanPlaySound(sound)){
             GameObject soundGameObject = new GameObject("Sound");
             soundGameObject.transform.position = position;
@@ -132,18 +140,86 @@ public class AudioManager : MonoBehaviour
                 UnityEngine.Object.Destroy(soundGameObject, audioSource.clip.length);
             }
         }
+    }*/
+
+    public void PlaySound(ESound sound, GameObject obj){
+        if (CanPlaySound(sound)){
+            //GameObject soundGameObject = new GameObject("Sound");
+            //soundGameObject.transform.position = obj.transform.position;
+            bool tmp = true;
+            AudioSource[] sources = obj.GetComponents<AudioSource>();
+            foreach(AudioSource source in sources){
+                oneShotAudioSource = source;
+                if (source.clip == GetAudio(sound).Clip){
+                    tmp = false;
+                    break;
+                }
+            }
+            if (tmp) {
+                AudioSource audioSource = obj.AddComponent<AudioSource>();
+                SoundClip s = GetAudio(sound);
+                audioSource.clip = s.Clip;
+                audioSource.volume = s.Volume;
+                audioSource.pitch = s.Pitch;
+                audioSource.loop = s.Loop;
+                audioSource.spatialBlend = 1f;
+                audioSource.rolloffMode = AudioRolloffMode.Linear;
+                audioSource.minDistance = s.MinDistance;
+                audioSource.maxDistance = s.MaxDistance;
+            
+                audioSource.Play();
+            } else {
+                oneShotAudioSource.Play();
+            }
+            /*
+            if (!audioSource.loop){
+                UnityEngine.Object.Destroy(soundGameObject, audioSource.clip.length);
+            }
+            */
+        }
     }
 
 
     public void PlaySound(ESound sound){
         if (CanPlaySound(sound)){
-            if (oneShotGameObject == null){
-                oneShotGameObject = new GameObject("Sound");
-                oneShotAudioSource = oneShotGameObject.AddComponent<AudioSource>();
+            if (audioSourceReferenceDictionary[sound] == null){
+                //oneShotGameObject = this.gameObject.AddComponent<AudioSource>();//new GameObject("Sound");
+                //oneShotAudioSource = this.gameObject.AddComponent<AudioSource>();
+                audioSourceReferenceDictionary[sound] = this.gameObject.AddComponent<AudioSource>();
             }
-            oneShotAudioSource.PlayOneShot(GetAudio(sound).Clip);
+            //oneShotAudioSource.PlayOneShot(GetAudio(sound).Clip);
+            audioSourceReferenceDictionary[sound].PlayOneShot(GetAudio(sound).Clip);
         }
     }
+
+    public void StopSound(ESound sound){
+        AudioSource[] sources = this.gameObject.GetComponents<AudioSource>();
+        if (sources.Length != 0){
+            foreach(AudioSource source in sources) {
+                if (source.clip == GetAudio(sound).Clip){
+                    source.Stop();
+                    break;
+                }
+            }
+        } else {
+            Debug.LogError("The object has no audio sources!");
+        }
+    }
+
+    public void StopSound(ESound sound, GameObject obj){
+        AudioSource[] sources = obj.GetComponents<AudioSource>();
+        if (sources.Length != 0){
+            foreach(AudioSource source in sources) {
+                if (source.clip == GetAudio(sound).Clip){
+                    source.Stop();
+                    break;
+                }
+            }
+        } else {
+            Debug.LogError("The object has no audio sources!");
+        }
+    }
+
 
     private SoundClip GetAudio(ESound sound){
         SoundClip s = Array.Find(OneShotSounds, SoundClip => SoundClip.Sound == sound);
@@ -247,6 +323,7 @@ public class AudioManager : MonoBehaviour
         volumeControlTimer += Time.deltaTime;
         currentBackgroundTrack.volume = Mathf.Lerp(0f, volumeControlBackground, volumeControlTimer);
     }
+
 
 }
 

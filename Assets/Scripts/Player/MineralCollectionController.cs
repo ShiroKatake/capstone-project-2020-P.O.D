@@ -89,7 +89,7 @@ public class MineralCollectionController : MonoBehaviour
                 if (mineral != null)
                 {
                     int mined = mineral.Mine();
-                    AudioManager.Instance.PlaySound(AudioManager.ESound.Mining, this.transform.position); //Currently not working, collision with 
+                    AudioManager.Instance.PlaySound(AudioManager.ESound.Mining, this.gameObject); //Currently not working, collision with 
                     //Debug.Log($"Raycast hit mineral node. Mined {mined} minerals");
                     ResourceController.Instance.Ore += mined;
                 }

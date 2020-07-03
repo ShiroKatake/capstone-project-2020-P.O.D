@@ -157,7 +157,7 @@ public class Alien : MonoBehaviour, IMessenger
     {
         if (health.IsDead())
         {
-            AudioManager.Instance.PlaySound(AudioManager.ESound.Alien_Dies, this.transform.position);
+            AudioManager.Instance.PlaySound(AudioManager.ESound.Alien_Dies, this.gameObject);
             AlienFactory.Instance.DestroyAlien(this);
         }
     }
@@ -267,6 +267,8 @@ public class Alien : MonoBehaviour, IMessenger
         if (Vector3.Distance(transform.position, PositionAtSameHeight(target.position)) > attackRange + targetSize.Radius)
         {
             RaycastHit hit;
+            //AudioManager.Instance.PlaySound(AudioManager.ESound.Alien_Moves, this.transform.position);
+            AudioManager.Instance.PlaySound(AudioManager.ESound.Alien_Moves, this.gameObject);
             float movement = speed * Time.fixedDeltaTime;
             
 
@@ -316,7 +318,7 @@ public class Alien : MonoBehaviour, IMessenger
         {
             timeOfLastAttack = Time.time;
             targetHealth.Value -= damage;
-            AudioManager.Instance.PlaySound(AudioManager.ESound.Damage_To_Building, this.transform.position); //need to add a check to see what it is attacking if we want to diversify sound portfolio, non essencial
+            AudioManager.Instance.PlaySound(AudioManager.ESound.Damage_To_Building, this.gameObject); //need to add a check to see what it is attacking if we want to diversify sound portfolio, non essencial
             //TODO: trigger attack animation
         }
     }
