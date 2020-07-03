@@ -179,7 +179,6 @@ public class PlayerMovementController : MonoBehaviour
     /// </summary>
     private void Move()
     {
-        //NavMeshHit navHit;
         RaycastHit rayHit;
         Vector3 oldPos = transform.position;
         float errorMargin = 0.01f;
@@ -192,101 +191,113 @@ public class PlayerMovementController : MonoBehaviour
 
         if (Physics.Raycast(transform.position, Vector3.down, out rayHit, 20, groundLayerMask))
         {
-            //RaycastHit cliffRayHit;
-            //Debug.Log($"POD hover height is {rayHit.distance}, default is {defaultHoverHeight}");
-
-            //if (Physics.Raycast(transform.position, Vector3.down, out rayHit, 20, groundLayerMask))
-            //{
-                
-            //}
-            //else
-            //{
-            //    Debug.LogError($"{this}.PlayerMovementController.Move() could not raycast to the ground from position {transform.position}");
-            //}
-
-            //if (NavMesh.SamplePosition(transform.position, out navHit, 4, NavMesh.AllAreas))
-            //{
-            //    Debug.Log($"NavMesh.SamplePosition() from {transform.position} hit mesh at {navHit.position}"); 
-
-            //    if (transform.position.x != navHit.position.x && transform.position.z != navHit.position.z)
-            //    {
-            //        Debug.LogError($"NavHit position {navHit.position} is not in line with {transform.position}. Cancelling movement to that position.");
-            //        transform.position = oldPos;
-            //    }
-            //}
-            //else
-            //{
-            //    Debug.LogError($"Position {transform.position} is not on the nav mesh. Cancelling movement to that position.");
-            //    transform.position = oldPos;
-            //}
-
-            //Toggle gravity if something has pushed the player up above hoverHeight
-            if (rigidbody.useGravity)
-            {
-                if (rayHit.distance <= defaultHoverHeight - errorMargin)
-                {
-                    transform.position = new Vector3(transform.position.x, defaultHoverHeight, transform.position.z);
-                    rigidbody.useGravity = false;
-                    rigidbody.drag = 100;
-                    Debug.Log("POD below hover height");
-                }
-                else
-                {
-                    Debug.Log("POD above or at hover height");
-                }
-            }
-            else
-            {
-                if (rayHit.distance > defaultHoverHeight + errorMargin)
-                {
-                    rigidbody.useGravity = true;
-                    rigidbody.drag = 0;
-                    rigidbody.velocity = Vector3.zero;
-                    Debug.Log("POD above hover height");
-                }
-                else
-                {
-                    Debug.Log("POD below  or at hover height");
-                }
-            }
+            Debug.Log($"POD hover height is {rayHit.distance}, default is {defaultHoverHeight}");
+            CheckForCliff(rayHit, errorMargin, oldPos);
+            CheckHoverHeight(rayHit, errorMargin);
         }
         else
         {
             Debug.LogError($"{this}.PlayerMovementController.Move() could not raycast to the ground from position {transform.position}");
         }
 
-        cameraTarget.transform.position = transform.position;
+        cameraTarget.transform.position = transform.position;  
+    }
 
-        //AudioManager.Instance.PlaySound(AudioManager.Sound.Player_Hover, this.transform.position);
+    /// <summary>
+    /// Checks if POD's current movement would put it too close to a cliff, and cancels the movement if it would.
+    /// </summary>
+    /// <param name="rayHit">The RaycastHit from POD's position to gauge distance to the ground and the normal of the hit surface.</param>
+    /// <param name="errorMargin">The margin of error for A == B float comparisons.</param>
+    /// <param name="oldPos">POD's position before attempting to move.</param>
+    private void CheckForCliff(RaycastHit rayHit, float errorMargin, Vector3 oldPos)
+    {
+        bool moveOkay = true;
+        RaycastHit cliffRayHit;
 
-        //if (movement != Vector3.zero)
-        //{
-        //    drone.transform.Translate(movement * movementSpeed * Time.deltaTime, Space.World);
-        //    cameraTarget.transform.position = drone.transform.position;
-        //}
+        foreach (Vector3 offset in cliffTestOffsets)
+        {
+            if (Physics.Raycast(transform.position + offset, Vector3.down, out cliffRayHit, 20, groundLayerMask))
+            {
+                if (cliffRayHit.point.y < rayHit.point.y - errorMargin || cliffRayHit.point.y > rayHit.point.y + errorMargin)   //Confirms ray hit heights differ; rules out OK: level to level - normal 1.0 to 1.0 and heights match
+                {
+                    Debug.Log($"POD at {rayHit.point} detecting cliff or ramp at {cliffRayHit.point}. POD ground normal: {rayHit.normal}, cliff/ramp normal: {cliffRayHit.normal}");
 
-        ////Toggle gravity if something has pushed the player up above hoverHeight
-        //if (rigidbody.useGravity)
-        //{
-        //    if (drone.position.y <= hoverHeight)
-        //    {
-        //        drone.position = new Vector3(drone.position.x, hoverHeight, drone.position.z);
-        //        rigidbody.useGravity = false;
-        //        rigidbody.drag = 100;
-        //    }
-        //}
-        //else
-        //{
-        //    if (drone.position.y > hoverHeight)   //TODO: account for terrain pushing the player up
-        //    {
-        //        rigidbody.useGravity = true;
-        //        rigidbody.drag = 0;
-        //        rigidbody.velocity = Vector3.zero;
-        //    }
-        //}
+                    if (cliffRayHit.normal.y < rayHit.normal.y - errorMargin || cliffRayHit.normal.y > rayHit.normal.y + errorMargin)     //Confirms normals differ
+                    {
+                        ///OK:  - Level to ramp  - normal 1.0 to 0.9
+                        ///OK:  - Ramp to level  - normal 0.9 to 1.0
+                        ///NOT: - Level to cliff - normal (0.9 OR 1.0) to !(0.9 OR 1.0)
+                    }
+                    else
+                    {
+                        ///OK:  - Ramp to ramp   - normal 0.9 to 0.9 and heights don't match
+                        ///NOT: - Level to cliff - normal 1.0 to 1.0 but heights don't match
 
-        ////Positioning this line here accounts for the player having been moved by an external force (e.g. pushed by enemies)
-        //cameraTarget.position = drone.position;     
+                        if (rayHit.normal.y >= 1 - errorMargin && rayHit.normal.y <= 1 + errorMargin                  //Confirm ray hit is on level ground
+                            && cliffRayHit.normal.y >= 1 - errorMargin && cliffRayHit.normal.y <= 1 + errorMargin)    //Confirms cliff ray hit is on level ground
+                        {
+                            Debug.Log($"POD and cliff rayhit normal y values within the margin of error ({errorMargin}) of each other and of level ground normal y (1), but the rayhit heights differ beyond the margin of error. Therefore sheer cliff, therefore not moving.");
+                            moveOkay = false;
+                            break;
+                        }
+                        //else if (rayHit.normal.y >= 0.9f - errorMargin && rayHit.normal.y <= 0.9f + errorMargin               //Confirm ray hit is on ramp
+                        //    && cliffRayHit.normal.y >= 0.9f - errorMargin && cliffRayHit.normal.y <= 0.9f + errorMargin)      //Confirm cliff ray hit is on ramp
+                        //{
+                        //    //Ignore
+                        //}
+                    }
+                }
+            }
+            else
+            {
+                Debug.LogError($"{this}.PlayerMovementController.Move(), cliff detection raycasting section, could not raycast to the ground from position {transform.position + offset}");
+                moveOkay = false;
+                break;
+            }
+        }
+
+        if (!moveOkay)
+        {
+            Debug.Log("Move disallowed, returning to original position");
+            transform.position = oldPos;
+        }
+    }
+
+    /// <summary>
+    /// Toggles gravity affecting POD if something has pushed POD up above its default hover height, and shuts it off when POD is back to its normal hover height.
+    /// </summary>
+    /// <param name="rayHit">The RaycastHit from POD's position to gauge distance to the ground.</param>
+    /// <param name="errorMargin">The margin of error for A == B float comparisons.</param>
+    private void CheckHoverHeight(RaycastHit rayHit, float errorMargin)
+    {
+        if (rigidbody.useGravity)
+        {
+            if (rayHit.distance <= defaultHoverHeight - errorMargin)
+            {
+                transform.position = new Vector3(transform.position.x, defaultHoverHeight, transform.position.z);
+                rigidbody.useGravity = false;
+                rigidbody.drag = 100;
+                Debug.Log("POD below hover height");
+            }
+            else
+            {
+                Debug.Log("POD above or at hover height");
+            }
+        }
+        else
+        {
+            if (rayHit.distance > defaultHoverHeight + errorMargin)
+            {
+                rigidbody.useGravity = true;
+                rigidbody.drag = 0;
+                rigidbody.velocity = Vector3.zero;
+                Debug.Log("POD above hover height");
+            }
+            else
+            {
+                Debug.Log("POD below  or at hover height");
+            }
+        }
     }
 
     /// <summary>
