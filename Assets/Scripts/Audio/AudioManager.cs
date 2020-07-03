@@ -254,12 +254,15 @@ public class AudioManager : MonoBehaviour
                 case ESound.Mining:
                     if (soundTimerDictionary.ContainsKey(sound))
                     {
+                        Debug.Log("Has found Mining");
                         if (Time.time == 0f)
                         {
+                            Debug.Log("Is playing Mining");
                             return true;
                         }
                         else
                         {
+                            Debug.Log("Is not playing Mining");
                             return false;
                         }
                     }

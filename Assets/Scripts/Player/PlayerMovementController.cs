@@ -17,6 +17,7 @@ public class PlayerMovementController : MonoBehaviour
     [SerializeField] private Transform cameraTarget;
     [SerializeField] private Transform barrelTip;
     [SerializeField] private Transform barrelMagazine;
+    [SerializeField] private Transform audioListener;
 
     [Header("Player Stats")]
     [SerializeField] private float movementSpeed;
@@ -207,7 +208,8 @@ public class PlayerMovementController : MonoBehaviour
         }
 
         //Positioning this line here accounts for the player having been moved by an external force (e.g. pushed by enemies)
-        cameraTarget.position = drone.position;     
+        cameraTarget.position = drone.position;
+        audioListener.position = drone.position;
     }
 
     /// <summary>
