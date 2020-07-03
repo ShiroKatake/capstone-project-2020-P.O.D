@@ -67,8 +67,6 @@ public class Building : CollisionListener
     //Positioning
     //private Dictionary<string, Vector3> offsets;
     private bool colliding = false;
-    private bool onCliff = false;
-    private bool inPit = false;
     private bool validPlacement = true;
     [SerializeField] private List<Collider> otherColliders;
     Vector3 normalScale;
@@ -335,11 +333,7 @@ public class Building : CollisionListener
         {
             if (!placed)
             {
-                CheckInPit();
-                CheckColliding();
-                CheckOnCliff();
-
-                validPlacement = !inPit && !colliding && !onCliff;
+                validPlacement = !(CheckInPit() || CheckColliding() || CheckOnCliff());
 
                 if (validPlacement)
                 {
@@ -381,8 +375,7 @@ public class Building : CollisionListener
     /// </summary>
     private bool CheckInPit()
     {
-        inPit = transform.position.y < -0.1f;
-        return inPit;
+        return transform.position.y < -0.1f;
     }
 
     /// <summary>
@@ -419,6 +412,8 @@ public class Building : CollisionListener
                 }
             }
         }
+
+        return colliding;
     }
 
     /// <summary>
@@ -427,28 +422,34 @@ public class Building : CollisionListener
     private bool CheckOnCliff()
     {
         RaycastHit hit;
-        float maxDistance = 0.18f;
-        onCliff = false;
+        Vector3 raycastPos;
+        float maxDistance = 0.68f;
 
         foreach (Vector3 offset in cliffRaycastOffsets)
         {
-            Vector3 raycastPos = transform.position + offset;
+            raycastPos = transform.position + offset;
 
-            if (Physics.Raycast(raycastPos, Vector3.down, out hit, 20, groundLayerMask))
+            if (!Physics.Raycast(raycastPos, Vector3.down, out hit, 20, groundLayerMask) || hit.distance > maxDistance)
             {
-                if (hit.distance > maxDistance)
-                {
-                    Debug.Log($"Building.CheckOnCliff() raycasted successfully from {raycastPos}, and hit {hit.point} at a distance of {hit.distance}, exceeding the max acceptable distance of {maxDistance}. Therefore, {this} is overlapping a cliff edge.");
-                    onCliff = true;
-                    break;
-                }
+                return true;
             }
-            else
-            {
-                Debug.LogError($"Building.CheckOnCliff() raycasted from offset position {raycastPos} and failed");
-                onCliff = true;
-            }
+
+            //if (Physics.Raycast(raycastPos, Vector3.down, out hit, 20, groundLayerMask))
+            //{
+            //    if (hit.distance > maxDistance)
+            //    {
+            //        //Debug.Log($"Building.CheckOnCliff() raycasted successfully from {raycastPos}, and hit {hit.point} at a distance of {hit.distance}, exceeding the max acceptable distance of {maxDistance}. Therefore, {this} is overlapping a cliff edge.");
+            //        return true;
+            //    }
+            //}
+            //else
+            //{
+            //    //Debug.Log($"Building.CheckOnCliff() raycasted from offset position {raycastPos} and failed. Therefore, {this} is overlapping a cliff edge or is off the map.");
+            //    return true;
+            //}
         }
+
+        return false;
     }
 
     /// <summary>
