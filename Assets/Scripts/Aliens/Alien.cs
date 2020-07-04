@@ -67,6 +67,11 @@ public class Alien : MonoBehaviour, IMessenger
     /// </summary>
     public Health Health { get => health; }
 
+    /// <summary>
+    /// Alien's NavMeshAgent component.
+    /// </summary>
+    public NavMeshAgent NavMeshAgent { get => navMeshAgent; }
+
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
