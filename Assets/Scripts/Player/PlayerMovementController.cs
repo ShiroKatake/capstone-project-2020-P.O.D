@@ -191,7 +191,7 @@ public class PlayerMovementController : MonoBehaviour
 
         if (Physics.Raycast(transform.position, Vector3.down, out rayHit, 20, groundLayerMask))
         {
-            Debug.Log($"POD hover height is {rayHit.distance}, default is {defaultHoverHeight}");
+            //Debug.Log($"POD hover height is {rayHit.distance}, default is {defaultHoverHeight}");
             CheckForCliff(rayHit, errorMargin, oldPos);
             CheckHoverHeight(rayHit, errorMargin);
         }
@@ -218,39 +218,44 @@ public class PlayerMovementController : MonoBehaviour
         {
             if (Physics.Raycast(transform.position + offset, Vector3.down, out cliffRayHit, 20, groundLayerMask))
             {
-                if (cliffRayHit.point.y < rayHit.point.y - errorMargin || cliffRayHit.point.y > rayHit.point.y + errorMargin)   //Confirms ray hit heights differ; rules out OK: level to level - normal 1.0 to 1.0 and heights match
+                //Confirm ray hit heights differ; rule out OK: level to level - normal.y 1.0 to 1.0 and heights match
+                if (cliffRayHit.point.y < rayHit.point.y - errorMargin || cliffRayHit.point.y > rayHit.point.y + errorMargin)   
                 {
-                    Debug.Log($"POD at {rayHit.point} detecting cliff or ramp at {cliffRayHit.point}. POD ground normal: {rayHit.normal}, cliff/ramp normal: {cliffRayHit.normal}");
+                    //Debug.Log($"POD at {rayHit.point} detecting cliff or ramp at {cliffRayHit.point}. POD ground normal: {rayHit.normal}, cliff/ramp normal: {cliffRayHit.normal}");
 
-                    if (cliffRayHit.normal.y < rayHit.normal.y - errorMargin || cliffRayHit.normal.y > rayHit.normal.y + errorMargin)     //Confirms normals differ
+                    //Confirm normal.y's differ
+                    if (cliffRayHit.normal.y < rayHit.normal.y - errorMargin || cliffRayHit.normal.y > rayHit.normal.y + errorMargin)     
                     {
-                        ///OK:  - Level to ramp  - normal 1.0 to 0.9
-                        ///OK:  - Ramp to level  - normal 0.9 to 1.0
-                        ///NOT: - Level to cliff - normal (0.9 OR 1.0) to !(0.9 OR 1.0)
-                    }
-                    else
-                    {
-                        ///OK:  - Ramp to ramp   - normal 0.9 to 0.9 and heights don't match
-                        ///NOT: - Level to cliff - normal 1.0 to 1.0 but heights don't match
-
-                        if (rayHit.normal.y >= 1 - errorMargin && rayHit.normal.y <= 1 + errorMargin                  //Confirm ray hit is on level ground
-                            && cliffRayHit.normal.y >= 1 - errorMargin && cliffRayHit.normal.y <= 1 + errorMargin)    //Confirms cliff ray hit is on level ground
+                        //OK:  - Level to ramp  - normal.y 1.0 to 0.9
+                        //OK:  - Ramp to level  - normal.y 0.9 to 1.0
+                        //NOT: - Level to cliff - normal.y (0.9 OR 1.0) to !(0.9 OR 1.0)
+                        
+                        //Confirm cliffRayHit normal.y is outside of accepted bounds
+                        if (cliffRayHit.normal.y < 0.9f - errorMargin || cliffRayHit.normal.y > 1 + errorMargin || (0.9f + errorMargin < cliffRayHit.normal.y && cliffRayHit.normal.y < 1 - errorMargin))
                         {
-                            Debug.Log($"POD and cliff rayhit normal y values within the margin of error ({errorMargin}) of each other and of level ground normal y (1), but the rayhit heights differ beyond the margin of error. Therefore sheer cliff, therefore not moving.");
+                            //Debug.LogError($"cliffRayHit normal.y is outside of expected bounds for level ground (~1.0) and ramps (~0.9), therefore cliff, therefore cancelling movement.");
                             moveOkay = false;
                             break;
                         }
-                        //else if (rayHit.normal.y >= 0.9f - errorMargin && rayHit.normal.y <= 0.9f + errorMargin               //Confirm ray hit is on ramp
-                        //    && cliffRayHit.normal.y >= 0.9f - errorMargin && cliffRayHit.normal.y <= 0.9f + errorMargin)      //Confirm cliff ray hit is on ramp
-                        //{
-                        //    //Ignore
-                        //}
+                    }
+                    else
+                    {
+                        //OK:  - Ramp to ramp   - normal.y 0.9 to 0.9 and heights don't match
+                        //NOT: - Level to cliff - normal.y 1.0 to 1.0 but heights don't match
+
+                        if (rayHit.normal.y >= 1 - errorMargin && rayHit.normal.y <= 1 + errorMargin                  //Confirm ray hit is on level ground
+                            && cliffRayHit.normal.y >= 1 - errorMargin && cliffRayHit.normal.y <= 1 + errorMargin)    //Confirm cliff ray hit is on level ground
+                        {
+                            //Debug.Log($"POD and cliff rayhit normal y values within the margin of error ({errorMargin}) of each other and of level ground normal y (1), but the rayhit heights differ beyond the margin of error. Therefore sheer cliff, therefore not moving.");
+                            moveOkay = false;
+                            break;
+                        }
                     }
                 }
             }
             else
             {
-                Debug.LogError($"{this}.PlayerMovementController.Move(), cliff detection raycasting section, could not raycast to the ground from position {transform.position + offset}");
+                Debug.LogError($"{this}.PlayerMovementController.CheckForCliff(), could not raycast to the ground from position {transform.position + offset}");
                 moveOkay = false;
                 break;
             }
@@ -258,7 +263,7 @@ public class PlayerMovementController : MonoBehaviour
 
         if (!moveOkay)
         {
-            Debug.Log("Move disallowed, returning to original position");
+            //Debug.Log("Move disallowed, returning to original position");
             transform.position = oldPos;
         }
     }
