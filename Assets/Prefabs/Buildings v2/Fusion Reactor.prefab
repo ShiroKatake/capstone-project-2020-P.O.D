@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2103360942000820280}
   - component: {fileID: 7989155517478719925}
   - component: {fileID: 8835600581987182225}
+  - component: {fileID: 8481876498188372686}
   - component: {fileID: -3725313067051829311}
   - component: {fileID: 1306673528173593697}
   m_Layer: 0
@@ -54,9 +55,7 @@ MonoBehaviour:
   powerConsumption: 0
   waterConsumption: 0
   wasteConsumption: 0
-  xSize: 1
-  zSize: 1
-  buildTime: 10
+  buildTime: 5
   buildStartHeight: -11.35
   boingInterval: 0.1667
   smallBoingMultiplier: 0.8
@@ -88,6 +87,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 15
+--- !u!114 &8481876498188372686
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1531695208761868921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e087b4d1f91fcb941a830564ec25c878, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 0.325
 --- !u!114 &-3725313067051829311
 MonoBehaviour:
   m_ObjectHideFlags: 0

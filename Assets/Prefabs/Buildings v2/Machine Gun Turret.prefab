@@ -364,8 +364,9 @@ GameObject:
   - component: {fileID: 2387721251791164881}
   - component: {fileID: 276844957512759736}
   - component: {fileID: 1219818938998714957}
-  - component: {fileID: 3380677155783403710}
+  - component: {fileID: 3115542525580505888}
   - component: {fileID: -6100819924566361332}
+  - component: {fileID: 3380677155783403710}
   - component: {fileID: 4623826420090890743}
   m_Layer: 0
   m_Name: Machine Gun Turret
@@ -409,9 +410,7 @@ MonoBehaviour:
   powerConsumption: 1
   waterConsumption: 0
   wasteConsumption: 0
-  xSize: 2
-  zSize: 2
-  buildTime: 10
+  buildTime: 5
   buildStartHeight: -18.9
   boingInterval: 0.1667
   smallBoingMultiplier: 0.8
@@ -449,6 +448,46 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 10
+--- !u!114 &3115542525580505888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2740937295730065718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e087b4d1f91fcb941a830564ec25c878, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 0.75
+--- !u!114 &-6100819924566361332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2740937295730065718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 860f746cc4b45fa4e8189e658bcab5ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotationSpeed: 90
+  elevationSpeed: 20
+  minBarrelElevation: -6
+  maxBarrelElevation: 6
+  crawlerPositionOffset: {x: 0, y: 0, z: 0}
+  rotationColliderOffset: {x: 180, y: -90, z: -90}
+  rotationModelCounterOffset: {x: 0, y: 0, z: 0}
+  elevationColliderOffset: {x: 0, y: 0, z: 0}
+  elevationModelCounterOffset: {x: 0, y: 0, z: 0}
+  rotationTargeter: {fileID: 1434680548536815315}
+  elevationTargeter: {fileID: 5851538331112331812}
+  armColliderPivot: {fileID: 7220145513979710444}
+  armModelPivot: {fileID: 4031274663492664482}
+  barrelColliderPivot: {fileID: 5451464881631675756}
+  barrelModelPivot: {fileID: 5877666295754112639}
 --- !u!114 &3380677155783403710
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -472,32 +511,6 @@ MonoBehaviour:
   shotCooldown: 3
   visibleTargets: []
   target: {fileID: 0}
---- !u!114 &-6100819924566361332
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2740937295730065718}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 860f746cc4b45fa4e8189e658bcab5ec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rotationSpeed: 90
-  elevationSpeed: 20
-  minBarrelElevation: -6
-  maxBarrelElevation: 6
-  rotationColliderOffset: {x: 180, y: -90, z: -90}
-  rotationModelCounterOffset: {x: 0, y: 0, z: 0}
-  elevationColliderOffset: {x: 0, y: 0, z: 0}
-  elevationModelCounterOffset: {x: 0, y: 0, z: 0}
-  rotationTargeter: {fileID: 1434680548536815315}
-  elevationTargeter: {fileID: 5851538331112331812}
-  armColliderPivot: {fileID: 7220145513979710444}
-  armModelPivot: {fileID: 4031274663492664482}
-  barrelColliderPivot: {fileID: 5451464881631675756}
-  barrelModelPivot: {fileID: 5877666295754112639}
 --- !u!95 &4623826420090890743
 Animator:
   serializedVersion: 3
