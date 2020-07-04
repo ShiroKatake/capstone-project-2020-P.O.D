@@ -224,11 +224,11 @@ public class AudioManager : MonoBehaviour
     }
 
     public void StopSound(ESound sound){
-        AudioSource[] sources = this.gameObject.GetComponents<AudioSource>();
+        AudioSource[] sources = this.gameObject.GetComponents<AudioSource>();        
         if (sources.Length != 0){
-            foreach(AudioSource source in sources) {
+            foreach (AudioSource source in sources) {
                 if (source.clip == GetAudio(sound).Clip){
-                    source.Stop();
+                    source.Stop();                    
                     break;
                 }
             }
