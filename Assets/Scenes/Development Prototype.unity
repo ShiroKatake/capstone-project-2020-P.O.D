@@ -155,7 +155,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &520807441 stripped
 MonoBehaviour:
@@ -278,7 +278,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!108 &705507994 stripped
 Light:
@@ -800,7 +800,7 @@ PrefabInstance:
     - target: {fileID: 4528282981372622710, guid: 9e7595dc8e91f594fb56c845983b5fac,
         type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4528282981372622710, guid: 9e7595dc8e91f594fb56c845983b5fac,
         type: 3}
@@ -1274,7 +1274,7 @@ PrefabInstance:
     - target: {fileID: 948949189687773390, guid: 9620c728b220f2e47adbd85dd9ac4899,
         type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 948949189687773390, guid: 9620c728b220f2e47adbd85dd9ac4899,
         type: 3}
@@ -1351,6 +1351,48 @@ PrefabInstance:
       propertyPath: bars.Array.data[2]
       value: 
       objectReference: {fileID: 1324127912}
+    - target: {fileID: 948949189687773395, guid: 9620c728b220f2e47adbd85dd9ac4899,
+        type: 3}
+      propertyPath: boilerPrefab
+      value: 
+      objectReference: {fileID: 2427136214263755661, guid: 4e43148294168b5408e3ff37e652870d,
+        type: 3}
+    - target: {fileID: 948949189687773395, guid: 9620c728b220f2e47adbd85dd9ac4899,
+        type: 3}
+      propertyPath: fusionReactorPrefab
+      value: 
+      objectReference: {fileID: 7989155517478719925, guid: 24cf1029333088241ba2e0353577d9d1,
+        type: 3}
+    - target: {fileID: 948949189687773395, guid: 9620c728b220f2e47adbd85dd9ac4899,
+        type: 3}
+      propertyPath: iceDrillPrefab
+      value: 
+      objectReference: {fileID: 6356630498027900237, guid: 4a6aee7009a4ab54fb92388f488d3d84,
+        type: 3}
+    - target: {fileID: 948949189687773395, guid: 9620c728b220f2e47adbd85dd9ac4899,
+        type: 3}
+      propertyPath: incineratorPrefab
+      value: 
+      objectReference: {fileID: 6057790016772902916, guid: 24128e7847c00194bb8cbc3018d54c6a,
+        type: 3}
+    - target: {fileID: 948949189687773395, guid: 9620c728b220f2e47adbd85dd9ac4899,
+        type: 3}
+      propertyPath: greenhousePrefab
+      value: 
+      objectReference: {fileID: 9054559055595012424, guid: 97a3241da72d78445860a020bbdd79e7,
+        type: 3}
+    - target: {fileID: 948949189687773395, guid: 9620c728b220f2e47adbd85dd9ac4899,
+        type: 3}
+      propertyPath: shortRangeTurretPrefab
+      value: 
+      objectReference: {fileID: 276844957512759736, guid: 2851863e0f38774468f249302c6d6612,
+        type: 3}
+    - target: {fileID: 948949189687773395, guid: 9620c728b220f2e47adbd85dd9ac4899,
+        type: 3}
+      propertyPath: longRangeTurretPrefab
+      value: 
+      objectReference: {fileID: 276844957512759736, guid: fc807d9469d7f84439c1de7633f2b340,
+        type: 3}
     - target: {fileID: 1565210319463471991, guid: 9620c728b220f2e47adbd85dd9ac4899,
         type: 3}
       propertyPath: camera
@@ -1361,6 +1403,31 @@ PrefabInstance:
       propertyPath: clockTimer
       value: 
       objectReference: {fileID: 1791195865}
+    - target: {fileID: 2489407218427492161, guid: 9620c728b220f2e47adbd85dd9ac4899,
+        type: 3}
+      propertyPath: cycleDuration
+      value: 240
+      objectReference: {fileID: 0}
+    - target: {fileID: 7995633453843656677, guid: 9620c728b220f2e47adbd85dd9ac4899,
+        type: 3}
+      propertyPath: ore
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7995633453843656677, guid: 9620c728b220f2e47adbd85dd9ac4899,
+        type: 3}
+      propertyPath: powerSupply
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7995633453843656677, guid: 9620c728b220f2e47adbd85dd9ac4899,
+        type: 3}
+      propertyPath: waterSupply
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7995633453843656677, guid: 9620c728b220f2e47adbd85dd9ac4899,
+        type: 3}
+      propertyPath: wasteSupply
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9620c728b220f2e47adbd85dd9ac4899, type: 3}
 --- !u!1001 &1008005629457548284
@@ -1413,7 +1480,7 @@ PrefabInstance:
     - target: {fileID: 1008005631251450811, guid: 6650ea0d512478c43a1daf70d68df5ef,
         type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1008005631251450811, guid: 6650ea0d512478c43a1daf70d68df5ef,
         type: 3}
@@ -1536,7 +1603,7 @@ PrefabInstance:
     - target: {fileID: 8777683415735347743, guid: 172bd19aa70452548bcdbc2cfdc6614a,
         type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 8777683415735347743, guid: 172bd19aa70452548bcdbc2cfdc6614a,
         type: 3}
