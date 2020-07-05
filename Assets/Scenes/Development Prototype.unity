@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -1094,6 +1094,11 @@ PrefabInstance:
       propertyPath: cryoEgg
       value: 
       objectReference: {fileID: 1170871704}
+    - target: {fileID: 948949189687773389, guid: 9620c728b220f2e47adbd85dd9ac4899,
+        type: 3}
+      propertyPath: maxSwarmSize
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 948949189687773390, guid: 9620c728b220f2e47adbd85dd9ac4899,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1232,26 +1237,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: AudioManager
-      objectReference: {fileID: 0}
-    - target: {fileID: 1008005631251450810, guid: 6650ea0d512478c43a1daf70d68df5ef,
-        type: 3}
-      propertyPath: OneShotSounds.Array.data[17].loop
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1008005631251450810, guid: 6650ea0d512478c43a1daf70d68df5ef,
-        type: 3}
-      propertyPath: OneShotSounds.Array.data[17].volume
-      value: 0.009
-      objectReference: {fileID: 0}
-    - target: {fileID: 1008005631251450810, guid: 6650ea0d512478c43a1daf70d68df5ef,
-        type: 3}
-      propertyPath: OneShotSounds.Array.data[17].maxDistance
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 1008005631251450810, guid: 6650ea0d512478c43a1daf70d68df5ef,
-        type: 3}
-      propertyPath: OneShotSounds.Array.data[0].maxDistance
-      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 1008005631251450811, guid: 6650ea0d512478c43a1daf70d68df5ef,
         type: 3}
