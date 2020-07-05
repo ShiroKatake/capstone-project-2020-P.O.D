@@ -13,13 +13,14 @@ public class AlienFactory : MonoBehaviour
 
     [Header("Game Objects")]
     [SerializeField] private Alien alienPrefab;
-    [SerializeField] private Transform alienPoolParent;
 
     [Header("Stats")]
+    [SerializeField] private int pooledAliens;
     [SerializeField] private float alienHoverHeight;
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
+    private Transform objectPoolParent;
     private List<Alien> alienPool;
 
     //PublicProperties-------------------------------------------------------------------------------------------------------------------------------
@@ -52,19 +53,24 @@ public class AlienFactory : MonoBehaviour
         }
 
         Instance = this;
+        objectPoolParent = ObjectPool.Instance.transform;
         alienPool = new List<Alien>();
+
+        for (int i = 0; i < pooledAliens; i++)
+        {
+            Alien alien = Instantiate(alienPrefab, objectPoolParent.position, new Quaternion()); 
+            alien.transform.parent = objectPoolParent;
+
+            foreach (Collider c in alien.GetComponents<Collider>())
+            {
+                c.enabled = false;
+            }
+
+            alienPool.Add(alien);
+        }
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
-
-    /// <summary>
-    /// Retrieves Enemies from a pool if there's any available, and instantiates a new alien if there isn't one. Provides a random position within the accepted bounds.
-    /// </summary>
-    /// <returns>A new alien.</returns>
-    public Alien GetAlien()
-    {
-        return GetAlien(MapController.Instance.RandomAlienSpawnablePos());
-    }
 
     /// <summary>
     /// Retrieves Enemies from a pool if there's any available, and instantiates a new alien if there isn't one.
@@ -81,6 +87,11 @@ public class AlienFactory : MonoBehaviour
             alienPool.Remove(alien);
             alien.transform.parent = null;
             alien.transform.position = position;
+
+            foreach (Collider c in alien.GetComponents<Collider>())
+            {
+                c.enabled = true;
+            }
         }
         else
         {
@@ -99,8 +110,8 @@ public class AlienFactory : MonoBehaviour
     {
         alien.Reset();
         AlienController.Instance.DeRegisterAlien(alien);
-        alien.transform.position = alienPoolParent.position;
-        alien.transform.parent = alienPoolParent;
+        alien.transform.position = objectPoolParent.position;
+        alien.transform.parent = objectPoolParent;
         alienPool.Add(alien);
     }
 }
