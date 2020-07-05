@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8835600581987182225}
   - component: {fileID: -6151874320592601714}
   - component: {fileID: -3725313067051829311}
+  - component: {fileID: 6149428130736486811}
   m_Layer: 0
   m_Name: Fusion Reactor
   m_TagString: Building
@@ -74,11 +75,11 @@ MonoBehaviour:
   - {x: 0, y: -0.45, z: 0}
   rendererMaterialSets:
   - renderer: {fileID: 1434847216883296504}
-    opaque: {fileID: 2100000, guid: 2f92b34ccdb6ac84b8aeee6a48e22042, type: 2}
-    transparent: {fileID: 2100000, guid: ac74a6884833d5c4e9b61f33a2f33b98, type: 2}
+    opaque: {fileID: 2100000, guid: c3b1016b873b8294589543b2ac716e0c, type: 2}
+    transparent: {fileID: 2100000, guid: e67356b465f5bb246aa3e12c1fdab0b2, type: 2}
   - renderer: {fileID: 1717378854722946914}
-    opaque: {fileID: 2100000, guid: 10e92a3c1311365478bcaeb17440ec00, type: 2}
-    transparent: {fileID: 2100000, guid: 780aff091caf8544eb96916e12e893e2, type: 2}
+    opaque: {fileID: 2100000, guid: ec205cb853590e54cb4306473cd2200e, type: 2}
+    transparent: {fileID: 2100000, guid: efd7cbd714946ee42a9dec8a51af2375, type: 2}
   buildingErrorMaterial: {fileID: 2100000, guid: 101275a717e4a1c4fb89e563e095dfd7,
     type: 2}
   idleSound: 15
@@ -125,6 +126,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resource: 1
   collectionRate: 1
+--- !u!95 &6149428130736486811
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1531695208761868921}
+  m_Enabled: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d78406312bd098c438619f2b39264774, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1590617144091470372
 GameObject:
   m_ObjectHideFlags: 0
@@ -373,6 +393,16 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Building
       objectReference: {fileID: 0}
+    - target: {fileID: 2328662970650231864, guid: 49a1fa4ffc3acb3469301dade190dbea,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: ec205cb853590e54cb4306473cd2200e, type: 2}
+    - target: {fileID: 2328662970650231864, guid: 49a1fa4ffc3acb3469301dade190dbea,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: ec205cb853590e54cb4306473cd2200e, type: 2}
     - target: {fileID: 2328662970650231865, guid: 49a1fa4ffc3acb3469301dade190dbea,
         type: 3}
       propertyPath: m_TagString
@@ -452,7 +482,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: ac74a6884833d5c4e9b61f33a2f33b98, type: 2}
+      objectReference: {fileID: 2100000, guid: e67356b465f5bb246aa3e12c1fdab0b2, type: 2}
     - target: {fileID: -927199367670048503, guid: 516e3572be4dbbc4baa2b406f4ed02e8,
         type: 3}
       propertyPath: m_Name
@@ -549,7 +579,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 780aff091caf8544eb96916e12e893e2, type: 2}
+      objectReference: {fileID: 2100000, guid: efd7cbd714946ee42a9dec8a51af2375, type: 2}
     - target: {fileID: -927199367670048503, guid: 516e3572be4dbbc4baa2b406f4ed02e8,
         type: 3}
       propertyPath: m_Name
