@@ -17,6 +17,7 @@ public class PlayerMovementController : MonoBehaviour
     [SerializeField] private Transform cameraTarget;
     [SerializeField] private Transform barrelTip;
     [SerializeField] private Transform barrelMagazine;
+    [SerializeField] private Transform audioListener;
 
     [Header("Player Stats")]
     [SerializeField] private float movementSpeed;
@@ -139,6 +140,7 @@ public class PlayerMovementController : MonoBehaviour
     /// </summary>
     private void UpdateDrone()
     {
+        audioListener.position = drone.position;
         CheckHealth();
         Look();
         Move();
@@ -153,7 +155,7 @@ public class PlayerMovementController : MonoBehaviour
         if (health.IsDead())
         {
             Debug.Log("The player's health has reached 0. GAME OVER!!!");
-
+            AudioManager.Instance.PlaySound(AudioManager.ESound.Explosion, this.gameObject);
             if (!gameOver)
             {
                 MessageDispatcher.Instance.SendMessage("Alien", new Message(gameObject.name, "Player", this.gameObject, "Dead"));
@@ -178,7 +180,7 @@ public class PlayerMovementController : MonoBehaviour
     /// </summary>
     private void Move()
     {
-        AudioManager.Instance.PlaySound(AudioManager.Sound.Player_Hover, this.transform.position);
+        AudioManager.Instance.PlaySound(AudioManager.ESound.Player_Hover, this.gameObject);
 
         if (movement != Vector3.zero)
         {
@@ -207,7 +209,8 @@ public class PlayerMovementController : MonoBehaviour
         }
 
         //Positioning this line here accounts for the player having been moved by an external force (e.g. pushed by enemies)
-        cameraTarget.position = drone.position;     
+        cameraTarget.position = drone.position;
+        
     }
 
     /// <summary>
@@ -219,6 +222,7 @@ public class PlayerMovementController : MonoBehaviour
         {
             timeOfLastShot = Time.time;
             Projectile projectile = ProjectileFactory.Instance.GetProjectile(EProjectileType.PODLaserBolt, transform, barrelTip.position);
+            AudioManager.Instance.PlaySound(AudioManager.ESound.Laser_POD, this.gameObject);
             Vector3 vector = barrelTip.position - barrelMagazine.position;
             projectile.Shoot(vector.normalized, 0);
             //TODO: use overload that incorporates shooter movement speed, and calculate current movement speed in the direction of the shot vector.

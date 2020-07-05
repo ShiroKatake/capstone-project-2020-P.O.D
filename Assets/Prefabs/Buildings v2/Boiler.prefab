@@ -71,6 +71,7 @@ MonoBehaviour:
     transparent: {fileID: 2100000, guid: 48daf2deecd43a54e995056522b3c6f9, type: 2}
   buildingErrorMaterial: {fileID: 2100000, guid: 101275a717e4a1c4fb89e563e095dfd7,
     type: 2}
+  idleSound: 18
   otherColliders: []
   active: 0
   operational: 0
@@ -113,7 +114,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   environmentParameter: 2
-  environmentalAffect: 0.5
+  environmentalAffect: 0.01
 --- !u!95 &8396123856442464619
 Animator:
   serializedVersion: 3
