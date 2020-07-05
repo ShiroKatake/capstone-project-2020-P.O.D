@@ -49,6 +49,11 @@ public class Building : CollisionListener
     [SerializeField] private List<RendererMaterialSet> rendererMaterialSets;
     [SerializeField] private Material buildingErrorMaterial;
 
+    [Header("Sound Library")]
+    [SerializeField] private AudioManager.ESound idleSound;
+
+ 
+
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
     //Components
@@ -261,6 +266,7 @@ public class Building : CollisionListener
         Vector3 largeScale = normalScale * largeBoingMultiplier;
         float boingTimeElapsed = 0;
 
+        AudioManager.Instance.PlaySound(AudioManager.ESound.Building_Materialises, this.gameObject); //needs to be stopped when finished building
         while (buildTimeElapsed < buildTime)
         {
             buildTimeElapsed += Time.deltaTime;
@@ -297,12 +303,13 @@ public class Building : CollisionListener
 
         boinging = false;
         Operational = true; //Using property to trigger activation of any resource collector component attached.
+        AudioManager.Instance.PlaySound(AudioManager.ESound.Building_Completes, this.gameObject);
 
         if (turretShooter != null)
         {
             turretShooter.Place();
         }
-
+        AudioManager.Instance.PlaySound(idleSound, this.gameObject);
         yield return null;
     }
 

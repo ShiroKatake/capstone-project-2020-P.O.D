@@ -214,8 +214,9 @@ GameObject:
   - component: {fileID: 2387721251791164881}
   - component: {fileID: 276844957512759736}
   - component: {fileID: 1219818938998714957}
-  - component: {fileID: 5814535936489597786}
+  - component: {fileID: 3538571623297457508}
   - component: {fileID: 6505921446254889876}
+  - component: {fileID: 5814535936489597786}
   - component: {fileID: 4314223668611133919}
   m_Layer: 0
   m_Name: Shotgun Turret
@@ -275,6 +276,7 @@ MonoBehaviour:
     transparent: {fileID: 2100000, guid: f2d1a5f99775530498b8bcb14843f094, type: 2}
   buildingErrorMaterial: {fileID: 2100000, guid: 101275a717e4a1c4fb89e563e095dfd7,
     type: 2}
+  idleSound: 19
   otherColliders: []
   active: 0
   operational: 0
@@ -290,8 +292,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7d1fe85e34b94943ad23931779e30d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 10
---- !u!114 &5814535936489597786
+  health: 15
+--- !u!114 &3538571623297457508
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -300,20 +302,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2740937295730065718}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 34d932f0839879649994915dc2d7419e, type: 3}
+  m_Script: {fileID: 11500000, guid: e087b4d1f91fcb941a830564ec25c878, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collisionReporters: []
-  barrelMagazine: {fileID: 6578390048626754263}
-  barrelTip: {fileID: 1873128266348440701}
-  projectileType: 2
-  targetClosest: 1
-  numProjectiles: 10
-  yAxisVariance: 0.1
-  zAxisVariance: 0.1
-  shotCooldown: 3
-  visibleTargets: []
-  target: {fileID: 0}
+  radius: 0.425
 --- !u!114 &6505921446254889876
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -340,6 +332,29 @@ MonoBehaviour:
   baseModel: {fileID: 6939182874317689528}
   barrelColliderPivot: {fileID: 6578390048626754263}
   barrelModelPivot: {fileID: 632658674879905165}
+--- !u!114 &5814535936489597786
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2740937295730065718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34d932f0839879649994915dc2d7419e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  collisionReporters: []
+  barrelMagazine: {fileID: 6578390048626754263}
+  barrelTip: {fileID: 1873128266348440701}
+  projectileType: 2
+  targetClosest: 1
+  numProjectiles: 10
+  yAxisVariance: 0.1
+  zAxisVariance: 0.1
+  shotCooldown: 3
+  visibleTargets: []
+  target: {fileID: 0}
 --- !u!95 &4314223668611133919
 Animator:
   serializedVersion: 3

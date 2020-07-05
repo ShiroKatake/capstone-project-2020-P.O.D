@@ -68,7 +68,6 @@ public class BuildingFactory : MonoBehaviour
         }
 
         Instance = this;
-        objectPool = ObjectPool.Instance.transform;
         buildings = new Dictionary<EBuilding, List<Building>>();
         buildings[EBuilding.FusionReactor] = new List<Building>();
         buildings[EBuilding.IceDrill] = new List<Building>();
@@ -78,7 +77,14 @@ public class BuildingFactory : MonoBehaviour
         buildings[EBuilding.ShortRangeTurret] = new List<Building>();
         buildings[EBuilding.LongRangeTurret] = new List<Building>();
         buildingFoundations = new List<BuildingFoundation>();
+
+        
+    }
+
+    private void Start() {
+        objectPool = ObjectPool.Instance.transform;
         IdGenerator idGenerator = IdGenerator.Instance;
+
 
         for (int i = 0; i < pooledFusionReactors; i++)
         {

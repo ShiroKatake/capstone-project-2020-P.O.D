@@ -19,6 +19,7 @@ public class PlayerMovementController : MonoBehaviour
     [SerializeField] private Transform barrelMagazine;
     [SerializeField] private List<Transform> cliffDetectionMarkers;
     [SerializeField] private List<Vector3> cliffTestOffsets;
+    [SerializeField] private Transform audioListener;
 
     [Header("Player Stats")]
     [SerializeField] private float movementSpeed;
@@ -143,6 +144,7 @@ public class PlayerMovementController : MonoBehaviour
     /// </summary>
     private void UpdateDrone()
     {
+        audioListener.position = transform.position;
         CheckHealth();
         Look();
         Move();
@@ -157,7 +159,7 @@ public class PlayerMovementController : MonoBehaviour
         if (health.IsDead())
         {
             Debug.Log("The player's health has reached 0. GAME OVER!!!");
-
+            AudioManager.Instance.PlaySound(AudioManager.ESound.Explosion, this.gameObject);
             if (!gameOver)
             {
                 MessageDispatcher.Instance.SendMessage("Alien", new Message(gameObject.name, "Player", this.gameObject, "Dead"));
@@ -182,7 +184,7 @@ public class PlayerMovementController : MonoBehaviour
         RaycastHit rayHit;
         Vector3 oldPos = transform.position;
         float errorMargin = 0.01f;
-        AudioManager.Instance.PlaySound(AudioManager.Sound.Player_Hover, transform.position);
+        AudioManager.Instance.PlaySound(AudioManager.ESound.Player_Hover, gameObject);
 
         if (movement != Vector3.zero)
         {
@@ -200,7 +202,7 @@ public class PlayerMovementController : MonoBehaviour
             Debug.LogError($"{this}.PlayerMovementController.Move() could not raycast to the ground from position {transform.position}");
         }
 
-        cameraTarget.transform.position = transform.position;  
+        cameraTarget.position = transform.position;  
     }
 
     /// <summary>
@@ -282,12 +284,12 @@ public class PlayerMovementController : MonoBehaviour
                 transform.position = new Vector3(transform.position.x, defaultHoverHeight, transform.position.z);
                 rigidbody.useGravity = false;
                 rigidbody.drag = 100;
-                Debug.Log("POD below hover height");
+                //Debug.Log("POD below hover height");
             }
-            else
-            {
-                Debug.Log("POD above or at hover height");
-            }
+            //else
+            //{
+            //    Debug.Log("POD above or at hover height");
+            //}
         }
         else
         {
@@ -296,12 +298,12 @@ public class PlayerMovementController : MonoBehaviour
                 rigidbody.useGravity = true;
                 rigidbody.drag = 0;
                 rigidbody.velocity = Vector3.zero;
-                Debug.Log("POD above hover height");
+                //Debug.Log("POD above hover height");
             }
-            else
-            {
-                Debug.Log("POD below  or at hover height");
-            }
+            //else
+            //{
+            //    Debug.Log("POD below  or at hover height");
+            //}
         }
     }
 
@@ -314,6 +316,7 @@ public class PlayerMovementController : MonoBehaviour
         {
             timeOfLastShot = Time.time;
             Projectile projectile = ProjectileFactory.Instance.GetProjectile(EProjectileType.PODLaserBolt, transform, barrelTip.position);
+            AudioManager.Instance.PlaySound(AudioManager.ESound.Laser_POD, this.gameObject);
             Vector3 vector = barrelTip.position - barrelMagazine.position;
             projectile.Shoot(vector.normalized, 0);
             //TODO: use overload that incorporates shooter movement speed, and calculate current movement speed in the direction of the shot vector.

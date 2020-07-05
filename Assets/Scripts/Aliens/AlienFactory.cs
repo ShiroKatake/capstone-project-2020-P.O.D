@@ -53,8 +53,13 @@ public class AlienFactory : MonoBehaviour
         }
 
         Instance = this;
-        objectPoolParent = ObjectPool.Instance.transform;
         alienPool = new List<Alien>();
+
+        
+    }
+
+    private void Start() {
+        objectPoolParent = ObjectPool.Instance.transform;
 
         for (int i = 0; i < pooledAliens; i++)
         {

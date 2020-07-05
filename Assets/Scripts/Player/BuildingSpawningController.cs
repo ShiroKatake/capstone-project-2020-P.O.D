@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Rewired;
 
 /// <summary>
 /// A controller class for building spawning.
@@ -137,44 +138,20 @@ public class BuildingSpawningController : MonoBehaviour
             if (heldBuilding == null)
             {
                 heldBuilding = BuildingFactory.Instance.GetBuilding(selectedBuildingType);
-
-                if (InputController.Instance.Gamepad == EGamepad.MouseAndKeyboard)
-                {
-                    heldBuilding.transform.position = MousePositionToBuildingPosition(transform.position, heldBuilding.Size.DiameterRoundedUp);
-                }
-                else
-                {
-                    heldBuilding.transform.position = RawBuildingPositionToBuildingPosition(heldBuilding.Size.DiameterRoundedUp);
-                }
+                heldBuilding.transform.position = MousePositionToBuildingPosition(transform.position, heldBuilding.Size.DiameterRoundedUp);
             }
             //Instantiate the appropriate building and postion it properly, replacing the old one.
             else if (heldBuilding.BuildingType != selectedBuildingType)
             {
                 Vector3 pos;
-
-                if (InputController.Instance.Gamepad == EGamepad.MouseAndKeyboard)
-                {
-                    pos = MousePositionToBuildingPosition(heldBuilding.transform.position, heldBuilding.Size.DiameterRoundedUp);
-                }
-                else
-                {
-                    pos = RawBuildingPositionToBuildingPosition(heldBuilding.Size.DiameterRoundedUp);
-                }
-
+                pos = MousePositionToBuildingPosition(heldBuilding.transform.position, heldBuilding.Size.DiameterRoundedUp);
                 BuildingFactory.Instance.DestroyBuilding(heldBuilding, false, false);
                 heldBuilding = BuildingFactory.Instance.GetBuilding(selectedBuildingType);
                 heldBuilding.transform.position = pos;
             }
             else //Move the building where you want it
             {
-                if (InputController.Instance.Gamepad == EGamepad.MouseAndKeyboard)
-                {
-                    heldBuilding.transform.position = MousePositionToBuildingPosition(heldBuilding.transform.position, heldBuilding.Size.DiameterRoundedUp);
-                }
-                else
-                {
-                    heldBuilding.transform.position = RawBuildingPositionToBuildingPosition(heldBuilding.Size.DiameterRoundedUp);
-                }                
+                heldBuilding.transform.position = MousePositionToBuildingPosition(heldBuilding.transform.position, heldBuilding.Size.DiameterRoundedUp);
             }
 
             bool placementValid = heldBuilding.IsPlacementValid();
@@ -201,15 +178,20 @@ public class BuildingSpawningController : MonoBehaviour
                     if (ResourceController.Instance.Ore < heldBuilding.OreCost)
                     {
                         Debug.Log("You have insufficient ore to build this building.");
+                        AudioManager.Instance.PlaySound(AudioManager.ESound.Negative_UI);
                     }
                     
                     if (!placementValid)
                     {
                         Debug.Log("You cannot place a building there; it would occupy the same space as something else.");
+                       
+                        AudioManager.Instance.PlaySound(AudioManager.ESound.Negative_UI);
                     }
                     else if (!MapController.Instance.PositionAvailableForBuilding(heldBuilding))
                     {
                         Debug.Log("You cannot place a building there; it would either occupy the same space as something else, or exceed the bounds of the map.");
+                       
+                        AudioManager.Instance.PlaySound(AudioManager.ESound.Negative_UI);
                     }
 
                 }
@@ -232,7 +214,7 @@ public class BuildingSpawningController : MonoBehaviour
     private Vector3 MousePositionToBuildingPosition(Vector3 backup, int radius)
     {
         RaycastHit hit;
-        Ray ray = camera.ScreenPointToRay(Input.mousePosition);
+        Ray ray = camera.ScreenPointToRay(ReInput.controllers.Mouse.screenPosition);
 
         if (Physics.Raycast(ray, out hit, 200, groundLayerMask))
         {

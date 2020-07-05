@@ -8,7 +8,7 @@ public class BackgroundMusicTest : MonoBehaviour
     private Rewired.Player player;
     // Start is called before the first frame update
 
-    [SerializeField] AudioManager.Sound soundToPlay;
+    [SerializeField] AudioManager.ESound soundToPlay;
 
     private void Start() {
         player = PlayerMovementController.Instance.PlayerInputManager;
@@ -21,7 +21,7 @@ public class BackgroundMusicTest : MonoBehaviour
         } else {
             if (player.GetButton("GeneralAction")) {
                 print("SWITCH!!");
-                AudioManager.Instance.SwitchBackgroundTrack(AudioManager.Sound.NightTime);
+                AudioManager.Instance.SwitchBackgroundTrack(AudioManager.ESound.NightTime);
             }
         }
         //AudioManager.Instance.PlayBackground(soundToPlay);
