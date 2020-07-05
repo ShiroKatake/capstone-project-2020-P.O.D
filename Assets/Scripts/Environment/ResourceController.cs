@@ -164,6 +164,10 @@ public class ResourceController : MonoBehaviour
         Instance = this;
     }
 
+    /// <summary>
+    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
+    /// Start() runs after Awake().
+    /// </summary>
     private void Start()
     {
         ResourceTextManager.Instance.SetMetalText(ore.ToString());

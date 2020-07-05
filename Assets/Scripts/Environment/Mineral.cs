@@ -13,14 +13,6 @@ public class Mineral : MonoBehaviour
 	//Serialized Fields----------------------------------------------------------------------------
 
     [SerializeField] private bool placed;
-	/*
-    [SerializeField] private int count;
-    [SerializeField] private float miningCooldown;
-
-
-    [SerializeField] private float afkTimeout;
-    [SerializeField] private float rotationSpeed;
-	*/
 	[SerializeField] private int oreCount = 50;
 	[SerializeField] private float oreSpawnRate = 1f;
 	[SerializeField] private float oreCurveRadius = 2;
@@ -32,11 +24,6 @@ public class Mineral : MonoBehaviour
     private List<Collider> colliders;
     private bool despawning;
 	private float timer = 0f;
-	/*
-	private float timeSpentMining;
-    private float timeOfLastMining;
-    private Vector3 rotationUpdate;
-	*/
 
 	//Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -98,13 +85,23 @@ public class Mineral : MonoBehaviour
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
+    /// <summary>
+    /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
+    /// Awake() runs before Start().
+    /// </summary>
     private void Awake()
     {
         colliders = new List<Collider>(GetComponentsInChildren<Collider>());
         initialCount = oreCount;
-        //rotationUpdate = new Vector3(0, rotationSpeed, 0);
         timer = oreSpawnRate;
+    }
 
+    /// <summary>
+    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
+    /// Start() runs after Awake().
+    /// </summary>
+    private void Start()
+    {
         if (placed)
         {
             MapController.Instance.RegisterMineral(this);
@@ -123,7 +120,6 @@ public class Mineral : MonoBehaviour
 
 		if (timer <= 0f)
 		{
-            //Debug.Log("Releasing ore");
 			ReleaseOre();
 			oreCount--;
 
@@ -134,39 +130,6 @@ public class Mineral : MonoBehaviour
 
 			timer = oreSpawnRate;
 		}
-		/*
-        if (count > 0 && !despawning)
-        {
-            transform.localRotation = Quaternion.Euler(transform.rotation.eulerAngles + rotationUpdate * Time.deltaTime);
-			ReleaseOre();
-
-			if (Time.time - timeOfLastMining > afkTimeout)
-            {
-                timeSpentMining = 0;
-            }
-            else
-            {
-                timeSpentMining += Time.deltaTime;
-            }
-
-            timeOfLastMining = Time.time;
-
-            if (timeSpentMining >= miningCooldown)
-            {
-                timeSpentMining -= miningCooldown;
-                count--;
-
-                if (count <= 0)
-                {
-                    MineralFactory.Instance.DestroyMineral(this);
-                }
-
-                return 1;
-            }            
-        }
-
-		return 0;
-		*/
 	}
 
 	/// <summary>

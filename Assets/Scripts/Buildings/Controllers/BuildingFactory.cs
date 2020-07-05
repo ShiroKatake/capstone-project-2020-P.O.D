@@ -76,15 +76,16 @@ public class BuildingFactory : MonoBehaviour
         buildings[EBuilding.Incinerator] = new List<Building>();
         buildings[EBuilding.ShortRangeTurret] = new List<Building>();
         buildings[EBuilding.LongRangeTurret] = new List<Building>();
-        buildingFoundations = new List<BuildingFoundation>();
-
-        
+        buildingFoundations = new List<BuildingFoundation>();        
     }
 
-    private void Start() {
+    /// <summary>
+    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
+    /// Start() runs after Awake().
+    /// </summary>
+    private void Start()
+    {
         objectPool = ObjectPool.Instance.transform;
-        IdGenerator idGenerator = IdGenerator.Instance;
-
 
         for (int i = 0; i < pooledFusionReactors; i++)
         {
