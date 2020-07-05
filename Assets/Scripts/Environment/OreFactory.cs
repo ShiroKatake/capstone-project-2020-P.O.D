@@ -42,11 +42,14 @@ public class OreFactory : MonoBehaviour
 		}
 
 		Instance = this;
-		objectPool = ObjectPool.Instance.transform;
 		IdGenerator idGenerator = IdGenerator.Instance;
 
 		AddOres(pooledOres);
 	}
+
+	private void Start() {
+        objectPool = ObjectPool.Instance.transform;
+    }
 
 	//Triggered Methods -----------------------------------------------------------------------------------------------------------------------------
 	
