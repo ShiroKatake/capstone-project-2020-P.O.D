@@ -101,7 +101,6 @@ public class Mineral : MonoBehaviour
     private void Awake()
     {
         colliders = new List<Collider>(GetComponentsInChildren<Collider>());
-
         initialCount = oreCount;
         //rotationUpdate = new Vector3(0, rotationSpeed, 0);
         timer = oreSpawnRate;
@@ -124,6 +123,7 @@ public class Mineral : MonoBehaviour
 
 		if (timer <= 0f)
 		{
+            //Debug.Log("Releasing ore");
 			ReleaseOre();
 			oreCount--;
 
@@ -174,7 +174,7 @@ public class Mineral : MonoBehaviour
 	/// </summary>
 	private void ReleaseOre()
 	{
-		var ore = OreFactory.Instance.Get();
+		Ore ore = OreFactory.Instance.Get();
 		ore.transform.position = transform.position;
 		ore.transform.rotation = transform.rotation;
 		ore.Start = transform;
@@ -243,10 +243,10 @@ public class Mineral : MonoBehaviour
 	/// <returns>A random 3D point that will be the control point for the ore's Bezier curve.</returns>
 	private Vector3 GetPointOnUnitSphereCap(Quaternion targetDirection, float angle)
 	{
-		var angleInRad = UnityEngine.Random.Range(0.0f, angle) * Mathf.Deg2Rad;
-		var PointOnCircle = (UnityEngine.Random.insideUnitCircle.normalized) * Mathf.Sin(angleInRad);
-		var V = new Vector3(PointOnCircle.x, PointOnCircle.y, Mathf.Cos(angleInRad));
-		return targetDirection * V;
+		float angleInRad = UnityEngine.Random.Range(0.0f, angle) * Mathf.Deg2Rad;
+		Vector2 PointOnCircle = (UnityEngine.Random.insideUnitCircle.normalized) * Mathf.Sin(angleInRad);
+		Vector3 v = new Vector3(PointOnCircle.x, PointOnCircle.y, Mathf.Cos(angleInRad));
+		return targetDirection * v;
 	}
 
 	/// <summary>
