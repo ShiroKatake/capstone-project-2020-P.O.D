@@ -13,14 +13,16 @@ public class EnvironmentalController : MonoBehaviour {
     //[SerializeField] private RatioBars Bio;
     //[SerializeField] private RatioBars O2;
     //[SerializeField] private RatioBars GHG;
-    [SerializeField] private float WinAmount;
+    [SerializeField] private float winAmount;
     [SerializeField] List<Terraformer> terraformers = new List<Terraformer>();
 
-    public float AtmosphereVal { get; private set; } = 0f;
-    public float HumidityVal { get; private set; } = 0f;
-    public float BiodiversityVal { get; private set; } = 0f;
+    public bool Win {get; private set;} = false;
 
-    public float TotalVal { get; private set; } = 0.0f;
+    private float AtmosphereVal = 0f;
+    private float HumidityVal = 0f;
+    private float BiodiversityVal = 0f;
+
+    private float TotalVal = 0.0f;
 
     private float atmoMalice = 1.0f;
     private float humMalice = 1.0f;
@@ -43,7 +45,7 @@ public class EnvironmentalController : MonoBehaviour {
 
         Instance = this;
 
-        progress.SetMax(WinAmount);
+        progress.SetMax(winAmount);
         progress.SetBarValue(TotalVal);
         bars[0].SetMaxBarValue(1);
         bars[0].SetBarValue(atmosRatio);
@@ -63,6 +65,9 @@ public class EnvironmentalController : MonoBehaviour {
         UpdateTotalValue();
 
         progress.SetBarValue(TotalVal);
+        if (TotalVal >= winAmount){
+            Win = true;
+        }
         bars[0].SetBarValue(atmosRatio);
         bars[1].SetBarValue(humRatio);
         bars[2].SetBarValue(bioRatio);

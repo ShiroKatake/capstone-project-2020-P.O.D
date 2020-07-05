@@ -198,7 +198,9 @@ public class TurretShooting : CollisionListener, IMessenger
                 }
 
                 projectile.Shoot((vector).normalized, 0);
-            }            
+               
+            }
+            AudioManager.Instance.PlaySound(AudioManager.ESound.MachineGun_Shoot, this.gameObject);
         }
     }
 
@@ -221,9 +223,9 @@ public class TurretShooting : CollisionListener, IMessenger
     {
         //detecting = active; //for testing
 
-        foreach (CollisionReporter c in collisionReporters)
+        foreach (CollisionReporter r in collisionReporters)
         {
-            c.Collider.enabled = active;
+            r.SetCollidersEnabled(active);
         }
     }
 

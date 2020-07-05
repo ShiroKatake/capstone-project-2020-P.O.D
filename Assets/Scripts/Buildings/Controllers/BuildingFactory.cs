@@ -68,7 +68,6 @@ public class BuildingFactory : MonoBehaviour
         }
 
         Instance = this;
-        objectPool = ObjectPool.Instance.transform;
         buildings = new Dictionary<EBuilding, List<Building>>();
         buildings[EBuilding.FusionReactor] = new List<Building>();
         buildings[EBuilding.IceDrill] = new List<Building>();
@@ -77,8 +76,16 @@ public class BuildingFactory : MonoBehaviour
         buildings[EBuilding.Incinerator] = new List<Building>();
         buildings[EBuilding.ShortRangeTurret] = new List<Building>();
         buildings[EBuilding.LongRangeTurret] = new List<Building>();
-        buildingFoundations = new List<BuildingFoundation>();
-        IdGenerator idGenerator = IdGenerator.Instance;
+        buildingFoundations = new List<BuildingFoundation>();        
+    }
+
+    /// <summary>
+    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
+    /// Start() runs after Awake().
+    /// </summary>
+    private void Start()
+    {
+        objectPool = ObjectPool.Instance.transform;
 
         for (int i = 0; i < pooledFusionReactors; i++)
         {
@@ -130,7 +137,7 @@ public class BuildingFactory : MonoBehaviour
     /// <returns>A building of the specified type.</returns>
     public Building GetBuilding(EBuilding buildingType)
     {
-        Debug.Log($"BuildingFactory.GetBuilding({buildingType})");
+        //Debug.Log($"BuildingFactory.GetBuilding({buildingType})");
         Building building;
 
         if (buildings[buildingType].Count > 0)
@@ -138,7 +145,7 @@ public class BuildingFactory : MonoBehaviour
             building = buildings[buildingType][0];
             buildings[buildingType].RemoveAt(0);
             building.transform.parent = null;
-            building.EnableColliders();
+            building.SetCollidersEnabled("Placement", true);
         }
         else
         {
@@ -197,7 +204,7 @@ public class BuildingFactory : MonoBehaviour
         {
             building.transform.position = objectPool.position;
             building.transform.parent = objectPool;
-            building.DisableColliders();
+            building.SetCollidersEnabled("Placement", false);
         }
 
         return building;

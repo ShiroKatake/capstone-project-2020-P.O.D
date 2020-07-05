@@ -164,6 +164,10 @@ public class ResourceController : MonoBehaviour
         Instance = this;
     }
 
+    /// <summary>
+    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
+    /// Start() runs after Awake().
+    /// </summary>
     private void Start()
     {
         ResourceTextManager.Instance.SetMetalText(ore.ToString());
@@ -181,7 +185,11 @@ public class ResourceController : MonoBehaviour
     {
         //For testing by changing resource values in the inspector.
         CheckResourceSupply();
-    }
+		ResourceTextManager.Instance.SetMetalText(ore.ToString());
+		ResourceTextManager.Instance.SetWaterText(waterSupply.ToString());
+		ResourceTextManager.Instance.SetEnergyUsedText(PowerConsumption.ToString());
+		ResourceTextManager.Instance.SetEnergyMaxText(PowerSupply.ToString());
+	}
 
     //Recurring Methods (Update())------------------------------------------------------------------------------------------------------------------  
 

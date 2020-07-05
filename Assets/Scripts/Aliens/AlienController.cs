@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 /// <summary>
 /// Controller class for aliens.
@@ -27,7 +28,7 @@ public class AlienController : MonoBehaviour
 
     [Header("For Testing")]
     [SerializeField] private bool spawnAliens;
-    //[SerializeField] private bool spawnAlienNow;
+    [SerializeField] private bool spawnAlienNow;
     //[SerializeField] private Vector3 testSpawnPos;
     [SerializeField] private bool ignoreDayNightCycle;
 
@@ -37,6 +38,7 @@ public class AlienController : MonoBehaviour
     private List<Alien> aliens;
     private float timeOfLastDeath;
     private Dictionary<int, List<Vector3>> swarmOffsets;
+    private LayerMask groundLayerMask;
 
     //Penalty Incrementation
     private int spawnCountPenalty;
@@ -66,7 +68,7 @@ public class AlienController : MonoBehaviour
     /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
     /// Awake() runs before Start().
     /// </summary>
-    void Awake()
+    private void Awake()
     {
         if (Instance != null)
         {
@@ -78,6 +80,7 @@ public class AlienController : MonoBehaviour
         timeOfLastDeath = respawnDelay * -1;
         timeOfLastPenalty = penaltyCooldown * -1;
         spawnCountPenalty = 0;
+        groundLayerMask = LayerMask.GetMask("Ground");
 
         //Setting up position offsets that can be randomly selected from for cluster spawning 
         swarmOffsets = new Dictionary<int, List<Vector3>>();
@@ -111,7 +114,7 @@ public class AlienController : MonoBehaviour
     /// <summary>
     /// Update() is run every frame.
     /// </summary>
-    void Update()
+    private void Update()
     {
         SpawnAliens();
     }
@@ -119,13 +122,91 @@ public class AlienController : MonoBehaviour
     //Recurring Methods (Update())-------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
-    /// Spawns more Enemies if there are less than 4 in the scene.
+    /// Spawns more aliens on a regular basis.
     /// </summary>
     private void SpawnAliens()
     {
-        if (spawnAliens && !ClockController.Instance.Daytime && aliens.Count == 0 && Time.time - timeOfLastDeath > respawnDelay)
+        if (spawnAliens && (spawnAlienNow || (!ClockController.Instance.Daytime && aliens.Count == 0 && Time.time - timeOfLastDeath > respawnDelay)))
         {
-            //Debug.Log("Nighttime? No enemies? Spawning time!");
+            //Start Testing----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+            //Debug.Log("Nighttime? No aliens? Spawning time!");
+            if (spawnAlienNow)
+            {
+                //Debug.Log("Test position start");
+                spawnAlienNow = false;
+
+                //Vector3 pos = MapController.Instance.RandomAlienSpawnablePos(new List<Vector3>());
+                //List<Vector3> testPositions = new List<Vector3>()
+                //{
+                //    new Vector3(30, pos.y, 30), //Test position on nav mesh
+                //    new Vector3(20, pos.y, 155), //Test position on nav mesh
+                //    new Vector3(20, pos.y, 130), //Test position on nav mesh
+                //    new Vector3(20, pos.y, 100), //Test position on nav mesh
+                //    new Vector3(20, pos.y, 70), //Test position on nav mesh
+                //    new Vector3(25, pos.y, 40), //Test position on nav mesh
+                //    new Vector3(130, pos.y, 180), //Test position on nav mesh
+                //    new Vector3(191, pos.y, 133), //Test position on nav mesh
+                //    new Vector3(300, pos.y, 300), //Test position on nav mesh
+                //    new Vector3(2, pos.y, 33),   //Test position off nav mesh on plane
+                //    new Vector3(43, pos.y, 54),   //Test position off nav mesh on plateau
+                //    new Vector3(43, pos.y, 80),   //Test position off nav mesh on plateau
+                //    new Vector3(160, pos.y, 25),   //Test position off nav mesh on plateau
+                //    new Vector3(29, pos.y, 195),   //Test position off nav mesh on plateau
+                //    //new Vector3(58, pos.y, 39),   //Test position off nav mesh in pit     //Excluded anyway by other mechanisms
+                //};
+
+                //foreach (Vector3 testPos in testPositions)
+                //{
+                //    Debug.Log($"Testing position {testPos}");
+
+                //    if (MapController.Instance.PositionAvailableForSpawning(testPos, true))
+                //    {
+                //        RaycastHit rayHit;
+                //        NavMeshHit navHit;
+                //        NavMeshPath path = new NavMeshPath();
+                //        Physics.Raycast(testPos, Vector3.down, out rayHit, 25, groundLayerMask);
+                //        Vector3 heightAdjustedPos = new Vector3(testPos.x, rayHit.point.y, testPos.z);
+                //        Alien alien = AlienFactory.Instance.GetAlien(heightAdjustedPos);
+                //        alien.Setup(IdGenerator.Instance.GetNextId());
+
+                //        //if (alien.NavMeshAgent.isOnNavMesh)           //All true
+                //        //if (alien.NavMeshAgent.hasPath)               //All false
+                //        //if (alien.NavMeshAgent.isOnOffMeshLink)       //All false
+
+                //        //alien.ActivateStationaryNavMeshAgent();                                           //Breaks
+                //        //if (alien.NavMeshAgent.CalculatePath(CryoEgg.Instance.transform.position, path))                  
+                //        //{
+                //        //    while (!alien.NavMeshAgent.hasPath)
+                //        //    {
+                //        //        Debug.Log($"Path pending . . . alien destination is {alien.NavMeshAgent.destination}");
+                //        //        yield return null;
+                //        //    }
+                //        //     
+                //        //    if (alien.NavMeshAgent.path.status != NavMeshPathStatus.PathComplete)
+
+                //        if (NavMesh.SamplePosition(alien.transform.position, out navHit, 1, NavMesh.AllAreas))
+                //        { 
+                //            aliens.Add(alien);
+                //            Debug.Log($"Successful spawn at pos {alien.transform.position}");
+                //        }
+                //        else
+                //        {
+                //            Debug.LogError($"NavMesh.SamplePosition returned false at {alien.transform.position}, therefore found a position not on the nav mesh");
+                //            MapController.Instance.RegisterOffMeshPosition(testPos);
+                //            AlienFactory.Instance.DestroyAlien(alien);
+                //        }
+                //    }
+                //    else
+                //    {
+                //        Debug.LogError($"Could not spawn at {testPos} as position is unavailable for spawning, regardless of if it's on the nav mesh or not.");
+                //    }
+                //}
+
+                //Debug.Log("Test position end");
+            }
+
+            //End Testing------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
             //Check and increment penalty
             if (Time.time - timeOfLastPenalty > penaltyCooldown && (Time.time - BuildingController.Instance.TimeLastDefenceWasBuilt > defencePenaltyThreshold || Time.time - BuildingController.Instance.TimeLastNonDefenceWasBuilt > nonDefencePenaltyThreshold))
@@ -135,7 +216,7 @@ public class AlienController : MonoBehaviour
                 Debug.Log($"AlienController.spawnCountPenalty incremented to {spawnCountPenalty}");
             }
 
-            //Spawn enemies
+            //Spawn aliens
             int spawnCount = BuildingController.Instance.BuildingCount * 3 + spawnCountPenalty;
             Vector3 swarmCentre = Vector3.zero; 
             int swarmSize = 0;                   
@@ -146,6 +227,7 @@ public class AlienController : MonoBehaviour
             Dictionary<Vector3, bool> unavailablePositions = new Dictionary<Vector3, bool>();
 
             for (int i = 0; i < spawnCount; i++)
+            //for (int i = 0; i < 100; i++)
             {
                 if (availableOffsets.Count == 0)
                 {
@@ -173,8 +255,25 @@ public class AlienController : MonoBehaviour
 
                 if (MapController.Instance.PositionAvailableForSpawning(spawnPos, true))
                 {
-                    aliens.Add(AlienFactory.Instance.GetAlien(spawnPos));
-                    swarmSize++;  
+                    RaycastHit rayHit;
+                    NavMeshHit navHit;
+                    Physics.Raycast(spawnPos, Vector3.down, out rayHit, 25, groundLayerMask);
+                    Alien alien = AlienFactory.Instance.GetAlien(new Vector3(spawnPos.x, rayHit.point.y, spawnPos.z));
+                    alien.Setup(IdGenerator.Instance.GetNextId());
+
+                    if (NavMesh.SamplePosition(alien.transform.position, out navHit, 1, NavMesh.AllAreas))
+                    {
+                        //Debug.Log($"Successful spawn at pos {alien.transform.position}");
+                        aliens.Add(alien);
+                        swarmSize++;
+                    }
+                    else
+                    {
+                        //Debug.LogError($"NavMesh.SamplePosition returned false at {alien.transform.position}, therefore found a position not on the nav mesh");
+                        MapController.Instance.RegisterOffMeshPosition(spawnPos);
+                        AlienFactory.Instance.DestroyAlien(alien);
+                        i--;
+                    }
 
                     int maxLeft = (int)(maxSwarmRadius * offsetMultiplier * -1);
                     int maxRight = Mathf.CeilToInt(maxSwarmRadius * offsetMultiplier);
@@ -197,9 +296,9 @@ public class AlienController : MonoBehaviour
     }
 
     /// <summary>
-    /// Removes the alien from AlienController's list of enemies.
+    /// Removes the alien from AlienController's list of aliens.
     /// </summary>
-    /// <param name="alien">The alien to be removed from AlienController's list of enemies.</param>
+    /// <param name="alien">The alien to be removed from AlienController's list of aliens.</param>
     public void DeRegisterAlien(Alien alien)
     {
         if (aliens.Contains(alien))

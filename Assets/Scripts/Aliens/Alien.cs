@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 /// <summary>
 /// Demo class for enemies.
@@ -16,28 +17,30 @@ public class Alien : MonoBehaviour, IMessenger
 
     [Header("Stats")] 
     [SerializeField] private int id;
-    [SerializeField] private float speed;
-    [SerializeField] private float turningSpeed;
-    [SerializeField] private float hoverHeight;
+    //[SerializeField] private float hoverHeight;
     [SerializeField] private float attackRange;
     [SerializeField] private float damage;
     [SerializeField] private float attackCooldown;
 
     //Non-Serialized Fields------------------------------------------------------------------------
+
     [Header("Testing")]
+    
     //Componenets
     private List<Collider> colliders;
     private Health health;
+    private NavMeshAgent navMeshAgent;
     private Rigidbody rigidbody;
 
     //Movement
     private bool moving;
-    [SerializeField] private float zRotation;
+    private float speed;
+    //[SerializeField] private float zRotation;
 
     //Turning
-    private Quaternion oldRotation;
-    private Quaternion targetRotation;
-    private float slerpProgress;
+    //private Quaternion oldRotation;
+    //private Quaternion targetRotation;
+    //private float slerpProgress;
     
     //Targeting
     //private CryoEgg CryoEgg;
@@ -49,9 +52,7 @@ public class Alien : MonoBehaviour, IMessenger
     [SerializeField] private string shotByName;
     [SerializeField] private Transform shotByTransform;
     private float timeOfLastAttack;
-
-    //[SerializeField] private bool conductSweepTesting;
-
+    
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
     //Basic Public Properties----------------------------------------------------------------------
@@ -66,15 +67,10 @@ public class Alien : MonoBehaviour, IMessenger
     /// </summary>
     public Health Health { get => health; }
 
-    ///// <summary>
-    ///// Alien's unique ID number. Id should only be set by Alien.Setup().
-    ///// </summary>
-    //public int Id { get => id; }
-
-    ///// <summary>
-    ///// Whether or not the alien is moving.
-    ///// </summary>
-    //public bool Moving { get => moving; set => moving = value; }
+    /// <summary>
+    /// Alien's NavMeshAgent component.
+    /// </summary>
+    public NavMeshAgent NavMeshAgent { get => navMeshAgent; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -86,22 +82,16 @@ public class Alien : MonoBehaviour, IMessenger
     {
         colliders = new List<Collider>(GetComponents<Collider>());
         health = GetComponent<Health>();
+        navMeshAgent = GetComponent<NavMeshAgent>();
         rigidbody = GetComponent<Rigidbody>();
-        zRotation = transform.rotation.eulerAngles.z;
+        //zRotation = transform.rotation.eulerAngles.z;
 
         visibleAliens = new List<Transform>();
         visibleTargets = new List<Transform>();
         moving = false;
+        navMeshAgent.enabled = false;
+        speed = navMeshAgent.speed;
     }
-
-    ///// <summary>
-    ///// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
-    ///// Start() runs after Awake().
-    ///// </summary>
-    //void Start()
-    //{
-    //    CryoEgg = CryoEgg.Instance;
-    //}
 
     /// <summary>
     /// Prepares the Alien to chase its targets when AlienFactory puts it in the world. 
@@ -111,9 +101,6 @@ public class Alien : MonoBehaviour, IMessenger
         this.id = id;
         gameObject.name = $"Alien {id}";
         health.Reset();
-
-        //Debug.Log($"{this}.Setup(), CryoEgg is {CryoEgg.Instance}");
-        //Debug.Log($"CryoEgg.ColliderTransform is {CryoEgg.Instance.ColliderTransform}, CryoEgg.Health is {CryoEgg.Instance.Health}, CryoEgg.Size is {CryoEgg.Instance.Size}");
 
         target = CryoEgg.Instance.ColliderTransform;
         targetHealth = CryoEgg.Instance.Health;
@@ -129,6 +116,8 @@ public class Alien : MonoBehaviour, IMessenger
         {
             c.enabled = true;
         }
+
+        navMeshAgent.enabled = true;
     }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
@@ -144,6 +133,7 @@ public class Alien : MonoBehaviour, IMessenger
             SelectTarget();
             Look();
             Move();
+            
         }
     }
 
@@ -156,6 +146,7 @@ public class Alien : MonoBehaviour, IMessenger
     {
         if (health.IsDead())
         {
+            AudioManager.Instance.PlaySound(AudioManager.ESound.Alien_Dies, this.gameObject);
             AlienFactory.Instance.DestroyAlien(this);
         }
     }
@@ -171,9 +162,7 @@ public class Alien : MonoBehaviour, IMessenger
                 //Target Cryo egg
                 if (target != CryoEgg.Instance.transform)
                 {
-                    target = CryoEgg.Instance.ColliderTransform;
-                    targetHealth = CryoEgg.Instance.Health;
-                    targetSize = CryoEgg.Instance.Size;
+                    SetTarget(CryoEgg.Instance.transform);
                 }
 
                 break;
@@ -181,9 +170,7 @@ public class Alien : MonoBehaviour, IMessenger
                 //Get only visible target
                 if (target != visibleTargets[0])
                 {
-                    target = visibleTargets[0];
-                    targetHealth = target.GetComponentInParent<Health>();   //Gets Health from target or any of its parents that has it.
-                    targetSize = target.GetComponentInParent<Size>();   //Gets Radius from target or any of its parents that has it.
+                    SetTarget(visibleTargets[0]);
                 }
 
                 break;
@@ -191,9 +178,7 @@ public class Alien : MonoBehaviour, IMessenger
                 //Prioritise shooter
                 if (shotByTransform != null && visibleTargets.Contains(shotByTransform))
                 {
-                    target = shotByTransform;
-                    targetHealth = target.GetComponentInParent<Health>();   //Gets Health from target or any of its parents that has it.
-                    targetSize = target.GetComponentInParent<Size>();   //Gets Radius from target or any of its parents that has it.
+                    SetTarget(shotByTransform);
                 }
                 else
                 {
@@ -215,9 +200,7 @@ public class Alien : MonoBehaviour, IMessenger
 
                     if (target != closestTarget)
                     {
-                        target = closestTarget;
-                        targetHealth = target.GetComponentInParent<Health>();   //Gets Health from target or any of its parents that has it.
-                        targetSize = target.GetComponentInParent<Size>();   //Gets Radius from target or any of its parents that has it.
+                        SetTarget(closestTarget);
                     }
                 }
 
@@ -226,24 +209,24 @@ public class Alien : MonoBehaviour, IMessenger
     }
 
     /// <summary>
+    /// Sets Alien's target transform, targetHealth and targetSize variables based on the selected target and its components.
+    /// </summary>
+    /// <param name="selectedTarget">The transform of the selected target.</param>
+    private void SetTarget(Transform selectedTarget)
+    {
+        target = selectedTarget;
+        targetHealth = target.GetComponentInParent<Health>();   //Gets Health from target or any of its parents that has it.
+        targetSize = target.GetComponentInParent<Size>();   //Gets Radius from target or any of its parents that has it.
+    }
+
+    /// <summary>
     /// Alien uses input information to determine which direction it should be facing
     /// </summary>
     private void Look()
     {
-        //TODO: swarm-based looking behaviour
-        Vector3 newRotation = PositionAtSameHeight(target.position) - transform.position;
-
-        if (newRotation != targetRotation.eulerAngles)
+        if (navMeshAgent.enabled && target.position != navMeshAgent.destination)
         {
-            oldRotation = transform.rotation;
-            targetRotation = Quaternion.LookRotation(newRotation);
-            slerpProgress = 0f;
-        }
-
-        if (slerpProgress < 1)
-        {
-            slerpProgress = Mathf.Min(1, slerpProgress + turningSpeed * Time.fixedDeltaTime);
-            transform.rotation = Quaternion.Slerp(oldRotation, targetRotation, slerpProgress);
+            navMeshAgent.destination = target.position;
         }
     }
 
@@ -264,56 +247,27 @@ public class Alien : MonoBehaviour, IMessenger
     {
         if (Vector3.Distance(transform.position, PositionAtSameHeight(target.position)) > attackRange + targetSize.Radius)
         {
-            RaycastHit hit;
-            float movement = speed * Time.fixedDeltaTime;
+            AudioManager.Instance.PlaySound(AudioManager.ESound.Alien_Moves, this.gameObject);
 
-            //if (conductSweepTesting && rigidbody.SweepTest(transform.forward, out hit, movement)) //Check if would collide with another object
-            //{
-            //    Debug.Log($"{this}.Move() sweep test, hit collider's game object is {hit.collider.gameObject}, tag is {hit.collider.tag}");
-
-            //    if (hit.collider.tag == "Alien" && hit.rigidbody != rigidbody)
-            //    {
-            //        return;
-            //    }
-            //}
-
-            transform.Translate(new Vector3(0, 0, movement));
-            //Vector3 translatedPos = transform.position;
-
-            LayerMask mask = LayerMask.GetMask("Planet");
-
-            if (Physics.Raycast(transform.position + Vector3.up * 0.5f, Vector3.down, out hit, 25, mask))
+            if (navMeshAgent.speed != speed)
             {
-                float height = (transform.position - hit.point).y;
-
-                //Toggle gravity if something has pushed the alien up above hoverHeight
-                if (rigidbody.useGravity)
-                {
-                    if (height <= hoverHeight)
-                    {
-                        transform.position = new Vector3(transform.position.x, hoverHeight, transform.position.z);
-                        rigidbody.useGravity = false;
-                        rigidbody.drag = 100;
-                        rigidbody.mass = 0;
-                    }
-                }
-                else
-                {
-                    if (height > hoverHeight)
-                    {
-                        rigidbody.useGravity = true;
-                        rigidbody.drag = 0;
-                        rigidbody.velocity = Vector3.zero;
-                        rigidbody.mass = 1000;
-                    }
-                }
+                navMeshAgent.speed = speed;
             }
         }
-        else if (Time.time - timeOfLastAttack > attackCooldown)
+        else
         {
-            timeOfLastAttack = Time.time;
-            targetHealth.Value -= damage;
-            //TODO: trigger attack animation
+            if (navMeshAgent.speed != 0)
+            {
+                navMeshAgent.speed = 0;
+            }
+
+            if (Time.time - timeOfLastAttack > attackCooldown)
+            {
+                timeOfLastAttack = Time.time;
+                targetHealth.Value -= damage;
+                AudioManager.Instance.PlaySound(AudioManager.ESound.Damage_To_Building, this.gameObject); //need to add a check to see what it is attacking if we want to diversify sound portfolio, non essential
+                //TODO: trigger attack animation
+            }
         }
     }
 
@@ -358,6 +312,7 @@ public class Alien : MonoBehaviour, IMessenger
     /// </summary>
     public void Reset()
     {
+        navMeshAgent.enabled = false;
         MessageDispatcher.Instance.SendMessage("Turret", new Message(gameObject.name, "Alien", this.gameObject, "Dead"));
         MessageDispatcher.Instance.Unsubscribe("Alien", this);
         moving = false;
@@ -373,21 +328,13 @@ public class Alien : MonoBehaviour, IMessenger
         }
     }
 
-    //private void OnCollisionEnter(Collision collision)
-    //{
-    //    if (moving)
-    //    {
-    //        Debug.Log($"{this} collided with {collision.gameObject}, tag is {collision.gameObject.tag}, force applied is {collision.impulse}");
-    //    }
-    //}
-
     /// <summary>
     /// When a GameObject collides with another GameObject, Unity calls OnTriggerEnter.
     /// </summary>
     /// <param name="other">The other Collider involved in this collision.</param>
     private void OnTriggerEnter(Collider other)
     {
-        if (/*bodyCollider.enabled &&*/ !other.isTrigger)
+        if (!other.isTrigger)
         {
             if (other.CompareTag("Alien"))
             {
@@ -416,7 +363,7 @@ public class Alien : MonoBehaviour, IMessenger
     /// <param name="other">The other Collider involved in this collision.</param>
     private void OnTriggerExit(Collider other)
     {
-        if (/*bodyCollider.enabled && */!other.isTrigger)
+        if (!other.isTrigger)
         {
             if (visibleAliens.Contains(other.transform))
             {
