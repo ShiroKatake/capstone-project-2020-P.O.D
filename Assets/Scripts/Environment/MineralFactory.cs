@@ -44,11 +44,16 @@ public class MineralFactory : MonoBehaviour
         }
 
         Instance = this;
-        objectPool = ObjectPool.Instance.transform;
         IdGenerator idGenerator = IdGenerator.Instance;
         minerals = new List<Mineral>();
         despawningMinerals = new List<Mineral>();
         despawnedMinerals = new List<Mineral>();
+
+        
+    }
+
+    private void Start() {
+        objectPool = ObjectPool.Instance.transform;
 
         for (int i = 0; i < pooledMinerals; i++)
         {

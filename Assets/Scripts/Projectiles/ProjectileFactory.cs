@@ -44,9 +44,14 @@ public class ProjectileFactory : MonoBehaviour
         }
 
         Instance = this;
-        objectPool = ObjectPool.Instance.transform;
         prefabs = new Dictionary<EProjectileType, Projectile>();
         projectiles = new Dictionary<EProjectileType, List<Projectile>>();
+
+               
+    }
+
+    private void Start() {
+        objectPool = ObjectPool.Instance.transform;
 
         foreach (Projectile p in projectilePrefabs)
         {
@@ -60,7 +65,8 @@ public class ProjectileFactory : MonoBehaviour
                 q.transform.parent = objectPool;
                 projectiles[q.Type].Add(q);
             }
-        }        
+        } 
+
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------

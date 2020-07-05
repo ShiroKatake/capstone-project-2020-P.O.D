@@ -68,7 +68,6 @@ public class BuildingFactory : MonoBehaviour
         }
 
         Instance = this;
-        objectPool = ObjectPool.Instance.transform;
         buildings = new Dictionary<EBuilding, List<Building>>();
         buildings[EBuilding.FusionReactor] = new List<Building>();
         buildings[EBuilding.IceDrill] = new List<Building>();
@@ -78,7 +77,14 @@ public class BuildingFactory : MonoBehaviour
         buildings[EBuilding.ShortRangeTurret] = new List<Building>();
         buildings[EBuilding.LongRangeTurret] = new List<Building>();
         buildingFoundations = new List<BuildingFoundation>();
+
+        
+    }
+
+    private void Start() {
+        objectPool = ObjectPool.Instance.transform;
         IdGenerator idGenerator = IdGenerator.Instance;
+
 
         for (int i = 0; i < pooledFusionReactors; i++)
         {
@@ -211,7 +217,6 @@ public class BuildingFactory : MonoBehaviour
     /// <param name="consumingResources">Was the building destroyed while placed, and therefore needs to leave behind foundations?</param>
     public void DestroyBuilding(Building building, bool consumingResources, bool killed)
     {
-
         BuildingController.Instance.DeRegisterBuilding(building);
 
         if (building.Terraformer != null)
@@ -228,7 +233,6 @@ public class BuildingFactory : MonoBehaviour
 
         if (killed)
         {
-            AudioManager.Instance.PlaySound(AudioManager.ESound.Explosion, this.gameObject);
             foreach (Vector3 offset in building.BuildingFoundationOffsets)
             {
                 GetBuildingFoundation().transform.position = building.transform.position + offset;
