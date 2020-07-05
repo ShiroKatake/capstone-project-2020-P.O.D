@@ -113,6 +113,7 @@ GameObject:
   - component: {fileID: 6966758408912711267}
   - component: {fileID: -703308631334502526}
   - component: {fileID: -6203622737719408024}
+  - component: {fileID: 5198899769767388593}
   m_Layer: 0
   m_Name: Incinerator
   m_TagString: Building
@@ -182,8 +183,8 @@ MonoBehaviour:
   - {x: -1, y: -0.45, z: 1}
   rendererMaterialSets:
   - renderer: {fileID: 1506364897671728230}
-    opaque: {fileID: 2100000, guid: 4fd76da51b591564ab0151e3a84fa644, type: 2}
-    transparent: {fileID: 2100000, guid: cd215eb414a915a49b4c92fd5b612079, type: 2}
+    opaque: {fileID: 2100000, guid: 32e5f86707429ae4e8b436122f0f6636, type: 2}
+    transparent: {fileID: 2100000, guid: 42f1c535a87428f44899ecdce7685f77, type: 2}
   buildingErrorMaterial: {fileID: 2100000, guid: 101275a717e4a1c4fb89e563e095dfd7,
     type: 2}
   idleSound: 17
@@ -230,6 +231,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   environmentParameter: 1
   environmentalAffect: 1
+--- !u!95 &5198899769767388593
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6754134058031210308}
+  m_Enabled: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7bfb9437fac181b4a8d908ad2a0122e0, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &8896923321153035447
 GameObject:
   m_ObjectHideFlags: 0
@@ -586,7 +606,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: cd215eb414a915a49b4c92fd5b612079, type: 2}
+      objectReference: {fileID: 2100000, guid: 42f1c535a87428f44899ecdce7685f77, type: 2}
     - target: {fileID: -927199367670048503, guid: aafe9845bf4a1cf45b0ed81d60a724b9,
         type: 3}
       propertyPath: m_Name
