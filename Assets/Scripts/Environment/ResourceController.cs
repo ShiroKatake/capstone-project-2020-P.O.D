@@ -181,7 +181,11 @@ public class ResourceController : MonoBehaviour
     {
         //For testing by changing resource values in the inspector.
         CheckResourceSupply();
-    }
+		ResourceTextManager.Instance.SetMetalText(ore.ToString());
+		ResourceTextManager.Instance.SetWaterText(waterSupply.ToString());
+		ResourceTextManager.Instance.SetEnergyUsedText(PowerConsumption.ToString());
+		ResourceTextManager.Instance.SetEnergyMaxText(PowerSupply.ToString());
+	}
 
     //Recurring Methods (Update())------------------------------------------------------------------------------------------------------------------  
 
