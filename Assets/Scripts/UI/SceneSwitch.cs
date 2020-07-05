@@ -5,10 +5,10 @@ using UnityEngine.SceneManagement;
 
 public class SceneSwitch : MonoBehaviour
 {
-    [SerializeField] private int MainGame;
+    [SerializeField] private int sceneToSwitchTo;
 
     public void OnTrigger(){
         //print(MainGame.ToString());
-        SceneManager.LoadScene(MainGame);
+        SceneManager.LoadScene(sceneToSwitchTo);
     }
 }
