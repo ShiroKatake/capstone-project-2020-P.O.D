@@ -83,7 +83,7 @@ public class Ore : MonoBehaviour
 	{
 		if (other.gameObject.tag == "Player")
 		{
-			Debug.Log("Collected " + value + " ores.");
+			//Debug.Log("Collected " + value + " ores.");
 			ResourceController.Instance.Ore += value;
 			OreFactory.Instance.ReturnToPool(this);
 		}

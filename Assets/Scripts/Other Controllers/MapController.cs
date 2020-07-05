@@ -127,21 +127,21 @@ public class MapController : MonoBehaviour
     /// <returns>Whether something can legally be spawned.</returns>
     public bool PositionAvailableForSpawning(Vector3 position, bool alien)
     {
-        Debug.Log($"Verifying for spawnable at {position}");
+        //Debug.Log($"Verifying for spawnable at {position}");
         position.x = Mathf.Round(position.x);
         position.z = Mathf.Round(position.z);
 
         //Check if out of bounds
         if (position.x < 0 || position.x > xMax || position.z < 0 || position.z > zMax)
         {
-            Debug.Log($"Can't spawn at {position}, which is outside the bounds of (0,0) to ({xMax},{zMax})");
+            //Debug.Log($"Can't spawn at {position}, which is outside the bounds of (0,0) to ({xMax},{zMax})");
             return false;
         }
 
         //Check if already building occupiued
         if (!availableBuildingPositions[(int)position.x, (int)position.z])
         {
-            Debug.Log($"Can't spawn at {position}, which is already occupied by a building.");
+            //Debug.Log($"Can't spawn at {position}, which is already occupied by a building.");
             return false;
         }
 
