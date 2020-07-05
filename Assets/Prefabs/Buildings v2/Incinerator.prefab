@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 2286067185773121041}
   - component: {fileID: 8514249765430718580}
   - component: {fileID: 8238984568749099194}
+  - component: {fileID: 2171302667265342842}
+  - component: {fileID: 3902482443278008762}
   m_Layer: 0
   m_Name: Collider
   m_TagString: Building
@@ -84,6 +86,34 @@ MonoBehaviour:
   reportOnTriggerEnter: 1
   reportOnTriggerExit: 1
   reportOnTriggerStay: 0
+--- !u!136 &2171302667265342842
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4955945958305400554}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 3.7145352
+  m_Height: 24.93496
+  m_Direction: 2
+  m_Center: {x: 0.019520972, y: 0.00000032719186, z: 10.606502}
+--- !u!136 &3902482443278008762
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4955945958305400554}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 1.0146416
+  m_Height: 24.924623
+  m_Direction: 2
+  m_Center: {x: -1.4189327, y: -4.1730537, z: 10.599486}
 --- !u!1 &6754134058031210308
 GameObject:
   m_ObjectHideFlags: 0
@@ -202,7 +232,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   environmentParameter: 1
-  environmentalAffect: 0.5
+  environmentalAffect: 0.01
 --- !u!95 &5381653726054783991
 Animator:
   serializedVersion: 3
