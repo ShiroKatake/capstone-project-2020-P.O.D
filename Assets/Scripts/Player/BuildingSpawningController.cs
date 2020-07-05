@@ -203,15 +203,20 @@ public class BuildingSpawningController : MonoBehaviour
                     if (ResourceController.Instance.Ore < heldBuilding.OreCost)
                     {
                         Debug.Log("You have insufficient ore to build this building.");
+                        AudioManager.Instance.PlaySound(AudioManager.ESound.Negative_UI);
                     }
                     
                     if (collision)
                     {
                         Debug.Log("You cannot place a building there; it would occupy the same space as something else.");
+                       
+                        AudioManager.Instance.PlaySound(AudioManager.ESound.Negative_UI);
                     }
                     else if (!MapController.Instance.PositionAvailableForBuilding(heldBuilding))
                     {
                         Debug.Log("You cannot place a building there; it would either occupy the same space as something else, or exceed the bounds of the map.");
+                       
+                        AudioManager.Instance.PlaySound(AudioManager.ESound.Negative_UI);
                     }
 
                 }

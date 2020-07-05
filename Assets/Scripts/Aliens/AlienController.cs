@@ -27,7 +27,7 @@ public class AlienController : MonoBehaviour
 
     [Header("For Testing")]
     [SerializeField] private bool spawnAliens;
-    //[SerializeField] private bool spawnAlienNow;
+    [SerializeField] private bool spawnAlienNow;
     //[SerializeField] private Vector3 testSpawnPos;
     [SerializeField] private bool ignoreDayNightCycle;
 
@@ -119,13 +119,19 @@ public class AlienController : MonoBehaviour
     //Recurring Methods (Update())-------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
-    /// Spawns more Enemies if there are less than 4 in the scene.
+    /// Spawns more aliens on a regular basis.
     /// </summary>
     private void SpawnAliens()
     {
-        if (spawnAliens && !ClockController.Instance.Daytime && aliens.Count == 0 && Time.time - timeOfLastDeath > respawnDelay)
+        if (spawnAliens && (spawnAlienNow || (!ClockController.Instance.Daytime && aliens.Count == 0 && Time.time - timeOfLastDeath > respawnDelay)))
         {
-            //Debug.Log("Nighttime? No enemies? Spawning time!");
+            //Debug.Log("Nighttime? No aliens? Spawning time!");
+            if (spawnAlienNow)
+            {
+                Debug.Log("Test position");
+                MapController.Instance.PositionAvailableForSpawning(new Vector3(10, 5, 10), true);
+                spawnAlienNow = false;
+            }
 
             //Check and increment penalty
             if (Time.time - timeOfLastPenalty > penaltyCooldown && (Time.time - BuildingController.Instance.TimeLastDefenceWasBuilt > defencePenaltyThreshold || Time.time - BuildingController.Instance.TimeLastNonDefenceWasBuilt > nonDefencePenaltyThreshold))
@@ -135,7 +141,7 @@ public class AlienController : MonoBehaviour
                 Debug.Log($"AlienController.spawnCountPenalty incremented to {spawnCountPenalty}");
             }
 
-            //Spawn enemies
+            //Spawn aliens
             int spawnCount = BuildingController.Instance.BuildingCount * 3 + spawnCountPenalty;
             Vector3 swarmCentre = Vector3.zero; 
             int swarmSize = 0;                   
@@ -145,7 +151,8 @@ public class AlienController : MonoBehaviour
             List<Vector3> availableOffsets = new List<Vector3>();
             Dictionary<Vector3, bool> unavailablePositions = new Dictionary<Vector3, bool>();
 
-            for (int i = 0; i < spawnCount; i++)
+            //for (int i = 0; i < spawnCount; i++)
+            for (int i = 0; i < 100; i++)
             {
                 if (availableOffsets.Count == 0)
                 {
@@ -173,8 +180,12 @@ public class AlienController : MonoBehaviour
 
                 if (MapController.Instance.PositionAvailableForSpawning(spawnPos, true))
                 {
-                    aliens.Add(AlienFactory.Instance.GetAlien(spawnPos));
-                    swarmSize++;  
+                    RaycastHit hit;
+                    Physics.Raycast(spawnPos, Vector3.down, out hit, 25, LayerMask.GetMask("Ground"));
+                    aliens.Add(AlienFactory.Instance.GetAlien(new Vector3(spawnPos.x, hit.point.y + 0.1f, spawnPos.z)));
+                    swarmSize++;
+
+                    //Debug.Log($"Spawning at ({spawnPos.x}, {hit.point.y + 0.1f}, {spawnPos.z})");
 
                     int maxLeft = (int)(maxSwarmRadius * offsetMultiplier * -1);
                     int maxRight = Mathf.CeilToInt(maxSwarmRadius * offsetMultiplier);
@@ -197,9 +208,9 @@ public class AlienController : MonoBehaviour
     }
 
     /// <summary>
-    /// Removes the alien from AlienController's list of enemies.
+    /// Removes the alien from AlienController's list of aliens.
     /// </summary>
-    /// <param name="alien">The alien to be removed from AlienController's list of enemies.</param>
+    /// <param name="alien">The alien to be removed from AlienController's list of aliens.</param>
     public void DeRegisterAlien(Alien alien)
     {
         if (aliens.Contains(alien))

@@ -90,9 +90,15 @@ public class MineralCollectionController : MonoBehaviour
                 {
                     /*int mined = */mineral.Mine();
                     //Debug.Log($"Raycast hit mineral node. Mined {mined} minerals");
+
+                    AudioManager.Instance.PlaySound(AudioManager.ESound.Mining, this.gameObject);
                     //ResourceController.Instance.Ore += mined; (Moved this function to Ore.cs)
                 }
             }
+        }
+        else
+        {
+            AudioManager.Instance.StopSound(AudioManager.ESound.Mining, this.gameObject);
         }
     }
 }

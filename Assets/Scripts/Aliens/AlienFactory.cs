@@ -16,7 +16,7 @@ public class AlienFactory : MonoBehaviour
 
     [Header("Stats")]
     [SerializeField] private int pooledAliens;
-    [SerializeField] private float alienHoverHeight;
+    [SerializeField] private float alienSpawnHeight;
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
@@ -35,9 +35,9 @@ public class AlienFactory : MonoBehaviour
     //Basic Public Properties----------------------------------------------------------------------
 
     /// <summary>
-    /// The height at which aliens hover.
+    /// The height at which aliens spawn.
     /// </summary>
-    public float AlienHoverHeight { get => alienHoverHeight; }
+    public float AlienSpawnHeight { get => alienSpawnHeight; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
