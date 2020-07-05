@@ -282,6 +282,7 @@ GameObject:
   - component: {fileID: 7957306087969153787}
   - component: {fileID: 6505921446254889876}
   - component: {fileID: 5814535936489597786}
+  - component: {fileID: 1384155706346117035}
   m_Layer: 0
   m_Name: Shotgun Turret
   m_TagString: Building
@@ -430,6 +431,25 @@ MonoBehaviour:
   shotCooldown: 3
   visibleTargets: []
   target: {fileID: 0}
+--- !u!95 &1384155706346117035
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2740937295730065718}
+  m_Enabled: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 978b9a8bc1c03da46b235dc40672f3eb, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &2946983348710066453
 GameObject:
   m_ObjectHideFlags: 0
