@@ -11,8 +11,8 @@ public class btnTutorial : MonoBehaviour
     [SerializeField] private ButtonType buildingType;
 
     //Non-Serialized Fields
-    private TutorialController tutorialController;
-    [SerializeField] private Button button;
+    private StageManager stageManager;
+    private Button button;
 
     //Public Properties
     public Button Button { get => button; }
@@ -24,7 +24,7 @@ public class btnTutorial : MonoBehaviour
     private void Start()
     {
         button = GetComponent<Button>();
-        tutorialController = TutorialController.Instance;
+        stageManager = StageManager.Instance;
     }
 
     //Recurring Methods------------------------------------------------------------------------------------------------------------------------------
@@ -32,12 +32,12 @@ public class btnTutorial : MonoBehaviour
     //Controls when lerping happens based on outside variables
     private void Update()
     {
-        if (tutorialController.Stage == TutorialStage.Finished)
+        if (stageManager.Stage == TutorialStage.Finished)
         {
             button.interactable = true;
             Destroy(this);
         }
-        else if ((UIController.instance.buildingSelector.Visible || buildingType == ButtonType.Upgrades || buildingType == ButtonType.Destroy) && tutorialController.ButtonAllowed(buildingType))
+        else if ((UIController.instance.buildingSelector.Visible || buildingType == ButtonType.Upgrades || buildingType == ButtonType.Destroy) && stageManager.ButtonAllowed(buildingType))
         {
             button.interactable = true;
         }
@@ -45,5 +45,10 @@ public class btnTutorial : MonoBehaviour
         {
             button.interactable = false;
         }
+    }
+
+    private void Notify(List<ButtonType> buttons)
+    {
+
     }
 }

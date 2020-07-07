@@ -682,9 +682,9 @@ public class DialogueBox : MonoBehaviour
                 textBox.text = "";
                 deactivating = false;
 
-                if (TutorialController.Instance.Stage != TutorialStage.Finished)
+                if (StageManager.Instance.Stage != TutorialStage.Finished)
                 {
-                    TutorialController.Instance.RegisterDialogueRead();
+                    StageManager.Instance.RegisterDialogueRead();
                 }
                 else
                 {

@@ -216,7 +216,7 @@ public class ObjectiveController : DialogueBoxController
             case 0:
                 if (cameraController.FinishedOpeningCameraPan)
                 {
-                    if (TutorialController.Instance.SkipTutorial)
+                    if (StageManager.Instance.SkipTutorial)
                     {
                         SendDialogue("start harvest stage", 1);
                         IncrementSubStage();
@@ -283,7 +283,7 @@ public class ObjectiveController : DialogueBoxController
                 // Play music Var 2 soundtrack
                 GameObject.Find("MusicFMOD").GetComponent<MusicFMOD>().StageTwoMusic();
 
-                if (TutorialController.Instance.SkipTutorial)
+                if (StageManager.Instance.SkipTutorial)
                 {
                     cameraController.MovementEnabled = false;
                     hubScript.Animator.enabled = false;  //add this, so the repaired hub is shown/active ? not sure if we need animator to set to true back.
@@ -334,7 +334,7 @@ public class ObjectiveController : DialogueBoxController
                 {
                     DismissDialogue();
                 }
-                else if (!TutorialController.Instance.SkipTutorial && !completedUpgrades && ResourceController.Instance.StoredMineral > mineralsForUpgrades && upgradesTimer > 30)
+                else if (!StageManager.Instance.SkipTutorial && !completedUpgrades && ResourceController.Instance.StoredMineral > mineralsForUpgrades && upgradesTimer > 30)
                 {
                     ResetSubStage();
                     currStage = ObjectiveStage.Upgrades;
@@ -354,7 +354,7 @@ public class ObjectiveController : DialogueBoxController
                     thruster.transform.DOMoveY(transform.position.y - 0.5f, 1);
                     IncrementSubStage();
                 }
-                else if (!TutorialController.Instance.SkipTutorial && !completedUpgrades && ResourceController.Instance.StoredMineral > mineralsForUpgrades && upgradesTimer > 30)
+                else if (!StageManager.Instance.SkipTutorial && !completedUpgrades && ResourceController.Instance.StoredMineral > mineralsForUpgrades && upgradesTimer > 30)
                 {
                     ResetSubStage();
                     currStage = ObjectiveStage.Upgrades;
