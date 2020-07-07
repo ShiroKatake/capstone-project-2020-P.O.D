@@ -12,21 +12,9 @@ using Random = UnityEngine.Random;
 
 
 
-public enum ButtonType
-{
-    None,
-    AirCannon,
-    Generator,
-    Harvester,
-    Extender,
-    FogRepeller,
-    Destroy,
-    Upgrades
-}
-
-//TODO: this shit needs cleaning up so that it's not a *check's Visual Studio* 2853-line wall of text.
-//Look at the GTFO post mortem PDF and check out the proposed restructure it mentions for the tutorial controller to get an idea of how it should look.
-
+/// <summary>
+/// A manager class for the current stage of the game
+/// </summary>
 public class StageManager : MonoBehaviour
 {
     //Fields-----------------------------------------------------------------------------------------------------------------------------------------
@@ -34,7 +22,7 @@ public class StageManager : MonoBehaviour
     //Serialized Fields----------------------------------------------------------------------------
 
     [SerializeField] private bool skipTutorial;
-    [SerializeField] private List<btnTutorial> subscribedButtons;
+    [SerializeField] private EStage firstStage;
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
@@ -55,18 +43,21 @@ public class StageManager : MonoBehaviour
     //Basic Public Properties----------------------------------------------------------------------
 
     /// <summary>
-    /// The current stage of the game;
+    /// The current stage of the game.
     /// </summary>
     public Stage CurrentStage { get => currentStage; }
 
     /// <summary>
-    /// Whether the player has elected to skip the tutorial or not;
+    /// Whether the player has elected to skip the tutorial or not.
     /// </summary>
     public bool SkipTutorial { get => skipTutorial; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
-    //Ensures singleton-ness
+    /// <summary>
+    /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
+    /// Awake() runs before Start().
+    /// </summary>
     private void Awake()
     {
         if (Instance != null)
@@ -83,11 +74,49 @@ public class StageManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Triggers the start of the game.
+    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
+    /// Start() runs after Awake().
+    /// </summary>
+    private void Start()
+    {
+        GetStages();
+        BeginGame();
+    }
+
+    /// <summary>
+    /// Gets all stage classes attached to the StageManager's game object.
+    /// </summary>
+    private void GetStages()
+    {
+        stages = new Dictionary<EStage, Stage>();
+        Stage[] stageList = GetComponents<Stage>();
+
+        foreach (Stage s in stageList)
+        {
+            if (!stages.ContainsKey(s.ID))
+            {
+                stages[s.ID] = s;
+            }
+            else
+            {
+                Debug.Log($"There there is more than one stage being processed by StageManager with the ID {s.ID}. Each stage should have a unique ID. Go back and check their Awake() methods.");
+            }
+        }
+    }
+
+    /// <summary>
+    /// Sets up the start of the game.
     /// </summary>
     public void BeginGame()
     {
-
+        if (skipTutorial)
+        {
+            currentStage = stages[EStage.FinishedTutorial];
+        }
+        else
+        {
+            currentStage = stages[firstStage];
+        }
     }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
@@ -97,7 +126,7 @@ public class StageManager : MonoBehaviour
     /// </summary>
     private void Update()
     {
-
+        currentStage.Execute();
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
@@ -118,32 +147,18 @@ public class StageManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Subscribes a btnTutorial to the StageManager's list of subscribed buttons.
+    /// Sets the selected stage as the current stage of the game.
     /// </summary>
-    /// <param name="button">The btnTutorial being subscribed to the StageManager.</param>
-    public void Subscribe(btnTutorial button)
+    /// <param name="stage">The stage that will become the current stage of the game.</param>
+    public void SetStage(EStage stage)
     {
-        if (!subscribedButtons.Contains(button))
+        if (stages.ContainsKey(stage))
         {
-            subscribedButtons.Add(button);
+            currentStage = stages[stage];
         }
-    }
-
-    /// <summary>
-    /// Removes a btnTutorial from the StageManager's list of subscribed buttons.
-    /// </summary>
-    /// <param name="button">The btnTutorial being unsubscribed from the StageManager.</param>
-    public void Unsubscribe(btnTutorial button)
-    {
-        if (subscribedButtons.Contains(button))
+        else
         {
-            subscribedButtons.Remove(button);
+            Debug.LogError($"StageManager does not have a stage {stage}");
         }
-    }
-
-
-    public void NotifySubscribers(List<ButtonType> buttons)
-    {
-
     }
 }

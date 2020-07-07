@@ -127,6 +127,9 @@ public class DialogueBox : MonoBehaviour
 
     //Serialized Fields----------------------------------------------------------------------------
 
+    [Header("ID")]
+    [SerializeField] private string id;
+
     [Header("Text Box")]
     [SerializeField] private TextMeshProUGUI textBox;
     [SerializeField] private Image aiImage;
@@ -216,9 +219,19 @@ public class DialogueBox : MonoBehaviour
     public int DialogueIndex { get => dialogueIndex; }
 
     /// <summary>
+    /// Whether the dialogue set currently being displayed by this dialogue box has been read.
+    /// </summary>
+    public bool DialogueRead { get => dialogueRead; }
+
+    /// <summary>
     /// Gets the amount of time the current dialogue set has been displayed.
     /// </summary>
     public float DialogueTimer { get => dialogueTimer; }
+
+    /// <summary>
+    /// The ID of this dialogue box to differentiate which dialogue box it is.
+    /// </summary>
+    public string ID { get => id; }
 
     /// <summary>
     /// Gets the key of the dialogue set submitted before the currently displayed dialogue set.
@@ -505,6 +518,7 @@ public class DialogueBox : MonoBehaviour
             dialogueRectTransform = GetComponent<RectTransform>();
             originalRectTransformPosition = GetComponent<RectTransform>().anchoredPosition;
 
+            dialogueRead = false;
             dialogueIndex = 0;
             lastDialogueKey = currentDialogueKey == "" ? lastDialogueKey : currentDialogueKey;
             currentDialogueKey = key;
@@ -661,6 +675,7 @@ public class DialogueBox : MonoBehaviour
                 lastDialogueKey = currentDialogueKey;
                 currentDialogueKey = "";
                 clickable = false;
+                dialogueRead = true;
                 DeactivateDialogueBox();
             }
         }
@@ -681,16 +696,6 @@ public class DialogueBox : MonoBehaviour
                 //Reset position after tweening
                 textBox.text = "";
                 deactivating = false;
-
-                if (StageManager.Instance.Stage != TutorialStage.Finished)
-                {
-                    StageManager.Instance.RegisterDialogueRead();
-                }
-                else
-                {
-                    ObjectiveController.Instance.RegisterDialogueRead();
-                }
-
                 activated = false;
             });
     }

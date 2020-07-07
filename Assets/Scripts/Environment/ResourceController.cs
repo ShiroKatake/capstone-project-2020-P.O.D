@@ -14,10 +14,10 @@ public class ResourceController : MonoBehaviour
     [SerializeField] private int ore;
     [SerializeField] private int powerConsumption;
     [SerializeField] private int powerSupply;
-    [SerializeField] private int waterConsumption;
-    [SerializeField] private int waterSupply;
     [SerializeField] private int wasteConsumption;
     [SerializeField] private int wasteSupply;
+    [SerializeField] private int waterConsumption;
+    [SerializeField] private int waterSupply;
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
@@ -77,6 +77,39 @@ public class ResourceController : MonoBehaviour
         {
             powerSupply = value;
             CheckResourceSupply();
+        }
+    }
+
+    /// <summary>
+    /// How much power the player has to spare.
+    /// </summary>
+    public int SurplusPower
+    {
+        get
+        {
+            return powerSupply - PowerConsumption;
+        }
+    }
+
+    /// <summary>
+    /// How much waste the player has to spare.
+    /// </summary>
+    public int SurplusWaste
+    {
+        get
+        {
+            return wasteSupply - wasteConsumption;
+        }
+    }
+
+    /// <summary>
+    /// How much water the player has to spare.
+    /// </summary>
+    public int SurplusWater
+    {
+        get
+        {
+            return waterSupply - waterConsumption;
         }
     }
 
