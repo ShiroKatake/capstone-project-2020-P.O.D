@@ -16,7 +16,7 @@ public class AlienFactory : MonoBehaviour
 
     [Header("Stats")]
     [SerializeField] private int pooledAliens;
-    [SerializeField] private float alienHoverHeight;
+    [SerializeField] private float alienSpawnHeight;
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
@@ -35,9 +35,9 @@ public class AlienFactory : MonoBehaviour
     //Basic Public Properties----------------------------------------------------------------------
 
     /// <summary>
-    /// The height at which aliens hover.
+    /// The height at which aliens spawn.
     /// </summary>
-    public float AlienHoverHeight { get => alienHoverHeight; }
+    public float AlienSpawnHeight { get => alienSpawnHeight; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -53,8 +53,13 @@ public class AlienFactory : MonoBehaviour
         }
 
         Instance = this;
-        objectPoolParent = ObjectPool.Instance.transform;
         alienPool = new List<Alien>();
+
+        
+    }
+
+    private void Start() {
+        objectPoolParent = ObjectPool.Instance.transform;
 
         for (int i = 0; i < pooledAliens; i++)
         {

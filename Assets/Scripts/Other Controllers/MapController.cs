@@ -63,7 +63,7 @@ public class MapController : MonoBehaviour
     /// </summary>
     private void Start()
     {
-        float alienHoverHeight = AlienFactory.Instance.AlienHoverHeight;
+        float alienSpawnHeight = AlienFactory.Instance.AlienSpawnHeight;
         int noAlienXMin = (int)Mathf.Round(innerBottomLeft.x);
         int noAlienXMax = (int)Mathf.Round(innerTopRight.x);
         int noAlienZMin = (int)Mathf.Round(innerBottomLeft.z);
@@ -84,7 +84,7 @@ public class MapController : MonoBehaviour
 
                 if (availableAlienPositions[i, j])
                 {
-                    alienSpawnablePositions.Add(new Vector3(i, alienHoverHeight, j));
+                    alienSpawnablePositions.Add(new Vector3(i, alienSpawnHeight, j));
                 }
             }
         }
@@ -129,22 +129,73 @@ public class MapController : MonoBehaviour
         position.x = Mathf.Round(position.x);
         position.z = Mathf.Round(position.z);
 
+        //Check if out of bounds
         if (position.x < 0 || position.x > xMax || position.z < 0 || position.z > zMax)
         {
             //Debug.Log($"Can't spawn at {position}, which is outside the bounds of (0,0) to ({xMax},{zMax})");
             return false;
         }
 
-        if (alien && alienExclusionArea[(int)position.x, (int)position.z])
-        {
-            //Debug.Log($"Can't spawn an alien at {position}, which is within the alien exclusion area.");
-            return false;
-        }
-
+        //Check if already building occupiued
         if (!availableBuildingPositions[(int)position.x, (int)position.z])
         {
             //Debug.Log($"Can't spawn at {position}, which is already occupied by a building.");
             return false;
+        }
+
+        if (alien)
+        {
+            //Check if in alien exclusion area
+            if (alienExclusionArea[(int)position.x, (int)position.z])
+            {
+                //Debug.Log($"Can't spawn an alien at {position}, which is within the alien exclusion area.");
+                return false;       
+            }
+
+            RaycastHit hit;
+
+            //Check if a cliff or pit or too close to either
+            for (int i = -1; i <= 1; i++)
+            {
+                for (int j = -1; j <= 1; j++)
+                {
+                    Vector3 testPos = new Vector3(position.x + i, position.y, position.z + j);
+                    //Debug.Log($"TestPos {testPos}");  
+
+                    if (testPos.x < 0 || testPos.x > xMax || testPos.z < 0 || testPos.z > zMax || !Physics.Raycast(testPos, Vector3.down, out hit, 25, LayerMask.GetMask("Ground")))
+                    {
+                        //Debug.Log($"Out of bounds or failed to hit on raycast");
+                        return false;
+                    }
+                    else
+                    {
+                        float hitHeight = hit.point.y;
+                        float errorMargin = 0.01f;
+                        //Debug.Log($"Test modifier ({i}, {j}), adjusted position {position}, raycast down hit at height {hitHeight}, error margin {errorMargin}");
+
+                        if ((hitHeight < 0f - errorMargin || hitHeight > 0f + errorMargin) && (hitHeight < 2.5f - errorMargin || hitHeight > 2.5f + errorMargin))
+                        {
+                            //Debug.Log($"Point.y != 0 or 2.5, therefore pit or cliff, therefore not alien spawnable. Adding to alienExclusionArea.");
+
+                            for (int k = -1; k <= 1; k++)
+                            {
+                                for (int l = -1; l <= 1; l++)
+                                {
+                                    int m = (int)(position.x + i + k);
+                                    int n = (int)(position.z + j + l);
+
+                                    if (m >= 0 && m <= xMax && n >= 0 && n <= zMax)
+                                    {
+                                        alienExclusionArea[m, n] = true;
+                                    }
+                                }
+                            }
+                            
+                            return false;
+                        }
+                    }
+                }
+            }            
         }
 
         return true;
@@ -171,7 +222,7 @@ public class MapController : MonoBehaviour
         switch (availablePositions.Count)
         {
             case 0:
-                return new Vector3 (-1, 0.5f, -1);
+                return new Vector3 (-1, AlienFactory.Instance.AlienSpawnHeight, -1);
             case 1:
                 return availablePositions[0];
             default:
@@ -243,7 +294,7 @@ public class MapController : MonoBehaviour
 
             if (availableAlienPositions[x, z] != startingAlienAvailability)
             {
-                Vector3 pos = new Vector3(x, 0.25f, z);
+                Vector3 pos = new Vector3(x, AlienFactory.Instance.AlienSpawnHeight, z);
 
                 if (availableAlienPositions[x, z])
                 {

@@ -129,7 +129,7 @@ public class ClockController : MonoBehaviour
                 //clockTimer.color = night;
                 //clockBackground.color = night;
                 UIColorManager.Instance.SetNight();
-                AudioManager.Instance.SwitchBackgroundTrack(AudioManager.Sound.NightTime);
+                AudioManager.Instance.SwitchBackgroundTrack(AudioManager.ESound.NightTime);
             }
         }
         else
@@ -142,7 +142,7 @@ public class ClockController : MonoBehaviour
                 //clockTimer.color = day;
                 //clockBackground.color = day;
                 UIColorManager.Instance.SetDay();
-                AudioManager.Instance.SwitchBackgroundTrack(AudioManager.Sound.DayTimeLvlOne);
+                AudioManager.Instance.SwitchBackgroundTrack(AudioManager.ESound.DayTimeLvlOne);
             }
         }
     }
