@@ -20,7 +20,7 @@ public class AlienFactory : MonoBehaviour
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
-    private Transform objectPoolParent;
+    private Transform objectPool;
     private List<Alien> alienPool;
 
     //PublicProperties-------------------------------------------------------------------------------------------------------------------------------
@@ -53,13 +53,20 @@ public class AlienFactory : MonoBehaviour
         }
 
         Instance = this;
-        objectPoolParent = ObjectPool.Instance.transform;
-        alienPool = new List<Alien>();
+        alienPool = new List<Alien>();        
+    }
+
+    /// <summary>
+    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
+    /// Start() runs after Awake().
+    /// </summary>
+    private void Start() {
+        objectPool = ObjectPool.Instance.transform;
 
         for (int i = 0; i < pooledAliens; i++)
         {
-            Alien alien = Instantiate(alienPrefab, objectPoolParent.position, new Quaternion()); 
-            alien.transform.parent = objectPoolParent;
+            Alien alien = Instantiate(alienPrefab, objectPool.position, new Quaternion()); 
+            alien.transform.parent = objectPool;
 
             foreach (Collider c in alien.GetComponents<Collider>())
             {
@@ -98,7 +105,6 @@ public class AlienFactory : MonoBehaviour
             alien = Instantiate(alienPrefab, position, new Quaternion());
         }
 
-        alien.Setup(IdGenerator.Instance.GetNextId());
         return alien;
     }
 
@@ -110,8 +116,8 @@ public class AlienFactory : MonoBehaviour
     {
         alien.Reset();
         AlienController.Instance.DeRegisterAlien(alien);
-        alien.transform.position = objectPoolParent.position;
-        alien.transform.parent = objectPoolParent;
+        alien.transform.position = objectPool.position;
+        alien.transform.parent = objectPool;
         alienPool.Add(alien);
     }
 }

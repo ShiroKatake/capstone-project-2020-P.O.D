@@ -13,14 +13,16 @@ public class EnvironmentalController : MonoBehaviour {
     //[SerializeField] private RatioBars Bio;
     //[SerializeField] private RatioBars O2;
     //[SerializeField] private RatioBars GHG;
-    [SerializeField] private float WinAmount;
+    [SerializeField] private float winAmount;
     [SerializeField] List<Terraformer> terraformers = new List<Terraformer>();
 
-    public float AtmosphereVal { get; private set; } = 0f;
-    public float HumidityVal { get; private set; } = 0f;
-    public float BiodiversityVal { get; private set; } = 0f;
+    public bool Win {get; private set;} = false;
 
-    public float TotalVal { get; private set; } = 0.0f;
+    private float AtmosphereVal = 0f;
+    private float HumidityVal = 0f;
+    private float BiodiversityVal = 0f;
+
+    private float TotalVal = 0.0f;
 
     private float atmoMalice = 1.0f;
     private float humMalice = 1.0f;
@@ -43,7 +45,7 @@ public class EnvironmentalController : MonoBehaviour {
 
         Instance = this;
 
-        progress.SetMax(WinAmount);
+        progress.SetMax(winAmount);
         progress.SetBarValue(TotalVal);
         bars[0].SetMaxBarValue(1);
         bars[0].SetBarValue(atmosRatio);
@@ -63,6 +65,9 @@ public class EnvironmentalController : MonoBehaviour {
         UpdateTotalValue();
 
         progress.SetBarValue(TotalVal);
+        if (TotalVal >= winAmount){
+            Win = true;
+        }
         bars[0].SetBarValue(atmosRatio);
         bars[1].SetBarValue(humRatio);
         bars[2].SetBarValue(bioRatio);
@@ -110,9 +115,9 @@ public class EnvironmentalController : MonoBehaviour {
             }
         }
 
-        AtmosphereVal = Mathf.Min(AtmosphereVal + atmoDelta * atmoMalice * tpf, 100);
-        HumidityVal = Mathf.Min(HumidityVal + humDelta * humMalice * tpf, 100);
-        BiodiversityVal = Mathf.Min(BiodiversityVal + bioDelta * bioMalice * tpf,100);
+        AtmosphereVal = Mathf.Min(AtmosphereVal + atmoDelta * atmoMalice * tpf, winAmount);
+        HumidityVal = Mathf.Min(HumidityVal + humDelta * humMalice * tpf, winAmount);
+        BiodiversityVal = Mathf.Min(BiodiversityVal + bioDelta * bioMalice * tpf, winAmount);
 
     }
 
@@ -132,8 +137,8 @@ public class EnvironmentalController : MonoBehaviour {
         //Debug.Log("AtmosphereRatio: " + atmosRatio);
 
         outputText += "Atmosphere Ratio: " + atmosRatio;
-        outputText += "\nHumidity Ratio: " + humRatio;
-        outputText += "\nBiodiversity Ratio: " + bioRatio;
+        outputText += "; Humidity Ratio: " + humRatio;
+        outputText += "; Biodiversity Ratio: " + bioRatio;
 
         float minthresh = 4f;
 
@@ -148,14 +153,13 @@ public class EnvironmentalController : MonoBehaviour {
             humMalice = MaliceFunction(humMaliceT);
             bioMalice = MaliceFunction(bioMaliceT);
 
-            outputText += "\nAtmos Malice: " +atmoMaliceT +"    :    " + atmoMalice;
-            outputText += "\nHumidity Malice: " + MaliceFunction(humMaliceT);
-            outputText += "\nBiodiversity Malice: " + MaliceFunction(bioMaliceT);
+            outputText += "; Atmos Malice: " +atmoMaliceT +"    :    " + atmoMalice;
+            outputText += "; Humidity Malice: " + MaliceFunction(humMaliceT);
+            outputText += "; Biodiversity Malice: " + MaliceFunction(bioMaliceT);
+            outputText += "Atmosphere: " + AtmosphereVal + "; Humidity: " + HumidityVal + "; Biodiversity: " + BiodiversityVal;
 
+            Debug.Log(outputText);
         }
-
-        //var.text = outputText;
-
     }
 
     private float MaliceFunction(float input) {
@@ -185,7 +189,7 @@ public class EnvironmentalController : MonoBehaviour {
     /// Print current values to console
     /// </summary>
     public void PrintEnvironmentValues() {
-        string debug = "Atmosphere: " + AtmosphereVal + "\tHumidity: " + HumidityVal + "\tBiodiversity: " + BiodiversityVal;
+        string debug = "Atmosphere: " + AtmosphereVal + "; Humidity: " + HumidityVal + "; Biodiversity: " + BiodiversityVal;
         Debug.Log(debug);
     }
 }

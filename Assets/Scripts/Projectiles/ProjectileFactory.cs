@@ -44,9 +44,17 @@ public class ProjectileFactory : MonoBehaviour
         }
 
         Instance = this;
-        objectPool = ObjectPool.Instance.transform;
         prefabs = new Dictionary<EProjectileType, Projectile>();
-        projectiles = new Dictionary<EProjectileType, List<Projectile>>();
+        projectiles = new Dictionary<EProjectileType, List<Projectile>>();               
+    }
+
+    /// <summary>
+    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
+    /// Start() runs after Awake().
+    /// </summary>
+    private void Start()
+    {
+        objectPool = ObjectPool.Instance.transform;
 
         foreach (Projectile p in projectilePrefabs)
         {
@@ -60,7 +68,8 @@ public class ProjectileFactory : MonoBehaviour
                 q.transform.parent = objectPool;
                 projectiles[q.Type].Add(q);
             }
-        }        
+        } 
+
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
