@@ -25,6 +25,7 @@ public class MapController : MonoBehaviour
     private bool[,] availableBuildingPositions;
     private bool[,] alienExclusionArea;
     private bool[,] availableAlienPositions;
+    private LayerMask groundLayerMask;
 
     [SerializeField] private List<Vector3> alienSpawnablePositions;
 
@@ -55,6 +56,7 @@ public class MapController : MonoBehaviour
         availableAlienPositions = new bool[xMax + 1, zMax + 1];
         alienExclusionArea = new bool[xMax + 1, zMax + 1];
         alienSpawnablePositions = new List<Vector3>();
+        groundLayerMask = LayerMask.GetMask("Ground");
     }
 
     /// <summary>
@@ -77,7 +79,7 @@ public class MapController : MonoBehaviour
             {
                 //Debug.Log($"Assessing position ({i},{j})");
                 availableBuildingPositions[i, j] = true;
-                availableAlienPositions[i, j] = ((i < noAlienXMin || i > noAlienXMax) && (j < noAlienZMin || j > noAlienZMax));
+                availableAlienPositions[i, j] = (i < noAlienXMin || i > noAlienXMax || j < noAlienZMin || j > noAlienZMax);//((i < noAlienXMin || i > noAlienXMax) && (j < noAlienZMin || j > noAlienZMax));
                 alienExclusionArea[i, j] = !availableAlienPositions[i, j];
 
                 //Debug.Log($"available for building: {availableBuildingPositions[i, j]}, available for enemies: {availableAlienPositions[i, j]}, alien exclusion area: {alienExclusionArea[i, j]}");
@@ -162,7 +164,7 @@ public class MapController : MonoBehaviour
                     Vector3 testPos = new Vector3(position.x + i, position.y, position.z + j);
                     //Debug.Log($"TestPos {testPos}");  
 
-                    if (testPos.x < 0 || testPos.x > xMax || testPos.z < 0 || testPos.z > zMax || !Physics.Raycast(testPos, Vector3.down, out hit, 25, LayerMask.GetMask("Ground")))
+                    if (testPos.x < 0 || testPos.x > xMax || testPos.z < 0 || testPos.z > zMax || !Physics.Raycast(testPos, Vector3.down, out hit, 25, groundLayerMask))
                     {
                         //Debug.Log($"Out of bounds or failed to hit on raycast");
                         return false;
@@ -275,6 +277,27 @@ public class MapController : MonoBehaviour
     }
 
     /// <summary>
+    /// Informs MapController that the passed position is not on the NavMesh and shouldn't allow alien spawning.
+    /// </summary>
+    /// <param name="position">The position that is not on the NavMesh</param>
+    public void RegisterOffMeshPosition(Vector3 position)
+    {
+        int x = (int)Mathf.Round(position.x);
+        int z = (int)Mathf.Round(position.z);
+
+        if (x >= 0 && x <= xMax && z >= 0 && z <= zMax && availableAlienPositions[x, z])
+        {
+            availableAlienPositions[x, z] = false;
+            Vector3 pos = new Vector3(x, AlienFactory.Instance.AlienSpawnHeight, z);
+            alienSpawnablePositions.Remove(pos);
+        }
+        else
+        {
+            Debug.LogError($"{gameObject.name} can't update the availability of position {position}, which is outside the bounds of (0,0) to ({xMax},{zMax})");
+        }
+    }
+
+    /// <summary>
     /// Updates the availability of the space(s) occupied / to be occupied by a building or mineral.
     /// </summary>
     /// <param name="gameObject">The game object whose space(s) are having their availability updated.</param>
@@ -308,7 +331,7 @@ public class MapController : MonoBehaviour
         }
         else
         {
-            Debug.Log($"{gameObject.name} can't update the availability of position {position}, which is outside the bounds of (0,0) to ({xMax},{zMax})");
+            Debug.LogError($"{gameObject.name} can't update the availability of position {position}, which is outside the bounds of (0,0) to ({xMax},{zMax})");
         }
     }
 }

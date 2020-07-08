@@ -8,9 +8,10 @@ using UnityEngine;
 public class CollisionReporter : MonoBehaviour
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
-    
+
     //Serialized Fields----------------------------------------------------------------------------
 
+    [SerializeField] private string purpose;
     [SerializeField] private List<CollisionListener> collisionListeners;
     [SerializeField] private bool reportOnCollisionEnter;
     [SerializeField] private bool reportOnCollisionExit;
@@ -22,17 +23,17 @@ public class CollisionReporter : MonoBehaviour
     //Non-Serialized Fields------------------------------------------------------------------------
 
     //Components
-    private Collider collider;
+    private List<Collider> colliders;
     private Rigidbody rigidbody;
 
     //TODO: check if reportX switches are turned off when no longer needed AND reportX switches are reset properly when a building is pooled
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
-
+    
     /// <summary>
-    /// This collision reporter's collider component.
+    /// The purpose of the colliders attached to the collision reporter.
     /// </summary>
-    public Collider Collider { get => collider; }
+    public string Purpose { get => purpose; }
 
     /// <summary>
     /// Should CollisionReporter report OnCollisionEnter messages to its ICollisionListeners?
@@ -77,7 +78,7 @@ public class CollisionReporter : MonoBehaviour
     /// </summary>
     private void Awake()
     {
-        collider = GetComponent<Collider>();
+        colliders = new List<Collider>(GetComponents<Collider>());
         rigidbody = GetComponent<Rigidbody>();
     }
 
@@ -91,6 +92,30 @@ public class CollisionReporter : MonoBehaviour
     public bool ReportsTo(CollisionListener collisionListener)
     {
         return collisionListeners.Contains(collisionListener);
+    }
+
+    /// <summary>
+    /// Sets the enabled property of all of the collision reporter's colliders to the passed value.
+    /// </summary>
+    /// <param name="value">What the colliders' enabled properties are being set to.</param>
+    public void SetCollidersEnabled(bool value)
+    {
+        foreach (Collider c in colliders)
+        {
+            c.enabled = value;
+        }
+    }
+
+    /// <summary>
+    /// Sets the isTrigger property of all of the collision reporter's colliders to the passed value.
+    /// </summary>
+    /// <param name="value">What the colliders' isTrigger properties are being set to.</param>
+    public void SetCollidersIsTrigger(bool value)
+    {
+        foreach (Collider c in colliders)
+        {
+            c.isTrigger = value;
+        }
     }
 
     /// <summary>

@@ -47,7 +47,12 @@ public class OreFactory : MonoBehaviour
 		AddOres(pooledOres);
 	}
 
-	private void Start() {
+    /// <summary>
+    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
+    /// Start() runs after Awake().
+    /// </summary>
+    private void Start()
+    {
         objectPool = ObjectPool.Instance.transform;
     }
 

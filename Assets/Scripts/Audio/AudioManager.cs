@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
-    public static AudioManager Instance {get; protected set;}
+    public static AudioManager Instance { get; protected set; }
 
     //gonna break these up later
     public enum ESound
@@ -37,7 +37,8 @@ public class AudioManager : MonoBehaviour
     }
 
     [System.Serializable]
-    public class SoundClip {
+    public class SoundClip
+    {
         [SerializeField] private string name;
         [SerializeField] private AudioManager.ESound sound;
         [SerializeField] private AudioClip clip;
@@ -57,8 +58,8 @@ public class AudioManager : MonoBehaviour
         public float Volume { get => volume; }
         public float Pitch { get => pitch; }
         public bool Loop { get => loop; }
-        public float MinDistance {get => minDistance;}
-        public float MaxDistance {get => maxDistance;}
+        public float MinDistance { get => minDistance; }
+        public float MaxDistance { get => maxDistance; }
         public AudioSource Source { get => source; set => source = value; }
     }
 
@@ -77,8 +78,10 @@ public class AudioManager : MonoBehaviour
     private bool bgSwitching, bgDown, bgUp, bgSwitchControl;
     private ESound bgSoundSwitch;
 
-    private void Awake() {
-        if (Instance != null){
+    private void Awake()
+    {
+        if (Instance != null)
+        {
             Debug.LogError("There should never be 2 or more Audio Managers.");
         }
         Instance = this;
@@ -110,19 +113,23 @@ public class AudioManager : MonoBehaviour
 
         bgSwitching = false;
         bgDown = false;
-        bgUp =false;
+        bgUp = false;
         bgSwitchControl = false;
     }
 
-    private void Update() {
-        if (bgSwitching){
+    private void Update()
+    {
+        if (bgSwitching)
+        {
             CheckBackgroundSound();
         }
     }
 
-    public void PlayBackground(ESound sound){
+    public void PlayBackground(ESound sound)
+    {
         SoundClip s = Array.Find(BackGroundSounds, SoundClip => SoundClip.Sound == sound);
-        if (s == null) {
+        if (s == null)
+        {
             Debug.LogWarning("Sound: " + sound + " not found.");
             return;
         }
@@ -149,18 +156,23 @@ public class AudioManager : MonoBehaviour
         }
     }*/
 
-    public void PlaySound(ESound sound, GameObject obj){
-        if (!ContainsSound(obj, sound)){
+    public void PlaySound(ESound sound, GameObject obj)
+    {
+        if (!ContainsSound(obj, sound))
+        {
             bool tmp = true;
             AudioSource[] sources = obj.GetComponents<AudioSource>();
-            foreach(AudioSource source in sources){
+            foreach (AudioSource source in sources)
+            {
                 oneShotAudioSource = source;
-                if (source.clip == GetAudio(sound).Clip){
+                if (source.clip == GetAudio(sound).Clip)
+                {
                     tmp = false;
                     break;
                 }
             }
-            if (tmp) {
+            if (tmp)
+            {
                 AudioSource audioSource = obj.AddComponent<AudioSource>();
                 SoundClip s = GetAudio(sound);
                 audioSource.clip = s.Clip;
@@ -171,26 +183,35 @@ public class AudioManager : MonoBehaviour
                 audioSource.rolloffMode = AudioRolloffMode.Linear;
                 audioSource.minDistance = s.MinDistance;
                 audioSource.maxDistance = s.MaxDistance;
-                if (gameObjectAudioTimerDictionary.ContainsKey(obj)){
-                    if (gameObjectAudioTimerDictionary[obj].ContainsKey(sound)){
+                if (gameObjectAudioTimerDictionary.ContainsKey(obj))
+                {
+                    if (gameObjectAudioTimerDictionary[obj].ContainsKey(sound))
+                    {
                         gameObjectAudioTimerDictionary[obj][sound] = Time.time;
-                    } else {
+                    }
+                    else
+                    {
                         gameObjectAudioTimerDictionary[obj].Add(sound, Time.time);
                     }
-                } else {
+                }
+                else
+                {
                     gameObjectAudioTimerDictionary.Add(obj, new Dictionary<ESound, float>());
                     gameObjectAudioTimerDictionary[obj].Add(sound, Time.time);
                 }
             }
         }
 
-        if (CanPlaySound(obj, sound)){
+        if (CanPlaySound(obj, sound))
+        {
             //GameObject soundGameObject = new GameObject("Sound");
             //soundGameObject.transform.position = obj.transform.position;
-            
+
             AudioSource[] sources = obj.GetComponents<AudioSource>();
-            foreach(AudioSource s in sources){
-                if (s.clip == GetAudio(sound).Clip){
+            foreach (AudioSource s in sources)
+            {
+                if (s.clip == GetAudio(sound).Clip)
+                {
                     s.Play();
                 }
             }
@@ -203,103 +224,140 @@ public class AudioManager : MonoBehaviour
     }
 
 
-    public void PlaySound(ESound sound){
+    public void PlaySound(ESound sound)
+    {
         //if (CanPlaySound(sound)){
-            if (!audioSourceReferenceDictionary.ContainsKey(sound)){
-                //oneShotGameObject = this.gameObject.AddComponent<AudioSource>();//new GameObject("Sound");
-                //oneShotAudioSource = this.gameObject.AddComponent<AudioSource>();
-                //audioSourceReferenceDictionary[sound] = this.gameObject.AddComponent<AudioSource>();
-                SoundClip s = GetAudio(sound);
-                s.Source = this.gameObject.AddComponent<AudioSource>();
-                s.Source.clip = s.Clip;
-                s.Source.volume = s.Volume;
-                s.Source.pitch = s.Pitch;
-                s.Source.loop = s.Loop;
-                audioSourceReferenceDictionary.Add(sound,s.Source);
-            }
-            //oneShotAudioSource.PlayOneShot(GetAudio(sound).Clip);
+        if (!audioSourceReferenceDictionary.ContainsKey(sound))
+        {
+            //oneShotGameObject = this.gameObject.AddComponent<AudioSource>();//new GameObject("Sound");
+            //oneShotAudioSource = this.gameObject.AddComponent<AudioSource>();
+            //audioSourceReferenceDictionary[sound] = this.gameObject.AddComponent<AudioSource>();
+            SoundClip s = GetAudio(sound);
+            s.Source = this.gameObject.AddComponent<AudioSource>();
+            s.Source.clip = s.Clip;
+            s.Source.volume = s.Volume;
+            s.Source.pitch = s.Pitch;
+            s.Source.loop = s.Loop;
+            audioSourceReferenceDictionary.Add(sound, s.Source);
+        }
+        //oneShotAudioSource.PlayOneShot(GetAudio(sound).Clip);
         audioSourceReferenceDictionary[sound].PlayOneShot(GetAudio(sound).Clip);
         //}
         //}
     }
 
-    public void StopSound(ESound sound){
-        AudioSource[] sources = this.gameObject.GetComponents<AudioSource>();        
-        if (sources.Length != 0){
-            foreach (AudioSource source in sources) {
-                if (source.clip == GetAudio(sound).Clip){
-                    source.Stop();                    
-                    break;
-                }
-            }
-        } else {
-            Debug.LogError("The object has no audio sources!");
-        }
-    }
-
-    public void StopSound(ESound sound, GameObject obj){
-        AudioSource[] sources = obj.GetComponents<AudioSource>();
-        if (sources.Length != 0){
-            foreach(AudioSource source in sources) {
-                if (source.clip == GetAudio(sound).Clip){
+    public void StopSound(ESound sound)
+    {
+        AudioSource[] sources = this.gameObject.GetComponents<AudioSource>();
+        if (sources.Length != 0)
+        {
+            foreach (AudioSource source in sources)
+            {
+                if (source.clip == GetAudio(sound).Clip)
+                {
                     source.Stop();
                     break;
                 }
             }
-        } else {
+        }
+        else
+        {
+            Debug.LogError("The object has no audio sources!");
+        }
+    }
+
+    public void StopSound(ESound sound, GameObject obj)
+    {
+        AudioSource[] sources = obj.GetComponents<AudioSource>();
+        if (sources.Length != 0)
+        {
+            foreach (AudioSource source in sources)
+            {
+                if (source.clip == GetAudio(sound).Clip)
+                {
+                    source.Stop();
+                    break;
+                }
+            }
+        }
+        else
+        {
             Debug.LogError("The object has no audio sources!");
         }
     }
 
 
-    private SoundClip GetAudio(ESound sound){
+    private SoundClip GetAudio(ESound sound)
+    {
         SoundClip s = Array.Find(OneShotSounds, SoundClip => SoundClip.Sound == sound);
-        if (s != null){
+        if (s != null)
+        {
             return s;
-        } else {
+        }
+        else
+        {
             return null;
         }
     }
 
-    private bool ContainsSound(GameObject obj, ESound sound){
-        if (Array.Find(OneShotSounds, SoundClip => SoundClip.Sound == sound) != null){
-            if (gameObjectAudioTimerDictionary.ContainsKey(obj)){
-                if (gameObjectAudioTimerDictionary[obj].ContainsKey(sound)){
+    private bool ContainsSound(GameObject obj, ESound sound)
+    {
+        if (Array.Find(OneShotSounds, SoundClip => SoundClip.Sound == sound) != null)
+        {
+            if (gameObjectAudioTimerDictionary.ContainsKey(obj))
+            {
+                if (gameObjectAudioTimerDictionary[obj].ContainsKey(sound))
+                {
                     return true;
-                } else {
+                }
+                else
+                {
                     return false;
                 }
 
-            } else {
+            }
+            else
+            {
                 return false;
             }
 
-        } else {
+        }
+        else
+        {
             return false;
         }
 
         //return false;
     }
 
-    private bool CanPlaySound(GameObject obj, ESound sound){
-        if (Array.Find(OneShotSounds, SoundClip => SoundClip.Sound == sound) != null){
-            switch (sound){
+    private bool CanPlaySound(GameObject obj, ESound sound)
+    {
+        if (Array.Find(OneShotSounds, SoundClip => SoundClip.Sound == sound) != null)
+        {
+            switch (sound)
+            {
                 case ESound.Player_Hover:
                     if (gameObjectAudioTimerDictionary.ContainsKey(obj))
                     {
                         bool tmp = false;
                         AudioSource[] sources = obj.GetComponents<AudioSource>();
-                        foreach (AudioSource s in sources){
-                            if (s.clip == GetAudio(sound).Clip){
-                                if (!s.isPlaying){
+                        foreach (AudioSource s in sources)
+                        {
+                            if (s.clip == GetAudio(sound).Clip)
+                            {
+                                if (!s.isPlaying)
+                                {
                                     s.Play();
-                                } else {
+                                }
+                                else
+                                {
                                     tmp = true;
                                     break;
                                 }
                             }
                         }
-                        if (gameObjectAudioTimerDictionary[obj].ContainsKey(sound) && tmp){
+                        if (gameObjectAudioTimerDictionary[obj].ContainsKey(sound) && tmp)
+                        {
                             float lastTimePlayed = gameObjectAudioTimerDictionary[obj][sound];
                             float delay = GetAudio(sound).Clip.length;
                             //if (Time.time == 0f)
@@ -312,7 +370,9 @@ public class AudioManager : MonoBehaviour
                             {
                                 return false;
                             }
-                        } else {
+                        }
+                        else
+                        {
                             return true;
                         }
                     }
@@ -325,17 +385,23 @@ public class AudioManager : MonoBehaviour
                     {
                         bool tmp = false;
                         AudioSource[] sources = obj.GetComponents<AudioSource>();
-                        foreach (AudioSource s in sources){
-                            if (s.clip == GetAudio(sound).Clip){
-                                if (!s.isPlaying){
+                        foreach (AudioSource s in sources)
+                        {
+                            if (s.clip == GetAudio(sound).Clip)
+                            {
+                                if (!s.isPlaying)
+                                {
                                     s.Play();
-                                } else {
+                                }
+                                else
+                                {
                                     tmp = true;
                                     break;
                                 }
                             }
                         }
-                        if (gameObjectAudioTimerDictionary[obj].ContainsKey(sound) && tmp){
+                        if (gameObjectAudioTimerDictionary[obj].ContainsKey(sound) && tmp)
+                        {
                             float lastTimePlayed = gameObjectAudioTimerDictionary[obj][sound];
                             float delay = GetAudio(sound).Clip.length;
                             //if (Time.time == 0f)
@@ -348,7 +414,9 @@ public class AudioManager : MonoBehaviour
                             {
                                 return false;
                             }
-                        } else {
+                        }
+                        else
+                        {
                             return true;
                         }
                     }
@@ -361,17 +429,23 @@ public class AudioManager : MonoBehaviour
                     {
                         bool tmp = false;
                         AudioSource[] sources = obj.GetComponents<AudioSource>();
-                        foreach (AudioSource s in sources){
-                            if (s.clip == GetAudio(sound).Clip){
-                                if (!s.isPlaying){
+                        foreach (AudioSource s in sources)
+                        {
+                            if (s.clip == GetAudio(sound).Clip)
+                            {
+                                if (!s.isPlaying)
+                                {
                                     s.Play();
-                                } else {
+                                }
+                                else
+                                {
                                     tmp = true;
                                     break;
                                 }
                             }
                         }
-                        if (gameObjectAudioTimerDictionary[obj].ContainsKey(sound) && tmp){
+                        if (gameObjectAudioTimerDictionary[obj].ContainsKey(sound) && tmp)
+                        {
                             float lastTimePlayed = gameObjectAudioTimerDictionary[obj][sound];
                             float delay = GetAudio(sound).Clip.length;
                             //if (Time.time == 0f)
@@ -384,7 +458,9 @@ public class AudioManager : MonoBehaviour
                             {
                                 return false;
                             }
-                        } else {
+                        }
+                        else
+                        {
                             return true;
                         }
                     }
@@ -396,13 +472,16 @@ public class AudioManager : MonoBehaviour
                     return true;
             }
 
-        } else {
+        }
+        else
+        {
             Debug.Log("Sound: " + sound.ToString() + " cannot be found");
             return false;
         }
     }
 
-    public void SwitchBackgroundTrack(ESound sound){
+    public void SwitchBackgroundTrack(ESound sound)
+    {
         bgSoundSwitch = sound;
         volumeControlTimer = 0;
         timeStamp = Time.time;
@@ -412,8 +491,10 @@ public class AudioManager : MonoBehaviour
         bgSwitching = true;
     }
 
-    private void CheckBackgroundSound(){
-        if (Time.time >= timeStamp + 1f && !bgSwitchControl){
+    private void CheckBackgroundSound()
+    {
+        if (Time.time >= timeStamp + 1f && !bgSwitchControl)
+        {
             bgSwitchControl = true;
             currentBackgroundTrack.Stop();
             currentBackgroundTrack.volume = volumeControlBackground;
@@ -427,26 +508,33 @@ public class AudioManager : MonoBehaviour
             currentBackgroundTrack.volume = 0;
 
             currentBackgroundTrack.Play();
-        } else if (Time.time >= timeStamp + 2f){
+        }
+        else if (Time.time >= timeStamp + 2f)
+        {
             timeStamp = 0f;
             bgSwitchControl = false;
             bgUp = false;
             bgSwitching = false;
         }
 
-        if (bgDown) {
+        if (bgDown)
+        {
             VolumeControlDown();
-        } else if (bgUp) {
+        }
+        else if (bgUp)
+        {
             VolumeControlUp();
         }
     }
 
-    private void VolumeControlDown(){
+    private void VolumeControlDown()
+    {
         volumeControlTimer += Time.deltaTime;
         currentBackgroundTrack.volume = Mathf.Lerp(volumeControlBackground, 0f, volumeControlTimer);
     }
 
-    private void VolumeControlUp(){
+    private void VolumeControlUp()
+    {
         volumeControlTimer += Time.deltaTime;
         currentBackgroundTrack.volume = Mathf.Lerp(0f, volumeControlBackground, volumeControlTimer);
     }
