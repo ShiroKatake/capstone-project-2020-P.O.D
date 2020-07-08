@@ -16,7 +16,7 @@ public struct RendererMaterialSet
 /// </summary>
 public class Building : CollisionListener
 {
-    //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
+	//Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
     //Serialized Fields----------------------------------------------------------------------------                                                    
 
@@ -26,7 +26,13 @@ public class Building : CollisionListener
     [Header("Building Type")]
     [SerializeField] private EBuilding buildingType;
 
-    [Header("Resource Requirements")]
+	[Header("Resource Supply")]
+	[SerializeField] private int ore;
+	[SerializeField] private int powerSupply;
+	[SerializeField] private int waterSupply;
+	[SerializeField] private int wasteSupply;
+
+	[Header("Resource Consumption")]
     [SerializeField] private int oreCost;
     [SerializeField] private int powerConsumption;
     [SerializeField] private int waterConsumption;
@@ -58,6 +64,7 @@ public class Building : CollisionListener
     private Terraformer terraformer;
     private TurretAiming turretAimer;
     private TurretShooting turretShooter;
+	private Animator animator;
 
     //Positioning
     //private Dictionary<string, Vector3> offsets;
@@ -70,7 +77,6 @@ public class Building : CollisionListener
     private bool placed = false;
     [SerializeField] private bool operational = false;
     private float normalBuildTime;
-    private bool boinging = false;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -80,12 +86,7 @@ public class Building : CollisionListener
     /// Whether the building is active and in the scene, or has been pooled and is inactive. Active should only be set in BuildingFactory.
     /// </summary>
     public bool Active { get => active; set => active = value; }
-
-    /// <summary>
-    /// Is the building going "boing" to indicate that it has finished building?
-    /// </summary>
-    public bool Boinging { get => boinging; }
-
+	
     /// <summary>
     /// The position of building foundations relative to the building's transform.position value.
     /// </summary>
@@ -125,11 +126,11 @@ public class Building : CollisionListener
     /// How much power this building requires per second to function.
     /// </summary>
     public int PowerConsumption { get => powerConsumption; }
-
-    /// <summary>
-    /// Size information regarding this building.
-    /// </summary>
-    public Size Size { get => size; }
+	public int PowerSupply { get => powerSupply; }
+	/// <summary>
+	/// Size information regarding this building.
+	/// </summary>
+	public Size Size { get => size; }
 
     /// <summary>
     /// The building's resource collector component, if it has one.
@@ -145,28 +146,28 @@ public class Building : CollisionListener
     /// How much waste this building requires per second to function.
     /// </summary>
     public int WasteConsumption { get => wasteConsumption; }
+	public int WasteSupply { get => wasteSupply; }
+	/// <summary>
+	/// How much water this building requires per second to function.
+	/// </summary>
+	public int WaterConsumption { get => waterConsumption; }
+	public int WaterSupply{ get => waterSupply; }
+	///// <summary>
+	///// How many squares this building occupies along the x-axis.
+	///// </summary>
+	//public int XSize { get => xSize; }
 
-    /// <summary>
-    /// How much water this building requires per second to function.
-    /// </summary>
-    public int WaterConsumption { get => waterConsumption; }
+	///// <summary>
+	///// How many squares this building occupies along the z-axis.
+	///// </summary>
+	//public int ZSize { get => zSize; }
 
-    ///// <summary>
-    ///// How many squares this building occupies along the x-axis.
-    ///// </summary>
-    //public int XSize { get => xSize; }
+	//Complex Public Properties--------------------------------------------------------------------                                                    
 
-    ///// <summary>
-    ///// How many squares this building occupies along the z-axis.
-    ///// </summary>
-    //public int ZSize { get => zSize; }
-
-    //Complex Public Properties--------------------------------------------------------------------                                                    
-
-    /// <summary>
-    /// The Building's unique ID number. Id should only be set by BuildingFactory.GetBuilding().
-    /// </summary>
-    public int Id
+	/// <summary>
+	/// The Building's unique ID number. Id should only be set by BuildingFactory.GetBuilding().
+	/// </summary>
+	public int Id
     {
         get
         {
@@ -189,28 +190,28 @@ public class Building : CollisionListener
         {
             return operational;
         }
-
         set
         {
-            //Debug.Log($"Pre-Setting: operational: {operational}, value: {value}, active: {active}");
+            Debug.Log($"Pre-Setting {gameObject.name}: operational: {operational}, value: {value}, active: {active}");
             if (operational != value)
             {
                 operational = (value && active);
-
                 if (resourceCollector != null)
                 {
                     if (operational)
                     {
                         resourceCollector.Activate();
+						Debug.Log($"{gameObject.name}: Resource Activated");
                     }
                     else
                     {
                         resourceCollector.Deactivate();
-                    }
+						Debug.Log($"{gameObject.name}: Resource Deactivated");
+					}
                 }
             }
 
-            //Debug.Log($"Post-Setting: operational: {operational}, value: {value}, active: {active}");
+            Debug.Log($"Post-Setting {gameObject.name}: operational: {operational}, value: {value}, active: {active}");
         }
     }
 
@@ -224,7 +225,8 @@ public class Building : CollisionListener
     {
         health = GetComponent<Health>();
         size = GetComponent<Size>();
-        parentRenderer = GetComponentInChildren<MeshRenderer>();
+		animator = GetComponent<Animator>();
+		parentRenderer = GetComponentInChildren<MeshRenderer>();
         allRenderers = new List<MeshRenderer>(parentRenderer.GetComponentsInChildren<MeshRenderer>());
         rigidbody = GetComponentInChildren<Rigidbody>();
         resourceCollector = GetComponent<ResourceCollector>();
@@ -239,84 +241,63 @@ public class Building : CollisionListener
         if (size.DiameterRoundedUp < 1 || size.DiameterRoundedUp > 3)
         {
             Debug.LogError("Building.Size.RadiusRoundedUp is invalid. It needs to be between 1 and 3.");
-        }
+		}
 
-        //if (xSize < 1 || xSize > 3)
-        //{
-        //    Debug.LogError("xSize is invalid. It needs to be between 1 and 3.");
-        //}
+		//The initial animation duration is 10s in the animation panel.
+		//Therefore 10 divided by whatever duration it needs to be will give us the speed multiplier (ie. 20s is twice as long as 10s, so the speed multiplier is 10/20 = 0.5, so if 10s is 1, 20s is only 0.5)
+		animator.SetFloat("DurationMultiplier", 10f / buildTime);
 
-        //if (zSize < 1 || zSize > 3)
-        //{
-        //    Debug.LogError("zSize is invalid. It needs to be between 1 and 3.");
-        //}
-    }
+		//if (xSize < 1 || xSize > 3)
+		//{
+		//    Debug.LogError("xSize is invalid. It needs to be between 1 and 3.");
+		//}
 
-    //Recurring Methods (Other)----------------------------------------------------------------------------------------------------------------------
+		//if (zSize < 1 || zSize > 3)
+		//{
+		//    Debug.LogError("zSize is invalid. It needs to be between 1 and 3.");
+		//}
+	}
 
-    /// <summary>
-    /// Handles a visual effect of the building rising from the ground when it's placed, before going "boing" and then triggering the public property Operational.
-    /// </summary>
-    public IEnumerator Build()
-    {
-        Vector3 startPos = new Vector3(0, 0, buildStartHeight);
-        Vector3 endPos = Vector3.zero;
-        float buildTimeElapsed = 0;
+	//Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
 
-        Vector3 smallScale = normalScale * smallBoingMultiplier;
-        Vector3 largeScale = normalScale * largeBoingMultiplier;
-        float boingTimeElapsed = 0;
+	/// <summary>
+	/// Update() is run every frame.
+	/// </summary>
+	private void Update()
+	{
+		animator.SetFloat("Health", health.Value);
+		animator.SetBool("Operational", operational);
+	}
 
-        while (buildTimeElapsed < buildTime)
-        {
-            buildTimeElapsed += Time.deltaTime;
-            parentRenderer.transform.localPosition = Vector3.Lerp(startPos, endPos, buildTimeElapsed / buildTime);
-            yield return null;
-        }
+	//Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
-        boinging = true;
+	//Building Triggered Methods-------------------------------------------------------------------
+	
+	/// <summary>
+	/// Handles a visual effect of the building rising from the ground when it's placed, before going "boing" and then triggering the public property Operational.
+	/// </summary>
+	public void Build()
+	{
+		animator.enabled = true;
+	}
 
-        while (boingTimeElapsed < boingInterval)
-        {
-            boingTimeElapsed += Time.deltaTime;
-            transform.localScale = Vector3.Lerp(normalScale, smallScale, boingTimeElapsed / boingInterval);
-            yield return null;
-        }
+	public void Shutdown()
+	{
+		Operational = false;
+		ResourceController.Instance.PowerSupply -= powerSupply;
+		ResourceController.Instance.WaterSupply -= waterSupply;
+		ResourceController.Instance.WasteSupply -= wasteSupply;
+	}
 
-        boingTimeElapsed -= boingInterval;
+	public void Restore()
+	{
+		Operational = true;
+		ResourceController.Instance.PowerSupply += powerSupply;
+		ResourceController.Instance.WaterSupply += waterSupply;
+		ResourceController.Instance.WasteSupply += wasteSupply;
+	}
 
-        while (boingTimeElapsed < boingInterval)
-        {
-            boingTimeElapsed += Time.deltaTime;
-            transform.localScale = Vector3.Lerp(smallScale, largeScale, boingTimeElapsed / boingInterval);
-            yield return null;
-        }
-
-        boingTimeElapsed -= boingInterval;
-
-        while (boingTimeElapsed < boingInterval)
-        {
-            boingTimeElapsed += Time.deltaTime;
-            transform.localScale = Vector3.Lerp(largeScale, normalScale, boingTimeElapsed / boingInterval);
-            yield return null;
-        }
-
-        boinging = false;
-        Operational = true; //Using property to trigger activation of any resource collector component attached.
-
-        if (turretShooter != null)
-        {
-            turretShooter.Place();
-        }
-
-        yield return null;
-    }
-
-    //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
-
-    //Building Triggered Methods-------------------------------------------------------------------
-
-    public void EnableColliders()
+	public void EnableColliders()
     {
         foreach (CollisionReporter c in collisionReporters)
         {
@@ -414,9 +395,6 @@ public class Building : CollisionListener
     {
         placed = true; //Needs to occur before its position gets set to be on the ground so that it triggers the building Foundation at the proper time.
         ResourceController.Instance.Ore -= oreCost;
-        ResourceController.Instance.PowerConsumption += powerConsumption;
-        ResourceController.Instance.WaterConsumption += waterConsumption;
-        ResourceController.Instance.WasteConsumption += wasteConsumption;
         transform.position = position;
 
         foreach (RendererMaterialSet r in rendererMaterialSets)
@@ -433,9 +411,8 @@ public class Building : CollisionListener
         }
 
         BuildingController.Instance.RegisterBuilding(this);
-        StartCoroutine(Build());
+        Build();
     }
-
     /// <summary>
     /// Resets Building to its initial values when it is returned to the building pool.
     /// </summary>
@@ -445,9 +422,9 @@ public class Building : CollisionListener
         active = false;
         colliding = false;
 
-        StopCoroutine(Build());
+        //StopCoroutine(Build());
         health.Reset();
-        Operational = false;
+        operational = false;
         
         otherColliders.Clear();
         parentRenderer.transform.localPosition = Vector3.zero;

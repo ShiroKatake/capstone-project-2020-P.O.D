@@ -184,10 +184,13 @@ public class BuildingController : MonoBehaviour
     /// <param name="water">Is there sufficient waste to supply all buildings?</param>
     public void ShutdownBuildings(bool power, bool water, bool waste)
     {
+		Debug.Log("Disabling Buildings");
         foreach (Building b in buildings)
         {
-            if (b.Operational && ((!power && b.PowerConsumption > 0) || (!water && b.WaterConsumption > 0) || (!waste && b.WasteConsumption > 0)))
+			Debug.Log(b.name);
+			if (b.Operational && ((!power && b.PowerConsumption > 0) || (!water && b.WaterConsumption > 0) || (!waste && b.WasteConsumption > 0)))
             {
+				Debug.Log($"{b.name}: Operational");
                 b.Operational = false;
             }
         }

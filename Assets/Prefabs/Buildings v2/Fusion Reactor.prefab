@@ -51,6 +51,10 @@ MonoBehaviour:
   collisionReporters: []
   id: 0
   buildingType: 2
+  ore: 0
+  powerSupply: 1
+  waterSupply: 0
+  wasteSupply: 0
   oreCost: 4
   powerConsumption: 0
   waterConsumption: 0
@@ -124,7 +128,7 @@ Animator:
   m_GameObject: {fileID: 1531695208761868921}
   m_Enabled: 0
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: d78406312bd098c438619f2b39264774, type: 2}
+  m_Controller: {fileID: 22100000, guid: d171bb24c37c54248b76f6c37e2fbe28, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -378,7 +382,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: e67356b465f5bb246aa3e12c1fdab0b2, type: 2}
+      objectReference: {fileID: 2100000, guid: c3b1016b873b8294589543b2ac716e0c, type: 2}
     - target: {fileID: -927199367670048503, guid: 516e3572be4dbbc4baa2b406f4ed02e8,
         type: 3}
       propertyPath: m_Name
@@ -470,7 +474,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: efd7cbd714946ee42a9dec8a51af2375, type: 2}
+      objectReference: {fileID: 2100000, guid: ec205cb853590e54cb4306473cd2200e, type: 2}
     - target: {fileID: -927199367670048503, guid: 516e3572be4dbbc4baa2b406f4ed02e8,
         type: 3}
       propertyPath: m_Name

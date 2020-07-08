@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Construction_Greenhouse
+  m_Name: FusionReactor_Construction
   serializedVersion: 6
   m_Legacy: 0
   m_Compressed: 0
@@ -30,7 +30,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 11.35
+        time: 9.5
         value: 1
         inSlope: 0
         outSlope: 0
@@ -39,7 +39,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 12
+        time: 10
         value: 1
         inSlope: 0
         outSlope: 0
@@ -51,7 +51,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: material._DissolveAmount
-    path: Collider/Walls Model
+    path: Collider/Base Model
     classID: 23
     script: {fileID: 0}
   - curve:
@@ -67,7 +67,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 3.1666667
+        time: 3.9666667
         value: 0
         inSlope: 0
         outSlope: 0
@@ -76,7 +76,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 7.15
+        time: 6.3
         value: 1
         inSlope: 0
         outSlope: 0
@@ -88,7 +88,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: material._DissolveAmount
-    path: Collider/Walls Model/Glass Model
+    path: Collider/Base Model/Core Model
     classID: 23
     script: {fileID: 0}
   - curve:
@@ -97,55 +97,50 @@ AnimationClip:
       - serializedVersion: 3
         time: 0
         value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 136
+        inSlope: Infinity
+        outSlope: Infinity
+        tangentMode: 103
         weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
+        inWeight: 0
+        outWeight: 0
       - serializedVersion: 3
-        time: 12
+        time: 9.5
         value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 136
+        inSlope: Infinity
+        outSlope: Infinity
+        tangentMode: 103
         weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 10
+        value: 1
+        inSlope: Infinity
+        outSlope: Infinity
+        tangentMode: 103
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: material._DissolveAmount
-    path: Windmill_2
-    classID: 23
+    attribute: m_IsActive
+    path: Collider/Base Model/Core Model/Fusion Reactor Beam
+    classID: 1
     script: {fileID: 0}
   m_PPtrCurves:
   - curve:
     - time: 0
-      value: {fileID: 2100000, guid: 53489400f2eb21e469d024929cce82d1, type: 2}
+      value: {fileID: 2100000, guid: c3b1016b873b8294589543b2ac716e0c, type: 2}
     attribute: m_Materials.Array.data[0]
-    path: Collider/Walls Model
+    path: Collider/Base Model
     classID: 23
     script: {fileID: 0}
   - curve:
     - time: 0
-      value: {fileID: 2100000, guid: fad8d3e269fd2de4d99aa14def7a4104, type: 2}
+      value: {fileID: 2100000, guid: ec205cb853590e54cb4306473cd2200e, type: 2}
     attribute: m_Materials.Array.data[0]
-    path: Collider/Walls Model/Glass Model
-    classID: 23
-    script: {fileID: 0}
-  - curve:
-    - time: 0
-      value: {fileID: 2100000, guid: 339fe3b0488ed094985c8f02a5539746, type: 2}
-    attribute: m_Materials.Array.data[0]
-    path: Windmill_2
-    classID: 23
-    script: {fileID: 0}
-  - curve:
-    - time: 0
-      value: {fileID: 2100000, guid: 339fe3b0488ed094985c8f02a5539746, type: 2}
-    attribute: m_Materials.Array.data[1]
-    path: Windmill_2
+    path: Collider/Base Model/Core Model
     classID: 23
     script: {fileID: 0}
   m_SampleRate: 60
@@ -156,65 +151,49 @@ AnimationClip:
   m_ClipBindingConstant:
     genericBindings:
     - serializedVersion: 2
-      path: 1824145040
+      path: 3478448626
       attribute: 2304829741
       script: {fileID: 0}
       typeID: 23
       customType: 22
       isPPtrCurve: 0
     - serializedVersion: 2
-      path: 1929742310
+      path: 4277526405
       attribute: 2304829741
       script: {fileID: 0}
       typeID: 23
       customType: 22
       isPPtrCurve: 0
     - serializedVersion: 2
-      path: 396065691
-      attribute: 2304829741
+      path: 907255043
+      attribute: 2086281974
       script: {fileID: 0}
-      typeID: 23
-      customType: 22
+      typeID: 1
+      customType: 0
       isPPtrCurve: 0
     - serializedVersion: 2
-      path: 1824145040
+      path: 3478448626
       attribute: 0
       script: {fileID: 0}
       typeID: 23
       customType: 21
       isPPtrCurve: 1
     - serializedVersion: 2
-      path: 1929742310
+      path: 4277526405
       attribute: 0
-      script: {fileID: 0}
-      typeID: 23
-      customType: 21
-      isPPtrCurve: 1
-    - serializedVersion: 2
-      path: 396065691
-      attribute: 0
-      script: {fileID: 0}
-      typeID: 23
-      customType: 21
-      isPPtrCurve: 1
-    - serializedVersion: 2
-      path: 396065691
-      attribute: 1
       script: {fileID: 0}
       typeID: 23
       customType: 21
       isPPtrCurve: 1
     pptrCurveMapping:
-    - {fileID: 2100000, guid: 53489400f2eb21e469d024929cce82d1, type: 2}
-    - {fileID: 2100000, guid: fad8d3e269fd2de4d99aa14def7a4104, type: 2}
-    - {fileID: 2100000, guid: 339fe3b0488ed094985c8f02a5539746, type: 2}
-    - {fileID: 2100000, guid: 339fe3b0488ed094985c8f02a5539746, type: 2}
+    - {fileID: 2100000, guid: c3b1016b873b8294589543b2ac716e0c, type: 2}
+    - {fileID: 2100000, guid: ec205cb853590e54cb4306473cd2200e, type: 2}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 12
+    m_StopTime: 10
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -243,7 +222,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 11.35
+        time: 9.5
         value: 1
         inSlope: 0
         outSlope: 0
@@ -252,7 +231,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 12
+        time: 10
         value: 1
         inSlope: 0
         outSlope: 0
@@ -264,7 +243,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: material._DissolveAmount
-    path: Collider/Walls Model
+    path: Collider/Base Model
     classID: 23
     script: {fileID: 0}
   - curve:
@@ -280,7 +259,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 3.1666667
+        time: 3.9666667
         value: 0
         inSlope: 0
         outSlope: 0
@@ -289,7 +268,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 7.15
+        time: 6.3
         value: 1
         inSlope: 0
         outSlope: 0
@@ -301,7 +280,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: material._DissolveAmount
-    path: Collider/Walls Model/Glass Model
+    path: Collider/Base Model/Core Model
     classID: 23
     script: {fileID: 0}
   - curve:
@@ -310,27 +289,36 @@ AnimationClip:
       - serializedVersion: 3
         time: 0
         value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 136
+        inSlope: Infinity
+        outSlope: Infinity
+        tangentMode: 103
         weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
+        inWeight: 0
+        outWeight: 0
       - serializedVersion: 3
-        time: 12
+        time: 9.5
         value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 136
+        inSlope: Infinity
+        outSlope: Infinity
+        tangentMode: 103
         weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 10
+        value: 1
+        inSlope: Infinity
+        outSlope: Infinity
+        tangentMode: 103
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: material._DissolveAmount
-    path: Windmill_2
-    classID: 23
+    attribute: m_IsActive
+    path: Collider/Base Model/Core Model/Fusion Reactor Beam
+    classID: 1
     script: {fileID: 0}
   m_EulerEditorCurves: []
   m_HasGenericRootTransform: 0

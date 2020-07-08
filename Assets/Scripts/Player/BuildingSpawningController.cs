@@ -183,7 +183,7 @@ public class BuildingSpawningController : MonoBehaviour
             bool collision = heldBuilding.CollisionUpdate();
 
             //Place it or cancel building it
-            if (placeBuilding && ResourceController.Instance.Ore >= heldBuilding.OreCost && !collision && MapController.Instance.PositionAvailableForBuilding(heldBuilding))
+            if (placeBuilding && ResourceController.Instance.Ore >= heldBuilding.OreCost && CheckForResources() && !collision && MapController.Instance.PositionAvailableForBuilding(heldBuilding))
             {              
                 Vector3 spawnPos = heldBuilding.transform.position;
                 spawnPos.y = 0.02f;
@@ -196,7 +196,7 @@ public class BuildingSpawningController : MonoBehaviour
                 placeBuilding = false;
                 cancelBuilding = false;
             }
-            else if (cancelBuilding || (placeBuilding && (ResourceController.Instance.Ore < heldBuilding.OreCost || collision || !MapController.Instance.PositionAvailableForBuilding(heldBuilding))))
+            else if (cancelBuilding || (placeBuilding && (ResourceController.Instance.Ore < heldBuilding.OreCost || !CheckForResources() || collision || !MapController.Instance.PositionAvailableForBuilding(heldBuilding))))
             {
                 if (placeBuilding)
                 {
@@ -204,8 +204,22 @@ public class BuildingSpawningController : MonoBehaviour
                     {
                         Debug.Log("You have insufficient ore to build this building.");
                     }
-                    
-                    if (collision)
+					if (ResourceController.Instance.PowerSupply < ResourceController.Instance.PowerConsumption + heldBuilding.PowerConsumption)
+					{
+						Debug.Log("You have insufficient power capacity to build more of this building.");
+					} else
+					{
+						Debug.Log("true");
+					}
+					if (ResourceController.Instance.WaterSupply < ResourceController.Instance.WaterConsumption + heldBuilding.WaterConsumption)
+					{
+						Debug.Log("You have insufficient water supply to build more of this building.");
+					}
+					if (ResourceController.Instance.WasteSupply < ResourceController.Instance.WasteConsumption + heldBuilding.WasteConsumption)
+					{
+						Debug.Log("You have insufficient waste supply to build more of this building.");
+					}
+					if (collision)
                     {
                         Debug.Log("You cannot place a building there; it would occupy the same space as something else.");
                     }
@@ -244,6 +258,13 @@ public class BuildingSpawningController : MonoBehaviour
 
         return backup;
     }
+
+	private bool CheckForResources()
+	{
+		return ResourceController.Instance.PowerSupply >= ResourceController.Instance.PowerConsumption + heldBuilding.PowerConsumption
+			&& ResourceController.Instance.WaterSupply >= ResourceController.Instance.WaterConsumption + heldBuilding.WaterConsumption
+			&& ResourceController.Instance.WasteSupply >= ResourceController.Instance.WasteConsumption + heldBuilding.WasteConsumption;
+	}
 
     /// <summary>
     /// Gets the position of the building based on the player's position and the offset according to the right analog stick's movement input, while keeping it within the player's field of view.
