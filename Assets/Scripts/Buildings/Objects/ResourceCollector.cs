@@ -27,10 +27,6 @@ public class ResourceCollector : MonoBehaviour
     /// </summary>
     public Building Building { get => building; }
 
-    //Complex Public Properties--------------------------------------------------------------------                                                    
-
-
-
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
@@ -41,45 +37,6 @@ public class ResourceCollector : MonoBehaviour
     {
         building = gameObject.GetComponent<Building>();
     }
-
-    /// <summary>
-    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
-    /// Start() runs after Awake().
-    /// </summary>
-    //private void Start()
-    //{
-
-    //}
-
-    //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
-
-    /// <summary>
-    /// Update() is run every frame.
-    /// </summary>
-    //private void Update()
-    //{
-
-    //}
-
-    /// <summary>
-    /// FixedUpdate() is run at a fixed interval independant of framerate.
-    /// </summary>
-    //private void FixedUpdate()
-    //{
-
-    //}
-
-    //Recurring Methods (Update())------------------------------------------------------------------------------------------------------------------  
-
-
-
-    //Recurring Methods (FixedUpdate())--------------------------------------------------------------------------------------------------------------
-
-
-
-    //Recurring Methods (Other)----------------------------------------------------------------------------------------------------------------------
-
-
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
@@ -120,8 +77,4 @@ public class ResourceCollector : MonoBehaviour
                 break;
         }
     }
-
-    //Utility Methods--------------------------------------------------------------------------------------------------------------------------------  
-
-
 }
