@@ -425,16 +425,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 403112268726757337, guid: c59556a7ef07f27488ad22ca85e6db1c,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 403112268726757338, guid: c59556a7ef07f27488ad22ca85e6db1c,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2899290923523960928, guid: bd669f780283e9944990e2bd084e19f4,
         type: 3}
       propertyPath: m_Name
@@ -488,6 +478,16 @@ PrefabInstance:
     - target: {fileID: 2899290923523960930, guid: bd669f780283e9944990e2bd084e19f4,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 403112268726757337, guid: c59556a7ef07f27488ad22ca85e6db1c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 403112268726757338, guid: c59556a7ef07f27488ad22ca85e6db1c,
+        type: 3}
+      propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -1785,6 +1785,11 @@ PrefabInstance:
       propertyPath: UIBorders.Array.data[1]
       value: 
       objectReference: {fileID: 1173380987}
+    - target: {fileID: 4528282981401134449, guid: 9e7595dc8e91f594fb56c845983b5fac,
+        type: 3}
+      propertyPath: m_Name
+      value: Humidity (Boiler)
+      objectReference: {fileID: 0}
     - target: {fileID: 4528282981535986045, guid: 9e7595dc8e91f594fb56c845983b5fac,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -1794,6 +1799,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4528282981749350481, guid: 9e7595dc8e91f594fb56c845983b5fac,
+        type: 3}
+      propertyPath: m_Name
+      value: Emission (Incinerator)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4528282981967245736, guid: 9e7595dc8e91f594fb56c845983b5fac,
+        type: 3}
+      propertyPath: m_Name
+      value: Biodiversity (Greenhouse))
       objectReference: {fileID: 0}
     - target: {fileID: 4528282982072529220, guid: 9e7595dc8e91f594fb56c845983b5fac,
         type: 3}

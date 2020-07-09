@@ -48,11 +48,11 @@ public class EnvironmentalController : MonoBehaviour {
         progress.SetMax(winAmount);
         progress.SetBarValue(TotalVal);
         bars[0].SetMaxBarValue(1);
-        bars[0].SetBarValue(atmosRatio);
+        bars[0].SetBarValue(bioRatio);
         bars[1].SetMaxBarValue(1);
         bars[1].SetBarValue(humRatio);
         bars[2].SetMaxBarValue(1);
-        bars[2].SetBarValue(bioRatio);
+        bars[2].SetBarValue(atmosRatio);
     }
 
     // Update is called once per frame
@@ -68,11 +68,11 @@ public class EnvironmentalController : MonoBehaviour {
         if (TotalVal >= winAmount){
             Win = true;
         }
-        bars[0].SetBarValue(atmosRatio);
+        bars[0].SetBarValue(bioRatio);
         bars[1].SetBarValue(humRatio);
-        bars[2].SetBarValue(bioRatio);
-        
-        float x = 0;
+        bars[2].SetBarValue(atmosRatio);
+
+		float x = 0;
         foreach (RatioBars r in bars){
             if (r.CurrentValue > x){
                 x = r.CurrentValue;
