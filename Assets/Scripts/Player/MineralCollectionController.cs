@@ -18,6 +18,7 @@ public class MineralCollectionController : MonoBehaviour
 
     private Player playerInputManager;
     private bool collectMinerals;
+    private LayerMask mineralsLayerMask;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -42,8 +43,13 @@ public class MineralCollectionController : MonoBehaviour
         }
 
         Instance = this;
+        mineralsLayerMask = LayerMask.GetMask("Minerals");
     }
 
+    /// <summary>
+    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
+    /// Start() runs after Awake().
+    /// </summary>
     private void Start()
     {
         playerInputManager = ReInput.players.GetPlayer(GetComponent<PlayerID>().Value);
@@ -81,9 +87,9 @@ public class MineralCollectionController : MonoBehaviour
             RaycastHit hit;
             Ray ray = camera.ScreenPointToRay(Input.mousePosition);
 
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("Ground")))
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity, mineralsLayerMask))
             {
-                //Debug.Log("Raycast hit ground");
+                //Debug.Log("Raycast hit minerals");
                 Mineral mineral = hit.collider.GetComponentInParent<Mineral>();
 
                 if (mineral != null)

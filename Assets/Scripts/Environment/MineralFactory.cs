@@ -47,12 +47,15 @@ public class MineralFactory : MonoBehaviour
         IdGenerator idGenerator = IdGenerator.Instance;
         minerals = new List<Mineral>();
         despawningMinerals = new List<Mineral>();
-        despawnedMinerals = new List<Mineral>();
-
-        
+        despawnedMinerals = new List<Mineral>();        
     }
 
-    private void Start() {
+    /// <summary>
+    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
+    /// Start() runs after Awake().
+    /// </summary>
+    private void Start()
+    {
         objectPool = ObjectPool.Instance.transform;
 
         for (int i = 0; i < pooledMinerals; i++)

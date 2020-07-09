@@ -18,6 +18,8 @@ public class EnvironmentalController : MonoBehaviour {
 
     public bool Win {get; private set;} = false;
 
+	private float maxRenderBarValue;
+
     private float AtmosphereVal = 0f;
     private float HumidityVal = 0f;
     private float BiodiversityVal = 0f;
@@ -28,9 +30,9 @@ public class EnvironmentalController : MonoBehaviour {
     private float humMalice = 1.0f;
     private float bioMalice = 1.0f;
 
-    private float atmosRatio = 0f;
-    private float humRatio = 0f;
-    private float bioRatio = 0f;
+	private float atmosRatio = 0f;
+	private float humRatio = 0f;
+	private float bioRatio = 0f;
 
     public static EnvironmentalController Instance { get; protected set; }
 
@@ -48,12 +50,14 @@ public class EnvironmentalController : MonoBehaviour {
         progress.SetMax(winAmount);
         progress.SetBarValue(TotalVal);
         bars[0].SetMaxBarValue(1);
-        bars[0].SetBarValue(atmosRatio);
+        bars[0].SetBarValue(bioRatio);
         bars[1].SetMaxBarValue(1);
         bars[1].SetBarValue(humRatio);
         bars[2].SetMaxBarValue(1);
-        bars[2].SetBarValue(bioRatio);
-    }
+        bars[2].SetBarValue(atmosRatio);
+
+		maxRenderBarValue = 1f / bars.Count * 2f;
+	}
 
     // Update is called once per frame
     void Update()
@@ -68,18 +72,18 @@ public class EnvironmentalController : MonoBehaviour {
         if (TotalVal >= winAmount){
             Win = true;
         }
-        bars[0].SetBarValue(atmosRatio);
+        bars[0].SetBarValue(bioRatio);
         bars[1].SetBarValue(humRatio);
-        bars[2].SetBarValue(bioRatio);
-        
-        float x = 0;
+        bars[2].SetBarValue(atmosRatio);
+
+		float x = 0;
         foreach (RatioBars r in bars){
             if (r.CurrentValue > x){
                 x = r.CurrentValue;
             }
         }
         foreach(RatioBars r in bars){
-            r.SetMaxRenderBarValue(x);
+            r.SetMaxRenderBarValue(maxRenderBarValue);
         }
 
 
@@ -115,9 +119,9 @@ public class EnvironmentalController : MonoBehaviour {
             }
         }
 
-        AtmosphereVal = Mathf.Min(AtmosphereVal + atmoDelta * atmoMalice * tpf, 100);
-        HumidityVal = Mathf.Min(HumidityVal + humDelta * humMalice * tpf, 100);
-        BiodiversityVal = Mathf.Min(BiodiversityVal + bioDelta * bioMalice * tpf,100);
+        AtmosphereVal = Mathf.Min(AtmosphereVal + atmoDelta * atmoMalice * tpf, winAmount);
+        HumidityVal = Mathf.Min(HumidityVal + humDelta * humMalice * tpf, winAmount);
+        BiodiversityVal = Mathf.Min(BiodiversityVal + bioDelta * bioMalice * tpf, winAmount);
 
     }
 
@@ -137,8 +141,8 @@ public class EnvironmentalController : MonoBehaviour {
         //Debug.Log("AtmosphereRatio: " + atmosRatio);
 
         outputText += "Atmosphere Ratio: " + atmosRatio;
-        outputText += "\nHumidity Ratio: " + humRatio;
-        outputText += "\nBiodiversity Ratio: " + bioRatio;
+        outputText += "; Humidity Ratio: " + humRatio;
+        outputText += "; Biodiversity Ratio: " + bioRatio;
 
         float minthresh = 4f;
 
@@ -153,14 +157,13 @@ public class EnvironmentalController : MonoBehaviour {
             humMalice = MaliceFunction(humMaliceT);
             bioMalice = MaliceFunction(bioMaliceT);
 
-            outputText += "\nAtmos Malice: " +atmoMaliceT +"    :    " + atmoMalice;
-            outputText += "\nHumidity Malice: " + MaliceFunction(humMaliceT);
-            outputText += "\nBiodiversity Malice: " + MaliceFunction(bioMaliceT);
+            outputText += "; Atmos Malice: " +atmoMaliceT +"    :    " + atmoMalice;
+            outputText += "; Humidity Malice: " + MaliceFunction(humMaliceT);
+            outputText += "; Biodiversity Malice: " + MaliceFunction(bioMaliceT);
+            outputText += "Atmosphere: " + AtmosphereVal + "; Humidity: " + HumidityVal + "; Biodiversity: " + BiodiversityVal;
 
+            Debug.Log(outputText);
         }
-
-        //var.text = outputText;
-
     }
 
     private float MaliceFunction(float input) {
@@ -190,7 +193,7 @@ public class EnvironmentalController : MonoBehaviour {
     /// Print current values to console
     /// </summary>
     public void PrintEnvironmentValues() {
-        string debug = "Atmosphere: " + AtmosphereVal + "\tHumidity: " + HumidityVal + "\tBiodiversity: " + BiodiversityVal;
+        string debug = "Atmosphere: " + AtmosphereVal + "; Humidity: " + HumidityVal + "; Biodiversity: " + BiodiversityVal;
         Debug.Log(debug);
     }
 }
