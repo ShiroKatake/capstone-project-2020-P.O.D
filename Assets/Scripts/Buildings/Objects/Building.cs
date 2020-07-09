@@ -226,6 +226,10 @@ public class Building : CollisionListener
     private void Awake()
     {
         animator = GetComponent<Animator>();
+		if (animator == null)
+		{
+			Debug.Log("This building is missing an animator component.");
+		}
         health = GetComponent<Health>();
         size = GetComponent<Size>();
         parentRenderer = GetComponentInChildren<MeshRenderer>();
@@ -265,8 +269,11 @@ public class Building : CollisionListener
     /// </summary>
     private void Update()
     {
-        animator.SetFloat("Health", health.Value);
-        animator.SetBool("Operational", operational);
+		if (animator != null)
+		{
+			animator.SetFloat("Health", health.Value);
+			animator.SetBool("Operational", operational);
+		}
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
@@ -409,7 +416,10 @@ public class Building : CollisionListener
     {
         placed = true; //Needs to occur before its position gets set to be on the ground so that it triggers the building Foundation at the proper time.
         ResourceController.Instance.Ore -= oreCost;
-        SetCollidersEnabled("Placement", false);
+		ResourceController.Instance.PowerConsumption += powerConsumption;
+		ResourceController.Instance.WaterConsumption += waterConsumption;
+		ResourceController.Instance.WasteConsumption += wasteConsumption;
+		SetCollidersEnabled("Placement", false);
         SetCollidersEnabled("Body", true);
 
         foreach (RendererMaterialSet r in rendererMaterialSets)
@@ -427,9 +437,6 @@ public class Building : CollisionListener
     /// </summary>
     public void Built()
     {
-        ResourceController.Instance.PowerConsumption += powerConsumption;
-        ResourceController.Instance.WaterConsumption += waterConsumption;
-        ResourceController.Instance.WasteConsumption += wasteConsumption;
         Operational = true; //Using property to trigger activation of any resource collector component attached.
 
         if (turretShooter != null)
