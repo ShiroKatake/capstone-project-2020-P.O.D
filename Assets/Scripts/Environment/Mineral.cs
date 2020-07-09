@@ -12,11 +12,7 @@ public class Mineral : MonoBehaviour
 
 	//Serialized Fields----------------------------------------------------------------------------
 
-	/*
-	[SerializeField] private float miningCooldown;
-    [SerializeField] private float afkTimeout;
-    [SerializeField] private float rotationSpeed;
-	*/
+    [SerializeField] private bool placed;
 	[SerializeField] private int oreCount = 50;
 	[SerializeField] private float oreSpawnRate = 1f;
 	[SerializeField] private float oreCurveRadius = 2;
@@ -28,11 +24,6 @@ public class Mineral : MonoBehaviour
     private List<Collider> colliders;
     private bool despawning;
 	private float timer = 0f;
-	/*
-	private float timeSpentMining;
-    private float timeOfLastMining;
-    private Vector3 rotationUpdate;
-	*/
 
 	//Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -43,18 +34,12 @@ public class Mineral : MonoBehaviour
 	/// </summary>
 	public bool Despawning { get => despawning; }
 
-    //Complex Public Properties----------------------------------------------------------------------
-
     /// <summary>
-    /// How many minerals are remaining in this mineral node.
+    /// How much ore remains in this mineral node.
     /// </summary>
-    public int Count
-    {
-        get
-        {
-            return oreCount;
-        }
-    }
+    public int OreCount { get => oreCount; }
+
+    //Complex Public Properties----------------------------------------------------------------------
 
     /// <summary>
     /// The Mineral node's unique ID number. Id should only be set by MineralFactory.GetMineral().
@@ -73,15 +58,55 @@ public class Mineral : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Whether or not the mineral has been placed in the scene, or is pooled in the object pool.
+    /// </summary>
+    public bool Placed
+    {
+        get
+        {
+            return placed;
+        }
+
+        set
+        {
+            placed = value;
+
+            if (placed)
+            {
+                MapController.Instance.RegisterMineral(this);
+            }
+            else
+            {
+                MapController.Instance.DeRegisterMineral(this);
+            }
+        }
+    }
+
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
+    /// <summary>
+    /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
+    /// Awake() runs before Start().
+    /// </summary>
     private void Awake()
     {
         colliders = new List<Collider>(GetComponentsInChildren<Collider>());
         initialCount = oreCount;
-        //rotationUpdate = new Vector3(0, rotationSpeed, 0);
-		timer = oreSpawnRate;
-	}
+        timer = oreSpawnRate;
+    }
+
+    /// <summary>
+    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
+    /// Start() runs after Awake().
+    /// </summary>
+    private void Start()
+    {
+        if (placed)
+        {
+            MapController.Instance.RegisterMineral(this);
+        }
+    }
 
 	//Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
@@ -92,6 +117,7 @@ public class Mineral : MonoBehaviour
 	public void Mine()
     {
 		timer -= Time.deltaTime;
+
 		if (timer <= 0f)
 		{
 			ReleaseOre();
@@ -104,39 +130,6 @@ public class Mineral : MonoBehaviour
 
 			timer = oreSpawnRate;
 		}
-		/*
-        if (count > 0 && !despawning)
-        {
-            transform.localRotation = Quaternion.Euler(transform.rotation.eulerAngles + rotationUpdate * Time.deltaTime);
-			ReleaseOre();
-
-			if (Time.time - timeOfLastMining > afkTimeout)
-            {
-                timeSpentMining = 0;
-            }
-            else
-            {
-                timeSpentMining += Time.deltaTime;
-            }
-
-            timeOfLastMining = Time.time;
-
-            if (timeSpentMining >= miningCooldown)
-            {
-                timeSpentMining -= miningCooldown;
-                count--;
-
-                if (count <= 0)
-                {
-                    MineralFactory.Instance.DestroyMineral(this);
-                }
-
-                return 1;
-            }            
-        }
-
-		return 0;
-		*/
 	}
 
 	/// <summary>
@@ -144,7 +137,7 @@ public class Mineral : MonoBehaviour
 	/// </summary>
 	private void ReleaseOre()
 	{
-		var ore = OreFactory.Instance.Get();
+		Ore ore = OreFactory.Instance.Get();
 		ore.transform.position = transform.position;
 		ore.transform.rotation = transform.rotation;
 		ore.Start = transform;
@@ -213,10 +206,10 @@ public class Mineral : MonoBehaviour
 	/// <returns>A random 3D point that will be the control point for the ore's Bezier curve.</returns>
 	private Vector3 GetPointOnUnitSphereCap(Quaternion targetDirection, float angle)
 	{
-		var angleInRad = UnityEngine.Random.Range(0.0f, angle) * Mathf.Deg2Rad;
-		var PointOnCircle = (UnityEngine.Random.insideUnitCircle.normalized) * Mathf.Sin(angleInRad);
-		var V = new Vector3(PointOnCircle.x, PointOnCircle.y, Mathf.Cos(angleInRad));
-		return targetDirection * V;
+		float angleInRad = UnityEngine.Random.Range(0.0f, angle) * Mathf.Deg2Rad;
+		Vector2 PointOnCircle = (UnityEngine.Random.insideUnitCircle.normalized) * Mathf.Sin(angleInRad);
+		Vector3 v = new Vector3(PointOnCircle.x, PointOnCircle.y, Mathf.Cos(angleInRad));
+		return targetDirection * v;
 	}
 
 	/// <summary>

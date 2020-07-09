@@ -39,6 +39,9 @@ public class Building : CollisionListener
     [SerializeField] private float smallBoingMultiplier;
     [SerializeField] private float largeBoingMultiplier;
 
+    [Header("Offsets of Cliff Detection Raycasts from Position")]
+    [SerializeField] private List<Vector3> cliffRaycastOffsets;
+
     [Header("Offsets of Foundations from Position")]
     [SerializeField] private List<Vector3> buildingFoundationOffsets;
 
@@ -64,11 +67,15 @@ public class Building : CollisionListener
     private TurretAiming turretAimer;
     private TurretShooting turretShooter;
 
+    private Dictionary<string, List<CollisionReporter>> groupedReporters;
+
     //Positioning
     //private Dictionary<string, Vector3> offsets;
     private bool colliding = false;
+    private bool validPlacement = true;
     [SerializeField] private List<Collider> otherColliders;
     Vector3 normalScale;
+    LayerMask groundLayerMask;
 
     //Other
     [SerializeField] private bool active = false;
@@ -105,11 +112,6 @@ public class Building : CollisionListener
     /// How long this building takes to builds itself when the player places it in the scene. Should only be set by BuildingFactory.
     /// </summary>
     public float BuildTime { get => buildTime; set => buildTime = value; }
-
-    ///// <summary>
-    ///// The building's collider component.
-    ///// </summary>
-    //public Collider Collider { get => collider; }
 
     /// <summary>
     /// The Building's Health component.
@@ -155,16 +157,6 @@ public class Building : CollisionListener
     /// How much water this building requires per second to function.
     /// </summary>
     public int WaterConsumption { get => waterConsumption; }
-
-    ///// <summary>
-    ///// How many squares this building occupies along the x-axis.
-    ///// </summary>
-    //public int XSize { get => xSize; }
-
-    ///// <summary>
-    ///// How many squares this building occupies along the z-axis.
-    ///// </summary>
-    //public int ZSize { get => zSize; }
 
     //Complex Public Properties--------------------------------------------------------------------                                                    
 
@@ -237,24 +229,26 @@ public class Building : CollisionListener
         turretAimer = GetComponent<TurretAiming>();
         turretShooter = GetComponent<TurretShooting>();
         collisionReporters = GetCollisionReporters();
+        groupedReporters = new Dictionary<string, List<CollisionReporter>>();
         otherColliders = new List<Collider>();
         normalScale = transform.localScale;
         normalBuildTime = buildTime;
+        groundLayerMask = LayerMask.GetMask("Ground");
+
+        foreach (CollisionReporter c in collisionReporters)
+        {
+            if (!groupedReporters.ContainsKey(c.Purpose))
+            {
+                groupedReporters[c.Purpose] = new List<CollisionReporter>();
+            }
+
+            groupedReporters[c.Purpose].Add(c);
+        }
 
         if (size.DiameterRoundedUp < 1 || size.DiameterRoundedUp > 3)
         {
             Debug.LogError("Building.Size.RadiusRoundedUp is invalid. It needs to be between 1 and 3.");
         }
-
-        //if (xSize < 1 || xSize > 3)
-        //{
-        //    Debug.LogError("xSize is invalid. It needs to be between 1 and 3.");
-        //}
-
-        //if (zSize < 1 || zSize > 3)
-        //{
-        //    Debug.LogError("zSize is invalid. It needs to be between 1 and 3.");
-        //}
     }
 
     //Recurring Methods (Other)----------------------------------------------------------------------------------------------------------------------
@@ -323,19 +317,16 @@ public class Building : CollisionListener
 
     //Building Triggered Methods-------------------------------------------------------------------
 
-    public void EnableColliders()
+    /// <summary>
+    /// Enables or disables all colliders attached to the building's collision reporters with the listed purpose.
+    /// </summary>
+    /// <param name="purpose">The purpose of the collision reporters to have their colliders enabled or disabled.</param>
+    /// <param name="enabled">Whether the collision reporters' colliders will be enabled or disabled.</param>
+    public void SetCollidersEnabled(string purpose, bool enabled)
     {
-        foreach (CollisionReporter c in collisionReporters)
-        {
-            c.Collider.enabled = true;
-        }
-    }
-
-    public void DisableColliders()
-    {
-        foreach (CollisionReporter c in collisionReporters)
-        {
-            c.Collider.enabled = false;
+        foreach (CollisionReporter r in groupedReporters[purpose])
+        {            
+            r.SetCollidersEnabled(enabled);
         }
     }
 
@@ -343,53 +334,15 @@ public class Building : CollisionListener
     /// Checks if the building is colliding while being placed, and updates colour appropriately.
     /// </summary>
     /// <returns>Is this building colliding with something?</returns>
-    public bool CollisionUpdate()
+    public bool IsPlacementValid()
     {
         if (active)
         {
             if (!placed)
             {
-                //Weird quirk of destroying one object and then instantating another and moving it to the same position: it triggers boths' OnTriggerEnter(),
-                //even though one doesn't exist, and then the other doesn't have OnTriggerExit() triggered in the next frame. This checks for the existence of
-                //the other collider and corrects the value of colliding if the other collider no longer exists.
-                if (colliding )
-                {
-                    if (otherColliders.Count == 0)
-                    {
-                        colliding = false;
-                    }
-                    else
-                    {
-                        colliding = false;
+                validPlacement = !(CheckInPit() || CheckColliding() || CheckOnCliff());
 
-                        for (int i = 0, j = otherColliders.Count; i < j; i++)
-                        {
-                            if (otherColliders[i] == null)  
-                            {
-                                otherColliders.RemoveAt(i);
-                                i--;
-                                j--;
-                            }
-                            else
-                            {
-                                colliding = true;
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                if (colliding)
-                {
-                    foreach (RendererMaterialSet r in rendererMaterialSets)
-                    {
-                        if (r.renderer.material != buildingErrorMaterial)
-                        {
-                            r.renderer.material = buildingErrorMaterial;
-                        }
-                    }
-                }
-                else
+                if (validPlacement)
                 {
                     foreach (RendererMaterialSet r in rendererMaterialSets)
                     {
@@ -399,18 +352,111 @@ public class Building : CollisionListener
                         }
                     }
                 }
+                else
+                {
+                    foreach (RendererMaterialSet r in rendererMaterialSets)
+                    {
+                        if (r.renderer.material != buildingErrorMaterial)
+                        {
+                            r.renderer.material = buildingErrorMaterial;
+                        }
+                    }
+                }
+
+                return validPlacement;
             }
             else
             {
-                Debug.Log($"Building {id} ran CollisionsUpdate(), though it's already placed.");
+                Debug.Log($"Building {id} ran IsPlacementValid(), even though it's already placed.");
+                return false;
             }
-
-            return colliding;
         }
         else
         {
-            return false;
+            return true;
         }
+    }
+
+    /// <summary>
+    /// Checks if this building is currently in a pit.
+    /// </summary>
+    private bool CheckInPit()
+    {
+        return transform.position.y < -0.1f;
+    }
+
+    /// <summary>
+    /// Verifies if this building should be considered to be colliding with another object.
+    /// </summary>
+    private bool CheckColliding()
+    {
+        //Weird quirk of destroying one object and then instantating another and moving it to the same position: it triggers boths' OnTriggerEnter(),
+        //even though one doesn't exist, and then the other doesn't have OnTriggerExit() triggered in the next frame. This checks for the existence of
+        //the other collider and corrects the value of colliding if the other collider no longer exists.
+        if (colliding)
+        {
+            if (otherColliders.Count == 0)
+            {
+                colliding = false;
+            }
+            else
+            {
+                colliding = false;
+
+                for (int i = 0, j = otherColliders.Count; i < j; i++)
+                {
+                    if (otherColliders[i] == null)
+                    {
+                        otherColliders.RemoveAt(i);
+                        i--;
+                        j--;
+                    }
+                    else
+                    {
+                        colliding = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return colliding;
+    }
+
+    /// <summary>
+    /// Verifies if this building is extending over a cliff edge.
+    /// </summary>
+    private bool CheckOnCliff()
+    {
+        RaycastHit hit;
+        Vector3 raycastPos;
+        float maxDistance = 0.68f;
+
+        foreach (Vector3 offset in cliffRaycastOffsets)
+        {
+            raycastPos = transform.position + offset;
+
+            if (!Physics.Raycast(raycastPos, Vector3.down, out hit, 20, groundLayerMask) || hit.distance > maxDistance)
+            {
+                return true;
+            }
+
+            //if (Physics.Raycast(raycastPos, Vector3.down, out hit, 20, groundLayerMask))
+            //{
+            //    if (hit.distance > maxDistance)
+            //    {
+            //        //Debug.Log($"Building.CheckOnCliff() raycasted successfully from {raycastPos}, and hit {hit.point} at a distance of {hit.distance}, exceeding the max acceptable distance of {maxDistance}. Therefore, {this} is overlapping a cliff edge.");
+            //        return true;
+            //    }
+            //}
+            //else
+            //{
+            //    //Debug.Log($"Building.CheckOnCliff() raycasted from offset position {raycastPos} and failed. Therefore, {this} is overlapping a cliff edge or is off the map.");
+            //    return true;
+            //}
+        }
+
+        return false;
     }
 
     /// <summary>
@@ -424,21 +470,16 @@ public class Building : CollisionListener
         ResourceController.Instance.PowerConsumption += powerConsumption;
         ResourceController.Instance.WaterConsumption += waterConsumption;
         ResourceController.Instance.WasteConsumption += wasteConsumption;
-        transform.position = position;
+
+        SetCollidersEnabled("Placement", false);
+        SetCollidersEnabled("Body", true);
 
         foreach (RendererMaterialSet r in rendererMaterialSets)
         {
             r.renderer.material = r.opaque;
         }
 
-        foreach (CollisionReporter c in collisionReporters)
-        {
-            c.Rigidbody.isKinematic = true;
-            c.Collider.isTrigger = false;
-            c.ReportOnTriggerEnter = false;
-            c.ReportOnTriggerExit = false;
-        }
-
+        transform.position = position;
         BuildingController.Instance.RegisterBuilding(this);
         StartCoroutine(Build());
     }
@@ -472,53 +513,19 @@ public class Building : CollisionListener
             r.renderer.material = r.transparent;
         }
 
-        foreach (CollisionReporter c in collisionReporters)
-        {
-            c.Collider.isTrigger = true;
-            c.Collider.enabled = false;
-            c.Rigidbody.isKinematic = false;
-            c.ReportOnTriggerEnter = true;
-            c.ReportOnTriggerExit = true;
-        }
+        SetCollidersEnabled("Body", false);
+
+        //foreach (CollisionReporter r in collisionReporters)
+        //{
+        //    r.SetCollidersIsTrigger(true);
+        //    r.SetCollidersEnabled(false);
+        //    r.Rigidbody.isKinematic = false;
+        //    r.ReportOnTriggerEnter = true;
+        //    r.ReportOnTriggerExit = true;
+        //}
     }
 
     //ICollisionListener Triggered Methods---------------------------------------------------------
-
-    ///// <summary>
-    ///// OnCollisionEnter is called when this collider/rigidbody has begun touching another rigidbody/collider.
-    ///// </summary>
-    ///// <param name="collision">The collision data associated with this event.</param>
-    //public override void OnCollisionEnter(Collision collision)
-    //{
-    //    if (active)
-    //    {
-    //        Debug.Log($"Building {id} OnCollisionEnter()");
-    //    }
-    //}
-
-    ///// <summary>
-    ///// OnCollisionExit is called when this collider/rigidbody has stopped touching another rigidbody/collider.
-    ///// </summary>
-    ///// <param name="collision">The collision data associated with this event.</param>
-    //public override void OnCollisionExit(Collision collision)
-    //{
-    //    if (active)
-    //    {
-    //        Debug.Log($"Building {id} OnCollisionExit()");
-    //    }
-    //}
-
-    ///// <summary>
-    ///// OnCollisionStay is called once per frame for every collider/rigidbody that is touching rigidbody/collider.
-    ///// </summary>
-    ///// <param name="collision">The collision data associated with this event.</param>
-    //public override void OnCollisionStay(Collision collision)
-    //{
-    //    if (active)
-    //    {
-    //        Debug.Log($"Building {id} OnCollisionStay()");
-    //    }
-    //}
 
     /// <summary>
     /// When a GameObject collides with another GameObject, Unity calls OnTriggerEnter.
@@ -526,15 +533,18 @@ public class Building : CollisionListener
     /// <param name="other">The other Collider involved in this collision.</param>
     public override void OnTriggerEnter(Collider other)
     {
+        //Debug.Log($"{this}.OnTriggerEnter, other is {other}");
+
         if (active && !operational && !other.isTrigger)
         {
-            //Debug.Log($"Building {id} OnTriggerEnter(). Other is {other}");
             colliding = true;
 
             if (!otherColliders.Contains(other))
             {
                 otherColliders.Add(other);
             }
+
+            //Debug.Log($"Active, not operational, and !other.isTrigger. Colliding is {colliding}");
         }
     }
 
@@ -544,9 +554,12 @@ public class Building : CollisionListener
     /// <param name="other">The other Collider involved in this collision.</param>
     public override void OnTriggerExit(Collider other)
     {
+        //Debug.Log($"{this}.OnTriggerExit, other is {other}");
+
         if (active && !operational && !other.isTrigger)
-        {            
-            //Debug.Log($"Building {id} OnTriggerExit(). Other is {other}");
+        {
+            //Debug.Log($"Active, not operational, and !other.isTrigger");
+
             if (otherColliders.Contains(other))
             {
                 otherColliders.Remove(other);
@@ -558,16 +571,4 @@ public class Building : CollisionListener
             }
         }
     }
-
-    ///// <summary>
-    ///// OnTriggerStay is called almost all the frames for every Collider other that is touching the trigger. The function is on the physics timer so it won't necessarily run every frame.
-    ///// </summary>
-    ///// <param name="other">The other Collider involved in this collision.</param>
-    //public override void OnTriggerStay(Collider other)
-    //{
-    //    if (active)
-    //    {
-    //        Debug.Log($"Building {id} OnTriggerStay()");
-    //    }
-    //}
 }

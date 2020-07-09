@@ -223,9 +223,9 @@ public class TurretShooting : CollisionListener, IMessenger
     {
         //detecting = active; //for testing
 
-        foreach (CollisionReporter c in collisionReporters)
+        foreach (CollisionReporter r in collisionReporters)
         {
-            c.Collider.enabled = active;
+            r.SetCollidersEnabled(active);
         }
     }
 
