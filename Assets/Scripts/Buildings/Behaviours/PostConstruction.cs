@@ -19,15 +19,9 @@ public class PostConstruction : StateMachineBehaviour
     //OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-		var building = animator.GetComponent<Building>();
-		Debug.Log("Adding " + building.WaterConsumption);
-		ResourceController.Instance.PowerConsumption += building.PowerConsumption;
-		ResourceController.Instance.WaterConsumption += building.WaterConsumption;
-		ResourceController.Instance.WasteConsumption += building.WasteConsumption;
-
-		building.Operational = true;
-		//animator.GetComponent<ResourceCollector>();
-	}
+		Building building = animator.GetComponent<Building>();
+        building.Built();
+    }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()
     //override public void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
