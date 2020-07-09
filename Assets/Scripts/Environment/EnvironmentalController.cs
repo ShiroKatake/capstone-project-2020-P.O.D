@@ -18,6 +18,8 @@ public class EnvironmentalController : MonoBehaviour {
 
     public bool Win {get; private set;} = false;
 
+	private float maxRenderBarValue;
+
     private float AtmosphereVal = 0f;
     private float HumidityVal = 0f;
     private float BiodiversityVal = 0f;
@@ -28,9 +30,9 @@ public class EnvironmentalController : MonoBehaviour {
     private float humMalice = 1.0f;
     private float bioMalice = 1.0f;
 
-    private float atmosRatio = 0f;
-    private float humRatio = 0f;
-    private float bioRatio = 0f;
+	private float atmosRatio = 0f;
+	private float humRatio = 0f;
+	private float bioRatio = 0f;
 
     public static EnvironmentalController Instance { get; protected set; }
 
@@ -53,7 +55,9 @@ public class EnvironmentalController : MonoBehaviour {
         bars[1].SetBarValue(humRatio);
         bars[2].SetMaxBarValue(1);
         bars[2].SetBarValue(atmosRatio);
-    }
+
+		maxRenderBarValue = 1f / bars.Count * 2f;
+	}
 
     // Update is called once per frame
     void Update()
@@ -79,7 +83,7 @@ public class EnvironmentalController : MonoBehaviour {
             }
         }
         foreach(RatioBars r in bars){
-            r.SetMaxRenderBarValue(x);
+            r.SetMaxRenderBarValue(maxRenderBarValue);
         }
 
 
