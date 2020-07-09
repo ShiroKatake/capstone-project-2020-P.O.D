@@ -228,7 +228,7 @@ public class Building : CollisionListener
         animator = GetComponent<Animator>();
 		if (animator == null)
 		{
-			Debug.Log("This building is missing an animator component.");
+			Debug.Log($"{this} building is missing an animator component.");
 		}
         health = GetComponent<Health>();
         size = GetComponent<Size>();
@@ -269,7 +269,7 @@ public class Building : CollisionListener
     /// </summary>
     private void Update()
     {
-		if (animator != null)
+		if (buildingType != EBuilding.CryoEgg && animator.enabled)
 		{
 			animator.SetFloat("Health", health.Value);
 			animator.SetBool("Operational", operational);
