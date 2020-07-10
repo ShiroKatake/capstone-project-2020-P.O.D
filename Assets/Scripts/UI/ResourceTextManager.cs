@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class ResourceTextManager : MonoBehaviour
 {
@@ -14,10 +15,10 @@ public class ResourceTextManager : MonoBehaviour
         }
     }
     */
-    [SerializeField] private Text ore;
-    [SerializeField] private Text water;
-    [SerializeField] private Text power;
-    [SerializeField] private Text waste;
+    [SerializeField] private TextMeshProUGUI ore;
+    [SerializeField] private TextMeshProUGUI water;
+    [SerializeField] private TextMeshProUGUI power;
+    [SerializeField] private TextMeshProUGUI waste;
 
     public static ResourceTextManager Instance {get; protected set;}
 
