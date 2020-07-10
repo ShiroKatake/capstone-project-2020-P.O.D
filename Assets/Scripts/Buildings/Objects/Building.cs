@@ -32,6 +32,10 @@ public class Building : CollisionListener
     [SerializeField] private int waterConsumption;
     [SerializeField] private int wasteConsumption;
 
+    //Note: if you need buildings to supply resources, the ResourceCollector component already has you covered 
+    //there, and it should be interacted with on shutdown / restoration through Building.Operational. If it's 
+    //not doing it's job, fix it rather than adding resource gathering to Building.
+
     [Header("Building")]
     [SerializeField] private float buildTime;
     [SerializeField] private float buildStartHeight;
@@ -52,17 +56,18 @@ public class Building : CollisionListener
     [Header("Sound Library")]
     [SerializeField] private AudioManager.ESound idleSound;
 
- 
+
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
     //Components
+    private Animator animator;
     private Health health;
     private MeshRenderer parentRenderer;
     private List<MeshRenderer> allRenderers;
     private ResourceCollector resourceCollector;
-    private Size size;
     private Rigidbody rigidbody;
+    private Size size;
     private Terraformer terraformer;
     private TurretAiming turretAimer;
     private TurretShooting turretShooter;
@@ -70,10 +75,9 @@ public class Building : CollisionListener
     private Dictionary<string, List<CollisionReporter>> groupedReporters;
 
     //Positioning
-    //private Dictionary<string, Vector3> offsets;
     private bool colliding = false;
     private bool validPlacement = true;
-    [SerializeField] private List<Collider> otherColliders;
+    private List<Collider> otherColliders;
     Vector3 normalScale;
     LayerMask groundLayerMask;
 
@@ -106,8 +110,8 @@ public class Building : CollisionListener
     /// <summary>
     /// The type of building this building is.
     /// </summary>
-    public EBuilding BuildingType { get => buildingType; }     
-    
+    public EBuilding BuildingType { get => buildingType; }
+
     /// <summary>
     /// How long this building takes to builds itself when the player places it in the scene. Should only be set by BuildingFactory.
     /// </summary>
@@ -149,6 +153,11 @@ public class Building : CollisionListener
     public Terraformer Terraformer { get => terraformer; }
 
     /// <summary>
+    /// The building's TurretShooting component, if it has one.
+    /// </summary>
+    public TurretShooting TurretShooter { get => turretShooter; }
+
+    /// <summary>
     /// How much waste this building requires per second to function.
     /// </summary>
     public int WasteConsumption { get => wasteConsumption; }
@@ -173,7 +182,7 @@ public class Building : CollisionListener
         set
         {
             id = value;
-            gameObject.name = $"{buildingType} {id}";            
+            gameObject.name = $"{buildingType} {id}";
         }
     }
 
@@ -189,7 +198,6 @@ public class Building : CollisionListener
 
         set
         {
-            //Debug.Log($"Pre-Setting: operational: {operational}, value: {value}, active: {active}");
             if (operational != value)
             {
                 operational = (value && active);
@@ -206,8 +214,6 @@ public class Building : CollisionListener
                     }
                 }
             }
-
-            //Debug.Log($"Post-Setting: operational: {operational}, value: {value}, active: {active}");
         }
     }
 
@@ -219,6 +225,11 @@ public class Building : CollisionListener
     /// </summary>
     private void Awake()
     {
+        animator = GetComponent<Animator>();
+		if (animator == null)
+		{
+			Debug.Log($"{this} building is missing an animator component.");
+		}
         health = GetComponent<Health>();
         size = GetComponent<Size>();
         parentRenderer = GetComponentInChildren<MeshRenderer>();
@@ -251,66 +262,18 @@ public class Building : CollisionListener
         }
     }
 
-    //Recurring Methods (Other)----------------------------------------------------------------------------------------------------------------------
+    //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
-    /// Handles a visual effect of the building rising from the ground when it's placed, before going "boing" and then triggering the public property Operational.
+    /// Update() is run every frame.
     /// </summary>
-    public IEnumerator Build()
+    private void Update()
     {
-        Vector3 startPos = new Vector3(0, 0, buildStartHeight);
-        Vector3 endPos = Vector3.zero;
-        float buildTimeElapsed = 0;
-
-        Vector3 smallScale = normalScale * smallBoingMultiplier;
-        Vector3 largeScale = normalScale * largeBoingMultiplier;
-        float boingTimeElapsed = 0;
-
-        AudioManager.Instance.PlaySound(AudioManager.ESound.Building_Materialises, this.gameObject); //needs to be stopped when finished building
-        while (buildTimeElapsed < buildTime)
-        {
-            buildTimeElapsed += Time.deltaTime;
-            parentRenderer.transform.localPosition = Vector3.Lerp(startPos, endPos, buildTimeElapsed / buildTime);
-            yield return null;
-        }
-
-        boinging = true;
-
-        while (boingTimeElapsed < boingInterval)
-        {
-            boingTimeElapsed += Time.deltaTime;
-            transform.localScale = Vector3.Lerp(normalScale, smallScale, boingTimeElapsed / boingInterval);
-            yield return null;
-        }
-
-        boingTimeElapsed -= boingInterval;
-
-        while (boingTimeElapsed < boingInterval)
-        {
-            boingTimeElapsed += Time.deltaTime;
-            transform.localScale = Vector3.Lerp(smallScale, largeScale, boingTimeElapsed / boingInterval);
-            yield return null;
-        }
-
-        boingTimeElapsed -= boingInterval;
-
-        while (boingTimeElapsed < boingInterval)
-        {
-            boingTimeElapsed += Time.deltaTime;
-            transform.localScale = Vector3.Lerp(largeScale, normalScale, boingTimeElapsed / boingInterval);
-            yield return null;
-        }
-
-        boinging = false;
-        Operational = true; //Using property to trigger activation of any resource collector component attached.
-        AudioManager.Instance.PlaySound(AudioManager.ESound.Building_Completes, this.gameObject);
-
-        if (turretShooter != null)
-        {
-            turretShooter.Place();
-        }
-        AudioManager.Instance.PlaySound(idleSound, this.gameObject);
-        yield return null;
+		if (buildingType != EBuilding.CryoEgg && animator.enabled)
+		{
+			animator.SetFloat("Health", health.Value);
+			animator.SetBool("Operational", operational);
+		}
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
@@ -325,7 +288,7 @@ public class Building : CollisionListener
     public void SetCollidersEnabled(string purpose, bool enabled)
     {
         foreach (CollisionReporter r in groupedReporters[purpose])
-        {            
+        {
             r.SetCollidersEnabled(enabled);
         }
     }
@@ -340,7 +303,7 @@ public class Building : CollisionListener
         {
             if (!placed)
             {
-                validPlacement = !(CheckInPit() || CheckColliding() || CheckOnCliff());
+                validPlacement = !(CheckInPit() || CheckColliding() || CheckOnCliff()) && MapController.Instance.PositionAvailableForBuilding(this);
 
                 if (validPlacement)
                 {
@@ -440,20 +403,6 @@ public class Building : CollisionListener
             {
                 return true;
             }
-
-            //if (Physics.Raycast(raycastPos, Vector3.down, out hit, 20, groundLayerMask))
-            //{
-            //    if (hit.distance > maxDistance)
-            //    {
-            //        //Debug.Log($"Building.CheckOnCliff() raycasted successfully from {raycastPos}, and hit {hit.point} at a distance of {hit.distance}, exceeding the max acceptable distance of {maxDistance}. Therefore, {this} is overlapping a cliff edge.");
-            //        return true;
-            //    }
-            //}
-            //else
-            //{
-            //    //Debug.Log($"Building.CheckOnCliff() raycasted from offset position {raycastPos} and failed. Therefore, {this} is overlapping a cliff edge or is off the map.");
-            //    return true;
-            //}
         }
 
         return false;
@@ -467,11 +416,10 @@ public class Building : CollisionListener
     {
         placed = true; //Needs to occur before its position gets set to be on the ground so that it triggers the building Foundation at the proper time.
         ResourceController.Instance.Ore -= oreCost;
-        ResourceController.Instance.PowerConsumption += powerConsumption;
-        ResourceController.Instance.WaterConsumption += waterConsumption;
-        ResourceController.Instance.WasteConsumption += wasteConsumption;
-
-        SetCollidersEnabled("Placement", false);
+		ResourceController.Instance.PowerConsumption += powerConsumption;
+		ResourceController.Instance.WaterConsumption += waterConsumption;
+		ResourceController.Instance.WasteConsumption += wasteConsumption;
+		SetCollidersEnabled("Placement", false);
         SetCollidersEnabled("Body", true);
 
         foreach (RendererMaterialSet r in rendererMaterialSets)
@@ -481,7 +429,69 @@ public class Building : CollisionListener
 
         transform.position = position;
         BuildingController.Instance.RegisterBuilding(this);
-        StartCoroutine(Build());
+        animator.enabled = true;
+    }
+
+    /// <summary>
+    /// Handles what should happen once the building has been built.
+    /// </summary>
+    public void Built()
+    {
+        Operational = true; //Using property to trigger activation of any resource collector component attached.
+
+        if (turretShooter != null)
+        {
+            turretShooter.Place();
+        }
+
+        AudioManager.Instance.PlaySound(idleSound, gameObject);
+        AudioManager.Instance.PlaySound(AudioManager.ESound.Building_Completes, gameObject);
+
+        //Vector3 startPos = new Vector3(0, 0, buildStartHeight);
+        //Vector3 endPos = Vector3.zero;
+        //float buildTimeElapsed = 0;
+
+        //Vector3 smallScale = normalScale * smallBoingMultiplier;
+        //Vector3 largeScale = normalScale * largeBoingMultiplier;
+        //float boingTimeElapsed = 0;
+
+        //AudioManager.Instance.PlaySound(AudioManager.ESound.Building_Materialises, this.gameObject); //needs to be stopped when finished building
+        //while (buildTimeElapsed < buildTime)
+        //{
+        //    buildTimeElapsed += Time.deltaTime;
+        //    parentRenderer.transform.localPosition = Vector3.Lerp(startPos, endPos, buildTimeElapsed / buildTime);
+        //    yield return null;
+        //}
+
+        //boinging = true;
+
+        //while (boingTimeElapsed < boingInterval)
+        //{
+        //    boingTimeElapsed += Time.deltaTime;
+        //    transform.localScale = Vector3.Lerp(normalScale, smallScale, boingTimeElapsed / boingInterval);
+        //    yield return null;
+        //}
+
+        //boingTimeElapsed -= boingInterval;
+
+        //while (boingTimeElapsed < boingInterval)
+        //{
+        //    boingTimeElapsed += Time.deltaTime;
+        //    transform.localScale = Vector3.Lerp(smallScale, largeScale, boingTimeElapsed / boingInterval);
+        //    yield return null;
+        //}
+
+        //boingTimeElapsed -= boingInterval;
+
+        //while (boingTimeElapsed < boingInterval)
+        //{
+        //    boingTimeElapsed += Time.deltaTime;
+        //    transform.localScale = Vector3.Lerp(largeScale, normalScale, boingTimeElapsed / boingInterval);
+        //    yield return null;
+        //}
+
+        //boinging = false;
+        //yield return null;
     }
 
     /// <summary>
@@ -493,15 +503,17 @@ public class Building : CollisionListener
         active = false;
         colliding = false;
 
-        StopCoroutine(Build());
+        //TODO: reset animator? i.e. disable and set animation progress back to 0?
+        animator.enabled = false;
+
         health.Reset();
         Operational = false;
-        
+
         otherColliders.Clear();
         parentRenderer.transform.localPosition = Vector3.zero;
         transform.localScale = normalScale;
         buildTime = normalBuildTime;
-        
+
         if (buildingType == EBuilding.ShortRangeTurret || buildingType == EBuilding.LongRangeTurret)
         {
             turretAimer.Reset();
@@ -514,15 +526,6 @@ public class Building : CollisionListener
         }
 
         SetCollidersEnabled("Body", false);
-
-        //foreach (CollisionReporter r in collisionReporters)
-        //{
-        //    r.SetCollidersIsTrigger(true);
-        //    r.SetCollidersEnabled(false);
-        //    r.Rigidbody.isKinematic = false;
-        //    r.ReportOnTriggerEnter = true;
-        //    r.ReportOnTriggerExit = true;
-        //}
     }
 
     //ICollisionListener Triggered Methods---------------------------------------------------------
@@ -537,14 +540,13 @@ public class Building : CollisionListener
 
         if (active && !operational && !other.isTrigger)
         {
+            //Debug.Log($"Active, not operational, and !other.isTrigger.");
             colliding = true;
 
             if (!otherColliders.Contains(other))
             {
                 otherColliders.Add(other);
             }
-
-            //Debug.Log($"Active, not operational, and !other.isTrigger. Colliding is {colliding}");
         }
     }
 
