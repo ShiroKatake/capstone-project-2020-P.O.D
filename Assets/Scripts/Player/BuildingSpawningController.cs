@@ -190,12 +190,12 @@ public class BuildingSpawningController : MonoBehaviour
 
                     if (ResourceController.Instance.WasteSupply < ResourceController.Instance.WasteConsumption + heldBuilding.WasteConsumption)
                     {
-                        Debug.Log("You have insufficient water to maintain this building.");
+                        Debug.Log("You have insufficient waste to maintain this building.");
                     }
 
                     if (ResourceController.Instance.WaterSupply < ResourceController.Instance.WaterConsumption + heldBuilding.WaterConsumption)
                     {
-                        Debug.Log("You have insufficient waste to maintain this building.");
+                        Debug.Log("You have insufficient water to maintain this building.");
                     }
 
                     if (!placementValid)
