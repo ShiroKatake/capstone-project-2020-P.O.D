@@ -7,7 +7,8 @@ public class ToolTips : MonoBehaviour
 {
     //All variables being set up setting up an Enum to direct what tooltip should pop up
     private static ToolTips instance;
-
+    [SerializeField]private bool testbuttonChange;
+    [SerializeField] private bool testbuttonHide;
     [SerializeField] private Camera uiCamera;
     public enum Etooltips
     {
@@ -44,7 +45,7 @@ public class ToolTips : MonoBehaviour
             tooltipDictionary.Add(entry.reference, entry.Tip);
         }
         //Hides the tooltip
-        HideToolTip();
+        ShowtoolTip(Etooltips.Testimage_1);
     }
     //Makes the object follow the mouse
     private void Update()
@@ -52,6 +53,7 @@ public class ToolTips : MonoBehaviour
         Vector2 localPoint;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(transform.parent.GetComponent<RectTransform>(), Input.mousePosition, uiCamera, out localPoint);
         transform.localPosition = localPoint;
+        testChange();
     }
     //Shows the tooltip and changes the sprite to the correct image
     private void ShowtoolTip(Etooltips toolImage)
@@ -64,10 +66,32 @@ public class ToolTips : MonoBehaviour
         //Vector2 backgroundSize = new Vector2(tooltip.preferredWidth + imagePaddingSize * 2, tooltip.preferredHeight + imagePaddingSize * 2);
         //backgroundRectTransform.sizeDelta = backgroundSize;
     }
+
+    private void ShowtoolTip()
+    {
+        gameObject.SetActive(true);
+
+    }
     // removes the tooltip from view
     private void HideToolTip()
     {
         gameObject.SetActive(false);
+    }
+
+    public void testChange()
+    {
+        if (testbuttonChange == true)
+        {
+            ShowtoolTip(Etooltips.Testimage_1);
+        }
+        else if (testbuttonChange == false)
+        {
+            ShowtoolTip(Etooltips.Testimage_2);
+        }
+
+        
+
+
     }
     // What is to be called from other classes when they want to show or hide the tool tip remotely
     public static void showTooltip_Static(Etooltips toolImage)
