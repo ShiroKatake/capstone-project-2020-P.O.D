@@ -162,7 +162,7 @@ public class EnvironmentalController : MonoBehaviour {
             outputText += "; Biodiversity Malice: " + MaliceFunction(bioMaliceT);
             outputText += "Atmosphere: " + AtmosphereVal + "; Humidity: " + HumidityVal + "; Biodiversity: " + BiodiversityVal;
 
-            Debug.Log(outputText);
+            //Debug.Log(outputText);
         }
     }
 

@@ -155,52 +155,60 @@ public class BuildingSpawningController : MonoBehaviour
             }
 
             bool placementValid = heldBuilding.IsPlacementValid();
+            bool resourcesAvailable = CheckResourcesAvailable();
             //TODO: check if all the methods below should be asking for "radius" or "diameter"
 
             //Place it or cancel building it
-            if (placeBuilding && ResourceController.Instance.Ore >= heldBuilding.OreCost && placementValid && MapController.Instance.PositionAvailableForBuilding(heldBuilding))
-            {              
+            if (placeBuilding && resourcesAvailable && placementValid)
+            {
                 Vector3 spawnPos = heldBuilding.transform.position;
                 spawnPos.y = 0.02f;
                 PipeManager.Instance.RegisterPipeBuilding(spawnPos);
                 spawnPos.y = GetStandardisedPlacementHeight(spawnPos, true);
-                heldBuilding.Place(spawnPos);    
+                heldBuilding.Place(spawnPos);
 
                 heldBuilding = null;
                 spawnBuilding = false;
                 placeBuilding = false;
                 cancelBuilding = false;
             }
-            else if (cancelBuilding || (placeBuilding && (ResourceController.Instance.Ore < heldBuilding.OreCost || !placementValid || !MapController.Instance.PositionAvailableForBuilding(heldBuilding))))
+            else if (cancelBuilding || (placeBuilding && (!resourcesAvailable || !placementValid)))
             {
                 if (placeBuilding)
                 {
+                    AudioManager.Instance.PlaySound(AudioManager.ESound.Negative_UI);
+
                     if (ResourceController.Instance.Ore < heldBuilding.OreCost)
                     {
                         Debug.Log("You have insufficient ore to build this building.");
-                        AudioManager.Instance.PlaySound(AudioManager.ESound.Negative_UI);
-                    }
-                    
-                    if (!placementValid)
-                    {
-                        Debug.Log("You cannot place a building there; it would occupy the same space as something else.");
-                       
-                        AudioManager.Instance.PlaySound(AudioManager.ESound.Negative_UI);
-                    }
-                    else if (!MapController.Instance.PositionAvailableForBuilding(heldBuilding))
-                    {
-                        Debug.Log("You cannot place a building there; it would either occupy the same space as something else, or exceed the bounds of the map.");
-                       
-                        AudioManager.Instance.PlaySound(AudioManager.ESound.Negative_UI);
                     }
 
+                    if (ResourceController.Instance.PowerSupply < ResourceController.Instance.PowerConsumption + heldBuilding.PowerConsumption)
+                    {
+                        Debug.Log("You have insufficient power to maintain this building.");
+                    }
+
+                    if (ResourceController.Instance.WasteSupply < ResourceController.Instance.WasteConsumption + heldBuilding.WasteConsumption)
+                    {
+                        Debug.Log("You have insufficient water to maintain this building.");
+                    }
+
+                    if (ResourceController.Instance.WaterSupply < ResourceController.Instance.WaterConsumption + heldBuilding.WaterConsumption)
+                    {
+                        Debug.Log("You have insufficient waste to maintain this building.");
+                    }
+
+                    if (!placementValid)
+                    {
+                        Debug.Log("You cannot place a building there; it would occupy the same space as something else, or exceed the bounds of the map.");
+                    }
                 }
 
                 BuildingFactory.Instance.DestroyBuilding(heldBuilding, false, false);
                 heldBuilding = null;
                 spawnBuilding = false;
                 placeBuilding = false;
-                cancelBuilding = false;                
+                cancelBuilding = false;
             }
         }
     }
@@ -254,7 +262,7 @@ public class BuildingSpawningController : MonoBehaviour
     {
         pos.x = Mathf.Round(pos.x) + (radius == 2 ? 0.5f : 0);
         pos.z = Mathf.Round(pos.z) + (radius == 2 ? 0.5f : 0);
-        pos.y = GetStandardisedPlacementHeight(pos, false);      
+        pos.y = GetStandardisedPlacementHeight(pos, false);
         return pos;
     }
 
@@ -299,5 +307,17 @@ public class BuildingSpawningController : MonoBehaviour
 
         result += placed ? 0.5f : 0.67f;
         return result;
+    }
+
+    /// <summary>
+    /// Checks if there are enough resources available to build and maintain this building.
+    /// </summary>
+    /// <returns>Whether there are enough resources available to build and maintain this building.</returns>
+    private bool CheckResourcesAvailable()
+    {
+        return ResourceController.Instance.Ore >= heldBuilding.OreCost
+            && ResourceController.Instance.PowerSupply >= ResourceController.Instance.PowerConsumption + heldBuilding.PowerConsumption
+            && ResourceController.Instance.WasteSupply >= ResourceController.Instance.WasteConsumption + heldBuilding.WasteConsumption
+            && ResourceController.Instance.WaterSupply >= ResourceController.Instance.WaterConsumption + heldBuilding.WaterConsumption;
     }
 }
