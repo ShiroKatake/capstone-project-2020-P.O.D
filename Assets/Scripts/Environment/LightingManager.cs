@@ -9,9 +9,11 @@ public class LightingManager : MonoBehaviour {
 	//Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
 	//Serialized Fields----------------------------------------------------------------------------
-	[SerializeField] private Light directionalLight;
+	[SerializeField] private Transform sunContainer;
+	[SerializeField] private Light sunLightSource;
 	[SerializeField] private LightingPreset preset;
 
+	
 	//Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
 
 	/// <summary>
@@ -35,10 +37,10 @@ public class LightingManager : MonoBehaviour {
 		RenderSettings.ambientLight = preset.AmbientColor.Evaluate(timePercent);
 		RenderSettings.fogColor = preset.FogColor.Evaluate(timePercent);
 
-		if (directionalLight != null)
+		if (sunLightSource != null)
 		{
-			directionalLight.color = preset.DirectionalColor.Evaluate(timePercent);
-			directionalLight.transform.localRotation = Quaternion.Euler(new Vector3((timePercent * 360f), 170f, 0));
+			sunLightSource.color = preset.DirectionalColor.Evaluate(timePercent);
+			sunContainer.transform.localRotation = Quaternion.Euler(new Vector3(timePercent * 360f, -90f, 0f));
 		}
 	}
 
@@ -50,11 +52,11 @@ public class LightingManager : MonoBehaviour {
 	/// </summary>
 	private void OnValidate()
 	{
-		if (directionalLight != null)
+		if (sunLightSource != null)
 			return;
 		if (RenderSettings.sun != null)
 		{
-			directionalLight = RenderSettings.sun;
+			sunLightSource = RenderSettings.sun;
 		}
 		else
 		{
@@ -63,7 +65,7 @@ public class LightingManager : MonoBehaviour {
 			{
 				if (light.type == LightType.Directional)
 				{
-					directionalLight = light;
+					sunLightSource = light;
 					return;
 				}
 			}
