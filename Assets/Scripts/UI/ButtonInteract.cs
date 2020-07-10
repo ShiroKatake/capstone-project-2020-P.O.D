@@ -27,8 +27,7 @@ public class ButtonInteract : MonoBehaviour
     [SerializeField] private Color fillDiabled;
 
     private void Awake() {
-        BorderNormalise();
-        FillNormalise();
+        SetDefault();
     }
 
     private void FadeToColor(Image image, Color color){
@@ -52,5 +51,10 @@ public class ButtonInteract : MonoBehaviour
 
     public void SayYes(){
         print("Button has been pressed");
+    }
+
+    public void SetDefault(){
+        BorderNormalise();
+        FillNormalise();
     }
 }

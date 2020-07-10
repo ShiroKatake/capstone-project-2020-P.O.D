@@ -85,7 +85,7 @@ public class BuildingFoundation : MonoBehaviour
         Building building = other.gameObject.GetComponentInParent<Building>();
         //Debug.Log($"BuildingFoundation {id} OnTriggerEnter()");
 
-        if (building != null && !building.Boinging)
+        if (building != null && building.Placed)
         {
             //Debug.Log($"BuildingFoundation {id} OnTriggerEnter() triggered by a building.");
             building.BuildTime -= buildTimeReduction;

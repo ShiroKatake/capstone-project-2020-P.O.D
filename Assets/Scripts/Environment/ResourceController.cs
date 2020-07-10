@@ -14,19 +14,19 @@ public class ResourceController : MonoBehaviour
     [SerializeField] private int ore;
     [SerializeField] private int powerConsumption;
     [SerializeField] private int powerSupply;
-    [SerializeField] private int waterConsumption;
-    [SerializeField] private int waterSupply;
     [SerializeField] private int wasteConsumption;
     [SerializeField] private int wasteSupply;
+    [SerializeField] private int waterConsumption;
+    [SerializeField] private int waterSupply;
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
     //Resource Consumption
 
     //Resource Availability
-    private bool powerAvailable = true;
-    private bool wasteAvailable = true;
-    private bool waterAvailable = true;
+    private bool powerAvailable = false;
+    private bool wasteAvailable = false;
+    private bool waterAvailable = false;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -77,6 +77,39 @@ public class ResourceController : MonoBehaviour
         {
             powerSupply = value;
             CheckResourceSupply();
+        }
+    }
+
+    /// <summary>
+    /// How much power the player has to spare.
+    /// </summary>
+    public int SurplusPower
+    {
+        get
+        {
+            return powerSupply - PowerConsumption;
+        }
+    }
+
+    /// <summary>
+    /// How much waste the player has to spare.
+    /// </summary>
+    public int SurplusWaste
+    {
+        get
+        {
+            return wasteSupply - wasteConsumption;
+        }
+    }
+
+    /// <summary>
+    /// How much water the player has to spare.
+    /// </summary>
+    public int SurplusWater
+    {
+        get
+        {
+            return waterSupply - waterConsumption;
         }
     }
 
@@ -164,14 +197,6 @@ public class ResourceController : MonoBehaviour
         Instance = this;
     }
 
-    private void Start()
-    {
-        ResourceTextManager.Instance.SetMetalText(ore.ToString());
-        ResourceTextManager.Instance.SetWaterText(waterSupply.ToString());
-        ResourceTextManager.Instance.SetEnergyUsedText(PowerConsumption.ToString());
-        ResourceTextManager.Instance.SetEnergyMaxText(PowerSupply.ToString());
-    }
-
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
@@ -181,7 +206,7 @@ public class ResourceController : MonoBehaviour
     {
         //For testing by changing resource values in the inspector.
         CheckResourceSupply();
-    }
+	}
 
     //Recurring Methods (Update())------------------------------------------------------------------------------------------------------------------  
 
@@ -196,19 +221,19 @@ public class ResourceController : MonoBehaviour
         bool initialWasteStatus = wasteAvailable;
 
         //Check if power needs to be updated
-        if ((powerAvailable && powerSupply < powerConsumption) || (!powerAvailable && powerSupply >= powerConsumption))
+        if ((powerAvailable && powerSupply < powerConsumption) || (!powerAvailable && powerSupply >= powerConsumption && powerSupply != 0))
         {
             powerAvailable = !powerAvailable;
         }
 
         //Check if water needs to be updated
-        if ((waterAvailable && waterSupply < waterConsumption) || (!waterAvailable && waterSupply >= waterConsumption))
+        if ((waterAvailable && waterSupply < waterConsumption) || (!waterAvailable && waterSupply >= waterConsumption && waterSupply != 0))
         {
             waterAvailable = !waterAvailable;
         }
 
         //Check if waste needs to be updated
-        if ((wasteAvailable && wasteSupply < wasteConsumption) || (!wasteAvailable && wasteSupply >= wasteConsumption))
+        if ((wasteAvailable && wasteSupply < wasteConsumption) || (!wasteAvailable && wasteSupply >= wasteConsumption && wasteSupply != 0))
         {
             wasteAvailable = !wasteAvailable;
         }

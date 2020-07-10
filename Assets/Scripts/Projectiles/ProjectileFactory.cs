@@ -12,11 +12,12 @@ public class ProjectileFactory : MonoBehaviour
 
     //Serialized Fields----------------------------------------------------------------------------                                                    
 
-    [SerializeField] private Transform projectilePoolParent;
     [SerializeField] private List<Projectile> projectilePrefabs;
+    [SerializeField] private int pooledProjectiles;
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
+    private Transform objectPool;
     private Dictionary<EProjectileType, Projectile> prefabs;
     private Dictionary<EProjectileType, List<Projectile>> projectiles;
 
@@ -44,21 +45,31 @@ public class ProjectileFactory : MonoBehaviour
 
         Instance = this;
         prefabs = new Dictionary<EProjectileType, Projectile>();
-        projectiles = new Dictionary<EProjectileType, List<Projectile>>();
+        projectiles = new Dictionary<EProjectileType, List<Projectile>>();               
+    }
+
+    /// <summary>
+    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
+    /// Start() runs after Awake().
+    /// </summary>
+    private void Start()
+    {
+        objectPool = ObjectPool.Instance.transform;
 
         foreach (Projectile p in projectilePrefabs)
         {
             prefabs[p.Type] = p;
             projectiles[p.Type] = new List<Projectile>();
 
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < pooledProjectiles; i++)
             {
                 Projectile q = CreateProjectile(p.Type);
-                q.transform.SetPositionAndRotation(projectilePoolParent.position, q.transform.rotation);
-                q.transform.parent = projectilePoolParent;
+                q.transform.SetPositionAndRotation(objectPool.position, q.transform.rotation);
+                q.transform.parent = objectPool;
                 projectiles[q.Type].Add(q);
             }
-        }        
+        } 
+
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
@@ -110,8 +121,8 @@ public class ProjectileFactory : MonoBehaviour
         projectile.Collider.enabled = false;
         projectile.Rigidbody.velocity = Vector3.zero;
         projectile.Rigidbody.isKinematic = true;
-        projectile.transform.position = projectilePoolParent.position;
-        projectile.transform.parent = projectilePoolParent;
+        projectile.transform.position = objectPool.position;
+        projectile.transform.parent = objectPool;
         projectiles[projectile.Type].Add(projectile);
     }
 }

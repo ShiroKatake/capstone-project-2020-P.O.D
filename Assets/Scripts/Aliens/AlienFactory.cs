@@ -13,13 +13,14 @@ public class AlienFactory : MonoBehaviour
 
     [Header("Game Objects")]
     [SerializeField] private Alien alienPrefab;
-    [SerializeField] private Transform alienPoolParent;
 
     [Header("Stats")]
-    [SerializeField] private float alienHoverHeight;
+    [SerializeField] private int pooledAliens;
+    [SerializeField] private float alienSpawnHeight;
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
+    private Transform objectPool;
     private List<Alien> alienPool;
 
     //PublicProperties-------------------------------------------------------------------------------------------------------------------------------
@@ -34,9 +35,9 @@ public class AlienFactory : MonoBehaviour
     //Basic Public Properties----------------------------------------------------------------------
 
     /// <summary>
-    /// The height at which aliens hover.
+    /// The height at which aliens spawn.
     /// </summary>
-    public float AlienHoverHeight { get => alienHoverHeight; }
+    public float AlienSpawnHeight { get => alienSpawnHeight; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -52,19 +53,31 @@ public class AlienFactory : MonoBehaviour
         }
 
         Instance = this;
-        alienPool = new List<Alien>();
+        alienPool = new List<Alien>();        
+    }
+
+    /// <summary>
+    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
+    /// Start() runs after Awake().
+    /// </summary>
+    private void Start() {
+        objectPool = ObjectPool.Instance.transform;
+
+        for (int i = 0; i < pooledAliens; i++)
+        {
+            Alien alien = Instantiate(alienPrefab, objectPool.position, new Quaternion()); 
+            alien.transform.parent = objectPool;
+
+            foreach (Collider c in alien.GetComponents<Collider>())
+            {
+                c.enabled = false;
+            }
+
+            alienPool.Add(alien);
+        }
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
-
-    /// <summary>
-    /// Retrieves Enemies from a pool if there's any available, and instantiates a new alien if there isn't one. Provides a random position within the accepted bounds.
-    /// </summary>
-    /// <returns>A new alien.</returns>
-    public Alien GetAlien()
-    {
-        return GetAlien(MapController.Instance.RandomAlienSpawnablePos());
-    }
 
     /// <summary>
     /// Retrieves Enemies from a pool if there's any available, and instantiates a new alien if there isn't one.
@@ -81,13 +94,17 @@ public class AlienFactory : MonoBehaviour
             alienPool.Remove(alien);
             alien.transform.parent = null;
             alien.transform.position = position;
+
+            foreach (Collider c in alien.GetComponents<Collider>())
+            {
+                c.enabled = true;
+            }
         }
         else
         {
             alien = Instantiate(alienPrefab, position, new Quaternion());
         }
 
-        alien.Setup(IdGenerator.Instance.GetNextId());
         return alien;
     }
 
@@ -99,8 +116,8 @@ public class AlienFactory : MonoBehaviour
     {
         alien.Reset();
         AlienController.Instance.DeRegisterAlien(alien);
-        alien.transform.position = alienPoolParent.position;
-        alien.transform.parent = alienPoolParent;
+        alien.transform.position = objectPool.position;
+        alien.transform.parent = objectPool;
         alienPool.Add(alien);
     }
 }

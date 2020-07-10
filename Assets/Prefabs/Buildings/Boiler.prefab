@@ -11,7 +11,9 @@ GameObject:
   - component: {fileID: 6609532187631785789}
   - component: {fileID: 2427136214263755661}
   - component: {fileID: 1528181348652726579}
+  - component: {fileID: -527322906450988592}
   - component: {fileID: -5340766545175857894}
+  - component: {fileID: 1908645070837100865}
   m_Layer: 0
   m_Name: Boiler
   m_TagString: Building
@@ -30,6 +32,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 5995866541290369328}
   - {fileID: 514400051476016873}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -50,16 +53,24 @@ MonoBehaviour:
   id: 0
   buildingType: 4
   oreCost: 4
-  powerConsumption: 1
+  powerConsumption: 2
   waterConsumption: 3
   wasteConsumption: 0
-  xSize: 2
-  zSize: 2
   buildTime: 10
   buildStartHeight: -11.5
   boingInterval: 0.1667
   smallBoingMultiplier: 0.8
   largeBoingMultiplier: 1.2
+  cliffRaycastOffsets:
+  - {x: -0.6, y: 0, z: -0.6}
+  - {x: -0.95, y: 0, z: 0}
+  - {x: -0.6, y: 0, z: 0.6}
+  - {x: 0, y: 0, z: -0.95}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0.95}
+  - {x: 0.6, y: 0, z: -0.6}
+  - {x: 0.95, y: 0, z: 0}
+  - {x: 0.6, y: 0, z: 0.6}
   buildingFoundationOffsets:
   - {x: 0.5, y: -0.45, z: -0.5}
   - {x: 0.5, y: -0.45, z: 0.5}
@@ -67,11 +78,11 @@ MonoBehaviour:
   - {x: -0.5, y: -0.45, z: 0.5}
   rendererMaterialSets:
   - renderer: {fileID: 2319864399700731164}
-    opaque: {fileID: 2100000, guid: 25423bdbd385ed94c974f78cac3fbac0, type: 2}
-    transparent: {fileID: 2100000, guid: c4132dd9e983768418a11e46cc76621e, type: 2}
+    opaque: {fileID: 2100000, guid: ec8b33f044a73e84e9c0d12133d4419d, type: 2}
+    transparent: {fileID: 2100000, guid: 48daf2deecd43a54e995056522b3c6f9, type: 2}
   buildingErrorMaterial: {fileID: 2100000, guid: 101275a717e4a1c4fb89e563e095dfd7,
     type: 2}
-  otherColliders: []
+  idleSound: 18
   active: 0
   operational: 0
 --- !u!114 &1528181348652726579
@@ -87,6 +98,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 20
+--- !u!114 &-527322906450988592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1695929192926328449}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e087b4d1f91fcb941a830564ec25c878, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 0.75
 --- !u!114 &-5340766545175857894
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -100,7 +124,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   environmentParameter: 2
-  environmentalAffect: 0.5
+  environmentalAffect: 1
+--- !u!95 &1908645070837100865
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1695929192926328449}
+  m_Enabled: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 997335202ca0cd847b0a4161d60f83f4, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &2202830091584974985
 GameObject:
   m_ObjectHideFlags: 0
@@ -112,7 +155,7 @@ GameObject:
   - component: {fileID: 6409866380421652941}
   m_Layer: 0
   m_Name: SteamGroup
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -139,6 +182,72 @@ Transform:
   m_Father: {fileID: 1033118395609408467}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3444443224165547048
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5995866541290369328}
+  - component: {fileID: 6564565932418022012}
+  - component: {fileID: 2831621559602170470}
+  m_Layer: 0
+  m_Name: Placement Collider
+  m_TagString: Building
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5995866541290369328
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3444443224165547048}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 6609532187631785789}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &6564565932418022012
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3444443224165547048}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.9, y: 2, z: 1.9}
+  m_Center: {x: 0, y: 0.5, z: 0}
+--- !u!114 &2831621559602170470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3444443224165547048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 122c182bf36096746af88abc3d48308c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  purpose: Placement
+  collisionListeners:
+  - {fileID: 2427136214263755661}
+  reportOnCollisionEnter: 0
+  reportOnCollisionExit: 0
+  reportOnCollisionStay: 0
+  reportOnTriggerEnter: 1
+  reportOnTriggerExit: 1
+  reportOnTriggerStay: 0
 --- !u!1 &5797989508795119653
 GameObject:
   m_ObjectHideFlags: 0
@@ -148,11 +257,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 514400051476016873}
-  - component: {fileID: 270572655307717685}
+  - component: {fileID: 1785076965048142400}
   - component: {fileID: 6287614416349798304}
   - component: {fileID: 3615240620241860045}
   m_Layer: 0
-  m_Name: Collider
+  m_Name: Body Collider
   m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -171,22 +280,22 @@ Transform:
   m_Children:
   - {fileID: 1033118395609408467}
   m_Father: {fileID: 6609532187631785789}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
---- !u!64 &270572655307717685
-MeshCollider:
+--- !u!136 &1785076965048142400
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5797989508795119653}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4290854921761531247, guid: a4e19ca52c42d5749b633b15809f9588, type: 3}
+  m_IsTrigger: 0
+  m_Enabled: 0
+  m_Radius: 4.49
+  m_Height: 63.230778
+  m_Direction: 2
+  m_Center: {x: 0, y: -6.750622e-15, z: 16.602457}
 --- !u!54 &6287614416349798304
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -215,13 +324,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 122c182bf36096746af88abc3d48308c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  purpose: Body
   collisionListeners:
   - {fileID: 2427136214263755661}
   reportOnCollisionEnter: 0
   reportOnCollisionExit: 0
   reportOnCollisionStay: 0
-  reportOnTriggerEnter: 1
-  reportOnTriggerExit: 1
+  reportOnTriggerEnter: 0
+  reportOnTriggerExit: 0
   reportOnTriggerStay: 0
 --- !u!1001 &1149017350054590353
 PrefabInstance:
@@ -939,11 +1049,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: c4132dd9e983768418a11e46cc76621e, type: 2}
+      objectReference: {fileID: 2100000, guid: ec8b33f044a73e84e9c0d12133d4419d, type: 2}
     - target: {fileID: -927199367670048503, guid: a4e19ca52c42d5749b633b15809f9588,
         type: 3}
       propertyPath: m_Name
       value: Model
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: a4e19ca52c42d5749b633b15809f9588,
+        type: 3}
+      propertyPath: m_TagString
+      value: Building
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a4e19ca52c42d5749b633b15809f9588, type: 3}
