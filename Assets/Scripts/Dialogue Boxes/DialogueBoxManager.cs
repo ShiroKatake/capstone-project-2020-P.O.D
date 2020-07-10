@@ -1,6 +1,50 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+/// <summary>
+/// The definition of tags for colouring lines of dialogue differently to the standard dialogue box text colour.
+/// </summary>
+[Serializable]
+public class ColourTag
+{
+    //Private Fields---------------------------------------------------------------------------------------------------------------------------------
+
+    //Serialized Fields----------------------------------------------------------------------------
+
+    [SerializeField] private char openingTag;
+    [SerializeField] private char closingTag;
+    [SerializeField] private Color colour;
+
+    //Non-Serialized Fields------------------------------------------------------------------------
+
+    private string colourName;
+
+    //Public Properties------------------------------------------------------------------------------------------------------------------------------
+
+    //Basic Public Properties----------------------------------------------------------------------
+
+    /// <summary>
+    /// The character of the tag opening character, equivalent to XML's "<".
+    /// </summary>
+    public char OpeningTag { get => openingTag; }
+
+    /// <summary>
+    /// The character of the tag closing character, equivalent to XML's ">".
+    /// </summary>
+    public char ClosingTag { get => closingTag; }
+
+    /// <summary>
+    /// The colour that the text between the opening and closing tag characters should be.
+    /// </summary>
+    public Color Colour { get => colour; }
+
+    /// <summary>
+    /// The name of the colour that the text should be.
+    /// </summary>
+    public string ColourName { get => colourName; set => colourName = value; }
+}
 
 /// <summary>
 /// A manager class for the dialogue boxes.
@@ -12,6 +56,7 @@ public class DialogueBoxManager : MonoBehaviour
     //Serialized Fields----------------------------------------------------------------------------                                                    
 
     [SerializeField] private List<DialogueBox> dialogueBoxList;
+    [SerializeField] private List<ColourTag> colourTags;
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
@@ -25,6 +70,13 @@ public class DialogueBoxManager : MonoBehaviour
     /// DialogueBoxManager's singleton public property.
     /// </summary>
     public static DialogueBoxManager Instance { get; protected set; }
+
+    //Basic Public Properties----------------------------------------------------------------------
+
+    /// <summary>
+    /// The list of colour tags used by dialogue boxes.
+    /// </summary>
+    public List<ColourTag> ColourTags { get => colourTags; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -40,10 +92,16 @@ public class DialogueBoxManager : MonoBehaviour
         }
 
         Instance = this;
+        dialogueBoxes = new Dictionary<string, DialogueBox>();
 
         foreach (DialogueBox d in dialogueBoxList)
         {
             dialogueBoxes[d.ID] = d;
+        }
+
+        foreach (ColourTag c in colourTags)
+        {
+            c.ColourName = $"#{ColorUtility.ToHtmlStringRGB(c.Colour)}";
         }
     }
 

@@ -20,49 +20,6 @@ public enum AIExpression
 }
 
 /// <summary>
-/// The definition of tags for colouring lines of dialogue differently to the standard dialogue box text colour.
-/// </summary>
-[Serializable]
-public class ColourTag
-{
-    //Private Fields---------------------------------------------------------------------------------------------------------------------------------
-
-    //Serialized Fields----------------------------------------------------------------------------
-
-    [SerializeField] private char openingTag;
-    [SerializeField] private char closingTag;
-    [SerializeField] private Color colour;
-
-    //Non-Serialized Fields------------------------------------------------------------------------
-
-    private string colourName;
-
-    //Public Properties------------------------------------------------------------------------------------------------------------------------------
-
-    //Basic Public Properties----------------------------------------------------------------------
-
-    /// <summary>
-    /// The character of the tag opening character, equivalent to XML's "<".
-    /// </summary>
-    public char OpeningTag { get => openingTag; }
-
-    /// <summary>
-    /// The character of the tag closing character, equivalent to XML's ">".
-    /// </summary>
-    public char ClosingTag { get => closingTag; }
-
-    /// <summary>
-    /// The colour that the text between the opening and closing tag characters should be.
-    /// </summary>
-    public Color Colour { get => colour; }
-
-    /// <summary>
-    /// The name of the colour that the text should be.
-    /// </summary>
-    public string ColourName { get => colourName; set => colourName = value; }
-}
-
-/// <summary>
 /// A serializable container for an AI expression and a line of dialogue.
 /// </summary>
 [Serializable]
@@ -72,17 +29,17 @@ public class ExpressionDialoguePair
 
     //Serialized Fields----------------------------------------------------------------------------
 
-    [SerializeField] private AIExpression aiExpression = AIExpression.Neutral;
+    //[SerializeField] private AIExpression aiExpression = AIExpression.Neutral;
     [SerializeField, TextArea(15, 20)] private string dialogue;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
     //Basic Public Properties----------------------------------------------------------------------
 
-    /// <summary>
-    /// The expression that the AI should have when its matching line of dialogue is displayed.
-    /// </summary>
-    public AIExpression AIExpression { get => aiExpression; }
+    ///// <summary>
+    ///// The expression that the AI should have when its matching line of dialogue is displayed.
+    ///// </summary>
+    //public AIExpression AIExpression { get => aiExpression; }
 
     /// <summary>
     /// The line of dialogue to be displayed.
@@ -132,31 +89,32 @@ public class DialogueBox : MonoBehaviour
 
     [Header("Text Box")]
     [SerializeField] private TextMeshProUGUI textBox;
-    [SerializeField] private Image aiImage;
+    //[SerializeField] private Image aiImage;
 
-    [Header("Tween/Lerp Speeds")]
-    [SerializeField] float popUpSpeed = 0.5f;
-    [SerializeField] private int lerpTextInterval = 3;
+    [Header("Tween Stats")]
+    [SerializeField] private Vector2 onScreenPos;
+    [SerializeField] private Vector2 offScreenPos;
+    [SerializeField] private float tweenSpeed;
 
-    [Header("Available Expressions")]
-    [SerializeField] private AIExpression currentExpression;
-    [SerializeField] private Sprite aiHappy;
-    [SerializeField] private Sprite aiNeutral;
-    [SerializeField] private Sprite aiSad;
-    [SerializeField] private Sprite aiExcited;
-    [SerializeField] private Sprite aiShocked;
+    //[Header("Available Expressions")]
+    //[SerializeField] private AIExpression currentExpression;
+    //[SerializeField] private Sprite aiHappy;
+    //[SerializeField] private Sprite aiNeutral;
+    //[SerializeField] private Sprite aiSad;
+    //[SerializeField] private Sprite aiExcited;
+    //[SerializeField] private Sprite aiShocked;
 
-    [Header("Images")]
-    [SerializeField] private Image completeArrow;
-    [SerializeField] private Image continueArrow;
+    //[Header("Images")]
+    //[SerializeField] private Image completeArrow;
+    //[SerializeField] private Image continueArrow;
 
     [Header("Dialogue")]
-    [SerializeField] private List<ColourTag> colourTags;
+    [SerializeField] private int lerpTextInterval;
     [SerializeField] private List<DialogueSet> dialogue;
 
-    [Header("Objective Buttons")]
-    [SerializeField] private Image countdown;
-    [SerializeField] private Image objButton;
+    //[Header("Objective Buttons")]
+    //[SerializeField] private Image countdown;
+    //[SerializeField] private Image objButton;
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
@@ -165,10 +123,12 @@ public class DialogueBox : MonoBehaviour
     private Vector2 originalRectTransformPosition;
     private RectTransform dialogueRectTransform;
     private Vector2 arrowInitialPosition;
-    [SerializeField] private bool activated = false;
-    [SerializeField] private bool clickable = false;
+    [SerializeField] private bool activated;
+    [SerializeField] private bool clickable;
+    [SerializeField] private bool showSingle;
+    [SerializeField] private bool showMultiple;
 
-    private Dictionary<string, List<ExpressionDialoguePair>> dialogueDictionary = new Dictionary<string, List<ExpressionDialoguePair>>();
+    private Dictionary<string, List<ExpressionDialoguePair>> dialogueDictionary;
     private string currentDialogueKey = "";
     private string lastDialogueKey = "";
     private int dialogueIndex = 0;
@@ -189,8 +149,8 @@ public class DialogueBox : MonoBehaviour
     private bool dialogueRead = false;
     private bool deactivating = false;
 
-    private RectTransform continueArrowTransform;
-    private RectTransform completeArrowTransform;
+    //private RectTransform continueArrowTransform;
+    //private RectTransform completeArrowTransform;
 
     private float dialogueTimer = 0;
 
@@ -246,35 +206,10 @@ public class DialogueBox : MonoBehaviour
     /// </summary>
     private void Awake()
     {
-        aiImage.sprite = aiNeutral;
-        arrowInitialPosition = completeArrow.GetComponent<RectTransform>().anchoredPosition;
-
-        foreach (ColourTag c in colourTags)
-        {
-            c.ColourName = $"#{ColorUtility.ToHtmlStringRGB(c.Colour)}";
-        }
-        
-        //TODO: looks like aiImage.sprite is already set manually just above. Therefore the if statement here is unnecessary.
-        if (aiImage.sprite == aiHappy)
-        {
-            currentExpression = AIExpression.Happy;
-        }
-        else if (aiImage.sprite == aiNeutral)
-        {
-            currentExpression = AIExpression.Neutral;
-        }
-        else if (aiImage.sprite == aiSad)
-        {
-            currentExpression = AIExpression.Sad;
-        }
-        else if (aiImage.sprite == aiExcited)
-        {
-            currentExpression = AIExpression.Excited;
-        }
-        else if (aiImage.sprite == aiShocked)
-        {
-            currentExpression = AIExpression.Shocked;
-        }
+        //aiImage.sprite = aiNeutral;
+        //currentExpression = AIExpression.Neutral;
+        //arrowInitialPosition = completeArrow.GetComponent<RectTransform>().anchoredPosition;
+        dialogueDictionary = new Dictionary<string, List<ExpressionDialoguePair>>();
 
         foreach (DialogueSet ds in dialogue)
         {
@@ -289,17 +224,15 @@ public class DialogueBox : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
-    /// Start() runs after Awake().
-    /// </summary>
-    private void Start()
-    {
-        //WorldController.Instance.Inputs.InputMap.ProceedDialogue.performed += ctx => RegisterDialogueRead();
-
-        continueArrowTransform = continueArrow.GetComponent<RectTransform>();
-        completeArrowTransform = completeArrow.GetComponent<RectTransform>();
-    }
+    ///// <summary>
+    ///// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
+    ///// Start() runs after Awake().
+    ///// </summary>
+    //private void Start()
+    //{
+    //    //continueArrowTransform = continueArrow.GetComponent<RectTransform>();
+    //    //completeArrowTransform = completeArrow.GetComponent<RectTransform>();
+    //}
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -308,10 +241,22 @@ public class DialogueBox : MonoBehaviour
     /// </summary>
     private void Update()
     {
+        if (showSingle)
+        {
+            showSingle = false;
+            SubmitDialogueSet("test single", 0);
+        }
+
+        if (showMultiple)
+        {
+            showMultiple = false;
+            SubmitDialogueSet("test multiple", 0);
+        }
+
         if (clickable)
         {
             dialogueTimer += Time.deltaTime;
-            UpdateArrow();
+            //UpdateArrow();
         }
 
         UpdateDialogueBoxState();
@@ -320,43 +265,43 @@ public class DialogueBox : MonoBehaviour
 
     //Recurring Methods (Update())-------------------------------------------------------------------------------------------------------------------
 
-    /// <summary>
-    /// Updates the arrow prompting the player to continue / finish reading the dialogue.
-    /// </summary>
-    private void UpdateArrow()
-    {
-        if (dialogueDictionary.ContainsKey(currentDialogueKey))
-        {
-            if (!continueArrow.enabled && dialogueIndex < dialogueDictionary[currentDialogueKey].Count)
-            {
-                if (completeArrow.enabled)
-                {
-                    DOTween.Kill(completeArrowTransform);
-                    completeArrowTransform.anchoredPosition = arrowInitialPosition;
-                    completeArrow.enabled = false;
-                }
+    ///// <summary>
+    ///// Updates the arrow prompting the player to continue / finish reading the dialogue.
+    ///// </summary>
+    //private void UpdateArrow()
+    //{
+    //    if (dialogueDictionary.ContainsKey(currentDialogueKey))
+    //    {
+    //        if (!continueArrow.enabled && dialogueIndex < dialogueDictionary[currentDialogueKey].Count)
+    //        {
+    //            if (completeArrow.enabled)
+    //            {
+    //                DOTween.Kill(completeArrowTransform);
+    //                completeArrowTransform.anchoredPosition = arrowInitialPosition;
+    //                completeArrow.enabled = false;
+    //            }
 
-                continueArrow.enabled = true;
-                continueArrowTransform.DOAnchorPosX(arrowInitialPosition.x + 5, 0.3f).SetLoops(-1, LoopType.Yoyo).SetUpdate(true);
-            }
-            else if (!completeArrow.enabled && dialogueIndex == dialogueDictionary[currentDialogueKey].Count)
-            {
-                if (continueArrow.enabled)
-                {
-                    DOTween.Kill(continueArrowTransform);
-                    continueArrowTransform.anchoredPosition = arrowInitialPosition;
-                    continueArrow.enabled = false;
-                }
+    //            continueArrow.enabled = true;
+    //            continueArrowTransform.DOAnchorPosX(arrowInitialPosition.x + 5, 0.3f).SetLoops(-1, LoopType.Yoyo).SetUpdate(true);
+    //        }
+    //        else if (!completeArrow.enabled && dialogueIndex == dialogueDictionary[currentDialogueKey].Count)
+    //        {
+    //            if (continueArrow.enabled)
+    //            {
+    //                DOTween.Kill(continueArrowTransform);
+    //                continueArrowTransform.anchoredPosition = arrowInitialPosition;
+    //                continueArrow.enabled = false;
+    //            }
 
-                completeArrow.enabled = true;
-                completeArrowTransform.DOAnchorPosY(arrowInitialPosition.y - 5, 0.3f).SetLoops(-1, LoopType.Yoyo).SetUpdate(true);
-            }
-        }
-        else
-        {
-            Debug.Log($"Cannot display dialogue set {currentDialogueKey}; Dialogue Key {currentDialogueKey} doesn't exist.");
-        }
-    }
+    //            completeArrow.enabled = true;
+    //            completeArrowTransform.DOAnchorPosY(arrowInitialPosition.y - 5, 0.3f).SetLoops(-1, LoopType.Yoyo).SetUpdate(true);
+    //        }
+    //    }
+    //    else
+    //    {
+    //        Debug.Log($"Cannot display dialogue set {currentDialogueKey}; Dialogue Key {currentDialogueKey} doesn't exist.");
+    //    }
+    //}
 
     /// <summary>
     /// Progresses the dialogue box's state depending on user input, dialogue submissions, etc. and reports when all of the dialogue has been read.
@@ -448,12 +393,15 @@ public class DialogueBox : MonoBehaviour
                 }
                 else
                 {
-                    foreach (ColourTag t in colourTags)
+                    if (DialogueBoxManager.Instance.ColourTags != null && DialogueBoxManager.Instance.ColourTags.Count > 0)
                     {
-                        if (c == t.OpeningTag)
+                        foreach (ColourTag t in DialogueBoxManager.Instance.ColourTags)
                         {
-                            colourTag = t;
-                            break;
+                            if (c == t.OpeningTag)
+                            {
+                                colourTag = t;
+                                break;
+                            }
                         }
                     }
 
@@ -541,9 +489,9 @@ public class DialogueBox : MonoBehaviour
     {
         nextDialogueSetReady = true;
 
-        countdown.rectTransform.DOAnchorPosY(-18 + 150, popUpSpeed).SetEase(Ease.OutBack);
-        objButton.rectTransform.DOAnchorPosY(-18 + 150, popUpSpeed).SetEase(Ease.OutBack);
-        dialogueRectTransform.DOAnchorPosY(-18, popUpSpeed).SetEase(Ease.OutBack).SetUpdate(true).OnComplete(
+        //countdown.rectTransform.DOAnchorPosY(-18 + 150, tweenSpeed).SetEase(Ease.OutBack);
+        //objButton.rectTransform.DOAnchorPosY(-18 + 150, tweenSpeed).SetEase(Ease.OutBack);
+        dialogueRectTransform.DOAnchorPos(onScreenPos, tweenSpeed).SetEase(Ease.OutBack).SetUpdate(true).OnComplete(
             delegate
             {
                 clickable = true;
@@ -581,14 +529,14 @@ public class DialogueBox : MonoBehaviour
         textBox.text = "";
         currentText = dialogueDictionary[currentDialogueKey][dialogueIndex].Dialogue;
 
-        if (dialogueDictionary[currentDialogueKey][dialogueIndex].AIExpression != currentExpression)
-        {
-            ChangeAIExpression(dialogueDictionary[currentDialogueKey][dialogueIndex].AIExpression);
-        }
-        //else
+        //if (dialogueDictionary[currentDialogueKey][dialogueIndex].AIExpression != currentExpression)
         //{
-        //    Debug.Log($"Keeping dialogue expression as {currentExpression}");
+        //    ChangeAIExpression(dialogueDictionary[currentDialogueKey][dialogueIndex].AIExpression);
         //}
+        ////else
+        ////{
+        ////    Debug.Log($"Keeping dialogue expression as {currentExpression}");
+        ////}
 
         dialogueIndex++;
         lerpTextMaxIndex = currentText.Length - 1;
@@ -604,50 +552,50 @@ public class DialogueBox : MonoBehaviour
         textBox.text = "";
         currentText = dialogueDictionary[currentDialogueKey][dialogueIndex].Dialogue;
 
-        if (dialogueDictionary[currentDialogueKey][dialogueIndex].AIExpression != currentExpression)
-        {
-            ChangeAIExpression(dialogueDictionary[currentDialogueKey][dialogueIndex].AIExpression);
-        }
-        //else
+        //if (dialogueDictionary[currentDialogueKey][dialogueIndex].AIExpression != currentExpression)
         //{
-        //    Debug.Log($"Keeping dialogue expression as {currentExpression}");
+        //    ChangeAIExpression(dialogueDictionary[currentDialogueKey][dialogueIndex].AIExpression);
         //}
+        ////else
+        ////{
+        ////    Debug.Log($"Keeping dialogue expression as {currentExpression}");
+        ////}
 
         dialogueIndex++;
         lerpTextMaxIndex = 0;
         dialogueTimer = 0;
     }
 
-    /// <summary>
-    /// Updates the AI sprite.
-    /// </summary>
-    /// <param name="expression">The expression that the AI should have. The enum value corresponds to a matching sprite.</param>
-    private void ChangeAIExpression(AIExpression expression)
-    {
-        //Debug.Log($"Changing AIExpression from {currentExpression} to {expression}");
-        currentExpression = expression;
+    ///// <summary>
+    ///// Updates the AI sprite.
+    ///// </summary>
+    ///// <param name="expression">The expression that the AI should have. The enum value corresponds to a matching sprite.</param>
+    //private void ChangeAIExpression(AIExpression expression)
+    //{
+    //    //Debug.Log($"Changing AIExpression from {currentExpression} to {expression}");
+    //    currentExpression = expression;
 
-        switch (expression)
-        {
-            case AIExpression.Happy:
-                aiImage.sprite = aiHappy;
-                break;
-            case AIExpression.Neutral:
-                aiImage.sprite = aiNeutral;
-                break;
-            case AIExpression.Sad:
-                aiImage.sprite = aiSad;
-                break;
-            case AIExpression.Excited:
-                aiImage.sprite = aiExcited;
-                break;
-            case AIExpression.Shocked:
-                aiImage.sprite = aiShocked;
-                break;
-        }
+    //    switch (expression)
+    //    {
+    //        case AIExpression.Happy:
+    //            aiImage.sprite = aiHappy;
+    //            break;
+    //        case AIExpression.Neutral:
+    //            aiImage.sprite = aiNeutral;
+    //            break;
+    //        case AIExpression.Sad:
+    //            aiImage.sprite = aiSad;
+    //            break;
+    //        case AIExpression.Excited:
+    //            aiImage.sprite = aiExcited;
+    //            break;
+    //        case AIExpression.Shocked:
+    //            aiImage.sprite = aiShocked;
+    //            break;
+    //    }
 
-        //Debug.Log($"AIExpression is now {currentExpression}");
-    }
+    //    //Debug.Log($"AIExpression is now {currentExpression}");
+    //}
 
     //Progress / Finish Dialogue-------------------------------------------------------------------
 
@@ -658,13 +606,13 @@ public class DialogueBox : MonoBehaviour
     {
         if (clickable)
         {
-            DOTween.Kill(continueArrowTransform);
-            continueArrowTransform.anchoredPosition = arrowInitialPosition;
-            continueArrow.enabled = false;
+            //DOTween.Kill(continueArrowTransform);
+            //continueArrowTransform.anchoredPosition = arrowInitialPosition;
+            //continueArrow.enabled = false;
 
-            DOTween.Kill(completeArrowTransform);
-            completeArrowTransform.anchoredPosition = arrowInitialPosition;
-            completeArrow.enabled = false;
+            //DOTween.Kill(completeArrowTransform);
+            //completeArrowTransform.anchoredPosition = arrowInitialPosition;
+            //completeArrow.enabled = false;
 
             if (dialogueIndex < dialogueDictionary[currentDialogueKey].Count)
             {
@@ -688,9 +636,9 @@ public class DialogueBox : MonoBehaviour
     {
         dialogueTimer = 0;
         deactivating = true;
-        countdown.rectTransform.DOAnchorPosY(20, popUpSpeed).SetEase(Ease.InBack);
-        objButton.rectTransform.DOAnchorPosY(20, popUpSpeed).SetEase(Ease.InBack);
-        dialogueRectTransform.DOAnchorPosY(originalRectTransformPosition.y, popUpSpeed).SetEase(Ease.InBack).SetUpdate(true).OnComplete(
+        //countdown.rectTransform.DOAnchorPosY(20, tweenSpeed).SetEase(Ease.InBack);
+        //objButton.rectTransform.DOAnchorPosY(20, tweenSpeed).SetEase(Ease.InBack);
+        dialogueRectTransform.DOAnchorPos(offScreenPos, tweenSpeed).SetEase(Ease.InBack).SetUpdate(true).OnComplete(
             delegate
             {
                 //Reset position after tweening
