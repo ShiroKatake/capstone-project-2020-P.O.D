@@ -55,6 +55,7 @@ public class DialogueBoxManager : MonoBehaviour
 
     //Serialized Fields----------------------------------------------------------------------------                                                    
 
+    [SerializeField] private char newLineMarker;
     [SerializeField] private List<ColourTag> colourTags;
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
@@ -77,6 +78,11 @@ public class DialogueBoxManager : MonoBehaviour
     /// </summary>
     public List<ColourTag> ColourTags { get => colourTags; }
 
+    /// <summary>
+    /// The character that denotes a new line.
+    /// </summary>
+    public char NewLineMarker { get { Debug.Log($"Getting newLineMarker {newLineMarker}"); return newLineMarker; } }
+
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
@@ -98,9 +104,16 @@ public class DialogueBoxManager : MonoBehaviour
             dialogueBoxes[d.ID] = d;
         }
 
+        Debug.Log($"New line marker character is {newLineMarker}");
+
         foreach (ColourTag c in colourTags)
         {
             c.ColourName = $"#{ColorUtility.ToHtmlStringRGB(c.Colour)}";
+
+            if (c.OpeningTag == newLineMarker || c.ClosingTag == newLineMarker)
+            {
+                Debug.LogError($"The character {newLineMarker} is reserved for denoting a new line. It cannot be the opening or closing tag of the colour tag for {c.ColourName} (hex: {ColorUtility.ToHtmlStringRGB(c.Colour)}).");
+            }
         }
     }
 

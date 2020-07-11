@@ -11,8 +11,9 @@ public class StageControls : Stage
 
     //Non-Serialized Fields--------------------------------------------------------------------------------------------------------------------------
 
-    private DialogueBox test1; 
-    private DialogueBox test2; 
+    private DialogueBox cat; 
+    private DialogueBox dog; 
+    private DialogueBox console; 
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -60,29 +61,40 @@ public class StageControls : Stage
     /// </note>
     protected override IEnumerator Execution()
     {
-        test1 = DialogueBoxManager.Instance.GetDialogueBox("Test 1");
-        test2 = DialogueBoxManager.Instance.GetDialogueBox("Test 2");
-        test1.SubmitDialogue("test single", 5, false);
+        cat = DialogueBoxManager.Instance.GetDialogueBox("CAT");
+        dog = DialogueBoxManager.Instance.GetDialogueBox("DOG");
+        console = DialogueBoxManager.Instance.GetDialogueBox("Console");
 
-        while (!test1.DialogueRead)
+        console.SubmitDialogue("test single", 2, false);
+
+        yield return new WaitForSeconds(4);
+
+        console.ClearDialogue();
+        console.SubmitDialogue("test single", 2, false);
+
+        yield return new WaitForSeconds(4);
+
+        cat.SubmitDialogue("test single", 0, false);
+
+        while (!cat.DialogueRead)
         {
             yield return null;
         }
 
-        test1.SubmitDialogue("test multiple", 0, true);
+        cat.SubmitDialogue("test multiple", 0, true);
 
-        while (!test1.DialogueRead)
+        while (!cat.DialogueRead)
         {
             yield return null;
         }
 
-        test2.SubmitDialogue("test multiple", 0, true);
+        dog.SubmitDialogue("test multiple", 0, true);
 
-        while (!test2.DialogueRead)
+        while (!dog.DialogueRead)
         {
             yield return null;
         }
 
-        Debug.Log("Finished test");
+        console.SubmitDialogue("finished", 0, false);
     }
 }

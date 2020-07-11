@@ -109,6 +109,7 @@ public class DialogueBox : MonoBehaviour
     //[SerializeField] private Image continueArrow;
 
     [Header("Dialogue")]
+    [SerializeField] private bool appendDialogue;
     [SerializeField] private int lerpTextInterval;
     [SerializeField] private List<DialogueSet> dialogue;
 
@@ -135,6 +136,7 @@ public class DialogueBox : MonoBehaviour
     private string pendingColouredText;
     //private int lerpTextMinIndex;
     private int lerpTextMaxIndex;
+    private string dialogueStash;
 
     private ColourTag colourTag;
     private bool lerpFinished;
@@ -230,6 +232,7 @@ public class DialogueBox : MonoBehaviour
         nextDialogueSetReady = false;
         dialogueRead = false;
         deactivating = false;
+        textBox.text = "";
 
         foreach (DialogueSet ds in dialogue)
         {
@@ -378,9 +381,9 @@ public class DialogueBox : MonoBehaviour
         if (!lerpFinished)
         {
             //Reset variables
+            colourTag = null;
             pendingText = "";
             pendingColouredText = "";
-            colourTag = null;
 
             //Get string of new letters to be added
             foreach (char c in currentText.Substring(0, lerpTextMaxIndex))
@@ -403,13 +406,26 @@ public class DialogueBox : MonoBehaviour
                     //Add if not coloured
                     if (colourTag == null)
                     {
-                        pendingText += c;
+                        if (c == DialogueBoxManager.Instance.NewLineMarker)
+                        {
+                            Debug.Log($"New line marker {c} detected.");
+                            pendingText += "<br>";
+                        }
+                        else
+                        {
+                            pendingText += c;
+                        }
                     }
                 }
                 else
                 {
                     //Check for closing colour tag
-                    if (c == colourTag.ClosingTag)
+                    if (c == DialogueBoxManager.Instance.NewLineMarker)
+                    {
+                        Debug.Log($"New line marker {c} detected.");
+                        pendingText += "<br>";
+                    }
+                    else if (c == colourTag.ClosingTag)
                     {
                         pendingText += $"<color={colourTag.ColourName}><b>{pendingColouredText}</b></color>";
                         pendingColouredText = "";
@@ -419,7 +435,7 @@ public class DialogueBox : MonoBehaviour
                     {
                         pendingColouredText += c;
                     }
-                }
+                }            
             }
 
             //Add if coloured
@@ -429,7 +445,7 @@ public class DialogueBox : MonoBehaviour
             }
 
             //Add all pending text
-            textBox.text = pendingText;
+            textBox.text = dialogueStash + pendingText;
 
             //Check progress
             if (lerpTextMaxIndex < currentText.Length)// - 1)
@@ -539,7 +555,16 @@ public class DialogueBox : MonoBehaviour
     private void DisplayNext()
     {
         lerpFinished = false;
-        textBox.text = "";
+
+        if (appendDialogue)
+        {
+            dialogueStash = textBox.text + "<br>";
+        }
+        else
+        {
+            textBox.text = "";
+        }
+
         currentText = dialogueDictionary[currentDialogueKey][dialogueIndex].Dialogue;
 
         //if (dialogueDictionary[currentDialogueKey][dialogueIndex].AIExpression != currentExpression)
@@ -562,7 +587,16 @@ public class DialogueBox : MonoBehaviour
     private void LerpNext()
     {
         lerpFinished = false;
-        textBox.text = "";
+
+        if (appendDialogue)
+        {
+            dialogueStash = textBox.text + "<br>";
+        }
+        else
+        {
+            textBox.text = "";
+        }
+
         currentText = dialogueDictionary[currentDialogueKey][dialogueIndex].Dialogue;
 
         //if (dialogueDictionary[currentDialogueKey][dialogueIndex].AIExpression != currentExpression)
@@ -661,6 +695,7 @@ public class DialogueBox : MonoBehaviour
             {
                 //Reset position after tweening
                 textBox.text = "";
+
                 deactivating = false;
                 activated = false;
             });
@@ -672,5 +707,14 @@ public class DialogueBox : MonoBehaviour
     public void SubmitDeactivation()
     {
         deactivationSubmitted = true;
+    }
+
+    /// <summary>
+    /// Clears the contents of DialogueBox.textBox.
+    /// </summary>
+    public void ClearDialogue()
+    {
+        textBox.text = "";
+        dialogueStash = "";
     }
 }
