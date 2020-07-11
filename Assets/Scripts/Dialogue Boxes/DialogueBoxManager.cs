@@ -55,7 +55,6 @@ public class DialogueBoxManager : MonoBehaviour
 
     //Serialized Fields----------------------------------------------------------------------------                                                    
 
-    [SerializeField] private List<DialogueBox> dialogueBoxList;
     [SerializeField] private List<ColourTag> colourTags;
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
@@ -94,7 +93,7 @@ public class DialogueBoxManager : MonoBehaviour
         Instance = this;
         dialogueBoxes = new Dictionary<string, DialogueBox>();
 
-        foreach (DialogueBox d in dialogueBoxList)
+        foreach (DialogueBox d in GetComponentsInChildren<DialogueBox>())
         {
             dialogueBoxes[d.ID] = d;
         }

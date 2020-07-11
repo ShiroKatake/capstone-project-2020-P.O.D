@@ -37,7 +37,7 @@ public abstract class Stage : MonoBehaviour
     /// </summary>
     protected virtual void Awake()
     {
-        
+        step = 1;
     }
 
     /// <summary>
@@ -318,17 +318,17 @@ public abstract class Stage : MonoBehaviour
     //    IncrementStep();
     //}
 
-    /// <summary>
-    /// Sends dialogue to the dialogue box and increments the step.
-    /// </summary>
-    /// <param name="dialogueBoxID">The ID of the dialogue box being sent dialogue.</param>
-    /// <param name="dialogueKey">The dialogue key of the dialogue set to be displayed.</param>
-    /// <param name="invokeDelay">How long the dialogue should be delayed before displaying.</param>
-    protected void SendDialogue(string dialogueBoxID, string dialogueKey, float invokeDelay)
-    {
-        DialogueBoxManager.Instance.GetDialogueBox(dialogueBoxID).SubmitDialogueSet(dialogueKey, invokeDelay);
-        IncrementStep();
-    }
+    ///// <summary>
+    ///// Sends dialogue to the dialogue box and increments the step.
+    ///// </summary>
+    ///// <param name="dialogueBoxID">The ID of the dialogue box being sent dialogue.</param>
+    ///// <param name="dialogueKey">The dialogue key of the dialogue set to be displayed.</param>
+    ///// <param name="invokeDelay">How long the dialogue should be delayed before displaying.</param>
+    //protected void SendDialogue(string dialogueBoxID, string dialogueKey, float invokeDelay)
+    //{
+    //    DialogueBoxManager.Instance.GetDialogueBox(dialogueBoxID).SubmitDialogueSet(dialogueKey, invokeDelay);
+    //    IncrementStep();
+    //}
 
     /// <summary>
     /// Dismisses the dialogue and increments the step

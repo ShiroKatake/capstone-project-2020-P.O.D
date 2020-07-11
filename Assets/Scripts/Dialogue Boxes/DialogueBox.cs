@@ -92,8 +92,8 @@ public class DialogueBox : MonoBehaviour
     //[SerializeField] private Image aiImage;
 
     [Header("Tween Stats")]
-    [SerializeField] private Vector2 onScreenPos;
     [SerializeField] private Vector2 offScreenPos;
+    [SerializeField] private Vector2 onScreenPos;
     [SerializeField] private float tweenSpeed;
 
     //[Header("Available Expressions")]
@@ -125,29 +125,29 @@ public class DialogueBox : MonoBehaviour
     private Vector2 arrowInitialPosition;
     [SerializeField] private bool activated;
     [SerializeField] private bool clickable;
-    [SerializeField] private bool showSingle;
-    [SerializeField] private bool showMultiple;
 
     private Dictionary<string, List<ExpressionDialoguePair>> dialogueDictionary;
-    private string currentDialogueKey = "";
-    private string lastDialogueKey = "";
-    private int dialogueIndex = 0;
-    private string currentText = "";
-    private string pendingText = "";
-    private string pendingColouredText = "";
-    //private int lerpTextMinIndex = 0;
-    private int lerpTextMaxIndex = 0;
+    private string currentDialogueKey;
+    private string lastDialogueKey;
+    private int dialogueIndex;
+    private string currentText;
+    private string pendingText;
+    private string pendingColouredText;
+    //private int lerpTextMinIndex;
+    private int lerpTextMaxIndex;
 
-    private ColourTag colourTag = null;
-    private bool lerpFinished = true;
+    private ColourTag colourTag;
+    private bool lerpFinished;
 
-    private string nextDialogueKey = "";
-    private float nextInvokeDelay = 0f;
-    private bool deactivationSubmitted = false;
-    private bool nextDialogueSetReady = false;
+    private string nextDialogueKey;
+    private float nextInvokeDelay;
+    [SerializeField] private bool tweenOut;
+    [SerializeField] private bool tweenOutNextDialogueSet;
+    private bool deactivationSubmitted;
+    private bool nextDialogueSetReady;
 
-    private bool dialogueRead = false;
-    private bool deactivating = false;
+    private bool dialogueRead;
+    private bool deactivating;
 
     //private RectTransform continueArrowTransform;
     //private RectTransform completeArrowTransform;
@@ -209,7 +209,27 @@ public class DialogueBox : MonoBehaviour
         //aiImage.sprite = aiNeutral;
         //currentExpression = AIExpression.Neutral;
         //arrowInitialPosition = completeArrow.GetComponent<RectTransform>().anchoredPosition;
+        dialogueRectTransform = GetComponent<RectTransform>();
+        originalRectTransformPosition = GetComponent<RectTransform>().anchoredPosition;
         dialogueDictionary = new Dictionary<string, List<ExpressionDialoguePair>>();
+        lerpFinished = true;
+        tweenOut = true;
+        tweenOutNextDialogueSet = true;
+
+        currentDialogueKey = "";
+        lastDialogueKey = "";
+        dialogueIndex = 0;
+        currentText = "";
+        pendingText = "";
+        pendingColouredText = "";
+        lerpTextMaxIndex = 0;
+        colourTag = null;
+        nextDialogueKey = "";
+        nextInvokeDelay = 0;
+        deactivationSubmitted = false;
+        nextDialogueSetReady = false;
+        dialogueRead = false;
+        deactivating = false;
 
         foreach (DialogueSet ds in dialogue)
         {
@@ -241,18 +261,6 @@ public class DialogueBox : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        if (showSingle)
-        {
-            showSingle = false;
-            SubmitDialogueSet("test single", 0);
-        }
-
-        if (showMultiple)
-        {
-            showMultiple = false;
-            SubmitDialogueSet("test multiple", 0);
-        }
-
         if (clickable)
         {
             dialogueTimer += Time.deltaTime;
@@ -311,22 +319,19 @@ public class DialogueBox : MonoBehaviour
         //Activates the dialogue box if dialogue has been submitted to be displayed.
         if (nextDialogueKey != "" && !deactivating)
         {
-            if (!activated)
+            if (activated)
             {
-                ActivateDialogueBox(nextDialogueKey, nextInvokeDelay);
-
-                nextDialogueKey = "";
-                nextInvokeDelay = 0f;
+                ChangeDialogue(nextDialogueKey);
             }
             else
             {
-                ChangeDialogue(nextDialogueKey);
-
-                nextDialogueKey = "";
-                nextInvokeDelay = 0f;
+                ActivateDialogueBox(nextDialogueKey, nextInvokeDelay);
             }
+
+            nextDialogueKey = "";
+            nextInvokeDelay = 0f;
         }
-        else if (deactivationSubmitted && activated)
+        else if (deactivationSubmitted && activated && tweenOut)
         {
             lastDialogueKey = currentDialogueKey;
             currentDialogueKey = "";
@@ -372,27 +377,17 @@ public class DialogueBox : MonoBehaviour
     {
         if (!lerpFinished)
         {
+            //Reset variables
             pendingText = "";
             pendingColouredText = "";
             colourTag = null;
 
+            //Get string of new letters to be added
             foreach (char c in currentText.Substring(0, lerpTextMaxIndex))
             {
-                if (colourTag != null)
+                if (colourTag == null)
                 {
-                    if (c == colourTag.ClosingTag)
-                    {
-                        pendingText += $"<color={colourTag.ColourName}><b>{pendingColouredText}</b></color>";
-                        pendingColouredText = "";
-                        colourTag = null;
-                    }
-                    else
-                    {
-                        pendingColouredText += c;
-                    }
-                }
-                else
-                {
+                    //Check for opening colour tag
                     if (DialogueBoxManager.Instance.ColourTags != null && DialogueBoxManager.Instance.ColourTags.Count > 0)
                     {
                         foreach (ColourTag t in DialogueBoxManager.Instance.ColourTags)
@@ -405,20 +400,38 @@ public class DialogueBox : MonoBehaviour
                         }
                     }
 
+                    //Add if not coloured
                     if (colourTag == null)
                     {
                         pendingText += c;
                     }
                 }
+                else
+                {
+                    //Check for closing colour tag
+                    if (c == colourTag.ClosingTag)
+                    {
+                        pendingText += $"<color={colourTag.ColourName}><b>{pendingColouredText}</b></color>";
+                        pendingColouredText = "";
+                        colourTag = null;
+                    }
+                    else
+                    {
+                        pendingColouredText += c;
+                    }
+                }
             }
 
+            //Add if coloured
             if (colourTag != null)
             {
                 pendingText += $"<color={colourTag.ColourName}><b>{pendingColouredText}</b></color>";
             }
 
+            //Add all pending text
             textBox.text = pendingText;
 
+            //Check progress
             if (lerpTextMaxIndex < currentText.Length)// - 1)
             {
                 lerpTextMaxIndex = Mathf.Min(lerpTextMaxIndex + lerpTextInterval, currentText.Length);// - 1);
@@ -439,47 +452,49 @@ public class DialogueBox : MonoBehaviour
     /// </summary>
     /// <param name="key">The key of the dialogue set to be displayed.</param>
     /// <param name="invokeDelay">How long the dialogue box should wait to display the new dialogue set.</param>
-    public void SubmitDialogueSet(string key, float invokeDelay)
+    /// <param name="invokeDelay">Should the dialogue box tween out on completion of the dialogue set?</param>
+    public void SubmitDialogue(string key, float invokeDelay, bool tweenOut)
     {
+        //Debug.Log($"{this} received a dialogue submission. TweenOut is {this.tweenOut} but will become {tweenOut}");
+
         if (dialogueDictionary.ContainsKey(key))
         {
-            nextDialogueKey = key;
-            nextInvokeDelay = invokeDelay;
+            if (dialogueDictionary[key].Count > 0)
+            {
+                nextDialogueKey = key;
+                nextInvokeDelay = invokeDelay;
+                tweenOutNextDialogueSet = tweenOut;
+                dialogueRead = false;
+            }
+            else
+            {
+                Debug.LogError($"dialogueDictionary[{key}] contains no dialogue set for DialogueBox to display.");
+            }
         }
         else
         {
-            Debug.Log("Dialogue key '" + key + "' is invalid.");
+            Debug.Log($"Dialogue key '{key}' is invalid.");
         }
     }
-
+    
+    //TODO: turn this into a coroutine
     /// <summary>
     /// Activates the dialogue box, prompting it to appear on-screen.
     /// </summary>
     /// <param name="key">The key of the dialogue set to be displayed.</param>
     /// <param name="invokeDelay">How long the dialogue box should wait to display the new dialogue set.</param>
     private void ActivateDialogueBox(string key, float invokeDelay)
-    {
-        if (dialogueDictionary.ContainsKey(key) && dialogueDictionary[key].Count > 0)
-        {
-            //Caches required tweening information for performance saving
-            //TODO: see if this can be cached once to improve performance
-            dialogueRectTransform = GetComponent<RectTransform>();
-            originalRectTransformPosition = GetComponent<RectTransform>().anchoredPosition;
+    {      
+        dialogueIndex = 0;
+        lastDialogueKey = currentDialogueKey == "" ? lastDialogueKey : currentDialogueKey;
+        currentDialogueKey = key;
+        tweenOut = tweenOutNextDialogueSet;
+        //Debug.Log($"Activating {this}, tween out is now {tweenOut}");
 
-            dialogueRead = false;
-            dialogueIndex = 0;
-            lastDialogueKey = currentDialogueKey == "" ? lastDialogueKey : currentDialogueKey;
-            currentDialogueKey = key;
+        activated = true;
+        nextDialogueSetReady = false;
 
-            activated = true;
-            nextDialogueSetReady = false;
-
-            Invoke(nameof(ShowDialogueBox), invokeDelay);
-        }
-        else
-        {
-            Debug.LogError($"dialogueDictionary[{key}] contains no dialogue set for DialogueBox to display.");
-        }
+        Invoke(nameof(ShowDialogueBox), invokeDelay);
     }
 
     /// <summary>
@@ -510,6 +525,8 @@ public class DialogueBox : MonoBehaviour
             lastDialogueKey = currentDialogueKey;
             currentDialogueKey = key;
             dialogueIndex = 0;
+            tweenOut = tweenOutNextDialogueSet;
+            //Debug.Log($"Changing dialogue of {this}, tween out is now {tweenOut}");
             LerpNext();
         }
         else
@@ -620,11 +637,15 @@ public class DialogueBox : MonoBehaviour
             }
             else if (activated)
             {
-                lastDialogueKey = currentDialogueKey;
-                currentDialogueKey = "";
-                clickable = false;
                 dialogueRead = true;
-                DeactivateDialogueBox();
+
+                if (tweenOut)
+                {
+                    lastDialogueKey = currentDialogueKey;
+                    currentDialogueKey = "";
+                    clickable = false;
+                    DeactivateDialogueBox();
+                }
             }
         }
     }
@@ -634,6 +655,7 @@ public class DialogueBox : MonoBehaviour
     /// </summary>
     private void DeactivateDialogueBox()
     {
+        //Debug.Log($"Deactivating {this}");
         dialogueTimer = 0;
         deactivating = true;
         //countdown.rectTransform.DOAnchorPosY(20, tweenSpeed).SetEase(Ease.InBack);
