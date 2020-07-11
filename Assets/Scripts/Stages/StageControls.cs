@@ -43,47 +43,46 @@ public class StageControls : Stage
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
-    //TODO: turn into coroutine, or method that triggers a coroutine and the coroutine itself
+    /// <summary>
+    /// Triggers the main behaviour of StageControls.
+    /// </summary>
+    public override void StartExecution()
+    {
+        StartCoroutine(Execution());
+    }
+
     /// <summary>
     /// The main behaviour of StageControls.
     /// </summary>
-    public override void Execute()
+    /// <note>
+    /// If the stage follows a linear path, use while(waiting){yield return null} statements to delay behaviour. If the stage can loop back on itself or
+    /// jump ahead, use an initial yield return null followed by while(step > -1){switch(step){/*stage content*/}.
+    /// </note>
+    protected override IEnumerator Execution()
     {
-        switch (step)
+        test1 = DialogueBoxManager.Instance.GetDialogueBox("Test 1");
+        test2 = DialogueBoxManager.Instance.GetDialogueBox("Test 2");
+        test1.SubmitDialogue("test single", 5, false);
+
+        while (!test1.DialogueRead)
         {
-            case 1:
-                test1 = DialogueBoxManager.Instance.GetDialogueBox("Test 1");
-                test2 = DialogueBoxManager.Instance.GetDialogueBox("Test 2");
-                test1.SubmitDialogue("test single", 5, false);
-                IncrementStep();
-                break;
-            case 2:
-                if (test1.DialogueRead)
-                {
-                    test1.SubmitDialogue("test multiple", 0, true);
-                    IncrementStep();
-                }
-
-                break;
-            case 3:
-                if (test1.DialogueRead)
-                {
-                    test2.SubmitDialogue("test multiple", 0, true);
-                    IncrementStep();
-                }
-
-                break;
-            case 4:
-                if (test2.DialogueRead)
-                {
-                    Debug.Log("Finished test");
-                    IncrementStep();
-                }
-
-                break;
-            default:
-
-                break;
+            yield return null;
         }
+
+        test1.SubmitDialogue("test multiple", 0, true);
+
+        while (!test1.DialogueRead)
+        {
+            yield return null;
+        }
+
+        test2.SubmitDialogue("test multiple", 0, true);
+
+        while (!test2.DialogueRead)
+        {
+            yield return null;
+        }
+
+        Debug.Log("Finished test");
     }
 }

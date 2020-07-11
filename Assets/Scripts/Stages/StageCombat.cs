@@ -39,13 +39,21 @@ public class StageCombat : Stage
     /// <summary>
     /// The main behaviour of StageCombat.
     /// </summary>
-    public override void Execute()
+    public override void StartExecution()
     {
-        switch (step)
-        {
-            default:
+        StartCoroutine(Execution());
+    }
 
-                break;
-        }
+    /// <summary>
+    /// The main behaviour of the stage. 
+    /// </summary>
+    /// <note>
+    /// If the stage follows a linear path, use while(waiting){yield return null} statements to delay behaviour. If the stage can loop back on itself or
+    /// jump ahead, use an initial yield return null followed by while(step > -1){switch(step){/*stage content*/}.
+    /// </note>
+    protected override IEnumerator Execution()
+    {
+        Debug.Log($"{this} not implemented.");
+        yield return null;
     }
 }

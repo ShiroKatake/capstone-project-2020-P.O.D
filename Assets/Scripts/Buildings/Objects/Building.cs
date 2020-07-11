@@ -56,8 +56,6 @@ public class Building : CollisionListener
     [Header("Sound Library")]
     [SerializeField] private AudioManager.ESound idleSound;
 
-
-
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
     //Components

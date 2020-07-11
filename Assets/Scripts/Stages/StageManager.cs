@@ -117,17 +117,19 @@ public class StageManager : MonoBehaviour
         {
             currentStage = stages[firstStage];
         }
+
+        currentStage.StartExecution();
     }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
 
-    /// <summary>
-    /// Update() is run every frame.
-    /// </summary>
-    private void Update()
-    {
-        currentStage.Execute();
-    }
+    ///// <summary>
+    ///// Update() is run every frame.
+    ///// </summary>
+    //private void Update()
+    //{
+    //    currentStage.Execute();
+    //}
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
@@ -155,6 +157,7 @@ public class StageManager : MonoBehaviour
         if (stages.ContainsKey(stage))
         {
             currentStage = stages[stage];
+            currentStage.StartExecution();
         }
         else
         {

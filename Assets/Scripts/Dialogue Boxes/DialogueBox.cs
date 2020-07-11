@@ -325,7 +325,7 @@ public class DialogueBox : MonoBehaviour
             }
             else
             {
-                ActivateDialogueBox(nextDialogueKey, nextInvokeDelay);
+                StartCoroutine(ActivateDialogueBox(nextDialogueKey, nextInvokeDelay));
             }
 
             nextDialogueKey = "";
@@ -476,15 +476,14 @@ public class DialogueBox : MonoBehaviour
             Debug.Log($"Dialogue key '{key}' is invalid.");
         }
     }
-    
-    //TODO: turn this into a coroutine
+
     /// <summary>
     /// Activates the dialogue box, prompting it to appear on-screen.
     /// </summary>
     /// <param name="key">The key of the dialogue set to be displayed.</param>
     /// <param name="invokeDelay">How long the dialogue box should wait to display the new dialogue set.</param>
-    private void ActivateDialogueBox(string key, float invokeDelay)
-    {      
+    IEnumerator ActivateDialogueBox(string key, float invokeDelay)
+    {
         dialogueIndex = 0;
         lastDialogueKey = currentDialogueKey == "" ? lastDialogueKey : currentDialogueKey;
         currentDialogueKey = key;
@@ -493,15 +492,12 @@ public class DialogueBox : MonoBehaviour
 
         activated = true;
         nextDialogueSetReady = false;
+        
+        if (invokeDelay > 0)
+        {
+            yield return new WaitForSeconds(invokeDelay);
+        }
 
-        Invoke(nameof(ShowDialogueBox), invokeDelay);
-    }
-
-    /// <summary>
-    /// Displays the dialogue box and the submitted dialogue once the invocation delay has elapsed.
-    /// </summary>
-    private void ShowDialogueBox()
-    {
         nextDialogueSetReady = true;
 
         //countdown.rectTransform.DOAnchorPosY(-18 + 150, tweenSpeed).SetEase(Ease.OutBack);
