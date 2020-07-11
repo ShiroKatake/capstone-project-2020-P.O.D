@@ -272,7 +272,7 @@ public class Alien : MonoBehaviour, IMessenger
 
 	/// <summary>
 	/// Send an event message for AlienFX.cs to do attack FX's and deal damage.
-	/// If there's no FX script listening to this to call DoDamage(), call it anyway.
+	/// If there's no FX script listening to this to call DealDamage(), call it anyway.
 	/// </summary>
 	private void Attack()
 	{
@@ -337,8 +337,8 @@ public class Alien : MonoBehaviour, IMessenger
 	}
 
 	/// <summary>
-	/// Deal damage to target.
-	/// DoDamage() is intended to be called if there is no AlienFX.cs to trigger attack animation.
+	/// Enable the melee weapon object to deal damage.
+	/// DealDamage() is intended to be called if there is no AlienFX.cs to trigger attack animation.
 	/// </summary>
 	public void DealDamage()
 	{

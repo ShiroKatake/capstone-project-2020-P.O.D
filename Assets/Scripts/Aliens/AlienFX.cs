@@ -1,12 +1,19 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+/// <summary>
+/// Class for doing SFX, VFX and Animations for aliens.
+/// </summary>
 public class AlienFX : MonoBehaviour
 {
+	//Private Fields---------------------------------------------------------------------------------------------------------------------------------  
+
+	//Serialized Fields----------------------------------------------------------------------------
+
 	[SerializeField] private Renderer alienRenderer;
 	[SerializeField] private Color onDamagedFlashColor;
 	[SerializeField] private float flashSpeed;
+
+	//Non-Serialized Fields------------------------------------------------------------------------  
 
 	private Animator animator;
 	private Alien alien;
@@ -18,6 +25,9 @@ public class AlienFX : MonoBehaviour
 	private const string ANIMATOR_DAMAGED = "Damaged";
 	private const string MATERIAL_FLASH = "_FlashColor";
 
+	/// <summary>
+	/// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
+	/// </summary>
 	void Awake()
 	{
 		animator = GetComponent<Animator>();
@@ -31,6 +41,9 @@ public class AlienFX : MonoBehaviour
 		material = alienRenderer.material;
 	}
 
+	/// <summary>
+	/// Update() is run every frame.
+	/// </summary>
 	private void Update()
 	{
 		if (materialFlashColor.a > 0)
@@ -41,6 +54,9 @@ public class AlienFX : MonoBehaviour
 		}
 	}
 
+	/// <summary>
+	/// OnDamaged() is called whenever it receives a message from Alien.cs saying it's taken damage.
+	/// </summary>
 	private void OnDamaged()
 	{
 		AudioManager.Instance.PlaySound(AudioManager.ESound.Alien_Takes_Damage, this.gameObject);
@@ -49,6 +65,9 @@ public class AlienFX : MonoBehaviour
 		//Debug.Log("Damaged");
 	}
 
+	/// <summary>
+	/// OnAttack() is called whenever it receives a message from Alien.cs saying it needs to deal damage.
+	/// </summary>
 	private void OnAttack()
 	{
 		AudioManager.Instance.PlaySound(AudioManager.ESound.Damage_To_Building, this.gameObject);
@@ -56,6 +75,9 @@ public class AlienFX : MonoBehaviour
 		//Debug.Log("Attack");
 	}
 
+	/// <summary>
+	/// OnDie() is called whenever it receives a message from Alien.cs saying it has reached 0 hp.
+	/// </summary>
 	private void OnDie()
 	{
 		AudioManager.Instance.PlaySound(AudioManager.ESound.Alien_Dies, this.gameObject);
@@ -63,6 +85,9 @@ public class AlienFX : MonoBehaviour
 		//Debug.Log("Die");
 	}
 
+	/// <summary>
+	/// Set the flash color of the alien's material to start the flashing FX.
+	/// </summary>
 	private void SetFlashColor(Color color)
 	{
 		alienRenderer.material = material;
