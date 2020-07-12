@@ -55,12 +55,15 @@ public class DialogueBoxManager : MonoBehaviour
 
     //Serialized Fields----------------------------------------------------------------------------                                                    
 
+    //[SerializeField] private string dialogueFilename;
+    [SerializeField] private TextAsset dialogue;
     [SerializeField] private char newLineMarker;
     [SerializeField] private List<ColourTag> colourTags;
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
-    protected Dictionary<string, DialogueBox> dialogueBoxes;
+    private Dictionary<string, DialogueBox> dialogueBoxes;
+    private Dictionary<string, List<string[]>> dialogueData;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -97,13 +100,55 @@ public class DialogueBoxManager : MonoBehaviour
         }
 
         Instance = this;
+
+        GetDialogueBoxes();
+        LoadDialogueData();
+        NameColourTags();
+    }
+
+    /// <summary>
+    /// Gets all dialogue boxes' DialogueBox components and stores them in a dictionary.
+    /// </summary>
+    private void GetDialogueBoxes()
+    {
         dialogueBoxes = new Dictionary<string, DialogueBox>();
 
         foreach (DialogueBox d in GetComponentsInChildren<DialogueBox>())
         {
             dialogueBoxes[d.ID] = d;
         }
-        
+    }
+
+    /// <summary>
+    /// Loads dialogue data from file and groups it by the ID of the dialogue box it belongs to.
+    /// </summary>
+    private void LoadDialogueData()
+    {
+        string[] data = dialogue.text.Split(new char[] { '\n' });
+        dialogueData = new Dictionary<string, List<string[]>>();
+
+        for (int i = 1; i < data.Length; i++)
+        {
+            string[] row = data[i].Split(new char[] { '\t' });
+            //Debug.Log($"Read row {row} with length {row.Length}");
+
+            if (row.Length == 3)
+            {
+                if (!dialogueData.ContainsKey(row[0]))
+                {
+                    dialogueData[row[0]] = new List<string[]>();
+                }
+
+                dialogueData[row[0]].Add(row);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Sets all colour tag objects' names based on the hexadecimal value of their colours. 
+    /// </summary>
+    private void NameColourTags()
+    {
         foreach (ColourTag c in colourTags)
         {
             c.ColourName = $"#{ColorUtility.ToHtmlStringRGB(c.Colour)}";
@@ -116,6 +161,24 @@ public class DialogueBoxManager : MonoBehaviour
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Retrieves the raw data of a dialogue box's dialogue.
+    /// </summary>
+    /// <param name="id">The ID of the dialogue box retrieving its data.</param>
+    /// <returns>The dialogue box's raw dialogue data.</returns>
+    public List<string[]> GetDialogueData(string id)
+    {
+        if (dialogueData.ContainsKey(id))
+        {
+            return dialogueData[id];
+        }
+        else
+        {
+            Debug.LogError($"DialogueBoxManager.dialogueData does not contain the key {id}. Double check the key passed and the contents of {dialogue.name}.");
+            return null;
+        }
+    }
 
     /// <summary>
     /// Retrieves the specified dialogue box if it exists.

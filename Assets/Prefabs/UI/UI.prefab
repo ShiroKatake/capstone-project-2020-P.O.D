@@ -1094,15 +1094,7 @@ MonoBehaviour:
   tweenSpeed: 0.5
   appendDialogue: 0
   lerpTextInterval: 3
-  dialogue:
-  - key: test single
-    expressionDialoguePairs:
-    - dialogue: Testing . . . 1 . . . 2 . . . 3 . . .
-  - key: test multiple
-    expressionDialoguePairs:
-    - dialogue: Testing . . . 1 . . . 2 . . . 3 . . .
-    - dialogue: Testing . . . Testing . . . A . . . B . . . C . . .
-    - dialogue: Is this thing on?
+  dialogue: []
   activated: 0
   clickable: 0
   tweenOut: 0
@@ -3827,6 +3819,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3c4dda4332ad05439720d5a27c696d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dialogue: {fileID: 4900000, guid: 069c3556d7d36fe4cabbb4971f5cd67f, type: 3}
   newLineMarker: 126
   colourTags:
   - openingTag: 60
@@ -5916,17 +5909,7 @@ MonoBehaviour:
   tweenSpeed: 0
   appendDialogue: 1
   lerpTextInterval: 3
-  dialogue:
-  - key: test single
-    expressionDialoguePairs:
-    - dialogue: 'Console: Testing . . .'
-  - key: test multiple
-    expressionDialoguePairs:
-    - dialogue: 'Console: Testing . . .  1 . . . 2 . . . 3 . . .~Console: Testing
-        . . . testing . . . A . . . B . . . C . . .~Console: Is this thing on?'
-  - key: finished
-    expressionDialoguePairs:
-    - dialogue: 'Console: Testing complete.'
+  dialogue: []
   activated: 1
   clickable: 0
   tweenOut: 0
@@ -6693,15 +6676,7 @@ MonoBehaviour:
   tweenSpeed: 0.5
   appendDialogue: 0
   lerpTextInterval: 3
-  dialogue:
-  - key: test single
-    expressionDialoguePairs:
-    - dialogue: Testing . . . 1 . . . 2 . . . 3 . . .
-  - key: test multiple
-    expressionDialoguePairs:
-    - dialogue: Testing . . . 1 . . . 2 . . . 3 . . .
-    - dialogue: Testing . . . Testing . . . A . . . B . . . C . . .
-    - dialogue: Is this thing on?
+  dialogue: []
   activated: 0
   clickable: 0
   tweenOut: 0

@@ -67,12 +67,12 @@ public class DialogueSet
     /// <summary>
     /// The key of the dialogue set.
     /// </summary>
-    public string Key { get => key; }
+    public string Key { get => key; set => key = value; }
 
     /// <summary>
     /// The list of expression-dialogue pairs that comprise the dialogue set.
     /// </summary>
-    public List<ExpressionDialoguePair> ExpressionDialoguePairs { get => expressionDialoguePairs; }
+    public List<ExpressionDialoguePair> ExpressionDialoguePairs { get => expressionDialoguePairs; set => expressionDialoguePairs = value; }
 }
 
 /// <summary>
@@ -214,7 +214,6 @@ public class DialogueBox : MonoBehaviour
         //arrowInitialPosition = completeArrow.GetComponent<RectTransform>().anchoredPosition;
         dialogueRectTransform = GetComponent<RectTransform>();
         originalRectTransformPosition = GetComponent<RectTransform>().anchoredPosition;
-        dialogueDictionary = new Dictionary<string, List<ExpressionDialoguePair>>();
         lerpFinished = true;
         tweenOut = true;
         tweenOutNextDialogueSet = true;
@@ -235,29 +234,74 @@ public class DialogueBox : MonoBehaviour
         deactivating = false;
         textBox.text = "";
         newLineMarker = DialogueBoxManager.Instance.NewLineMarker;
-
-        foreach (DialogueSet ds in dialogue)
-        {
-            if (dialogueDictionary.ContainsKey(ds.Key))
-            {
-                Debug.Log($"DialogueBox has multiple dialogue sets with the dialogue key {ds.Key}. Each dialogue key should be unique.");
-            }
-            else
-            {
-                dialogueDictionary[ds.Key] = ds.ExpressionDialoguePairs;
-            }
-        }
     }
 
     ///// <summary>
     ///// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
     ///// Start() runs after Awake().
     ///// </summary>
-    //private void Start()
-    //{
-    //    //continueArrowTransform = continueArrow.GetComponent<RectTransform>();
-    //    //completeArrowTransform = completeArrow.GetComponent<RectTransform>();
-    //}
+    private void Start()
+    {
+        List<string[]> dialogueData = DialogueBoxManager.Instance.GetDialogueData(id);
+        dialogueDictionary = new Dictionary<string, List<ExpressionDialoguePair>>();
+        dialogue = new List<DialogueSet>(); //For in-editor verification during testing
+
+        if (dialogueData == null)
+        {
+            Debug.LogError($"{id} could not load its dialogue.");
+        }
+        else
+        {
+            foreach (string[] row in dialogueData)
+            {
+                if (!dialogueDictionary.ContainsKey(row[1]))
+                {
+                    dialogueDictionary[row[1]] = new List<ExpressionDialoguePair>();
+                }
+
+                ExpressionDialoguePair edp = new ExpressionDialoguePair();
+                edp.Dialogue = row[2];
+                dialogueDictionary[row[1]].Add(edp);
+
+                //For in-editor verification during testing
+                DialogueSet ds = null;
+
+                foreach (DialogueSet set in dialogue)
+                {
+                    if (set.Key == row[1])
+                    {
+                        ds = set;
+                        break;
+                    }
+                }
+
+                if (ds == null)
+                {
+                    ds = new DialogueSet();
+                    ds.Key = row[1];
+                    ds.ExpressionDialoguePairs = new List<ExpressionDialoguePair>();
+                    dialogue.Add(ds);
+                }
+
+                ds.ExpressionDialoguePairs.Add(edp);
+            }
+
+            //foreach (DialogueSet ds in dialogue)
+            //{
+            //    if (dialogueDictionary.ContainsKey(ds.Key))
+            //    {
+            //        Debug.Log($"DialogueBox has multiple dialogue sets with the dialogue key {ds.Key}. Each dialogue key should be unique.");
+            //    }
+            //    else
+            //    {
+            //        dialogueDictionary[ds.Key] = ds.ExpressionDialoguePairs;
+            //    }
+            //}
+        }
+
+        //    //continueArrowTransform = continueArrow.GetComponent<RectTransform>();
+        //    //completeArrowTransform = completeArrow.GetComponent<RectTransform>();
+    }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
 
