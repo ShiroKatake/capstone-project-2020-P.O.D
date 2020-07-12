@@ -44,7 +44,7 @@ public class ExpressionDialoguePair
     /// <summary>
     /// The line of dialogue to be displayed.
     /// </summary>
-    public string Dialogue { get => dialogue; }
+    public string Dialogue { get => dialogue; set => dialogue = value; }
 }
 
 /// <summary>
@@ -138,6 +138,7 @@ public class DialogueBox : MonoBehaviour
     private int lerpTextMaxIndex;
     private string dialogueStash;
 
+    private char newLineMarker;
     private ColourTag colourTag;
     private bool lerpFinished;
 
@@ -233,6 +234,7 @@ public class DialogueBox : MonoBehaviour
         dialogueRead = false;
         deactivating = false;
         textBox.text = "";
+        newLineMarker = DialogueBoxManager.Instance.NewLineMarker;
 
         foreach (DialogueSet ds in dialogue)
         {
@@ -406,9 +408,8 @@ public class DialogueBox : MonoBehaviour
                     //Add if not coloured
                     if (colourTag == null)
                     {
-                        if (c == DialogueBoxManager.Instance.NewLineMarker)
+                        if (c == newLineMarker)
                         {
-                            Debug.Log($"New line marker {c} detected.");
                             pendingText += "<br>";
                         }
                         else
@@ -420,10 +421,9 @@ public class DialogueBox : MonoBehaviour
                 else
                 {
                     //Check for closing colour tag
-                    if (c == DialogueBoxManager.Instance.NewLineMarker)
+                    if (c == newLineMarker)
                     {
-                        Debug.Log($"New line marker {c} detected.");
-                        pendingText += "<br>";
+                        pendingColouredText += "<br>";
                     }
                     else if (c == colourTag.ClosingTag)
                     {
@@ -467,9 +467,9 @@ public class DialogueBox : MonoBehaviour
     /// Submit a dialogue set for the dialogue box to display during the next update.
     /// </summary>
     /// <param name="key">The key of the dialogue set to be displayed.</param>
-    /// <param name="invokeDelay">How long the dialogue box should wait to display the new dialogue set.</param>
-    /// <param name="invokeDelay">Should the dialogue box tween out on completion of the dialogue set?</param>
-    public void SubmitDialogue(string key, float invokeDelay, bool tweenOut)
+    /// <param name="delay">How long the dialogue box should wait to display the new dialogue set.</param>
+    /// <param name="delay">Should the dialogue box tween out on completion of the dialogue set?</param>
+    public void SubmitDialogue(string key, float delay, bool tweenOut)
     {
         //Debug.Log($"{this} received a dialogue submission. TweenOut is {this.tweenOut} but will become {tweenOut}");
 
@@ -478,7 +478,7 @@ public class DialogueBox : MonoBehaviour
             if (dialogueDictionary[key].Count > 0)
             {
                 nextDialogueKey = key;
-                nextInvokeDelay = invokeDelay;
+                nextInvokeDelay = delay;
                 tweenOutNextDialogueSet = tweenOut;
                 dialogueRead = false;
             }
@@ -497,8 +497,8 @@ public class DialogueBox : MonoBehaviour
     /// Activates the dialogue box, prompting it to appear on-screen.
     /// </summary>
     /// <param name="key">The key of the dialogue set to be displayed.</param>
-    /// <param name="invokeDelay">How long the dialogue box should wait to display the new dialogue set.</param>
-    IEnumerator ActivateDialogueBox(string key, float invokeDelay)
+    /// <param name="delay">How long the dialogue box should wait to display the new dialogue set.</param>
+    IEnumerator ActivateDialogueBox(string key, float delay)
     {
         dialogueIndex = 0;
         lastDialogueKey = currentDialogueKey == "" ? lastDialogueKey : currentDialogueKey;
@@ -509,9 +509,9 @@ public class DialogueBox : MonoBehaviour
         activated = true;
         nextDialogueSetReady = false;
         
-        if (invokeDelay > 0)
+        if (delay > 0)
         {
-            yield return new WaitForSeconds(invokeDelay);
+            yield return new WaitForSeconds(delay);
         }
 
         nextDialogueSetReady = true;
@@ -716,5 +716,26 @@ public class DialogueBox : MonoBehaviour
     {
         textBox.text = "";
         dialogueStash = "";
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="message"></param>
+    /// <param name="delay"></param>
+    public void SubmitErrorMessage(string message, float delay)
+    {
+        if (id != "Console")
+        {
+            Debug.LogError($"You should not submit an error message to the dialogue box {id}. Submit it to the dialogue box Console instead.");
+        }
+        else
+        {
+            dialogueDictionary["error"] = new List<ExpressionDialoguePair>();
+            ExpressionDialoguePair errorMessage = new ExpressionDialoguePair();
+            errorMessage.Dialogue = $"<{message}>";
+            dialogueDictionary["error"].Add(errorMessage);
+            SubmitDialogue("error", delay, false);
+        }
     }
 }

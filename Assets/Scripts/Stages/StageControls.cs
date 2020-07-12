@@ -61,6 +61,7 @@ public class StageControls : Stage
     /// </note>
     protected override IEnumerator Execution()
     {
+        char newLine = DialogueBoxManager.Instance.NewLineMarker;
         cat = DialogueBoxManager.Instance.GetDialogueBox("CAT");
         dog = DialogueBoxManager.Instance.GetDialogueBox("DOG");
         console = DialogueBoxManager.Instance.GetDialogueBox("Console");
@@ -70,7 +71,11 @@ public class StageControls : Stage
         yield return new WaitForSeconds(4);
 
         console.ClearDialogue();
-        console.SubmitDialogue("test single", 2, false);
+        console.SubmitDialogue("test multiple", 2, false);
+
+        yield return new WaitForSeconds(4);
+
+        console.SubmitErrorMessage($"Error: Test error message{newLine}Error: Test message successful", 2);
 
         yield return new WaitForSeconds(4);
 

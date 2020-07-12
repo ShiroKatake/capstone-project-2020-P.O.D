@@ -81,7 +81,7 @@ public class DialogueBoxManager : MonoBehaviour
     /// <summary>
     /// The character that denotes a new line.
     /// </summary>
-    public char NewLineMarker { get { Debug.Log($"Getting newLineMarker {newLineMarker}"); return newLineMarker; } }
+    public char NewLineMarker { get => newLineMarker; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -103,9 +103,7 @@ public class DialogueBoxManager : MonoBehaviour
         {
             dialogueBoxes[d.ID] = d;
         }
-
-        Debug.Log($"New line marker character is {newLineMarker}");
-
+        
         foreach (ColourTag c in colourTags)
         {
             c.ColourName = $"#{ColorUtility.ToHtmlStringRGB(c.Colour)}";
