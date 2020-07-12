@@ -132,14 +132,15 @@ public class DialogueBoxManager : MonoBehaviour
             string[] row = data[i].Split(new char[] { '\t' });
             //Debug.Log($"Read row {row} with length {row.Length}");
 
-            if (row.Length == 3)
+            if (row.Length >= 4 && row[1] != "" && !row[1].StartsWith("#"))
             {
-                if (!dialogueData.ContainsKey(row[0]))
+                if (!dialogueData.ContainsKey(row[1]))
                 {
-                    dialogueData[row[0]] = new List<string[]>();
+                    //Debug.Log($"Adding dialogue box key {row[1]} to DialogueBoxManager.dialogueData.");
+                    dialogueData[row[1]] = new List<string[]>();
                 }
 
-                dialogueData[row[0]].Add(row);
+                dialogueData[row[1]].Add(row);
             }
         }
     }

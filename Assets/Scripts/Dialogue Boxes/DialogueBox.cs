@@ -233,7 +233,6 @@ public class DialogueBox : MonoBehaviour
         dialogueRead = false;
         deactivating = false;
         textBox.text = "";
-        newLineMarker = DialogueBoxManager.Instance.NewLineMarker;
     }
 
     ///// <summary>
@@ -242,6 +241,8 @@ public class DialogueBox : MonoBehaviour
     ///// </summary>
     private void Start()
     {
+        newLineMarker = DialogueBoxManager.Instance.NewLineMarker;
+
         List<string[]> dialogueData = DialogueBoxManager.Instance.GetDialogueData(id);
         dialogueDictionary = new Dictionary<string, List<ExpressionDialoguePair>>();
         dialogue = new List<DialogueSet>(); //For in-editor verification during testing
@@ -254,21 +255,21 @@ public class DialogueBox : MonoBehaviour
         {
             foreach (string[] row in dialogueData)
             {
-                if (!dialogueDictionary.ContainsKey(row[1]))
+                if (!dialogueDictionary.ContainsKey(row[2]))
                 {
-                    dialogueDictionary[row[1]] = new List<ExpressionDialoguePair>();
+                    dialogueDictionary[row[2]] = new List<ExpressionDialoguePair>();
                 }
 
                 ExpressionDialoguePair edp = new ExpressionDialoguePair();
-                edp.Dialogue = row[2];
-                dialogueDictionary[row[1]].Add(edp);
+                edp.Dialogue = row[3];
+                dialogueDictionary[row[2]].Add(edp);
 
                 //For in-editor verification during testing
                 DialogueSet ds = null;
 
                 foreach (DialogueSet set in dialogue)
                 {
-                    if (set.Key == row[1])
+                    if (set.Key == row[2])
                     {
                         ds = set;
                         break;
@@ -278,7 +279,7 @@ public class DialogueBox : MonoBehaviour
                 if (ds == null)
                 {
                     ds = new DialogueSet();
-                    ds.Key = row[1];
+                    ds.Key = row[2];
                     ds.ExpressionDialoguePairs = new List<ExpressionDialoguePair>();
                     dialogue.Add(ds);
                 }
