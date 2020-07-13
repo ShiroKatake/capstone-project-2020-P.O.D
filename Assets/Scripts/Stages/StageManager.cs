@@ -112,10 +112,12 @@ public class StageManager : MonoBehaviour
         if (skipTutorial)
         {
             currentStage = stages[EStage.FinishedTutorial];
+            //TODO: swap for a stage for skipping the tutorial
         }
         else
         {
             currentStage = stages[firstStage];
+            //TODO: Set the clock to 20% of daytime and turn its ticking off.
         }
 
         currentStage.StartExecution();

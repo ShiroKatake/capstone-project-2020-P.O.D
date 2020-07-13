@@ -12,7 +12,11 @@ public class StageControls : Stage
 
     //Serialized Fields----------------------------------------------------------------------------
 
-    [SerializeField] private GameObject uiBorder;
+    [SerializeField] private UIElementStatusController uiBorderUIEC;
+    [SerializeField] private UIElementStatusController miniMapBackgroundUIEC;
+    [SerializeField] private UIElementStatusController consoleUIEC;
+    [SerializeField] private UIElementStatusController mineralsHighlightUIEC;
+
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -61,6 +65,7 @@ public class StageControls : Stage
     protected override IEnumerator Execution()
     {
         //Get all dialogue boxes, etc.
+        //Debug.Log("Starting Stage Controls");
         DialogueBox console = DialogueBoxManager.Instance.GetDialogueBox("Console");
         DialogueBox game = DialogueBoxManager.Instance.GetDialogueBox("Game");
         DialogueBox w = DialogueBoxManager.Instance.GetDialogueBox("W");
@@ -70,16 +75,29 @@ public class StageControls : Stage
         DialogueBox cat = DialogueBoxManager.Instance.GetDialogueBox("CAT");
         Player playerInputManager = ReInput.players.GetPlayer(PlayerMovementController.Instance.GetComponent<PlayerID>().Value);
         char newLine = DialogueBoxManager.Instance.NewLineMarker;
-
         yield return new WaitForSeconds(3);
 
         //Enable UI
-        console.SubmitDialogue("ai online", 0, false, false);
-        //TODO: UI border becomes visible
+        //Debug.Log($"Enabling UI");
+        uiBorderUIEC.Visible = true;
+        miniMapBackgroundUIEC.Visible = true;
 
-        yield return new WaitForSeconds(2);
+        while (!uiBorderUIEC.FinishedFlickeringIn || !miniMapBackgroundUIEC.FinishedFlickeringIn)
+        {
+            yield return null;
+        }
+
+        consoleUIEC.Visible = true;
+
+        while (!consoleUIEC.FinishedFlickeringIn)
+        {
+            yield return null;
+        }
 
         //Movement controls: WASD
+        console.SubmitDialogue("ai online", 0, false, false);
+        yield return new WaitForSeconds(2);
+
         console.SubmitDialogue("calibrate movement", 0, false, false);
         w.SubmitDialogue("w", 1, false, true);
         a.SubmitDialogue("a", 1, false, true);
@@ -129,53 +147,64 @@ public class StageControls : Stage
             }            
         }
 
+        //Assess planet livability
         if (game.Activated)
         {
             game.SubmitDeactivation();
         }
+
+        console.SubmitDialogue("systems online", 0, false, false);
+        yield return new WaitForSeconds(2);
+
+        console.SubmitDialogue("welcome pod", 0, false, false);
+        yield return new WaitForSeconds(3);
+
+        console.ClearDialogue();
+        console.SubmitDialogue("planet livability", 0, false, false);
+        yield return new WaitForSeconds(2);
+
+        console.SubmitDialogue("planet unlivable", 0, false, false);
+        yield return new WaitForSeconds(2);
+
+        console.SubmitDialogue("launch cat", 0, false, false);
+
+        //Minerals controls: LMB
+        cat.SubmitDialogue("need minerals", 2, true, false);
+        
+        while (!cat.DialogueRead)
+        {
+            yield return null;
+        }
+
+        console.SubmitDialogue("scan minerals", 0, false, false);
+        yield return new WaitForSeconds(2);
+
+        console.SubmitDialogue("minerals detected", 0, false, false);
+        yield return new WaitForSeconds(2);
+
+        console.ClearDialogue();
+        console.SubmitDialogue("task gather minerals", 0, false, false);
+        cat.SubmitDialogue("gather minerals", 0, true, false);
+        game.SubmitDialogue("lmb", 1, true, false);
+        float startingMinerals = ResourceController.Instance.Ore;
+        Debug.Log($"Starting minerals: {startingMinerals}");
+
+        while (ResourceController.Instance.Ore < startingMinerals + 4)
+        {
+            Debug.Log($"Minerals are {ResourceController.Instance.Ore}");
+            yield return null;
+        }
+
+        //Finished controls stage
+        if (game.Activated)
+        {
+            game.SubmitDeactivation();
+        }
+
+        console.ClearDialogue();
+        cat.SubmitDialogue("collected minerals", 0, true, false);//TODO: change to false, false when implementing StageTerraforming, as CAT has dialogue immediately following this with no delay.
+        mineralsHighlightUIEC.Visible = true;
+
+        //TODO: start StageTerraforming on cat.DialogueRead
     }
-
-    //private void Test()
-    //{
-    //    char newLine = DialogueBoxManager.Instance.NewLineMarker;
-    //    cat = DialogueBoxManager.Instance.GetDialogueBox("CAT");
-    //    dog = DialogueBoxManager.Instance.GetDialogueBox("DOG");
-    //    console = DialogueBoxManager.Instance.GetDialogueBox("Console");
-
-    //    console.SubmitDialogue("test single", 2, false);
-
-    //    yield return new WaitForSeconds(4);
-
-    //    console.ClearDialogue();
-    //    console.SubmitDialogue("test multiple", 2, false);
-
-    //    yield return new WaitForSeconds(4);
-
-    //    console.SubmitErrorMessage($"Error: Test error message{newLine}Error: Test message successful", 2);
-
-    //    yield return new WaitForSeconds(4);
-
-    //    cat.SubmitDialogue("test single", 0, false);
-
-    //    while (!cat.DialogueRead)
-    //    {
-    //        yield return null;
-    //    }
-
-    //    cat.SubmitDialogue("test multiple", 0, true);
-
-    //    while (!cat.DialogueRead)
-    //    {
-    //        yield return null;
-    //    }
-
-    //    dog.SubmitDialogue("test multiple", 0, true);
-
-    //    while (!dog.DialogueRead)
-    //    {
-    //        yield return null;
-    //    }
-
-    //    console.SubmitDialogue("finished", 0, false);
-    //}
 }
