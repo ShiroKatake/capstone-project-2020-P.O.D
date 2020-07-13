@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Rewired;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,15 +10,13 @@ public class StageControls : Stage
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
-    //Non-Serialized Fields--------------------------------------------------------------------------------------------------------------------------
+    //Serialized Fields----------------------------------------------------------------------------
 
-    private DialogueBox cat; 
-    private DialogueBox dog; 
-    private DialogueBox console; 
+    [SerializeField] private GameObject uiBorder;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    //Singleton Public Property----------------------------------------------------------------------------------------------------------------------
+    //Singleton Public Property--------------------------------------------------------------------
 
     /// <summary>
     /// StageControls' singleton public property.
@@ -61,47 +60,122 @@ public class StageControls : Stage
     /// </note>
     protected override IEnumerator Execution()
     {
-        Debug.Log($"Stage Controls is not implemented yet.");
-        yield return null;
-        //char newLine = DialogueBoxManager.Instance.NewLineMarker;
-        //cat = DialogueBoxManager.Instance.GetDialogueBox("CAT");
-        //dog = DialogueBoxManager.Instance.GetDialogueBox("DOG");
-        //console = DialogueBoxManager.Instance.GetDialogueBox("Console");
+        //Get all dialogue boxes, etc.
+        DialogueBox console = DialogueBoxManager.Instance.GetDialogueBox("Console");
+        DialogueBox game = DialogueBoxManager.Instance.GetDialogueBox("Game");
+        DialogueBox w = DialogueBoxManager.Instance.GetDialogueBox("W");
+        DialogueBox a = DialogueBoxManager.Instance.GetDialogueBox("A");
+        DialogueBox s = DialogueBoxManager.Instance.GetDialogueBox("S");
+        DialogueBox d = DialogueBoxManager.Instance.GetDialogueBox("D");
+        DialogueBox cat = DialogueBoxManager.Instance.GetDialogueBox("CAT");
+        Player playerInputManager = ReInput.players.GetPlayer(PlayerMovementController.Instance.GetComponent<PlayerID>().Value);
+        char newLine = DialogueBoxManager.Instance.NewLineMarker;
 
-        //console.SubmitDialogue("test single", 2, false);
+        yield return new WaitForSeconds(3);
 
-        //yield return new WaitForSeconds(4);
+        //Enable UI
+        console.SubmitDialogue("ai online", 0, false, false);
+        //TODO: UI border becomes visible
 
-        //console.ClearDialogue();
-        //console.SubmitDialogue("test multiple", 2, false);
+        yield return new WaitForSeconds(2);
 
-        //yield return new WaitForSeconds(4);
+        //Movement controls: WASD
+        console.SubmitDialogue("calibrate movement", 0, false, false);
+        w.SubmitDialogue("w", 1, false, true);
+        a.SubmitDialogue("a", 1, false, true);
+        s.SubmitDialogue("s", 1, false, true);
+        d.SubmitDialogue("d", 1, false, true);
+        game.SubmitDialogue("wasd", 1, true, false);
 
-        //console.SubmitErrorMessage($"Error: Test error message{newLine}Error: Test message successful", 2);
+        while (!w.Clickable || !a.Clickable || !s.Clickable || !d.Clickable || !game.Clickable)
+        {
+            yield return null;
+        }
 
-        //yield return new WaitForSeconds(4);
+        float moveVertical;
+        float moveHorizontal;
 
-        //cat.SubmitDialogue("test single", 0, false);
+        while (w.Activated || a.Activated || s.Activated || d.Activated)
+        {
+            yield return null;
 
-        //while (!cat.DialogueRead)
-        //{
-        //    yield return null;
-        //}
+            moveVertical = -playerInputManager.GetAxis("Vertical");
+            moveHorizontal  = playerInputManager.GetAxis("Horizontal");
 
-        //cat.SubmitDialogue("test multiple", 0, true);
+            if (moveVertical != 0)
+            {
+                if (moveVertical > 0 && w.Activated)
+                {
+                    w.SubmitDeactivation();
+                }
 
-        //while (!cat.DialogueRead)
-        //{
-        //    yield return null;
-        //}
+                if (moveVertical < 0 && s.Activated)
+                {
+                    s.SubmitDeactivation();
+                }
+            }
 
-        //dog.SubmitDialogue("test multiple", 0, true);
+            if (moveHorizontal != 0)
+            {
+                if (moveHorizontal < 0 && a.Activated)
+                {
+                    a.SubmitDeactivation();
+                }
+                
+                if (moveHorizontal > 0 && d.Activated)
+                {
+                    d.SubmitDeactivation();
+                }
+            }            
+        }
 
-        //while (!dog.DialogueRead)
-        //{
-        //    yield return null;
-        //}
-
-        //console.SubmitDialogue("finished", 0, false);
+        if (game.Activated)
+        {
+            game.SubmitDeactivation();
+        }
     }
+
+    //private void Test()
+    //{
+    //    char newLine = DialogueBoxManager.Instance.NewLineMarker;
+    //    cat = DialogueBoxManager.Instance.GetDialogueBox("CAT");
+    //    dog = DialogueBoxManager.Instance.GetDialogueBox("DOG");
+    //    console = DialogueBoxManager.Instance.GetDialogueBox("Console");
+
+    //    console.SubmitDialogue("test single", 2, false);
+
+    //    yield return new WaitForSeconds(4);
+
+    //    console.ClearDialogue();
+    //    console.SubmitDialogue("test multiple", 2, false);
+
+    //    yield return new WaitForSeconds(4);
+
+    //    console.SubmitErrorMessage($"Error: Test error message{newLine}Error: Test message successful", 2);
+
+    //    yield return new WaitForSeconds(4);
+
+    //    cat.SubmitDialogue("test single", 0, false);
+
+    //    while (!cat.DialogueRead)
+    //    {
+    //        yield return null;
+    //    }
+
+    //    cat.SubmitDialogue("test multiple", 0, true);
+
+    //    while (!cat.DialogueRead)
+    //    {
+    //        yield return null;
+    //    }
+
+    //    dog.SubmitDialogue("test multiple", 0, true);
+
+    //    while (!dog.DialogueRead)
+    //    {
+    //        yield return null;
+    //    }
+
+    //    console.SubmitDialogue("finished", 0, false);
+    //}
 }

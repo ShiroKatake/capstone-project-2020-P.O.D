@@ -87,14 +87,20 @@ public class DialogueBox : MonoBehaviour
     [Header("ID")]
     [SerializeField] private string id;
 
-    [Header("Text Box")]
+    [Header("Components")]
+    [SerializeField] private Image background;
+    [SerializeField] private Image border;
     [SerializeField] private TextMeshProUGUI textBox;
     //[SerializeField] private Image aiImage;
 
     [Header("Tween Stats")]
     [SerializeField] private Vector2 offScreenPos;
     [SerializeField] private Vector2 onScreenPos;
-    [SerializeField] private float tweenSpeed;
+    [SerializeField] private float tweenInDuration;
+    [SerializeField] private bool tweenOut;
+    [SerializeField] private float tweenOutDuration;
+    [SerializeField] private bool fadeOut;
+    [SerializeField] private float fadeSpeed;
 
     //[Header("Available Expressions")]
     //[SerializeField] private AIExpression currentExpression;
@@ -144,8 +150,8 @@ public class DialogueBox : MonoBehaviour
 
     private string nextDialogueKey;
     private float nextInvokeDelay;
-    [SerializeField] private bool tweenOut;
     [SerializeField] private bool tweenOutNextDialogueSet;
+    [SerializeField] private bool fadeOutNextDialogueSet;
     private bool deactivationSubmitted;
     private bool nextDialogueSetReady;
 
@@ -165,6 +171,11 @@ public class DialogueBox : MonoBehaviour
     /// Has dialogue been submitted to be displayed and is the dialogue box either moving on-screen or on-screen displaying the submitted dialogue?
     /// </summary>
     public bool Activated { get => activated; }
+
+    /// <summary>
+    /// Is the dialogue box on the screen and interactable?
+    /// </summary>
+    public bool Clickable { get => clickable; }
 
     /// <summary>
     /// Gets the key of the dialogue set that is currently being displayed.
@@ -216,7 +227,9 @@ public class DialogueBox : MonoBehaviour
         originalRectTransformPosition = GetComponent<RectTransform>().anchoredPosition;
         lerpFinished = true;
         tweenOut = true;
+        fadeOut = false;
         tweenOutNextDialogueSet = true;
+        fadeOutNextDialogueSet = false;
 
         currentDialogueKey = "";
         lastDialogueKey = "";
@@ -286,18 +299,6 @@ public class DialogueBox : MonoBehaviour
 
                 ds.ExpressionDialoguePairs.Add(edp);
             }
-
-            //foreach (DialogueSet ds in dialogue)
-            //{
-            //    if (dialogueDictionary.ContainsKey(ds.Key))
-            //    {
-            //        Debug.Log($"DialogueBox has multiple dialogue sets with the dialogue key {ds.Key}. Each dialogue key should be unique.");
-            //    }
-            //    else
-            //    {
-            //        dialogueDictionary[ds.Key] = ds.ExpressionDialoguePairs;
-            //    }
-            //}
         }
 
         //    //continueArrowTransform = continueArrow.GetComponent<RectTransform>();
@@ -381,7 +382,7 @@ public class DialogueBox : MonoBehaviour
             nextDialogueKey = "";
             nextInvokeDelay = 0f;
         }
-        else if (deactivationSubmitted && activated && tweenOut)
+        else if (deactivationSubmitted && activated && (tweenOut || fadeOut))
         {
             lastDialogueKey = currentDialogueKey;
             currentDialogueKey = "";
@@ -509,12 +510,34 @@ public class DialogueBox : MonoBehaviour
     //Change over the dialogue list----------------------------------------------------------------
 
     /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="message"></param>
+    /// <param name="delay"></param>
+    public void SubmitErrorMessage(string message, float delay)
+    {
+        if (id != "Console")
+        {
+            Debug.LogError($"You should not submit an error message to the dialogue box {id}. Submit it to the dialogue box Console instead.");
+        }
+        else
+        {
+            dialogueDictionary["error"] = new List<ExpressionDialoguePair>();
+            ExpressionDialoguePair errorMessage = new ExpressionDialoguePair();
+            errorMessage.Dialogue = $"<{message}>";
+            dialogueDictionary["error"].Add(errorMessage);
+            SubmitDialogue("error", delay, false, false);
+        }
+    }
+
+    /// <summary>
     /// Submit a dialogue set for the dialogue box to display during the next update.
     /// </summary>
     /// <param name="key">The key of the dialogue set to be displayed.</param>
     /// <param name="delay">How long the dialogue box should wait to display the new dialogue set.</param>
     /// <param name="delay">Should the dialogue box tween out on completion of the dialogue set?</param>
-    public void SubmitDialogue(string key, float delay, bool tweenOut)
+    /// <param name="delay">Should the dialogue box fade out on completion of the dialogue set?</param>
+    public void SubmitDialogue(string key, float delay, bool tweenOut, bool fadeOut)
     {
         //Debug.Log($"{this} received a dialogue submission. TweenOut is {this.tweenOut} but will become {tweenOut}");
 
@@ -525,6 +548,7 @@ public class DialogueBox : MonoBehaviour
                 nextDialogueKey = key;
                 nextInvokeDelay = delay;
                 tweenOutNextDialogueSet = tweenOut;
+                fadeOutNextDialogueSet = fadeOut;
                 dialogueRead = false;
             }
             else
@@ -549,6 +573,7 @@ public class DialogueBox : MonoBehaviour
         lastDialogueKey = currentDialogueKey == "" ? lastDialogueKey : currentDialogueKey;
         currentDialogueKey = key;
         tweenOut = tweenOutNextDialogueSet;
+        fadeOut = fadeOutNextDialogueSet;
         //Debug.Log($"Activating {this}, tween out is now {tweenOut}");
 
         activated = true;
@@ -560,10 +585,9 @@ public class DialogueBox : MonoBehaviour
         }
 
         nextDialogueSetReady = true;
-
         //countdown.rectTransform.DOAnchorPosY(-18 + 150, tweenSpeed).SetEase(Ease.OutBack);
         //objButton.rectTransform.DOAnchorPosY(-18 + 150, tweenSpeed).SetEase(Ease.OutBack);
-        dialogueRectTransform.DOAnchorPos(onScreenPos, tweenSpeed).SetEase(Ease.OutBack).SetUpdate(true).OnComplete(
+        dialogueRectTransform.DOAnchorPos(onScreenPos, tweenInDuration).SetEase(Ease.OutBack).SetUpdate(true).OnComplete(
             delegate
             {
                 clickable = true;
@@ -591,8 +615,6 @@ public class DialogueBox : MonoBehaviour
             Debug.LogError($"dialogueDictionary[{key}] contains no dialogue set for DialogueBox to display.");
         }
     }
-
-    //Display the next set of content--------------------------------------------------------------
 
     /// <summary>
     /// Displays the next line of dialogue in one hit.
@@ -724,26 +746,14 @@ public class DialogueBox : MonoBehaviour
             }
         }
     }
-
+    
     /// <summary>
-    /// Tweens the dialogue box off the screen.
+    /// Clears the contents of DialogueBox.textBox.
     /// </summary>
-    private void DeactivateDialogueBox()
+    public void ClearDialogue()
     {
-        //Debug.Log($"Deactivating {this}");
-        dialogueTimer = 0;
-        deactivating = true;
-        //countdown.rectTransform.DOAnchorPosY(20, tweenSpeed).SetEase(Ease.InBack);
-        //objButton.rectTransform.DOAnchorPosY(20, tweenSpeed).SetEase(Ease.InBack);
-        dialogueRectTransform.DOAnchorPos(offScreenPos, tweenSpeed).SetEase(Ease.InBack).SetUpdate(true).OnComplete(
-            delegate
-            {
-                //Reset position after tweening
-                textBox.text = "";
-
-                deactivating = false;
-                activated = false;
-            });
+        textBox.text = "";
+        dialogueStash = "";
     }
 
     /// <summary>
@@ -755,32 +765,139 @@ public class DialogueBox : MonoBehaviour
     }
 
     /// <summary>
-    /// Clears the contents of DialogueBox.textBox.
+    /// Tweens the dialogue box off the screen.
     /// </summary>
-    public void ClearDialogue()
+    private void DeactivateDialogueBox() 
     {
-        textBox.text = "";
-        dialogueStash = "";
+        //Debug.Log($"Deactivating {this}");
+        dialogueTimer = 0;
+        deactivating = true;
+
+        if (fadeOut)
+        {
+            StartCoroutine(FadeOut());
+        }
+
+        //countdown.rectTransform.DOAnchorPosY(20, tweenSpeed).SetEase(Ease.InBack);
+        //objButton.rectTransform.DOAnchorPosY(20, tweenSpeed).SetEase(Ease.InBack);
+        if (tweenOut)
+        {
+            TweenOut(tweenOutDuration);
+        }
     }
 
     /// <summary>
-    /// 
+    /// Updates the opacity of the dialogue box as it tweens in or out.
     /// </summary>
-    /// <param name="message"></param>
-    /// <param name="delay"></param>
-    public void SubmitErrorMessage(string message, float delay)
+    /// <param name="fadeIn">Is the dialogue box tweening and fading in?</param>
+    private IEnumerator FadeOut()
     {
-        if (id != "Console")
+        //Debug.Log($"{this} fading out");
+        bool backgroundFinished = false;
+        bool borderFinished = false;
+        bool textFinished = false;
+        Color backgroundColour = Color.white;
+        Color borderColour = Color.white;
+        Color textColour = Color.white;
+        float deltaTime;
+
+        if (background != null)
         {
-            Debug.LogError($"You should not submit an error message to the dialogue box {id}. Submit it to the dialogue box Console instead.");
+            backgroundColour = background.color;
         }
         else
         {
-            dialogueDictionary["error"] = new List<ExpressionDialoguePair>();
-            ExpressionDialoguePair errorMessage = new ExpressionDialoguePair();
-            errorMessage.Dialogue = $"<{message}>";
-            dialogueDictionary["error"].Add(errorMessage);
-            SubmitDialogue("error", delay, false);
+            backgroundFinished = true;
         }
+
+        if (border != null)
+        {
+            borderColour = border.color;
+        }
+        else
+        {
+            borderFinished = true;
+        }
+
+        if (textBox != null)
+        {
+            textColour = textBox.color;
+        }
+        else
+        {
+            textFinished = true;
+        }
+
+        do
+        {
+            deltaTime = Time.deltaTime;
+
+            if (!backgroundFinished)
+            {
+                //Debug.Log($"Decrementing background opacity by {fadeSpeed * deltaTime}");
+                backgroundColour.a -= fadeSpeed * deltaTime;
+                background.color = backgroundColour;
+                //Debug.Log($"Background opacity is {background.color.a}");
+
+                if (background.color.a <= 0)
+                {
+                    backgroundFinished = true;
+                    //Debug.Log($"{this} background fade finished");
+                }
+            }
+
+            if (!borderFinished)
+            {
+                //Debug.Log($"Decrementing border opacity by {fadeSpeed * deltaTime}");
+                borderColour.a -= fadeSpeed * deltaTime;
+                border.color = borderColour;
+                //Debug.Log($"Border opacity is {border.color.a}");
+
+                if (border.color.a <= 0)
+                {
+                    borderFinished = true;
+                    //Debug.Log($"{this} border fade finished");
+                }
+            }
+
+            if (!textFinished)
+            {
+                //Debug.Log($"Decrementing text opacity by {fadeSpeed * deltaTime}");
+                textColour.a -= fadeSpeed * deltaTime;
+                textBox.color = textColour;
+                //Debug.Log($"Text opacity is {textBox.color.a}");
+
+                if (textBox.color.a <= 0)
+                {
+                    textFinished = true;
+                    //Debug.Log($"{this} text fade finished");
+                }
+            }
+
+            yield return null;
+        }
+        while (!backgroundFinished || !borderFinished || !textFinished);
+
+        if (!tweenOut)
+        {
+            //Debug.Log("Fading finished, calling TweenOut()");
+            TweenOut(0);
+        }
+    }
+
+    /// <summary>
+    /// Tweens the dialogue box off the screen.
+    /// </summary>
+    private void TweenOut(float duration)
+    {
+        //Debug.Log($"{this} is tweening out");
+        dialogueRectTransform.DOAnchorPos(offScreenPos, duration).SetEase(Ease.InBack).SetUpdate(true).OnComplete(
+                delegate
+                {
+                    //Reset position after tweening
+                    textBox.text = "";
+                    deactivating = false;
+                    activated = false;
+                });
     }
 }
