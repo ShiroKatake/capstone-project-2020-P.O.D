@@ -558,7 +558,7 @@ public class DialogueBox : MonoBehaviour
         }
         else
         {
-            Debug.Log($"Dialogue key '{key}' is invalid.");
+            Debug.LogError($"Dialogue key '{key}' is invalid.");
         }
     }
 

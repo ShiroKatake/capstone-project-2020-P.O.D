@@ -15,7 +15,19 @@ public class StageControls : Stage
     [SerializeField] private UIElementStatusController uiBorderUIEC;
     [SerializeField] private UIElementStatusController consoleUIEC;
     [SerializeField] private UIElementStatusController mineralsHighlightUIEC;
+    [SerializeField] private UIElementStatusController buildingAndResourcesBarUIEC;
 
+    //Non-Serialized Fields------------------------------------------------------------------------
+
+    DialogueBox console;
+    DialogueBox game;
+    DialogueBox w;
+    DialogueBox a;
+    DialogueBox s;
+    DialogueBox d;
+    DialogueBox cat;
+    Player playerInputManager;
+    char newLine;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -44,7 +56,23 @@ public class StageControls : Stage
         base.Awake();
     }
 
-    //TODO: in start, if tutorial isn't skipped, set 
+    /// <summary>
+    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
+    /// Start() runs after Awake().
+    /// </summary>
+    private void Start()
+    {
+        //Get all dialogue boxes, etc.
+        console = DialogueBoxManager.Instance.GetDialogueBox("Console");
+        game = DialogueBoxManager.Instance.GetDialogueBox("Game");
+        w = DialogueBoxManager.Instance.GetDialogueBox("W");
+        a = DialogueBoxManager.Instance.GetDialogueBox("A");
+        s = DialogueBoxManager.Instance.GetDialogueBox("S");
+        d = DialogueBoxManager.Instance.GetDialogueBox("D");
+        cat = DialogueBoxManager.Instance.GetDialogueBox("CAT");
+        playerInputManager = ReInput.players.GetPlayer(PlayerMovementController.Instance.GetComponent<PlayerID>().Value);
+        newLine = DialogueBoxManager.Instance.NewLineMarker;
+    }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
@@ -68,22 +96,9 @@ public class StageControls : Stage
         //Switch the clock off
         ClockController.Instance.Paused = true;
         ClockController.Instance.SetTime(ClockController.Instance.HalfCycleDuration * 0.2f);
-
-        //Get all dialogue boxes, etc.
-        //Debug.Log("Starting Stage Controls");
-        DialogueBox console = DialogueBoxManager.Instance.GetDialogueBox("Console");
-        DialogueBox game = DialogueBoxManager.Instance.GetDialogueBox("Game");
-        DialogueBox w = DialogueBoxManager.Instance.GetDialogueBox("W");
-        DialogueBox a = DialogueBoxManager.Instance.GetDialogueBox("A");
-        DialogueBox s = DialogueBoxManager.Instance.GetDialogueBox("S");
-        DialogueBox d = DialogueBoxManager.Instance.GetDialogueBox("D");
-        DialogueBox cat = DialogueBoxManager.Instance.GetDialogueBox("CAT");
-        Player playerInputManager = ReInput.players.GetPlayer(PlayerMovementController.Instance.GetComponent<PlayerID>().Value);
-        char newLine = DialogueBoxManager.Instance.NewLineMarker;
         yield return new WaitForSeconds(3);
 
         //Enable UI
-        //Debug.Log($"Enabling UI");
         uiBorderUIEC.Visible = true;
 
         while (!uiBorderUIEC.FinishedFlickeringIn)
@@ -183,12 +198,14 @@ public class StageControls : Stage
         yield return new WaitForSeconds(2);
 
         console.SubmitDialogue("minerals detected", 0, false, false);
+        buildingAndResourcesBarUIEC.Visible = true;
         yield return new WaitForSeconds(2);
 
         console.ClearDialogue();
         console.SubmitDialogue("task gather minerals", 0, false, false);
         cat.SubmitDialogue("gather minerals", 0, true, false);
         game.SubmitDialogue("lmb", 1, true, false);
+        ResourceTextManager.Instance.FadeIn();
         float startingMinerals = ResourceController.Instance.Ore;
 
         while (ResourceController.Instance.Ore < startingMinerals + 4)

@@ -20,7 +20,7 @@ public class PostConstruction : StateMachineBehaviour
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
 		Building building = animator.GetComponent<Building>();
-        building.Built();
+        building.FinishBuilding();
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()

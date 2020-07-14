@@ -138,6 +138,24 @@ public class BuildingController : MonoBehaviour
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
+    /// Checks if a building of the specified type has been placed and built.
+    /// </summary>
+    /// <param name="buildingType">The type of building you want to check for.</param>
+    /// <returns>Whether a building of the specified type has been placed and built.</returns>
+    public bool HasBuiltBuilding(EBuilding buildingType)
+    {
+        foreach (Building b in buildings)
+        {
+            if (b.BuildingType == buildingType && b.Built)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
     /// Registers a Building with BuildingController. BuildingController adds it to its list of Buildings in the scene.
     /// <param name="building">The building being registered with BuildingController.</param>
     /// </summary>

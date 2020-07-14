@@ -15,7 +15,7 @@ public class UIElementStatusController : MonoBehaviour
     [SerializeField] private Image border;
     [SerializeField] private Image fill;
     [SerializeField] private Image image;
-    [SerializeField] private TextMeshProUGUI textBox;
+    [SerializeField] private Text textBox;
 
     [Header("Visibility Stats")]
     [SerializeField] private bool visibleOnAwake;
@@ -400,7 +400,7 @@ public class UIElementStatusController : MonoBehaviour
     /// <param name="speedMultiplier">Multiplies the speed at which the text box's opacity updates.</param>
     /// <param name="targetOpacity">The opacity the text box should be updating towards</param>
     /// <returns>Whether or not the text box has reached the target opacity.</returns>
-    private bool UpdateOpacityOfTextBox(TextMeshProUGUI t, bool increasing, float speedMultiplier, float targetOpacity)
+    private bool UpdateOpacityOfTextBox(Text t, bool increasing, float speedMultiplier, float targetOpacity)
     {
         float directionMultiplier = (increasing ? 1 : -1);
 
