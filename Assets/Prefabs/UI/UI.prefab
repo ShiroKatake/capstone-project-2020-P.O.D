@@ -1217,7 +1217,6 @@ GameObject:
   - component: {fileID: 1399840895626872972}
   - component: {fileID: 8206897815876893460}
   - component: {fileID: 2670046510568154850}
-  - component: {fileID: 2004941572}
   m_Layer: 5
   m_Name: BG
   m_TagString: Untagged
@@ -1280,29 +1279,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &2004941572
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2151069941175654532}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97335b3d8af8d9141a331358af6c3300, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  visibleOnAwake: 0
-  flickersIn: 1
-  flickerInSpeed: 2
-  flickerCount: 2
-  finalOpacity: 1
-  flickerOutOnComplete: 0
-  requiresResources: 0
-  requiredOre: 0
-  requiredPower: 0
-  requiredWater: 0
-  requiredWaste: 0
 --- !u!1 &2155687144281439072
 GameObject:
   m_ObjectHideFlags: 0
@@ -3233,6 +3209,7 @@ GameObject:
   - component: {fileID: 4528282980971714328}
   - component: {fileID: 4528282980971714330}
   - component: {fileID: 4528282980971714329}
+  - component: {fileID: 6223249184082275947}
   m_Layer: 5
   m_Name: ProgressFill
   m_TagString: Untagged
@@ -3295,6 +3272,37 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &6223249184082275947
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4528282980971714327}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97335b3d8af8d9141a331358af6c3300, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 0}
+  border: {fileID: 0}
+  fill: {fileID: 0}
+  image: {fileID: 0}
+  textBox: {fileID: 0}
+  finalBorderOpacity: 0
+  finalFillOpacity: 0
+  finalImageOpacity: 0
+  finalTextOpacity: 0
+  visibleOnAwake: 0
+  flickersIn: 1
+  flickerInSpeed: 2
+  flickerCount: 2
+  flickerOutOnComplete: 0
+  requiresResources: 0
+  requiredOre: 0
+  requiredPower: 0
+  requiredWater: 0
+  requiredWaste: 0
 --- !u!1 &4528282981037921721
 GameObject:
   m_ObjectHideFlags: 0
@@ -5233,11 +5241,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97335b3d8af8d9141a331358af6c3300, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  button: {fileID: 0}
+  border: {fileID: 4528282981767748617}
+  fill: {fileID: 2670046510568154850}
+  image: {fileID: 0}
+  textBox: {fileID: 0}
+  finalBorderOpacity: 1
+  finalFillOpacity: 1
+  finalImageOpacity: 0
+  finalTextOpacity: 0
   visibleOnAwake: 0
   flickersIn: 1
   flickerInSpeed: 2
   flickerCount: 2
-  finalOpacity: 1
   flickerOutOnComplete: 0
   requiresResources: 0
   requiredOre: 0
@@ -6595,11 +6611,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97335b3d8af8d9141a331358af6c3300, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  button: {fileID: 0}
+  border: {fileID: 0}
+  fill: {fileID: 6130934686969434301}
+  image: {fileID: 0}
+  textBox: {fileID: 1232516319373021477}
+  finalBorderOpacity: 0
+  finalFillOpacity: 0.5
+  finalImageOpacity: 0
+  finalTextOpacity: 1
   visibleOnAwake: 0
   flickersIn: 1
   flickerInSpeed: 0.5
   flickerCount: 0
-  finalOpacity: 0.5
   flickerOutOnComplete: 0
   requiresResources: 0
   requiredOre: 0
@@ -6617,6 +6641,7 @@ GameObject:
   - component: {fileID: 7271057446461941391}
   - component: {fileID: 3595534030429488248}
   - component: {fileID: 5677109242779600207}
+  - component: {fileID: 652841775937806660}
   m_Layer: 5
   m_Name: Border
   m_TagString: Untagged
@@ -6679,6 +6704,37 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &652841775937806660
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4960437434699722946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97335b3d8af8d9141a331358af6c3300, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 0}
+  border: {fileID: 0}
+  fill: {fileID: 0}
+  image: {fileID: 0}
+  textBox: {fileID: 0}
+  finalBorderOpacity: 0
+  finalFillOpacity: 0
+  finalImageOpacity: 0
+  finalTextOpacity: 0
+  visibleOnAwake: 0
+  flickersIn: 1
+  flickerInSpeed: 2
+  flickerCount: 2
+  flickerOutOnComplete: 0
+  requiresResources: 0
+  requiredOre: 0
+  requiredPower: 0
+  requiredWater: 0
+  requiredWaste: 0
 --- !u!1 &4966749601010462450
 GameObject:
   m_ObjectHideFlags: 0
@@ -7832,6 +7888,7 @@ GameObject:
   - component: {fileID: 2762728365931718879}
   - component: {fileID: 1229100715034220518}
   - component: {fileID: 537462615196558535}
+  - component: {fileID: 7776337172777977865}
   m_Layer: 5
   m_Name: BG
   m_TagString: Untagged
@@ -7894,6 +7951,37 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &7776337172777977865
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6106152842301644204}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97335b3d8af8d9141a331358af6c3300, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 0}
+  border: {fileID: 0}
+  fill: {fileID: 0}
+  image: {fileID: 0}
+  textBox: {fileID: 0}
+  finalBorderOpacity: 0
+  finalFillOpacity: 0
+  finalImageOpacity: 0
+  finalTextOpacity: 0
+  visibleOnAwake: 0
+  flickersIn: 1
+  flickerInSpeed: 2
+  flickerCount: 2
+  flickerOutOnComplete: 0
+  requiresResources: 0
+  requiredOre: 0
+  requiredPower: 0
+  requiredWater: 0
+  requiredWaste: 0
 --- !u!1 &6530620224641623326
 GameObject:
   m_ObjectHideFlags: 0
@@ -8853,11 +8941,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97335b3d8af8d9141a331358af6c3300, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  button: {fileID: 0}
+  border: {fileID: 5049936344924189349}
+  fill: {fileID: 0}
+  image: {fileID: 0}
+  textBox: {fileID: 0}
+  finalBorderOpacity: 1
+  finalFillOpacity: 0
+  finalImageOpacity: 0
+  finalTextOpacity: 0
   visibleOnAwake: 0
   flickersIn: 1
   flickerInSpeed: 1
   flickerCount: 4
-  finalOpacity: 1
   flickerOutOnComplete: 1
   requiresResources: 0
   requiredOre: 0
@@ -9041,7 +9137,7 @@ PrefabInstance:
         type: 3}
       propertyPath: miniMapBackgroundUIEC
       value: 
-      objectReference: {fileID: 2004941572}
+      objectReference: {fileID: 0}
     - target: {fileID: 7691648321688888052, guid: 7ec13c4878030604f886d212027c72e6,
         type: 3}
       propertyPath: consoleUIEC

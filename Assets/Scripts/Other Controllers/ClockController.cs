@@ -25,10 +25,13 @@ public class ClockController : MonoBehaviour
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
-    private bool daytime;
 	[SerializeField] private float time12hr;
     [SerializeField] private float time24hr;
     private float halfCycleDuration;
+
+    private bool daytime;
+    private bool paused;
+
     private RectTransform rectTransform;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
@@ -56,6 +59,11 @@ public class ClockController : MonoBehaviour
     /// The duration of a day or night in seconds; i.e. half of one day-night cycle.
     /// </summary>
     public float HalfCycleDuration { get => halfCycleDuration; }
+
+    /// <summary>
+    /// Is the day night cycle paused?
+    /// </summary>
+    public bool Paused { get => paused; set => paused = value; }
 
     /// <summary>
     /// The time elapsed in seconds since the start of the current day or night. Equivalent to 12-hour time.
@@ -99,9 +107,12 @@ public class ClockController : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        UpdateTime();
-        CheckDayNight();
-        UpdateClock();
+        if (!paused)
+        {
+            UpdateTime();
+            CheckDayNight();
+            UpdateClock();
+        }
     }
 
     //Recurring Methods (Update())------------------------------------------------------------------------------------------------------------------  
@@ -158,5 +169,31 @@ public class ClockController : MonoBehaviour
         clockTimer.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, (180 - 360 * (time24hr / cycleDuration))));
         //clockTimer.fillAmount = 1 - (time12hr / halfCycleDuration);
         UIColorManager.Instance.ColorUpdate();
+    }
+
+    //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Manually sets the time of day.
+    /// </summary>
+    /// <param name="time">The 24-hour-equivalent time in seconds since the start of the day-night cycle that you want to set the clock to.</param>
+    public void SetTime(float time)
+    {
+        while (time >= cycleDuration)
+        {
+            time -= cycleDuration;
+        }
+
+        time24hr = time;
+
+        if (time >= halfCycleDuration)
+        {
+            time -= halfCycleDuration;
+        }
+
+        time12hr = time;
+
+        CheckDayNight();
+        UpdateClock();
     }
 }

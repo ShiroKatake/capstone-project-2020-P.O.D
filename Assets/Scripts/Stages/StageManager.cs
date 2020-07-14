@@ -117,7 +117,6 @@ public class StageManager : MonoBehaviour
         else
         {
             currentStage = stages[firstStage];
-            //TODO: Set the clock to 20% of daytime and turn its ticking off.
         }
 
         currentStage.StartExecution();

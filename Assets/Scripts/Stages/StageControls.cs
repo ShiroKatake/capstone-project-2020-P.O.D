@@ -13,7 +13,6 @@ public class StageControls : Stage
     //Serialized Fields----------------------------------------------------------------------------
 
     [SerializeField] private UIElementStatusController uiBorderUIEC;
-    [SerializeField] private UIElementStatusController miniMapBackgroundUIEC;
     [SerializeField] private UIElementStatusController consoleUIEC;
     [SerializeField] private UIElementStatusController mineralsHighlightUIEC;
 
@@ -45,6 +44,8 @@ public class StageControls : Stage
         base.Awake();
     }
 
+    //TODO: in start, if tutorial isn't skipped, set 
+
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
@@ -64,6 +65,10 @@ public class StageControls : Stage
     /// </note>
     protected override IEnumerator Execution()
     {
+        //Switch the clock off
+        ClockController.Instance.Paused = true;
+        ClockController.Instance.SetTime(ClockController.Instance.HalfCycleDuration * 0.2f);
+
         //Get all dialogue boxes, etc.
         //Debug.Log("Starting Stage Controls");
         DialogueBox console = DialogueBoxManager.Instance.GetDialogueBox("Console");
@@ -80,9 +85,8 @@ public class StageControls : Stage
         //Enable UI
         //Debug.Log($"Enabling UI");
         uiBorderUIEC.Visible = true;
-        miniMapBackgroundUIEC.Visible = true;
 
-        while (!uiBorderUIEC.FinishedFlickeringIn || !miniMapBackgroundUIEC.FinishedFlickeringIn)
+        while (!uiBorderUIEC.FinishedFlickeringIn)
         {
             yield return null;
         }
@@ -166,9 +170,8 @@ public class StageControls : Stage
         console.SubmitDialogue("planet unlivable", 0, false, false);
         yield return new WaitForSeconds(2);
 
-        console.SubmitDialogue("launch cat", 0, false, false);
-
         //Minerals controls: LMB
+        console.SubmitDialogue("launch cat", 0, false, false);
         cat.SubmitDialogue("need minerals", 2, true, false);
         
         while (!cat.DialogueRead)
@@ -187,11 +190,9 @@ public class StageControls : Stage
         cat.SubmitDialogue("gather minerals", 0, true, false);
         game.SubmitDialogue("lmb", 1, true, false);
         float startingMinerals = ResourceController.Instance.Ore;
-        Debug.Log($"Starting minerals: {startingMinerals}");
 
         while (ResourceController.Instance.Ore < startingMinerals + 4)
         {
-            Debug.Log($"Minerals are {ResourceController.Instance.Ore}");
             yield return null;
         }
 
@@ -202,9 +203,15 @@ public class StageControls : Stage
         }
 
         console.ClearDialogue();
-        cat.SubmitDialogue("collected minerals", 0, true, false);//TODO: change to false, false when implementing StageTerraforming, as CAT has dialogue immediately following this with no delay.
+        cat.SubmitDialogue("collected minerals", 0, false, false);
         mineralsHighlightUIEC.Visible = true;
 
-        //TODO: start StageTerraforming on cat.DialogueRead
+        //Start terraforming stage
+        while (!cat.DialogueRead)
+        {
+            yield return null;
+        }
+
+        StageManager.Instance.SetStage(EStage.Terraforming);
     }
 }
