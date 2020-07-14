@@ -216,6 +216,7 @@ public class Alien : MonoBehaviour, IMessenger
         target = selectedTarget;
         targetHealth = target.GetComponentInParent<Health>();   //Gets Health from target or any of its parents that has it.
         targetSize = target.GetComponentInParent<Size>();   //Gets Radius from target or any of its parents that has it.
+        //Debug.Log($"{this} set target as {target}");
     }
 
     /// <summary>
@@ -406,15 +407,17 @@ public class Alien : MonoBehaviour, IMessenger
     {
         if (!other.isTrigger)
         {
+            //Debug.Log($"{this} detected {other} entering trigger collider");
+
             if (other.CompareTag("Alien"))
             {
                 visibleAliens.Add(other.transform);
             }
-            else if (other.CompareTag("Building"))
+            else if (other.CompareTag("Building") && !visibleTargets.Contains(other.transform.parent))
             {
                 visibleTargets.Add(other.transform.parent);
             }
-            else if (other.CompareTag("Player"))
+            else if (other.CompareTag("Player") && !visibleTargets.Contains(other.transform))
             {
                 visibleTargets.Add(other.transform);
             }
@@ -442,6 +445,7 @@ public class Alien : MonoBehaviour, IMessenger
             else if (visibleTargets.Contains(other.transform))
             {
                 visibleTargets.Remove(other.transform);
+                //Debug.Log($"{this} detected {other} exiting trigger collider");
             }
         }
     }
