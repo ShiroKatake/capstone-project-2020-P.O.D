@@ -124,7 +124,7 @@ public class ToolTips : MonoBehaviour
         }
     }
     //Shows the tooltip and changes the sprite to the correct image
-    private void ShowtoolTip(Etooltips toolImage)
+    public void ShowtoolTip(Etooltips toolImage)
     {
         gameObject.SetActive(true);
 
