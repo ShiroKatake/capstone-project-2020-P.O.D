@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Crawler
-  m_Shader: {fileID: -6465566751694194690, guid: 84be0c012e954f84998c7228e42e5fdd,
+  m_Shader: {fileID: -6465566751694194690, guid: 6c90b2c70fb3d90498b005e035a56d0c,
     type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -20,19 +20,30 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _BaseTexture:
+    - _Base:
         m_Texture: {fileID: 2800000, guid: 514b8aff6be973d4c9010d9c6c3ffe12, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _TexturesProcessing_A7B78C3D_Texture2D2EDB9A78_1893250173:
+    - _Normal:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _TexturesProcessing_A7B78C3D_Texture2DA0F43E0D_721316606:
+    - _RAME:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    m_Floats: []
+    m_Floats:
+    - BOOLEAN_2A50EBE8: 0
+    - _DissolveAmount: 0
+    - _EdgeWidth: 0.05
+    - _End: -3.77
+    - _Metallicness: 0
+    - _NoiseScale: 30
+    - _NoiseStrength: 1
+    - _NormalStrength: 0
+    - _Roughness: 0.5
+    - _Start: 1.5
     m_Colors:
-    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _FlashColor: {r: 0, g: 1, b: 0.2607293, a: 0}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _EdgeColor: {r: 1, g: 0, b: 0, a: 1}
+    - _Flash: {r: 0, g: 1, b: 0.2607293, a: 0}
