@@ -12,6 +12,7 @@ public class BuildingSpawningController : MonoBehaviour
 
     //Serialized Fields----------------------------------------------------------------------------
 
+    [SerializeField] private bool printInputs;
     [SerializeField] private Camera camera;
     
 
@@ -126,6 +127,12 @@ public class BuildingSpawningController : MonoBehaviour
         {
             placeBuilding = InputController.Instance.ButtonPressed("PlaceBuilding");
             cancelBuilding = InputController.Instance.ButtonPressed("CancelBuilding");
+
+            if (printInputs)
+            {
+                Debug.Log($"Rewired via InputController, BuildingSpawningController.GetInput() (called by IEnumerator UpdateBuildingSpawning()), placeBuilding: {placeBuilding}");
+                Debug.Log($"Rewired via InputController, BuildingSpawningController.GetInput() (called by IEnumerator UpdateBuildingSpawning()), cancelBuilding: {cancelBuilding}");
+            }
         }
     }
 

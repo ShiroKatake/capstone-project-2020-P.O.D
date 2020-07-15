@@ -23,7 +23,7 @@ public class AlienFX : MonoBehaviour
 	private const string ANIMATOR_DIE = "Die";
 	private const string ANIMATOR_ATTACK = "Attack";
 	private const string ANIMATOR_DAMAGED = "Damaged";
-	private const string MATERIAL_FLASH = "_FlashColor";
+	private const string MATERIAL_FLASH = "_Flash";
 
 	/// <summary>
 	/// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
@@ -49,7 +49,7 @@ public class AlienFX : MonoBehaviour
 		if (materialFlashColor.a > 0)
 		{
 			materialFlashColor.a = Mathf.Clamp01(materialFlashColor.a - flashSpeed * Time.deltaTime);
-			material.SetColor("_FlashColor", materialFlashColor);
+			material.SetColor(MATERIAL_FLASH, materialFlashColor);
 			//Debug.Log("Flash");
 		}
 	}
@@ -92,6 +92,6 @@ public class AlienFX : MonoBehaviour
 	{
 		alienRenderer.material = material;
 		materialFlashColor = color;
-		material.SetColor("_FlashColor", materialFlashColor);
+		material.SetColor(MATERIAL_FLASH, materialFlashColor);
 	}
 }
