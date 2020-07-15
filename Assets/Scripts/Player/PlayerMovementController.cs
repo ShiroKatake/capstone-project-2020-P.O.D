@@ -12,6 +12,8 @@ public class PlayerMovementController : MonoBehaviour
 
     //Serialized Fields----------------------------------------------------------------------------
 
+    [SerializeField] private bool printInputs;
+
     [Header("Player Objects")]
     [SerializeField] private Camera camera;
     [SerializeField] private Transform cameraTarget;
@@ -134,7 +136,12 @@ public class PlayerMovementController : MonoBehaviour
 
         movement = new Vector3(moveHorizontal, 0, -moveVertical);
         shooting = InputController.Instance.ButtonHeld("Shoot");
-        //Debug.Log($"Movement input: {movement}");
+
+        if (printInputs)
+        {
+            Debug.Log($"Rewired, PlayerMovementController.GetInput() (called by Update()), movement: {movement}");
+            Debug.Log($"Rewired via InputController, PlayerMovementController.GetInput() (called by Update()), shooting: {shooting}");
+        }
     }
 
     //Recurring Methods (FixedUpdate())--------------------------------------------------------------------------------------------------------------

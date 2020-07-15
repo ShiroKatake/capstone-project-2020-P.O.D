@@ -122,6 +122,8 @@ public class Projectile : MonoBehaviour
     /// <param name="other">The other Collider involved in this collision.</param>
     public void OnTriggerEnter(Collider other)
     {
+        //Debug.Log($"{this}.OnTriggerEnter(), other is {other}");
+
 		if (!other.CompareTag("Melee Range"))
 		{
 			ProjectileCollision(other);
@@ -135,6 +137,7 @@ public class Projectile : MonoBehaviour
     public void OnTriggerExit(Collider other)
     {
         //Debug.Log("ProjectileCollision OnTriggerExit");
+
         if (!leftOwnerCollider && other.CompareTag(owner.tag))
         {
             //Debug.Log("Left owner collider");
@@ -148,7 +151,9 @@ public class Projectile : MonoBehaviour
     /// <param name="collidedWith">The collider of the other object the projectile collided with.</param>
     private void ProjectileCollision(Collider collidedWith)
     {
+        //Debug.Log($"{this}.ProjectileCollision(), collidedWith is {collidedWith}");
 		Health damageable = collidedWith.GetComponent<Health>();
+
 		if (damageable != null)
 		{
 			damageable.TakeDamage(damage, owner.GetComponentInChildren<Actor>());
@@ -161,6 +166,9 @@ public class Projectile : MonoBehaviour
             //Debug.Log($"ProjectileCollision, not Player or Projectile; tag is {collidedWith.tag}; position is {transform.position}");
             ProjectileFactory.Instance.DestroyProjectile(this);
         }
-		ProjectileFactory.Instance.DestroyProjectile(this);
+
+        //ProjectileFactory.Instance.DestroyProjectile(this);
+        //No, don't put this here. The projectile should not automatically be destroyed upon hitting a
+        //collider, as that would include trigger colliders we want it to ignore.
 	}
 }
