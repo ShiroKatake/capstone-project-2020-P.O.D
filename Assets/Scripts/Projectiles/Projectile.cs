@@ -68,7 +68,8 @@ public class Projectile : MonoBehaviour
     {
         collider = GetComponent<Collider>();
         rigidbody = GetComponent<Rigidbody>();
-    }
+
+	}
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -121,7 +122,10 @@ public class Projectile : MonoBehaviour
     /// <param name="other">The other Collider involved in this collision.</param>
     public void OnTriggerEnter(Collider other)
     {
-        ProjectileCollision(other);
+		if (!other.CompareTag("Melee Range"))
+		{
+			ProjectileCollision(other);
+		}
     }
 
     /// <summary>
@@ -144,19 +148,19 @@ public class Projectile : MonoBehaviour
     /// <param name="collidedWith">The collider of the other object the projectile collided with.</param>
     private void ProjectileCollision(Collider collidedWith)
     {
-        if (collidedWith.CompareTag("Alien"))
-        {           
-            Alien a = collidedWith.gameObject.GetComponent<Alien>();
-            a.ShotBy(owner.name, owner.GetComponentInChildren<Collider>().transform);
-            a.Health.Value -= damage;
-            AudioManager.Instance.PlaySound(AudioManager.ESound.Alien_Takes_Damage, this.gameObject);
-            //Debug.Log($"{gameObject.name} reduced {a.gameObject.name}'s health to {a.Health.Value}; {a.gameObject.name}.ShotBy is now {owner.name}");
-        }
+		Health damageable = collidedWith.GetComponent<Health>();
+		if (damageable != null)
+		{
+			damageable.TakeDamage(damage, owner.GetComponentInChildren<Actor>());
+		}
+
+        //Debug.Log($"{gameObject.name} reduced {a.gameObject.name}'s health to {a.Health.Value}; {a.gameObject.name}.ShotBy is now {owner.name}");
 
         if (!collidedWith.CompareTag("Projectile") && !collidedWith.isTrigger && (!collidedWith.CompareTag(owner.tag) || leftOwnerCollider))
         {
             //Debug.Log($"ProjectileCollision, not Player or Projectile; tag is {collidedWith.tag}; position is {transform.position}");
             ProjectileFactory.Instance.DestroyProjectile(this);
         }
-    }
+		ProjectileFactory.Instance.DestroyProjectile(this);
+	}
 }

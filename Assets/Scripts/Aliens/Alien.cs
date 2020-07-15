@@ -1,7 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Events;
 
 /// <summary>
 /// Demo class for enemies.
@@ -14,8 +16,8 @@ public class Alien : MonoBehaviour, IMessenger
 
     [Header("Components")]
     [SerializeField] private List<Collider> bodyColliders;
-
-    [Header("Stats")] 
+	[SerializeField] private AlienClaw alienWeapon;
+	[Header("Stats")] 
     [SerializeField] private int id;
     //[SerializeField] private float hoverHeight;
     [SerializeField] private float attackRange;
@@ -31,9 +33,9 @@ public class Alien : MonoBehaviour, IMessenger
     private Health health;
     private NavMeshAgent navMeshAgent;
     private Rigidbody rigidbody;
-
-    //Movement
-    private bool moving;
+	private Actor actor;
+	//Movement
+	private bool moving;
     private float speed;
     //[SerializeField] private float zRotation;
 
@@ -52,15 +54,18 @@ public class Alien : MonoBehaviour, IMessenger
     [SerializeField] private string shotByName;
     [SerializeField] private Transform shotByTransform;
     private float timeOfLastAttack;
-    
-    //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    //Basic Public Properties----------------------------------------------------------------------
+	//Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    /// <summary>
-    /// The colliders that comprise the alien's body.
-    /// </summary>
-    public List<Collider> BodyColliders { get => bodyColliders; }
+	//Basic Public Properties----------------------------------------------------------------------
+	public UnityAction onAttack;
+	public UnityAction onDamaged;
+	public UnityAction onDie;
+
+	/// <summary>
+	/// The colliders that comprise the alien's body.
+	/// </summary>
+	public List<Collider> BodyColliders { get => bodyColliders; }
 
     /// <summary>
     /// Alien's Health component.
@@ -82,7 +87,7 @@ public class Alien : MonoBehaviour, IMessenger
     {
         colliders = new List<Collider>(GetComponents<Collider>());
         health = GetComponent<Health>();
-        navMeshAgent = GetComponent<NavMeshAgent>();
+		navMeshAgent = GetComponent<NavMeshAgent>();
         rigidbody = GetComponent<Rigidbody>();
         //zRotation = transform.rotation.eulerAngles.z;
 
@@ -91,7 +96,15 @@ public class Alien : MonoBehaviour, IMessenger
         moving = false;
         navMeshAgent.enabled = false;
         speed = navMeshAgent.speed;
-    }
+
+		actor = GetComponent<Actor>();
+
+		alienWeapon = GetComponentInChildren<AlienClaw>();
+		alienWeapon.gameObject.SetActive(false);
+
+		health.onDamaged += OnDamaged;
+		health.onDie += OnDie;
+	}
 
     /// <summary>
     /// Prepares the Alien to chase its targets when AlienFactory puts it in the world. 
@@ -103,7 +116,7 @@ public class Alien : MonoBehaviour, IMessenger
         health.Reset();
 
         target = CryoEgg.Instance.ColliderTransform;
-        targetHealth = CryoEgg.Instance.Health;
+        targetHealth = CryoEgg.Instance.GetComponent<Health>();
         timeOfLastAttack = attackCooldown * -1;
         moving = true;
         MessageDispatcher.Instance.Subscribe("Alien", this);
@@ -129,28 +142,14 @@ public class Alien : MonoBehaviour, IMessenger
     {
         if (moving)
         {
-            CheckHealth();
             SelectTarget();
             Look();
-            Move();
-            
+            Move();            
         }
     }
 
     //Recurring Methods (FixedUpdate())-------------------------------------------------------------------------------------------------------------  
-
-    /// <summary>
-    /// Checks if alien has 0 health, destroying it if it has.
-    /// </summary>
-    private void CheckHealth()
-    {
-        if (health.IsDead())
-        {
-            AudioManager.Instance.PlaySound(AudioManager.ESound.Alien_Dies, this.gameObject);
-            AlienFactory.Instance.DestroyAlien(this);
-        }
-    }
-
+	
     /// <summary>
     /// Selects the most appropriate target for the alien.
     /// </summary>
@@ -217,6 +216,7 @@ public class Alien : MonoBehaviour, IMessenger
         target = selectedTarget;
         targetHealth = target.GetComponentInParent<Health>();   //Gets Health from target or any of its parents that has it.
         targetSize = target.GetComponentInParent<Size>();   //Gets Radius from target or any of its parents that has it.
+        //Debug.Log($"{this} set target as {target}");
     }
 
     /// <summary>
@@ -264,20 +264,102 @@ public class Alien : MonoBehaviour, IMessenger
             if (Time.time - timeOfLastAttack > attackCooldown)
             {
                 timeOfLastAttack = Time.time;
-                targetHealth.Value -= damage;
-                AudioManager.Instance.PlaySound(AudioManager.ESound.Damage_To_Building, this.gameObject); //need to add a check to see what it is attacking if we want to diversify sound portfolio, non essential
-                //TODO: trigger attack animation
+				Attack();
             }
         }
     }
 
-    //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
+	//Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
-    /// <summary>
-    /// Allows message-sending classes to deliver a message to this alien.
-    /// </summary>
-    /// <param name="message">The message to send to this messenger.</param>
-    public void Receive(Message message)
+	/// <summary>
+	/// Send an event message for AlienFX.cs to do attack FX's and deal damage.
+	/// If there's no FX script listening to this to call DealDamage(), call it anyway.
+	/// </summary>
+	private void Attack()
+	{
+		if (onAttack != null)
+		{
+			onAttack.Invoke();
+		}
+		else
+		{
+			Debug.Log("No script for Alien FX attached, doing damage without visuals . . .");
+			DealDamage();
+		}
+	}
+
+	/// <summary>
+	/// Send an event message for AlienFX.cs to do damage taken FX's and assign attacker target.
+	/// If there's no FX script listening to this, assign attacker target anyway.
+	/// </summary>
+	private void OnDamaged(float amount, Transform attackerTransform)
+	{
+		if (onDamaged != null)
+		{
+			onDamaged.Invoke();
+		}
+		else
+		{
+			Debug.Log("No script for Alien FX attached, taking damage without visuals . . .");
+		}
+		ShotBy(attackerTransform);
+	}
+
+	/// <summary>
+	/// Send an event message for AlienFX.cs to do death FX's and destroy the alien.
+	/// If there's no FX script listening to this to call DestroyAlien(), call it anyway.
+	/// </summary>
+	public void OnDie()
+	{
+		if (onDie != null)
+		{
+			foreach (Collider c in colliders)
+			{
+				c.enabled = false;
+			}
+			onDie.Invoke();
+		}
+		else
+		{
+			Debug.Log("No script for Alien FX attached, destroying alien without visuals . . .");
+			DestroyAlien();
+		}
+	}
+
+	/// <summary>
+	/// Registers with an alien the name and transform of an entity that shot it.
+	/// </summary>
+	/// <param name="name">The name of the entity that shot the alien.</param>
+	/// <param name="transform">The transform of the entity that shot the alien.</param>
+	public void ShotBy(Transform attackerTransform)
+	{
+		shotByName = attackerTransform.name;
+		shotByTransform = attackerTransform;
+	}
+
+	/// <summary>
+	/// Enable the melee weapon object to deal damage.
+	/// DealDamage() is intended to be called if there is no AlienFX.cs to trigger attack animation.
+	/// </summary>
+	public void DealDamage()
+	{
+		alienWeapon.gameObject.SetActive(true);
+	}
+
+	/// <summary>
+	/// Destroy the alien.
+	/// DestroyAlien() is intended to be called via an animation clip in AlienFX.cs
+	/// </summary>
+	public void DestroyAlien()
+	{
+		AlienFactory.Instance.DestroyAlien(this);
+	}
+
+	/// <summary>
+	/// Allows message-sending classes to deliver a message to this alien.
+	/// </summary>
+	/// <param name="message">The message to send to this messenger.</param>
+	public void Receive(Message message)
     {
         if (message.SenderTag == "Turret" && message.MessageContents == "Dead")
         {
@@ -297,17 +379,6 @@ public class Alien : MonoBehaviour, IMessenger
     }
 
     /// <summary>
-    /// Registers with an alien the name and transform of an entity that shot it.
-    /// </summary>
-    /// <param name="name">The name of the entity that shot the alien.</param>
-    /// <param name="transform">The transform of the entity that shot the alien.</param>
-    public void ShotBy(string name, Transform transform)
-    {
-        shotByName = name;
-        shotByTransform = transform;
-    }
-
-    /// <summary>
     /// Resets the alien to its inactive state.
     /// </summary>
     public void Reset()
@@ -322,11 +393,11 @@ public class Alien : MonoBehaviour, IMessenger
         visibleAliens.Clear();
         target = null;
 
-        foreach (Collider c in colliders)
-        {
-            c.enabled = false;
-        }
-    }
+		foreach (Collider c in colliders)
+		{
+			c.enabled = false;
+		}
+	}
 
     /// <summary>
     /// When a GameObject collides with another GameObject, Unity calls OnTriggerEnter.
@@ -336,15 +407,17 @@ public class Alien : MonoBehaviour, IMessenger
     {
         if (!other.isTrigger)
         {
+            //Debug.Log($"{this} detected {other} entering trigger collider");
+
             if (other.CompareTag("Alien"))
             {
                 visibleAliens.Add(other.transform);
             }
-            else if (other.CompareTag("Building"))
+            else if (other.CompareTag("Building") && !visibleTargets.Contains(other.transform.parent))
             {
                 visibleTargets.Add(other.transform.parent);
             }
-            else if (other.CompareTag("Player"))
+            else if (other.CompareTag("Player") && !visibleTargets.Contains(other.transform))
             {
                 visibleTargets.Add(other.transform);
             }
@@ -372,6 +445,7 @@ public class Alien : MonoBehaviour, IMessenger
             else if (visibleTargets.Contains(other.transform))
             {
                 visibleTargets.Remove(other.transform);
+                //Debug.Log($"{this} detected {other} exiting trigger collider");
             }
         }
     }
