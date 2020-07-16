@@ -50,7 +50,7 @@ public class PlayerMovementController : MonoBehaviour
     private float timeOfLastShot;
 
     //Other
-    private Rewired.Player playerInputManager;
+    private Player playerInputManager;
     private bool gameOver;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------

@@ -1,10 +1,11 @@
-﻿using System;
+﻿using DG.Tweening;
+using Rewired;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine.UI;
 using UnityEngine;
-using TMPro;
-using DG.Tweening;
 
 /// <summary>
 /// An enum for the expressions the AI should display.
@@ -115,9 +116,9 @@ public class DialogueBox : MonoBehaviour
     //[SerializeField] private Image continueArrow;
 
     [Header("Dialogue")]
+    [SerializeField] private bool dismissable;
     [SerializeField] private bool appendDialogue;
     [SerializeField] private int lerpTextInterval;
-    [SerializeField] private List<DialogueSet> dialogue;
 
     //[Header("Objective Buttons")]
     //[SerializeField] private Image countdown;
@@ -125,14 +126,13 @@ public class DialogueBox : MonoBehaviour
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
-    [Header("Testing")]
-
     private Vector2 originalRectTransformPosition;
     private RectTransform dialogueRectTransform;
     private Vector2 arrowInitialPosition;
-    [SerializeField] private bool activated;
-    [SerializeField] private bool clickable;
+    private bool activated;
+    private bool clickable;
 
+    private List<DialogueSet> dialogue;
     private Dictionary<string, List<ExpressionDialoguePair>> dialogueDictionary;
     private string currentDialogueKey;
     private string lastDialogueKey;
@@ -150,13 +150,16 @@ public class DialogueBox : MonoBehaviour
 
     private string nextDialogueKey;
     private float nextInvokeDelay;
-    [SerializeField] private bool tweenOutNextDialogueSet;
-    [SerializeField] private bool fadeOutNextDialogueSet;
+    private bool tweenOutNextDialogueSet;
+    private bool fadeOutNextDialogueSet;
     private bool deactivationSubmitted;
     private bool nextDialogueSetReady;
 
+    private bool dialogueReadRegistered;
     private bool dialogueRead;
     private bool deactivating;
+
+    private Player playerInputManager;
 
     //private RectTransform continueArrowTransform;
     //private RectTransform completeArrowTransform;
@@ -246,6 +249,8 @@ public class DialogueBox : MonoBehaviour
         dialogueRead = false;
         deactivating = false;
         textBox.text = "";
+        clickable = false;
+        activated = false;
     }
 
     ///// <summary>
@@ -254,6 +259,7 @@ public class DialogueBox : MonoBehaviour
     ///// </summary>
     private void Start()
     {
+        playerInputManager = PlayerMovementController.Instance.PlayerInputManager;
         newLineMarker = DialogueBoxManager.Instance.NewLineMarker;
 
         List<string[]> dialogueData = DialogueBoxManager.Instance.GetDialogueData(id);
@@ -315,14 +321,61 @@ public class DialogueBox : MonoBehaviour
         if (clickable)
         {
             dialogueTimer += Time.deltaTime;
+            GetInput();
+            CheckDialogueRead();
             //UpdateArrow();
         }
-
+        
         UpdateDialogueBoxState();
         LerpDialogue();
     }
 
     //Recurring Methods (Update())-------------------------------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Retrieve any dialogue box-related user input that needs to be accounted for manually in-code.
+    /// </summary>
+    private void GetInput()
+    {
+        if (!dialogueReadRegistered)
+        {
+            dialogueReadRegistered = playerInputManager.GetButtonDown("DialogueRead");
+        }
+    }
+
+    /// <summary>
+    /// Checks if the dialogue has been read and determines what should happen next.
+    /// </summary>
+    private void CheckDialogueRead()
+    {
+        if (dismissable && dialogueReadRegistered) //Should check clickable, but that is checked by the enclosing if statement in Update();
+        {
+            //DOTween.Kill(continueArrowTransform);
+            //continueArrowTransform.anchoredPosition = arrowInitialPosition;
+            //continueArrow.enabled = false;
+
+            //DOTween.Kill(completeArrowTransform);
+            //completeArrowTransform.anchoredPosition = arrowInitialPosition;
+            //completeArrow.enabled = false;
+
+            if (dialogueIndex < dialogueDictionary[currentDialogueKey].Count)
+            {
+                LerpNext();
+            }
+            else if (activated)
+            {
+                dialogueRead = true;
+
+                if (tweenOut)
+                {
+                    lastDialogueKey = currentDialogueKey;
+                    currentDialogueKey = "";
+                    clickable = false;
+                    DeactivateDialogueBox();
+                }
+            }
+        }
+    }
 
     ///// <summary>
     ///// Updates the arrow prompting the player to continue / finish reading the dialogue.
@@ -419,6 +472,8 @@ public class DialogueBox : MonoBehaviour
                 RegisterDialogueRead();
             }
         }
+
+        dialogueReadRegistered = false;
     }
 
     /// <summary>
@@ -714,37 +769,11 @@ public class DialogueBox : MonoBehaviour
     //Progress / Finish Dialogue-------------------------------------------------------------------
 
     /// <summary>
-    /// Called by OnClick to register that the player has read the currently displayed dialogue
+    /// Called by OnClick or pressing z to register that the player has read the currently displayed dialogue.
     /// </summary>
     public void RegisterDialogueRead()
     {
-        if (clickable)
-        {
-            //DOTween.Kill(continueArrowTransform);
-            //continueArrowTransform.anchoredPosition = arrowInitialPosition;
-            //continueArrow.enabled = false;
-
-            //DOTween.Kill(completeArrowTransform);
-            //completeArrowTransform.anchoredPosition = arrowInitialPosition;
-            //completeArrow.enabled = false;
-
-            if (dialogueIndex < dialogueDictionary[currentDialogueKey].Count)
-            {
-                LerpNext();
-            }
-            else if (activated)
-            {
-                dialogueRead = true;
-
-                if (tweenOut)
-                {
-                    lastDialogueKey = currentDialogueKey;
-                    currentDialogueKey = "";
-                    clickable = false;
-                    DeactivateDialogueBox();
-                }
-            }
-        }
+        dialogueReadRegistered = true;
     }
     
     /// <summary>
