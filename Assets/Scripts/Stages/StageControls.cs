@@ -28,7 +28,6 @@ public class StageControls : Stage
     DialogueBox d;
     DialogueBox cat;
     Player playerInputManager;
-    char newLine;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -72,7 +71,6 @@ public class StageControls : Stage
         d = DialogueBoxManager.Instance.GetDialogueBox("D");
         cat = DialogueBoxManager.Instance.GetDialogueBox("CAT");
         playerInputManager = ReInput.players.GetPlayer(PlayerMovementController.Instance.GetComponent<PlayerID>().Value);
-        newLine = DialogueBoxManager.Instance.NewLineMarker;
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------

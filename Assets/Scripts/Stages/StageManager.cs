@@ -109,16 +109,7 @@ public class StageManager : MonoBehaviour
     /// </summary>
     public void BeginGame()
     {
-        if (skipTutorial)
-        {
-            currentStage = stages[EStage.FinishedTutorial];
-            //TODO: swap for a stage for skipping the tutorial
-        }
-        else
-        {
-            currentStage = stages[firstStage];
-        }
-
+        currentStage = stages[(skipTutorial ? EStage.SkippedTutorial : firstStage)];
         currentStage.StartExecution();
     }
 

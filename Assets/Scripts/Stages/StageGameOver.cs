@@ -5,16 +5,16 @@ using UnityEngine;
 /// <summary>
 /// The stage of the game where the player is just left to do their own thing and play the game.
 /// </summary>
-public class StageFinishedTutorial : Stage
+public class StageGameOver : Stage
 {
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
     //Singleton Public Property----------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
-    /// StageFinishedTutorial's singleton public property.
+    /// StageGameOver's singleton public property.
     /// </summary>
-    public StageFinishedTutorial Instance { get; protected set; }
+    public StageGameOver Instance { get; protected set; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -30,7 +30,7 @@ public class StageFinishedTutorial : Stage
         }
 
         Instance = this;
-        id = EStage.FinishedTutorial;
+        id = EStage.GameOver;
         base.Awake();
     }
 

@@ -40,7 +40,7 @@ Combat	Console	launch dog	Warning! Hostile alien activity detected.		Triggered a
 Combat	Console	launch dog	Launching D.O.G.exe . . .																								
 Combat	DOG	dog launched	DEFENCE ORGANISATION GUIDE ONLINE!																								
 Combat	DOG	aliens spawned	Listen up soldier! Those B.U.G.s look angry.		3 enemies spawn here																						
-Combat	Console	task build turret	Task: build a <Turret>.		Clear console first																						
+Combat	Console	task build turret	Task: build a <Shotgun Turret> and a <Machine Gun Turret>.		Clear console first																						
 Combat	DOG	build turret	Use these <Turrets> to defend your base.	Build turrets	Turret icons appear and are buildable																						
 Combat	Console	task shoot	Weapon systems online.~Task: shoot with your on-board laser cannon.		Clear console first																						
 Combat	DOG	shoot	You also have an on-board laser cannon to defend yourself with.																								
@@ -57,13 +57,13 @@ N/A	#Notes 	Technical	"If the value of the ""Dialogue Box"" column starts with a
 N/A	#Notes 	Technical	"The values in the columns ""Dialogue Box"" need to be character for character identical to the ID of the dialogue box that you want the dialogue to appear in."																								
 N/A	#Notes 	Technical	"To retrieve a dialogue set in-code, you need to retrieve it with the exact value listed in the ""Dialogue Key"" column."																								
 N/A	#Notes 	Technical	"If multiple lines of dialogue are listed with the same Dialogue Box ID and Dialogue Key, they'll be added to the same dialogue set and displayed in their dialogue box one after the other as the player indicates they've read each (except for the Console)."																								
-N/A	#Notes 	Technical	All dialogue is continued by pressing button [z]																								
+N/A	#Notes 	Technical	All manually continuable dialogue is continued by pressing button [z] or clicking on the dialogue box.																								
 N/A	#Notes 	Technical	"If dialogue needs to be separated into multiple lines, denote the line break with a ~."																								
 N/A	#Notes 	Technical	"Special characters are used to denote a section of dialogue as being coloured differently to the default for a given dialogue box. For reference, check the UI's DialogueBoxManager component."																								
 N/A	#Notes 	Formatting	All lines of dialogue should have the speaker's name																								
 N/A	#Notes 	Formatting	You don't need to put dialogue in quotation marks unless the character is using them in-line. Just type it as you want it presented in the dialogue box excepting the special characters for line breaks and colour tags.																								
 N/A	#Notes 	Formatting	Please order dialogue here in order of when it will be called just to make it easier to understand for the humans reading it.																								
-N/A	#Notes 	TODO	Juice: Typewriter FX																								
+N/A	#Notes 	TODO	Juice: Typewriter FX (might have already been covered by lerping of dialogue?)																								
 																											
 																											
 																											

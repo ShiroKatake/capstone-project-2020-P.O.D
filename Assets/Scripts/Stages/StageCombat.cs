@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Rewired;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,6 +8,21 @@ using UnityEngine;
 /// </summary>
 public class StageCombat : Stage
 {
+    //Private Fields---------------------------------------------------------------------------------------------------------------------------------
+
+    //Serialized Fields----------------------------------------------------------------------------
+
+    [SerializeField] private UIElementStatusController shotgunTurret;
+    [SerializeField] private UIElementStatusController machineGunTurret;
+    [SerializeField] private UIElementStatusController turretsHighlight;
+
+    //Non-Serialized Fields------------------------------------------------------------------------
+
+    DialogueBox console;
+    DialogueBox game;
+    DialogueBox dog;
+    Player playerInputManager;
+
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
     //Singleton Public Property----------------------------------------------------------------------------------------------------------------------
@@ -34,6 +50,19 @@ public class StageCombat : Stage
         base.Awake();
     }
 
+    /// <summary>
+    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
+    /// Start() runs after Awake().
+    /// </summary>
+    private void Start()
+    {
+        //Get all dialogue boxes, etc.
+        console = DialogueBoxManager.Instance.GetDialogueBox("Console");
+        game = DialogueBoxManager.Instance.GetDialogueBox("Game");
+        dog = DialogueBoxManager.Instance.GetDialogueBox("DOG");
+        playerInputManager = ReInput.players.GetPlayer(PlayerMovementController.Instance.GetComponent<PlayerID>().Value);
+    }
+
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
@@ -53,7 +82,74 @@ public class StageCombat : Stage
     /// </note>
     protected override IEnumerator Execution()
     {
-        Debug.Log($"{this} not implemented.");
-        yield return null;
+        while (ClockController.Instance.Daytime)
+        {
+            yield return null;
+        }
+
+        ClockController.Instance.Paused = true;
+
+        console.SubmitDialogue("launch dog", 0, false, false);
+        dog.SubmitDialogue("dog launched", 1, false, false);
+
+        while (!dog.DialogueRead)
+        {
+            yield return null;
+        }
+
+        dog.SubmitDialogue("aliens spawned", 0, false, false);
+
+        while (!dog.DialogueRead)
+        {
+            yield return null;
+        }
+
+        console.ClearDialogue();
+        console.SubmitDialogue("task build turret", 0, false, false);
+        dog.SubmitDialogue("build turret", 0, true, false);
+        shotgunTurret.Visible = true;
+        machineGunTurret.Visible = true;
+        turretsHighlight.Visible = true;
+
+        while (!BuildingController.Instance.HasBuiltBuilding(EBuilding.ShortRangeTurret) || !BuildingController.Instance.HasBuiltBuilding(EBuilding.ShortRangeTurret))
+        {
+            yield return null;
+        }
+
+        console.ClearDialogue();
+        console.SubmitDialogue("task shoot", 0, false, false);
+        dog.SubmitDialogue("shoot", 0, true, false);
+        game.SubmitDialogue("shoot", 0, true, false);
+
+        while (!ProjectileManager.Instance.HasProjectileWithOwner(PlayerMovementController.Instance.transform))
+        {
+            yield return null;
+        }
+
+        //console.ClearDialogue();
+        //console.SubmitDialogue("task heal", 0, false, false);
+        //dog.SubmitDialogue("heal at cryo egg", 0, true, false);
+        //game.SubmitDialogue("heal", 0, true, false);
+
+        //while (!playerInputManager.GetButtonDown("Heal") || Vector3.Distance(PlayerMovementController.Instance.transform.position, CryoEgg.Instance.transform.position) > healingDistance) //TODO: get reference to thing that says what the healing distance is
+        //{
+        //    yield return null;
+        //}
+
+        console.ClearDialogue();
+        dog.SubmitDialogue("good luck", 0, true, false);
+
+        while (!dog.DialogueRead)
+        {
+            yield return null;
+        }
+
+        console.SubmitDialogue("dog closed", 0, false, false);
+
+        yield return new WaitForSeconds(1);
+
+        game.SubmitDialogue("finished tutorial", 0, true, false);
+        ClockController.Instance.Paused = false;
+        StageManager.Instance.SetStage(EStage.MainGame);
     }
 }

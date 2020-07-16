@@ -16,6 +16,7 @@ public class AlienController : MonoBehaviour
     [SerializeField] private float respawnDelay;
 
     [Header("Swarm Stats")]
+    [SerializeField] private Vector3 tutorialSwarmCentre;
     [SerializeField] private int maxSwarmRadius;
     [SerializeField] private int maxSwarmSize;
     [SerializeField] private int maxSwarmCount;
@@ -39,6 +40,7 @@ public class AlienController : MonoBehaviour
     private float timeOfLastDeath;
     private Dictionary<int, List<Vector3>> swarmOffsets;
     private LayerMask groundLayerMask;
+    private List<EStage> spawnableStages;
 
     //Penalty Incrementation
     private int spawnCountPenalty;
@@ -81,6 +83,7 @@ public class AlienController : MonoBehaviour
         timeOfLastPenalty = penaltyCooldown * -1;
         spawnCountPenalty = 0;
         groundLayerMask = LayerMask.GetMask("Ground");
+        spawnableStages = new List<EStage>() { EStage.Combat, EStage.MainGame };
 
         //Setting up position offsets that can be randomly selected from for cluster spawning 
         swarmOffsets = new Dictionary<int, List<Vector3>>();
@@ -126,7 +129,7 @@ public class AlienController : MonoBehaviour
     /// </summary>
     private void SpawnAliens()
     {
-        if (spawnAliens && (spawnAlienNow || (!ClockController.Instance.Daytime && aliens.Count == 0 && Time.time - timeOfLastDeath > respawnDelay)))
+        if (spawnAliens && spawnableStages.Contains(StageManager.Instance.CurrentStage.ID) && (spawnAlienNow || (!ClockController.Instance.Daytime && aliens.Count == 0 && Time.time - timeOfLastDeath > respawnDelay)))
         {
             //Start Testing----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -217,7 +220,8 @@ public class AlienController : MonoBehaviour
             }
 
             //Spawn aliens
-            int spawnCount = BuildingController.Instance.BuildingCount * 3 + spawnCountPenalty;
+            EStage currentStage = StageManager.Instance.CurrentStage.ID;
+            int spawnCount = (currentStage == EStage.Combat ? 3 : BuildingController.Instance.BuildingCount * 3 + spawnCountPenalty);
             Vector3 swarmCentre = Vector3.zero; 
             int swarmSize = 0;                   
             int swarmRadius = 0;
@@ -240,7 +244,7 @@ public class AlienController : MonoBehaviour
                             return;
                         }
 
-                        swarmCentre = MapController.Instance.RandomAlienSpawnablePos(new List<Vector3>(unavailablePositions.Keys));
+                        swarmCentre = (currentStage == EStage.Combat ? tutorialSwarmCentre : MapController.Instance.RandomAlienSpawnablePos(new List<Vector3>(unavailablePositions.Keys)));
                         swarmRadius = 0;
                         swarmSize = 0;
                     }
