@@ -94,15 +94,7 @@ public class PlayerMovementController : MonoBehaviour
         defaultHoverHeight = transform.position.y;
         gameOver = false;
         groundLayerMask = LayerMask.GetMask("Ground");
-    }
-
-    /// <summary>
-    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
-    /// Start() runs after Awake().
-    /// </summary>
-    void Start()
-    {
-        playerInputManager = ReInput.players.GetPlayer(GetComponent<PlayerID>().Value);
+        playerInputManager = ReInput.players.GetPlayer(GetComponent<PlayerID>().Value);  //Needs to run in Awake() or the tutorial breaks
     }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------

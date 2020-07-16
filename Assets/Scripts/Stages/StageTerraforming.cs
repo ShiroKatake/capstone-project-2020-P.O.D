@@ -200,6 +200,7 @@ public class StageTerraforming : Stage
 
         cat.SubmitDialogue("good luck", 0, true, false);
         clock.Visible = true;
+        ClockController.Instance.Paused = false;
 
         while (!cat.DialogueRead)
         {

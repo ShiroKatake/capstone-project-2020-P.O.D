@@ -53,6 +53,9 @@ public class UIColorManager : MonoBehaviour
     }
 
     public void ColorUpdate() {
+        Debug.Log($"PlayerMovementController.PlayerInputManager is {PlayerMovementController.Instance.PlayerInputManager}");
+        Debug.Log($"PlayerInputManager.GetButton(\"EnemyAttack\") is  {PlayerMovementController.Instance.PlayerInputManager.GetButton("EnemyAttack")}");
+
         if (PlayerMovementController.Instance.PlayerInputManager.GetButton("EnemyAttack") && !alienPhaseOne && !alienPhaseTwo){
             eBackgroundCurColor = backgroundCurColor;
             eBorderCurColor = borderCurColor;
