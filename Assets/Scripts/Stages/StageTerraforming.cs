@@ -33,6 +33,9 @@ public class StageTerraforming : Stage
     [SerializeField] private UIElementStatusController greenhouseHighlight;
     [SerializeField] private UIElementStatusController boilerHighlight;
     [SerializeField] private UIElementStatusController incineratorHighlight;
+    [SerializeField] private UIElementStatusController humidityBarHighlight;
+    [SerializeField] private UIElementStatusController biodiversityBarHighlight;
+    [SerializeField] private UIElementStatusController atmosphereBarHighlight;
     [SerializeField] private UIElementStatusController ratioBarsHighlight;
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
@@ -149,36 +152,48 @@ public class StageTerraforming : Stage
         }
 
         //Here's the terraformers
-        cat.SubmitDialogue("greenhouse", 0, false, false);
-        greenhouse.Visible = true;
-        greenhouse.Interactable = true;
-        greenhouseHighlight.Visible = true;
-
-        while (!cat.DialogueRead)
-        {
-            yield return null;
-        }
-
         cat.SubmitDialogue("boiler", 0, false, false);
         boiler.Visible = true;
         boiler.Interactable = true;
         boilerHighlight.Visible = true;
+        humidityBar.Visible = true;
+        humidityBarHighlight.Visible = true;
 
         while (!cat.DialogueRead)
         {
             yield return null;
         }
 
+        boilerHighlight.Visible = false;
+        humidityBarHighlight.Visible = false;
+        cat.SubmitDialogue("greenhouse", 0, false, false);
+        greenhouse.Visible = true;
+        greenhouse.Interactable = true;
+        greenhouseHighlight.Visible = true;
+        biodiversityBar.Visible = true;
+        biodiversityBarHighlight.Visible = true;
+
+        while (!cat.DialogueRead)
+        {
+            yield return null;
+        }
+
+        greenhouseHighlight.Visible = false;
+        biodiversityBarHighlight.Visible = false;
         cat.SubmitDialogue("incinerator", 0, false, false);
         incinerator.Visible = true;
         incinerator.Interactable = true;
         incineratorHighlight.Visible = true;
+        atmosphereBar.Visible = true;
+        atmosphereBarHighlight.Visible = true;
 
         while (!cat.DialogueRead)
         {
             yield return null;
         }
 
+        incineratorHighlight.Visible = false;
+        atmosphereBarHighlight.Visible = false;
         cat.SubmitDialogue("buildings important", 0, false, false);
 
         while (!cat.DialogueRead)
@@ -188,9 +203,6 @@ public class StageTerraforming : Stage
 
         cat.SubmitDialogue("ratios important", 0, false, false);
         progressBar.Visible = true;
-        biodiversityBar.Visible = true;
-        humidityBar.Visible = true;
-        atmosphereBar.Visible = true;
         ratioBarsHighlight.Visible = true;
 
         while (!cat.DialogueRead)

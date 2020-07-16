@@ -42,6 +42,8 @@ public class UIElementStatusController : MonoBehaviour
     private bool visible;
     private bool finishedFlickeringIn;
 
+    private List<Graphic> graphics;
+
     //Public Properties------------------------------------------------------------------------------------------------------------
 
     //Simple Public Properties---------------------------------------------------------------------
@@ -149,83 +151,31 @@ public class UIElementStatusController : MonoBehaviour
                 finishedFlickeringIn = true;
             }
 
-            if (
-                   (border != null && border.enabled != visible)
-                || (fill != null && fill.enabled != visible)
-                || (image != null && image.enabled != visible)
-                || (textBox != null && textBox.enabled != visible)
-            )
+            bool readyToFlickerIn = false;
+
+            foreach (Graphic g in graphics)
             {
-                bool readyToFlickerIn = false;
-
-                if (border != null)
+                if (!g.enabled && visible && flickersIn)
                 {
-                    if (!border.enabled && visible && flickersIn)
-                    {
-                        Color colour = border.color;
-                        colour.a = 0;
-                        border.color = colour;
-                        border.enabled = true;
-                        readyToFlickerIn = true;
-                    }
-                    else
-                    {
-                        border.enabled = visible;
-                    }
+                    Color colour = g.color;
+                    colour.a = 0;
+                    g.color = colour;
+                    g.enabled = true;
+                    readyToFlickerIn = true;
                 }
-
-                if (fill != null)
+                else
                 {
-                    if (!fill.enabled && visible && flickersIn)
-                    {
-                        Color colour = fill.color;
-                        colour.a = 0;
-                        fill.color = colour;
-                        fill.enabled = true;
-                        readyToFlickerIn = true;
-                    }
-                    else
-                    {
-                        fill.enabled = visible;
-                    }
+                    g.enabled = visible;
                 }
+            }
 
-                if (image != null)
-                {
-                    if (!image.enabled && visible && flickersIn)
-                    {
-                        Color colour = image.color;
-                        colour.a = 0;
-                        image.color = colour;
-                        image.enabled = true;
-                        readyToFlickerIn = true;
-                    }
-                    else
-                    {
-                        image.enabled = visible;
-                    }
-                }
-
-                if (textBox != null)
-                {
-                    if (!textBox.enabled && visible && flickersIn)
-                    {
-                        Color colour = textBox.color;
-                        colour.a = 0;
-                        textBox.color = colour;
-                        textBox.enabled = true;
-                        readyToFlickerIn = true;
-                    }
-                    else
-                    {
-                        textBox.enabled = visible;
-                    }
-                }
-
-                if (readyToFlickerIn)
-                {
-                    StartCoroutine(FlickerIn());
-                }
+            if (readyToFlickerIn)
+            {
+                StartCoroutine(FlickerIn());
+            }
+            else if (!visible)
+            {
+                StopCoroutine(FlickerIn());
             }
         }
     }
@@ -240,27 +190,46 @@ public class UIElementStatusController : MonoBehaviour
     {
         //Debug.Log($"{this}.button is {button}, {this}.image is {image}");
 
-        if (!visibleOnAwake)
+        graphics = new List<Graphic>();
+
+        if (border != null)
         {
-            if (border != null)
+            graphics.Add(border);
+
+            if (!visibleOnAwake)
             {
                 finalBorderOpacity = border.color.a;
                 border.enabled = false;
-            }
+            }            
+        }
 
-            if (fill != null)
+        if (fill != null)
+        {
+            graphics.Add(fill);
+
+            if (!visibleOnAwake)
             {
                 finalFillOpacity = fill.color.a;
                 fill.enabled = false;
             }
+        }
 
-            if (image != null)
+        if (image != null)
+        {
+            graphics.Add(image);
+
+            if (!visibleOnAwake)
             {
                 finalImageOpacity = image.color.a;
                 image.enabled = false;
             }
+        }
 
-            if (textBox != null)
+        if (textBox != null)
+        {
+            graphics.Add(textBox);
+
+            if (!visibleOnAwake)
             {
                 finalTextOpacity = textBox.color.a;
                 textBox.enabled = false;
@@ -300,11 +269,11 @@ public class UIElementStatusController : MonoBehaviour
         {
             do
             {
-                yield return null; 
-                if (!borderFinished) { borderFinished = UpdateOpacityOfImage(border, true, 1, 0.67f * finalBorderOpacity); }
-                if (!fillFinished) { fillFinished = UpdateOpacityOfImage(fill, true, 1, 0.67f * finalFillOpacity); } 
-                if (!imageFinished) { imageFinished = UpdateOpacityOfImage(image, true, 1, 0.67f * finalImageOpacity); } 
-                if (!textBoxFinished) { textBoxFinished = UpdateOpacityOfTextBox(textBox, true, 1, 0.67f * finalTextOpacity); }
+                yield return null;
+                if (!borderFinished) { borderFinished = UpdateOpacityOfGraphic(border, true, 1, 0.67f * finalBorderOpacity); }
+                if (!fillFinished) { fillFinished = UpdateOpacityOfGraphic(fill, true, 1, 0.67f * finalFillOpacity); } 
+                if (!imageFinished) { imageFinished = UpdateOpacityOfGraphic(image, true, 1, 0.67f * finalImageOpacity); } 
+                if (!textBoxFinished) { textBoxFinished = UpdateOpacityOfGraphic(textBox, true, 1, 0.67f * finalTextOpacity); }
                 //Debug.Log($"Incrementing {this}.image.color.a, alpha is {image.color.a}, finished incrementing up to {0.67f * finalOpacity} is {image.color.a >= 0.67f * finalOpacity}");
             }
             while (!borderFinished || !fillFinished || !imageFinished || !textBoxFinished);
@@ -317,10 +286,10 @@ public class UIElementStatusController : MonoBehaviour
             do
             {
                 yield return null;
-                if (!borderFinished) { borderFinished = UpdateOpacityOfImage(border, false, 1, 0); }
-                if (!fillFinished) { fillFinished = UpdateOpacityOfImage(fill, false, 1, 0); }
-                if (!imageFinished) { imageFinished = UpdateOpacityOfImage(image, false, 1, 0); }
-                if (!textBoxFinished) { textBoxFinished = UpdateOpacityOfTextBox(textBox, false, 1, 0); }
+                if (!borderFinished) { borderFinished = UpdateOpacityOfGraphic(border, false, 1, 0); }
+                if (!fillFinished) { fillFinished = UpdateOpacityOfGraphic(fill, false, 1, 0); }
+                if (!imageFinished) { imageFinished = UpdateOpacityOfGraphic(image, false, 1, 0); }
+                if (!textBoxFinished) { textBoxFinished = UpdateOpacityOfGraphic(textBox, false, 1, 0); }
 
                 //Debug.Log($"Decrementing {this}.image.color.a, alpha is {image.color.a}, finished decrementing to 0 is {image.color.a <= 0}");
             }
@@ -337,10 +306,10 @@ public class UIElementStatusController : MonoBehaviour
         do
         {
             yield return null;
-            if (!borderFinished) { borderFinished = UpdateOpacityOfImage(border, true, 1.25f, finalBorderOpacity); }
-            if (!fillFinished) { fillFinished = UpdateOpacityOfImage(fill, true, 1.25f, finalFillOpacity); }
-            if (!imageFinished) { imageFinished = UpdateOpacityOfImage(image, true, 1.25f, finalImageOpacity); } 
-            if (!textBoxFinished) { textBoxFinished = UpdateOpacityOfTextBox(textBox, true, 1.25f, finalTextOpacity); }
+            if (!borderFinished) { borderFinished = UpdateOpacityOfGraphic(border, true, 1.25f, finalBorderOpacity); }
+            if (!fillFinished) { fillFinished = UpdateOpacityOfGraphic(fill, true, 1.25f, finalFillOpacity); }
+            if (!imageFinished) { imageFinished = UpdateOpacityOfGraphic(image, true, 1.25f, finalImageOpacity); } 
+            if (!textBoxFinished) { textBoxFinished = UpdateOpacityOfGraphic(textBox, true, 1.25f, finalTextOpacity); }
             //Debug.Log($"Incrementing {this}.image.color.a, alpha is {image.color.a}, finished incrementing up to {finalOpacity} is {image.color.a >= finalOpacity}");
         }
         while (!borderFinished || !fillFinished || !imageFinished || !textBoxFinished);
@@ -355,10 +324,10 @@ public class UIElementStatusController : MonoBehaviour
             do
             {
                 yield return null; 
-                if (!borderFinished) { borderFinished = UpdateOpacityOfImage(border, false, 1.25f, 0); } 
-                if (!fillFinished) { fillFinished = UpdateOpacityOfImage(fill, false, 1.25f, 0); } 
-                if (!imageFinished) { imageFinished = UpdateOpacityOfImage(image, false, 1.25f, 0); }
-                if (!textBoxFinished) { textBoxFinished = UpdateOpacityOfTextBox(textBox, false, 1.25f, 0); }
+                if (!borderFinished) { borderFinished = UpdateOpacityOfGraphic(border, false, 1.25f, 0); } 
+                if (!fillFinished) { fillFinished = UpdateOpacityOfGraphic(fill, false, 1.25f, 0); } 
+                if (!imageFinished) { imageFinished = UpdateOpacityOfGraphic(image, false, 1.25f, 0); }
+                if (!textBoxFinished) { textBoxFinished = UpdateOpacityOfGraphic(textBox, false, 1.25f, 0); }
                 //Debug.Log($"Decrementing {this}.image.color.a, alpha is {image.color.a}, finished decrementing down to {0} is {image.color.a <= 0}");
             }
             while (!borderFinished || !fillFinished || !imageFinished || !textBoxFinished);
@@ -370,45 +339,20 @@ public class UIElementStatusController : MonoBehaviour
     /// <summary>
     /// Updates the opacity of the passed image.
     /// </summary>
-    /// <param name="i">The image whose opacity is being updated</param>
+    /// <param name="g">The graphic whose opacity is being updated</param>
     /// <param name="increasing">Should its opacity increase?</param>
-    /// <param name="speedMultiplier">Multiplies the speed at which the image's opacity updates.</param>
-    /// <param name="targetOpacity">The opacity the image should be updating towards</param>
-    /// <returns>Whether or not the image has reached the target opacity.</returns>
-    private bool UpdateOpacityOfImage(Image i, bool increasing, float speedMultiplier, float targetOpacity)
+    /// <param name="speedMultiplier">Multiplies the speed at which the graphic's opacity updates.</param>
+    /// <param name="targetOpacity">The opacity the graphic should be updating towards</param>
+    /// <returns>Whether or not the graphic has reached the target opacity.</returns>
+    private bool UpdateOpacityOfGraphic(Graphic g, bool increasing, float speedMultiplier, float targetOpacity)
     {
         float directionMultiplier = (increasing ? 1 : -1);
 
-        if (i.color.a * directionMultiplier < targetOpacity)
+        if (g.color.a * directionMultiplier < targetOpacity)
         {
-            Color colour = i.color;
+            Color colour = g.color;
             colour.a += flickerInSpeed * directionMultiplier * speedMultiplier * Time.deltaTime;
-            i.color = colour;
-            return false;
-        }
-        else
-        {
-            return true;
-        }
-    }
-
-    /// <summary>
-    /// Updates the opacity of the passed text box.
-    /// </summary>
-    /// <param name="t">The text box whose opacity is being updated</param>
-    /// <param name="increasing">Should its opacity increase?</param>
-    /// <param name="speedMultiplier">Multiplies the speed at which the text box's opacity updates.</param>
-    /// <param name="targetOpacity">The opacity the text box should be updating towards</param>
-    /// <returns>Whether or not the text box has reached the target opacity.</returns>
-    private bool UpdateOpacityOfTextBox(Text t, bool increasing, float speedMultiplier, float targetOpacity)
-    {
-        float directionMultiplier = (increasing ? 1 : -1);
-
-        if (t.color.a * directionMultiplier < targetOpacity)
-        {
-            Color colour = t.color;
-            colour.a += flickerInSpeed * directionMultiplier * speedMultiplier * Time.deltaTime;
-            t.color = colour;
+            g.color = colour;
             return false;
         }
         else
