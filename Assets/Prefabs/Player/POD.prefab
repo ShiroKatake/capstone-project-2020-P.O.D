@@ -12,12 +12,13 @@ GameObject:
   - component: {fileID: 8012111687188129642}
   - component: {fileID: 6640390380996798274}
   - component: {fileID: 1254351314858929259}
+  - component: {fileID: 7060469489430186544}
   - component: {fileID: 896588547581440063}
   - component: {fileID: 1599954602420491413}
   - component: {fileID: 7041390208095427918}
   - component: {fileID: 403112268726757339}
   - component: {fileID: 1903319585361199757}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: POD
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -82,6 +83,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   camera: {fileID: 0}
+--- !u!114 &7060469489430186544
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 403112268726757337}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5bfa9bda77c9c3488923b65c75f29e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  affiliation: 0
 --- !u!114 &896588547581440063
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -94,7 +108,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7d1fe85e34b94943ad23931779e30d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 100
+  maxHealth: 100
 --- !u!114 &1599954602420491413
 MonoBehaviour:
   m_ObjectHideFlags: 0

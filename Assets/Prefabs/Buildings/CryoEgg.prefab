@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 880952307760529668}
   - component: {fileID: 880952308425214859}
   - component: {fileID: 4025372026840351080}
+  - component: {fileID: 3520859837222714372}
   - component: {fileID: 880952307760529664}
   - component: {fileID: -2340967334442575925}
   m_Layer: 0
@@ -85,6 +86,19 @@ MonoBehaviour:
   colliderTransform: {fileID: 8586582078626057228}
   health: {fileID: 880952307760529664}
   size: {fileID: -2340967334442575925}
+--- !u!114 &3520859837222714372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 880952307760529665}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5bfa9bda77c9c3488923b65c75f29e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  affiliation: 0
 --- !u!114 &880952307760529664
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -97,7 +111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7d1fe85e34b94943ad23931779e30d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 100
+  maxHealth: 100
 --- !u!114 &-2340967334442575925
 MonoBehaviour:
   m_ObjectHideFlags: 0
