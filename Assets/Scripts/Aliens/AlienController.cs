@@ -16,9 +16,14 @@ public class AlienController : MonoBehaviour
     [SerializeField] private float respawnDelay;
 
     [Header("Swarm Stats")]
-    [SerializeField] private int maxSwarmRadius;
-    [SerializeField] private int maxSwarmSize;
-    [SerializeField] private int maxSwarmCount;
+	[Tooltip("How much space 1 swarm takes.")]
+	[SerializeField] private int maxSwarmRadius;
+	[Tooltip("How many aliens should be in 1 swarm.")]
+	[SerializeField] private int aliensPerSwarm;
+	[Tooltip("How many swarms should be in 1 night.")]
+	[SerializeField] private int maxSwarmCount;
+	[Tooltip("How many swarms should exist at any give time.")]
+	[SerializeField] private int maxSwarmSize;
 
     [Header("Penalty Stats")]
     [SerializeField] private float defencePenaltyThreshold;
@@ -217,7 +222,7 @@ public class AlienController : MonoBehaviour
             }
 
             //Spawn aliens
-            int spawnCount = BuildingController.Instance.BuildingCount * 3 + spawnCountPenalty;
+            int spawnCount = BuildingController.Instance.BuildingCount * aliensPerSwarm + spawnCountPenalty;
             Vector3 swarmCentre = Vector3.zero; 
             int swarmSize = 0;                   
             int swarmRadius = 0;
