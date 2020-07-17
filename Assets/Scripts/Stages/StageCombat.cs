@@ -145,9 +145,6 @@ public class StageCombat : Stage
         }
 
         console.SubmitDialogue("dog closed", 0, false, false);
-
-        yield return new WaitForSeconds(1);
-
         game.SubmitDialogue("finished tutorial", 0, true, false);
         ClockController.Instance.Paused = false;
         StageManager.Instance.SetStage(EStage.MainGame);

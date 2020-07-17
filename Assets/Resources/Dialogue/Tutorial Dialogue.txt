@@ -1,16 +1,16 @@
 Stage	Dialogue Box	Dialogue Key	Dialogue	Required action	What happens in the game/Action																						
-Controls	Console	ai online	Commencing system check . . .~AI unit: online.~Vitals: green.		"UI border appears, dialogue box Console appears in top left"																						
-Controls	Console	calibrate movement	Initialising movement system . . .~Movement calibration required.~Task: move using WASD.		Prompt appears above POD (with transition in sem 2) with image showing how to move																						
+Controls	Console	ai online	Commencing system check.~AI unit: online.~Vitals: green.		"UI border appears, dialogue box Console appears in top left"																						
+Controls	Console	calibrate movement	Initialising movement system.~Movement calibration required.~Task: move using the WASD keys.		Prompt appears above POD (with transition in sem 2) with image showing how to move																						
 Controls	W	w	W	Press W																							
 Controls	A	a	A	Press A																							
 Controls	S	s	S	Press S																							
 Controls	D	d	D	Press D																							
-Controls	Game	wasd	Move using WASD	Move in each direction	Flashing bottom left corner of the image (sem 2)																						
+Controls	Game	wasd	Move using the WASD keys.~(Click this box or press Z to dismiss it.)	Move in each direction	Flashing bottom left corner of the image (sem 2)																						
 Controls	Console	systems online	Movement calibrated.~System check complete.~All systems online.		Prompt closes																						
-Controls	Console	welcome pod	Connecting to S.E.E.R. . . .~Welcome Protective.Observation.Drone.																								
-Controls	Console	planet livability	Initialising External Environment Scanner . . .~Planet P.R.I.M.E detected.~Launching planetlivability.exe . . .		Clear Console first																						
+Controls	Console	welcome pod	Connecting to SEER.~Welcome Protective Observation Drone.																								
+Controls	Console	planet livability	Initialising External Environment Scanner.~Planet PRIME detected.~Launching planetlivability.exe.		Clear Console first																						
 Controls	Console	planet unlivable	<PLANET IS UNABLE TO SUPPORT LIFE.>																								
-Controls	Console	launch cat	Terraforming protocol updated.~Launching C.A.T.exe . . .																								
+Controls	Console	launch cat	Terraforming protocol updated.~Launching CAT.exe.																								
 Controls	CAT	need minerals	Hello! I am the Construction Assistant Technician. Here to assist with all your terraforming needs!																								
 Controls	CAT	need minerals	"This planet is currently inadequate for human life, fortunately you have been equipped with me!"																								
 Controls	CAT	need minerals	"Firstly, we are going to need some building materials."																								
@@ -20,8 +20,8 @@ Controls	CAT	gather minerals	Please gather 4 +minerals&.
 Controls	Console	task gather minerals	Task: gather 4 +minerals&.		Clear console first																						
 Controls	Game	lmb	Move the mouse over a mineral and hold down the left mouse button to mine it.	Gather minerals	Image of LMB appears above POD when near mining node																						
 Controls	CAT	collected minerals	Good job! Any minerals you collect will be displayed here.		"Clear Console, game highlights the resource area after the first strike"																						
-Terraforming	CAT	enough for building	"Perfect, this should be enough to construct your first building."																								
-Terraforming	CAT	build buildings	Stored in my memory are blueprints of buildings that can be used to convert this barren planet into a sustainable paradise for your humans in the cryo egg.		"Building UI Appears, Building Icons are still hidden"																						
+Terraforming	CAT	enough for building	"Perfect, this should be enough to construct a building."																								
+Terraforming	CAT	build buildings	I have the blueprints of several that can help convert this rock into a paradise for the humans in the cryo egg.		"Building UI Appears, Building Icons are still hidden"																						
 Terraforming	Console	task build fusion reactor	Task: build a [Fusion Reactor].		Clear Console first																						
 Terraforming	CAT	build fusion reactor	"First, you'll need power, please build a [Fusion Reactor]."	Build a fusion reactor	"Highlights fusion reactor icon, player can only select reactor"																						
 Terraforming	Console	task build ice drill	Task: build an /Ice Drill\.		Clear Console first																						
@@ -32,32 +32,32 @@ Terraforming	CAT	boiler	"This is a @Boiler$, it turns water into oxygen for your
 Terraforming	CAT	incinerator	This is an <Incinerator>. It burns waste into atmospheric gases for the planet.		Incinerator appears and is buildable																						
 Terraforming	CAT	buildings important	"Remember, all buildings are important! "																								
 Terraforming	CAT	buildings important	"The more you build, the quicker you'll reach the end goal."																								
-Terraforming	CAT	ratios important	"Make sure to keep the ratio between the buildings balanced, as going off balance can slow down your progress."		Highlights the ratio bars																						
+Terraforming	CAT	ratios important	Make sure to keep the ratio between the buildings balanced; imbalance will slow down your progress.		Highlights the ratio bars																						
 Terraforming	CAT	good luck	Good luck and happy terraforming!		Resume clock																						
-Terraforming	CAT	good luck	C.A.T. out. = ^__^ =																								
-Terraforming	Console	cat closed	C.A.T.exe has closed.		Clear console first																						
+Terraforming	CAT	good luck	CAT out. = ^__^ =																								
+Terraforming	Console	cat closed	CAT.exe has closed.		Clear console first																						
 Combat	Console	launch dog	Warning! Hostile alien activity detected.		Triggered at night time; clear Console first																						
-Combat	Console	launch dog	Launching D.O.G.exe . . .																								
+Combat	Console	launch dog	Launching DOG.exe.																								
 Combat	DOG	dog launched	DEFENCE ORGANISATION GUIDE ONLINE!																								
-Combat	DOG	aliens spawned	Listen up soldier! Those B.U.G.s look angry.		3 enemies spawn here																						
+Combat	DOG	aliens spawned	Listen up soldier! Those BUGs look angry.		3 enemies spawn here																						
 Combat	Console	task build turret	Task: build a <Shotgun Turret> and a <Machine Gun Turret>.		Clear console first																						
 Combat	DOG	build turret	Use these <Turrets> to defend your base.	Build turrets	Turret icons appear and are buildable																						
 Combat	Console	task shoot	Weapon systems online.~Task: shoot with your on-board laser cannon.		Clear console first																						
 Combat	DOG	shoot	You also have an on-board laser cannon to defend yourself with.																								
-Combat	Game	shoot	Press space to shoot	Shoot	Image of space bar + to shoot																						
+Combat	Game	shoot	Press space to shoot.	Shoot	Image of space bar + to shoot																						
 Combat	DOG	heal at cryo egg	If you wanna patch yourself up head to the cryo egg.																								
 Combat	Console	task heal	Task: heal yourself at the cryo egg.		Clear console first																						
-Combat	Game	heal	Press E to heal	Press E in range of the cryo egg	"Image of ""E"" above cryo egg"																						
+Combat	Game	heal	Press E to heal.	Press E in range of the cryo egg	"Image of ""E"" above cryo egg"																						
 Combat	DOG	good luck	That's all you need to know. Good luck out there soldier! Don't die!																								
-Combat	DOG	good luck	D.O.G. OUT!																								
-Combat	Console	dog closed	D.O.G.exe has closed.																								
+Combat	DOG	good luck	DOG OUT!																								
+Combat	Console	dog closed	DOG.exe has closed.																								
 Combat	Game	finished tutorial	This is the end of the tutorial. You are on your own from here. Good luck!																								
-Skipped Tutorial	Console	system check	Commencing system check . . .																								
-Skipped Tutorial	Console	initialising functions	AI unit: online.~Movement system: online and calibrated.~Vitals: green.~Initialising additional functionality . . .																								
+Skipped Tutorial	Console	system check	Commencing system check.																								
+Skipped Tutorial	Console	initialising functions	AI unit: online.~Movement system: online and calibrated.~Vitals: green.~Initialising additional functionality.																								
 Skipped Tutorial	Console	clock gps inventory online	Chronometer: online.~GPS: online.~Inventory: online.																								
-Skipped Tutorial	Console	buildings ready	Building system: ready.																								
-Skipped Tutorial	Console	begin game	External environment scanner: online.~Building system: enabled.~All systems are online.~Task: terraform this planet for human habitation. Begin.																								
-N/A	Console	blank	 		"Console prints "" "" to initialise itself."																						
+Skipped Tutorial	Console	buildings ready	Construction system: ready.																								
+Skipped Tutorial	Console	begin game	External environment scanner: online.~Construction system: enabled.~All systems are online.~Task: terraform this planet for human habitation. Begin.																								
+Any	Console	blank	 		"Console prints "" "" to initialise itself."																						
 N/A	#Notes 	Technical	"If the value of the ""Dialogue Box"" column starts with a #, it will be treated as a comment and ignored. The first line with the column headings will also be ignored and reading of this file's contents will begin from the second line."																								
 N/A	#Notes 	Technical	"The values in the columns ""Dialogue Box"" need to be character for character identical to the ID of the dialogue box that you want the dialogue to appear in."																								
 N/A	#Notes 	Technical	"To retrieve a dialogue set in-code, you need to retrieve it with the exact value listed in the ""Dialogue Key"" column."																								
