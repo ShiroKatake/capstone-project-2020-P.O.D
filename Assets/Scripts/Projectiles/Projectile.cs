@@ -112,6 +112,7 @@ public class Projectile : MonoBehaviour
         collider.enabled = true;
         rigidbody.velocity = vector * (speed + movementSpeed);
         leftOwnerCollider = false;
+        ProjectileManager.Instance.RegisterProjectile(this);
     }
 
     //Collisions-----------------------------------------------------------------------------------

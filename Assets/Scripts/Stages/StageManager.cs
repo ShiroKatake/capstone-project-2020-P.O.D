@@ -109,24 +109,8 @@ public class StageManager : MonoBehaviour
     /// </summary>
     public void BeginGame()
     {
-        if (skipTutorial)
-        {
-            currentStage = stages[EStage.FinishedTutorial];
-        }
-        else
-        {
-            currentStage = stages[firstStage];
-        }
-    }
-
-    //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
-
-    /// <summary>
-    /// Update() is run every frame.
-    /// </summary>
-    private void Update()
-    {
-        currentStage.Execute();
+        currentStage = stages[(skipTutorial ? EStage.SkippedTutorial : firstStage)];
+        currentStage.StartExecution();
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
@@ -155,6 +139,7 @@ public class StageManager : MonoBehaviour
         if (stages.ContainsKey(stage))
         {
             currentStage = stages[stage];
+            currentStage.StartExecution();
         }
         else
         {

@@ -50,7 +50,7 @@ public class PlayerMovementController : MonoBehaviour
     private float timeOfLastShot;
 
     //Other
-    private Rewired.Player playerInputManager;
+    private Player playerInputManager;
     private bool gameOver;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
@@ -94,15 +94,7 @@ public class PlayerMovementController : MonoBehaviour
         defaultHoverHeight = transform.position.y;
         gameOver = false;
         groundLayerMask = LayerMask.GetMask("Ground");
-    }
-
-    /// <summary>
-    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
-    /// Start() runs after Awake().
-    /// </summary>
-    void Start()
-    {
-        playerInputManager = ReInput.players.GetPlayer(GetComponent<PlayerID>().Value);
+        playerInputManager = ReInput.players.GetPlayer(GetComponent<PlayerID>().Value);  //Needs to run in Awake() or the tutorial breaks
     }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
@@ -321,6 +313,7 @@ public class PlayerMovementController : MonoBehaviour
     {
         if (shooting && Time.time - timeOfLastShot > shootCooldown)
         {
+         
             timeOfLastShot = Time.time;
             Projectile projectile = ProjectileFactory.Instance.GetProjectile(EProjectileType.PODLaserBolt, transform, barrelTip.position);
             AudioManager.Instance.PlaySound(AudioManager.ESound.Laser_POD, this.gameObject);
@@ -328,5 +321,6 @@ public class PlayerMovementController : MonoBehaviour
             projectile.Shoot(vector.normalized, 0);
             //TODO: use overload that incorporates shooter movement speed, and calculate current movement speed in the direction of the shot vector.
         }
+        
     }
 }

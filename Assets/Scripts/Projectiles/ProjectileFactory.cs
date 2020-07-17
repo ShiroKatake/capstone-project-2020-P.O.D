@@ -117,6 +117,7 @@ public class ProjectileFactory : MonoBehaviour
     /// <param name="projectile">The projectile to destroy.</param>
     public void DestroyProjectile(Projectile projectile)
     {
+        ProjectileManager.Instance.DeRegisterProjectile(projectile);
         projectile.Active = false;
         projectile.Collider.enabled = false;
         projectile.Rigidbody.velocity = Vector3.zero;
