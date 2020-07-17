@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6727844688691865855}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Barrel Magazine
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 8716553431156141239}
   - component: {fileID: 6137680522166776620}
   - component: {fileID: 7745247874657328331}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Barrel Collider
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -125,7 +125,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5451464881631675756}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Barrel Collider Pivot
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -156,7 +156,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7220145513979710444}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Arm Collider Pivot
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -187,7 +187,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5877666295754112639}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Barrel Model Pivot
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -220,7 +220,7 @@ GameObject:
   - component: {fileID: 431181569229458202}
   - component: {fileID: 1230650354762099642}
   - component: {fileID: 2830984377133115279}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Detection Collider
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -286,7 +286,7 @@ GameObject:
   - component: {fileID: 5223150120495089885}
   - component: {fileID: 8196995621459989315}
   - component: {fileID: 4035820058908691400}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Arm Model
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -365,12 +365,13 @@ GameObject:
   m_Component:
   - component: {fileID: 2387721251791164881}
   - component: {fileID: 276844957512759736}
+  - component: {fileID: 2320425670518256764}
   - component: {fileID: 1219818938998714957}
   - component: {fileID: 8965008406432620709}
   - component: {fileID: -6100819924566361332}
   - component: {fileID: 3380677155783403710}
   - component: {fileID: 8629933168825371649}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Machine Gun Turret
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -448,6 +449,19 @@ MonoBehaviour:
   idleSound: 19
   active: 0
   operational: 0
+--- !u!114 &2320425670518256764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2740937295730065718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5bfa9bda77c9c3488923b65c75f29e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  affiliation: 0
 --- !u!114 &1219818938998714957
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -555,7 +569,7 @@ GameObject:
   - component: {fileID: 3740305946930748035}
   - component: {fileID: 4397239375696895422}
   - component: {fileID: 1027100590201339714}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Left Leg Collider
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -635,7 +649,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5393543937875639934}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Arm Collider
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -670,7 +684,7 @@ GameObject:
   - component: {fileID: 7328419553029745564}
   - component: {fileID: 9219593705000371998}
   - component: {fileID: 7781070645565734634}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Front Leg Collider
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -750,7 +764,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1434680548536815315}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Rotation Targeter
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -782,7 +796,7 @@ GameObject:
   - component: {fileID: 7147067420780265804}
   - component: {fileID: 7983453626436929705}
   - component: {fileID: 6889150811345144746}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Placement Collider
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -846,7 +860,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5851538331112331812}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Elevation Targeter
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -879,7 +893,7 @@ GameObject:
   - component: {fileID: 6532647471815162122}
   - component: {fileID: 3845462663364875076}
   - component: {fileID: 5245646542437450650}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Body Collider
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -968,7 +982,7 @@ GameObject:
   - component: {fileID: 2907905751649608173}
   - component: {fileID: 6280456990488007986}
   - component: {fileID: 8551197441184960373}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Barrel Model
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -1045,7 +1059,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3455601484792482889}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Barrel Tip
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -1078,7 +1092,7 @@ GameObject:
   - component: {fileID: 7919812280877667556}
   - component: {fileID: 5747407953040792196}
   - component: {fileID: 4003729136528240409}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Right Leg Collider
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -1158,7 +1172,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4031274663492664482}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Arm Model Pivot
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -1262,6 +1276,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TagString
       value: Building
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 19b46225064d3304881e9378633495c0,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 19b46225064d3304881e9378633495c0, type: 3}
