@@ -16,11 +16,17 @@ public class AlienClaw : MonoBehaviour
 	private void OnTriggerEnter(Collider collidedWith)
 	{
 		Health damageable = collidedWith.GetComponent<Health>();
-		if (damageable != null)
+		if (damageable == null)
 		{
-			damageable.TakeDamage(damage, alienActor);
-			gameObject.SetActive(false);
-			//Debug.Log(damageable + " " + damageable.CurrentHealth);
+			damageable = collidedWith.transform.parent.GetComponent<Health>();
+		} else if (damageable == null)
+		{
+			Debug.Log("None");
+			return;
 		}
+		AudioManager.Instance.PlaySound(AudioManager.ESound.Damage_To_Building, this.gameObject);
+		damageable.TakeDamage(damage, alienActor);
+		gameObject.SetActive(false);
+		Debug.Log(damageable + " " + damageable.CurrentHealth);
 	}
 }
