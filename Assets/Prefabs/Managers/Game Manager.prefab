@@ -15,7 +15,6 @@ GameObject:
   - component: {fileID: 6577456260396280564}
   - component: {fileID: 8421924202713650533}
   - component: {fileID: 6577456260396280566}
-  - component: {fileID: 6227503964386302997}
   - component: {fileID: 6577456260396280555}
   - component: {fileID: 5301063456322420980}
   - component: {fileID: 3892250182970023661}
@@ -109,7 +108,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   respawnDelay: 30
-  tutorialSwarmCentre: {x: 0, y: 0, z: 0}
+  tutorialSwarmCentre: {x: 86, y: 5, z: 100}
   maxSwarmRadius: 5
   maxSwarmSize: 2
   maxSwarmCount: 5
@@ -173,20 +172,6 @@ MonoBehaviour:
   - {fileID: 0}
   winAmount: 500
   terraformers: []
---- !u!114 &6227503964386302997
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6577456260396280556}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c0232d8ae4acaf43bbc96ed37d4c40d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  uiManager: {fileID: 0}
-  goMessage: {fileID: 0}
 --- !u!114 &6577456260396280555
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -242,7 +227,8 @@ MonoBehaviour:
   zMax: 200
   innerBottomLeft: {x: 60, y: 0, z: 60}
   innerTopRight: {x: 140, y: 0, z: 140}
-  alienSpawnablePositions: []
+  tutorialBottomLeft: {x: 85, y: 0, z: 85}
+  tutorialTopRight: {x: 115, y: 0, z: 115}
 --- !u!114 &4650057477837480150
 MonoBehaviour:
   m_ObjectHideFlags: 0

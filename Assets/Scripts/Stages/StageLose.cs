@@ -3,18 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// The stage of the game where the player is just left to do their own thing and play the game.
+/// The stage of the game that is triggered if the player loses.
 /// </summary>
-public class StageGameOver : Stage
+public class StageLose : Stage
 {
+    //Private Fields---------------------------------------------------------------------------------------------------------------------------------
+
+    //Serialized Fields----------------------------------------------------------------------------
+
+    [SerializeField] private GameObject uiManager;
+    [SerializeField] private GOMessageController goMessage;
+
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
     //Singleton Public Property----------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
-    /// StageGameOver's singleton public property.
+    /// StageLose's singleton public property.
     /// </summary>
-    public StageGameOver Instance { get; protected set; }
+    public StageLose Instance { get; protected set; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -30,7 +37,7 @@ public class StageGameOver : Stage
         }
 
         Instance = this;
-        id = EStage.GameOver;
+        id = EStage.Lose;
         base.Awake();
     }
 
@@ -53,7 +60,8 @@ public class StageGameOver : Stage
     /// </note>
     protected override IEnumerator Execution()
     {
-        Debug.Log($"{this} not implemented.");
+        goMessage.SetText(false);
+        uiManager.GetComponent<UIAppearScript>().ToggleVisibility();
         yield return null;
     }
 }

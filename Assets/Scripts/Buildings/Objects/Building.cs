@@ -275,7 +275,7 @@ public class Building : CollisionListener
     {
 		if (buildingType != EBuilding.CryoEgg && animator.enabled)
 		{
-			animator.SetFloat("Health", health.Value);
+			animator.SetFloat("Health", health.CurrentHealth);
 			animator.SetBool("Operational", operational);
 		}
     }

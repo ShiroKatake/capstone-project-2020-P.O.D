@@ -18,6 +18,7 @@ public class Health : MonoBehaviour
 	//Non-Serialized Fields------------------------------------------------------------------------
 
 	private Actor actor;
+    private float currentHealth;
 
 	//Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -27,18 +28,16 @@ public class Health : MonoBehaviour
 	public UnityAction<float> onHealed;
 	public UnityAction onDie;
 
-	public float CurrentHealth { get; set; }
-
 	/// <summary>
-	/// How much health, durability, etc. something currently has.
+	/// How much health, durability, etc. this entity currently has.
 	/// </summary>
-	public float Value
+	public float CurrentHealth
     {
-        get => CurrentHealth; //set => health = value;
+        get => currentHealth; //set => health = value;
 
         set
         {
-			CurrentHealth = value;
+			currentHealth = value;
             //Debug.Log($"{gameObject.name}'s health updated to {health}");
         }
     }
@@ -51,7 +50,7 @@ public class Health : MonoBehaviour
     /// </summary>
     private void Awake()
     {
-		CurrentHealth = maxHealth;
+		currentHealth = maxHealth;
 		actor = GetComponent<Actor>();
 	}
 
@@ -65,18 +64,14 @@ public class Health : MonoBehaviour
 	public void TakeDamage(float amount, Actor attackerActor)
 	{
         //Friendly fire OFF: If the attacker does not have the same tag as this object, take damage from the attacker
-        Debug.Log($"{this}.Health.TakeDamage(), actor: {actor}");
-        Debug.Log($"{this}.Health.TakeDamage(), actor.Affiliation: {actor.Affiliation}");
-        Debug.Log($"{this}.Health.TakeDamage(), attackerActor: {attackerActor}");
-        Debug.Log($"{this}.Health.TakeDamage(), attackerActor.Affiliation: {attackerActor.Affiliation}");
 		if (actor.Affiliation != attackerActor.Affiliation)
 		{
-			float healthBefore = CurrentHealth;
-			CurrentHealth -= amount;
-			CurrentHealth = Mathf.Clamp(CurrentHealth, 0f, maxHealth);
+			float healthBefore = currentHealth;
+			currentHealth -= amount;
+			currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
 
 			//If the object has taken damage, do damage related stuffs (ie. animations, sounds, etc)
-			float trueDamageAmount = healthBefore - CurrentHealth;
+			float trueDamageAmount = healthBefore - currentHealth;
 			if (trueDamageAmount > 0f && onDamaged != null)
 			{
 				onDamaged.Invoke(trueDamageAmount, attackerActor.transform);
@@ -92,12 +87,12 @@ public class Health : MonoBehaviour
 	/// <param name="amount">The amount of healing to give.</param>
 	public void Heal(float amount)
 	{
-		float healthBefore = CurrentHealth;
-		CurrentHealth += amount;
-		CurrentHealth = Mathf.Clamp(CurrentHealth, 0f, maxHealth);
+		float healthBefore = currentHealth;
+		currentHealth += amount;
+		currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
 
 		//If the object has been healed, do heal related stuffs (ie. animations, sounds, etc)
-		float trueHealAmount = CurrentHealth - healthBefore;
+		float trueHealAmount = currentHealth - healthBefore;
 		if (trueHealAmount > 0f && onHealed != null)
 		{
 			onHealed.Invoke(trueHealAmount);
@@ -121,7 +116,7 @@ public class Health : MonoBehaviour
     /// <returns>Is the object this health class is a component of dead?</returns>
     public bool IsDead()
     {
-        return CurrentHealth <= 0;
+        return currentHealth <= 0;
     }
 
     /// <summary>
@@ -129,6 +124,6 @@ public class Health : MonoBehaviour
     /// </summary>
     public void Reset()
     {
-		CurrentHealth = maxHealth;
+		currentHealth = maxHealth;
     }
 }

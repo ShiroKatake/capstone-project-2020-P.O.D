@@ -13,5 +13,6 @@ public enum EStage
     Terraforming,
     Combat,
     MainGame,
-    GameOver
+    Win,
+    Lose
 }

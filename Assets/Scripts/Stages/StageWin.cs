@@ -3,18 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// The stage of the game where the player is just left to do their own thing and play the game.
+/// The stage of the game that is triggered if the player wins.
 /// </summary>
-public class StageMainGame: Stage
+public class StageWin : Stage
 {
+    //Private Fields---------------------------------------------------------------------------------------------------------------------------------
+
+    //Serialized Fields----------------------------------------------------------------------------
+
+    [SerializeField] private GameObject uiManager;
+    [SerializeField] private GOMessageController goMessage;
+
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
     //Singleton Public Property----------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
-    /// StageMAinGame's singleton public property.
+    /// StageWin's singleton public property.
     /// </summary>
-    public StageMainGame Instance { get; protected set; }
+    public StageWin Instance { get; protected set; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -30,7 +37,7 @@ public class StageMainGame: Stage
         }
 
         Instance = this;
-        id = EStage.MainGame;
+        id = EStage.Win;
         base.Awake();
     }
 
@@ -53,24 +60,8 @@ public class StageMainGame: Stage
     /// </note>
     protected override IEnumerator Execution()
     {
-        while (true)
-        {
-            if (EnvironmentalController.Instance.Win)
-            {
-                StageManager.Instance.SetStage(EStage.Win);
-                break;
-            }
-            else if (CryoEgg.Instance.Health.IsDead())
-            {
-                StageManager.Instance.SetStage(EStage.Lose);
-                break;
-            }
-            else
-            {
-                yield return null;
-            }
-        }
-
-        Debug.Log("StageMainGame finished executing");
+        goMessage.SetText(true);
+        uiManager.GetComponent<UIAppearScript>().ToggleVisibility();
+        yield return null;
     }
 }
