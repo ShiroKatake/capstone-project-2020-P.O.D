@@ -109,8 +109,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   respawnDelay: 30
   maxSwarmRadius: 5
+  aliensPerSwarm: 2
+  maxSwarmCount: 4
   maxSwarmSize: 2
-  maxSwarmCount: 5
   defencePenaltyThreshold: 300
   nonDefencePenaltyThreshold: 300
   penaltyIncrement: 3
@@ -328,7 +329,7 @@ MonoBehaviour:
   ore: 200
   powerConsumption: 0
   powerSupply: 100
-  waterConsumption: 0
-  waterSupply: 100
   wasteConsumption: 0
   wasteSupply: 0
+  waterConsumption: 0
+  waterSupply: 100
