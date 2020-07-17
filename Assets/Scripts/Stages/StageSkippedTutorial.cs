@@ -61,7 +61,6 @@ public class StageSkippedTutorial : Stage
 
         Instance = this;
         id = EStage.SkippedTutorial;
-        base.Awake();
     }
 
     /// <summary>

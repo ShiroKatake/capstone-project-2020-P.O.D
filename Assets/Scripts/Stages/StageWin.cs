@@ -38,7 +38,6 @@ public class StageWin : Stage
 
         Instance = this;
         id = EStage.Win;
-        base.Awake();
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------

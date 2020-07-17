@@ -38,7 +38,6 @@ public class StageLose : Stage
 
         Instance = this;
         id = EStage.Lose;
-        base.Awake();
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------

@@ -47,7 +47,6 @@ public class StageCombat : Stage
 
         Instance = this;
         id = EStage.Combat;
-        base.Awake();
     }
 
     /// <summary>

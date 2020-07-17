@@ -53,7 +53,6 @@ public class StageControls : Stage
 
         Instance = this;
         id = EStage.Controls;
-        base.Awake();
     }
 
     /// <summary>

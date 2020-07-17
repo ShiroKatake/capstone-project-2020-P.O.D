@@ -67,7 +67,6 @@ public class StageTerraforming : Stage
 
         Instance = this;
         id = EStage.Terraforming;
-        base.Awake();
     }
 
     /// <summary>

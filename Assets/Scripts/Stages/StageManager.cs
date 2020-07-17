@@ -113,16 +113,6 @@ public class StageManager : MonoBehaviour
         currentStage.StartExecution();
     }
 
-    //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
-
-    ///// <summary>
-    ///// Update() is run every frame.
-    ///// </summary>
-    //private void Update()
-    //{
-    //    currentStage.Execute();
-    //}
-
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>

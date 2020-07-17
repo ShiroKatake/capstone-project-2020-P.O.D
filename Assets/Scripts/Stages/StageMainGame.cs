@@ -31,7 +31,6 @@ public class StageMainGame: Stage
 
         Instance = this;
         id = EStage.MainGame;
-        base.Awake();
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
@@ -70,7 +69,5 @@ public class StageMainGame: Stage
                 yield return null;
             }
         }
-
-        Debug.Log("StageMainGame finished executing");
     }
 }
