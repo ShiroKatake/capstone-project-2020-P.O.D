@@ -64,7 +64,11 @@ public class Health : MonoBehaviour
 	/// <param name="attackerActor">The attacker who did damage.</param>
 	public void TakeDamage(float amount, Actor attackerActor)
 	{
-		//Friendly fire OFF: If the attacker does not have the same tag as this object, take damage from the attacker
+        //Friendly fire OFF: If the attacker does not have the same tag as this object, take damage from the attacker
+        Debug.Log($"{this}.Health.TakeDamage(), actor: {actor}");
+        Debug.Log($"{this}.Health.TakeDamage(), actor.Affiliation: {actor.Affiliation}");
+        Debug.Log($"{this}.Health.TakeDamage(), attackerActor: {attackerActor}");
+        Debug.Log($"{this}.Health.TakeDamage(), attackerActor.Affiliation: {attackerActor.Affiliation}");
 		if (actor.Affiliation != attackerActor.Affiliation)
 		{
 			float healthBefore = CurrentHealth;

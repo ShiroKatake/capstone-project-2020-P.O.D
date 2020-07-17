@@ -15,6 +15,8 @@ public class ToolTips : MonoBehaviour
     [SerializeField] private float offsetX = 0f;
     [SerializeField] private float offsetY = 0f;
 
+    [SerializeField] private bool printPosition;
+
     private bool test = false;
     public enum Etooltips
     {
@@ -77,14 +79,17 @@ public class ToolTips : MonoBehaviour
         {
             Vector3 totalOffset = new Vector3(offsetX, offsetY, 0);
             RectTransformUtility.ScreenPointToLocalPointInRectangle(transform.parent.GetComponent<RectTransform>(), (Input.mousePosition + totalOffset), uiCamera, out localPoint);
-          
+
         }
         else
         {
             Vector2 newlocation = new Vector2(Location.position.x + offsetX, Location.position.y + offsetY);
             RectTransformUtility.ScreenPointToLocalPointInRectangle(transform.parent.GetComponent<RectTransform>(), newlocation, uiCamera, out localPoint);
-         
-            Debug.Log(localPoint);
+
+            if (printPosition)
+            {
+                Debug.Log(localPoint);
+            }
         }
 
         transform.localPosition = localPoint;

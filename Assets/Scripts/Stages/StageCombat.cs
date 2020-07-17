@@ -11,7 +11,7 @@ public class StageCombat : Stage
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
     //Serialized Fields----------------------------------------------------------------------------
-
+    
     [SerializeField] private UIElementStatusController shotgunTurret;
     [SerializeField] private UIElementStatusController machineGunTurret;
     [SerializeField] private UIElementStatusController turretsHighlight;

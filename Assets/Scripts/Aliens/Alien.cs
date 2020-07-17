@@ -118,7 +118,6 @@ public class Alien : MonoBehaviour, IMessenger
         target = CryoEgg.Instance.ColliderTransform;
         targetHealth = CryoEgg.Instance.GetComponent<Health>();
         timeOfLastAttack = attackCooldown * -1;
-        moving = true;
         MessageDispatcher.Instance.Subscribe("Alien", this);
 
         //Rotate to face the Cryo egg
@@ -130,7 +129,11 @@ public class Alien : MonoBehaviour, IMessenger
             c.enabled = true;
         }
 
-        navMeshAgent.enabled = true;
+        if (StageManager.Instance.CurrentStage.ID == EStage.MainGame)
+        {
+            navMeshAgent.enabled = true;
+            moving = true;
+        }
     }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------

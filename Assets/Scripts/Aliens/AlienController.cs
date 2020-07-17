@@ -216,12 +216,13 @@ public class AlienController : MonoBehaviour
             {
                 spawnCountPenalty += penaltyIncrement;
                 timeOfLastPenalty = Time.time;
-                Debug.Log($"AlienController.spawnCountPenalty incremented to {spawnCountPenalty}");
+                //Debug.Log($"AlienController.spawnCountPenalty incremented to {spawnCountPenalty}");
             }
 
             //Spawn aliens
             EStage currentStage = StageManager.Instance.CurrentStage.ID;
             int spawnCount = (currentStage == EStage.Combat ? 3 : BuildingController.Instance.BuildingCount * 3 + spawnCountPenalty);
+            //Debug.Log($"Current stage: {currentStage}, Spawn count: {spawnCount}");
             Vector3 swarmCentre = Vector3.zero; 
             int swarmSize = 0;                   
             int swarmRadius = 0;
@@ -244,7 +245,8 @@ public class AlienController : MonoBehaviour
                             return;
                         }
 
-                        swarmCentre = (currentStage == EStage.Combat ? tutorialSwarmCentre : MapController.Instance.RandomAlienSpawnablePos(new List<Vector3>(unavailablePositions.Keys)));
+                        swarmCentre = MapController.Instance.RandomAlienSpawnablePos(new List<Vector3>(unavailablePositions.Keys));     //RandomAlienSpawnablePos() checks the stage before selecting its list of normally available positions
+                        //Debug.Log($"Swarm centre: {swarmCentre}");
                         swarmRadius = 0;
                         swarmSize = 0;
                     }
@@ -256,18 +258,20 @@ public class AlienController : MonoBehaviour
                 int j = Random.Range(0, availableOffsets.Count);
                 Vector3 spawnPos = swarmCentre + availableOffsets[j] * offsetMultiplier;
                 availableOffsets.RemoveAt(j);
+                //Debug.Log($"spawnPos: {spawnPos}");
 
-                if (MapController.Instance.PositionAvailableForSpawning(spawnPos, true))
+                if (MapController.Instance.PositionAvailableForSpawning(spawnPos, true) || currentStage == EStage.Combat)
                 {
                     RaycastHit rayHit;
                     NavMeshHit navHit;
                     Physics.Raycast(spawnPos, Vector3.down, out rayHit, 25, groundLayerMask);
                     Alien alien = AlienFactory.Instance.GetAlien(new Vector3(spawnPos.x, rayHit.point.y, spawnPos.z));
                     alien.Setup(IdGenerator.Instance.GetNextId());
+                    //Debug.Log($"Spawned and set up {alien} at {alien.transform.position}");
 
                     if (NavMesh.SamplePosition(alien.transform.position, out navHit, 1, NavMesh.AllAreas))
                     {
-                        //Debug.Log($"Successful spawn at pos {alien.transform.position}");
+                        //Debug.Log($"Successfully spawned {alien} at pos {alien.transform.position}");
                         aliens.Add(alien);
                         swarmSize++;
                     }
