@@ -51,7 +51,7 @@ public class PlayerMovementController : MonoBehaviour
 
     //Other
     private Rewired.Player playerInputManager;
-    private bool gameOver;
+    private bool repsawn;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -92,8 +92,10 @@ public class PlayerMovementController : MonoBehaviour
         rigidbody = GetComponent<Rigidbody>();
         timeOfLastShot = shootCooldown * -1;
         defaultHoverHeight = transform.position.y;
-        gameOver = false;
+        repsawn = false;
         groundLayerMask = LayerMask.GetMask("Ground");
+
+		health.onDie += OnDie;
     }
 
     /// <summary>
@@ -152,7 +154,6 @@ public class PlayerMovementController : MonoBehaviour
     private void UpdateDrone()
     {
         audioListener.position = transform.position;
-        CheckHealth();
         Look();
         Move();
         CheckShooting();
@@ -161,17 +162,14 @@ public class PlayerMovementController : MonoBehaviour
     /// <summary>
     /// Checks the player's health and if they're still alive.
     /// </summary>
-    private void CheckHealth()
+    private void OnDie()
     {
-        if (health.IsDead())
-        {
-            Debug.Log("The player's health has reached 0. GAME OVER!!!");
-            AudioManager.Instance.PlaySound(AudioManager.ESound.Explosion, this.gameObject);
-            if (!gameOver)
-            {
-                MessageDispatcher.Instance.SendMessage("Alien", new Message(gameObject.name, "Player", this.gameObject, "Dead"));
-                gameOver = true;
-            }
+        if (!repsawn)
+		{
+			AudioManager.Instance.PlaySound(AudioManager.ESound.Explosion, this.gameObject);
+			Debug.Log("The player's health has reached 0. Respawn!!!");
+			MessageDispatcher.Instance.SendMessage("Alien", new Message(gameObject.name, "Player", this.gameObject, "Dead"));
+            repsawn = true;
         }
     }
 
