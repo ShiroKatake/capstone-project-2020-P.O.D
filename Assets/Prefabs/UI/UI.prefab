@@ -1,5 +1,40 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &86497187
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 86497188}
+  m_Layer: 5
+  m_Name: IceDrill Pointer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &86497188
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 86497187}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4541814358227564511}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -259.9, y: -386.7}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &652683185530462781
 GameObject:
   m_ObjectHideFlags: 0
@@ -113,6 +148,41 @@ RectTransform:
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 217.7998, y: 233.1}
   m_SizeDelta: {x: 72, y: 72}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &880532126959456768
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6483541837517650440}
+  m_Layer: 5
+  m_Name: Fusion_Pointer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &6483541837517650440
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 880532126959456768}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4541814358227564511}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -170.5, y: -386.7}
+  m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &978285987066695634
 GameObject:
@@ -1435,6 +1505,7 @@ GameObject:
   - component: {fileID: 4528282980658916503}
   - component: {fileID: 4528282980658916502}
   - component: {fileID: 4528282980658916501}
+  - component: {fileID: 5215971488961558995}
   - component: {fileID: 4528282980658916505}
   m_Layer: 5
   m_Name: Boiler
@@ -1567,6 +1638,17 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 5215971488961558995}
+          m_MethodName: tooltipON
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   - eventID: 1
     callback:
       m_PersistentCalls:
@@ -1584,6 +1666,17 @@ MonoBehaviour:
           m_CallState: 2
         - m_Target: {fileID: 4528282980658916501}
           m_MethodName: FillNormalise
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 5215971488961558995}
+          m_MethodName: tooltipOff
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -1618,6 +1711,19 @@ MonoBehaviour:
   fillPressed: {r: 0, g: 0, b: 0, a: 0}
   fillSelect: {r: 0, g: 0, b: 0, a: 0}
   fillDiabled: {r: 0, g: 0, b: 0, a: 0}
+--- !u!114 &5215971488961558995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4528282980658916499}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7759d7a6d8528e40a88e96cb66b6f84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selection: 3
 --- !u!114 &4528282980658916505
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2528,6 +2634,7 @@ GameObject:
   - component: {fileID: 4528282981065271663}
   - component: {fileID: 4528282981065271662}
   - component: {fileID: 4528282981065271661}
+  - component: {fileID: 4671366540628818556}
   - component: {fileID: 4528282981065271665}
   m_Layer: 5
   m_Name: FusionReactor
@@ -2660,6 +2767,17 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 4671366540628818556}
+          m_MethodName: tooltipON
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   - eventID: 1
     callback:
       m_PersistentCalls:
@@ -2677,6 +2795,17 @@ MonoBehaviour:
           m_CallState: 2
         - m_Target: {fileID: 4528282981065271661}
           m_MethodName: FillNormalise
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 4671366540628818556}
+          m_MethodName: tooltipOff
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -2711,6 +2840,19 @@ MonoBehaviour:
   fillPressed: {r: 0, g: 0, b: 0, a: 0}
   fillSelect: {r: 0, g: 0, b: 0, a: 0}
   fillDiabled: {r: 0, g: 0, b: 0, a: 0}
+--- !u!114 &4671366540628818556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4528282981065271659}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7759d7a6d8528e40a88e96cb66b6f84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selection: 1
 --- !u!114 &4528282981065271665
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2943,6 +3085,7 @@ GameObject:
   - component: {fileID: 4528282981183931575}
   - component: {fileID: 4528282981183931574}
   - component: {fileID: 4528282981183931573}
+  - component: {fileID: 8900142071182537673}
   - component: {fileID: 4528282981183931577}
   m_Layer: 5
   m_Name: GreenHouse
@@ -3075,6 +3218,17 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 8900142071182537673}
+          m_MethodName: tooltipON
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   - eventID: 1
     callback:
       m_PersistentCalls:
@@ -3092,6 +3246,17 @@ MonoBehaviour:
           m_CallState: 2
         - m_Target: {fileID: 4528282981183931573}
           m_MethodName: FillNormalise
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 8900142071182537673}
+          m_MethodName: tooltipOff
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -3126,6 +3291,19 @@ MonoBehaviour:
   fillPressed: {r: 0, g: 0, b: 0, a: 0}
   fillSelect: {r: 0, g: 0, b: 0, a: 0}
   fillDiabled: {r: 0, g: 0, b: 0, a: 0}
+--- !u!114 &8900142071182537673
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4528282981183931571}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7759d7a6d8528e40a88e96cb66b6f84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selection: 4
 --- !u!114 &4528282981183931577
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4432,6 +4610,7 @@ GameObject:
   - component: {fileID: 4528282982050965522}
   - component: {fileID: 4528282982050965521}
   - component: {fileID: 4528282982050965520}
+  - component: {fileID: 6492544841372595370}
   - component: {fileID: 4528282982050965524}
   m_Layer: 5
   m_Name: Incinerator
@@ -4564,6 +4743,17 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 6492544841372595370}
+          m_MethodName: tooltipON
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   - eventID: 1
     callback:
       m_PersistentCalls:
@@ -4581,6 +4771,17 @@ MonoBehaviour:
           m_CallState: 2
         - m_Target: {fileID: 4528282982050965520}
           m_MethodName: FillNormalise
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 6492544841372595370}
+          m_MethodName: tooltipOff
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -4615,6 +4816,19 @@ MonoBehaviour:
   fillPressed: {r: 0, g: 0, b: 0, a: 0}
   fillSelect: {r: 0, g: 0, b: 0, a: 0}
   fillDiabled: {r: 0, g: 0, b: 0, a: 0}
+--- !u!114 &6492544841372595370
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4528282982050965518}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7759d7a6d8528e40a88e96cb66b6f84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selection: 2
 --- !u!114 &4528282982050965524
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4864,6 +5078,7 @@ GameObject:
   - component: {fileID: 4528282982346513307}
   - component: {fileID: 4528282982346513306}
   - component: {fileID: 4528282982346513305}
+  - component: {fileID: 7759555678275795557}
   - component: {fileID: 4528282982346513309}
   m_Layer: 5
   m_Name: ShogunTurret
@@ -4996,6 +5211,17 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 7759555678275795557}
+          m_MethodName: tooltipON
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   - eventID: 1
     callback:
       m_PersistentCalls:
@@ -5013,6 +5239,17 @@ MonoBehaviour:
           m_CallState: 2
         - m_Target: {fileID: 4528282982346513305}
           m_MethodName: FillNormalise
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 7759555678275795557}
+          m_MethodName: tooltipOff
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -5047,6 +5284,19 @@ MonoBehaviour:
   fillPressed: {r: 0, g: 0, b: 0, a: 0}
   fillSelect: {r: 0, g: 0, b: 0, a: 0}
   fillDiabled: {r: 0, g: 0, b: 0, a: 0}
+--- !u!114 &7759555678275795557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4528282982346513303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7759d7a6d8528e40a88e96cb66b6f84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selection: 5
 --- !u!114 &4528282982346513309
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5146,6 +5396,7 @@ GameObject:
   - component: {fileID: 4528282982575996862}
   - component: {fileID: 4528282982575996861}
   - component: {fileID: 4528282982575996860}
+  - component: {fileID: 8495488869495948445}
   - component: {fileID: 4528282982575996800}
   m_Layer: 5
   m_Name: MachineGunTurret
@@ -5278,6 +5529,17 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 8495488869495948445}
+          m_MethodName: tooltipON
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   - eventID: 1
     callback:
       m_PersistentCalls:
@@ -5295,6 +5557,17 @@ MonoBehaviour:
           m_CallState: 2
         - m_Target: {fileID: 4528282982575996860}
           m_MethodName: FillNormalise
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 8495488869495948445}
+          m_MethodName: tooltipOff
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -5329,6 +5602,19 @@ MonoBehaviour:
   fillPressed: {r: 0, g: 0, b: 0, a: 0}
   fillSelect: {r: 0, g: 0, b: 0, a: 0}
   fillDiabled: {r: 0, g: 0, b: 0, a: 0}
+--- !u!114 &8495488869495948445
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4528282982575996858}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7759d7a6d8528e40a88e96cb66b6f84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selection: 6
 --- !u!114 &4528282982575996800
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5415,6 +5701,41 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &4646309012154604347
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6945623177078318875}
+  m_Layer: 5
+  m_Name: Boiler_Pointer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &6945623177078318875
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4646309012154604347}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4541814358227564511}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 35.5, y: -386.7}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &4960437434699722946
 GameObject:
   m_ObjectHideFlags: 0
@@ -5871,6 +6192,41 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &6113788523767180163
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4034267006943986454}
+  m_Layer: 5
+  m_Name: MachineGun_Pointer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &4034267006943986454
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6113788523767180163}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4541814358227564511}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 336.9, y: -386.7}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &6686679037577076009
 GameObject:
   m_ObjectHideFlags: 0
@@ -5944,6 +6300,41 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &7049068660592844913
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8024486340857416470}
+  m_Layer: 5
+  m_Name: Incinerator_Pointer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &8024486340857416470
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7049068660592844913}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4541814358227564511}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -49.7, y: -386.7}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &7337459301913204136
 GameObject:
   m_ObjectHideFlags: 0
@@ -6125,6 +6516,111 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &8046911217076103389
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2411153474214525636}
+  m_Layer: 5
+  m_Name: Shotgun_Pointer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2411153474214525636
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8046911217076103389}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4541814358227564511}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 248.4, y: -386.7}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &8494834869256148674
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 356139951663452637}
+  m_Layer: 5
+  m_Name: Ratio_Bar_Pointer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &356139951663452637
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8494834869256148674}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4541814358227564511}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -429.22, y: -479.7}
+  m_SizeDelta: {x: 182.15, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &9048051269059992634
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4013202484626221687}
+  m_Layer: 5
+  m_Name: Greenhouse_Pointer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &4013202484626221687
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9048051269059992634}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4541814358227564511}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 132.4, y: -386.7}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &1164706839
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6240,13 +6736,18 @@ PrefabInstance:
     - target: {fileID: 4765965728956551856, guid: 37c164347e2d41743b147c8738cdf05a,
         type: 3}
       propertyPath: m_Name
-      value: Tooltip 1
+      value: Tooltip_Controller
+      objectReference: {fileID: 0}
+    - target: {fileID: 5731308861872505446, guid: 37c164347e2d41743b147c8738cdf05a,
+        type: 3}
+      propertyPath: tooltipImages.Array.size
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5731308861872505446, guid: 37c164347e2d41743b147c8738cdf05a,
         type: 3}
       propertyPath: tooltipImages.Array.data[0].tooltipLocation
       value: 
-      objectReference: {fileID: 4528282980782118900}
+      objectReference: {fileID: 86497188}
     - target: {fileID: 5731308861872505446, guid: 37c164347e2d41743b147c8738cdf05a,
         type: 3}
       propertyPath: tooltipImages.Array.data[1].tooltipLocation
@@ -6282,6 +6783,12 @@ PrefabInstance:
       propertyPath: tooltipImages.Array.data[3].followMouse
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5731308861872505446, guid: 37c164347e2d41743b147c8738cdf05a,
+        type: 3}
+      propertyPath: tooltipImages.Array.data[0].Tip
+      value: 
+      objectReference: {fileID: 6170530557244104193, guid: a7c795d54d8db6b469cd67fb9ff3a362,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 37c164347e2d41743b147c8738cdf05a, type: 3}
 --- !u!224 &4541814358227564511 stripped
