@@ -17,21 +17,21 @@ public class StageTerraforming : Stage
     [Header("Building Buttons")]
     [SerializeField] private UIElementStatusController fusionReactor;
     [SerializeField] private UIElementStatusController iceDrill;
-    [SerializeField] private UIElementStatusController greenhouse;
     [SerializeField] private UIElementStatusController boiler;
+    [SerializeField] private UIElementStatusController greenhouse;
     [SerializeField] private UIElementStatusController incinerator;
 
     [Header("Progress/Ratio Bars")]
     [SerializeField] private UIElementStatusController progressBar;
-    [SerializeField] private UIElementStatusController biodiversityBar;
     [SerializeField] private UIElementStatusController humidityBar;
+    [SerializeField] private UIElementStatusController biodiversityBar;
     [SerializeField] private UIElementStatusController atmosphereBar;
 
     [Header("Highlights")]
     [SerializeField] private UIElementStatusController fusionReactorHighlight;
     [SerializeField] private UIElementStatusController iceDrillHighlight;
-    [SerializeField] private UIElementStatusController greenhouseHighlight;
     [SerializeField] private UIElementStatusController boilerHighlight;
+    [SerializeField] private UIElementStatusController greenhouseHighlight;
     [SerializeField] private UIElementStatusController incineratorHighlight;
     [SerializeField] private UIElementStatusController humidityBarHighlight;
     [SerializeField] private UIElementStatusController biodiversityBarHighlight;

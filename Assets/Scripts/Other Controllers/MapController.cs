@@ -60,6 +60,7 @@ public class MapController : MonoBehaviour
         availableAlienPositions = new bool[xMax + 1, zMax + 1];
         alienExclusionArea = new bool[xMax + 1, zMax + 1];
         alienSpawnablePositions = new List<Vector3>();
+        tutorialAlienSpawnablePositions = new List<Vector3>();
         groundLayerMask = LayerMask.GetMask("Ground");
     }
 

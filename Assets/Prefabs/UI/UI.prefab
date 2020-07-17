@@ -8440,13 +8440,13 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6686679037577076009}
-  m_LocalRotation: {x: 0.008726225, y: 0.008726225, z: -0.0000761528, w: 0.9999238}
+  m_LocalRotation: {x: 0.008726225, y: -0.008726225, z: 0.9999238, w: 0.0000761528}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4941037853461097782}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 1, y: 1, z: 0}
+  m_LocalEulerAnglesHint: {x: 1, y: 1, z: 180}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -9808,6 +9808,78 @@ MonoBehaviour:
   dismissable: 0
   appendDialogue: 0
   lerpTextInterval: 3
+--- !u!1 &8163616264821628048
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6635404531501214274}
+  - component: {fileID: 6891641915392552822}
+  - component: {fileID: 1100081560740661833}
+  m_Layer: 5
+  m_Name: TMP SubMeshUI [Consola SDF Material + LiberationSans SDF Atlas]
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &6635404531501214274
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8163616264821628048}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5182552681699755084}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &6891641915392552822
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8163616264821628048}
+  m_CullTransparentMesh: 0
+--- !u!114 &1100081560740661833
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8163616264821628048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 058cba836c1846c3aa1c5fd2e28aea77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_spriteAsset: {fileID: 0}
+  m_material: {fileID: 0}
+  m_sharedMaterial: {fileID: 0}
+  m_isDefaultMaterial: 0
+  m_padding: 11.25
+  m_canvasRenderer: {fileID: 6891641915392552822}
+  m_TextComponent: {fileID: 3165661137549049746}
+  m_materialReferenceIndex: 1
 --- !u!1 &8214989252231301460
 GameObject:
   m_ObjectHideFlags: 0
@@ -10094,13 +10166,14 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 6635404531501214274}
   m_Father: {fileID: 309306905708270137}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -2.399994}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &134764771085111940
@@ -10129,7 +10202,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Console: Test dialogue bla bla blah'
+  m_text: Test dialogue blah blah blah
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c2c88eab05e7543418bd8974a72f5885, type: 2}
   m_sharedMaterial: {fileID: 2700730227722313435, guid: c2c88eab05e7543418bd8974a72f5885,
@@ -10196,15 +10269,15 @@ MonoBehaviour:
   m_firstVisibleCharacter: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -95, y: -95, z: -95, w: -95}
+  m_margin: {x: -95, y: -96.125, z: -95, w: -96.125}
   m_textInfo:
     textComponent: {fileID: 3165661137549049746}
-    characterCount: 35
+    characterCount: 28
     spriteCount: 0
-    spaceCount: 5
-    wordCount: 6
+    spaceCount: 4
+    wordCount: 5
     linkCount: 0
-    lineCount: 2
+    lineCount: 1
     pageCount: 1
     materialCount: 1
   m_isUsingLegacyAnimationComponent: 0
@@ -10213,7 +10286,7 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_subTextObjects:
   - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 1100081560740661833}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -10362,7 +10435,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0.00048828125, y: -0.00024414062}
-  m_SizeDelta: {x: 300, y: 300}
+  m_SizeDelta: {x: 300, y: 302}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &6026503053087694700
 CanvasRenderer:
@@ -10841,6 +10914,91 @@ PrefabInstance:
       propertyPath: turretsHighlight
       value: 
       objectReference: {fileID: 3375868973159110995}
+    - target: {fileID: 4952588298347314997, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: uiBorder
+      value: 
+      objectReference: {fileID: 6861676443234600692}
+    - target: {fileID: 4952588298347314997, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: console
+      value: 
+      objectReference: {fileID: 4248151223148685886}
+    - target: {fileID: 4952588298347314997, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: buildingAndResourcesBar
+      value: 
+      objectReference: {fileID: 8281387120525931581}
+    - target: {fileID: 4952588298347314997, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: miniMap
+      value: 
+      objectReference: {fileID: 1241017726861422378}
+    - target: {fileID: 4952588298347314997, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: clock
+      value: 
+      objectReference: {fileID: 1955485796443818665}
+    - target: {fileID: 4952588298347314997, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: fusionReactor
+      value: 
+      objectReference: {fileID: 8811207533684519288}
+    - target: {fileID: 4952588298347314997, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: iceDrill
+      value: 
+      objectReference: {fileID: 2264462394696573834}
+    - target: {fileID: 4952588298347314997, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: boiler
+      value: 
+      objectReference: {fileID: 5076386399117365775}
+    - target: {fileID: 4952588298347314997, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: greenhouse
+      value: 
+      objectReference: {fileID: 4518618402418983237}
+    - target: {fileID: 4952588298347314997, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: incinerator
+      value: 
+      objectReference: {fileID: 1725697348948331295}
+    - target: {fileID: 4952588298347314997, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: shotgunTurret
+      value: 
+      objectReference: {fileID: 6777165961620252396}
+    - target: {fileID: 4952588298347314997, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: machineGunTurret
+      value: 
+      objectReference: {fileID: 7657444240278630611}
+    - target: {fileID: 4952588298347314997, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: progressBar
+      value: 
+      objectReference: {fileID: 123439877150901302}
+    - target: {fileID: 4952588298347314997, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: humidityBar
+      value: 
+      objectReference: {fileID: 1874430421438624971}
+    - target: {fileID: 4952588298347314997, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: biodiversityBar
+      value: 
+      objectReference: {fileID: 4872448788878292819}
+    - target: {fileID: 4952588298347314997, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: atmosphereBar
+      value: 
+      objectReference: {fileID: 3671729350069552769}
+    - target: {fileID: 7009541622833408660, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: skipTutorial
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7691648321688888052, guid: 7ec13c4878030604f886d212027c72e6,
         type: 3}
       propertyPath: uiBorderUIEC

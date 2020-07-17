@@ -7,6 +7,36 @@ using UnityEngine;
 /// </summary>
 public class StageSkippedTutorial : Stage
 {
+    //Private Fields---------------------------------------------------------------------------------------------------------------------------------
+
+    //Serialized Fields----------------------------------------------------------------------------
+
+    [Header("General UI")]
+    [SerializeField] private UIElementStatusController uiBorder;
+    [SerializeField] private UIElementStatusController console;
+    [SerializeField] private UIElementStatusController buildingAndResourcesBar;
+    [SerializeField] private UIElementStatusController miniMap;
+    [SerializeField] private UIElementStatusController clock;
+
+    [Header("Building Buttons")]
+    [SerializeField] private UIElementStatusController fusionReactor;
+    [SerializeField] private UIElementStatusController iceDrill;
+    [SerializeField] private UIElementStatusController boiler;
+    [SerializeField] private UIElementStatusController greenhouse;
+    [SerializeField] private UIElementStatusController incinerator;
+    [SerializeField] private UIElementStatusController shotgunTurret;
+    [SerializeField] private UIElementStatusController machineGunTurret;
+
+    [Header("Progress/Ratio Bars")]
+    [SerializeField] private UIElementStatusController progressBar;
+    [SerializeField] private UIElementStatusController humidityBar;
+    [SerializeField] private UIElementStatusController biodiversityBar;
+    [SerializeField] private UIElementStatusController atmosphereBar;
+
+    //Non-Serialized Fields------------------------------------------------------------------------
+
+    private DialogueBox consoleDB;
+
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
     //Singleton Public Property----------------------------------------------------------------------------------------------------------------------
@@ -34,6 +64,16 @@ public class StageSkippedTutorial : Stage
         base.Awake();
     }
 
+    /// <summary>
+    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
+    /// Start() runs after Awake().
+    /// </summary>
+    private void Start()
+    {
+        //Get all dialogue boxes, etc.
+        consoleDB = DialogueBoxManager.Instance.GetDialogueBox("Console");
+    }
+
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
@@ -53,7 +93,104 @@ public class StageSkippedTutorial : Stage
     /// </note>
     protected override IEnumerator Execution()
     {
-        Debug.Log($"{this} not implemented.");
-        yield return null;
+        //Switch the clock off
+        ClockController.Instance.Paused = true;
+        ClockController.Instance.SetTime(0);
+        yield return new WaitForSeconds(3);
+
+        //Enable UI
+        uiBorder.Visible = true;
+
+        while (!uiBorder.FinishedFlickeringIn)
+        {
+            yield return null;
+        }
+
+        console.Visible = true;
+        consoleDB.SubmitDialogue("blank", 0, false, false);
+
+        while (!console.FinishedFlickeringIn)
+        {
+            yield return null;
+        }
+
+        consoleDB.SubmitDialogue("system check", 0, false, false);
+        buildingAndResourcesBar.Visible = true;
+        miniMap.Visible = true;
+
+        while (!buildingAndResourcesBar.FinishedFlickeringIn || !miniMap.FinishedFlickeringIn || consoleDB.LerpingDialogue)
+        {
+            yield return null;
+        }
+
+        consoleDB.SubmitDialogue("initialising functions", 0, false, false);
+        ResourceTextManager.Instance.FadeIn();
+        clock.Visible = true;
+        //TODO: miniMapContent.Visible = true;
+
+        while (!clock.FinishedFlickeringIn /*|| !miniMapContent.FinishedFlickeringIn*/ || consoleDB.LerpingDialogue)
+        {
+            yield return null;
+        }
+
+        //Enable Building Buttons
+        ClockController.Instance.Paused = false;
+        consoleDB.SubmitDialogue("clock gps inventory online", 0, false, false);
+        fusionReactor.Visible = true;
+        yield return new WaitForSeconds(0.15f);
+        iceDrill.Visible = true;
+        yield return new WaitForSeconds(0.15f);
+        boiler.Visible = true;
+        yield return new WaitForSeconds(0.15f);
+        greenhouse.Visible = true;
+        yield return new WaitForSeconds(0.15f);
+        incinerator.Visible = true;
+        yield return new WaitForSeconds(0.15f);
+        shotgunTurret.Visible = true;
+        yield return new WaitForSeconds(0.15f);
+        machineGunTurret.Visible = true;
+
+        while (!fusionReactor.FinishedFlickeringIn 
+            || !iceDrill.FinishedFlickeringIn 
+            || !boiler.FinishedFlickeringIn
+            || !greenhouse.FinishedFlickeringIn
+            || !incinerator.FinishedFlickeringIn
+            || !shotgunTurret.FinishedFlickeringIn
+            || !machineGunTurret.FinishedFlickeringIn 
+            || consoleDB.LerpingDialogue
+        )
+        {
+            yield return null;
+        }
+
+        //Enable Progress/Ratio Bars
+        consoleDB.SubmitDialogue("buildings ready", 0, false, false);
+        progressBar.Visible = true;
+        yield return new WaitForSeconds(0.15f);
+        humidityBar.Visible = true;
+        yield return new WaitForSeconds(0.15f);
+        biodiversityBar.Visible = true;
+        yield return new WaitForSeconds(0.15f);
+        atmosphereBar.Visible = true;
+
+        while (!progressBar.FinishedFlickeringIn
+            || !humidityBar.FinishedFlickeringIn
+            || !biodiversityBar.FinishedFlickeringIn
+            || !atmosphereBar.FinishedFlickeringIn
+        )
+        {
+            yield return null;
+        }
+
+        //Begin Game
+        consoleDB.SubmitDialogue("begin game", 0, false, false);
+        fusionReactor.Interactable = true;
+        iceDrill.Interactable = true;
+        boiler.Interactable = true;
+        greenhouse.Interactable = true;
+        incinerator.Interactable = true;
+        shotgunTurret.Interactable = true;
+        machineGunTurret.Interactable = true;
+        StageManager.Instance.SetStage(EStage.MainGame);
     }
 }

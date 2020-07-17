@@ -215,6 +215,11 @@ public class DialogueBox : MonoBehaviour
     /// </summary>
     public string LastDialogueSet { get => lastDialogueKey; }
 
+    /// <summary>
+    /// Is text currently scrolling onto the dialogue box?
+    /// </summary>
+    public bool LerpingDialogue { get => !lerpFinished; }
+
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>

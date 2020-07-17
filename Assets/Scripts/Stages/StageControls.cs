@@ -106,6 +106,7 @@ public class StageControls : Stage
         }
 
         consoleUIEC.Visible = true;
+        console.SubmitDialogue("blank", 0, false, false);
 
         while (!consoleUIEC.FinishedFlickeringIn)
         {
