@@ -10,12 +10,15 @@ GameObject:
   m_Component:
   - component: {fileID: 8636725444475562949}
   - component: {fileID: 7009541622833408660}
+  - component: {fileID: 4952588298347314997}
   - component: {fileID: 7691648321688888052}
-  - component: {fileID: 3011167280432518999}
   - component: {fileID: 1629162378140240872}
+  - component: {fileID: 3011167280432518999}
   - component: {fileID: 8778031101374311301}
+  - component: {fileID: 6305260852210968538}
+  - component: {fileID: 6849662262458465755}
   m_Layer: 0
-  m_Name: StageManager
+  m_Name: Stage Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30,7 +33,7 @@ Transform:
   m_GameObject: {fileID: 2959021111598887537}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 100.1, y: 0.0000076293945, z: 100}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.9979252, y: 0.9979252, z: 0.9979252}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -48,7 +51,35 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skipTutorial: 0
-  firstStage: 1
+  firstStage: 2
+--- !u!114 &4952588298347314997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2959021111598887537}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8adcf6b50e65a14fa31115fa93011b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiBorder: {fileID: 0}
+  console: {fileID: 0}
+  buildingAndResourcesBar: {fileID: 0}
+  miniMap: {fileID: 0}
+  clock: {fileID: 0}
+  fusionReactor: {fileID: 0}
+  iceDrill: {fileID: 0}
+  boiler: {fileID: 0}
+  greenhouse: {fileID: 0}
+  incinerator: {fileID: 0}
+  shotgunTurret: {fileID: 0}
+  machineGunTurret: {fileID: 0}
+  progressBar: {fileID: 0}
+  humidityBar: {fileID: 0}
+  biodiversityBar: {fileID: 0}
+  atmosphereBar: {fileID: 0}
 --- !u!114 &7691648321688888052
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -61,18 +92,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a341c128c83dee478a4269f27e0e98c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &3011167280432518999
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2959021111598887537}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c0c8ff77f7e066449a6d1128f9c8978, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  uiBorderUIEC: {fileID: 0}
+  consoleUIEC: {fileID: 0}
+  buildingAndResourcesBarUIEC: {fileID: 0}
+  miniMapUIEC: {fileID: 0}
+  mineralsHighlightUIEC: {fileID: 0}
 --- !u!114 &1629162378140240872
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -85,6 +109,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63b431965b875ce4282bb0a4f3cb8448, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  clock: {fileID: 0}
+  fusionReactor: {fileID: 0}
+  iceDrill: {fileID: 0}
+  boiler: {fileID: 0}
+  greenhouse: {fileID: 0}
+  incinerator: {fileID: 0}
+  progressBar: {fileID: 0}
+  humidityBar: {fileID: 0}
+  biodiversityBar: {fileID: 0}
+  atmosphereBar: {fileID: 0}
+  fusionReactorHighlight: {fileID: 0}
+  iceDrillHighlight: {fileID: 0}
+  boilerHighlight: {fileID: 0}
+  greenhouseHighlight: {fileID: 0}
+  incineratorHighlight: {fileID: 0}
+  humidityBarHighlight: {fileID: 0}
+  biodiversityBarHighlight: {fileID: 0}
+  atmosphereBarHighlight: {fileID: 0}
+  ratioBarsHighlight: {fileID: 0}
+--- !u!114 &3011167280432518999
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2959021111598887537}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c0c8ff77f7e066449a6d1128f9c8978, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shotgunTurret: {fileID: 0}
+  machineGunTurret: {fileID: 0}
+  turretsHighlight: {fileID: 0}
 --- !u!114 &8778031101374311301
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -97,3 +155,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14efd187e82131246a9ec4b052e68434, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6305260852210968538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2959021111598887537}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fbf98a5a0dba8f44bcafc4eceb1ec0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiManager: {fileID: 0}
+  goMessage: {fileID: 0}
+--- !u!114 &6849662262458465755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2959021111598887537}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 178351f540fda2047add98bf6bc49e0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiManager: {fileID: 0}
+  goMessage: {fileID: 0}

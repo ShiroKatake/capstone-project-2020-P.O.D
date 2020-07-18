@@ -19,7 +19,6 @@ public class Alien : MonoBehaviour, IMessenger
 	[SerializeField] private AlienClaw alienWeapon;
 	[Header("Stats")] 
     [SerializeField] private int id;
-    //[SerializeField] private float hoverHeight;
     [SerializeField] private float attackRange;
     [SerializeField] private float damage;
     [SerializeField] private float attackCooldown;
@@ -34,18 +33,12 @@ public class Alien : MonoBehaviour, IMessenger
     private NavMeshAgent navMeshAgent;
     private Rigidbody rigidbody;
 	private Actor actor;
+
 	//Movement
 	private bool moving;
     private float speed;
-    //[SerializeField] private float zRotation;
-
-    //Turning
-    //private Quaternion oldRotation;
-    //private Quaternion targetRotation;
-    //private float slerpProgress;
     
     //Targeting
-    //private CryoEgg CryoEgg;
     private List<Transform> visibleAliens;
     private List<Transform> visibleTargets;
     [SerializeField] private Transform target;
@@ -55,17 +48,20 @@ public class Alien : MonoBehaviour, IMessenger
     [SerializeField] private Transform shotByTransform;
     private float timeOfLastAttack;
 
-	//Public Properties------------------------------------------------------------------------------------------------------------------------------
+    //Public Fields----------------------------------------------------------------------------------------------------------------------------------
 
-	//Basic Public Properties----------------------------------------------------------------------
-	public UnityAction onAttack;
-	public UnityAction onDamaged;
-	public UnityAction onDie;
+    public UnityAction onAttack;
+    public UnityAction onDamaged;
+    public UnityAction onDie;
 
-	/// <summary>
-	/// The colliders that comprise the alien's body.
-	/// </summary>
-	public List<Collider> BodyColliders { get => bodyColliders; }
+    //Public Properties------------------------------------------------------------------------------------------------------------------------------
+
+    //Basic Public Properties----------------------------------------------------------------------
+    
+    /// <summary>
+    /// The colliders that comprise the alien's body.
+    /// </summary>
+    public List<Collider> BodyColliders { get => bodyColliders; }
 
     /// <summary>
     /// Alien's Health component.
@@ -89,7 +85,6 @@ public class Alien : MonoBehaviour, IMessenger
         health = GetComponent<Health>();
 		navMeshAgent = GetComponent<NavMeshAgent>();
         rigidbody = GetComponent<Rigidbody>();
-        //zRotation = transform.rotation.eulerAngles.z;
 
         visibleAliens = new List<Transform>();
         visibleTargets = new List<Transform>();
@@ -118,7 +113,6 @@ public class Alien : MonoBehaviour, IMessenger
         target = CryoEgg.Instance.ColliderTransform;
         targetHealth = CryoEgg.Instance.GetComponent<Health>();
         timeOfLastAttack = attackCooldown * -1;
-        moving = true;
         MessageDispatcher.Instance.Subscribe("Alien", this);
 
         //Rotate to face the Cryo egg
@@ -130,7 +124,11 @@ public class Alien : MonoBehaviour, IMessenger
             c.enabled = true;
         }
 
-        navMeshAgent.enabled = true;
+        if (StageManager.Instance.CurrentStage.ID == EStage.MainGame)
+        {
+            navMeshAgent.enabled = true;
+            moving = true;
+        }
     }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
@@ -216,7 +214,6 @@ public class Alien : MonoBehaviour, IMessenger
         target = selectedTarget;
         targetHealth = target.GetComponentInParent<Health>();   //Gets Health from target or any of its parents that has it.
         targetSize = target.GetComponentInParent<Size>();   //Gets Radius from target or any of its parents that has it.
-        //Debug.Log($"{this} set target as {target}");
     }
 
     /// <summary>
@@ -416,8 +413,6 @@ public class Alien : MonoBehaviour, IMessenger
     {
         if (!other.isTrigger)
         {
-            //Debug.Log($"{this} detected {other} entering trigger collider");
-
             if (other.CompareTag("Alien"))
             {
                 visibleAliens.Add(other.transform);
@@ -432,7 +427,6 @@ public class Alien : MonoBehaviour, IMessenger
             }
             else if (other.CompareTag("Projectile"))
             {
-                Debug.Log("Alien.OnTriggerEnter; Alien hit by a projectile");
                 Projectile projectile = other.GetComponent<Projectile>();
                 shotByTransform = projectile.Owner.GetComponentInChildren<Collider>().transform;
             }
@@ -454,7 +448,6 @@ public class Alien : MonoBehaviour, IMessenger
             else if (visibleTargets.Contains(other.transform))
             {
                 visibleTargets.Remove(other.transform);
-                //Debug.Log($"{this} detected {other} exiting trigger collider");
             }
         }
     }

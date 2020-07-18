@@ -56,8 +56,6 @@ public class Building : CollisionListener
     [Header("Sound Library")]
     [SerializeField] private AudioManager.ESound idleSound;
 
-
-
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
     //Components
@@ -85,6 +83,7 @@ public class Building : CollisionListener
     [SerializeField] private bool active = false;
     private bool placed = false;
     [SerializeField] private bool operational = false;
+    private bool built;
     private float normalBuildTime;
     private bool boinging = false;
 
@@ -116,6 +115,11 @@ public class Building : CollisionListener
     /// How long this building takes to builds itself when the player places it in the scene. Should only be set by BuildingFactory.
     /// </summary>
     public float BuildTime { get => buildTime; set => buildTime = value; }
+
+    /// <summary>
+    /// Has the building been placed and been fully built?
+    /// </summary>
+    public bool Built { get => built; }
 
     /// <summary>
     /// The Building's Health component.
@@ -271,7 +275,7 @@ public class Building : CollisionListener
     {
 		if (buildingType != EBuilding.CryoEgg && animator.enabled)
 		{
-			animator.SetFloat("Health", health.Value);
+			animator.SetFloat("Health", health.CurrentHealth);
 			animator.SetBool("Operational", operational);
 		}
     }
@@ -435,8 +439,9 @@ public class Building : CollisionListener
     /// <summary>
     /// Handles what should happen once the building has been built.
     /// </summary>
-    public void Built()
+    public void FinishBuilding()
     {
+        built = true;
         Operational = true; //Using property to trigger activation of any resource collector component attached.
 
         if (turretShooter != null)
@@ -502,6 +507,7 @@ public class Building : CollisionListener
         placed = false; //Needs to occur first so that BuildingFoundations know to ignore this building
         active = false;
         colliding = false;
+        built = false;
 
         //TODO: reset animator? i.e. disable and set animation progress back to 0?
         animator.enabled = false;

@@ -8,9 +8,11 @@ using UnityEngine;
 public enum EStage
 {
     None,
+    SkippedTutorial,
     Controls,
     Terraforming,
     Combat,
-    FinishedTutorial,
-    GameOver
+    MainGame,
+    Win,
+    Lose
 }

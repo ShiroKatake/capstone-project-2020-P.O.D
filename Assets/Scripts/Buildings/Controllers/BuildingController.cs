@@ -86,7 +86,6 @@ public class BuildingController : MonoBehaviour
     {
         foreach (Building b in buildings)
         {
-            ExecuteBuildingBehaviour(b);
             CheckBuildingHealth(b);
         }
 
@@ -95,25 +94,10 @@ public class BuildingController : MonoBehaviour
 
     //Recurring Methods (Update())------------------------------------------------------------------------------------------------------------------  
 
-    private void ExecuteBuildingBehaviour(Building building)
-    {
-        switch (building.BuildingType)
-        {
-            case EBuilding.ShortRangeTurret:
-                ShortRangeTurretBehaviour.Instance.Execute(building);
-                break;
-            case EBuilding.LongRangeTurret:
-                LongRangeTurretBehaviour.Instance.Execute(building);
-                break;
-            default:
-                return;
-        }
-    }
-
     /// <summary>
     /// Checks the building's health, and passes it to BuildingFactory to be destroyed if it falls below 0.
-    /// <param name="building">The building whose health is being checked.</param>
     /// </summary>
+    /// <param name="building">The building whose health is being checked.</param>
     private void CheckBuildingHealth(Building building)
     {
         if (building.Health.IsDead() && building.BuildingType != EBuilding.CryoEgg)
@@ -138,9 +122,27 @@ public class BuildingController : MonoBehaviour
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
-    /// Registers a Building with BuildingController. BuildingController adds it to its list of Buildings in the scene.
-    /// <param name="building">The building being registered with BuildingController.</param>
+    /// Checks if a building of the specified type has been placed and built.
     /// </summary>
+    /// <param name="buildingType">The type of building you want to check for.</param>
+    /// <returns>Whether a building of the specified type has been placed and built.</returns>
+    public bool HasBuiltBuilding(EBuilding buildingType)
+    {
+        foreach (Building b in buildings)
+        {
+            if (b.BuildingType == buildingType && b.Built)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Registers a Building with BuildingController. BuildingController adds it to its list of Buildings in the scene.
+    /// </summary>
+    /// <param name="building">The building being registered with BuildingController.</param>
     public void RegisterBuilding(Building building)
     {
         if (!buildings.Contains(building))
@@ -161,8 +163,8 @@ public class BuildingController : MonoBehaviour
 
     /// <summary>
     /// De-registers a Building from BuildingController. BuildingController removes it from its list of Buildings in a scene.
-    /// <param name="building">The building being de-registered from BuildingController.</param>
     /// </summary>
+    /// <param name="building">The building being de-registered from BuildingController.</param>
     public void DeRegisterBuilding(Building building)
     {
         if (buildings.Contains(building))

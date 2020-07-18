@@ -14,11 +14,13 @@ public class BuildingSpawningController : MonoBehaviour
 
     [SerializeField] private bool printInputs;
     [SerializeField] private Camera camera;
+    
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
     //Building fields
     private EBuilding selectedBuildingType;
+    private ToolTips.Etooltips tooltip;
     private Building heldBuilding;
     private Vector3 rawBuildingMovement;
 
@@ -146,6 +148,9 @@ public class BuildingSpawningController : MonoBehaviour
             {
                 heldBuilding = BuildingFactory.Instance.GetBuilding(selectedBuildingType);
                 heldBuilding.transform.position = MousePositionToBuildingPosition(transform.position, heldBuilding.Size.DiameterRoundedUp);
+                ChangeTooltip(selectedBuildingType);
+                ToolTips.showTooltip_Static(tooltip);
+                // put tooltip spawn here
             }
             //Instantiate the appropriate building and postion it properly, replacing the old one.
             else if (heldBuilding.BuildingType != selectedBuildingType)
@@ -155,6 +160,11 @@ public class BuildingSpawningController : MonoBehaviour
                 BuildingFactory.Instance.DestroyBuilding(heldBuilding, false, false);
                 heldBuilding = BuildingFactory.Instance.GetBuilding(selectedBuildingType);
                 heldBuilding.transform.position = pos;
+
+                ChangeTooltip(selectedBuildingType);
+                ToolTips.hideToolTip_Static();
+                ToolTips.showTooltip_Static(tooltip);
+                // hide and then show new tooltip
             }
             else //Move the building where you want it
             {
@@ -168,6 +178,8 @@ public class BuildingSpawningController : MonoBehaviour
             //Place it or cancel building it
             if (placeBuilding && resourcesAvailable && placementValid)
             {
+                ToolTips.hideToolTip_Static();
+
                 Vector3 spawnPos = heldBuilding.transform.position;
                 spawnPos.y = 0.02f;
                 PipeManager.Instance.RegisterPipeBuilding(spawnPos);
@@ -181,6 +193,8 @@ public class BuildingSpawningController : MonoBehaviour
             }
             else if (cancelBuilding || (placeBuilding && (!resourcesAvailable || !placementValid)))
             {
+                ToolTips.hideToolTip_Static();
+
                 if (placeBuilding)
                 {
                     AudioManager.Instance.PlaySound(AudioManager.ESound.Negative_UI);
@@ -326,5 +340,23 @@ public class BuildingSpawningController : MonoBehaviour
             && ResourceController.Instance.PowerSupply >= ResourceController.Instance.PowerConsumption + heldBuilding.PowerConsumption
             && ResourceController.Instance.WasteSupply >= ResourceController.Instance.WasteConsumption + heldBuilding.WasteConsumption
             && ResourceController.Instance.WaterSupply >= ResourceController.Instance.WaterConsumption + heldBuilding.WaterConsumption;
+    }
+
+    private void ChangeTooltip(EBuilding selectedbuilding)
+    {
+        if (selectedbuilding == EBuilding.FusionReactor)
+            tooltip = ToolTips.Etooltips.FusionReactor;
+        if (selectedbuilding == EBuilding.IceDrill)
+            tooltip = ToolTips.Etooltips.IceDrill;
+        if (selectedbuilding == EBuilding.Greenhouse)
+            tooltip = ToolTips.Etooltips.Greenhouse;
+        if (selectedbuilding == EBuilding.Boiler)
+            tooltip = ToolTips.Etooltips.Boilier;
+        if (selectedbuilding == EBuilding.Incinerator)
+            tooltip = ToolTips.Etooltips.Incinorator;
+        if (selectedbuilding == EBuilding.ShortRangeTurret)
+            tooltip = ToolTips.Etooltips.Shotgun;
+        if (selectedbuilding == EBuilding.LongRangeTurret)
+            tooltip = ToolTips.Etooltips.MachineGun;
     }
 }
