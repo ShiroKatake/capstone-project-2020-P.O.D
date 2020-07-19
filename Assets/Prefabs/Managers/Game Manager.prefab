@@ -116,6 +116,7 @@ MonoBehaviour:
   nonDefencePenaltyThreshold: 300
   penaltyIncrement: 3
   penaltyCooldown: 90
+  spawningFrameTimeLimit: 5
   spawnAliens: 1
   spawnAlienNow: 0
   ignoreDayNightCycle: 0
@@ -172,6 +173,10 @@ MonoBehaviour:
   - {fileID: 0}
   winAmount: 500
   terraformers: []
+  AtmosphereVal: 0
+  HumidityVal: 0
+  BiodiversityVal: 0
+  TotalVal: 0
 --- !u!114 &6577456260396280555
 MonoBehaviour:
   m_ObjectHideFlags: 0

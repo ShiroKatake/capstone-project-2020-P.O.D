@@ -47,14 +47,10 @@ public class AlienController : MonoBehaviour
 
     //Alien Spawning Per-Frame Optimisation
     System.Diagnostics.Stopwatch loopStopwatch;
-    System.Diagnostics.Stopwatch methodStopwatch;
-    long spawnAliensTickBudget;
 
     //Penalty Incrementation
     private int spawnCountPenalty;
     private float timeOfLastPenalty;
-
-    private int yieldPerFrame;
 
     //PublicProperties-------------------------------------------------------------------------------------------------------------------------------
 
@@ -84,7 +80,7 @@ public class AlienController : MonoBehaviour
     {
         if (Instance != null)
         {
-            UnityEngine.Debug.LogError("There should never be 2 or more AlienControllers.");
+            Debug.LogError("There should never be 2 or more AlienControllers.");
         }
 
         Instance = this;
@@ -98,8 +94,6 @@ public class AlienController : MonoBehaviour
 
         //Setting up spawning optimisation variables
         loopStopwatch = new System.Diagnostics.Stopwatch();
-        methodStopwatch = new System.Diagnostics.Stopwatch();
-        //spawnAliensTickBudget = (long)(System.Diagnostics.Stopwatch.Frequency * spawningFrameTimeLimit / 1000f);
 
         //Setting up position offsets that can be randomly selected from for cluster spawning 
         swarmOffsets = new Dictionary<int, List<Vector3>>();
@@ -126,8 +120,6 @@ public class AlienController : MonoBehaviour
                 }
             }
         }
-
-        yieldPerFrame = 0;
     }
 
 
@@ -139,12 +131,6 @@ public class AlienController : MonoBehaviour
         StartCoroutine(SpawnAliens());
     }
 
-    private void Update()
-    {
-        Debug.Log($"Yields last frame: {yieldPerFrame}");
-        yieldPerFrame = 0;
-    }
-
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
     
     /// <summary>
@@ -152,11 +138,8 @@ public class AlienController : MonoBehaviour
     /// </summary>
     private IEnumerator SpawnAliens()
     {
-        Debug.Log("Starting coroutine SpawnAliens");
-
         while (StageManager.Instance == null || StageManager.Instance.CurrentStage == null)
         {
-            yieldPerFrame++;
             yield return null;
         }
 
@@ -167,7 +150,6 @@ public class AlienController : MonoBehaviour
                 && aliens.Count == 0 
                 && Time.time - timeOfLastDeath > respawnDelay)
             {
-                Debug.Log("Starting Spawning Aliens");
                 //Reset start time
                 loopStopwatch.Restart();
 
@@ -188,15 +170,12 @@ public class AlienController : MonoBehaviour
                 float offsetMultiplier = 2;
                 List<Vector3> availableOffsets = new List<Vector3>();
                 List<Vector3> availablePositions = MapController.Instance.GetAlienSpawnablePositions();
-                //Dictionary<Vector3, bool> unavailablePositions = new Dictionary<Vector3, bool>();
 
-                //for (int i = 0; i < spawnCount; i++)
-                for (int i = 0; i < 100; i++)
+                for (int i = 0; i < spawnCount; i++)
+                //for (int i = 0; i < 100; i++)
                 {
                     if (loopStopwatch.ElapsedMilliseconds >= spawningFrameTimeLimit)
                     {
-                        Debug.Log($"Spawning time limit per frame: {spawnAliensTickBudget}, elapsed milliseconds: {loopStopwatch.ElapsedMilliseconds}, yielding for this frame from start of spawning main loop");
-                        yieldPerFrame++;
                         yield return null;
                         loopStopwatch.Restart();
                     }
@@ -207,15 +186,12 @@ public class AlienController : MonoBehaviour
                         {
                             swarmCount++;
 
-                            if (swarmCount >= maxSwarmCount)
+                            if (swarmCount >= maxSwarmCount || availablePositions.Count == 0)
                             {
                                 break;
                             }
 
-                            methodStopwatch.Restart();
-                            //swarmCentre = MapController.Instance.RandomAlienSpawnablePos(new List<Vector3>(unavailablePositions.Keys));     //RandomAlienSpawnablePos() checks the stage before selecting its list of normally available positions
                             swarmCentre = GetRandomPosition(availablePositions);
-                            Debug.Log($"Method stop watch timing MapController.Instance.RandomAlienSpawnablePos(), elapsed milliseconds: {methodStopwatch.ElapsedMilliseconds}");
                             swarmRadius = 0;
                             swarmSize = 0;
                         }
@@ -228,97 +204,49 @@ public class AlienController : MonoBehaviour
                     Vector3 spawnPos = swarmCentre + availableOffsets[j] * offsetMultiplier;
                     availableOffsets.RemoveAt(j);
 
-                    methodStopwatch.Restart();
                     if (MapController.Instance.PositionAvailableForSpawning(spawnPos, true) || currentStage == EStage.Combat)
                     {
-                        Debug.Log($"Method stop watch timing MapController.Instance.PositionAvailableForSpawning() on returns true or bypassed, elapsed milliseconds: {methodStopwatch.ElapsedMilliseconds}");
                         RaycastHit rayHit;
                         NavMeshHit navHit;
-
-                        methodStopwatch.Restart();
                         Physics.Raycast(spawnPos, Vector3.down, out rayHit, 25, groundLayerMask);
-                        Debug.Log($"Method stop watch timing Physics.Raycast(), elapsed milliseconds: {methodStopwatch.ElapsedMilliseconds}");
-
-                        methodStopwatch.Restart();
                         Alien alien = AlienFactory.Instance.GetAlien(new Vector3(spawnPos.x, rayHit.point.y, spawnPos.z));
-                        Debug.Log($"Method stop watch timing AlienFactory.Instance.GetAlien(), elapsed milliseconds: {methodStopwatch.ElapsedMilliseconds}");
-
-                        methodStopwatch.Restart();
                         alien.Setup(IdGenerator.Instance.GetNextId());
-                        Debug.Log($"Method stop watch timing Alien.Setup(), elapsed milliseconds: {methodStopwatch.ElapsedMilliseconds}");
 
-                        methodStopwatch.Restart();
                         if (NavMesh.SamplePosition(alien.transform.position, out navHit, 1, NavMesh.AllAreas))
                         {
-                            Debug.Log($"Method stop watch timing NavMesh.SamplePosition() on returned true, elapsed milliseconds: {methodStopwatch.ElapsedMilliseconds}");
                             aliens.Add(alien);
                             swarmSize++;
                         }
                         else
                         {
-                            Debug.Log($"Method stop watch timing NavMesh.SamplePosition() on returned false, elapsed milliseconds: {methodStopwatch.ElapsedMilliseconds}");
-
-                            methodStopwatch.Restart();
                             MapController.Instance.RegisterOffMeshPosition(spawnPos);
-                            Debug.Log($"Method stop watch timing MapController.Instance.RegisterOffMeshPosition(), elapsed milliseconds: {methodStopwatch.ElapsedMilliseconds}");
-
                             AlienFactory.Instance.DestroyAlien(alien);
                             i--;
                         }
-
-                        //int maxLeft = (int)(maxSwarmRadius * offsetMultiplier * -1);
-                        //int maxRight = Mathf.CeilToInt(maxSwarmRadius * offsetMultiplier);
-                        int count = 0;
-
-                        methodStopwatch.Restart();
-                        for (int m = -1; m <= 1; m++)
+                        
+                        for (int m = -2; m <= 2; m++)
                         {
-                            for (int n = -1; n <= 1; n++)
+                            for (int n = -2; n <= 2; n++)
                             {
-                                count++;
                                 availablePositions.Remove(new Vector3(spawnPos.x + m, spawnPos.y, spawnPos.z + n));
 
                                 if (loopStopwatch.ElapsedMilliseconds >= spawningFrameTimeLimit)
                                 {
-                                    Debug.Log($"Spawning time limit per frame: {spawnAliensTickBudget}, elapsed milliseconds: {loopStopwatch.ElapsedMilliseconds}, yielding for this frame from removing unavailable positions loop");
-                                    yieldPerFrame++;
                                     yield return null;
                                     loopStopwatch.Restart();
                                 }
                             }
                         }
-
-                        //int maxLeft = (int)(maxSwarmRadius * offsetMultiplier * -1);
-                        //int maxRight = Mathf.CeilToInt(maxSwarmRadius * offsetMultiplier);
-                        //int count = 0;
-
-                        //methodStopwatch.Restart();
-                        //for (int m = maxLeft; m <= maxRight; m++)
-                        //{
-                        //    for (int n = maxLeft; n <= maxRight; n++)
-                        //    {
-                        //        count++;
-                        //        availablePositions.Remove(new Vector3(spawnPos.x + m, spawnPos.y, spawnPos.z + n));
-                        //    }
-                        //}
-
-                        Debug.Log($"Method stop watch timing availablePositions.Remove() x{count}, elapsed milliseconds: {methodStopwatch.ElapsedMilliseconds}");
                     }
                     else
                     {
-                        Debug.Log($"Method stop watch timing MapController.Instance.RandomAlienSpawnablePos() on returns false and not bypassed, elapsed milliseconds: {methodStopwatch.ElapsedMilliseconds}");
                         i--;
                     }
                 }
-
-                Debug.LogError("Finished Spawning Aliens");
             }
 
-            yieldPerFrame++;
             yield return null;
         }
-
-        Debug.Log("Finished coroutine SpawnAliens");
     }
 
     /// <summary>
