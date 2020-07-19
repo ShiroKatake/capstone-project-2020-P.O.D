@@ -20,11 +20,11 @@ public class EnvironmentalController : MonoBehaviour {
 
 	private float maxRenderBarValue;
 
-    private float AtmosphereVal = 0f;
-    private float HumidityVal = 0f;
-    private float BiodiversityVal = 0f;
+    [SerializeField] private float AtmosphereVal = 0f;
+    [SerializeField] private float HumidityVal = 0f;
+    [SerializeField] private float BiodiversityVal = 0f;
 
-    private float TotalVal = 0.0f;
+    [SerializeField] private float TotalVal = 0.0f;
 
     private float atmoMalice = 1.0f;
     private float humMalice = 1.0f;
@@ -34,10 +34,12 @@ public class EnvironmentalController : MonoBehaviour {
 	private float humRatio = 0f;
 	private float bioRatio = 0f;
 
+    private float progressProportion = 0;
+
     public static EnvironmentalController Instance { get; protected set; }
 
     public List<Terraformer> Terraformers { get => terraformers; }
-
+    public float ProgressProportion { get => progressProportion; }
     private void Awake()
     {
         if (Instance != null)
@@ -69,6 +71,7 @@ public class EnvironmentalController : MonoBehaviour {
         UpdateTotalValue();
 
         progress.SetBarValue(TotalVal);
+        progressProportion = TotalVal / winAmount;
         if (TotalVal >= winAmount){
             Win = true;
         }
