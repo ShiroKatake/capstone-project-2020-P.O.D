@@ -224,33 +224,43 @@ public class MapController : MonoBehaviour
         return true;
     }
 
+    ///// <summary>
+    ///// Gets a random position that an alien could legally be spawned at.
+    ///// </summary>
+    ///// <returns>A position for an alien to spawn at.</returns>
+    //public Vector3 RandomAlienSpawnablePos(List<Vector3> temporarilyUnavailablePositions)
+    //{
+    //    List<Vector3> availablePositions = new List<Vector3>((StageManager.Instance.CurrentStage.ID == EStage.Combat ? tutorialAlienSpawnablePositions : alienSpawnablePositions));
+
+    //    foreach (Vector3 p in temporarilyUnavailablePositions)
+    //    {
+    //        if (availablePositions.Contains(p))
+    //        {
+    //            availablePositions.Remove(p);
+    //        }
+    //    }
+
+    //    //Debug.Log($"Getting alien spawnable position, available positions: {availablePositions.Count}");
+
+    //    switch (availablePositions.Count)
+    //    {
+    //        case 0:
+    //            return new Vector3 (-1, AlienFactory.Instance.AlienSpawnHeight, -1);
+    //        case 1:
+    //            return availablePositions[0];
+    //        default:
+    //            return availablePositions[Random.Range(0, availablePositions.Count)];
+    //    }
+    //}
+
+
     /// <summary>
-    /// Gets a random position that an alien could legally be spawned at.
+    /// Gets the current list of alien spawnable positions.
     /// </summary>
-    /// <returns>A position for an alien to spawn at.</returns>
-    public Vector3 RandomAlienSpawnablePos(List<Vector3> temporarilyUnavailablePositions)
+    /// <returns>The current list of alien spawnable positions.</returns>
+    public List<Vector3> GetAlienSpawnablePositions()
     {
-        List<Vector3> availablePositions = new List<Vector3>((StageManager.Instance.CurrentStage.ID == EStage.Combat ? tutorialAlienSpawnablePositions : alienSpawnablePositions));
-
-        foreach (Vector3 p in temporarilyUnavailablePositions)
-        {
-            if (availablePositions.Contains(p))
-            {
-                availablePositions.Remove(p);
-            }
-        }
-
-        //Debug.Log($"Getting alien spawnable position, available positions: {availablePositions.Count}");
-
-        switch (availablePositions.Count)
-        {
-            case 0:
-                return new Vector3 (-1, AlienFactory.Instance.AlienSpawnHeight, -1);
-            case 1:
-                return availablePositions[0];
-            default:
-                return availablePositions[Random.Range(0, availablePositions.Count)];
-        }
+        return StageManager.Instance.CurrentStage.ID == EStage.Combat ? tutorialAlienSpawnablePositions : alienSpawnablePositions;
     }
 
     //Entity Registration Methods------------------------------------------------------------------
