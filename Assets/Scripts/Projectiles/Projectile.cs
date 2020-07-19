@@ -162,9 +162,9 @@ public class Projectile : MonoBehaviour
 
         //Debug.Log($"{gameObject.name} reduced {a.gameObject.name}'s health to {a.Health.Value}; {a.gameObject.name}.ShotBy is now {owner.name}");
 
-        if (!collidedWith.CompareTag("Projectile") && !collidedWith.isTrigger && (!collidedWith.CompareTag(owner.tag) || leftOwnerCollider))
+        if (!collidedWith.CompareTag("Projectile") && !collidedWith.CompareTag("Pit Walls") && !collidedWith.isTrigger && (!collidedWith.CompareTag(owner.tag) || leftOwnerCollider))
         {
-            //Debug.Log($"ProjectileCollision, not Player or Projectile; tag is {collidedWith.tag}; position is {transform.position}");
+            //Debug.Log($"ProjectileCollision, not {owner.tag} or Projectile or Pit Walls; tag is {collidedWith.tag}; position is {transform.position}");
             ProjectileFactory.Instance.DestroyProjectile(this);
         }
 
