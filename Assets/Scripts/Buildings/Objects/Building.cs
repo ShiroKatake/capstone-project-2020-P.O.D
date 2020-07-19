@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using Rewired;
 
 [Serializable]
 public struct RendererMaterialSet
@@ -307,7 +309,7 @@ public class Building : CollisionListener
         {
             if (!placed)
             {
-                validPlacement = !(CheckInPit() || CheckColliding() || CheckOnCliff()) && MapController.Instance.PositionAvailableForBuilding(this);
+                validPlacement = !(CheckInPit() || CheckColliding() || CheckOnCliff()) && MapController.Instance.PositionAvailableForBuilding(this) && !IsMouseOverUI();
 
                 if (validPlacement)
                 {
@@ -342,6 +344,32 @@ public class Building : CollisionListener
         {
             return true;
         }
+    }
+
+    /// <summary>
+    /// Checks if the mouse is over the UI before placement.
+    /// </summary>
+    private bool IsMouseOverUI(){
+        bool tmp = false;//EventSystem.current.IsPointerOverGameObject();
+        
+        PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
+        pointerEventData.position = ReInput.controllers.Mouse.screenPosition;
+
+        List<RaycastResult> raycastResultList = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointerEventData, raycastResultList);
+        for (int i = 0; i < raycastResultList.Count; i++){
+            if (raycastResultList[i].gameObject.GetComponent<MouseClickThrough>() != null){
+                tmp = true;
+            }
+        }
+        
+        
+        if (tmp){
+            Debug.Log("Over UI");
+        } else {
+            Debug.Log("Not Over UI");
+        }
+        return tmp;
     }
 
     /// <summary>
