@@ -149,7 +149,7 @@ public class BuildingSpawningController : MonoBehaviour
                 heldBuilding = BuildingFactory.Instance.GetBuilding(selectedBuildingType);
                 heldBuilding.transform.position = MousePositionToBuildingPosition(transform.position, heldBuilding.Size.DiameterRoundedUp);
                 ChangeTooltip(selectedBuildingType);
-                ToolTips.showTooltip_Static(tooltip);
+              
                 // put tooltip spawn here
             }
             //Instantiate the appropriate building and postion it properly, replacing the old one.
@@ -162,8 +162,7 @@ public class BuildingSpawningController : MonoBehaviour
                 heldBuilding.transform.position = pos;
 
                 ChangeTooltip(selectedBuildingType);
-                ToolTips.hideToolTip_Static();
-                ToolTips.showTooltip_Static(tooltip);
+               
                 // hide and then show new tooltip
             }
             else //Move the building where you want it
@@ -178,7 +177,7 @@ public class BuildingSpawningController : MonoBehaviour
             //Place it or cancel building it
             if (placeBuilding && resourcesAvailable && placementValid)
             {
-                ToolTips.hideToolTip_Static();
+                
 
                 Vector3 spawnPos = heldBuilding.transform.position;
                 spawnPos.y = 0.02f;
@@ -193,7 +192,7 @@ public class BuildingSpawningController : MonoBehaviour
             }
             else if (cancelBuilding || (placeBuilding && (!resourcesAvailable || !placementValid)))
             {
-                ToolTips.hideToolTip_Static();
+                
 
                 if (placeBuilding)
                 {
