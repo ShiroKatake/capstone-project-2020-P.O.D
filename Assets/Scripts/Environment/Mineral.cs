@@ -13,7 +13,7 @@ public class Mineral : MonoBehaviour
 	//Serialized Fields----------------------------------------------------------------------------
 
     [SerializeField] private bool placed;
-	[SerializeField] private int oreCount = 50;
+	private int oreCount;
 	[SerializeField] private float oreSpawnRate = 1f;
 	[SerializeField] private float oreCurveRadius = 2;
 
@@ -92,7 +92,8 @@ public class Mineral : MonoBehaviour
     private void Awake()
     {
         colliders = new List<Collider>(GetComponentsInChildren<Collider>());
-        initialCount = oreCount;
+		oreCount = MineralFactory.Instance.OreCount;
+		initialCount = oreCount;
         timer = oreSpawnRate;
     }
 
