@@ -309,7 +309,7 @@ public class Building : CollisionListener
         {
             if (!placed)
             {
-                validPlacement = !(CheckInPit() || CheckColliding() || CheckOnCliff()) && MapController.Instance.PositionAvailableForBuilding(this) && !IsMouseOverUI();
+                validPlacement = !(CheckInPit() || CheckColliding() || CheckOnCliff() || CheckMouseOverUI()) && MapController.Instance.PositionAvailableForBuilding(this);
 
                 if (validPlacement)
                 {
@@ -349,27 +349,25 @@ public class Building : CollisionListener
     /// <summary>
     /// Checks if the mouse is over the UI before placement.
     /// </summary>
-    private bool IsMouseOverUI(){
-        bool tmp = false;//EventSystem.current.IsPointerOverGameObject();
-        
+    private bool CheckMouseOverUI()
+    {        
         PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
         pointerEventData.position = ReInput.controllers.Mouse.screenPosition;
 
         List<RaycastResult> raycastResultList = new List<RaycastResult>();
         EventSystem.current.RaycastAll(pointerEventData, raycastResultList);
-        for (int i = 0; i < raycastResultList.Count; i++){
-            if (raycastResultList[i].gameObject.GetComponent<MouseClickThrough>() != null){
-                tmp = true;
+
+        foreach (RaycastResult r in raycastResultList)
+        {
+            if (r.gameObject.GetComponent<MouseClickThrough>() != null)
+            {
+                //Debug.Log("Over UI");
+                return true;
             }
         }
-        
-        
-        if (tmp){
-            Debug.Log("Over UI");
-        } else {
-            Debug.Log("Not Over UI");
-        }
-        return tmp;
+
+        //Debug.Log("Not Over UI");
+        return false;
     }
 
     /// <summary>
