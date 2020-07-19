@@ -16,6 +16,7 @@ public class AlienClaw : MonoBehaviour
 	private void OnTriggerEnter(Collider collidedWith)
 	{
 		Health damageable = collidedWith.GetComponent<Health>();
+
 		if (damageable != null)
 		{
 			damageable.TakeDamage(damage, alienActor);

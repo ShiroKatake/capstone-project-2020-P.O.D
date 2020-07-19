@@ -33,6 +33,7 @@ public class PlayerMovementController : MonoBehaviour
     //Components
     private Health health;
     private Rigidbody rigidbody;
+    private CharacterController charCon;
 
     //Variables for moving & determining if rotation is necessary
     private Vector3 movement;
@@ -50,7 +51,7 @@ public class PlayerMovementController : MonoBehaviour
     private float timeOfLastShot;
 
     //Other
-    private Rewired.Player playerInputManager;
+    private Player playerInputManager;
     private bool gameOver;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
@@ -90,19 +91,12 @@ public class PlayerMovementController : MonoBehaviour
         Instance = this;
         health = GetComponent<Health>();
         rigidbody = GetComponent<Rigidbody>();
+        charCon = GetComponent<CharacterController>();
         timeOfLastShot = shootCooldown * -1;
         defaultHoverHeight = transform.position.y;
         gameOver = false;
         groundLayerMask = LayerMask.GetMask("Ground");
-    }
-
-    /// <summary>
-    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
-    /// Start() runs after Awake().
-    /// </summary>
-    void Start()
-    {
-        playerInputManager = ReInput.players.GetPlayer(GetComponent<PlayerID>().Value);
+        playerInputManager = ReInput.players.GetPlayer(GetComponent<PlayerID>().Value);  //Needs to run in Awake() or the tutorial breaks
     }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
@@ -195,10 +189,12 @@ public class PlayerMovementController : MonoBehaviour
 
         if (movement != Vector3.zero)
         {
-            transform.Translate(movement * movementSpeed * Time.deltaTime, Space.World);
+            //charCon.Move(movement * movementSpeed * Time.deltaTime);
+            charCon.SimpleMove(movement * movementSpeed);
+            //transform.Translate(movement * movementSpeed * Time.deltaTime, Space.World);
         }
 
-        if (Physics.Raycast(transform.position, Vector3.down, out rayHit, 20, groundLayerMask))
+        /*if (Physics.Raycast(transform.position, Vector3.down, out rayHit, 20, groundLayerMask))
         {
             //Debug.Log($"POD hover height is {rayHit.distance}, default is {defaultHoverHeight}");
             CheckForCliff(rayHit, errorMargin, oldPos);
@@ -208,7 +204,7 @@ public class PlayerMovementController : MonoBehaviour
         {
             Debug.LogError($"{this}.PlayerMovementController.Move() could not raycast to the ground from position {transform.position}");
         }
-
+        */
         cameraTarget.position = transform.position;  
     }
 
@@ -230,10 +226,14 @@ public class PlayerMovementController : MonoBehaviour
                 //Confirm ray hit heights differ; rule out OK: level to level - normal.y 1.0 to 1.0 and heights match
                 if (cliffRayHit.point.y < rayHit.point.y - errorMargin || cliffRayHit.point.y > rayHit.point.y + errorMargin)   
                 {
+
+                    moveOkay = true;
+                    break;
+
                     //Debug.Log($"POD at {rayHit.point} detecting cliff or ramp at {cliffRayHit.point}. POD ground normal: {rayHit.normal}, cliff/ramp normal: {cliffRayHit.normal}");
 
                     //Confirm normal.y's differ
-                    if (cliffRayHit.normal.y < rayHit.normal.y - errorMargin || cliffRayHit.normal.y > rayHit.normal.y + errorMargin)     
+                    /*if (cliffRayHit.normal.y < rayHit.normal.y - errorMargin || cliffRayHit.normal.y > rayHit.normal.y + errorMargin)     
                     {
                         //OK:  - Level to ramp  - normal.y 1.0 to 0.9
                         //OK:  - Ramp to level  - normal.y 0.9 to 1.0
@@ -259,7 +259,7 @@ public class PlayerMovementController : MonoBehaviour
                             moveOkay = false;
                             break;
                         }
-                    }
+                    }*/
                 }
             }
             else
