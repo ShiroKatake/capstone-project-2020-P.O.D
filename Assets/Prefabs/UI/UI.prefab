@@ -2999,8 +2999,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   padding: 10
   contentRectTransform: {fileID: 6520952630464928852}
-  layoutGroupComponent: {fileID: 6336932577202869316}
-  contentSizeFitter: {fileID: 0}
 --- !u!1 &3663632094679797709
 GameObject:
   m_ObjectHideFlags: 0
@@ -5388,10 +5386,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9443fc6be154de4459a67b0ddba829ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  visibleOnAwake: 0
+  fadeInSpeed: 0
   ore: {fileID: 6080990814396580658}
   water: {fileID: 720249211782636342}
   power: {fileID: 7371966420870863399}
   waste: {fileID: 1330899939722319177}
+  oreIcon: {fileID: 0}
+  waterIcon: {fileID: 0}
+  powerIcon: {fileID: 0}
+  wasteIcon: {fileID: 0}
 --- !u!114 &8536321062500261737
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6088,7 +6092,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c27e4d3749552194294e5dab01b3baaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hoverDialogue: {fileID: 3306413585195064210}
+  hoverDialogueObject: {fileID: 3306413585195064210}
   hoverDialogueRect: {fileID: 6520952630464928852}
   dialogueName: {fileID: 7695042508241166163}
   oreCost: {fileID: 8412958267760550860}
