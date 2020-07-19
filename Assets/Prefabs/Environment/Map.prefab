@@ -30,7 +30,7 @@ Transform:
   m_LocalScale: {x: 0.03960396, y: 0.03960396, z: 0.04}
   m_Children: []
   m_Father: {fileID: 5630249265997957760}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!108 &1114419451
 Light:
@@ -215,6 +215,51 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!1 &2174504917129731723
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4830446827545301007}
+  - component: {fileID: 1437847145399167759}
+  m_Layer: 0
+  m_Name: Pit Walls
+  m_TagString: Pit Walls
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 8
+  m_IsActive: 1
+--- !u!4 &4830446827545301007
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2174504917129731723}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5630249265997957760}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!64 &1437847145399167759
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2174504917129731723}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 1768352172019660574, guid: 1cbe508c26db64540920c63146e1b24f, type: 3}
 --- !u!1 &2455154194505917760
 GameObject:
   m_ObjectHideFlags: 0
@@ -245,7 +290,7 @@ Transform:
   m_Children:
   - {fileID: 5618528566283417379}
   m_Father: {fileID: 5630249265997957760}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3035633378439880166
 MonoBehaviour:
@@ -624,7 +669,7 @@ Transform:
   - {fileID: 8945435230752710620}
   - {fileID: 1089656254458211382}
   m_Father: {fileID: 5630249265997957760}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4031338973111114439
 GameObject:
@@ -749,7 +794,7 @@ Transform:
   m_Children:
   - {fileID: 5630249266004542494}
   m_Father: {fileID: 5630249265997957760}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!1 &4220959379027400585
 GameObject:
@@ -905,6 +950,7 @@ GameObject:
   - component: {fileID: 5630249265997957766}
   - component: {fileID: 1374667277884573856}
   - component: {fileID: 4031338972023079512}
+  - component: {fileID: 1341402925}
   m_Layer: 8
   m_Name: Map
   m_TagString: Planet
@@ -925,6 +971,7 @@ Transform:
   m_Children:
   - {fileID: 980629147733805794}
   - {fileID: 7239418603126459752}
+  - {fileID: 4830446827545301007}
   - {fileID: 6612108011595738914}
   - {fileID: 1692836184304410547}
   - {fileID: 2455154194505917761}
@@ -940,7 +987,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5630249265997957764}
-  m_Mesh: {fileID: -462981019419857548, guid: d43d1196923e2594b9bfebd085821665, type: 3}
+  m_Mesh: {fileID: -7931158211573133568, guid: 75deaec51dfb4c4419819415dbdb40cb, type: 3}
 --- !u!23 &5630249265997957766
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -993,7 +1040,7 @@ MeshCollider:
   serializedVersion: 3
   m_Convex: 0
   m_CookingOptions: -1
-  m_Mesh: {fileID: -462981019419857548, guid: d43d1196923e2594b9bfebd085821665, type: 3}
+  m_Mesh: {fileID: -7931158211573133568, guid: 75deaec51dfb4c4419819415dbdb40cb, type: 3}
 --- !u!54 &4031338972023079512
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1010,6 +1057,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1341402925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5630249265997957764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a665471c4900e1a45917d0bb1c9c0ee5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5630249266004542492
 GameObject:
   m_ObjectHideFlags: 0
@@ -1223,7 +1282,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.16666667
   m_BuildHeightMesh: 0
-  m_NavMeshData: {fileID: 23800000, guid: 7ed5f0c7572ef674699a29395866d9ca, type: 2}
+  m_NavMeshData: {fileID: 0}
 --- !u!1 &6612108010754148609
 GameObject:
   m_ObjectHideFlags: 0
@@ -1253,7 +1312,7 @@ Transform:
   m_LocalScale: {x: 1, y: 0.05, z: 1}
   m_Children: []
   m_Father: {fileID: 6612108011595738914}
-  m_RootOrder: 7
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!208 &6612108010754148611
 NavMeshObstacle:
@@ -1266,53 +1325,6 @@ NavMeshObstacle:
   serializedVersion: 3
   m_Shape: 1
   m_Extents: {x: 0.175, y: 0.5, z: 0.1625}
-  m_MoveThreshold: 0.1
-  m_Carve: 1
-  m_CarveOnlyStationary: 1
-  m_Center: {x: 0, y: 0, z: 0}
-  m_TimeToStationary: 0.5
---- !u!1 &6612108010806476963
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6612108010806476972}
-  - component: {fileID: 6612108010806476973}
-  m_Layer: 0
-  m_Name: NavMeshObstacle SW Isolated Plane
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6612108010806476972
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6612108010806476963}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.802, y: 0, z: -2.297}
-  m_LocalScale: {x: 1, y: 0.05, z: 1}
-  m_Children: []
-  m_Father: {fileID: 6612108011595738914}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!208 &6612108010806476973
-NavMeshObstacle:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6612108010806476963}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Shape: 1
-  m_Extents: {x: 0.2, y: 0.5, z: 1.785}
   m_MoveThreshold: 0.1
   m_Carve: 1
   m_CarveOnlyStationary: 1
@@ -1347,7 +1359,7 @@ Transform:
   m_LocalScale: {x: 1, y: 0.05, z: 1}
   m_Children: []
   m_Father: {fileID: 6612108011595738914}
-  m_RootOrder: 10
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!208 &6612108011030198486
 NavMeshObstacle:
@@ -1360,53 +1372,6 @@ NavMeshObstacle:
   serializedVersion: 3
   m_Shape: 1
   m_Extents: {x: 0.3, y: 0.5, z: 0.175}
-  m_MoveThreshold: 0.1
-  m_Carve: 1
-  m_CarveOnlyStationary: 1
-  m_Center: {x: 0, y: 0, z: 0}
-  m_TimeToStationary: 0.5
---- !u!1 &6612108011106993159
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6612108011106993152}
-  - component: {fileID: 6612108011106993153}
-  m_Layer: 0
-  m_Name: NavMeshObstacle NW Isolated Plane
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6612108011106993152
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6612108011106993159}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.77, y: 0, z: 3.766}
-  m_LocalScale: {x: 1, y: 0.05, z: 1}
-  m_Children: []
-  m_Father: {fileID: 6612108011595738914}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!208 &6612108011106993153
-NavMeshObstacle:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6612108011106993159}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Shape: 1
-  m_Extents: {x: 0.455, y: 0.5, z: 0.26}
   m_MoveThreshold: 0.1
   m_Carve: 1
   m_CarveOnlyStationary: 1
@@ -1441,7 +1406,7 @@ Transform:
   m_LocalScale: {x: 1, y: 0.05, z: 1}
   m_Children: []
   m_Father: {fileID: 6612108011595738914}
-  m_RootOrder: 8
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!208 &6612108011141582630
 NavMeshObstacle:
@@ -1488,7 +1453,7 @@ Transform:
   m_LocalScale: {x: 1, y: 0.05, z: 1}
   m_Children: []
   m_Father: {fileID: 6612108011595738914}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!208 &6612108011262152876
 NavMeshObstacle:
@@ -1534,11 +1499,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6612108012202615155}
-  - {fileID: 6612108011106993152}
   - {fileID: 6612108011721549901}
   - {fileID: 6612108012512866147}
   - {fileID: 6612108011262152867}
-  - {fileID: 6612108010806476972}
   - {fileID: 6612108012557919006}
   - {fileID: 6612108010754148610}
   - {fileID: 6612108011141582629}
@@ -1546,7 +1509,7 @@ Transform:
   - {fileID: 6612108011030198485}
   - {fileID: 6612108012578187410}
   m_Father: {fileID: 5630249265997957760}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6612108011721549900
 GameObject:
@@ -1577,7 +1540,7 @@ Transform:
   m_LocalScale: {x: 1, y: 0.05, z: 1}
   m_Children: []
   m_Father: {fileID: 6612108011595738914}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!208 &6612108011721549902
 NavMeshObstacle:
@@ -1671,7 +1634,7 @@ Transform:
   m_LocalScale: {x: 1, y: 0.05, z: 1}
   m_Children: []
   m_Father: {fileID: 6612108011595738914}
-  m_RootOrder: 9
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!208 &6612108012473732449
 NavMeshObstacle:
@@ -1718,7 +1681,7 @@ Transform:
   m_LocalScale: {x: 1, y: 0.05, z: 1}
   m_Children: []
   m_Father: {fileID: 6612108011595738914}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!208 &6612108012512866156
 NavMeshObstacle:
@@ -1765,7 +1728,7 @@ Transform:
   m_LocalScale: {x: 1, y: 0.05, z: 1}
   m_Children: []
   m_Father: {fileID: 6612108011595738914}
-  m_RootOrder: 6
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!208 &6612108012557919007
 NavMeshObstacle:
@@ -1812,7 +1775,7 @@ Transform:
   m_LocalScale: {x: 1, y: 0.05, z: 1}
   m_Children: []
   m_Father: {fileID: 6612108011595738914}
-  m_RootOrder: 11
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!208 &6612108012578187411
 NavMeshObstacle:
