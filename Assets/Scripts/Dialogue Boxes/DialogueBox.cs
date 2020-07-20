@@ -8,70 +8,6 @@ using UnityEngine.UI;
 using UnityEngine;
 
 /// <summary>
-/// An enum for the expressions the AI should display.
-/// </summary>
-public enum AIExpression
-{
-    None,
-    Happy,
-    Neutral,
-    Sad,
-    Excited,
-    Shocked
-}
-
-/// <summary>
-/// A serializable container for an AI expression and a line of dialogue.
-/// </summary>
-[Serializable]
-public class ExpressionDialoguePair
-{
-    //Private Fields---------------------------------------------------------------------------------------------------------------------------------
-
-    //Serialized Fields----------------------------------------------------------------------------
-
-    [SerializeField, TextArea(15, 20)] private string dialogue;
-
-    //Public Properties------------------------------------------------------------------------------------------------------------------------------
-
-    //Basic Public Properties----------------------------------------------------------------------
-
-    /// <summary>
-    /// The line of dialogue to be displayed.
-    /// </summary>
-    public string Dialogue { get => dialogue; set => dialogue = value; }
-}
-
-/// <summary>
-/// A serializable key-value pair of a dialogue key and a set of ExpressionDialoguePairs, because Unity doesn't serialize dictionaries.
-/// </summary>
-[Serializable]
-public class DialogueSet
-{
-    //Private Fields---------------------------------------------------------------------------------------------------------------------------------
-
-    //Serialized Fields----------------------------------------------------------------------------
-
-    [SerializeField] private string key;
-    [SerializeField] private List<ExpressionDialoguePair> expressionDialoguePairs;
-
-    //Public Properties------------------------------------------------------------------------------------------------------------------------------
-
-    //Basic Public Properties----------------------------------------------------------------------
-
-    /// <summary>
-    /// The key of the dialogue set.
-    /// </summary>
-    public string Key { get => key; set => key = value; }
-
-    /// <summary>
-    /// The list of expression-dialogue pairs that comprise the dialogue set.
-    /// </summary>
-    public List<ExpressionDialoguePair> ExpressionDialoguePairs { get => expressionDialoguePairs; set => expressionDialoguePairs = value; }
-    //TODO: tidy this up because if images aren't being used, we don't need a class to encapsulate a list I don't think. Don't need the inspector-serializable verificational stuff either
-}
-
-/// <summary>
 /// Allows other classes to submit dialogue for the dialogue box to display.
 /// </summary>
 public class DialogueBox : MonoBehaviour
@@ -110,8 +46,7 @@ public class DialogueBox : MonoBehaviour
     private bool activated;
     private bool clickable;
 
-    private List<DialogueSet> dialogue;
-    private Dictionary<string, List<ExpressionDialoguePair>> dialogueDictionary;
+    private Dictionary<string, List<string>> dialogue;
     private string currentDialogueKey;
     private string lastDialogueKey;
     private int dialogueIndex;
@@ -238,8 +173,7 @@ public class DialogueBox : MonoBehaviour
         newLineMarker = DialogueBoxManager.Instance.NewLineMarker;
 
         List<string[]> dialogueData = DialogueBoxManager.Instance.GetDialogueData(id);
-        dialogueDictionary = new Dictionary<string, List<ExpressionDialoguePair>>();
-        dialogue = new List<DialogueSet>(); //For in-editor verification during testing
+        dialogue = new Dictionary<string, List<string>>();
 
         if (dialogueData == null)
         {
@@ -249,36 +183,12 @@ public class DialogueBox : MonoBehaviour
         {
             foreach (string[] row in dialogueData)
             {
-                if (!dialogueDictionary.ContainsKey(row[2]))
+                if (!dialogue.ContainsKey(row[2]))
                 {
-                    dialogueDictionary[row[2]] = new List<ExpressionDialoguePair>();
+                    dialogue[row[2]] = new List<string>();
                 }
 
-                ExpressionDialoguePair edp = new ExpressionDialoguePair();
-                edp.Dialogue = row[3];
-                dialogueDictionary[row[2]].Add(edp);
-
-                //For in-editor verification during testing
-                DialogueSet ds = null;
-
-                foreach (DialogueSet set in dialogue)
-                {
-                    if (set.Key == row[2])
-                    {
-                        ds = set;
-                        break;
-                    }
-                }
-
-                if (ds == null)
-                {
-                    ds = new DialogueSet();
-                    ds.Key = row[2];
-                    ds.ExpressionDialoguePairs = new List<ExpressionDialoguePair>();
-                    dialogue.Add(ds);
-                }
-
-                ds.ExpressionDialoguePairs.Add(edp);
+                dialogue[row[2]].Add(row[3]);
             }
         }
     }
@@ -321,7 +231,7 @@ public class DialogueBox : MonoBehaviour
     {
         if (dismissable && dialogueReadRegistered) //Should check clickable, but that is checked by the enclosing if statement in Update();
         {
-            if (dialogueIndex < dialogueDictionary[currentDialogueKey].Count)
+            if (dialogueIndex < dialogue[currentDialogueKey].Count)
             {
                 LerpNext();
             }
@@ -371,24 +281,24 @@ public class DialogueBox : MonoBehaviour
         deactivationSubmitted = false;
 
         //Triggers the lerping of the next line of dialogue onto the screen, or informs the classes that use the dialogue box that all of the dialogue in the current dialogue set has been read.
-        if (nextDialogueSetReady && dialogueDictionary.ContainsKey(currentDialogueKey) && dialogueIndex < dialogueDictionary[currentDialogueKey].Count)
+        if (nextDialogueSetReady && dialogue.ContainsKey(currentDialogueKey) && dialogueIndex < dialogue[currentDialogueKey].Count)
         {
             DisplayNext();
             nextDialogueSetReady = false;
         }
         else
         {
-            if (nextDialogueSetReady && (dialogueDictionary.ContainsKey(currentDialogueKey) || dialogueIndex >= dialogueDictionary[currentDialogueKey].Count))
+            if (nextDialogueSetReady && (dialogue.ContainsKey(currentDialogueKey) || dialogueIndex >= dialogue[currentDialogueKey].Count))
             {
                 nextDialogueSetReady = false;
 
-                if (dialogueDictionary.ContainsKey(currentDialogueKey))
+                if (dialogue.ContainsKey(currentDialogueKey))
                 {
                     Debug.Log($"Warning: nextDialogueSetReady was true, but dialogue key {currentDialogueKey} doesn't exist in dialogueDictionary.");
                 }
                 else
                 {
-                    Debug.Log($"Warning: nextDialogueSetReady was true and dialogue key {currentDialogueKey} exists, but dialogueIndex {dialogueIndex} is an invalid index, given dialogueDictionary[{currentDialogueKey}].Count ({dialogueDictionary[currentDialogueKey].Count}).");
+                    Debug.Log($"Warning: nextDialogueSetReady was true and dialogue key {currentDialogueKey} exists, but dialogueIndex {dialogueIndex} is an invalid index, given dialogueDictionary[{currentDialogueKey}].Count ({dialogue[currentDialogueKey].Count}).");
                 }
             }
 
@@ -502,10 +412,7 @@ public class DialogueBox : MonoBehaviour
         }
         else
         {
-            dialogueDictionary["error"] = new List<ExpressionDialoguePair>();
-            ExpressionDialoguePair errorMessage = new ExpressionDialoguePair();
-            errorMessage.Dialogue = $"<{message}>";
-            dialogueDictionary["error"].Add(errorMessage);
+            dialogue["error"] = new List<string>() { $"<{message}>" };
             SubmitDialogue("error", delay, false, false);
         }
     }
@@ -519,9 +426,9 @@ public class DialogueBox : MonoBehaviour
     /// <param name="fadeOut">Should the dialogue box fade out on completion of the dialogue set?</param>
     public void SubmitDialogue(string key, float delay, bool tweenOut, bool fadeOut)
     {
-        if (dialogueDictionary.ContainsKey(key))
+        if (dialogue.ContainsKey(key))
         {
-            if (dialogueDictionary[key].Count > 0)
+            if (dialogue[key].Count > 0)
             {
                 nextDialogueKey = key;
                 nextInvokeDelay = delay;
@@ -576,7 +483,7 @@ public class DialogueBox : MonoBehaviour
     /// <param name="key">The key of the dialogue set to be displayed.</param>
     private void ChangeDialogue(string key)
     {
-        if (dialogueDictionary.ContainsKey(key) && dialogueDictionary[key].Count > 0)
+        if (dialogue.ContainsKey(key) && dialogue[key].Count > 0)
         {
             lastDialogueKey = currentDialogueKey;
             currentDialogueKey = key;
@@ -606,7 +513,7 @@ public class DialogueBox : MonoBehaviour
             textBox.text = "";
         }
 
-        currentText = dialogueDictionary[currentDialogueKey][dialogueIndex].Dialogue;
+        currentText = dialogue[currentDialogueKey][dialogueIndex];
         dialogueIndex++;
         lerpTextMaxIndex = currentText.Length - 1;
         dialogueTimer = 0;
@@ -628,7 +535,7 @@ public class DialogueBox : MonoBehaviour
             textBox.text = "";
         }
 
-        currentText = dialogueDictionary[currentDialogueKey][dialogueIndex].Dialogue;
+        currentText = dialogue[currentDialogueKey][dialogueIndex];
         dialogueIndex++;
         lerpTextMaxIndex = 0;
         dialogueTimer = 0;
