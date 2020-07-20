@@ -15,6 +15,7 @@ public class HoveringDialogueManager : MonoBehaviour
 
 	[Header("Hovering Dialogue")]
 	[SerializeField] private GameObject hoverDialogueObject;
+	[SerializeField] private RectTransform hoverDialogueRectTransform;
 
 	[Header("Dialogue Contents")]
 	[SerializeField] private TextMeshProUGUI dialogueName;
@@ -44,7 +45,6 @@ public class HoveringDialogueManager : MonoBehaviour
 	private List<TextMeshProUGUI> texts = new List<TextMeshProUGUI>();
 	private List<HoveringDialogueDemi_Container> containers = new List<HoveringDialogueDemi_Container>();
 	private List<RectTransform> rectsToRefresh = new List<RectTransform>();
-	private RectTransform hoverDialogueRectTransform;
 	private Camera playerCamera;
 	private HoverDialogueBoxPreset presetWithMineral;
 
@@ -70,7 +70,6 @@ public class HoveringDialogueManager : MonoBehaviour
 		playerCamera = Camera.main;
 
 		Instance = this;
-		hoverDialogueRectTransform = hoverDialogueObject.GetComponent<RectTransform>();
 
 		//Get all "editable" text fields
 		HoveringDialogueDemi_TextElement[] hoveringDialogueTexts = hoverDialogueObject.GetComponentsInChildren<HoveringDialogueDemi_TextElement>(true);
@@ -164,6 +163,8 @@ public class HoveringDialogueManager : MonoBehaviour
 		{
 			LayoutRebuilder.ForceRebuildLayoutImmediate(rect);
 		}
+		//Refresh the biggest container last
+		LayoutRebuilder.ForceRebuildLayoutImmediate(hoverDialogueRectTransform);
 	}
 
 	/// <summary>

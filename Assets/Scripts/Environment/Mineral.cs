@@ -92,7 +92,6 @@ public class Mineral : MonoBehaviour
     private void Awake()
     {
         colliders = new List<Collider>(GetComponentsInChildren<Collider>());
-		oreCount = MineralFactory.Instance.OreCount;
 		initialCount = oreCount;
         timer = oreSpawnRate;
     }
@@ -102,8 +101,9 @@ public class Mineral : MonoBehaviour
     /// Start() runs after Awake().
     /// </summary>
     private void Start()
-    {
-        if (placed)
+	{
+		oreCount = MineralFactory.Instance.OreCount;
+		if (placed)
         {
             MapController.Instance.RegisterMineral(this);
         }
