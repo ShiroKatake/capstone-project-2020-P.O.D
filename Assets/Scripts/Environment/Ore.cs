@@ -11,7 +11,7 @@ public class Ore : MonoBehaviour
 
 	//Serialized Fields----------------------------------------------------------------------------
 
-	[SerializeField] private int value = 5;
+	private int value;
 	[SerializeField] private float speed;
 
 	//Non-Serialized Fields------------------------------------------------------------------------
@@ -41,6 +41,11 @@ public class Ore : MonoBehaviour
 	public Transform End { get => p2; set => p2 = value; }
 
 	//Initialization Methods-------------------------------------------------------------------------------------------------------------------------
+
+	private void Awake()
+	{
+		value = OreFactory.Instance.OreValue;
+	}
 
 	/// <summary>
 	/// This function is called when the object becomes enabled and active.
