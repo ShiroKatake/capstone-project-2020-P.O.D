@@ -18,6 +18,7 @@ public class HoveringDialogueManager : MonoBehaviour
 
 	[Header("Dialogue Contents")]
 	[SerializeField] private TextMeshProUGUI dialogueName;
+	[SerializeField] private TextMeshProUGUI objectClass;
 
 	[Space(10)]
 	[SerializeField] private TextMeshProUGUI oreCost;
@@ -153,6 +154,7 @@ public class HoveringDialogueManager : MonoBehaviour
 	private void FillDialogueBox(HoverDialogueBoxPreset hoveringDialogueBoxPreset)
 	{
 		dialogueName.text = hoveringDialogueBoxPreset.DialogueName;
+		objectClass.text = hoveringDialogueBoxPreset.ObjectClass;
 		oreCost.text = hoveringDialogueBoxPreset.OreCost;
 		powerCost.text = hoveringDialogueBoxPreset.PowerCost;
 		waterCost.text = hoveringDialogueBoxPreset.WaterCost;
