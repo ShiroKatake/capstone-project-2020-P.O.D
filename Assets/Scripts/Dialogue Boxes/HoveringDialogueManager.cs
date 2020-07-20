@@ -65,6 +65,7 @@ public class HoveringDialogueManager : MonoBehaviour
 		}
 
 		Instance = this;
+		hoverDialogueRectTransform = hoverDialogueObject.GetComponent<RectTransform>();
 
 		//Get all "editable" text fields
 		HoveringDialogueText[] hoveringDialogueTexts = hoverDialogueObject.GetComponentsInChildren<HoveringDialogueText>(true);
@@ -137,7 +138,7 @@ public class HoveringDialogueManager : MonoBehaviour
 	}
 	
 	/// <summary>
-	/// Update every object that has a ContentSizeFitter component because they require explicit commands to update.
+	/// Update every object that has a ContentSizeFitter component because they require explicit commands to update for some reason . . .
 	/// </summary>
 	private void Rebuild()
 	{
@@ -145,6 +146,8 @@ public class HoveringDialogueManager : MonoBehaviour
 		{
 			LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
 		}
+		//The top most parent needs to be recalculated last so it can accommodate all the changes from its children
+		LayoutRebuilder.ForceRebuildLayoutImmediate(hoverDialogueRectTransform);
 	}
 
 	/// <summary>
