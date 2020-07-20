@@ -13,10 +13,11 @@ public class HoverDialogueBoxPreset : MonoBehaviour
 	[SerializeField] private string waterCost;
 	[SerializeField] private string wasteCost;
 	[SerializeField] private string buildTime;
-	[SerializeField] private string description;
 	[SerializeField] private string powerProductionAmount;
 	[SerializeField] private string waterProductionAmount;
 	[SerializeField] private string wasteProductionAmount;
+	[TextArea]
+	[SerializeField] private string description;
 
 	public Transform AnchorPoint { get => anchorPoint; }
 
