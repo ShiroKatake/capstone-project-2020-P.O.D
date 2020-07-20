@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 783183267388824351}
   - component: {fileID: 9142006181561205437}
   - component: {fileID: 2203777157340861769}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Body Collider
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -126,7 +126,7 @@ GameObject:
   - component: {fileID: 5020365198722141690}
   - component: {fileID: 4415145624477959995}
   - component: {fileID: 8508511535337948823}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Placement Collider
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -191,12 +191,13 @@ GameObject:
   m_Component:
   - component: {fileID: 701136541000889738}
   - component: {fileID: 9054559055595012424}
+  - component: {fileID: -2706660425750957403}
   - component: {fileID: 3752192069620436707}
   - component: {fileID: -211467451985298925}
   - component: {fileID: 1120844386694136956}
   - component: {fileID: -2579203448979226937}
   - component: {fileID: 2391272698768910777}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Greenhouse
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -234,9 +235,9 @@ MonoBehaviour:
   collisionReporters: []
   id: 0
   buildingType: 5
-  oreCost: 4
+  oreCost: 6
   powerConsumption: 2
-  waterConsumption: 2
+  waterConsumption: 4
   wasteConsumption: 0
   buildTime: 10
   buildStartHeight: -3
@@ -278,6 +279,19 @@ MonoBehaviour:
   idleSound: 16
   active: 0
   operational: 0
+--- !u!114 &-2706660425750957403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4273049605349681512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5bfa9bda77c9c3488923b65c75f29e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  affiliation: 0
 --- !u!114 &3752192069620436707
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -317,7 +331,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   resource: 3
-  collectionRate: 1
+  collectionRate: 2
 --- !u!114 &-2579203448979226937
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -448,6 +462,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Windmill Model
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: fd82af953e83c174aa016489f3e03d3e,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fd82af953e83c174aa016489f3e03d3e, type: 3}
 --- !u!23 &7483942982006519358 stripped
@@ -553,6 +572,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TagString
       value: Building
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 84ef7d7f6c7c6334d8847af0368ef092,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 84ef7d7f6c7c6334d8847af0368ef092, type: 3}
@@ -665,6 +689,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TagString
       value: Building
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 84ef7d7f6c7c6334d8847af0368ef092,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 84ef7d7f6c7c6334d8847af0368ef092, type: 3}

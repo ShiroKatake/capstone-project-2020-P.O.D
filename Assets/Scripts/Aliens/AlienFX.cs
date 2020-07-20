@@ -70,7 +70,6 @@ public class AlienFX : MonoBehaviour
 	/// </summary>
 	private void OnAttack()
 	{
-		AudioManager.Instance.PlaySound(AudioManager.ESound.Damage_To_Building, this.gameObject);
 		animator.SetTrigger(ANIMATOR_ATTACK);
 		//Debug.Log("Attack");
 	}

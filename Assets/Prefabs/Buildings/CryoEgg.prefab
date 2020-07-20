@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3520859837222714372}
   - component: {fileID: 880952307760529664}
   - component: {fileID: -2340967334442575925}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: CryoEgg
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -137,7 +137,7 @@ GameObject:
   - component: {fileID: 2289122112919515551}
   - component: {fileID: 2328156697569344516}
   - component: {fileID: 3547622832239237036}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Body Collider
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -289,6 +289,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TagString
       value: Building
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 1f40daa4e3a975b4a82b2b186ea2c1d9,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1f40daa4e3a975b4a82b2b186ea2c1d9, type: 3}

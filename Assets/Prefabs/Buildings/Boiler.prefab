@@ -10,11 +10,12 @@ GameObject:
   m_Component:
   - component: {fileID: 6609532187631785789}
   - component: {fileID: 2427136214263755661}
+  - component: {fileID: 6987495701241030554}
   - component: {fileID: 1528181348652726579}
   - component: {fileID: -527322906450988592}
   - component: {fileID: -5340766545175857894}
   - component: {fileID: 1908645070837100865}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Boiler
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -54,7 +55,7 @@ MonoBehaviour:
   buildingType: 4
   oreCost: 4
   powerConsumption: 2
-  waterConsumption: 3
+  waterConsumption: 5
   wasteConsumption: 0
   buildTime: 10
   buildStartHeight: -11.5
@@ -85,6 +86,19 @@ MonoBehaviour:
   idleSound: 18
   active: 0
   operational: 0
+--- !u!114 &6987495701241030554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1695929192926328449}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5bfa9bda77c9c3488923b65c75f29e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  affiliation: 0
 --- !u!114 &1528181348652726579
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -153,7 +167,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6409866380421652941}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SteamGroup
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -193,7 +207,7 @@ GameObject:
   - component: {fileID: 5995866541290369328}
   - component: {fileID: 6564565932418022012}
   - component: {fileID: 2831621559602170470}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Placement Collider
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -260,7 +274,7 @@ GameObject:
   - component: {fileID: 1785076965048142400}
   - component: {fileID: 6287614416349798304}
   - component: {fileID: 3615240620241860045}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Body Collider
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -344,6 +358,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Steam (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3552505557991046284, guid: edfb00644a5da2240b6debd74fe55ccd,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3552505557991046286, guid: edfb00644a5da2240b6debd74fe55ccd,
         type: 3}
@@ -450,6 +469,11 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 5.0941
       objectReference: {fileID: 0}
+    - target: {fileID: 3552505558468084510, guid: edfb00644a5da2240b6debd74fe55ccd,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 3552505558468084511, guid: edfb00644a5da2240b6debd74fe55ccd,
         type: 3}
       propertyPath: m_Parameters.m_DirectionCurveX.scalar
@@ -474,6 +498,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Steam
+      objectReference: {fileID: 0}
+    - target: {fileID: 3552505557991046284, guid: edfb00644a5da2240b6debd74fe55ccd,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3552505557991046286, guid: edfb00644a5da2240b6debd74fe55ccd,
         type: 3}
@@ -580,6 +609,11 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 5.0941
       objectReference: {fileID: 0}
+    - target: {fileID: 3552505558468084510, guid: edfb00644a5da2240b6debd74fe55ccd,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 3552505558468084511, guid: edfb00644a5da2240b6debd74fe55ccd,
         type: 3}
       propertyPath: m_Parameters.m_DirectionCurveX.scalar
@@ -604,6 +638,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Steam (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3552505557991046284, guid: edfb00644a5da2240b6debd74fe55ccd,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3552505557991046286, guid: edfb00644a5da2240b6debd74fe55ccd,
         type: 3}
@@ -710,6 +749,11 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 5.0941
       objectReference: {fileID: 0}
+    - target: {fileID: 3552505558468084510, guid: edfb00644a5da2240b6debd74fe55ccd,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 3552505558468084511, guid: edfb00644a5da2240b6debd74fe55ccd,
         type: 3}
       propertyPath: m_Parameters.m_DirectionCurveX.scalar
@@ -734,6 +778,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Steam (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3552505557991046284, guid: edfb00644a5da2240b6debd74fe55ccd,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3552505557991046286, guid: edfb00644a5da2240b6debd74fe55ccd,
         type: 3}
@@ -840,6 +889,11 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 5.0941
       objectReference: {fileID: 0}
+    - target: {fileID: 3552505558468084510, guid: edfb00644a5da2240b6debd74fe55ccd,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 3552505558468084511, guid: edfb00644a5da2240b6debd74fe55ccd,
         type: 3}
       propertyPath: m_Parameters.m_DirectionCurveX.scalar
@@ -864,6 +918,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Steam (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3552505557991046284, guid: edfb00644a5da2240b6debd74fe55ccd,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3552505557991046286, guid: edfb00644a5da2240b6debd74fe55ccd,
         type: 3}
@@ -970,6 +1029,11 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 5.0941
       objectReference: {fileID: 0}
+    - target: {fileID: 3552505558468084510, guid: edfb00644a5da2240b6debd74fe55ccd,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 3552505558468084511, guid: edfb00644a5da2240b6debd74fe55ccd,
         type: 3}
       propertyPath: m_Parameters.m_DirectionCurveX.scalar
@@ -1060,6 +1124,11 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Building
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: a4e19ca52c42d5749b633b15809f9588,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a4e19ca52c42d5749b633b15809f9588, type: 3}
 --- !u!4 &1033118395609408467 stripped
@@ -1085,6 +1154,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Steam (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3552505557991046284, guid: edfb00644a5da2240b6debd74fe55ccd,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3552505557991046286, guid: edfb00644a5da2240b6debd74fe55ccd,
         type: 3}
@@ -1191,6 +1265,11 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 5.0941
       objectReference: {fileID: 0}
+    - target: {fileID: 3552505558468084510, guid: edfb00644a5da2240b6debd74fe55ccd,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 3552505558468084511, guid: edfb00644a5da2240b6debd74fe55ccd,
         type: 3}
       propertyPath: m_Parameters.m_DirectionCurveX.scalar
@@ -1215,6 +1294,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Steam (7)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3552505557991046284, guid: edfb00644a5da2240b6debd74fe55ccd,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3552505557991046286, guid: edfb00644a5da2240b6debd74fe55ccd,
         type: 3}
@@ -1321,6 +1405,11 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 5.0941
       objectReference: {fileID: 0}
+    - target: {fileID: 3552505558468084510, guid: edfb00644a5da2240b6debd74fe55ccd,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 3552505558468084511, guid: edfb00644a5da2240b6debd74fe55ccd,
         type: 3}
       propertyPath: m_Parameters.m_DirectionCurveX.scalar
@@ -1345,6 +1434,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Steam (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3552505557991046284, guid: edfb00644a5da2240b6debd74fe55ccd,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3552505557991046286, guid: edfb00644a5da2240b6debd74fe55ccd,
         type: 3}
@@ -1450,6 +1544,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.z
       value: 5.0941
+      objectReference: {fileID: 0}
+    - target: {fileID: 3552505558468084510, guid: edfb00644a5da2240b6debd74fe55ccd,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3552505558468084511, guid: edfb00644a5da2240b6debd74fe55ccd,
         type: 3}
