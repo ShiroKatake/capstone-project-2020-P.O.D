@@ -281,7 +281,7 @@ public class Alien : MonoBehaviour, IMessenger
 		else
 		{
 			Debug.Log("No script for Alien FX attached, doing damage without visuals . . .");
-			DealDamage();
+			UnsheathClaw();
 		}
 	}
 
@@ -335,12 +335,21 @@ public class Alien : MonoBehaviour, IMessenger
 	}
 
 	/// <summary>
-	/// Enable the melee weapon object to deal damage.
-	/// DealDamage() is intended to be called if there is no AlienFX.cs to trigger attack animation.
+	/// Enables the melee weapon to deal damage.
+	/// UnsheathClaw() is intended to be called if there is no AlienFX.cs to trigger attack animation.
 	/// </summary>
-	public void DealDamage()
+	public void UnsheathClaw()
 	{
 		alienWeapon.gameObject.SetActive(true);
+	}
+
+	/// <summary>
+	/// Disables the melee weapon.
+	/// SheathClaw() is intended to be called if there is no AlienFX.cs to trigger attack animation.
+	/// </summary>
+	public void SheathClaw()
+	{
+		alienWeapon.gameObject.SetActive(false);
 	}
 
 	/// <summary>
