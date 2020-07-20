@@ -12,6 +12,17 @@ using UnityEngine;
 /// </summary>
 public class DialogueBox : MonoBehaviour
 {
+    /// <summary>
+    /// Encapsulates all the data required of a new dialogue submission.
+    /// </summary>
+    private struct DialogueSubmission
+    {
+        public string key;
+        public float delay;
+        public bool tweenOut;
+        public bool fadeOut;
+    }
+
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
     //Serialized Fields----------------------------------------------------------------------------
@@ -60,12 +71,13 @@ public class DialogueBox : MonoBehaviour
     private ColourTag colourTag;
     private bool lerpFinished;
 
-    private string nextDialogueKey;
-    private float nextInvokeDelay;
-    private bool tweenOutNextDialogueSet;
-    private bool fadeOutNextDialogueSet;
+    //private string nextDialogueKey;
+    //private float nextInvokeDelay;
+    //private bool tweenOutNextDialogueSet;
+    //private bool fadeOutNextDialogueSet;
     private bool deactivationSubmitted;
     private bool nextDialogueSetReady;
+    private Queue<DialogueSubmission> dialogueQueue;
 
     private bool dialogueReadRegistered;
     private bool dialogueRead;
@@ -141,8 +153,8 @@ public class DialogueBox : MonoBehaviour
         lerpFinished = true;
         tweenOut = true;
         fadeOut = false;
-        tweenOutNextDialogueSet = true;
-        fadeOutNextDialogueSet = false;
+        //tweenOutNextDialogueSet = true;
+        //fadeOutNextDialogueSet = false;
 
         currentDialogueKey = "";
         lastDialogueKey = "";
@@ -152,8 +164,8 @@ public class DialogueBox : MonoBehaviour
         pendingColouredText = "";
         lerpTextMaxIndex = 0;
         colourTag = null;
-        nextDialogueKey = "";
-        nextInvokeDelay = 0;
+        //nextDialogueKey = "";
+        //nextInvokeDelay = 0;
         deactivationSubmitted = false;
         nextDialogueSetReady = false;
         dialogueRead = false;
@@ -174,6 +186,7 @@ public class DialogueBox : MonoBehaviour
 
         List<string[]> dialogueData = DialogueBoxManager.Instance.GetDialogueData(id);
         dialogue = new Dictionary<string, List<string>>();
+        dialogueQueue = new Queue<DialogueSubmission>();
 
         if (dialogueData == null)
         {
@@ -256,19 +269,19 @@ public class DialogueBox : MonoBehaviour
     private void UpdateDialogueBoxState()
     {
         //Activates the dialogue box if dialogue has been submitted to be displayed.
-        if (nextDialogueKey != "" && !deactivating)
+        if (dialogueQueue.Count > 0 && !deactivating && lerpFinished)
         {
             if (activated)
             {
-                ChangeDialogue(nextDialogueKey);
+                ChangeDialogue(dialogueQueue.Dequeue());
             }
             else
             {
-                StartCoroutine(ActivateDialogueBox(nextDialogueKey, nextInvokeDelay));
+                StartCoroutine(ActivateDialogueBox(dialogueQueue.Dequeue()));
             }
 
-            nextDialogueKey = "";
-            nextInvokeDelay = 0f;
+            //nextDialogueKey = "";
+            //nextInvokeDelay = 0f;
         }
         else if (deactivationSubmitted && activated && (tweenOut || fadeOut))
         {
@@ -426,25 +439,31 @@ public class DialogueBox : MonoBehaviour
     /// <param name="fadeOut">Should the dialogue box fade out on completion of the dialogue set?</param>
     public void SubmitDialogue(string key, float delay, bool tweenOut, bool fadeOut)
     {
-        if (dialogue.ContainsKey(key))
+        if (!appendDialogue && (!lerpFinished || dialogueQueue.Count > 0))
         {
-            if (dialogue[key].Count > 0)
-            {
-                nextDialogueKey = key;
-                nextInvokeDelay = delay;
-                tweenOutNextDialogueSet = tweenOut;
-                fadeOutNextDialogueSet = fadeOut;
-                dialogueRead = false;
-            }
-            else
-            {
-                Debug.LogError($"dialogueDictionary[{key}] contains no dialogue set for DialogueBox to display.");
-            }
+            Debug.LogError($"{this} already has dialogue to display and is not set to append additional dialogue to what it already displays. Submission of the dialogue set with key {key} rejected.");
+            return;
         }
-        else
+
+        if (!dialogue.ContainsKey(key))
         {
             Debug.LogError($"Dialogue key '{key}' is invalid.");
+            return;
         }
+
+        if (dialogue[key].Count == 0)
+        {
+            Debug.LogError($"dialogueDictionary[{key}] contains no dialogue set for DialogueBox to display.");
+            return;
+        }
+
+        DialogueSubmission ds = new DialogueSubmission();
+        ds.key = key;
+        ds.delay = delay;
+        ds.tweenOut = tweenOut;
+        ds.fadeOut = fadeOut;
+        dialogueQueue.Enqueue(ds);
+        dialogueRead = false;
     }
 
     /// <summary>
@@ -452,20 +471,20 @@ public class DialogueBox : MonoBehaviour
     /// </summary>
     /// <param name="key">The key of the dialogue set to be displayed.</param>
     /// <param name="delay">How long the dialogue box should wait to display the new dialogue set.</param>
-    IEnumerator ActivateDialogueBox(string key, float delay)
+    IEnumerator ActivateDialogueBox(DialogueSubmission submission)
     {
         dialogueIndex = 0;
         lastDialogueKey = currentDialogueKey == "" ? lastDialogueKey : currentDialogueKey;
-        currentDialogueKey = key;
-        tweenOut = tweenOutNextDialogueSet;
-        fadeOut = fadeOutNextDialogueSet;
+        currentDialogueKey = submission.key;
+        tweenOut = submission.tweenOut;
+        fadeOut = submission.fadeOut;
 
         activated = true;
         nextDialogueSetReady = false;
         
-        if (delay > 0)
+        if (submission.delay > 0)
         {
-            yield return new WaitForSeconds(delay);
+            yield return new WaitForSeconds(submission.delay);
         }
 
         nextDialogueSetReady = true;
@@ -481,19 +500,20 @@ public class DialogueBox : MonoBehaviour
     /// Changes over the dialogue set to display when the dialogue box is already active.
     /// </summary>
     /// <param name="key">The key of the dialogue set to be displayed.</param>
-    private void ChangeDialogue(string key)
+    private void ChangeDialogue(DialogueSubmission submission)
     {
-        if (dialogue.ContainsKey(key) && dialogue[key].Count > 0)
+        if (dialogue.ContainsKey(submission.key) && dialogue[submission.key].Count > 0)
         {
             lastDialogueKey = currentDialogueKey;
-            currentDialogueKey = key;
+            currentDialogueKey = submission.key;
             dialogueIndex = 0;
-            tweenOut = tweenOutNextDialogueSet;
+            tweenOut = submission.tweenOut;
+            fadeOut = submission.fadeOut;
             LerpNext();
         }
         else
         {
-            Debug.LogError($"dialogueDictionary[{key}] contains no dialogue set for DialogueBox to display.");
+            Debug.LogError($"dialogueDictionary[{submission.key}] contains no dialogue set for DialogueBox to display.");
         }
     }
 
