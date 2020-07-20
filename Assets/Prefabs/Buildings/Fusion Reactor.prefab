@@ -10,11 +10,12 @@ GameObject:
   m_Component:
   - component: {fileID: 2103360942000820280}
   - component: {fileID: 7989155517478719925}
+  - component: {fileID: -8028724317887167732}
   - component: {fileID: 8835600581987182225}
   - component: {fileID: -6151874320592601714}
   - component: {fileID: -3725313067051829311}
   - component: {fileID: 6149428130736486811}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Fusion Reactor
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -56,7 +57,7 @@ MonoBehaviour:
   powerConsumption: 0
   waterConsumption: 0
   wasteConsumption: 0
-  buildTime: 10
+  buildTime: 5
   buildStartHeight: -11.35
   boingInterval: 0.1667
   smallBoingMultiplier: 0.8
@@ -85,6 +86,19 @@ MonoBehaviour:
   idleSound: 15
   active: 0
   operational: 0
+--- !u!114 &-8028724317887167732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1531695208761868921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5bfa9bda77c9c3488923b65c75f29e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  affiliation: 0
 --- !u!114 &8835600581987182225
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -97,7 +111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7d1fe85e34b94943ad23931779e30d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 15
+  maxHealth: 20
 --- !u!114 &-6151874320592601714
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -124,7 +138,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   resource: 1
-  collectionRate: 3
+  collectionRate: 6
 --- !u!95 &6149428130736486811
 Animator:
   serializedVersion: 3
@@ -156,7 +170,7 @@ GameObject:
   - component: {fileID: 2948313445381567454}
   - component: {fileID: 135830335532270725}
   - component: {fileID: 1196245590506013141}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Body Collider
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -240,7 +254,7 @@ GameObject:
   - component: {fileID: 1112191767738305490}
   - component: {fileID: 1785203551101359709}
   - component: {fileID: 6817804607377848236}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Placement Collider
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -311,6 +325,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TagString
       value: Building
+      objectReference: {fileID: 0}
+    - target: {fileID: 623500914955328112, guid: 49a1fa4ffc3acb3469301dade190dbea,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 655807625986143100, guid: 49a1fa4ffc3acb3469301dade190dbea,
         type: 3}
@@ -387,6 +406,11 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Building
       objectReference: {fileID: 0}
+    - target: {fileID: 2328662969604896751, guid: 49a1fa4ffc3acb3469301dade190dbea,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 2328662970072153345, guid: 49a1fa4ffc3acb3469301dade190dbea,
         type: 3}
       propertyPath: m_LocalPosition.y
@@ -396,6 +420,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TagString
       value: Building
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328662970072153356, guid: 49a1fa4ffc3acb3469301dade190dbea,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2328662970650231864, guid: 49a1fa4ffc3acb3469301dade190dbea,
         type: 3}
@@ -411,6 +440,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TagString
       value: Building
+      objectReference: {fileID: 0}
+    - target: {fileID: 2328662970650231865, guid: 49a1fa4ffc3acb3469301dade190dbea,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2328662970650231866, guid: 49a1fa4ffc3acb3469301dade190dbea,
         type: 3}
@@ -506,6 +540,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TagString
       value: Building
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 516e3572be4dbbc4baa2b406f4ed02e8,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 516e3572be4dbbc4baa2b406f4ed02e8, type: 3}
@@ -603,6 +642,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TagString
       value: Building
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 516e3572be4dbbc4baa2b406f4ed02e8,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 516e3572be4dbbc4baa2b406f4ed02e8, type: 3}

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1313838627382815405}
   - component: {fileID: 8514249765430718580}
   - component: {fileID: 8238984568749099194}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Body Collider
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -110,11 +110,12 @@ GameObject:
   m_Component:
   - component: {fileID: 6754134058031210328}
   - component: {fileID: 6057790016772902916}
+  - component: {fileID: 1097937831683221508}
   - component: {fileID: 6966758408912711267}
   - component: {fileID: -703308631334502526}
   - component: {fileID: -6203622737719408024}
   - component: {fileID: 5198899769767388593}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Incinerator
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -152,10 +153,10 @@ MonoBehaviour:
   collisionReporters: []
   id: 0
   buildingType: 6
-  oreCost: 6
-  powerConsumption: 3
+  oreCost: 8
+  powerConsumption: 6
   waterConsumption: 0
-  wasteConsumption: 4
+  wasteConsumption: 1
   buildTime: 10
   buildStartHeight: -13
   boingInterval: 0.1667
@@ -190,6 +191,19 @@ MonoBehaviour:
   idleSound: 17
   active: 0
   operational: 0
+--- !u!114 &1097937831683221508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6754134058031210308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5bfa9bda77c9c3488923b65c75f29e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  affiliation: 0
 --- !u!114 &6966758408912711267
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -260,7 +274,7 @@ GameObject:
   - component: {fileID: 892119003820523716}
   - component: {fileID: 245434532727652196}
   - component: {fileID: 5888161813551655346}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: PlacementCollider
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -331,6 +345,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TagString
       value: Building
+      objectReference: {fileID: 0}
+    - target: {fileID: 3552505557991046284, guid: da5a5aaeaad227c4fbed8613e549fc51,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3552505557991046286, guid: da5a5aaeaad227c4fbed8613e549fc51,
         type: 3}
@@ -517,6 +536,11 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 0.2427417
       objectReference: {fileID: 0}
+    - target: {fileID: 3552505558468084510, guid: da5a5aaeaad227c4fbed8613e549fc51,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 3552505558468084511, guid: da5a5aaeaad227c4fbed8613e549fc51,
         type: 3}
       propertyPath: m_Parameters.m_DirectionCurveX.scalar
@@ -615,6 +639,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TagString
       value: Building
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: aafe9845bf4a1cf45b0ed81d60a724b9,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aafe9845bf4a1cf45b0ed81d60a724b9, type: 3}
