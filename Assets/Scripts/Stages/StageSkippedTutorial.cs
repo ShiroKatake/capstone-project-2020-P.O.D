@@ -113,6 +113,17 @@ public class StageSkippedTutorial : Stage
             yield return null;
         }
 
+        consoleDB.SubmitErrorMessage("Test Message 1", 0);
+        consoleDB.SubmitErrorMessage("Test Message 2", 0);
+        consoleDB.SubmitErrorMessage("Test Message 3", 0);
+        consoleDB.SubmitErrorMessage("Test Message 4", 2);
+        consoleDB.SubmitErrorMessage("Test Message 5", 2);
+
+        while (consoleDB.LerpingDialogue)
+        {
+            yield return null;
+        }
+
         consoleDB.SubmitDialogue("system check", 0, false, false);
         buildingAndResourcesBar.Visible = true;
         miniMap.Visible = true;

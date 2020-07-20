@@ -71,10 +71,6 @@ public class DialogueBox : MonoBehaviour
     private ColourTag colourTag;
     private bool lerpFinished;
 
-    //private string nextDialogueKey;
-    //private float nextInvokeDelay;
-    //private bool tweenOutNextDialogueSet;
-    //private bool fadeOutNextDialogueSet;
     private bool deactivationSubmitted;
     private bool nextDialogueSetReady;
     private Queue<DialogueSubmission> dialogueQueue;
@@ -82,9 +78,12 @@ public class DialogueBox : MonoBehaviour
     private bool dialogueReadRegistered;
     private bool dialogueRead;
     private bool deactivating;
+    private bool changing;
 
     private Player playerInputManager;
     private float dialogueTimer = 0;
+
+    private List<Graphic> graphics;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -153,8 +152,6 @@ public class DialogueBox : MonoBehaviour
         lerpFinished = true;
         tweenOut = true;
         fadeOut = false;
-        //tweenOutNextDialogueSet = true;
-        //fadeOutNextDialogueSet = false;
 
         currentDialogueKey = "";
         lastDialogueKey = "";
@@ -164,15 +161,34 @@ public class DialogueBox : MonoBehaviour
         pendingColouredText = "";
         lerpTextMaxIndex = 0;
         colourTag = null;
-        //nextDialogueKey = "";
-        //nextInvokeDelay = 0;
         deactivationSubmitted = false;
         nextDialogueSetReady = false;
         dialogueRead = false;
         deactivating = false;
+        changing = false;
         textBox.text = "";
         clickable = false;
         activated = false;
+
+        dialogue = new Dictionary<string, List<string>>();
+        dialogueQueue = new Queue<DialogueSubmission>();
+
+        graphics = new List<Graphic>();
+
+        if (background != null)
+        {
+            graphics.Add(background);
+        }
+        
+        if (border != null)
+        {
+            graphics.Add(border);
+        }
+
+        if (textBox != null)
+        {
+            graphics.Add(textBox);
+        }
     }
 
     ///// <summary>
@@ -185,8 +201,7 @@ public class DialogueBox : MonoBehaviour
         newLineMarker = DialogueBoxManager.Instance.NewLineMarker;
 
         List<string[]> dialogueData = DialogueBoxManager.Instance.GetDialogueData(id);
-        dialogue = new Dictionary<string, List<string>>();
-        dialogueQueue = new Queue<DialogueSubmission>();
+
 
         if (dialogueData == null)
         {
@@ -257,7 +272,7 @@ public class DialogueBox : MonoBehaviour
                     lastDialogueKey = currentDialogueKey;
                     currentDialogueKey = "";
                     clickable = false;
-                    DeactivateDialogueBox();
+                    Deactivate();
                 }
             }
         }
@@ -273,22 +288,19 @@ public class DialogueBox : MonoBehaviour
         {
             if (activated)
             {
-                ChangeDialogue(dialogueQueue.Dequeue());
+                StartCoroutine(ChangeDialogue(dialogueQueue.Dequeue()));
             }
             else
             {
-                StartCoroutine(ActivateDialogueBox(dialogueQueue.Dequeue()));
+                StartCoroutine(Activate(dialogueQueue.Dequeue()));
             }
-
-            //nextDialogueKey = "";
-            //nextInvokeDelay = 0f;
         }
         else if (deactivationSubmitted && activated && (tweenOut || fadeOut))
         {
             lastDialogueKey = currentDialogueKey;
             currentDialogueKey = "";
             clickable = false;
-            DeactivateDialogueBox();
+            Deactivate();
         }
 
         deactivationSubmitted = false;
@@ -401,6 +413,10 @@ public class DialogueBox : MonoBehaviour
             {
                 lerpTextMaxIndex = Mathf.Min(lerpTextMaxIndex + lerpTextInterval, currentText.Length);// - 1);
             }
+            else if (dialogueQueue.Count > 0 && !deactivating && !changing)
+            {
+                StartCoroutine(ChangeDialogue(dialogueQueue.Dequeue()));
+            }
             else
             {
                 lerpFinished = true;
@@ -425,8 +441,9 @@ public class DialogueBox : MonoBehaviour
         }
         else
         {
-            dialogue["error"] = new List<string>() { $"<{message}>" };
-            SubmitDialogue("error", delay, false, false);
+            int id = IdGenerator.Instance.GetNextId();
+            dialogue[$"error {id}"] = new List<string>() { $"<{message}>" };
+            SubmitDialogue($"error {id}", delay, false, false);
         }
     }
 
@@ -469,10 +486,10 @@ public class DialogueBox : MonoBehaviour
     /// <summary>
     /// Activates the dialogue box, prompting it to appear on-screen.
     /// </summary>
-    /// <param name="key">The key of the dialogue set to be displayed.</param>
-    /// <param name="delay">How long the dialogue box should wait to display the new dialogue set.</param>
-    IEnumerator ActivateDialogueBox(DialogueSubmission submission)
+    /// <param name="submission">The dialogue submission to have its content displayed.</param>
+    private IEnumerator Activate(DialogueSubmission submission)
     {
+        Debug.Log($"Activating dialogue box, key is {submission.key}");
         dialogueIndex = 0;
         lastDialogueKey = currentDialogueKey == "" ? lastDialogueKey : currentDialogueKey;
         currentDialogueKey = submission.key;
@@ -499,17 +516,26 @@ public class DialogueBox : MonoBehaviour
     /// <summary>
     /// Changes over the dialogue set to display when the dialogue box is already active.
     /// </summary>
-    /// <param name="key">The key of the dialogue set to be displayed.</param>
-    private void ChangeDialogue(DialogueSubmission submission)
+    /// <param name="submission">The dialogue submission to have its content displayed.</param>
+    private IEnumerator ChangeDialogue(DialogueSubmission submission)
     {
+        Debug.Log($"Changing dialogue, key is {submission.key}");
         if (dialogue.ContainsKey(submission.key) && dialogue[submission.key].Count > 0)
         {
+            changing = true;
             lastDialogueKey = currentDialogueKey;
             currentDialogueKey = submission.key;
             dialogueIndex = 0;
             tweenOut = submission.tweenOut;
             fadeOut = submission.fadeOut;
+
+            if (submission.delay > 0)
+            {
+                yield return new WaitForSeconds(submission.delay);
+            }
+
             LerpNext();
+            changing = false;
         }
         else
         {
@@ -591,7 +617,7 @@ public class DialogueBox : MonoBehaviour
     /// <summary>
     /// Tweens the dialogue box off the screen.
     /// </summary>
-    private void DeactivateDialogueBox() 
+    private void Deactivate() 
     {
         dialogueTimer = 0;
         deactivating = true;
@@ -613,81 +639,28 @@ public class DialogueBox : MonoBehaviour
     /// <param name="fadeIn">Is the dialogue box tweening and fading in?</param>
     private IEnumerator FadeOut()
     {
-        bool backgroundFinished = false;
-        bool borderFinished = false;
-        bool textFinished = false;
-        Color backgroundColour = Color.white;
-        Color borderColour = Color.white;
-        Color textColour = Color.white;
         float deltaTime;
-
-        if (background != null)
-        {
-            backgroundColour = background.color;
-        }
-        else
-        {
-            backgroundFinished = true;
-        }
-
-        if (border != null)
-        {
-            borderColour = border.color;
-        }
-        else
-        {
-            borderFinished = true;
-        }
-
-        if (textBox != null)
-        {
-            textColour = textBox.color;
-        }
-        else
-        {
-            textFinished = true;
-        }
+        bool finished;
 
         do
         {
             deltaTime = Time.deltaTime;
+            finished = true;
 
-            if (!backgroundFinished)
+            foreach (Graphic g in graphics)
             {
-                backgroundColour.a -= fadeSpeed * deltaTime;
-                background.color = backgroundColour;
-
-                if (background.color.a <= 0)
+                if (g.color.a > 0)
                 {
-                    backgroundFinished = true;
+                    finished = false;
+                    Color colour = g.color;
+                    colour.a -= fadeSpeed * deltaTime;
+                    g.color = colour;
                 }
             }
-
-            if (!borderFinished)
-            {
-                borderColour.a -= fadeSpeed * deltaTime;
-                border.color = borderColour;
-
-                if (border.color.a <= 0)
-                {
-                    borderFinished = true;
-                }
-            }
-
-            if (!textFinished)
-            {
-                textColour.a -= fadeSpeed * deltaTime;
-                textBox.color = textColour;
-
-                if (textBox.color.a <= 0)
-                {
-                    textFinished = true;
-                }
-            }
-
+            
             yield return null;
         }
-        while (!backgroundFinished || !borderFinished || !textFinished);
+        while (!finished);
 
         if (!tweenOut)
         {
