@@ -110,8 +110,9 @@ MonoBehaviour:
   respawnDelay: 30
   tutorialSwarmCentre: {x: 86, y: 5, z: 100}
   maxSwarmRadius: 5
+  aliensPerSwarm: 2
+  maxSwarmCount: 4
   maxSwarmSize: 2
-  maxSwarmCount: 5
   defencePenaltyThreshold: 300
   nonDefencePenaltyThreshold: 300
   penaltyIncrement: 3
@@ -261,6 +262,7 @@ MonoBehaviour:
   mineralPrefab: {fileID: 6920960518473543034, guid: 4cce8f281ac35a346bc3e16f60d137a7,
     type: 3}
   pooledMinerals: 10
+  oreCount: 10
 --- !u!114 &4887592665430866259
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -289,6 +291,7 @@ MonoBehaviour:
   orePrefab: {fileID: 293440447126890837, guid: d37174262cff0824bb2285fd3464f7f1,
     type: 3}
   pooledOres: 2
+  oreValue: 5
 --- !u!114 &7712896613637118947
 MonoBehaviour:
   m_ObjectHideFlags: 0

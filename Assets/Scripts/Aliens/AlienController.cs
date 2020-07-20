@@ -16,10 +16,12 @@ public class AlienController : MonoBehaviour
     [SerializeField] private float respawnDelay;
 
     [Header("Swarm Stats")]
-    [SerializeField] private Vector3 tutorialSwarmCentre;
-    [SerializeField] private int maxSwarmRadius;
-    [SerializeField] private int maxSwarmSize;
-    [SerializeField] private int maxSwarmCount;
+	[Tooltip("How much space 1 swarm takes.")]
+	[SerializeField] private int maxSwarmRadius;
+	[Tooltip("How many swarms should be in 1 night.")]
+	[SerializeField] private int maxSwarmCount;
+	[Tooltip("How many aliens can be in a swarm.")]
+	[SerializeField] private int maxSwarmSize;
 
     [Header("Penalty Stats")]
     [SerializeField] private float defencePenaltyThreshold;
@@ -42,6 +44,7 @@ public class AlienController : MonoBehaviour
     private float timeOfLastDeath;
     private Dictionary<int, List<Vector3>> swarmOffsets;
     private LayerMask groundLayerMask;
+
     private List<EStage> spawnableStages;
     private List<EStage> gameOverStages;
 
@@ -89,6 +92,7 @@ public class AlienController : MonoBehaviour
         timeOfLastPenalty = penaltyCooldown * -1;
         spawnCountPenalty = 0;
         groundLayerMask = LayerMask.GetMask("Ground");
+
         spawnableStages = new List<EStage>() { EStage.Combat, EStage.MainGame };
         gameOverStages = new List<EStage>() { EStage.Win, EStage.Lose };
 

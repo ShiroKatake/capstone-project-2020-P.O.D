@@ -48,7 +48,7 @@ public class ResourceTextManager : MonoBehaviour
         Instance = this;
         if (!visibleOnAwake)
         {
-            List<Graphic> initialisationGraphics = new List<Graphic>() { ore, water, power, waste, oreIcon, waterIcon, powerIcon/*, wasteIcon*/ };
+            List<Graphic> initialisationGraphics = new List<Graphic>() { ore, water, power, waste, oreIcon, waterIcon, powerIcon, wasteIcon };
             graphics = new List<Graphic>();
             foreach (Graphic g in initialisationGraphics)
             {

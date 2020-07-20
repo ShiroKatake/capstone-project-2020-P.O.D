@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5136758428388025279}
   - component: {fileID: 6920960518473543034}
+  - component: {fileID: 4184532511934497422}
   m_Layer: 9
   m_Name: Mineral
   m_TagString: Planet
@@ -45,9 +46,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   placed: 0
-  oreCount: 30
+  oreCount: 10
   oreSpawnRate: 0.75
   oreCurveRadius: 2
+--- !u!114 &4184532511934497422
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7795659470375798990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e5ec34ea6254b1459d279d8f7d3ad74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  reference: 8
 --- !u!65 &8154828047606236989
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -61,6 +75,19 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.91391957, y: 0.828523, z: 0.8020679}
   m_Center: {x: -0.25444025, y: -0.20359258, z: 0.45239112}
+--- !u!114 &3901012778875276594
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7865185940965092602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e5ec34ea6254b1459d279d8f7d3ad74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  reference: 8
 --- !u!1001 &2163748618175100403
 PrefabInstance:
   m_ObjectHideFlags: 0

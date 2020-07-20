@@ -51,8 +51,8 @@ public class PlayerMovementController : MonoBehaviour
     private float timeOfLastShot;
 
     //Other
-    private Player playerInputManager;
-    private bool gameOver;
+    private Rewired.Player playerInputManager;
+    private bool repsawn;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -94,9 +94,19 @@ public class PlayerMovementController : MonoBehaviour
         charCon = GetComponent<CharacterController>();
         timeOfLastShot = shootCooldown * -1;
         defaultHoverHeight = transform.position.y;
-        gameOver = false;
+        repsawn = false;
         groundLayerMask = LayerMask.GetMask("Ground");
-        playerInputManager = ReInput.players.GetPlayer(GetComponent<PlayerID>().Value);  //Needs to run in Awake() or the tutorial breaks
+
+		health.onDie += OnDie;
+    }
+
+    /// <summary>
+    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
+    /// Start() runs after Awake().
+    /// </summary>
+    void Start()
+    {
+        playerInputManager = ReInput.players.GetPlayer(GetComponent<PlayerID>().Value);
     }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
@@ -146,7 +156,6 @@ public class PlayerMovementController : MonoBehaviour
     private void UpdateDrone()
     {
         audioListener.position = transform.position;
-        CheckHealth();
         Look();
         Move();
         CheckShooting();
@@ -155,17 +164,14 @@ public class PlayerMovementController : MonoBehaviour
     /// <summary>
     /// Checks the player's health and if they're still alive.
     /// </summary>
-    private void CheckHealth()
+    private void OnDie()
     {
-        if (health.IsDead())
-        {
-            Debug.Log("The player's health has reached 0. GAME OVER!!!");
-            AudioManager.Instance.PlaySound(AudioManager.ESound.Explosion, this.gameObject);
-            if (!gameOver)
-            {
-                MessageDispatcher.Instance.SendMessage("Alien", new Message(gameObject.name, "Player", this.gameObject, "Dead"));
-                gameOver = true;
-            }
+        if (!repsawn)
+		{
+			AudioManager.Instance.PlaySound(AudioManager.ESound.Explosion, this.gameObject);
+			Debug.Log("The player's health has reached 0. Respawn!!!");
+			MessageDispatcher.Instance.SendMessage("Alien", new Message(gameObject.name, "Player", this.gameObject, "Dead"));
+            repsawn = true;
         }
     }
 
@@ -321,7 +327,6 @@ public class PlayerMovementController : MonoBehaviour
     {
         if (shooting && Time.time - timeOfLastShot > shootCooldown)
         {
-         
             timeOfLastShot = Time.time;
             Projectile projectile = ProjectileFactory.Instance.GetProjectile(EProjectileType.PODLaserBolt, transform, barrelTip.position);
             AudioManager.Instance.PlaySound(AudioManager.ESound.Laser_POD, this.gameObject);
@@ -329,6 +334,5 @@ public class PlayerMovementController : MonoBehaviour
             projectile.Shoot(vector.normalized, 0);
             //TODO: use overload that incorporates shooter movement speed, and calculate current movement speed in the direction of the shot vector.
         }
-        
     }
 }

@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class ActivateToolTips : MonoBehaviour
 {
+    [SerializeField] private ToolTips.Etooltips selection;
     public void tooltipON()
     {
-        ToolTips.showTooltip_Static(ToolTips.Etooltips.Boilier);
+        ToolTips.showTooltip_Static(selection);
     }
     public void tooltipOff()
     {

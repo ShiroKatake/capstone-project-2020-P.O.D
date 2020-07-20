@@ -13,6 +13,7 @@ public class OreFactory : MonoBehaviour
 
 	[SerializeField] private Ore orePrefab;
 	[SerializeField] private int pooledOres;
+	[SerializeField] private int oreValue;
 
 	//Non-Serialized Fields------------------------------------------------------------------------
 
@@ -27,6 +28,7 @@ public class OreFactory : MonoBehaviour
 	/// MineralFactory's singleton public property.
 	/// </summary>
 	public static OreFactory Instance { get; protected set; }
+	public int OreValue { get => oreValue; }
 
 	//Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
