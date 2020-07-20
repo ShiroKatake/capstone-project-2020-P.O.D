@@ -4,13 +4,13 @@ using TMPro;
 /// <summary>
 /// A demi script placed in objects with multiple children that have editable text fields (this is neccessary since we need to check if all children are empty before disabling this object).
 /// </summary>
-public class HoveringDialogueContainer : MonoBehaviour
+public class HoveringDialogueDemi_Container : MonoBehaviour
 {
 	//Private Fields---------------------------------------------------------------------------------------------------------------------------------
 	
 	//Non-Serialized Fields------------------------------------------------------------------------
 
-	private HoveringDialogueText[] hoveringDialogueTexts;
+	private HoveringDialogueDemi_TextElement[] hoveringDialogueTexts;
 
 	//Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -21,7 +21,7 @@ public class HoveringDialogueContainer : MonoBehaviour
 	/// </summary>
 	public bool IsAllEmpty {
 		get {
-			foreach (HoveringDialogueText text in hoveringDialogueTexts)
+			foreach (HoveringDialogueDemi_TextElement text in hoveringDialogueTexts)
 			{
 				if (!string.IsNullOrEmpty(text.GetComponent<TextMeshProUGUI>().text))
 				{
@@ -40,6 +40,6 @@ public class HoveringDialogueContainer : MonoBehaviour
 	/// </summary>
 	private void Awake()
 	{
-		hoveringDialogueTexts = GetComponentsInChildren<HoveringDialogueText>();
+		hoveringDialogueTexts = GetComponentsInChildren<HoveringDialogueDemi_TextElement>();
 	}
 }

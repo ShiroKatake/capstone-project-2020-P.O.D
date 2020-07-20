@@ -164,9 +164,8 @@ public class Mineral : MonoBehaviour
     public void Reset()
     {
         DisableColliders();
-        oreCount = initialCount;
         StartCoroutine(DespawnMineral());
-    }
+	}
 
     /// <summary>
     /// Disables the mineral node's colliders
@@ -193,7 +192,8 @@ public class Mineral : MonoBehaviour
             yield return null;
         }
 
-        transform.position = ObjectPool.Instance.transform.position;
+		oreCount = initialCount;
+		transform.position = ObjectPool.Instance.transform.position;
         transform.parent = ObjectPool.Instance.transform;
         despawning = false;
     }

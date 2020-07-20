@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 /// <summary>
 /// Controls what to put in the hovering dialogue box and handling showing/hiding.
@@ -14,7 +15,6 @@ public class HoveringDialogueManager : MonoBehaviour
 
 	[Header("Hovering Dialogue")]
 	[SerializeField] private GameObject hoverDialogueObject;
-	[SerializeField] private RectTransform hoverDialogueRect;
 
 	[Header("Dialogue Contents")]
 	[SerializeField] private TextMeshProUGUI dialogueName;
@@ -36,14 +36,17 @@ public class HoveringDialogueManager : MonoBehaviour
 	[SerializeField] private TextMeshProUGUI wasteProductionAmount;
 
 	[Space(10)]
+	[SerializeField] private Image mineralFill;
 	[SerializeField] private TextMeshProUGUI mineralValue;
 
 	//Non-Serialized Fields------------------------------------------------------------------------
 
 	private List<TextMeshProUGUI> texts = new List<TextMeshProUGUI>();
-	private List<HoveringDialogueContainer> containers = new List<HoveringDialogueContainer>();
-	private List<RectTransform> rectsWithContentFitter = new List<RectTransform>();
+	private List<HoveringDialogueDemi_Container> containers = new List<HoveringDialogueDemi_Container>();
+	private List<RectTransform> rectsToRefresh = new List<RectTransform>();
 	private RectTransform hoverDialogueRectTransform;
+	private Camera playerCamera;
+	private HoverDialogueBoxPreset presetWithMineral;
 
 	//Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -64,28 +67,31 @@ public class HoveringDialogueManager : MonoBehaviour
 			Debug.LogError("There should never be more than one HoveringDialogueManager.");
 		}
 
+		playerCamera = Camera.main;
+
 		Instance = this;
 		hoverDialogueRectTransform = hoverDialogueObject.GetComponent<RectTransform>();
 
 		//Get all "editable" text fields
-		HoveringDialogueText[] hoveringDialogueTexts = hoverDialogueObject.GetComponentsInChildren<HoveringDialogueText>(true);
-		foreach (HoveringDialogueText hoveringDialogueText in hoveringDialogueTexts)
+		HoveringDialogueDemi_TextElement[] hoveringDialogueTexts = hoverDialogueObject.GetComponentsInChildren<HoveringDialogueDemi_TextElement>(true);
+		foreach (HoveringDialogueDemi_TextElement hoveringDialogueText in hoveringDialogueTexts)
 		{
 			texts.Add(hoveringDialogueText.GetComponent<TextMeshProUGUI>());
 		}
 
 		//Get all game objects with multiple editable text fields
-		HoveringDialogueContainer[] containerArray = hoverDialogueObject.GetComponentsInChildren<HoveringDialogueContainer>(true);
+		HoveringDialogueDemi_Container[] containerArray = hoverDialogueObject.GetComponentsInChildren<HoveringDialogueDemi_Container>(true);
 		foreach (var container in containerArray)
 		{
 			containers.Add(container);
 		}
 
-		ContentSizeFitter[] contentSizeFitters = hoverDialogueObject.GetComponentsInChildren<ContentSizeFitter>();
-		foreach (ContentSizeFitter contentSizeFitter in contentSizeFitters)
+		HoveringDialogueDemi_RefreshElement[] refreshElements = hoverDialogueObject.GetComponentsInChildren<HoveringDialogueDemi_RefreshElement>();
+		foreach (HoveringDialogueDemi_RefreshElement refreshElement in refreshElements)
 		{
-			rectsWithContentFitter.Add(contentSizeFitter.GetComponent<RectTransform>());
+			rectsToRefresh.Add(refreshElement.GetComponent<RectTransform>());
 		}
+		rectsToRefresh.Reverse();
 	}
 
 	/// <summary>
@@ -104,13 +110,13 @@ public class HoveringDialogueManager : MonoBehaviour
 	/// </summary>
 	private void Update()
 	{
-		if (Input.GetKeyDown(KeyCode.G))
+		if (presetWithMineral != null && !string.IsNullOrEmpty(presetWithMineral.MineralValue))
 		{
-			hoverDialogueObject.SetActive(true);
-		}
-		if (Input.GetKeyDown(KeyCode.H))
-		{
-			HideDialogue();
+			UpdateMiningLive();
+			if (presetWithMineral.WorldAnchorPoint != null)
+			{
+				hoverDialogueObject.transform.position = new Vector3(presetWithMineral.WorldAnchorPoint.x, presetWithMineral.WorldAnchorPoint.y, 0);
+			}
 		}
 	}
 
@@ -118,12 +124,23 @@ public class HoveringDialogueManager : MonoBehaviour
 
 	/// <summary>
 	/// Fill in the dialogue's contents, enable the dialogue object, disable the empty text fields, and update the sizing.
-	/// <param name="hoveringDialogueBoxPreset">The preset that the mouse hovered over.</param>
+	/// <param name="preset">The preset that the mouse hovered over.</param>
 	/// </summary>
-	public void ShowDialogue(HoverDialogueBoxPreset hoveringDialogueBoxPreset)
+	public void ShowDialogue(HoverDialogueBoxPreset preset)
 	{
-		FillDialogueBox(hoveringDialogueBoxPreset);
-		hoverDialogueObject.transform.SetParent(hoveringDialogueBoxPreset.AnchorPoint, false);
+		presetWithMineral = preset;
+		FillDialogueBox(preset);
+		
+		//Position the dialogue
+		RectTransform rectTransform = preset.UIAnchorPoint.GetComponent<RectTransform>();
+		if (rectTransform != null)
+		{
+			hoverDialogueObject.transform.position = rectTransform.position;
+		}
+		else if (presetWithMineral.WorldAnchorPoint != null)
+		{
+			hoverDialogueObject.transform.position = new Vector3(presetWithMineral.WorldAnchorPoint.x, presetWithMineral.WorldAnchorPoint.y, 0);
+		}
 		hoverDialogueObject.SetActive(true);
 		CheckEmpty(); //This being after enabling the dialogue object is necessary in order to execute Rebuild() correctly.
 		Rebuild();
@@ -134,6 +151,7 @@ public class HoveringDialogueManager : MonoBehaviour
 	/// </summary>
 	public void HideDialogue()
 	{
+		presetWithMineral = null;
 		hoverDialogueObject.SetActive(false);
 	}
 	
@@ -142,32 +160,39 @@ public class HoveringDialogueManager : MonoBehaviour
 	/// </summary>
 	private void Rebuild()
 	{
-		foreach (RectTransform rectTransform in rectsWithContentFitter)
+		foreach (var rect in rectsToRefresh)
 		{
-			LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
+			LayoutRebuilder.ForceRebuildLayoutImmediate(rect);
 		}
-		//The top most parent needs to be recalculated last so it can accommodate all the changes from its children
-		LayoutRebuilder.ForceRebuildLayoutImmediate(hoverDialogueRectTransform);
 	}
 
 	/// <summary>
 	/// Fill the dialogue's content with everything from the preset (including empty strings).
 	/// </summary>
-	/// <param name="hoveringDialogueBoxPreset">The preset that the mouse hovered over.</param>
-	private void FillDialogueBox(HoverDialogueBoxPreset hoveringDialogueBoxPreset)
+	/// <param name="preset">The preset that the mouse hovered over.</param>
+	private void FillDialogueBox(HoverDialogueBoxPreset preset)
 	{
-		dialogueName.text = hoveringDialogueBoxPreset.DialogueName;
-		objectClass.text = hoveringDialogueBoxPreset.ObjectClass;
-		oreCost.text = hoveringDialogueBoxPreset.OreCost;
-		powerCost.text = hoveringDialogueBoxPreset.PowerCost;
-		waterCost.text = hoveringDialogueBoxPreset.WaterCost;
-		wasteCost.text = hoveringDialogueBoxPreset.WasteCost;
-		buildTime.text = hoveringDialogueBoxPreset.BuildTime;
-		description.text = hoveringDialogueBoxPreset.Description;
-		powerProductionAmount.text = hoveringDialogueBoxPreset.PowerProductionAmount;
-		waterProductionAmount.text = hoveringDialogueBoxPreset.WaterProductionAmount;
-		wasteProductionAmount.text = hoveringDialogueBoxPreset.WasteProductionAmount;
-		mineralValue.text = hoveringDialogueBoxPreset.MineralValue;
+		dialogueName.text = preset.DialogueName;
+		objectClass.text = preset.ObjectClass;
+		oreCost.text = preset.OreCost;
+		powerCost.text = preset.PowerCost;
+		waterCost.text = preset.WaterCost;
+		wasteCost.text = preset.WasteCost;
+		buildTime.text = preset.BuildTime;
+		description.text = preset.Description;
+		powerProductionAmount.text = preset.PowerProductionAmount;
+		waterProductionAmount.text = preset.WaterProductionAmount;
+		wasteProductionAmount.text = preset.WasteProductionAmount;
+		mineralValue.text = preset.MineralValue;
+	}
+
+	/// <summary>
+	/// Update mining related data if necessary components exist.
+	/// </summary>
+	public void UpdateMiningLive()
+	{
+		mineralValue.text = presetWithMineral.MineralValue;
+		mineralFill.fillAmount = presetWithMineral.MineralFillValue;
 	}
 
 	/// <summary>
@@ -189,7 +214,7 @@ public class HoveringDialogueManager : MonoBehaviour
 		}
 
 		//Disable the big container if all of their children text fields are empty (ie. production has a potential to provide more than 1 type of resources, so only disable if ALL are empty.)
-		foreach (HoveringDialogueContainer container in containers)
+		foreach (HoveringDialogueDemi_Container container in containers)
 		{
 			if (container.IsAllEmpty)
 			{
