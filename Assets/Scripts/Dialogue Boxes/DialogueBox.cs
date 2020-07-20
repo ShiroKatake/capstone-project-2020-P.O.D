@@ -85,6 +85,8 @@ public class DialogueBox : MonoBehaviour
 
     private List<Graphic> graphics;
 
+    private int lastUpdate;
+
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
     //Basic Public Properties----------------------------------------------------------------------
@@ -169,6 +171,7 @@ public class DialogueBox : MonoBehaviour
         textBox.text = "";
         clickable = false;
         activated = false;
+        lastUpdate = 0;
 
         dialogue = new Dictionary<string, List<string>>();
         dialogueQueue = new Queue<DialogueSubmission>();
@@ -228,6 +231,8 @@ public class DialogueBox : MonoBehaviour
     /// </summary>
     private void Update()
     {
+        lastUpdate++;
+
         if (clickable)
         {
             dialogueTimer += Time.deltaTime;
@@ -246,9 +251,11 @@ public class DialogueBox : MonoBehaviour
     /// </summary>
     private void GetInput()
     {
-        if (!dialogueReadRegistered)
+        if (!dialogueReadRegistered && playerInputManager.GetButtonDown("DialogueRead"))
         {
-            dialogueReadRegistered = playerInputManager.GetButtonDown("DialogueRead");
+            RegisterDialogueRead();
+            //Note: is it slipping in during a delay between the calls to SubmitDialogue() and ChangeDialogue()? Need to test
+            deliberate error to draw attention to this comment.
         }
     }
 
@@ -284,7 +291,7 @@ public class DialogueBox : MonoBehaviour
     private void UpdateDialogueBoxState()
     {
         //Activates the dialogue box if dialogue has been submitted to be displayed.
-        if (dialogueQueue.Count > 0 && !deactivating && lerpFinished)
+        if (dialogueQueue.Count > 0 && !deactivating && lerpFinished && !changing)
         {
             if (activated)
             {
@@ -327,10 +334,10 @@ public class DialogueBox : MonoBehaviour
                 }
             }
 
-            if (clickable && dialogueRead)
-            {
-                RegisterDialogueRead();
-            }
+            //if (clickable && dialogueRead)
+            //{
+            //    RegisterDialogueRead();
+            //}
         }
 
         dialogueReadRegistered = false;
@@ -341,7 +348,7 @@ public class DialogueBox : MonoBehaviour
     /// </summary>
     private void LerpDialogue()
     {
-        if (!lerpFinished)
+        if (!lerpFinished && !changing)
         {
             //Reset variables
             colourTag = null;
@@ -413,7 +420,7 @@ public class DialogueBox : MonoBehaviour
             {
                 lerpTextMaxIndex = Mathf.Min(lerpTextMaxIndex + lerpTextInterval, currentText.Length);// - 1);
             }
-            else if (dialogueQueue.Count > 0 && !deactivating && !changing)
+            else if (dialogueQueue.Count > 0 && !deactivating)
             {
                 StartCoroutine(ChangeDialogue(dialogueQueue.Dequeue()));
             }
@@ -456,7 +463,9 @@ public class DialogueBox : MonoBehaviour
     /// <param name="fadeOut">Should the dialogue box fade out on completion of the dialogue set?</param>
     public void SubmitDialogue(string key, float delay, bool tweenOut, bool fadeOut)
     {
-        if (!appendDialogue && (!lerpFinished || dialogueQueue.Count > 0))
+        Debug.Log($"{this} received dialogue submission with key {key} during update {lastUpdate}. appendDialogue: {appendDialogue}, lerpFinished: {lerpFinished}, dialogueRead: {dialogueRead}, dialogueQueue.Count: {dialogueQueue.Count}");
+
+        if (!appendDialogue && ((!lerpFinished && !dialogueRead) || dialogueQueue.Count > 0))
         {
             Debug.LogError($"{this} already has dialogue to display and is not set to append additional dialogue to what it already displays. Submission of the dialogue set with key {key} rejected.");
             return;
@@ -489,7 +498,6 @@ public class DialogueBox : MonoBehaviour
     /// <param name="submission">The dialogue submission to have its content displayed.</param>
     private IEnumerator Activate(DialogueSubmission submission)
     {
-        Debug.Log($"Activating dialogue box, key is {submission.key}");
         dialogueIndex = 0;
         lastDialogueKey = currentDialogueKey == "" ? lastDialogueKey : currentDialogueKey;
         currentDialogueKey = submission.key;
@@ -519,7 +527,6 @@ public class DialogueBox : MonoBehaviour
     /// <param name="submission">The dialogue submission to have its content displayed.</param>
     private IEnumerator ChangeDialogue(DialogueSubmission submission)
     {
-        Debug.Log($"Changing dialogue, key is {submission.key}");
         if (dialogue.ContainsKey(submission.key) && dialogue[submission.key].Count > 0)
         {
             changing = true;
@@ -594,6 +601,7 @@ public class DialogueBox : MonoBehaviour
     /// </summary>
     public void RegisterDialogueRead()
     {
+        Debug.Log($"{this}.RegisterDialogueRead() called during update {lastUpdate}");
         dialogueReadRegistered = true;
     }
     
