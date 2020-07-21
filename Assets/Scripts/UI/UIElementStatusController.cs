@@ -24,6 +24,9 @@ public class UIElementStatusController : MonoBehaviour
     [SerializeField] private int flickerCount;
     [SerializeField] private bool flickerOutOnComplete;
 
+    [Header("Interactability")]
+    [SerializeField] private bool interactableOnAwake;
+
     [Header("Interactability Requirements - Resources")]
     [SerializeField] private bool requiresResources;
     [SerializeField] private int requiredOre;
@@ -188,7 +191,11 @@ public class UIElementStatusController : MonoBehaviour
     /// </summary>
     private void Awake()
     {
-        //Debug.Log($"{this}.button is {button}, {this}.image is {image}");
+        if (button != null)
+        {
+            interactable = interactableOnAwake;
+            button.interactable = interactableOnAwake;
+        }
 
         graphics = new List<Graphic>();
 

@@ -225,7 +225,7 @@ public class StageControls : Stage
         mineralsHighlightUIEC.Visible = true;
 
         //Start terraforming stage
-        while (!cat.DialogueRead)
+        while (!cat.DialogueRead || !cat.AcceptingSubmissions)
         {
             yield return null;
         }
