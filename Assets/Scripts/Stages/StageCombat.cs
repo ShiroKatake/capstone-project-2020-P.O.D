@@ -114,7 +114,7 @@ public class StageCombat : Stage
         machineGunTurret.Interactable = true;
         turretsHighlight.Visible = true;
 
-        while (!BuildingController.Instance.HasBuiltBuilding(EBuilding.ShortRangeTurret) || !BuildingController.Instance.HasBuiltBuilding(EBuilding.ShortRangeTurret))
+        while (!BuildingController.Instance.HasBuiltBuilding(EBuilding.ShortRangeTurret) || !BuildingController.Instance.HasBuiltBuilding(EBuilding.LongRangeTurret))
         {
             yield return null;
         }
