@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 /// <summary>
 /// A player script for collecting minerals.
@@ -18,16 +19,20 @@ public class MineralCollectionController : MonoBehaviour
 
     private Player playerInputManager;
     private bool collectMinerals;
+	private bool isOnMineral;
     private LayerMask mineralsLayerMask;
 
-    //Public Properties------------------------------------------------------------------------------------------------------------------------------
+	//Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    //Singleton Public Property--------------------------------------------------------------------                                                    
+	public UnityAction onMouseHoverEnter;
+	public UnityAction onMouserHoverExit;
 
-    /// <summary>
-    /// MineralCollectionController's singleton public property.
-    /// </summary>
-    public static MineralCollectionController Instance { get; protected set; }
+	//Singleton Public Property--------------------------------------------------------------------                                                    
+
+	/// <summary>
+	/// MineralCollectionController's singleton public property.
+	/// </summary>
+	public static MineralCollectionController Instance { get; protected set; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -81,7 +86,7 @@ public class MineralCollectionController : MonoBehaviour
     /// </summary>
     private void CollectMinerals()
     {
-        if (collectMinerals && !BuildingSpawningController.Instance.SpawningBuilding)
+        if (!BuildingSpawningController.Instance.SpawningBuilding)
         {
             //Debug.Log("Mining");
             RaycastHit hit;
@@ -89,22 +94,49 @@ public class MineralCollectionController : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, mineralsLayerMask))
             {
-                //Debug.Log("Raycast hit minerals");
-                Mineral mineral = hit.collider.GetComponentInParent<Mineral>();
-
-                if (mineral != null)
+				//Debug.Log("Raycast hit minerals");
+				Mineral mineral = hit.collider.GetComponentInParent<Mineral>();
+				DisplayMineralInfo(mineral);
+				if (collectMinerals && mineral != null)
                 {
-                    /*int mined = */mineral.Mine();
+                    mineral.Mine();
                     //Debug.Log($"Raycast hit mineral node. Mined {mined} minerals");
 
                     AudioManager.Instance.PlaySound(AudioManager.ESound.Mining, this.gameObject);
                     //ResourceController.Instance.Ore += mined; (Moved this function to Ore.cs)
                 }
-            }
+			}
+			else {
+				HideMineralInfo();
+			}
         }
         else
         {
             AudioManager.Instance.StopSound(AudioManager.ESound.Mining, this.gameObject);
         }
-    }
+	}
+
+	/// <summary>
+	/// Trigger hovering dialogue box if mouse hovers over the mineral deposit.
+	/// </summary>
+	private void DisplayMineralInfo(Mineral mineral)
+	{
+		if (!isOnMineral)
+		{
+			HoveringDialogueManager.Instance.ShowDialogue(mineral.GetComponent<HoverDialogueBoxPreset>());
+			isOnMineral = true;
+		}
+	}
+	
+	/// <summary>
+	/// Hide hovering dialogue box if mouse leaves the mineral deposit.
+	/// </summary>
+	private void HideMineralInfo()
+	{
+		if (isOnMineral)
+		{
+			HoveringDialogueManager.Instance.HideDialogue();
+			isOnMineral = false;
+		}
+	}
 }

@@ -92,7 +92,6 @@ public class Mineral : MonoBehaviour
     private void Awake()
     {
         colliders = new List<Collider>(GetComponentsInChildren<Collider>());
-		oreCount = MineralFactory.Instance.OreCount;
 		initialCount = oreCount;
         timer = oreSpawnRate;
     }
@@ -102,8 +101,9 @@ public class Mineral : MonoBehaviour
     /// Start() runs after Awake().
     /// </summary>
     private void Start()
-    {
-        if (placed)
+	{
+		oreCount = MineralFactory.Instance.OreCount;
+		if (placed)
         {
             MapController.Instance.RegisterMineral(this);
         }
@@ -164,9 +164,8 @@ public class Mineral : MonoBehaviour
     public void Reset()
     {
         DisableColliders();
-        oreCount = initialCount;
         StartCoroutine(DespawnMineral());
-    }
+	}
 
     /// <summary>
     /// Disables the mineral node's colliders
@@ -193,7 +192,8 @@ public class Mineral : MonoBehaviour
             yield return null;
         }
 
-        transform.position = ObjectPool.Instance.transform.position;
+		oreCount = initialCount;
+		transform.position = ObjectPool.Instance.transform.position;
         transform.parent = ObjectPool.Instance.transform;
         despawning = false;
     }
