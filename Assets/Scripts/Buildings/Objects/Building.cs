@@ -11,6 +11,9 @@ public struct RendererMaterialSet
     public MeshRenderer renderer;
     public Material opaque;
     public Material transparent;
+    [Tooltip("Some models require a material to be applied multiple times to cover the whole model. How many times should a material be applied to this renderer's model?")]
+    [Range(1, 99)]
+    public int count;
 }
 
 /// <summary>
@@ -232,10 +235,12 @@ public class Building : CollisionListener
     private void Awake()
     {
         animator = GetComponent<Animator>();
+
 		if (animator == null)
 		{
 			Debug.Log($"{this} building is missing an animator component.");
 		}
+
         health = GetComponent<Health>();
         size = GetComponent<Size>();
         parentRenderer = GetComponentInChildren<MeshRenderer>();
@@ -311,24 +316,30 @@ public class Building : CollisionListener
             {
                 validPlacement = !(CheckInPit() || CheckColliding() || CheckOnCliff() || CheckMouseOverUI()) && MapController.Instance.PositionAvailableForBuilding(this);
 
-                if (validPlacement)
+                foreach (RendererMaterialSet r in rendererMaterialSets)
                 {
-                    foreach (RendererMaterialSet r in rendererMaterialSets)
+                    Material currentMaterial = (validPlacement ? r.transparent : buildingErrorMaterial);
+                    bool change = false;
+
+                    for (int i = 0; i < r.renderer.materials.Length; i++)
                     {
-                        if (r.renderer.material != r.transparent)
+                        if (r.renderer.materials[i] != currentMaterial)
                         {
-                            r.renderer.material = r.transparent;
+                            change = true;
+                            break;
                         }
                     }
-                }
-                else
-                {
-                    foreach (RendererMaterialSet r in rendererMaterialSets)
+
+                    if (change)
                     {
-                        if (r.renderer.material != buildingErrorMaterial)
+                        List<Material> materials = new List<Material>();
+
+                        for (int i = 0; i < r.count; i++)
                         {
-                            r.renderer.material = buildingErrorMaterial;
+                            materials.Add(currentMaterial);
                         }
+
+                        r.renderer.materials = materials.ToArray();
                     }
                 }
 
@@ -454,7 +465,10 @@ public class Building : CollisionListener
 
         foreach (RendererMaterialSet r in rendererMaterialSets)
         {
-            r.renderer.material = r.opaque;
+            for (int i = 0; i < r.renderer.materials.Length; i++)
+            {
+                r.renderer.materials[i] = r.opaque;
+            }
         }
 
         transform.position = position;
