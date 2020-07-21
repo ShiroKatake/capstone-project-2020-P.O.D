@@ -477,52 +477,6 @@ public class Building : CollisionListener
 
         AudioManager.Instance.PlaySound(idleSound, gameObject);
         AudioManager.Instance.PlaySound(AudioManager.ESound.Building_Completes, gameObject);
-
-        //Vector3 startPos = new Vector3(0, 0, buildStartHeight);
-        //Vector3 endPos = Vector3.zero;
-        //float buildTimeElapsed = 0;
-
-        //Vector3 smallScale = normalScale * smallBoingMultiplier;
-        //Vector3 largeScale = normalScale * largeBoingMultiplier;
-        //float boingTimeElapsed = 0;
-
-        //AudioManager.Instance.PlaySound(AudioManager.ESound.Building_Materialises, this.gameObject); //needs to be stopped when finished building
-        //while (buildTimeElapsed < buildTime)
-        //{
-        //    buildTimeElapsed += Time.deltaTime;
-        //    parentRenderer.transform.localPosition = Vector3.Lerp(startPos, endPos, buildTimeElapsed / buildTime);
-        //    yield return null;
-        //}
-
-        //boinging = true;
-
-        //while (boingTimeElapsed < boingInterval)
-        //{
-        //    boingTimeElapsed += Time.deltaTime;
-        //    transform.localScale = Vector3.Lerp(normalScale, smallScale, boingTimeElapsed / boingInterval);
-        //    yield return null;
-        //}
-
-        //boingTimeElapsed -= boingInterval;
-
-        //while (boingTimeElapsed < boingInterval)
-        //{
-        //    boingTimeElapsed += Time.deltaTime;
-        //    transform.localScale = Vector3.Lerp(smallScale, largeScale, boingTimeElapsed / boingInterval);
-        //    yield return null;
-        //}
-
-        //boingTimeElapsed -= boingInterval;
-
-        //while (boingTimeElapsed < boingInterval)
-        //{
-        //    boingTimeElapsed += Time.deltaTime;
-        //    transform.localScale = Vector3.Lerp(largeScale, normalScale, boingTimeElapsed / boingInterval);
-        //    yield return null;
-        //}
-
-        //boinging = false;
-        //yield return null;
     }
 
     /// <summary>

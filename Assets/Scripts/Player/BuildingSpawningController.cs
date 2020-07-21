@@ -18,19 +18,22 @@ public class BuildingSpawningController : MonoBehaviour
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
-    //Building fields
+    //Building variables
     private EBuilding selectedBuildingType;
     private ToolTips.Etooltips tooltip;
     private Building heldBuilding;
     private Vector3 rawBuildingMovement;
 
-    //Spawning bools
+    //Spawning variables
     private bool cycleBuildingSelection;
     private bool cyclingBuildingSelection;
     private bool spawnBuilding;
     private bool placeBuilding;
     private bool cancelBuilding;
     private LayerMask groundLayerMask;
+
+    //Other
+    private DialogueBox console;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -77,6 +80,7 @@ public class BuildingSpawningController : MonoBehaviour
     /// </summary>
     private void Start()
     {
+        console = DialogueBoxManager.Instance.GetDialogueBox("Console");
         StartCoroutine(UpdateBuildingSpawning());
     }
 
@@ -177,7 +181,7 @@ public class BuildingSpawningController : MonoBehaviour
             //Place it or cancel building it
             if (placeBuilding && resourcesAvailable && placementValid)
             {
-                
+                console.SubmitCustomMessage($"Placement successful. Constructing {heldBuilding.BuildingType}.", false, 0);
 
                 Vector3 spawnPos = heldBuilding.transform.position;
                 spawnPos.y = 0.02f;
@@ -188,40 +192,46 @@ public class BuildingSpawningController : MonoBehaviour
                 heldBuilding = null;
                 spawnBuilding = false;
                 placeBuilding = false;
-                cancelBuilding = false;
+                cancelBuilding = false;                
             }
             else if (cancelBuilding || (placeBuilding && (!resourcesAvailable || !placementValid)))
             {
-                
-
                 if (placeBuilding)
                 {
                     AudioManager.Instance.PlaySound(AudioManager.ESound.Negative_UI);
+                    string errorMessage = $"Cannot build {heldBuilding.BuildingType}.";
+
+                    if (!placementValid)
+                    {
+                        errorMessage += "~    - Invalid location.";
+                        //Debug.Log("You cannot place a building there; it would occupy the same space as something else, or exceed the bounds of the map.");
+                    }
 
                     if (ResourceController.Instance.Ore < heldBuilding.OreCost)
                     {
-                        Debug.Log("You have insufficient ore to build this building.");
+                        errorMessage += "~    - Insufficient ore.";
+                        //Debug.Log("You have insufficient ore to build this building.");
                     }
 
                     if (ResourceController.Instance.PowerSupply < ResourceController.Instance.PowerConsumption + heldBuilding.PowerConsumption)
                     {
-                        Debug.Log("You have insufficient power to maintain this building.");
-                    }
-
-                    if (ResourceController.Instance.WasteSupply < ResourceController.Instance.WasteConsumption + heldBuilding.WasteConsumption)
-                    {
-                        Debug.Log("You have insufficient waste to maintain this building.");
+                        errorMessage += "~    - Insufficient power.";
+                        //Debug.Log("You have insufficient power to maintain this building.");
                     }
 
                     if (ResourceController.Instance.WaterSupply < ResourceController.Instance.WaterConsumption + heldBuilding.WaterConsumption)
                     {
-                        Debug.Log("You have insufficient water to maintain this building.");
+                        errorMessage += "~    - Insufficient water.";
+                        //Debug.Log("You have insufficient water to maintain this building.");
                     }
 
-                    if (!placementValid)
+                    if (ResourceController.Instance.WasteSupply < ResourceController.Instance.WasteConsumption + heldBuilding.WasteConsumption)
                     {
-                        Debug.Log("You cannot place a building there; it would occupy the same space as something else, or exceed the bounds of the map.");
+                        errorMessage += "~    - Insufficient waste.";
+                        //Debug.Log("You have insufficient waste to maintain this building.");
                     }
+
+                    console.SubmitCustomMessage(errorMessage, true, 0);
                 }
 
                 BuildingFactory.Instance.DestroyBuilding(heldBuilding, false, false);

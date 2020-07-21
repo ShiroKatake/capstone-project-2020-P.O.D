@@ -461,11 +461,12 @@ public class DialogueBox : MonoBehaviour
     //Change over the dialogue list----------------------------------------------------------------
 
     /// <summary>
-    /// Submit a custom error message to the dialogue box.
+    /// Submit a custom message to the dialogue box.
     /// </summary>
-    /// <param name="message">The custom error message to display</param>
+    /// <param name="message">The custom message to display.</param>
+    /// <param name="error">Is the custom message a error message?</param>
     /// <param name="delay">How long the dialogue box should wait to display the message.</param>
-    public void SubmitErrorMessage(string message, float delay)
+    public void SubmitCustomMessage(string message, bool error, float delay)
     {
         if (id != "Console")
         {
@@ -473,9 +474,16 @@ public class DialogueBox : MonoBehaviour
         }
         else
         {
-            int id = IdGenerator.Instance.GetNextId();
-            dialogue[$"error {id}"] = new List<string>() { $"<{message}>" };
-            SubmitDialogue($"error {id}", delay, false, false);
+            int num = IdGenerator.Instance.GetNextId();
+            string id = (error ? $"error {num}" : $"message {num}");
+
+            if (error)
+            {
+                message = $"<{message}>";
+            }
+
+            dialogue[id] = new List<string>() { message };
+            SubmitDialogue(id, delay, false, false);
         }
     }
 
