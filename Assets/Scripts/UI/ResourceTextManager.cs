@@ -72,7 +72,7 @@ public class ResourceTextManager : MonoBehaviour
 		ore.text = ResourceController.Instance.Ore.ToString();
 		power.text = ResourceController.Instance.PowerConsumption.ToString() + " / " + ResourceController.Instance.PowerSupply.ToString();
 		waste.text = ResourceController.Instance.WasteConsumption.ToString() + " / " + ResourceController.Instance.WasteSupply.ToString();
-		water.text = ResourceController.Instance.WaterConsumption.ToString() + "/" + ResourceController.Instance.WaterSupply.ToString();
+		water.text = ResourceController.Instance.WaterConsumption.ToString() + " / " + ResourceController.Instance.WaterSupply.ToString();
 	}
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
     /// <summary>
