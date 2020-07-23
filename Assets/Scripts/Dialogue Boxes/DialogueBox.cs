@@ -34,6 +34,7 @@ public class DialogueBox : MonoBehaviour
     [SerializeField] private Image background;
     [SerializeField] private Image border;
     [SerializeField] private TextMeshProUGUI textBox;
+    //[SerializeField] private TextMeshProUGUI debug;
 
     [Header("Tween Stats")]
     [SerializeField] private Vector2 offScreenPos;
@@ -46,6 +47,10 @@ public class DialogueBox : MonoBehaviour
     [SerializeField] private bool dismissable;
     [SerializeField] private bool appendDialogue;
     [SerializeField] private int lerpTextInterval;
+
+    [SerializeField] private int lines;
+    //[SerializeField] private int maxVisibleLines;
+    [SerializeField] private bool cullOverflow;
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
@@ -265,6 +270,9 @@ public class DialogueBox : MonoBehaviour
     {
         //lastUpdate++;
 
+        
+        
+
         if (clickable)
         {
             dialogueTimer += Time.deltaTime;
@@ -274,6 +282,7 @@ public class DialogueBox : MonoBehaviour
         
         UpdateDialogueBoxState();
         LerpDialogue();
+        CullOverflow();
     }
 
     //Recurring Methods (Update())-------------------------------------------------------------------------------------------------------------------
@@ -454,6 +463,65 @@ public class DialogueBox : MonoBehaviour
                 lerpFinished = true;
             }
         }
+    }
+
+    /// <summary>
+    /// Culls any excess lines of text that poke down from off-screen.
+    /// </summary>
+    private void CullOverflow()
+    {
+        //textBox.maxVisibleLines = maxVisibleLines;
+        TMP_TextInfo info = textBox.GetTextInfo(textBox.text);
+        int index = 0;
+        int cullChars = info.lineInfo[index].characterCount;
+        //int visibleCullChars = info.lineInfo[index].visibleCharacterCount;
+
+
+        //debug.text = $"Max visible lines: {textBox.maxVisibleLines}\nLines in textBox is {info.lineCount}\nIs text overflowing?: {textBox.isTextOverflowing}\ncullChars is {cullChars}\nvisibleCullChars is {visibleCullChars}\n";
+        //debug.text += $"TextInfo for {this} is:\n";
+
+        //for (int i = 0; i < info.lineInfo.Length; i++)
+        //{
+        //    debug.text += $"\tlineInfo[{i}].characterCount: {info.lineInfo[i].characterCount}\n";
+        //}
+
+        //if (ClockController.Instance.Daytime)
+        //{
+        //    if (debug.color != Color.black)
+        //    {
+        //        debug.color = Color.black;
+        //    }
+        //}
+        //else
+        //{
+        //    if (debug.color != Color.white)
+        //    {
+        //        debug.color = Color.white;
+        //    }
+        //}
+
+        if (cullOverflow && info.lineCount > lines)
+        {
+            dialogueStash = dialogueStash.Substring(cullChars);
+
+            if (dialogueStash.StartsWith("br>"))
+            {
+                dialogueStash = dialogueStash.Substring(3);
+            }
+
+            if (dialogueStash.StartsWith("r>"))
+            {
+                dialogueStash = dialogueStash.Substring(2);
+            }
+
+            if (dialogueStash.StartsWith(">"))
+            {
+                dialogueStash = dialogueStash.Substring(1);
+            }
+
+            textBox.text = dialogueStash + pendingText;
+        }
+
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
