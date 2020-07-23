@@ -48,9 +48,9 @@ public class DialogueBox : MonoBehaviour
     [SerializeField] private bool appendDialogue;
     [SerializeField] private int lerpTextInterval;
 
-    [SerializeField] private int lines;
-    //[SerializeField] private int maxVisibleLines;
+    [Header("Cull Overflowing Text")]
     [SerializeField] private bool cullOverflow;
+    [SerializeField] private int lines;
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
@@ -470,58 +470,33 @@ public class DialogueBox : MonoBehaviour
     /// </summary>
     private void CullOverflow()
     {
-        //textBox.maxVisibleLines = maxVisibleLines;
-        TMP_TextInfo info = textBox.GetTextInfo(textBox.text);
-        int index = 0;
-        int cullChars = info.lineInfo[index].characterCount;
-        //int visibleCullChars = info.lineInfo[index].visibleCharacterCount;
-
-
-        //debug.text = $"Max visible lines: {textBox.maxVisibleLines}\nLines in textBox is {info.lineCount}\nIs text overflowing?: {textBox.isTextOverflowing}\ncullChars is {cullChars}\nvisibleCullChars is {visibleCullChars}\n";
-        //debug.text += $"TextInfo for {this} is:\n";
-
-        //for (int i = 0; i < info.lineInfo.Length; i++)
-        //{
-        //    debug.text += $"\tlineInfo[{i}].characterCount: {info.lineInfo[i].characterCount}\n";
-        //}
-
-        //if (ClockController.Instance.Daytime)
-        //{
-        //    if (debug.color != Color.black)
-        //    {
-        //        debug.color = Color.black;
-        //    }
-        //}
-        //else
-        //{
-        //    if (debug.color != Color.white)
-        //    {
-        //        debug.color = Color.white;
-        //    }
-        //}
-
-        if (cullOverflow && info.lineCount > lines)
+        if (cullOverflow)
         {
-            dialogueStash = dialogueStash.Substring(cullChars);
+            TMP_TextInfo info = textBox.GetTextInfo(textBox.text);
+            int cullChars = info.lineInfo[0].characterCount;
 
-            if (dialogueStash.StartsWith("br>"))
+            if (info.lineCount > lines)
             {
-                dialogueStash = dialogueStash.Substring(3);
-            }
+                dialogueStash = dialogueStash.Substring(cullChars);
 
-            if (dialogueStash.StartsWith("r>"))
-            {
-                dialogueStash = dialogueStash.Substring(2);
-            }
+                if (dialogueStash.StartsWith("br>"))
+                {
+                    dialogueStash = dialogueStash.Substring(3);
+                }
 
-            if (dialogueStash.StartsWith(">"))
-            {
-                dialogueStash = dialogueStash.Substring(1);
-            }
+                if (dialogueStash.StartsWith("r>"))
+                {
+                    dialogueStash = dialogueStash.Substring(2);
+                }
 
-            textBox.text = dialogueStash + pendingText;
+                if (dialogueStash.StartsWith(">"))
+                {
+                    dialogueStash = dialogueStash.Substring(1);
+                }
+
+                textBox.text = dialogueStash + pendingText;
+            }
         }
-
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
