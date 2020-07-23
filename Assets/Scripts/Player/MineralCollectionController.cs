@@ -108,7 +108,8 @@ public class MineralCollectionController : MonoBehaviour
 			}
 			else {
 				HideMineralInfo();
-			}
+                AudioManager.Instance.StopSound(AudioManager.ESound.Mining, this.gameObject);
+            }
         }
         else
         {
