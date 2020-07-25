@@ -91,6 +91,9 @@ public class StageControls : Stage
     /// </note>
     protected override IEnumerator Execution()
     {
+        //Set the player's health ready for the healing section of the tutorial
+        PlayerController.Instance.GetComponent<Health>().CurrentHealth = PlayerController.Instance.GetComponent<Health>().MaxHealth * 0.25f;
+
         //Switch the clock off
         ClockController.Instance.Paused = true;
         ClockController.Instance.SetTime(ClockController.Instance.HalfCycleDuration * 0.2f);

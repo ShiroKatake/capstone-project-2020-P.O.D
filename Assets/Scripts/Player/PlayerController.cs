@@ -76,6 +76,11 @@ public class PlayerController : MonoBehaviour
     //Basic Public Properties----------------------------------------------------------------------
 
     /// <summary>
+    /// How close the player needs to be to the cryo egg to heal themselves.
+    /// </summary>
+    public float HealingRange { get => healingRange; }
+
+    /// <summary>
     /// POD's movement speed.
     /// </summary>
     public float MovementSpeed { get => movementSpeed; }

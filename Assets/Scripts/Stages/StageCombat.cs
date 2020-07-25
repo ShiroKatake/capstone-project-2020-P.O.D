@@ -138,24 +138,24 @@ public class StageCombat : Stage
             }
         }
 
-        ////If player doesn't know how, here's how to heal
-        //if (!playerInputManager.GetButtonDown("Heal") || Vector3.Distance(PlayerMovementController.Instance.transform.position, CryoEgg.Instance.transform.position) > healingDistance)
-        //{
-        //    console.ClearDialogue();
-        //    console.SubmitDialogue("task heal", 0, false, false);
-        //    dog.SubmitDialogue("heal at cryo egg", 0, true, false);
-        //    game.SubmitDialogue("heal", 0, true, false);
+        //If player doesn't know how, here's how to heal
+        if (!playerInputManager.GetButtonDown("Heal") || Vector3.Distance(PlayerController.Instance.transform.position, CryoEgg.Instance.transform.position) >= PlayerController.Instance.HealingRange)
+        {
+            console.ClearDialogue();
+            console.SubmitDialogue("task heal", 0, false, false);
+            dog.SubmitDialogue("heal at cryo egg", 0, true, false);
+            game.SubmitDialogue("heal", 0, true, false);
 
-        //    while (!playerInputManager.GetButtonDown("Heal") || Vector3.Distance(PlayerMovementController.Instance.transform.position, CryoEgg.Instance.transform.position) > healingDistance || !dog.AcceptingSubmissions) //TODO: get reference to thing that says what the healing distance is
-        //    {
-        //        yield return null;
-        //    }
-        //
-        //    if (!dog.DialogueRead)
-        //    {
-        //        dog.DialogueRead = true;
-        //    }
-        //}
+            while (!playerInputManager.GetButtonDown("Heal") || Vector3.Distance(PlayerController.Instance.transform.position, CryoEgg.Instance.transform.position) >= PlayerController.Instance.HealingRange || !dog.AcceptingSubmissions)
+            {
+                yield return null;
+            }
+
+            if (!dog.DialogueRead)
+            {
+                dog.DialogueRead = true;
+            }
+        }
 
         console.ClearDialogue();
         dog.SubmitDialogue("good luck", 0, true, false);

@@ -31,7 +31,7 @@ public class Health : MonoBehaviour
 	/// <summary>
 	/// How much health, durability, etc. this entity currently has.
 	/// </summary>
-	public float CurrentHealth { get => currentHealth;}
+	public float CurrentHealth { get => currentHealth; set => currentHealth = value; }
 
     /// <summary>
     /// The maximum health, durability, etc. this entity can have.
