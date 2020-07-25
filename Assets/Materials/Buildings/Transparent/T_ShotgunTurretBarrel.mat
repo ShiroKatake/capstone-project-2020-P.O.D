@@ -16,7 +16,8 @@ Material:
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
-  disabledShaderPasses: []
+  disabledShaderPasses:
+  - SHADOWCASTER
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -61,20 +62,19 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - BOOLEAN_2A50EBE8: 0
     - _AlphaClip: 0
     - _Blend: 0
     - _BumpScale: 1
     - _Cull: 2
     - _Cutoff: 0.5
     - _DissolveAmount: 1
-    - _DstBlend: 0
+    - _DstBlend: 10
     - _EdgeWidth: 0.05
-    - _End: 3.84
+    - _End: 4.18
     - _EnvironmentReflections: 1
-    - _GlossMapScale: 0
-    - _Glossiness: 0
-    - _GlossyReflections: 0
+    - _GlossMapScale: 1
+    - _Glossiness: 0.5
+    - _GlossyReflections: 1
     - _Metallic: 0
     - _Metallicness: 0
     - _NoiseScale: 30
@@ -87,19 +87,18 @@ Material:
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
-    - _SrcBlend: 1
-    - _Start: -1.7
-    - _Surface: 0
+    - _SrcBlend: 5
+    - _Start: -2.01
+    - _Surface: 1
     - _WorkflowMode: 1
-    - _ZWrite: 1
+    - _ZWrite: 0
     m_Colors:
-    - _BaseColor: {r: 0.588, g: 0.588, b: 0.588, a: 1}
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 0.5019608}
     - _Color: {r: 1, g: 1, b: 1, a: 0.5019608}
     - _EdgeColor: {r: 0, g: 1.336072, b: 2.297397, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _Flash: {r: 0, g: 1, b: 0.2607293, a: 0}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
---- !u!114 &3931897520011163308
+--- !u!114 &6604039618890675539
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}

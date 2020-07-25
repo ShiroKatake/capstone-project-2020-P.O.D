@@ -59,7 +59,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 439ae1e34033fce458db778e26e08c14, type: 2}
+  - {fileID: 2100000, guid: ec205cb853590e54cb4306473cd2200e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -156,12 +156,12 @@ MonoBehaviour:
   - {x: 0, y: -0.45, z: 0}
   rendererMaterialSets:
   - renderer: {fileID: 3018881853560271061}
-    opaque: {fileID: 2100000, guid: ac839b6a4238ce34fb4f4e4a36adb8f7, type: 2}
-    transparent: {fileID: 2100000, guid: b4e2bd38536d50e478e2e34485e0ce02, type: 2}
+    opaque: {fileID: 2100000, guid: c3b1016b873b8294589543b2ac716e0c, type: 2}
+    transparent: {fileID: 2100000, guid: e67356b465f5bb246aa3e12c1fdab0b2, type: 2}
     count: 1
   - renderer: {fileID: 490722819877295073}
-    opaque: {fileID: 2100000, guid: 439ae1e34033fce458db778e26e08c14, type: 2}
-    transparent: {fileID: 2100000, guid: 22e0246cc2e642146afcdd93d2d9de44, type: 2}
+    opaque: {fileID: 2100000, guid: ec205cb853590e54cb4306473cd2200e, type: 2}
+    transparent: {fileID: 2100000, guid: efd7cbd714946ee42a9dec8a51af2375, type: 2}
     count: 1
   buildingErrorMaterial: {fileID: 2100000, guid: 806ad34bfb9bf5441adae4c49ba5313c,
     type: 2}
@@ -384,7 +384,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: ac839b6a4238ce34fb4f4e4a36adb8f7, type: 2}
+  - {fileID: 2100000, guid: c3b1016b873b8294589543b2ac716e0c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -492,6 +492,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 623500914955328112, guid: 49a1fa4ffc3acb3469301dade190dbea,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 655807625986143100, guid: 49a1fa4ffc3acb3469301dade190dbea,
         type: 3}
@@ -602,12 +607,12 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 62afd8d42ea86034789dc7dbd5ca1ac3, type: 2}
+      objectReference: {fileID: 2100000, guid: ec205cb853590e54cb4306473cd2200e, type: 2}
     - target: {fileID: 2328662970650231864, guid: 49a1fa4ffc3acb3469301dade190dbea,
         type: 3}
       propertyPath: m_Materials.Array.data[1]
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 2100000, guid: ec205cb853590e54cb4306473cd2200e, type: 2}
     - target: {fileID: 2328662970650231865, guid: 49a1fa4ffc3acb3469301dade190dbea,
         type: 3}
       propertyPath: m_TagString

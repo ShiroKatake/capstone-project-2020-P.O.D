@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 134923703162832185}
   m_Layer: 10
-  m_Name: Tower Model Pivot
+  m_Name: Base Model Pivot
   m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -251,16 +251,16 @@ MonoBehaviour:
   - {x: 0, y: -0.45, z: 0}
   rendererMaterialSets:
   - renderer: {fileID: 3025660970298743260}
-    opaque: {fileID: 2100000, guid: 9925d17947b2bdb47934a8ce1f792aaf, type: 2}
-    transparent: {fileID: 2100000, guid: 2e3b0f6e4c117bb46a49dd0a5d42d762, type: 2}
+    opaque: {fileID: 2100000, guid: 53c2ddfccaa112a4d97de760903cd330, type: 2}
+    transparent: {fileID: 2100000, guid: 6bd364ab4bff9f145a01f786f5a068a7, type: 2}
     count: 1
   - renderer: {fileID: 2320487590585829980}
-    opaque: {fileID: 2100000, guid: f17a741d18158e243813414087a55ccb, type: 2}
-    transparent: {fileID: 2100000, guid: 1127a41a6b6a9e144b8e0a5df477eec5, type: 2}
+    opaque: {fileID: 2100000, guid: 2785de8e0da646c4db09adaa027b56ec, type: 2}
+    transparent: {fileID: 2100000, guid: f2d1a5f99775530498b8bcb14843f094, type: 2}
     count: 1
   - renderer: {fileID: 7739934893343984963}
-    opaque: {fileID: 2100000, guid: fdb5062b11f5e0545bfda493ff465ac6, type: 2}
-    transparent: {fileID: 2100000, guid: fd551999945a648418bc3e822deeab3a, type: 2}
+    opaque: {fileID: 2100000, guid: d46f8670794254442987f8c3127bed2a, type: 2}
+    transparent: {fileID: 2100000, guid: 0384d8f2c070e5945a58d1b3c395d8bf, type: 2}
     count: 1
   buildingErrorMaterial: {fileID: 2100000, guid: 806ad34bfb9bf5441adae4c49ba5313c,
     type: 2}
@@ -384,7 +384,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7345750986247059595}
   m_Layer: 10
-  m_Name: TowerCollider
+  m_Name: Base Collider
   m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -546,7 +546,7 @@ GameObject:
   - component: {fileID: 1740587601337509806}
   - component: {fileID: 3519067798138725708}
   m_Layer: 10
-  m_Name: BaseCollider
+  m_Name: Barrel Housing Collider
   m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -631,7 +631,7 @@ GameObject:
   - component: {fileID: 1468587579904676733}
   - component: {fileID: 2320487590585829980}
   m_Layer: 0
-  m_Name: Base Model
+  m_Name: Barrel Housing Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -677,7 +677,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: f17a741d18158e243813414087a55ccb, type: 2}
+  - {fileID: 2100000, guid: 2785de8e0da646c4db09adaa027b56ec, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -708,7 +708,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8958835884956689479}
   m_Layer: 10
-  m_Name: Housing Model Pivot
+  m_Name: Barrel Housing Model Pivot
   m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -788,7 +788,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: fdb5062b11f5e0545bfda493ff465ac6, type: 2}
+  - {fileID: 2100000, guid: d46f8670794254442987f8c3127bed2a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -906,7 +906,7 @@ GameObject:
   - component: {fileID: 6845690319055633579}
   - component: {fileID: 3025660970298743260}
   m_Layer: 0
-  m_Name: Tower Model
+  m_Name: Base Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -952,7 +952,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9925d17947b2bdb47934a8ce1f792aaf, type: 2}
+  - {fileID: 2100000, guid: 53c2ddfccaa112a4d97de760903cd330, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
