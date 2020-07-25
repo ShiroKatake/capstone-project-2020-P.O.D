@@ -69,7 +69,7 @@ public class StageControls : Stage
         s = DialogueBoxManager.Instance.GetDialogueBox("S");
         d = DialogueBoxManager.Instance.GetDialogueBox("D");
         cat = DialogueBoxManager.Instance.GetDialogueBox("CAT");
-        playerInputManager = ReInput.players.GetPlayer(PlayerMovementController.Instance.GetComponent<PlayerID>().Value);
+        playerInputManager = ReInput.players.GetPlayer(PlayerController.Instance.GetComponent<PlayerID>().Value);
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------

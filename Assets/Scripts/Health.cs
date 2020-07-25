@@ -31,16 +31,12 @@ public class Health : MonoBehaviour
 	/// <summary>
 	/// How much health, durability, etc. this entity currently has.
 	/// </summary>
-	public float CurrentHealth
-    {
-        get => currentHealth; //set => health = value;
+	public float CurrentHealth { get => currentHealth;}
 
-        set
-        {
-			currentHealth = value;
-            //Debug.Log($"{gameObject.name}'s health updated to {health}");
-        }
-    }
+    /// <summary>
+    /// The maximum health, durability, etc. this entity can have.
+    /// </summary>
+    public float MaxHealth { get => maxHealth; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -69,9 +65,9 @@ public class Health : MonoBehaviour
 			float healthBefore = currentHealth;
 			currentHealth -= amount;
 			currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
+			float trueDamageAmount = healthBefore - currentHealth;
 
 			//If the object has taken damage, do damage related stuffs (ie. animations, sounds, etc)
-			float trueDamageAmount = healthBefore - currentHealth;
 			if (trueDamageAmount > 0f && onDamaged != null)
 			{
 				onDamaged.Invoke(trueDamageAmount, attackerActor.transform);
@@ -90,10 +86,10 @@ public class Health : MonoBehaviour
 		float healthBefore = currentHealth;
 		currentHealth += amount;
 		currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
-
-		//If the object has been healed, do heal related stuffs (ie. animations, sounds, etc)
 		float trueHealAmount = currentHealth - healthBefore;
-		if (trueHealAmount > 0f && onHealed != null)
+
+        //If the object has been healed, do heal related stuffs (ie. animations, sounds, etc)
+        if (trueHealAmount > 0f && onHealed != null)
 		{
 			onHealed.Invoke(trueHealAmount);
 		}

@@ -59,7 +59,7 @@ public class StageCombat : Stage
         console = DialogueBoxManager.Instance.GetDialogueBox("Console");
         game = DialogueBoxManager.Instance.GetDialogueBox("Game");
         dog = DialogueBoxManager.Instance.GetDialogueBox("DOG");
-        playerInputManager = ReInput.players.GetPlayer(PlayerMovementController.Instance.GetComponent<PlayerID>().Value);
+        playerInputManager = ReInput.players.GetPlayer(PlayerController.Instance.GetComponent<PlayerID>().Value);
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
@@ -120,14 +120,14 @@ public class StageCombat : Stage
         }
 
         //If player doesn't know, here's how to shoot
-        if (!ProjectileManager.Instance.HasProjectileWithOwner(PlayerMovementController.Instance.transform))
+        if (!ProjectileManager.Instance.HasProjectileWithOwner(PlayerController.Instance.transform))
         {
             console.ClearDialogue();
             console.SubmitDialogue("task shoot", 0, false, false);
             dog.SubmitDialogue("shoot", 0, true, false);
             game.SubmitDialogue("shoot", 0, true, false);
 
-            while (!ProjectileManager.Instance.HasProjectileWithOwner(PlayerMovementController.Instance.transform) || !dog.AcceptingSubmissions)
+            while (!ProjectileManager.Instance.HasProjectileWithOwner(PlayerController.Instance.transform) || !dog.AcceptingSubmissions)
             {
                 yield return null;
             }

@@ -579,30 +579,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bd669f780283e9944990e2bd084e19f4, type: 3}
---- !u!1 &642653582 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5029904101723603984, guid: 435f7674b2b881b4896020642be86b13,
-    type: 3}
-  m_PrefabInstance: {fileID: 4635870160120624295}
-  m_PrefabAsset: {fileID: 0}
---- !u!143 &642653593
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 642653582}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Height: 1.2
-  m_Radius: 0.5
-  m_SlopeLimit: 52
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &661380979
 GameObject:
   m_ObjectHideFlags: 0
@@ -9688,16 +9664,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2049855296128894091, guid: 435f7674b2b881b4896020642be86b13,
-        type: 3}
-      propertyPath: m_CollisionDetection
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3415230967371121827, guid: 435f7674b2b881b4896020642be86b13,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4635870159163347478, guid: 435f7674b2b881b4896020642be86b13,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -9758,19 +9724,7 @@ PrefabInstance:
       propertyPath: m_Name
       value: Mum_Bots_Mum
       objectReference: {fileID: 0}
-    - target: {fileID: 5029904101723603986, guid: 435f7674b2b881b4896020642be86b13,
-        type: 3}
-      propertyPath: movementSpeed
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 5486714557031060470, guid: 435f7674b2b881b4896020642be86b13,
-        type: 3}
-      propertyPath: maxHealth
-      value: 20
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 3415230967371121827, guid: 435f7674b2b881b4896020642be86b13, type: 3}
-    - {fileID: 2049855296128894091, guid: 435f7674b2b881b4896020642be86b13, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 435f7674b2b881b4896020642be86b13, type: 3}
 --- !u!1001 &5216131016438606743
 PrefabInstance:
@@ -10796,7 +10750,7 @@ PrefabInstance:
     - target: {fileID: 9033323265905847547, guid: 485364eaa1338b94285a4b76d671c4a2,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 190
+      value: 194.68
       objectReference: {fileID: 0}
     - target: {fileID: 9033323265905847547, guid: 485364eaa1338b94285a4b76d671c4a2,
         type: 3}
