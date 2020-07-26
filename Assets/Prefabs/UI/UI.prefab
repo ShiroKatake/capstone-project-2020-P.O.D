@@ -580,7 +580,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.5019608}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.6666667}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -620,7 +620,7 @@ MonoBehaviour:
   appendDialogue: 1
   lerpTextInterval: 3
   cullOverflow: 1
-  lines: 16
+  lines: 14
 --- !u!114 &3808045080015975989
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1194,41 +1194,39 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Test dialogue blah blah blah
+  m_text: '14 Test dialogue blah blah blah
 
+    13 Test dialogue blah blah blah
+
+    12
     Test dialogue blah blah blah
 
-    Test
+    11 Test dialogue blah blah blah
+
+    10 Test
     dialogue blah blah blah
 
-    Test dialogue blah blah blah
+    9 Test dialogue blah blah blah
 
-    Test dialogue
+    8 Test dialogue
     blah blah blah
 
-    Test dialogue blah blah blah
+    7 Test dialogue blah blah blah
 
-    Test dialogue blah blah
+    6 Test dialogue blah
+    blah blah
+
+    5 Test dialogue blah blah blah
+
+    4 Test dialogue blah blah
     blah
 
-    Test dialogue blah blah blah
+    3 Test dialogue blah blah blah
 
-    Test dialogue blah blah blah
+    2 Test dialogue blah blah blah
 
-    Test
-    dialogue blah blah blah
-
-    Test dialogue blah blah blah
-
-    Test dialogue
-    blah blah blah
-
-    Test dialogue blah blah blah
-
-    Test dialogue blah blah
-    blah
-
-    Test dialogue blah blah blahTest dialogue blah blah blah'
+    1
+    Test dialogue blah blah blah'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c2c88eab05e7543418bd8974a72f5885, type: 2}
   m_sharedMaterial: {fileID: 2700730227722313435, guid: c2c88eab05e7543418bd8974a72f5885,
@@ -1295,15 +1293,15 @@ MonoBehaviour:
   m_firstVisibleCharacter: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -95, y: -100, z: -95, w: -100}
+  m_margin: {x: -90, y: -80, z: -90, w: -80}
   m_textInfo:
     textComponent: {fileID: 6690153072061978012}
-    characterCount: 462
+    characterCount: 438
     spriteCount: 0
-    spaceCount: 78
-    wordCount: 79
+    spaceCount: 83
+    wordCount: 84
     linkCount: 0
-    lineCount: 16
+    lineCount: 14
     pageCount: 1
     materialCount: 1
   m_isUsingLegacyAnimationComponent: 0
@@ -6030,13 +6028,13 @@ GameObject:
   m_Component:
   - component: {fileID: 4528282981372622710}
   - component: {fileID: 4528282981372622709}
+  - component: {fileID: 274707100}
   - component: {fileID: 4528282981372622708}
   - component: {fileID: 4528282981372622707}
-  - component: {fileID: 4528282981372622712}
   - component: {fileID: 4528282981372622711}
-  - component: {fileID: 4528282981372622713}
-  - component: {fileID: 274707100}
   - component: {fileID: 2458087390284636419}
+  - component: {fileID: 4528282981372622712}
+  - component: {fileID: 4528282981372622713}
   m_Layer: 5
   m_Name: UI
   m_TagString: Untagged
@@ -6096,6 +6094,18 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!225 &274707100
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4528282981372622706}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!114 &4528282981372622708
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6135,19 +6145,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &4528282981372622712
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4528282981372622706}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 96b85da1bd0eae34b9f7e0c0a367bb92, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cursorTexture: {fileID: 2800000, guid: dfc02566e9e723a44b4e935004f3f27e, type: 3}
 --- !u!114 &4528282981372622711
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6191,44 +6188,6 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
---- !u!114 &4528282981372622713
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4528282981372622706}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38b52ca42ffd82f4f99e0a8899d5d190, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  UIBackgrounds:
-  - {fileID: 537462615196558535}
-  - {fileID: 2670046510568154850}
-  UIBorders:
-  - {fileID: 4528282981767748617}
-  - {fileID: 5677109242779600207}
-  - {fileID: 229669293237092185}
-  alienAttackBackground: {r: 0.54901963, g: 0, b: 0, a: 1}
-  alienAttackBorder: {r: 1, g: 0, b: 0, a: 1}
-  backgroundDay: {r: 0.32156864, g: 0.5176471, b: 0.54901963, a: 1}
-  backgroundNight: {r: 0.18039216, g: 0.16470589, b: 0.37647063, a: 1}
-  borderDay: {r: 0.5921569, g: 0.9568628, b: 1, a: 1}
-  borderNight: {r: 0.019607844, g: 0, b: 0.37647063, a: 1}
-  duration: 12
---- !u!225 &274707100
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4528282981372622706}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
 --- !u!114 &2458087390284636419
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6262,6 +6221,45 @@ MonoBehaviour:
   - openingTag: 64
     closingTag: 36
     colour: {r: 0.6, g: 0, b: 0.6, a: 1}
+--- !u!114 &4528282981372622712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4528282981372622706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96b85da1bd0eae34b9f7e0c0a367bb92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cursorTexture: {fileID: 2800000, guid: dfc02566e9e723a44b4e935004f3f27e, type: 3}
+--- !u!114 &4528282981372622713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4528282981372622706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38b52ca42ffd82f4f99e0a8899d5d190, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UIBackgrounds:
+  - {fileID: 537462615196558535}
+  - {fileID: 2670046510568154850}
+  UIBorders:
+  - {fileID: 4528282981767748617}
+  - {fileID: 5677109242779600207}
+  - {fileID: 229669293237092185}
+  alienAttackBackground: {r: 0.54901963, g: 0, b: 0, a: 1}
+  alienAttackBorder: {r: 1, g: 0, b: 0, a: 1}
+  backgroundDay: {r: 0.32156864, g: 0.5176471, b: 0.54901963, a: 1}
+  backgroundNight: {r: 0.18039216, g: 0.16470589, b: 0.37647063, a: 1}
+  borderDay: {r: 0.5921569, g: 0.9568628, b: 1, a: 1}
+  borderNight: {r: 0.019607844, g: 0, b: 0.37647063, a: 1}
+  duration: 12
 --- !u!1 &4528282981401134449
 GameObject:
   m_ObjectHideFlags: 0
