@@ -16,6 +16,7 @@ public class StageSkippedTutorial : Stage
     [SerializeField] private UIElementStatusController console;
     [SerializeField] private UIElementStatusController buildingAndResourcesBar;
     [SerializeField] private UIElementStatusController miniMap;
+    [SerializeField] private UIElementStatusController miniMap2;
     [SerializeField] private UIElementStatusController clock;
 
     [Header("Building Buttons")]

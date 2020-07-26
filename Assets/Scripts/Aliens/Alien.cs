@@ -34,8 +34,10 @@ public class Alien : MonoBehaviour, IMessenger
     private Rigidbody rigidbody;
 	private Actor actor;
 
-	//Movement
-	private bool moving;
+    
+
+    //Movement
+    private bool moving;
     private float speed;
     
     //Targeting
@@ -99,6 +101,8 @@ public class Alien : MonoBehaviour, IMessenger
 
 		health.onDamaged += OnDamaged;
 		health.onDie += OnDie;
+
+        
 	}
 
     /// <summary>
@@ -359,6 +363,7 @@ public class Alien : MonoBehaviour, IMessenger
 	public void DestroyAlien()
 	{
 		AlienFactory.Instance.DestroyAlien(this);
+       
 	}
 
 	/// <summary>

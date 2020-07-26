@@ -70,12 +70,12 @@ GameObject:
   - component: {fileID: 6082736747149941726}
   - component: {fileID: 3692332996195157330}
   - component: {fileID: 130242450852513669}
-  - component: {fileID: 5821381605166471830}
   - component: {fileID: 5065040778077614937}
   - component: {fileID: 5448622151791115966}
   - component: {fileID: 2316329990381896840}
   - component: {fileID: 638251404826614395}
   - component: {fileID: 8686111838577874511}
+  - component: {fileID: 3830939879231715871}
   - component: {fileID: 2782735999490008039}
   - component: {fileID: 2450999256365859151}
   m_Layer: 11
@@ -145,21 +145,6 @@ MonoBehaviour:
   targetSize: {fileID: 0}
   shotByName: 
   shotByTransform: {fileID: 0}
---- !u!114 &5821381605166471830
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6062238761412881410}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1fec0b866b0e0841879182c40e31399, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  alienRenderer: {fileID: 7145354558093107861}
-  onDamagedFlashColor: {r: 1, g: 0, b: 0, a: 1}
-  flashSpeed: 10
 --- !u!114 &5065040778077614937
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -228,6 +213,18 @@ CapsuleCollider:
   m_Height: 3.92
   m_Direction: 2
   m_Center: {x: 0, y: 0.53, z: -1.35}
+--- !u!114 &3830939879231715871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6062238761412881410}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 445228639babb924e8da1f190ab1a931, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!195 &2782735999490008039
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1162,12 +1159,6 @@ PrefabInstance:
 --- !u!4 &8631190982695728952 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: 7ac0e82036ea61343a338f43814ae38d,
-    type: 3}
-  m_PrefabInstance: {fileID: 3653143560309152802}
-  m_PrefabAsset: {fileID: 0}
---- !u!137 &7145354558093107861 stripped
-SkinnedMeshRenderer:
-  m_CorrespondingSourceObject: {fileID: -3342809285718425929, guid: 7ac0e82036ea61343a338f43814ae38d,
     type: 3}
   m_PrefabInstance: {fileID: 3653143560309152802}
   m_PrefabAsset: {fileID: 0}

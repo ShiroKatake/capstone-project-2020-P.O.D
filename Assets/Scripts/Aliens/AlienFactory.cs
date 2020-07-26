@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
 /// <summary>
@@ -18,11 +19,12 @@ public class AlienFactory : MonoBehaviour
     [SerializeField] private int pooledAliens;
     [SerializeField] private float alienSpawnHeight;
 
+
     //Non-Serialized Fields------------------------------------------------------------------------
 
     private Transform objectPool;
     private List<Alien> alienPool;
-
+   
     //PublicProperties-------------------------------------------------------------------------------------------------------------------------------
 
     //Singleton Public Property--------------------------------------------------------------------
@@ -74,6 +76,7 @@ public class AlienFactory : MonoBehaviour
             }
 
             alienPool.Add(alien);
+            
         }
     }
 

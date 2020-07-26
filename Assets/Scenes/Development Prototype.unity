@@ -229,13 +229,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &371130879 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 880952307760529665, guid: 953fe9ae95f39bd4d8a9f952c654fc00,
+    type: 3}
+  m_PrefabInstance: {fileID: 2096531859}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &397363426 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 880952308425214859, guid: 953fe9ae95f39bd4d8a9f952c654fc00,
     type: 3}
   m_PrefabInstance: {fileID: 2096531859}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 371130879}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0fc4c47b30ac0644e9720df61d64f2ca, type: 3}
@@ -1625,7 +1631,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 19
+  m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1865065298 stripped
 MonoBehaviour:
@@ -1663,36 +1669,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &1932559898
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1932559899}
-  m_Layer: 0
-  m_Name: =======At Runtime========
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &1932559899
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1932559898}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 99.02324, y: -9.074219, z: 95.73752}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 18
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1957023142
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2155,6 +2131,11 @@ PrefabInstance:
       propertyPath: atmosphereBar
       value: 
       objectReference: {fileID: 1445816511}
+    - target: {fileID: 4952588298347314997, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: miniMap2
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 6305260852210968538, guid: 7ec13c4878030604f886d212027c72e6,
         type: 3}
       propertyPath: uiManager
@@ -4903,6 +4884,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4111349993846732881, guid: 172bd19aa70452548bcdbc2cfdc6614a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 4132089550273515722, guid: 172bd19aa70452548bcdbc2cfdc6614a,
         type: 3}
@@ -9397,6 +9383,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Mum_Bots_Mum
       objectReference: {fileID: 0}
+    - target: {fileID: 5341517056827524826, guid: 435f7674b2b881b4896020642be86b13,
+        type: 3}
+      propertyPath: cryoegg
+      value: 
+      objectReference: {fileID: 371130879}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 435f7674b2b881b4896020642be86b13, type: 3}
 --- !u!1001 &5216131016438606743
