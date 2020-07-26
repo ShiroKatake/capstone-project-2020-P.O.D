@@ -85,10 +85,23 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public float MovementSpeed { get => movementSpeed; }
 
+    //Complex Public Properties--------------------------------------------------------------------
+
     /// <summary>
     /// POD's Rewired player input manager.
     /// </summary>
-    public Player PlayerInputManager { get => playerInputManager; }
+    public Player PlayerInputManager
+    {
+        get
+        {
+            if (playerInputManager == null)
+            {
+                playerInputManager = ReInput.players.GetPlayer(GetComponent<PlayerID>().Value);
+            }
+
+            return playerInputManager;
+        }
+    }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 

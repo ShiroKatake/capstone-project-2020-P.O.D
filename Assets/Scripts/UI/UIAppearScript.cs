@@ -6,20 +6,20 @@ public class UIAppearScript : MonoBehaviour
 {
 
     [Header("Element 1")]
-    [SerializeField] private GameObject canvas1;
-    [SerializeField] private bool isShowingC1;
+    [SerializeField] private GameObject uiCanvas;
+    [SerializeField] private bool isShowingUICanvas;
 
     [Header("Element 2 <--- This one is inactive at start")]
-    [SerializeField] private GameObject canvas2;
-    [SerializeField] private bool isShowingC2;
+    [SerializeField] private GameObject gameOverCanvas;
+    [SerializeField] private bool isShowingGameOverCanvas;
 
-    public GameObject Canvas {get => canvas2;}
+    public GameObject Canvas {get => gameOverCanvas;}
 
     // Start is called before the first frame update
     void Start()
     {
-        canvas1.SetActive(isShowingC1);
-        canvas2.SetActive(isShowingC2);
+        uiCanvas.SetActive(isShowingUICanvas);
+        gameOverCanvas.SetActive(isShowingGameOverCanvas);
     }
 
     // Update is called once per frame
@@ -33,10 +33,15 @@ public class UIAppearScript : MonoBehaviour
     }*/
 
     public void ToggleVisibility(){
-        isShowingC2 = !isShowingC2;
-            canvas2.SetActive(isShowingC2);
-            if (isShowingC2){
-                canvas2.GetComponent<UIButtonInitialise>().Initialise();
+        isShowingGameOverCanvas = !isShowingGameOverCanvas;
+            gameOverCanvas.SetActive(isShowingGameOverCanvas);
+            if (isShowingGameOverCanvas){
+                gameOverCanvas.GetComponent<UIButtonInitialise>().Initialise();
             }
+    }
+
+    public void DeactivateGameOverCanvas()
+    {
+        gameOverCanvas.SetActive(false);
     }
 }
