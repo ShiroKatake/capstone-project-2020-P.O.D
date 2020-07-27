@@ -268,21 +268,19 @@ public class DialogueBox : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        //lastUpdate++;
-
-        
-        
-
-        if (clickable)
+        if (!PauseMenuManager.Paused)
         {
-            dialogueTimer += Time.deltaTime;
-            GetInput();
-            CheckDialogueRead();
+            if (clickable)
+            {
+                dialogueTimer += Time.deltaTime;
+                GetInput();
+                CheckDialogueRead();
+            }
+
+            UpdateDialogueBoxState();
+            LerpDialogue();
+            CullOverflow();
         }
-        
-        UpdateDialogueBoxState();
-        LerpDialogue();
-        CullOverflow();
     }
 
     //Recurring Methods (Update())-------------------------------------------------------------------------------------------------------------------

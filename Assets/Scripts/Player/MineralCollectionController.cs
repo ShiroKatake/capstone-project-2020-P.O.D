@@ -67,8 +67,11 @@ public class MineralCollectionController : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        GetInput();
-        CollectMinerals();
+        if (!PauseMenuManager.Paused)
+        {
+            GetInput();
+            CollectMinerals();
+        }
     }
 
     //Recurring Methods (Update())------------------------------------------------------------------------------------------------------------------  

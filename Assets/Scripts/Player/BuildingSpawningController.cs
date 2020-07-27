@@ -95,8 +95,12 @@ public class BuildingSpawningController : MonoBehaviour
 
         while (true)
         {
-            GetInput();
-            CheckBuildingSpawning();
+            if (!PauseMenuManager.Paused)
+            {
+                GetInput();
+                CheckBuildingSpawning();
+            }
+
             yield return null;
         }
     }

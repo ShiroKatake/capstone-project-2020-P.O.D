@@ -15,13 +15,17 @@ public class GOMessageController : MonoBehaviour
 
 	private void Update()
 	{
-		if (victory)
-		{
-			SetText(true);
-		} else if (defeat)
-		{
-			SetText(false);
-		}
+        if (!PauseMenuManager.Paused)
+        {
+            if (victory)
+            {
+                SetText(true);
+            }
+            else if (defeat)
+            {
+                SetText(false);
+            }
+        }
 	}
 
 	public void SetText(bool win){

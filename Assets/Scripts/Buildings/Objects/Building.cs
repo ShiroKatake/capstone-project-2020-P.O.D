@@ -280,11 +280,14 @@ public class Building : CollisionListener
     /// </summary>
     private void Update()
     {
-		if (buildingType != EBuilding.CryoEgg && animator.enabled)
-		{
-			animator.SetFloat("Health", health.CurrentHealth);
-			animator.SetBool("Operational", operational);
-		}
+        if (!PauseMenuManager.Paused)
+        {
+            if (buildingType != EBuilding.CryoEgg && animator.enabled)
+            {
+                animator.SetFloat("Health", health.CurrentHealth);
+                animator.SetBool("Operational", operational);
+            }
+        }
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------

@@ -144,11 +144,15 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         //Input manager checks every frame, not at fixed update's rate, so calls to input manager should be made every frame
-        GetInput();
+        if (!PauseMenuManager.Paused)
+        {
+            GetInput();
+        }
     }
 
     /// <summary>
     /// FixedUpdate() is run at a fixed interval independant of framerate.
+    /// If Time.timeScale == 0, FixedUpdate will not be called.
     /// </summary>
     private void FixedUpdate()
     {

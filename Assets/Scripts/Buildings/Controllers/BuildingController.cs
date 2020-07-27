@@ -84,12 +84,15 @@ public class BuildingController : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        foreach (Building b in buildings)
+        if (!PauseMenuManager.Paused)
         {
-            CheckBuildingHealth(b);
-        }
+            foreach (Building b in buildings)
+            {
+                CheckBuildingHealth(b);
+            }
 
-        CleanupBuildings();
+            CleanupBuildings();
+        }
     }
 
     //Recurring Methods (Update())------------------------------------------------------------------------------------------------------------------  
