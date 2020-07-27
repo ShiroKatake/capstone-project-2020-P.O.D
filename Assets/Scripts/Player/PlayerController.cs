@@ -4,15 +4,13 @@ using UnityEngine;
 using UnityEngine.AI;
 
 /// <summary>
-/// The player. Player controls the player's movement and shooting. For building spawning, see BuildingSpawningController.
+/// The player. Player controls the player's movement, shooting and healing. For building spawning, see BuildingSpawningController.
 /// </summary>
-public class PlayerMovementController : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
     //Serialized Fields----------------------------------------------------------------------------
-
-    [SerializeField] private bool printInputs;
 
     [Header("Player Objects")]
     [SerializeField] private Camera camera;
@@ -23,10 +21,19 @@ public class PlayerMovementController : MonoBehaviour
     [SerializeField] private List<Vector3> cliffTestOffsets;
     [SerializeField] private Transform audioListener;
 
-    [Header("Player Stats")]
+    [Header("Movement Stats")]
     [SerializeField] private float movementSpeed;
     [SerializeField] private float rotationSpeed;
+
+    [Header("Shooting Stats")]
     [SerializeField] private float shootCooldown;
+
+    [Header("Healing Stats")]
+    [SerializeField] private float healingSpeed;
+    [SerializeField] private float healingRange;
+
+    [Header("Testing")]
+    [SerializeField] private bool printInputs;
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
@@ -50,6 +57,9 @@ public class PlayerMovementController : MonoBehaviour
     private bool shooting;
     private float timeOfLastShot;
 
+    //Healing variables
+    private bool healing;
+
     //Other
     private Rewired.Player playerInputManager;
     private bool repsawn;
@@ -59,11 +69,16 @@ public class PlayerMovementController : MonoBehaviour
     //Singleton Public Property--------------------------------------------------------------------
 
     /// <summary>
-    /// Singleton public property for the player.
+    /// Singleton public property for the player controller.
     /// </summary>
-    public static PlayerMovementController Instance { get; protected set; }
+    public static PlayerController Instance { get; protected set; }
 
     //Basic Public Properties----------------------------------------------------------------------
+
+    /// <summary>
+    /// How close the player needs to be to the cryo egg to heal themselves.
+    /// </summary>
+    public float HealingRange { get => healingRange; }
 
     /// <summary>
     /// POD's movement speed.
@@ -92,12 +107,11 @@ public class PlayerMovementController : MonoBehaviour
         health = GetComponent<Health>();
         rigidbody = GetComponent<Rigidbody>();
         charCon = GetComponent<CharacterController>();
+        groundLayerMask = LayerMask.GetMask("Ground");
+		health.onDie += OnDie;
         timeOfLastShot = shootCooldown * -1;
         defaultHoverHeight = transform.position.y;
         repsawn = false;
-        groundLayerMask = LayerMask.GetMask("Ground");
-
-		health.onDie += OnDie;
     }
 
     /// <summary>
@@ -139,7 +153,9 @@ public class PlayerMovementController : MonoBehaviour
         float moveVertical = playerInputManager.GetAxis("Vertical");
 
         movement = new Vector3(moveHorizontal, 0, -moveVertical);
-        shooting = InputController.Instance.ButtonHeld("Shoot");
+
+        healing = playerInputManager.GetButton("Heal") && Vector3.Distance(transform.position, CryoEgg.Instance.transform.position) < healingRange && health.CurrentHealth < health.MaxHealth;
+        shooting = InputController.Instance.ButtonHeld("Shoot") && !healing && Time.time - timeOfLastShot > shootCooldown;
 
         if (printInputs)
         {
@@ -159,20 +175,7 @@ public class PlayerMovementController : MonoBehaviour
         Look();
         Move();
         CheckShooting();
-    }
-
-    /// <summary>
-    /// Checks the player's health and if they're still alive.
-    /// </summary>
-    private void OnDie()
-    {
-        if (!repsawn)
-		{
-			AudioManager.Instance.PlaySound(AudioManager.ESound.Explosion, this.gameObject);
-			Debug.Log("The player's health has reached 0. Respawn!!!");
-			MessageDispatcher.Instance.SendMessage("Alien", new Message(gameObject.name, "Player", this.gameObject, "Dead"));
-            repsawn = true;
-        }
+        CheckHealing();
     }
 
     /// <summary>
@@ -193,7 +196,7 @@ public class PlayerMovementController : MonoBehaviour
         float errorMargin = 0.01f;
         AudioManager.Instance.PlaySound(AudioManager.ESound.Player_Hover, gameObject);
 
-        if (movement != Vector3.zero)
+        if (movement != Vector3.zero && !healing)
         {
             //charCon.Move(movement * movementSpeed * Time.deltaTime);
             charCon.SimpleMove(movement * movementSpeed);
@@ -325,14 +328,40 @@ public class PlayerMovementController : MonoBehaviour
     /// </summary>
     private void CheckShooting()
     {
-        if (shooting && Time.time - timeOfLastShot > shootCooldown)
+        if (shooting) //No-shooting conditions checked for in GetInput() when determining the value of shooting.
         {
             timeOfLastShot = Time.time;
             Projectile projectile = ProjectileFactory.Instance.GetProjectile(EProjectileType.PODLaserBolt, transform, barrelTip.position);
             AudioManager.Instance.PlaySound(AudioManager.ESound.Laser_POD, this.gameObject);
             Vector3 vector = barrelTip.position - barrelMagazine.position;
             projectile.Shoot(vector.normalized, 0);
-            //TODO: use overload that incorporates shooter movement speed, and calculate current movement speed in the direction of the shot vector.
+        }
+    }
+
+    /// <summary>
+    /// Checks if the player wants to heal themselves based on their input, and heals them if they do.
+    /// </summary>
+    private void CheckHealing() //No-healing conditions checked for in GetInput() when determining the value of healing.
+    {
+        if (healing)
+        {
+            health.Heal(healingSpeed * Time.deltaTime);
+        }
+    }
+
+    //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Checks the player's health and if they're still alive.
+    /// </summary>
+    private void OnDie()
+    {
+        if (!repsawn)
+        {
+            AudioManager.Instance.PlaySound(AudioManager.ESound.Explosion, this.gameObject);
+            Debug.Log("The player's health has reached 0. Respawn!!!");
+            MessageDispatcher.Instance.SendMessage("Alien", new Message(gameObject.name, "Player", this.gameObject, "Dead"));
+            repsawn = true;
         }
     }
 }
