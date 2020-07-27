@@ -60,7 +60,7 @@ public class StageLose : Stage
     protected override IEnumerator Execution()
     {
         goMessage.SetText(false);
-        uiManager.GetComponent<UIAppearScript>().ToggleVisibility();
+        uiManager.GetComponent<UIManager>().SetGameOverCanvasActive(true);
         yield return null;
     }
 }

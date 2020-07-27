@@ -23,6 +23,7 @@ public class SceneLoader : MonoBehaviour
 
     private List<Graphic> graphics;
     private bool skipTutorial;
+    private bool loadingScene;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -34,6 +35,11 @@ public class SceneLoader : MonoBehaviour
     public static SceneLoader Instance { get; protected set; }
 
     //Basic Public Properties----------------------------------------------------------------------
+
+    /// <summary>
+    /// Is the SceneLoader in the middle of loading a scene?
+    /// </summary>
+    public bool LoadingScene { get => loadingScene; }
 
     /// <summary>
     /// Has the player chosen to skip the tutorial?
@@ -56,6 +62,7 @@ public class SceneLoader : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
         graphics = new List<Graphic>() { background, textBox };
+        loadingScene = false;
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
@@ -73,13 +80,15 @@ public class SceneLoader : MonoBehaviour
     /// </summary>
     private IEnumerator LoadingGame()
     {
+        loadingScene = true;
         canvas.SetActive(true);
         yield return StartCoroutine(Fade(true));
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSecondsRealtime(0.3f);
         SceneManager.LoadScene((int)EScene.Game);
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSecondsRealtime(0.3f);
         yield return StartCoroutine(Fade(false));
         canvas.SetActive(false);
+        loadingScene = false;
     }
 
     /// <summary>
@@ -95,13 +104,15 @@ public class SceneLoader : MonoBehaviour
     /// </summary>
     private IEnumerator LoadingMainMenu()
     {
+        loadingScene = true;
         canvas.SetActive(true);
         yield return StartCoroutine(Fade(true));
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSecondsRealtime(0.3f);
         SceneManager.LoadScene((int)EScene.MainMenu);
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSecondsRealtime(0.3f);
         yield return StartCoroutine(Fade(false));
         canvas.SetActive(false);
+        loadingScene = false;
     }
 
     /// <summary>
@@ -117,6 +128,7 @@ public class SceneLoader : MonoBehaviour
     /// </summary>
     private IEnumerator QuittingGame()
     {
+        Debug.Log("Quit");
         yield return null;
         Application.Quit();
     }
@@ -138,7 +150,7 @@ public class SceneLoader : MonoBehaviour
             foreach (Graphic g in graphics)
             {
                 Color colour = g.color;
-                colour.a += fadeSpeed * Time.deltaTime * directionMultiplier;
+                colour.a += fadeSpeed * Time.unscaledDeltaTime * directionMultiplier;
                 g.color = colour;
 
                 if (g.color.a * directionMultiplier < goal)

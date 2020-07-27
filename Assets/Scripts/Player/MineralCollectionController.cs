@@ -97,6 +97,7 @@ public class MineralCollectionController : MonoBehaviour
 				//Debug.Log("Raycast hit minerals");
 				Mineral mineral = hit.collider.GetComponentInParent<Mineral>();
 				DisplayMineralInfo(mineral);
+
 				if (collectMinerals && mineral != null)
                 {
                     mineral.Mine();
@@ -106,7 +107,8 @@ public class MineralCollectionController : MonoBehaviour
                     //ResourceController.Instance.Ore += mined; (Moved this function to Ore.cs)
                 }
 			}
-			else {
+			else
+            {
 				HideMineralInfo();
 			}
         }

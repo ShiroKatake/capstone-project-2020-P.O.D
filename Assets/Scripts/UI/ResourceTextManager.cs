@@ -82,6 +82,7 @@ public class ResourceTextManager : MonoBehaviour
     {
         StartCoroutine(FadingIn());
     }
+
     /// <summary>
     /// Fades the resources text in.
     /// </summary>
@@ -90,13 +91,16 @@ public class ResourceTextManager : MonoBehaviour
         while (opacity < 1)
         {
             opacity += fadeInSpeed * Time.deltaTime;
+
             foreach (Graphic g in graphics)
             {
                 g.color = UpdateColorOpacity(g.color, opacity);
             }
+
             yield return null;
         }
     }
+
     /// <summary>
     /// Updates the opacity of a colour.
     /// </summary>

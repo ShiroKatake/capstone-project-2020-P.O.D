@@ -351,21 +351,52 @@ public class BuildingSpawningController : MonoBehaviour
             && ResourceController.Instance.WaterSupply >= ResourceController.Instance.WaterConsumption + heldBuilding.WaterConsumption;
     }
 
-    private void ChangeTooltip(EBuilding selectedbuilding)
+    /// <summary>
+    /// Change the active tooltip.
+    /// </summary>
+    /// <param name="selectedBuilding">The building the player has selected to build.</param>
+    private void ChangeTooltip(EBuilding selectedBuilding)
     {
-        if (selectedbuilding == EBuilding.FusionReactor)
-            tooltip = ToolTips.Etooltips.FusionReactor;
-        if (selectedbuilding == EBuilding.IceDrill)
-            tooltip = ToolTips.Etooltips.IceDrill;
-        if (selectedbuilding == EBuilding.Greenhouse)
-            tooltip = ToolTips.Etooltips.Greenhouse;
-        if (selectedbuilding == EBuilding.Boiler)
-            tooltip = ToolTips.Etooltips.Boilier;
-        if (selectedbuilding == EBuilding.Incinerator)
-            tooltip = ToolTips.Etooltips.Incinorator;
-        if (selectedbuilding == EBuilding.ShortRangeTurret)
-            tooltip = ToolTips.Etooltips.Shotgun;
-        if (selectedbuilding == EBuilding.LongRangeTurret)
-            tooltip = ToolTips.Etooltips.MachineGun;
+        //if (selectedBuilding == EBuilding.FusionReactor)
+        //    tooltip = ToolTips.Etooltips.FusionReactor;
+        //if (selectedBuilding == EBuilding.IceDrill)
+        //    tooltip = ToolTips.Etooltips.IceDrill;
+        //if (selectedBuilding == EBuilding.Greenhouse)
+        //    tooltip = ToolTips.Etooltips.Greenhouse;
+        //if (selectedBuilding == EBuilding.Boiler)
+        //    tooltip = ToolTips.Etooltips.Boiler;
+        //if (selectedBuilding == EBuilding.Incinerator)
+        //    tooltip = ToolTips.Etooltips.Incinerator;
+        //if (selectedBuilding == EBuilding.ShortRangeTurret)
+        //    tooltip = ToolTips.Etooltips.Shotgun;
+        //if (selectedBuilding == EBuilding.LongRangeTurret)
+        //    tooltip = ToolTips.Etooltips.MachineGun;
+
+        switch(selectedBuilding)
+        {
+            case EBuilding.FusionReactor:
+                tooltip = ToolTips.Etooltips.FusionReactor;
+                break;
+            case EBuilding.IceDrill:
+                tooltip = ToolTips.Etooltips.IceDrill;
+                break;
+            case EBuilding.Greenhouse:
+                tooltip = ToolTips.Etooltips.Greenhouse;
+                break;
+            case EBuilding.Boiler:
+                tooltip = ToolTips.Etooltips.Boiler;
+                break;
+            case EBuilding.Incinerator:
+                tooltip = ToolTips.Etooltips.Incinerator;
+                break;
+            case EBuilding.ShortRangeTurret:
+                tooltip = ToolTips.Etooltips.Shotgun;
+                break;
+            case EBuilding.LongRangeTurret:
+                tooltip = ToolTips.Etooltips.MachineGun;
+                break;
+            default:
+                break;
+        }
     }
 }

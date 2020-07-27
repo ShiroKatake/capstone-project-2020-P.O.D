@@ -61,7 +61,7 @@ public class PlayerController : MonoBehaviour
     private bool healing;
 
     //Other
-    private Rewired.Player playerInputManager;
+    private Player playerInputManager;
     private bool repsawn;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
