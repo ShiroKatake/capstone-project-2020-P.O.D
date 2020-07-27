@@ -17,8 +17,8 @@ public class ToolTips : MonoBehaviour
     {
         IceDrill,
         FusionReactor,
-        Incinorator,
-        Boilier,
+        Incinerator,
+        Boiler,
         Greenhouse,
         Shotgun,
         MachineGun,
