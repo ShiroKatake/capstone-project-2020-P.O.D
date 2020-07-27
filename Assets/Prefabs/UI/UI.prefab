@@ -125,6 +125,7 @@ MonoBehaviour:
   border: {fileID: 138956041}
   fill: {fileID: 0}
   image: {fileID: 0}
+  rawImage: {fileID: 0}
   textBox: {fileID: 0}
   visibleOnAwake: 0
   flickersIn: 1
@@ -676,6 +677,7 @@ MonoBehaviour:
   border: {fileID: 0}
   fill: {fileID: 3471172587907442008}
   image: {fileID: 0}
+  rawImage: {fileID: 0}
   textBox: {fileID: 0}
   visibleOnAwake: 0
   flickersIn: 1
@@ -807,7 +809,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -686.2002, y: -249.01212}
+  m_AnchoredPosition: {x: -686.2002, y: -208.2}
   m_SizeDelta: {x: 72, y: 72}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &6309912171680464121
@@ -826,6 +828,7 @@ MonoBehaviour:
   border: {fileID: 952362360226430118}
   fill: {fileID: 0}
   image: {fileID: 808446894517300084}
+  rawImage: {fileID: 0}
   textBox: {fileID: 0}
   visibleOnAwake: 0
   flickersIn: 1
@@ -1762,6 +1765,7 @@ MonoBehaviour:
   border: {fileID: 7811920747759873259}
   fill: {fileID: 0}
   image: {fileID: 0}
+  rawImage: {fileID: 0}
   textBox: {fileID: 0}
   visibleOnAwake: 0
   flickersIn: 1
@@ -2440,6 +2444,7 @@ MonoBehaviour:
   border: {fileID: 5677109242779600207}
   fill: {fileID: 537462615196558535}
   image: {fileID: 0}
+  rawImage: {fileID: 0}
   textBox: {fileID: 0}
   visibleOnAwake: 0
   flickersIn: 1
@@ -2697,6 +2702,7 @@ MonoBehaviour:
   border: {fileID: 4630443420594716807}
   fill: {fileID: 0}
   image: {fileID: 0}
+  rawImage: {fileID: 0}
   textBox: {fileID: 0}
   visibleOnAwake: 0
   flickersIn: 1
@@ -2798,6 +2804,7 @@ MonoBehaviour:
   border: {fileID: 4970429336361680596}
   fill: {fileID: 0}
   image: {fileID: 0}
+  rawImage: {fileID: 0}
   textBox: {fileID: 0}
   visibleOnAwake: 0
   flickersIn: 1
@@ -3318,8 +3325,9 @@ GameObject:
   - component: {fileID: 1777008339783513318}
   - component: {fileID: 2464931180582993638}
   - component: {fileID: 6934429081480819135}
+  - component: {fileID: 2428501459005377597}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Minimap Backing
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3342,8 +3350,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 108.000015, y: 112.640015}
-  m_SizeDelta: {x: 316, y: 334.72}
+  m_AnchoredPosition: {x: 108.25, y: 115}
+  m_SizeDelta: {x: 316, y: 332}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1777008339783513318
 CanvasRenderer:
@@ -3394,6 +3402,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ShowMaskGraphic: 1
+--- !u!114 &2428501459005377597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3742760478825879945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97335b3d8af8d9141a331358af6c3300, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 0}
+  border: {fileID: 0}
+  fill: {fileID: 0}
+  image: {fileID: 2464931180582993638}
+  rawImage: {fileID: 5268568899748987141}
+  textBox: {fileID: 0}
+  visibleOnAwake: 0
+  flickersIn: 1
+  flickerInSpeed: 2
+  flickerCount: 2
+  flickerOutOnComplete: 0
+  requiresResources: 0
+  requiredOre: 0
+  requiredPower: 0
+  requiredWater: 0
+  requiredWaste: 0
 --- !u!1 &3777514955939021384
 GameObject:
   m_ObjectHideFlags: 0
@@ -3522,7 +3558,8 @@ MonoBehaviour:
   button: {fileID: 0}
   border: {fileID: 229669293237092185}
   fill: {fileID: 3840560828001302749}
-  image: {fileID: 1708878713714258182}
+  image: {fileID: 0}
+  rawImage: {fileID: 0}
   textBox: {fileID: 0}
   visibleOnAwake: 0
   flickersIn: 1
@@ -3812,6 +3849,7 @@ MonoBehaviour:
   border: {fileID: 4416522334982830925}
   fill: {fileID: 0}
   image: {fileID: 0}
+  rawImage: {fileID: 0}
   textBox: {fileID: 0}
   visibleOnAwake: 0
   flickersIn: 1
@@ -3857,8 +3895,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 365, y: 335}
+  m_AnchoredPosition: {x: 0, y: -2}
+  m_SizeDelta: {x: 365, y: 337}
   m_Pivot: {x: 0, y: 0}
 --- !u!222 &1361718963772423152
 CanvasRenderer:
@@ -4419,6 +4457,7 @@ MonoBehaviour:
   border: {fileID: 4528282981136870260}
   fill: {fileID: 4528282980871887151}
   image: {fileID: 1708878713714258182}
+  rawImage: {fileID: 0}
   textBox: {fileID: 0}
   visibleOnAwake: 0
   flickersIn: 1
@@ -4756,6 +4795,7 @@ MonoBehaviour:
   border: {fileID: 4550432712909149442}
   fill: {fileID: 6083567140978022828}
   image: {fileID: 7171766509266209443}
+  rawImage: {fileID: 0}
   textBox: {fileID: 0}
   visibleOnAwake: 0
   flickersIn: 1
@@ -5467,6 +5507,7 @@ MonoBehaviour:
   border: {fileID: 4528282981613849403}
   fill: {fileID: 4528282981515449481}
   image: {fileID: 6938558425073580407}
+  rawImage: {fileID: 0}
   textBox: {fileID: 0}
   visibleOnAwake: 0
   flickersIn: 1
@@ -5916,6 +5957,7 @@ MonoBehaviour:
   border: {fileID: 4528282981591850915}
   fill: {fileID: 4528282980806117137}
   image: {fileID: 8213098921932911717}
+  rawImage: {fileID: 0}
   textBox: {fileID: 0}
   visibleOnAwake: 0
   flickersIn: 1
@@ -5995,6 +6037,7 @@ MonoBehaviour:
   border: {fileID: 0}
   fill: {fileID: 0}
   image: {fileID: 4528282980971714329}
+  rawImage: {fileID: 0}
   textBox: {fileID: 0}
   visibleOnAwake: 0
   flickersIn: 1
@@ -6443,6 +6486,7 @@ MonoBehaviour:
   border: {fileID: 4528282981045555745}
   fill: {fileID: 4528282981236161980}
   image: {fileID: 0}
+  rawImage: {fileID: 0}
   textBox: {fileID: 0}
   visibleOnAwake: 0
   flickersIn: 1
@@ -6940,6 +6984,7 @@ MonoBehaviour:
   border: {fileID: 4528282980544100665}
   fill: {fileID: 4528282982072529221}
   image: {fileID: 0}
+  rawImage: {fileID: 0}
   textBox: {fileID: 0}
   visibleOnAwake: 0
   flickersIn: 1
@@ -7114,6 +7159,7 @@ MonoBehaviour:
   border: {fileID: 4528282981767748617}
   fill: {fileID: 0}
   image: {fileID: 0}
+  rawImage: {fileID: 0}
   textBox: {fileID: 0}
   visibleOnAwake: 0
   flickersIn: 1
@@ -7246,6 +7292,7 @@ MonoBehaviour:
   border: {fileID: 4528282982211082422}
   fill: {fileID: 4528282981535986046}
   image: {fileID: 0}
+  rawImage: {fileID: 0}
   textBox: {fileID: 0}
   visibleOnAwake: 0
   flickersIn: 1
@@ -7565,6 +7612,7 @@ MonoBehaviour:
   border: {fileID: 4528282982590775342}
   fill: {fileID: 4528282982474148230}
   image: {fileID: 1370610219509641046}
+  rawImage: {fileID: 0}
   textBox: {fileID: 0}
   visibleOnAwake: 0
   flickersIn: 1
@@ -7973,6 +8021,7 @@ MonoBehaviour:
   border: {fileID: 4528282981037921723}
   fill: {fileID: 4528282981751309073}
   image: {fileID: 6709285651695328998}
+  rawImage: {fileID: 0}
   textBox: {fileID: 0}
   visibleOnAwake: 0
   flickersIn: 1
@@ -8308,6 +8357,7 @@ MonoBehaviour:
   border: {fileID: 4528282980772847868}
   fill: {fileID: 4528282981436915140}
   image: {fileID: 1712435567168549826}
+  rawImage: {fileID: 0}
   textBox: {fileID: 0}
   visibleOnAwake: 0
   flickersIn: 1
@@ -10050,7 +10100,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7516570644932097272}
-  m_LocalRotation: {x: -0, y: -0, z: -1, w: 0}
+  m_LocalRotation: {x: -4.3786486e-10, y: 4.934577e-10, z: -1, w: -7.275958e-12}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -10059,7 +10109,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.1, y: -27.100037}
+  m_AnchoredPosition: {x: 0.09999873, y: -27.100037}
   m_SizeDelta: {x: 9, y: 20}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &3130963517557781145
@@ -10339,7 +10389,7 @@ GameObject:
   - component: {fileID: 7261649729793583742}
   - component: {fileID: 5268568899748987141}
   m_Layer: 5
-  m_Name: Minimap
+  m_Name: Minimap Map
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10487,6 +10537,7 @@ MonoBehaviour:
   border: {fileID: 2948767947210014411}
   fill: {fileID: 0}
   image: {fileID: 0}
+  rawImage: {fileID: 0}
   textBox: {fileID: 0}
   visibleOnAwake: 0
   flickersIn: 1
@@ -10588,6 +10639,7 @@ MonoBehaviour:
   border: {fileID: 2189837300967449997}
   fill: {fileID: 0}
   image: {fileID: 0}
+  rawImage: {fileID: 0}
   textBox: {fileID: 0}
   visibleOnAwake: 0
   flickersIn: 1
@@ -11109,6 +11161,7 @@ MonoBehaviour:
   border: {fileID: 4180897299447425025}
   fill: {fileID: 0}
   image: {fileID: 0}
+  rawImage: {fileID: 0}
   textBox: {fileID: 0}
   visibleOnAwake: 0
   flickersIn: 1
@@ -11210,6 +11263,7 @@ MonoBehaviour:
   border: {fileID: 5601172245011865695}
   fill: {fileID: 0}
   image: {fileID: 0}
+  rawImage: {fileID: 0}
   textBox: {fileID: 0}
   visibleOnAwake: 0
   flickersIn: 1
@@ -11311,6 +11365,7 @@ MonoBehaviour:
   border: {fileID: 2562509192640748311}
   fill: {fileID: 0}
   image: {fileID: 0}
+  rawImage: {fileID: 0}
   textBox: {fileID: 0}
   visibleOnAwake: 0
   flickersIn: 1
@@ -11412,6 +11467,7 @@ MonoBehaviour:
   border: {fileID: 7528362924156410269}
   fill: {fileID: 0}
   image: {fileID: 0}
+  rawImage: {fileID: 0}
   textBox: {fileID: 0}
   visibleOnAwake: 0
   flickersIn: 1
