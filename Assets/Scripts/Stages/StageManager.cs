@@ -63,11 +63,6 @@ public class StageManager : MonoBehaviour
         }
 
         Instance = this;
-
-        //if (GlobalVars.LoadedFromMenu)
-        //{
-        //    skipTutorial = GlobalVars.SkipTut;
-        //}
     }
 
     /// <summary>
@@ -76,6 +71,11 @@ public class StageManager : MonoBehaviour
     /// </summary>
     private void Start()
     {
+        if (SceneLoaderListener.Instance.SceneLoaderInstantiatedOnAwake)
+        {
+            skipTutorial = SceneLoader.Instance.SkipTutorial;
+        }
+
         GetStages();
         BeginGame();
     }

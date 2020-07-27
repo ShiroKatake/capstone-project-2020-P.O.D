@@ -22,6 +22,7 @@ public class SceneLoader : MonoBehaviour
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
     private List<Graphic> graphics;
+    private bool skipTutorial;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -31,6 +32,13 @@ public class SceneLoader : MonoBehaviour
     /// SceneLoader's singleton public property.
     /// </summary>
     public static SceneLoader Instance { get; protected set; }
+
+    //Basic Public Properties----------------------------------------------------------------------
+
+    /// <summary>
+    /// Has the player chosen to skip the tutorial?
+    /// </summary>
+    public bool SkipTutorial { get => skipTutorial; set => skipTutorial = value; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -53,7 +61,7 @@ public class SceneLoader : MonoBehaviour
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
-    /// Loads the game scene from the main menu.
+    /// Loads the game scene.
     /// </summary>
     public void LoadGame()
     {
@@ -61,7 +69,7 @@ public class SceneLoader : MonoBehaviour
     }
 
     /// <summary>
-    /// Loads the game scene from the main menu.
+    /// Loads the game scene.
     /// </summary>
     private IEnumerator LoadingGame()
     {
@@ -75,7 +83,7 @@ public class SceneLoader : MonoBehaviour
     }
 
     /// <summary>
-    /// Loads the main menu scene from the game.
+    /// Loads the main menu scene.
     /// </summary>
     public void LoadMainMenu()
     {
@@ -83,7 +91,7 @@ public class SceneLoader : MonoBehaviour
     }
 
     /// <summary>
-    /// Loads the main menu scene from the game.
+    /// Loads the main menu scene.
     /// </summary>
     private IEnumerator LoadingMainMenu()
     {
