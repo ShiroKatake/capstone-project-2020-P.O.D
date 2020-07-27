@@ -61,6 +61,9 @@ public class Building : CollisionListener
     [Header("Sound Library")]
     [SerializeField] private AudioManager.ESound idleSound;
 
+	[Header("Effects")]
+	[SerializeField] private FinishedFX constructionFinishedFX;
+
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
     //Components
@@ -488,10 +491,16 @@ public class Building : CollisionListener
         {
             turretShooter.Place();
         }
-
         AudioManager.Instance.PlaySound(idleSound, gameObject);
         AudioManager.Instance.PlaySound(AudioManager.ESound.Building_Completes, gameObject);
     }
+
+	public void SpawnFinishedFX()
+	{
+		GameObject fx = FinishedFXFactory.Instance.Get();
+		fx.transform.position = transform.position;
+		fx.SetActive(true);
+	}
 
     /// <summary>
     /// Resets Building to its initial values when it is returned to the building pool.
