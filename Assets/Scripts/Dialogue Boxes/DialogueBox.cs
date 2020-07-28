@@ -90,7 +90,7 @@ public class DialogueBox : MonoBehaviour
 
     //Dialogue lerping special characters
     private char newLineMarker;
-    private ColourTag colourTag;
+    private List<ColourTag> colourTags;
 
     //Dialogue lerping
     private bool lerpFinished;
@@ -205,7 +205,7 @@ public class DialogueBox : MonoBehaviour
         lastDialogueKey = "";
 
         //Dialogue lerping special characters
-        colourTag = null;
+        colourTags = new List<ColourTag>();
 
         //Dialogue lerping
         lerpFinished = true;
@@ -393,65 +393,68 @@ public class DialogueBox : MonoBehaviour
         if (!lerpFinished && !changing)
         {
             //Reset variables
-            colourTag = null;
+            //colourTag = null;
+            colourTags.Clear();
             pendingText = "";
             pendingColouredText = "";
 
             //Get string of new letters to be added
             foreach (char c in currentText.Substring(0, lerpTextMaxIndex))
             {
-                if (colourTag == null)
+                //Check for new line marker
+                if (c == newLineMarker)
                 {
-                    //Check for opening colour tag
-                    if (DialogueBoxManager.Instance.ColourTags != null && DialogueBoxManager.Instance.ColourTags.Count > 0)
+                    pendingText += "<br>";
+                }
+                //Check for closing colour tag
+                else if (colourTags.Count > 0 && c == colourTags[colourTags.Count - 1].ClosingTag)
+                {
+                    pendingText += $"</b></color>";
+                    colourTags.RemoveAt(colourTags.Count - 1);
+
+                    if (colourTags.Count > 0)
                     {
-                        foreach (ColourTag t in DialogueBoxManager.Instance.ColourTags)
+                        pendingText += $"<color={colourTags[colourTags.Count - 1].ColourName}><b>";
+                    }
+                }
+                //Check for opening colour tag
+                else if (DialogueBoxManager.Instance.ColourTags != null && DialogueBoxManager.Instance.ColourTags.Count > 0)
+                {
+                    bool newTag = false;
+
+                    foreach (ColourTag t in DialogueBoxManager.Instance.ColourTags)
+                    {
+                        if (c == t.OpeningTag)
                         {
-                            if (c == t.OpeningTag)
+                            if (colourTags.Count > 0)
                             {
-                                colourTag = t;
-                                break;
+                                pendingText += $"</b></color>";
                             }
+
+                            colourTags.Add(t);
+                            pendingText += $"<color={colourTags[colourTags.Count - 1].ColourName}><b>";
+                            newTag = true;
+                            break;
                         }
                     }
 
-                    //Add if not coloured
-                    if (colourTag == null)
+                    //Else just a regular character
+                    if (!newTag)
                     {
-                        if (c == newLineMarker)
-                        {
-                            pendingText += "<br>";
-                        }
-                        else
-                        {
-                            pendingText += c;
-                        }
+                        pendingText += c;
                     }
                 }
+                //Else just a regular character
                 else
                 {
-                    //Check for closing colour tag
-                    if (c == newLineMarker)
-                    {
-                        pendingColouredText += "<br>";
-                    }
-                    else if (c == colourTag.ClosingTag)
-                    {
-                        pendingText += $"<color={colourTag.ColourName}><b>{pendingColouredText}</b></color>";
-                        pendingColouredText = "";
-                        colourTag = null;
-                    }
-                    else
-                    {
-                        pendingColouredText += c;
-                    }
-                }            
+                    pendingText += c;
+                }
             }
 
             //Add if coloured
-            if (colourTag != null)
+            if (colourTags.Count > 0)
             {
-                pendingText += $"<color={colourTag.ColourName}><b>{pendingColouredText}</b></color>";
+                pendingText += $"</b></color>";
             }
 
             //Add all pending text

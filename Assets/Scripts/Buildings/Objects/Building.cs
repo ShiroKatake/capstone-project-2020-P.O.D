@@ -25,11 +25,10 @@ public class Building : CollisionListener
 
     //Serialized Fields----------------------------------------------------------------------------                                                    
 
-    [Header("ID")]
+    [Header("Identification")]
     [SerializeField] private int id;
-
-    [Header("Building Type")]
     [SerializeField] private EBuilding buildingType;
+    [SerializeField] private string consoleName;
 
     [Header("Resource Requirements")]
     [SerializeField] private int oreCost;
@@ -129,6 +128,11 @@ public class Building : CollisionListener
     /// Has the building been placed and been fully built?
     /// </summary>
     public bool Built { get => built; }
+
+    /// <summary>
+    /// What should this building's name be and how should it be formatted when printed in the console?
+    /// </summary>
+    public string ConsoleName { get => consoleName; }
 
     /// <summary>
     /// The Building's Health component.

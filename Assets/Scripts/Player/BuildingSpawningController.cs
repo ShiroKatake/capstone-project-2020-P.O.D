@@ -185,7 +185,7 @@ public class BuildingSpawningController : MonoBehaviour
             //Place it or cancel building it
             if (placeBuilding && resourcesAvailable && placementValid)
             {
-                console.SubmitCustomMessage($"Placement successful. Constructing {heldBuilding.BuildingType}.", false, 0);
+                console.SubmitCustomMessage($"Placement successful. Constructing {heldBuilding.ConsoleName}.", false, 0);
 
                 Vector3 spawnPos = heldBuilding.transform.position;
                 spawnPos.y = 0.02f;
@@ -203,7 +203,7 @@ public class BuildingSpawningController : MonoBehaviour
                 if (placeBuilding)
                 {
                     AudioManager.Instance.PlaySound(AudioManager.ESound.Negative_UI);
-                    string errorMessage = $"Cannot build {heldBuilding.BuildingType}.";
+                    string errorMessage = $"Cannot build {heldBuilding.ConsoleName}.";
 
                     if (!placementValid)
                     {
@@ -213,25 +213,25 @@ public class BuildingSpawningController : MonoBehaviour
 
                     if (ResourceController.Instance.Ore < heldBuilding.OreCost)
                     {
-                        errorMessage += "~    - Insufficient ore.";
+                        errorMessage += "~    - Insufficient +minerals&.";
                         //Debug.Log("You have insufficient ore to build this building.");
                     }
 
                     if (ResourceController.Instance.PowerSupply < ResourceController.Instance.PowerConsumption + heldBuilding.PowerConsumption)
                     {
-                        errorMessage += "~    - Insufficient power.";
+                        errorMessage += "~    - Insufficient [power].";
                         //Debug.Log("You have insufficient power to maintain this building.");
                     }
 
                     if (ResourceController.Instance.WaterSupply < ResourceController.Instance.WaterConsumption + heldBuilding.WaterConsumption)
                     {
-                        errorMessage += "~    - Insufficient water.";
+                        errorMessage += "~    - Insufficient /water\\.";
                         //Debug.Log("You have insufficient water to maintain this building.");
                     }
 
                     if (ResourceController.Instance.WasteSupply < ResourceController.Instance.WasteConsumption + heldBuilding.WasteConsumption)
                     {
-                        errorMessage += "~    - Insufficient waste.";
+                        errorMessage += "~    - Insufficient {waste}.";
                         //Debug.Log("You have insufficient waste to maintain this building.");
                     }
 
