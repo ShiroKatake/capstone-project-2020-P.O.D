@@ -59,7 +59,7 @@ public class StageCombat : Stage
         console = DialogueBoxManager.Instance.GetDialogueBox("Console");
         game = DialogueBoxManager.Instance.GetDialogueBox("Game");
         dog = DialogueBoxManager.Instance.GetDialogueBox("DOG");
-        playerInputManager = ReInput.players.GetPlayer(PlayerMovementController.Instance.GetComponent<PlayerID>().Value);
+        playerInputManager = ReInput.players.GetPlayer(PlayerController.Instance.GetComponent<PlayerID>().Value);
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
@@ -81,59 +81,81 @@ public class StageCombat : Stage
     /// </note>
     protected override IEnumerator Execution()
     {
+        //Wait for aliens to spawn
         while (ClockController.Instance.Daytime)
         {
             yield return null;
         }
 
+        //Help from DOG, aliens bad
         ClockController.Instance.Paused = true;
-
         console.SubmitDialogue("launch dog", 0, false, false);
         dog.SubmitDialogue("dog launched", 1, false, false);
 
-        while (!dog.DialogueRead)
+        while (!dog.DialogueRead || !dog.AcceptingSubmissions)
         {
             yield return null;
         }
 
         dog.SubmitDialogue("aliens spawned", 0, false, false);
 
-        while (!dog.DialogueRead)
+        while (!dog.DialogueRead || !dog.AcceptingSubmissions)
         {
             yield return null;
         }
 
+        //Build Turrets
         console.ClearDialogue();
         console.SubmitDialogue("task build turret", 0, false, false);
         dog.SubmitDialogue("build turret", 0, true, false);
         shotgunTurret.Visible = true;
         machineGunTurret.Visible = true;
+        shotgunTurret.Interactable = true;
+        machineGunTurret.Interactable = true;
         turretsHighlight.Visible = true;
 
-        while (!BuildingController.Instance.HasBuiltBuilding(EBuilding.ShortRangeTurret) || !BuildingController.Instance.HasBuiltBuilding(EBuilding.ShortRangeTurret))
+        while (!BuildingController.Instance.HasBuiltBuilding(EBuilding.ShortRangeTurret) || !BuildingController.Instance.HasBuiltBuilding(EBuilding.LongRangeTurret))
         {
             yield return null;
         }
 
-        console.ClearDialogue();
-        console.SubmitDialogue("task shoot", 0, false, false);
-        dog.SubmitDialogue("shoot", 0, true, false);
-        game.SubmitDialogue("shoot", 0, true, false);
-
-        while (!ProjectileManager.Instance.HasProjectileWithOwner(PlayerMovementController.Instance.transform))
+        //If player doesn't know, here's how to shoot
+        if (!ProjectileManager.Instance.HasProjectileWithOwner(PlayerController.Instance.transform))
         {
-            yield return null;
+            console.ClearDialogue();
+            console.SubmitDialogue("task shoot", 0, false, false);
+            dog.SubmitDialogue("shoot", 0, true, false);
+            game.SubmitDialogue("shoot", 0, true, false);
+
+            while (!ProjectileManager.Instance.HasProjectileWithOwner(PlayerController.Instance.transform) || !dog.AcceptingSubmissions)
+            {
+                yield return null;
+            }
+
+            if (!dog.DialogueRead)
+            {
+                dog.DialogueRead = true;
+            }
         }
 
-        //console.ClearDialogue();
-        //console.SubmitDialogue("task heal", 0, false, false);
-        //dog.SubmitDialogue("heal at cryo egg", 0, true, false);
-        //game.SubmitDialogue("heal", 0, true, false);
+        //If player doesn't know how, here's how to heal
+        if (!playerInputManager.GetButtonDown("Heal") || Vector3.Distance(PlayerController.Instance.transform.position, CryoEgg.Instance.transform.position) >= PlayerController.Instance.HealingRange)
+        {
+            console.ClearDialogue();
+            console.SubmitDialogue("task heal", 0, false, false);
+            dog.SubmitDialogue("heal at cryo egg", 0, true, false);
+            game.SubmitDialogue("heal", 0, true, false);
 
-        //while (!playerInputManager.GetButtonDown("Heal") || Vector3.Distance(PlayerMovementController.Instance.transform.position, CryoEgg.Instance.transform.position) > healingDistance) //TODO: get reference to thing that says what the healing distance is
-        //{
-        //    yield return null;
-        //}
+            while (!playerInputManager.GetButtonDown("Heal") || Vector3.Distance(PlayerController.Instance.transform.position, CryoEgg.Instance.transform.position) >= PlayerController.Instance.HealingRange || !dog.AcceptingSubmissions)
+            {
+                yield return null;
+            }
+
+            if (!dog.DialogueRead)
+            {
+                dog.DialogueRead = true;
+            }
+        }
 
         console.ClearDialogue();
         dog.SubmitDialogue("good luck", 0, true, false);

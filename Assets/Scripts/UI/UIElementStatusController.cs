@@ -24,12 +24,15 @@ public class UIElementStatusController : MonoBehaviour
     [SerializeField] private int flickerCount;
     [SerializeField] private bool flickerOutOnComplete;
 
-    [Header("Interactability Requirements - Resources")]
-    [SerializeField] private bool requiresResources;
-    [SerializeField] private int requiredOre;
-    [SerializeField] private int requiredPower;
-    [SerializeField] private int requiredWater;
-    [SerializeField] private int requiredWaste;
+    [Header("Interactability")]
+    [SerializeField] private bool interactableOnAwake;
+
+    //[Header("Interactability Requirements - Resources")]
+    //[SerializeField] private bool requiresResources;
+    //[SerializeField] private int requiredOre;
+    //[SerializeField] private int requiredPower;
+    //[SerializeField] private int requiredWater;
+    //[SerializeField] private int requiredWaste;
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
@@ -69,7 +72,7 @@ public class UIElementStatusController : MonoBehaviour
         {
             interactable = value;
 
-            if (!requiresResources && button != null && button.interactable != interactable)
+            if (/*!requiresResources && */button != null /*&& button.interactable != interactable*/)
             {
                 button.interactable = interactable;
             }
@@ -188,7 +191,11 @@ public class UIElementStatusController : MonoBehaviour
     /// </summary>
     private void Awake()
     {
-        //Debug.Log($"{this}.button is {button}, {this}.image is {image}");
+        if (button != null)
+        {
+            interactable = interactableOnAwake;
+            button.interactable = interactableOnAwake;
+        }
 
         graphics = new List<Graphic>();
 
@@ -237,17 +244,17 @@ public class UIElementStatusController : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
-    /// Start() runs after Awake().
-    /// </summary>
-    private void Start()
-    {
-        if (button != null && requiresResources)
-        {
-            StartCoroutine(CheckInteractable());
-        }
-    }
+    ///// <summary>
+    ///// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
+    ///// Start() runs after Awake().
+    ///// </summary>
+    //private void Start()
+    //{
+    //    if (button != null && requiresResources)
+    //    {
+    //        StartCoroutine(CheckInteractable());
+    //    }
+    //}
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
@@ -361,23 +368,23 @@ public class UIElementStatusController : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Checks if the button should be interactable.
-    /// </summary>
-    private IEnumerator CheckInteractable()
-    {
-        while (true)
-        {
-            button.interactable = interactable && (!requiresResources ||
-                    (
-                           requiredOre <= ResourceController.Instance.Ore
-                        && requiredPower <= ResourceController.Instance.SurplusPower
-                        && requiredWaste <= ResourceController.Instance.SurplusWaste
-                        && requiredWater <= ResourceController.Instance.SurplusWater
-                    )
-                );
+    ///// <summary>
+    ///// Checks if the button should be interactable.
+    ///// </summary>
+    //private IEnumerator CheckInteractable()
+    //{
+    //    while (true)
+    //    {
+    //        button.interactable = interactable && (!requiresResources ||
+    //                (
+    //                       requiredOre <= ResourceController.Instance.Ore
+    //                    && requiredPower <= ResourceController.Instance.SurplusPower
+    //                    && requiredWaste <= ResourceController.Instance.SurplusWaste
+    //                    && requiredWater <= ResourceController.Instance.SurplusWater
+    //                )
+    //            );
 
-            yield return null;
-        }
-    }
+    //        yield return null;
+    //    }
+    //}
 }

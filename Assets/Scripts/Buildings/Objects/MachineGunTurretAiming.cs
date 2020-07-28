@@ -96,8 +96,8 @@ public class MachineGunTurretAiming : TurretAiming
     protected override void Aim()
     {
         //Turret rotation on turret base's local horizontal axis. All other local values remain static.
-        if (currentTurretRotation != targetTurretRotation)
-        //if (true)
+        //if (currentTurretRotation != targetTurretRotation)
+        if (true)
         {
             float deltaAngle = Mathf.DeltaAngle(currentTurretRotation, targetTurretRotation);
             float rotationDirection = MathUtility.Instance.Sign(deltaAngle);
@@ -114,8 +114,8 @@ public class MachineGunTurretAiming : TurretAiming
         }
 
         //Barrel pivoting on barrel pivot's local vertical axis. All other local values remain static.
-        if (currentBarrelElevation != targetBarrelElevation)
-        //if (true)
+        //if (currentBarrelElevation != targetBarrelElevation)
+        if (true)
         {
             float deltaAngle = Mathf.DeltaAngle(currentBarrelElevation, targetBarrelElevation);
             float pivotDirection = MathUtility.Instance.Sign(deltaAngle);
@@ -123,7 +123,8 @@ public class MachineGunTurretAiming : TurretAiming
             float fixedUpdatePivot = elevationSpeed * Time.fixedDeltaTime;
 
             currentBarrelElevation += pivotDirection * Mathf.Min(deltaAngle, fixedUpdatePivot);
-            barrelColliderPivot.localRotation = Quaternion.Euler(elevationColliderOffset.x, elevationColliderOffset.z, - elevationColliderOffset.y - currentBarrelElevation);
+            //barrelColliderPivot.localRotation = Quaternion.Euler(elevationColliderOffset.x, elevationColliderOffset.z, - elevationColliderOffset.y - currentBarrelElevation);
+            barrelColliderPivot.localRotation = Quaternion.Euler(elevationColliderOffset.x, elevationColliderOffset.y + currentBarrelElevation, elevationColliderOffset.z);
             barrelModelPivot.localRotation = Quaternion.Euler(
                 elevationColliderOffset.x + elevationModelCounterOffset.x,
                 elevationColliderOffset.y + elevationModelCounterOffset.y + currentBarrelElevation,
