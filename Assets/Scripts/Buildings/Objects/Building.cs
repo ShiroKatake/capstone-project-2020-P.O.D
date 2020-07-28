@@ -63,11 +63,12 @@ public class Building : CollisionListener
 
 	[Header("Effects")]
 	[SerializeField] private FinishedFX constructionFinishedFX;
+	[SerializeField] private float fxSize = 1f;
 
-    //Non-Serialized Fields------------------------------------------------------------------------                                                    
+	//Non-Serialized Fields------------------------------------------------------------------------                                                    
 
-    //Components
-    private Animator animator;
+	//Components
+	private Animator animator;
     private Health health;
     private MeshRenderer parentRenderer;
     private List<MeshRenderer> allRenderers;
@@ -499,6 +500,7 @@ public class Building : CollisionListener
 	{
 		GameObject fx = FinishedFXFactory.Instance.Get();
 		fx.transform.position = transform.position;
+		fx.transform.localScale = new Vector3(fxSize, fxSize, fxSize);
 		fx.SetActive(true);
 	}
 

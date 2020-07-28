@@ -85,6 +85,9 @@ MonoBehaviour:
   buildingErrorMaterial: {fileID: 2100000, guid: 101275a717e4a1c4fb89e563e095dfd7,
     type: 2}
   idleSound: 18
+  constructionFinishedFX: {fileID: 5264390033885133910, guid: 9a30dc8a4a1a76241acc06f41a0df0e0,
+    type: 3}
+  fxSize: 1.5
   active: 0
   operational: 0
 --- !u!114 &6987495701241030554
@@ -290,7 +293,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5797989508795119653}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0.293, z: 0}
+  m_LocalPosition: {x: 0, y: 0.293, z: -0.084}
   m_LocalScale: {x: 0.17, y: 0.17, z: 0.17}
   m_Children:
   - {fileID: 4595218341875925051}
@@ -1498,17 +1501,17 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: 223ea9b122ced86448b5ea13868c4556,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0.000000059604645
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 223ea9b122ced86448b5ea13868c4556,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0.41528577
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 223ea9b122ced86448b5ea13868c4556,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.90969104
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 223ea9b122ced86448b5ea13868c4556,
         type: 3}
@@ -1528,7 +1531,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: 223ea9b122ced86448b5ea13868c4556,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
+      value: 49.075
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 223ea9b122ced86448b5ea13868c4556,
         type: 3}
