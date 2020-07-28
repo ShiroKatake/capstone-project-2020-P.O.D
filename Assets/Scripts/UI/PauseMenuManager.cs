@@ -15,6 +15,8 @@ public class PauseMenuManager : MonoBehaviour
     //Serialized Fields----------------------------------------------------------------------------                                                    
 
     [SerializeField] private GameObject canvas;
+    [SerializeField] private TextMeshProUGUI dialogueLog;
+    [SerializeField] private Scrollbar scrollbar;
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
@@ -40,6 +42,11 @@ public class PauseMenuManager : MonoBehaviour
     //Basic Public Properties----------------------------------------------------------------------
 
     /// <summary>
+    /// The log of all dialogue in the pause menu.
+    /// </summary>
+    public TextMeshProUGUI DialogueLog { get => dialogueLog; }
+
+    /// <summary>
     /// Is the game currently paused?
     /// </summary>
     public static bool Paused { get => paused; }
@@ -63,6 +70,7 @@ public class PauseMenuManager : MonoBehaviour
         canvas.SetActive(false);
         paused = false;
         changePause = false;
+        //dialogueLog.text = "";
     }
 
     /// <summary>
@@ -127,6 +135,7 @@ public class PauseMenuManager : MonoBehaviour
         Time.timeScale = 0f;
         canvas.SetActive(true);
         buttonInitialiser.Initialise();
+        scrollbar.value = 0;
         paused = true;
     }
 
