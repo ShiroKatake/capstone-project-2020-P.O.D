@@ -81,8 +81,11 @@ public class PauseMenuManager : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        GetInput();
-        CheckPaused();
+        if (!UIManager.Instance.GameOverCanvas.activeInHierarchy && !SceneLoader.Instance.LoadingScene)
+        {
+            GetInput();
+            CheckPaused();
+        }
     }
 
     //Core Reucrring Methods (Update)----------------------------------------------------------------------------------------------------------------

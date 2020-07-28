@@ -49,7 +49,6 @@ public class SceneLoaderListener : MonoBehaviour
         }
 
         Instance = this;
-
         sceneLoaderInstantiatedOnAwake = false;
 
         try
@@ -85,6 +84,20 @@ public class SceneLoaderListener : MonoBehaviour
         {
             SceneLoader.Instance.SkipTutorial = skipTutorialToggle.isOn;
         }
+        else
+        {
+            try
+            {
+                if (StageManager.Instance != null)
+                {
+                    SceneLoader.Instance.SkipTutorial = StageManager.Instance.SkipTutorial;
+                }
+            }
+            catch
+            {
+
+            }
+        }
 
         SceneLoader.Instance.LoadGame();
     }
@@ -94,6 +107,18 @@ public class SceneLoaderListener : MonoBehaviour
     /// </summary>
     public void LoadMainMenu()
     {
+        try
+        {
+            if (StageManager.Instance != null)
+            {
+                SceneLoader.Instance.SkipTutorial = StageManager.Instance.SkipTutorial;
+            }
+        }
+        catch
+        {
+
+        }
+
         SceneLoader.Instance.LoadMainMenu();
     }
 
