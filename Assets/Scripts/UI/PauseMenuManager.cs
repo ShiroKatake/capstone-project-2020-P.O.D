@@ -70,7 +70,7 @@ public class PauseMenuManager : MonoBehaviour
         canvas.SetActive(false);
         paused = false;
         changePause = false;
-        //dialogueLog.text = "";
+        dialogueLog.text = "";
     }
 
     /// <summary>

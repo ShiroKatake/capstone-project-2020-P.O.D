@@ -90,7 +90,14 @@ public class StageCombat : Stage
         //Help from DOG, aliens bad
         ClockController.Instance.Paused = true;
         console.SubmitDialogue("launch dog", 0, false, false);
-        dog.SubmitDialogue("dog launched", 1, false, false);
+
+        do
+        {
+            yield return null;
+        }
+        while (console.LerpingDialogue);
+
+        dog.SubmitDialogue("dog launched", 0, false, false);
 
         while (!dog.DialogueRead || !dog.AcceptingSubmissions)
         {
@@ -155,6 +162,11 @@ public class StageCombat : Stage
             {
                 dog.DialogueRead = true;
             }
+        }
+
+        if (game.Activated)
+        {
+            game.SubmitDeactivation();
         }
 
         console.ClearDialogue();

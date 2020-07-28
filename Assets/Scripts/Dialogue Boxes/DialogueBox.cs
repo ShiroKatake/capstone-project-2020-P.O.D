@@ -48,6 +48,10 @@ public class DialogueBox : MonoBehaviour
     [SerializeField] private bool appendDialogue;
     [SerializeField] private int lerpTextInterval;
 
+    [Header("Logging Dialogue")]
+    [SerializeField] private bool logDialogue;
+    [SerializeField] private Color logColour;
+
     [Header("Cull Overflowing Text")]
     [SerializeField] private bool cullOverflow;
     [SerializeField] private int lines;
@@ -99,6 +103,9 @@ public class DialogueBox : MonoBehaviour
 
     //Dialogue timer
     private float dialogueTimer;
+
+    //Logging dialogue
+    private string logColourName;
 
     //Test variable for players spamming LMB or Z
     //private int lastUpdate;
@@ -211,6 +218,9 @@ public class DialogueBox : MonoBehaviour
 
         //Dialogue timer
         dialogueTimer = 0;
+
+        //Dialogue logging
+        logColourName = $"#{ColorUtility.ToHtmlStringRGB(logColour)}";
 
         //Test variable for players spamming LMB or Z
         //lastUpdate = 0;
@@ -339,7 +349,7 @@ public class DialogueBox : MonoBehaviour
                 StartCoroutine(Activate(dialogueQueue.Dequeue()));
             }
         }
-        else if (deactivationSubmitted && activated && (tweenOut || fadeOut))
+        else if (deactivationSubmitted && activated && clickable && (tweenOut || fadeOut))
         {
             lastDialogueKey = currentDialogueKey;
             currentDialogueKey = "";
@@ -608,6 +618,12 @@ public class DialogueBox : MonoBehaviour
 
         if (dialogue.ContainsKey(submission.key) && dialogue[submission.key].Count > 0)
         {
+            while (dialogueIndex < dialogue[currentDialogueKey].Count)
+            {
+                LogDialogue();
+                dialogueIndex++;
+            }
+
             acceptingSubmissions = true;
             changing = true;
             lastDialogueKey = currentDialogueKey;
@@ -631,6 +647,65 @@ public class DialogueBox : MonoBehaviour
     }
 
     /// <summary>
+    /// Adds the currently displaying line of dialogue to the dialogue log (or the most recently added line if it's an appending dialogue box).
+    /// </summary>
+    private void LogDialogue()
+    {
+        string raw = dialogue[currentDialogueKey][dialogueIndex];
+
+        if (logDialogue && raw != "" && raw != " ")
+        {
+            string result = $"<color={logColourName}>" + (PauseMenuManager.Instance.DialogueLog.text != "" ? $"<br>{id}: " : $"{id}: ");
+            ColourTag colourTag = null;
+
+            foreach (char c in raw)
+            {
+                if (c == newLineMarker)
+                {
+                    result += $"<br>{id}: ";
+                }
+                else if (colourTag == null)
+                {
+                    //Check for opening colour tag
+                    if (DialogueBoxManager.Instance.ColourTags != null && DialogueBoxManager.Instance.ColourTags.Count > 0)
+                    {
+                        foreach (ColourTag t in DialogueBoxManager.Instance.ColourTags)
+                        {
+                            if (c == t.OpeningTag)
+                            {
+                                colourTag = t;
+                                result += $"</color><color={colourTag.ColourName}><b>";
+                                break;
+                            }
+                        }
+
+                        if (colourTag == null)
+                        {
+                            result += c;
+                        }
+                    }
+                }
+                else
+                {
+                    //Check for closing colour tag
+                    if (c == colourTag.ClosingTag)
+                    {
+                        result += $"</b></color><color={logColourName}>";
+                        colourTag = null;
+                    }
+                    else
+                    {
+                        result += c;
+                    }
+                }
+            }
+
+            result += "</color>";
+            PauseMenuManager.Instance.DialogueLog.text += $"{result}";
+        }        
+    }
+
+    /// <summary>
     /// Displays the next line of dialogue in one hit.
     /// </summary>
     private void DisplayNext()
@@ -646,6 +721,7 @@ public class DialogueBox : MonoBehaviour
             textBox.text = "";
         }
 
+        LogDialogue();
         currentText = dialogue[currentDialogueKey][dialogueIndex];
         dialogueIndex++;
         lerpTextMaxIndex = currentText.Length - 1;
@@ -668,6 +744,7 @@ public class DialogueBox : MonoBehaviour
             textBox.text = "";
         }
 
+        LogDialogue();
         currentText = dialogue[currentDialogueKey][dialogueIndex];
         dialogueIndex++;
         lerpTextMaxIndex = 0;
@@ -709,6 +786,15 @@ public class DialogueBox : MonoBehaviour
     {
         dialogueTimer = 0;
         deactivating = true;
+
+        if (lastDialogueKey != "")
+        {
+            while (dialogueIndex < dialogue[lastDialogueKey].Count)
+            {
+                LogDialogue();
+                dialogueIndex++;
+            }
+        }
 
         if (fadeOut)
         {
