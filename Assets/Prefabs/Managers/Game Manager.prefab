@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 6577456260396280564}
   - component: {fileID: 8421924202713650533}
   - component: {fileID: 6577456260396280566}
+  - component: {fileID: 3751654114936324664}
   - component: {fileID: 6577456260396280555}
   - component: {fileID: 5301063456322420980}
   - component: {fileID: 3892250182970023661}
@@ -177,6 +178,21 @@ MonoBehaviour:
   HumidityVal: 0
   BiodiversityVal: 0
   TotalVal: 0
+--- !u!114 &3751654114936324664
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6577456260396280556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7fc4aad8e7680a44a675c09ec3e7e18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  constructionFinishedFX: {fileID: 7598014629204696912, guid: 9a30dc8a4a1a76241acc06f41a0df0e0,
+    type: 3}
+  pooledFX: 3
 --- !u!114 &6577456260396280555
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -116,7 +116,45 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: material._DissolveAmount
-    path: Body Collider/Walls Model/Windmill Model
+    path: Body Collider/Walls Model/Windmill Base Model
+    classID: 23
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 3.5666666
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 9
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: material._DissolveAmount
+    path: Body Collider/Walls Model/Windmill Base Model/Windmill Blades/Windmill
+      Blades Model
     classID: 23
     script: {fileID: 0}
   m_PPtrCurves:
@@ -138,14 +176,22 @@ AnimationClip:
     - time: 0
       value: {fileID: 2100000, guid: 339fe3b0488ed094985c8f02a5539746, type: 2}
     attribute: m_Materials.Array.data[0]
-    path: Body Collider/Walls Model/Windmill Model
+    path: Body Collider/Walls Model/Windmill Base Model
     classID: 23
     script: {fileID: 0}
   - curve:
     - time: 0
       value: {fileID: 2100000, guid: 339fe3b0488ed094985c8f02a5539746, type: 2}
     attribute: m_Materials.Array.data[1]
-    path: Body Collider/Walls Model/Windmill Model
+    path: Body Collider/Walls Model/Windmill Base Model
+    classID: 23
+    script: {fileID: 0}
+  - curve:
+    - time: 0
+      value: {fileID: 2100000, guid: 6de2bf4948d332c4f950c7fb92c1a8a0, type: 2}
+    attribute: m_Materials.Array.data[0]
+    path: Body Collider/Walls Model/Windmill Base Model/Windmill Blades/Windmill
+      Blades Model
     classID: 23
     script: {fileID: 0}
   m_SampleRate: 60
@@ -170,7 +216,14 @@ AnimationClip:
       customType: 22
       isPPtrCurve: 0
     - serializedVersion: 2
-      path: 2433784263
+      path: 3464015145
+      attribute: 2304829741
+      script: {fileID: 0}
+      typeID: 23
+      customType: 22
+      isPPtrCurve: 0
+    - serializedVersion: 2
+      path: 332049101
       attribute: 2304829741
       script: {fileID: 0}
       typeID: 23
@@ -191,15 +244,22 @@ AnimationClip:
       customType: 21
       isPPtrCurve: 1
     - serializedVersion: 2
-      path: 2433784263
+      path: 3464015145
       attribute: 0
       script: {fileID: 0}
       typeID: 23
       customType: 21
       isPPtrCurve: 1
     - serializedVersion: 2
-      path: 2433784263
+      path: 3464015145
       attribute: 1
+      script: {fileID: 0}
+      typeID: 23
+      customType: 21
+      isPPtrCurve: 1
+    - serializedVersion: 2
+      path: 332049101
+      attribute: 0
       script: {fileID: 0}
       typeID: 23
       customType: 21
@@ -209,6 +269,7 @@ AnimationClip:
     - {fileID: 2100000, guid: fad8d3e269fd2de4d99aa14def7a4104, type: 2}
     - {fileID: 2100000, guid: 339fe3b0488ed094985c8f02a5539746, type: 2}
     - {fileID: 2100000, guid: 339fe3b0488ed094985c8f02a5539746, type: 2}
+    - {fileID: 2100000, guid: 6de2bf4948d332c4f950c7fb92c1a8a0, type: 2}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
@@ -329,7 +390,45 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: material._DissolveAmount
-    path: Body Collider/Walls Model/Windmill Model
+    path: Body Collider/Walls Model/Windmill Base Model
+    classID: 23
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 3.5666666
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 9
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: material._DissolveAmount
+    path: Body Collider/Walls Model/Windmill Base Model/Windmill Blades/Windmill
+      Blades Model
     classID: 23
     script: {fileID: 0}
   m_EulerEditorCurves: []
