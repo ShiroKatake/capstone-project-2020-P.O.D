@@ -214,7 +214,14 @@ MonoBehaviour:
   incinerator: {fileID: 0}
   shotgunTurret: {fileID: 0}
   machineGunTurret: {fileID: 0}
-  buttonClickEventManagers: []
+  buttonClickEventManagers:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   buildingUIParent: {fileID: 0}
 --- !u!114 &5301063456322420980
 MonoBehaviour:
@@ -347,10 +354,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d131939d7065e54d8ad9015902b6b68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ore: 200
+  ore: 100
   powerConsumption: 0
   powerSupply: 100
   wasteConsumption: 0
-  wasteSupply: 0
+  wasteSupply: 100
   waterConsumption: 0
   waterSupply: 100
