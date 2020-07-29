@@ -8,10 +8,14 @@ using UnityEngine;
 
 public class PipeManager : MonoBehaviour {
 
+    
+
     public static PipeManager Instance { get; protected set; }
 
     List<PipeBuilding> buildings = new List<PipeBuilding>();
     List<PipeNode> nodes = new List<PipeNode>();
+    List<PipeSegment> pipeSegments = new List<PipeSegment>();
+
 
     List<LineSegment> lines = new List<LineSegment>();
     List<Label> labels = new List<Label>();
@@ -29,8 +33,6 @@ public class PipeManager : MonoBehaviour {
     // Start is called before the first frame update
     void Start() {
         meshFilter = GetComponent<MeshFilter>();
-
-
     }
 
     // Update is called once per frame
@@ -41,106 +43,167 @@ public class PipeManager : MonoBehaviour {
     public void RegisterPipeBuilding(PipeBuilding pipeBuilding) {
         Vector3 fromPos = pipeBuilding.transform.position;
 
-        RegisterPipeBuilding(fromPos);
+        RegisterPipeBuilding(fromPos, ENodeType.BUILDING);
     }
 
-    public void RegisterPipeBuilding(Vector3 pos) {
+    public void RegisterPipeBuilding(Vector3 pos, ENodeType nodeType = ENodeType.INTERSECTION) {
+        //RegisterPipeBuilding(pos, nodeType);
 
-        //nodes.Add(new PipeNode(pipeBuilding.transform.position));
-        Vector3 fromPos = pos;
+        PipeNode newNode = new PipeNode(pos, nodeType);
+
+        nodes.Add(newNode);
+
+        RecalculatePipeMesh(newNode);
+    }
+
+
+    private void RecalculatePipeMesh(PipeNode newNode) {
+
+        if (nodes.Count > 1) {
+
+            Vector3 startPosition = Vector3.zero;
+            Vector3 endPosition = newNode.position;
+
+            PipeNode closestNode = nodes[0];
+            float closestNodeDistance = 9999999;
+
+            // Check all the existing nodes and find the closest one
+
+            foreach (PipeNode node in nodes) {
+                if (node != newNode) {
+
+                    Vector3 deltaVector = newNode.position - node.position;
+                    float thisDistance = deltaVector.sqrMagnitude;
+
+                    if (thisDistance < closestNodeDistance) {
+                        closestNodeDistance = thisDistance;
+                        closestNode = node;
+                    }
+
+                }
+            }
+
+            startPosition = closestNode.position;
+
+            if (pipeSegments.Count > 0) {
+
+                PipeSegment closestSegment = pipeSegments[0];
+                float closestSegmentDistance = 999999;
+
+                // Find the closest segment
+                foreach (PipeSegment segment in pipeSegments) {
+                    Vector3 segmentDelta = segment.toNode.position - segment.fromNode.position;
+                    bool withinSegment = false;
+
+                    // Check if point is along segment
+                    if (segmentDelta.x == 0) {
+                        //Segment is a vertical line
+                        Vector3 testVec = newNode.position - segment.toNode.position;
+                        if (Mathf.Abs(testVec.z) < Mathf.Abs(segmentDelta.z/2)) {
+                            withinSegment = true;
+                        }
+                    }
+
+                    if (withinSegment) {
+                        float thisDistance = PerpendicularDistance(segment.fromNode.position, segment.toNode.position, newNode.position);
+
+                        if (thisDistance < closestSegmentDistance) {
+                            closestSegmentDistance = thisDistance;
+                            closestSegment = segment;
+                        }
+                    }
+                }
+
+
+                if (closestSegmentDistance < closestNodeDistance) {
+                    Vector3 segmentVector = (closestSegment.toNode.position - closestSegment.fromNode.position).normalized;
+                    segmentVector = Quaternion.AngleAxis(90, Vector3.up) * segmentVector;
+
+                    startPosition = endPosition - segmentVector * closestSegmentDistance;
+                }
+
+            }
+
+            AddOrthogonalSegments(startPosition, endPosition);
+        }
         
 
-        List<LineSegment> tempLines = new List<LineSegment>();
-
-
-
-        // get a list of buildings and their distances
-        List<(PipeNode, float, MajorAxis, Label)> distances = new List<(PipeNode, float, MajorAxis, Label)>();
-        foreach (PipeNode node in nodes) {
-            Vector3 toPos = node.position;
-
-            Vector3 halfPos = toPos + (fromPos - toPos) / 2;
-
-            float diffX = Math.Abs(fromPos.x - toPos.x);
-            float diffY = Math.Abs(fromPos.z - toPos.z);
-            float dist = diffX + diffY;
-
-            MajorAxis axis;
-            if (diffX > diffY)
-                axis = MajorAxis.X;
-            else if (diffY > diffX)
-                axis = MajorAxis.Y;
-            else axis = MajorAxis.Equal;
-
-            distances.Add((node, dist, axis, new Label(halfPos, dist.ToString(), Color.red)));
-
-
-        }
-
-        //Distances sorted, shortest distance first
-        distances = distances.OrderBy(o => o.Item2).ToList();
-        if (distances.Count > 0) {
-
-            /*switch(distances[0].Item3) {
-                case all://MajorAxis.X:*/
-            Vector3 toPos = distances[0].Item1.position;
-
-            Vector3 verticalSegment = new Vector3(0, 0, toPos.z - fromPos.z);
-            Vector3 horizontalSegment = new Vector3(toPos.x - fromPos.x, 0, 0);
-
-            lines.Add(new LineSegment(fromPos, fromPos + horizontalSegment, Color.green));
-            lines.Add(new LineSegment(toPos, toPos - verticalSegment, Color.green));
-            nodes.Add(new PipeNode(fromPos + horizontalSegment));
-            //      break;
-            //}
-
-            //lines.Add(new LineSegment(fromPos, distances[0].Item1.position, Color.blue));
-            labels.Add(distances[0].Item4);
-        }
-
-        //buildings.Add(pipeBuilding);
-        nodes.Add(new PipeNode(fromPos));
-
-        UpdateMesh();
     }
 
-    private void UpdateMesh() {
+    private void AddOrthogonalSegments(Vector3 start, Vector3 end) {
+        Vector3 deltaVector = end - start;
 
-        Mesh m = new Mesh();
-
-        List<Vector3> verts = new List<Vector3>();
-        List<int> indices = new List<int>();
-
-        //        foreach (LineSegment line in lines) {
-        for (int i = 0; i < lines.Count; i ++) {
-            verts.Add(lines[i].from);
-            verts.Add(lines[i].to);
-            indices.Add(2 * i);
-            indices.Add(2 * i + 1);
+        if (deltaVector.z ==0 || deltaVector.x == 0) {
+            AddPipeSegment(start, end);
+        } else if (deltaVector.z >= deltaVector.x) {
+            AddPipeSegment(start, start + new Vector3(deltaVector.x / 2, 0, 0));
+            AddPipeSegment(start + new Vector3(deltaVector.x / 2, 0, 0), end - new Vector3(deltaVector.x / 2, 0, 0));
+            AddPipeSegment(end - new Vector3(deltaVector.x / 2, 0, 0), end);
+        } else {
+            AddPipeSegment(start, start + new Vector3(0, 0, deltaVector.z / 2));
+            AddPipeSegment(start + new Vector3(0, 0, deltaVector.z / 2), end - new Vector3(0, 0, deltaVector.z / 2));
+            AddPipeSegment(end - new Vector3(0, 0, deltaVector.z / 2), end);
         }
-
-
-        m.SetVertices(verts);
-        m.SetIndices(indices, MeshTopology.Lines, 0);
-        //m.mesh MeshTopology.Lines
-
-        meshFilter.mesh = m;
-
     }
 
+    private void AddPipeSegment(Vector3 start, Vector3 end) {
+        PipeNode startNode = null;
+        PipeNode endNode = null;
+
+       
+
+        for (int i = 0; i < nodes.Count; i ++) {
+            if (nodes[i].position == start)
+                startNode = nodes[i];
+            if (nodes[i].position == end)
+                endNode = nodes[i];
+        }
+
+        if (startNode == null) {
+            startNode = new PipeNode(start, ENodeType.INTERSECTION);
+            nodes.Add(startNode);
+            //Debug.Log("Added Start Node");
+        }
+        if (endNode == null) {
+            endNode = new PipeNode(end, ENodeType.INTERSECTION);
+            nodes.Add(endNode);
+            //Debug.Log("Added End Node");
+        }
+
+        pipeSegments.Add(new PipeSegment(startNode, endNode));
+        /*foreach (PipeNode node in nodes) {
+            if (node.position == start)
+                startNode = node;
+            if (node.position == end)
+                endNode = node;
+        }*/
+
+
+
+        //pipeSegments
+    }
+        
 
     private class PipeNode {
 
         public Vector3 position;
+        public ENodeType nodeType;
 
-        public PipeNode(Vector3 position) {
+        public PipeNode(Vector3 position, ENodeType nodeType) {
             this.position = position;
+            this.nodeType = nodeType;
         }
 
-        //public void AddNode
-
     }
+    private class PipeSegment {
+        public PipeNode fromNode, toNode;
 
+        public PipeSegment(PipeNode fromNode, PipeNode toNode) {
+            this.fromNode = fromNode;
+            this.toNode = toNode;
+        }
+    }
+    
     
 
     private class Label {
@@ -187,31 +250,39 @@ public class PipeManager : MonoBehaviour {
 
     }
 
-    //private void OnDrawGizmos() {
-    //    if (Application.isPlaying) {
+    private void OnDrawGizmos() {
 
-    //        foreach (LineSegment line in lines) {
-    //            Gizmos.color = line.col;
-    //            Gizmos.DrawLine(line.from, line.to);
-    //        }
 
-    //        foreach (var label in labels) {
-    //            Handles.color = label.col;
-    //            Handles.Label(label.loc, label.label);
-    //        }
+        if (Application.isPlaying) {
+            UnityEngine.Random.InitState(100);
 
-    //    }
-    //}
+
+            foreach (LineSegment line in lines) {
+                Gizmos.color = line.col;
+                Gizmos.DrawLine(line.from, line.to);
+            }
+
+            foreach (var label in labels) {
+                Handles.color = label.col;
+                Handles.Label(label.loc, label.label);
+            }
+
+            Gizmos.color = Color.cyan;
+            foreach (PipeSegment seg in pipeSegments) {
+                Gizmos.DrawLine(seg.fromNode.position, seg.toNode.position);
+            }
+            foreach(PipeNode node in nodes) {
+                Gizmos.color = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
+                Gizmos.DrawWireSphere(node.position, UnityEngine.Random.value * 0.05f + 0.05f);
+            }
+
+        }
+    }
 
     private enum MajorAxis {
         X,
         Y,
         Equal
-    }
-
-    private class PipeSegment {
-        public PipeNode from;
-        public PipeNode to;
     }
 
     private class LineSegment {
