@@ -14,6 +14,7 @@ public class MineralCollectionController : MonoBehaviour
     //Serialized Fields----------------------------------------------------------------------------                                                    
 
     [SerializeField] private Camera camera;
+	[SerializeField] private MiningBeam miningBeam;
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
@@ -23,9 +24,6 @@ public class MineralCollectionController : MonoBehaviour
     private LayerMask mineralsLayerMask;
 
 	//Public Properties------------------------------------------------------------------------------------------------------------------------------
-
-	public UnityAction onMouseHoverEnter;
-	public UnityAction onMouserHoverExit;
 
 	//Singleton Public Property--------------------------------------------------------------------                                                    
 
@@ -97,16 +95,24 @@ public class MineralCollectionController : MonoBehaviour
 				//Debug.Log("Raycast hit minerals");
 				Mineral mineral = hit.collider.GetComponentInParent<Mineral>();
 				DisplayMineralInfo(mineral);
-				if (collectMinerals && mineral != null)
+
+				if (collectMinerals && mineral != null && mineral.OreCount > 0)
                 {
+					miningBeam.OnMineEnable(mineral.MiningPoint);
                     mineral.Mine();
                     //Debug.Log($"Raycast hit mineral node. Mined {mined} minerals");
 
                     AudioManager.Instance.PlaySound(AudioManager.ESound.Mining, this.gameObject);
                     //ResourceController.Instance.Ore += mined; (Moved this function to Ore.cs)
                 }
+				else
+				{
+					miningBeam.OnMineDisable();
+				}
 			}
-			else {
+			else
+			{
+				miningBeam.OnMineDisable();
 				HideMineralInfo();
 			}
         }

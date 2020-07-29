@@ -5,16 +5,11 @@ using UnityEngine;
 public class ImpactGlow : MonoBehaviour
 {
 	[SerializeField] private LineRenderer lineRenderer;
-	private Vector3[] positions;
+	[SerializeField] private Transform beamOrigin;
 
 	private void Update()
 	{
-		lineRenderer.GetPositions(positions);
-		transform.LookAt(lineRenderer.transform);
-	}
-
-	public void OnMining()
-	{
-
+		transform.position = lineRenderer.GetPosition(1);
+		transform.LookAt(beamOrigin);
 	}
 }
