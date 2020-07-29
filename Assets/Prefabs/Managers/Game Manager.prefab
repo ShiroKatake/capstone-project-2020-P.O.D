@@ -215,7 +215,14 @@ MonoBehaviour:
   incinerator: {fileID: 0}
   shotgunTurret: {fileID: 0}
   machineGunTurret: {fileID: 0}
-  buttonClickEventManagers: []
+  buttonClickEventManagers:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   buildingUIParent: {fileID: 0}
 --- !u!114 &5301063456322420980
 MonoBehaviour:
@@ -348,13 +355,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d131939d7065e54d8ad9015902b6b68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ore: 200
+  ore: 0
   powerConsumption: 0
-  powerSupply: 100
+  powerSupply: 0
   wasteConsumption: 0
   wasteSupply: 0
   waterConsumption: 0
-  waterSupply: 100
+  waterSupply: 0
 --- !u!114 &3607602877255847704
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -369,3 +376,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneLoaderPrefab: {fileID: 4921356873257255501, guid: 82928ef9969e85f4b8a1954494ac065f,
     type: 3}
+  skipTutorialToggle: {fileID: 0}
