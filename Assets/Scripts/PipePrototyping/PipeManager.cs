@@ -12,15 +12,17 @@ public class PipeManager : MonoBehaviour {
 
     public static PipeManager Instance { get; protected set; }
 
-    List<PipeBuilding> buildings = new List<PipeBuilding>();
-    List<PipeNode> nodes = new List<PipeNode>();
-    List<PipeSegment> pipeSegments = new List<PipeSegment>();
+    private List<PipeBuilding> buildings = new List<PipeBuilding>();
+    private List<PipeNode> nodes = new List<PipeNode>();
+    private List<PipeSegment> pipeSegments = new List<PipeSegment>();
 
 
-    List<LineSegment> lines = new List<LineSegment>();
-    List<Label> labels = new List<Label>();
+    private List<LineSegment> lines = new List<LineSegment>();
+    private List<Label> labels = new List<Label>();
 
-    MeshFilter meshFilter;
+    private MeshFilter meshFilter;
+
+    [SerializeField] private GameObject pipeMeshPrefab;
 
     private void Awake() {
         if (Instance != null) {
@@ -89,37 +91,56 @@ public class PipeManager : MonoBehaviour {
 
                 PipeSegment closestSegment = pipeSegments[0];
                 float closestSegmentDistance = 999999;
+                Vector3 intersectionPoint = Vector3.zero;
 
                 // Find the closest segment
                 foreach (PipeSegment segment in pipeSegments) {
                     Vector3 segmentDelta = segment.toNode.position - segment.fromNode.position;
                     bool withinSegment = false;
 
+                    float minPos, maxPos;
+                    Vector3 segmentIntersection = Vector3.zero;
                     // Check if point is along segment
                     if (segmentDelta.x == 0) {
-                        //Segment is a vertical line
-                        Vector3 testVec = newNode.position - segment.toNode.position;
-                        if (Mathf.Abs(testVec.z) < Mathf.Abs(segmentDelta.z/2)) {
+                        // Vertical Line Segment
+                        minPos = Mathf.Min(segment.toNode.position.z, segment.fromNode.position.z);
+                        maxPos = Mathf.Max(segment.toNode.position.z, segment.fromNode.position.z);
+
+                        if (newNode.position.z > minPos && newNode.position.z < maxPos) {
                             withinSegment = true;
                         }
+                        
+                        segmentIntersection = new Vector3(segment.fromNode.position.x, segment.fromNode.position.y, newNode.position.z);
+                    } else
+                    if (segmentDelta.z == 0) {
+                        // Horizontal Line Segment
+                        minPos = Mathf.Min(segment.toNode.position.x, segment.fromNode.position.x);
+                        maxPos = Mathf.Max(segment.toNode.position.x, segment.fromNode.position.x);
+
+                        if (newNode.position.x > minPos && newNode.position.x < maxPos) {
+                            withinSegment = true;
+                        }
+                        //float segmentDistance = segment.fromNode.position.x - newNode.position.x;
+                        segmentIntersection = new Vector3(newNode.position.x, segment.fromNode.position.y, segment.fromNode.position.z);
                     }
 
                     if (withinSegment) {
-                        float thisDistance = PerpendicularDistance(segment.fromNode.position, segment.toNode.position, newNode.position);
-
-                        if (thisDistance < closestSegmentDistance) {
-                            closestSegmentDistance = thisDistance;
+                        float segmentDistance = (newNode.position - segmentIntersection).sqrMagnitude;
+                        if (segmentDistance < closestSegmentDistance) {
+                            closestSegmentDistance = segmentDistance;
+                            intersectionPoint = segmentIntersection;
                             closestSegment = segment;
                         }
+
                     }
                 }
 
 
                 if (closestSegmentDistance < closestNodeDistance) {
-                    Vector3 segmentVector = (closestSegment.toNode.position - closestSegment.fromNode.position).normalized;
-                    segmentVector = Quaternion.AngleAxis(90, Vector3.up) * segmentVector;
+                    startPosition = intersectionPoint;
 
-                    startPosition = endPosition - segmentVector * closestSegmentDistance;
+                    SplitPipeSegment(closestSegment, intersectionPoint);
+
                 }
 
             }
@@ -170,17 +191,22 @@ public class PipeManager : MonoBehaviour {
             //Debug.Log("Added End Node");
         }
 
-        pipeSegments.Add(new PipeSegment(startNode, endNode));
-        /*foreach (PipeNode node in nodes) {
-            if (node.position == start)
-                startNode = node;
-            if (node.position == end)
-                endNode = node;
-        }*/
+        pipeSegments.Add(new PipeSegment(startNode, endNode, pipeMeshPrefab, transform));
 
+    }
 
+    private void SplitPipeSegment(PipeSegment segment, Vector3 newPoint) {
 
-        //pipeSegments
+        //Remove the old segment
+        pipeSegments.Remove(segment);
+
+        // Re-Add from - new
+        AddPipeSegment(segment.fromNode.position, newPoint);
+        // Re-Add new - to
+        AddPipeSegment(newPoint, segment.toNode.position);
+
+        segment.RemoveSegment();
+
     }
         
 
@@ -198,10 +224,37 @@ public class PipeManager : MonoBehaviour {
     private class PipeSegment {
         public PipeNode fromNode, toNode;
 
-        public PipeSegment(PipeNode fromNode, PipeNode toNode) {
+        public GameObject segmentMeshObject;
+
+        public PipeSegment(PipeNode fromNode, PipeNode toNode, GameObject pipeMeshPrefab, Transform parent) {
             this.fromNode = fromNode;
             this.toNode = toNode;
+
+            Vector3 deltaVec = toNode.position - fromNode.position;
+            Quaternion rotation = Quaternion.identity;
+
+            Vector3 scale = Vector3.one;
+
+            // Horizontal Line
+            if (fromNode.position.z == toNode.position.z) {
+                rotation = Quaternion.AngleAxis(90, Vector3.up);
+                scale.z = deltaVec.x;
+
+            } else {
+                scale.z = deltaVec.z;
+            }
+
+            segmentMeshObject = Instantiate(pipeMeshPrefab, fromNode.position + new Vector3(0,0,0), rotation);
+            segmentMeshObject.transform.parent = parent;
+            segmentMeshObject.transform.localScale = scale;
+
         }
+
+
+        public void RemoveSegment() {
+            Destroy(segmentMeshObject);
+        }
+
     }
     
     
@@ -218,7 +271,7 @@ public class PipeManager : MonoBehaviour {
         }
     }
 
-    private float PerpendicularDistance(Vector3 from, Vector3 to, Vector3 point) {
+    /*private float PerpendicularDistance(Vector3 from, Vector3 to, Vector3 point) {
 
         Vector3 dirPos = to - from;
         float dist = dirPos.magnitude;
@@ -233,22 +286,7 @@ public class PipeManager : MonoBehaviour {
 
         float distPerp = Mathf.Abs((y2 - y1) * x0 - (x2 - x1) * y0 + x2 * y1 - y2 * x1) / dist;
         return distPerp;
-    }
-
-    public float LineSide(Vector3 from, Vector3 to, Vector3 point) {
-        float x0 = point.x;
-        float y0 = point.z;
-
-        float x1 = from.x;
-        float x2 = to.x;
-        float y1 = from.z;
-        float y2 = to.z;
-
-        float d = (x0 - x1) * (y2 - y1) - (y0 - y1) * (x2 - x1);
-
-        return d;
-
-    }
+    }*/
 
     private void OnDrawGizmos() {
 
@@ -267,8 +305,9 @@ public class PipeManager : MonoBehaviour {
                 Handles.Label(label.loc, label.label);
             }
 
-            Gizmos.color = Color.cyan;
+            //Gizmos.color = Color.cyan;
             foreach (PipeSegment seg in pipeSegments) {
+                Gizmos.color = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
                 Gizmos.DrawLine(seg.fromNode.position, seg.toNode.position);
             }
             foreach(PipeNode node in nodes) {
@@ -277,12 +316,6 @@ public class PipeManager : MonoBehaviour {
             }
 
         }
-    }
-
-    private enum MajorAxis {
-        X,
-        Y,
-        Equal
     }
 
     private class LineSegment {

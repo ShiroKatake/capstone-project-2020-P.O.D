@@ -185,8 +185,11 @@ public class BuildingSpawningController : MonoBehaviour
 
                 Vector3 spawnPos = heldBuilding.transform.position;
                 spawnPos.y = 0.02f;
-                PipeManager.Instance.RegisterPipeBuilding(spawnPos);
+                
                 spawnPos.y = GetStandardisedPlacementHeight(spawnPos, true);
+
+                PipeManager.Instance.RegisterPipeBuilding(spawnPos + new Vector3(0, -0.5f, 0));
+
                 heldBuilding.Place(spawnPos);
 
                 heldBuilding = null;
