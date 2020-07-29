@@ -401,54 +401,7 @@ public class DialogueBox : MonoBehaviour
             //Get string of new letters to be added
             foreach (char c in currentText.Substring(0, lerpTextMaxIndex))
             {
-                //Check for new line marker
-                if (c == newLineMarker)
-                {
-                    pendingText += "<br>";
-                }
-                //Check for closing colour tag
-                else if (colourTags.Count > 0 && c == colourTags[colourTags.Count - 1].ClosingTag)
-                {
-                    pendingText += $"</b></color>";
-                    colourTags.RemoveAt(colourTags.Count - 1);
-
-                    if (colourTags.Count > 0)
-                    {
-                        pendingText += $"<color={colourTags[colourTags.Count - 1].ColourName}><b>";
-                    }
-                }
-                //Check for opening colour tag
-                else if (DialogueBoxManager.Instance.ColourTags != null && DialogueBoxManager.Instance.ColourTags.Count > 0)
-                {
-                    bool newTag = false;
-
-                    foreach (ColourTag t in DialogueBoxManager.Instance.ColourTags)
-                    {
-                        if (c == t.OpeningTag)
-                        {
-                            if (colourTags.Count > 0)
-                            {
-                                pendingText += $"</b></color>";
-                            }
-
-                            colourTags.Add(t);
-                            pendingText += $"<color={colourTags[colourTags.Count - 1].ColourName}><b>";
-                            newTag = true;
-                            break;
-                        }
-                    }
-
-                    //Else just a regular character
-                    if (!newTag)
-                    {
-                        pendingText += c;
-                    }
-                }
-                //Else just a regular character
-                else
-                {
-                    pendingText += c;
-                }
+                pendingText += CheckForSpecialCharacters(c, "<br>");
             }
 
             //Add if coloured
@@ -473,6 +426,62 @@ public class DialogueBox : MonoBehaviour
             {
                 lerpFinished = true;
             }
+        }
+    }
+
+    /// <summary>
+    /// Checks if the passed character is a special character and needs a custom string returned, or is a regular text character that should be returned as is.
+    /// </summary>
+    /// <param name="c">The character to be assessed.</param>
+    /// <param name="newLine">What to return if the character is a new line marker.</param>
+    /// <returns>The string to be appended to the text to be displayed.</returns>
+    private string CheckForSpecialCharacters(char c, string newLine)
+    {
+        //Check for new line marker
+        if (c == newLineMarker)
+        {
+            return newLine;
+        }
+        //Check for closing colour tag
+        else if (colourTags.Count > 0 && c == colourTags[colourTags.Count - 1].ClosingTag)
+        {
+            string result = $"</b></color>";
+            colourTags.RemoveAt(colourTags.Count - 1);
+
+            if (colourTags.Count > 0)
+            {
+                result += $"<color={colourTags[colourTags.Count - 1].ColourName}><b>";
+            }
+
+            return result;
+        }
+        //Check for opening colour tag
+        else if (DialogueBoxManager.Instance.ColourTags != null && DialogueBoxManager.Instance.ColourTags.Count > 0)
+        {
+            foreach (ColourTag t in DialogueBoxManager.Instance.ColourTags)
+            {
+                if (c == t.OpeningTag)
+                {
+                    string result = "";
+
+                    if (colourTags.Count > 0)
+                    {
+                        result += $"</b></color>";
+                    }
+
+                    colourTags.Add(t);
+                    result += $"<color={colourTags[colourTags.Count - 1].ColourName}><b>";
+                    return result;
+                }
+            }
+
+            //Else just a regular character
+            return $"{c}";
+        }
+        //Else just a regular character
+        else
+        {
+            return $"{c}";
         }
     }
 
@@ -530,11 +539,6 @@ public class DialogueBox : MonoBehaviour
         {
             int num = IdGenerator.Instance.GetNextId();
             string id = (error ? $"error {num}" : $"message {num}");
-
-            if (error)
-            {
-                message = $"<{message}>";
-            }
 
             dialogue[id] = new List<string>() { message };
             SubmitDialogue(id, delay, false, false);
@@ -658,49 +662,14 @@ public class DialogueBox : MonoBehaviour
 
         if (logDialogue && raw != "" && raw != " ")
         {
+            //Reset variables
             string result = $"<color={logColourName}>" + (PauseMenuManager.Instance.DialogueLog.text != "" ? $"<br>{id}: " : $"{id}: ");
-            ColourTag colourTag = null;
+            colourTags.Clear();
 
+            //Get string of new letters to be added
             foreach (char c in raw)
             {
-                if (c == newLineMarker)
-                {
-                    result += $"<br>{id}: ";
-                }
-                else if (colourTag == null)
-                {
-                    //Check for opening colour tag
-                    if (DialogueBoxManager.Instance.ColourTags != null && DialogueBoxManager.Instance.ColourTags.Count > 0)
-                    {
-                        foreach (ColourTag t in DialogueBoxManager.Instance.ColourTags)
-                        {
-                            if (c == t.OpeningTag)
-                            {
-                                colourTag = t;
-                                result += $"</color><color={colourTag.ColourName}><b>";
-                                break;
-                            }
-                        }
-
-                        if (colourTag == null)
-                        {
-                            result += c;
-                        }
-                    }
-                }
-                else
-                {
-                    //Check for closing colour tag
-                    if (c == colourTag.ClosingTag)
-                    {
-                        result += $"</b></color><color={logColourName}>";
-                        colourTag = null;
-                    }
-                    else
-                    {
-                        result += c;
-                    }
-                }
+                result += CheckForSpecialCharacters(c, $"<br>{id}: ");
             }
 
             result += "</color>";
