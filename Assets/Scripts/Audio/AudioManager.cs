@@ -513,7 +513,7 @@ public class AudioManager : MonoBehaviour
 
             currentBackgroundTrack.Play();
         }
-        else if (Time.time >= timeStamp + 2f)
+        else if (Time.time >= timeStamp + 3f)
         {
             timeStamp = 0f;
             bgSwitchControl = false;
