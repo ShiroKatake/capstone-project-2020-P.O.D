@@ -289,7 +289,7 @@ public class DialogueBox : MonoBehaviour
 
             UpdateDialogueBoxState();
             LerpDialogue();
-            CullOverflow();
+            //CullOverflow();
         }
     }
 
