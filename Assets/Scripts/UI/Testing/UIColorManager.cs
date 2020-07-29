@@ -53,7 +53,7 @@ public class UIColorManager : MonoBehaviour
     }
 
     public void ColorUpdate() {
-        if (PlayerMovementController.Instance.PlayerInputManager.GetButton("EnemyAttack") && !alienPhaseOne && !alienPhaseTwo){
+        if (PlayerController.Instance.PlayerInputManager.GetButton("EnemyAttack") && !alienPhaseOne && !alienPhaseTwo){
             eBackgroundCurColor = backgroundCurColor;
             eBorderCurColor = borderCurColor;
 
@@ -116,7 +116,7 @@ public class UIColorManager : MonoBehaviour
 	{
 		foreach (Image border in UIBorders)
 		{
-			border.GetComponent<Image>().color = color;
+			//border.GetComponent<Image>().color = color;
 		}
 	}
 

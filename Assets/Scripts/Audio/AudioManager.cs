@@ -34,6 +34,10 @@ public class AudioManager : MonoBehaviour
         Alien_Moves,
         Alien_Takes_Damage,
         Alien_Dies,
+        Win,
+        Lose,
+        Day_Shift,
+        Night_Shift
     }
 
     [System.Serializable]
@@ -539,7 +543,14 @@ public class AudioManager : MonoBehaviour
         currentBackgroundTrack.volume = Mathf.Lerp(0f, volumeControlBackground, volumeControlTimer);
     }
 
-
+    public void StopBackGroundMusic()
+    {
+        currentBackgroundTrack.Stop();
+    }
+    public void StartBackGroundMusic()
+    {
+        currentBackgroundTrack.Play();
+    }
 }
 
 

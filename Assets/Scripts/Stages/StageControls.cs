@@ -70,7 +70,7 @@ public class StageControls : Stage
         s = DialogueBoxManager.Instance.GetDialogueBox("S");
         d = DialogueBoxManager.Instance.GetDialogueBox("D");
         cat = DialogueBoxManager.Instance.GetDialogueBox("CAT");
-        playerInputManager = ReInput.players.GetPlayer(PlayerMovementController.Instance.GetComponent<PlayerID>().Value);
+        playerInputManager = ReInput.players.GetPlayer(PlayerController.Instance.GetComponent<PlayerID>().Value);
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
@@ -92,6 +92,9 @@ public class StageControls : Stage
     /// </note>
     protected override IEnumerator Execution()
     {
+        //Set the player's health ready for the healing section of the tutorial
+        PlayerController.Instance.GetComponent<Health>().CurrentHealth = PlayerController.Instance.GetComponent<Health>().MaxHealth * 0.25f;
+
         //Switch the clock off
         ClockController.Instance.Paused = true;
         ClockController.Instance.SetTime(ClockController.Instance.HalfCycleDuration * 0.2f);
@@ -226,7 +229,7 @@ public class StageControls : Stage
         mineralsHighlightUIEC.Visible = true;
 
         //Start terraforming stage
-        while (!cat.DialogueRead)
+        while (!cat.DialogueRead || !cat.AcceptingSubmissions)
         {
             yield return null;
         }

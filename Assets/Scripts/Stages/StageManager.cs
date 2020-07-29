@@ -22,14 +22,11 @@ public class StageManager : MonoBehaviour
     //Serialized Fields----------------------------------------------------------------------------
 
     [SerializeField] private bool skipTutorial;
-    [SerializeField] private EStage firstStage;
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
     private Dictionary<EStage, Stage> stages;
     private Stage currentStage;
-    private Stage savedStage;
-    private int savedStep;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -109,7 +106,7 @@ public class StageManager : MonoBehaviour
     /// </summary>
     public void BeginGame()
     {
-        currentStage = stages[(skipTutorial ? EStage.SkippedTutorial : firstStage)];
+        currentStage = stages[(skipTutorial ? EStage.SkippedTutorial : EStage.Controls)];
         currentStage.StartExecution();
     }
 

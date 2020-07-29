@@ -101,14 +101,14 @@ public class StageTerraforming : Stage
         //Yay minerals for building
         cat.SubmitDialogue("enough for building", 0, false, false);
 
-        while (!cat.DialogueRead)
+        while (!cat.DialogueRead || !cat.AcceptingSubmissions)
         {
             yield return null;
         }
 
         cat.SubmitDialogue("build buildings", 0, false, false);
 
-        while (!cat.DialogueRead)
+        while (!cat.DialogueRead || !cat.AcceptingSubmissions)
         {
             yield return null;
         }
@@ -145,7 +145,7 @@ public class StageTerraforming : Stage
         cat.SubmitDialogue("got power and water", 0, false, false);
         fusionReactor.Interactable = true;
 
-        while (!cat.DialogueRead)
+        while (!cat.DialogueRead || !cat.AcceptingSubmissions)
         {
             yield return null;
         }
@@ -158,7 +158,7 @@ public class StageTerraforming : Stage
         humidityBar.Visible = true;
         humidityBarHighlight.Visible = true;
 
-        while (!cat.DialogueRead)
+        while (!cat.DialogueRead || !cat.AcceptingSubmissions)
         {
             yield return null;
         }
@@ -172,7 +172,7 @@ public class StageTerraforming : Stage
         biodiversityBar.Visible = true;
         biodiversityBarHighlight.Visible = true;
 
-        while (!cat.DialogueRead)
+        while (!cat.DialogueRead || !cat.AcceptingSubmissions)
         {
             yield return null;
         }
@@ -186,7 +186,7 @@ public class StageTerraforming : Stage
         atmosphereBar.Visible = true;
         atmosphereBarHighlight.Visible = true;
 
-        while (!cat.DialogueRead)
+        while (!cat.DialogueRead || !cat.AcceptingSubmissions)
         {
             yield return null;
         }
@@ -195,7 +195,7 @@ public class StageTerraforming : Stage
         atmosphereBarHighlight.Visible = false;
         cat.SubmitDialogue("buildings important", 0, false, false);
 
-        while (!cat.DialogueRead)
+        while (!cat.DialogueRead || !cat.AcceptingSubmissions)
         {
             yield return null;
         }
@@ -204,7 +204,7 @@ public class StageTerraforming : Stage
         progressBar.Visible = true;
         ratioBarsHighlight.Visible = true;
 
-        while (!cat.DialogueRead)
+        while (!cat.DialogueRead || !cat.AcceptingSubmissions)
         {
             yield return null;
         }
@@ -213,7 +213,7 @@ public class StageTerraforming : Stage
         clock.Visible = true;
         ClockController.Instance.Paused = false;
 
-        while (!cat.DialogueRead)
+        while (!cat.DialogueRead || !cat.AcceptingSubmissions)
         {
             yield return null;
         }

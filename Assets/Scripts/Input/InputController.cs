@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Rewired;
 
 /// <summary>
@@ -21,10 +22,21 @@ public class InputController : MonoBehaviour
     [SerializeField] private int playerID = 0;
     [SerializeField] private Rewired.Player player;
 
-    [Header("Buttons")]
-    [SerializeField] private List<ButtonClickEventManager> buttons;
+    [Header("Building Buttons")]
+    [SerializeField] private Button fusionReactor;
+    [SerializeField] private Button iceDrill;
+    [SerializeField] private Button boiler;
+    [SerializeField] private Button greenhouse;
+    [SerializeField] private Button incinerator;
+    [SerializeField] private Button shotgunTurret;
+    [SerializeField] private Button machineGunTurret;
+
+    [Header("ButtonsClickEventManagers")]
+    [SerializeField] private List<ButtonClickEventManager> buttonClickEventManagers;
     // needs to be renamed...
     [SerializeField] private GameObject buildingUIParent;
+
+
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
@@ -93,7 +105,7 @@ public class InputController : MonoBehaviour
                 break;
         }
 
-        buttons = new List<ButtonClickEventManager>(buildingUIParent.GetComponentsInChildren<ButtonClickEventManager>());
+        buttonClickEventManagers = new List<ButtonClickEventManager>(buildingUIParent.GetComponentsInChildren<ButtonClickEventManager>());
         player = ReInput.players.GetPlayer(playerID);
     }
 
@@ -151,13 +163,13 @@ public class InputController : MonoBehaviour
 
             //Custom
             case "CycleBuilding":
-                return player.GetButton("IceDrill")
-                    || player.GetButton("Reactor")
-                    || player.GetButton("Incinerator")
-                    || player.GetButton("Boiler")
-                    || player.GetButton("GreenHouse")
-                    || player.GetButton("Turret1")
-                    || player.GetButton("Turret2")
+                return (player.GetButton("Reactor") && fusionReactor.interactable)
+                    || (player.GetButton("IceDrill") && iceDrill.interactable)
+                    || (player.GetButton("Boiler") && boiler.interactable)
+                    || (player.GetButton("GreenHouse") && greenhouse.interactable)
+                    || (player.GetButton("Incinerator") && incinerator.interactable)
+                    || (player.GetButton("Turret1") && shotgunTurret.interactable)
+                    || (player.GetButton("Turret2") && machineGunTurret.interactable)
                     || CheckUIButtonClicked();
                 /*if (gamepad == EGamepad.MouseAndKeyboard)
                 {
@@ -177,13 +189,13 @@ public class InputController : MonoBehaviour
                 }*/
 
             case "SpawnBuilding":
-                return player.GetButton("IceDrill")
-                    || player.GetButton("Reactor")
-                    || player.GetButton("Incinerator")
-                    || player.GetButton("Boiler")
-                    || player.GetButton("GreenHouse")
-                    || player.GetButton("Turret1")
-                    || player.GetButton("Turret2")
+                return (player.GetButton("Reactor") && fusionReactor.interactable)
+                    || (player.GetButton("IceDrill") && iceDrill.interactable)
+                    || (player.GetButton("Boiler") && boiler.interactable)
+                    || (player.GetButton("GreenHouse") && greenhouse.interactable)
+                    || (player.GetButton("Incinerator") && incinerator.interactable)
+                    || (player.GetButton("Turret1") && shotgunTurret.interactable)
+                    || (player.GetButton("Turret2") && machineGunTurret.interactable)
                     || CheckUIButtonClicked();
                 /*if (gamepad == EGamepad.MouseAndKeyboard)
                 {
@@ -503,7 +515,7 @@ public class InputController : MonoBehaviour
     /// <returns>Was a UI button for building clicked by the player?</returns>
     private bool CheckUIButtonClicked()
     {
-        foreach (ButtonClickEventManager b in buttons)
+        foreach (ButtonClickEventManager b in buttonClickEventManagers)
         {
             if (b.Clicked)
             {

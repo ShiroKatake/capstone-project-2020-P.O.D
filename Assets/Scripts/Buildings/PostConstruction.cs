@@ -21,7 +21,9 @@ public class PostConstruction : StateMachineBehaviour
     {
 		Building building = animator.GetComponent<Building>();
         building.FinishBuilding();
-    }
+		building.SpawnFinishedFX();
+
+	}
 
     // OnStateMove is called right after Animator.OnAnimatorMove()
     //override public void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
