@@ -19,6 +19,7 @@ public class AlienClaw : MonoBehaviour
 		if (damageable == null)
 		{
 			damageable = collidedWith.transform.parent.GetComponent<Health>();
+			
 		} else if (damageable == null)
 		{
 			Debug.Log("None");

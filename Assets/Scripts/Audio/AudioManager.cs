@@ -37,7 +37,8 @@ public class AudioManager : MonoBehaviour
         Win,
         Lose,
         Day_Shift,
-        Night_Shift
+        Night_Shift,
+        Attacked
     }
 
     [System.Serializable]
