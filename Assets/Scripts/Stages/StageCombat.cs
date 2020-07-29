@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Rewired;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,6 +8,21 @@ using UnityEngine;
 /// </summary>
 public class StageCombat : Stage
 {
+    //Private Fields---------------------------------------------------------------------------------------------------------------------------------
+
+    //Serialized Fields----------------------------------------------------------------------------
+    
+    [SerializeField] private UIElementStatusController shotgunTurret;
+    [SerializeField] private UIElementStatusController machineGunTurret;
+    [SerializeField] private UIElementStatusController turretsHighlight;
+
+    //Non-Serialized Fields------------------------------------------------------------------------
+
+    DialogueBox console;
+    DialogueBox game;
+    DialogueBox dog;
+    Player playerInputManager;
+
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
     //Singleton Public Property----------------------------------------------------------------------------------------------------------------------
@@ -31,7 +47,19 @@ public class StageCombat : Stage
 
         Instance = this;
         id = EStage.Combat;
-        base.Awake();
+    }
+
+    /// <summary>
+    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
+    /// Start() runs after Awake().
+    /// </summary>
+    private void Start()
+    {
+        //Get all dialogue boxes, etc.
+        console = DialogueBoxManager.Instance.GetDialogueBox("Console");
+        game = DialogueBoxManager.Instance.GetDialogueBox("Game");
+        dog = DialogueBoxManager.Instance.GetDialogueBox("DOG");
+        playerInputManager = ReInput.players.GetPlayer(PlayerController.Instance.GetComponent<PlayerID>().Value);
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
@@ -39,13 +67,107 @@ public class StageCombat : Stage
     /// <summary>
     /// The main behaviour of StageCombat.
     /// </summary>
-    public override void Execute()
+    public override void StartExecution()
     {
-        switch (step)
-        {
-            default:
+        StartCoroutine(Execution());
+    }
 
-                break;
+    /// <summary>
+    /// The main behaviour of the stage. 
+    /// </summary>
+    /// <note>
+    /// If the stage follows a linear path, use while(waiting){yield return null} statements to delay behaviour. If the stage can loop back on itself or
+    /// jump ahead, use an initial yield return null followed by while(step > -1){switch(step){/*stage content*/}.
+    /// </note>
+    protected override IEnumerator Execution()
+    {
+        //Wait for aliens to spawn
+        while (ClockController.Instance.Daytime)
+        {
+            yield return null;
         }
+
+        //Help from DOG, aliens bad
+        ClockController.Instance.Paused = true;
+        console.SubmitDialogue("launch dog", 0, false, false);
+        dog.SubmitDialogue("dog launched", 1, false, false);
+
+        while (!dog.DialogueRead || !dog.AcceptingSubmissions)
+        {
+            yield return null;
+        }
+
+        dog.SubmitDialogue("aliens spawned", 0, false, false);
+
+        while (!dog.DialogueRead || !dog.AcceptingSubmissions)
+        {
+            yield return null;
+        }
+
+        //Build Turrets
+        console.ClearDialogue();
+        console.SubmitDialogue("task build turret", 0, false, false);
+        dog.SubmitDialogue("build turret", 0, true, false);
+        shotgunTurret.Visible = true;
+        machineGunTurret.Visible = true;
+        shotgunTurret.Interactable = true;
+        machineGunTurret.Interactable = true;
+        turretsHighlight.Visible = true;
+
+        while (!BuildingController.Instance.HasBuiltBuilding(EBuilding.ShortRangeTurret) || !BuildingController.Instance.HasBuiltBuilding(EBuilding.LongRangeTurret))
+        {
+            yield return null;
+        }
+
+        //If player doesn't know, here's how to shoot
+        if (!ProjectileManager.Instance.HasProjectileWithOwner(PlayerController.Instance.transform))
+        {
+            console.ClearDialogue();
+            console.SubmitDialogue("task shoot", 0, false, false);
+            dog.SubmitDialogue("shoot", 0, true, false);
+            game.SubmitDialogue("shoot", 0, true, false);
+
+            while (!ProjectileManager.Instance.HasProjectileWithOwner(PlayerController.Instance.transform) || !dog.AcceptingSubmissions)
+            {
+                yield return null;
+            }
+
+            if (!dog.DialogueRead)
+            {
+                dog.DialogueRead = true;
+            }
+        }
+
+        //If player doesn't know how, here's how to heal
+        if (!playerInputManager.GetButtonDown("Heal") || Vector3.Distance(PlayerController.Instance.transform.position, CryoEgg.Instance.transform.position) >= PlayerController.Instance.HealingRange)
+        {
+            console.ClearDialogue();
+            console.SubmitDialogue("task heal", 0, false, false);
+            dog.SubmitDialogue("heal at cryo egg", 0, true, false);
+            game.SubmitDialogue("heal", 0, true, false);
+
+            while (!playerInputManager.GetButtonDown("Heal") || Vector3.Distance(PlayerController.Instance.transform.position, CryoEgg.Instance.transform.position) >= PlayerController.Instance.HealingRange || !dog.AcceptingSubmissions)
+            {
+                yield return null;
+            }
+
+            if (!dog.DialogueRead)
+            {
+                dog.DialogueRead = true;
+            }
+        }
+
+        console.ClearDialogue();
+        dog.SubmitDialogue("good luck", 0, true, false);
+
+        while (!dog.DialogueRead)
+        {
+            yield return null;
+        }
+
+        console.SubmitDialogue("dog closed", 0, false, false);
+        game.SubmitDialogue("finished tutorial", 0, true, false);
+        ClockController.Instance.Paused = false;
+        StageManager.Instance.SetStage(EStage.MainGame);
     }
 }

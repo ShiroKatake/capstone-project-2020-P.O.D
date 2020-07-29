@@ -13,6 +13,7 @@ public class MineralFactory : MonoBehaviour
 
     [SerializeField] private Mineral mineralPrefab;
     [SerializeField] private int pooledMinerals;
+	[SerializeField] private int oreCount;
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
@@ -29,14 +30,15 @@ public class MineralFactory : MonoBehaviour
     /// MineralFactory's singleton public property.
     /// </summary>
     public static MineralFactory Instance { get; protected set; }
+	public int OreCount { get => oreCount;}
 
-    //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
+	//Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
-    /// <summary>
-    /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
-    /// Awake() runs before Start().
-    /// </summary>
-    private void Awake()
+	/// <summary>
+	/// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
+	/// Awake() runs before Start().
+	/// </summary>
+	private void Awake()
     {
         if (Instance != null)
         {

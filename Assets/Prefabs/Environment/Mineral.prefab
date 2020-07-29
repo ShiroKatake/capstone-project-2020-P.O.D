@@ -1,5 +1,35 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &26415010305429678
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7694997801588937915}
+  m_Layer: 9
+  m_Name: Hover Anchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7694997801588937915
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 26415010305429678}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.833, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5136758428388025279}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7795659470375798990
 GameObject:
   m_ObjectHideFlags: 0
@@ -9,7 +39,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5136758428388025279}
+  - component: {fileID: 2181151351687923271}
   - component: {fileID: 6920960518473543034}
+  - component: {fileID: 7797008365469057430}
+  - component: {fileID: 2033458020145386998}
   m_Layer: 9
   m_Name: Mineral
   m_TagString: Planet
@@ -29,9 +62,23 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6592593835074264809}
+  - {fileID: 7694997801588937915}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &2181151351687923271
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7795659470375798990}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.69420445, y: 0.6004691, z: 0.57503366}
+  m_Center: {x: -0.15289778, y: 0.31523252, z: 0.14442825}
 --- !u!114 &6920960518473543034
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -45,22 +92,49 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   placed: 0
-  oreCount: 30
   oreSpawnRate: 0.75
   oreCurveRadius: 2
---- !u!65 &8154828047606236989
-BoxCollider:
+--- !u!114 &7797008365469057430
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7865185940965092602}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_GameObject: {fileID: 7795659470375798990}
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.8081517, y: 0.7746079, z: 0.7132808}
-  m_Center: {x: -0.20155622, y: -0.1766349, z: 0.40799746}
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a5cbf71e1cb5844ab693645a4a84b3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anchorPoint: {fileID: 7694997801588937915}
+  dialogueName: Mineral Deposit
+  objectClass: 
+  oreCost: 
+  powerCost: 
+  waterCost: 
+  wasteCost: 
+  buildTime: 
+  powerProductionAmount: 
+  waterProductionAmount: 
+  wasteProductionAmount: 
+  description: 'Provides material for constructing buildings.
+
+
+    Hold left click
+    to mine'
+--- !u!114 &2033458020145386998
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7795659470375798990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff4b731bcf6e0b44db2de812be8a741e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectRenderer: {fileID: 8438082130433333286}
 --- !u!1001 &2163748618175100403
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -71,17 +145,17 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: 1d80d71c22a6e0840973c31ef38edb3b,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.06
+      value: -0.0030734558
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 1d80d71c22a6e0840973c31ef38edb3b,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 1d80d71c22a6e0840973c31ef38edb3b,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.065
+      value: 0.0008358108
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 1d80d71c22a6e0840973c31ef38edb3b,
         type: 3}
@@ -96,7 +170,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: 1d80d71c22a6e0840973c31ef38edb3b,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 1d80d71c22a6e0840973c31ef38edb3b,
         type: 3}
@@ -111,7 +185,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: 1d80d71c22a6e0840973c31ef38edb3b,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: -90
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 1d80d71c22a6e0840973c31ef38edb3b,
         type: 3}
@@ -122,21 +196,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -4216859302048453862, guid: 1d80d71c22a6e0840973c31ef38edb3b,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.6
-      objectReference: {fileID: 0}
-    - target: {fileID: -4216859302048453862, guid: 1d80d71c22a6e0840973c31ef38edb3b,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.6
-      objectReference: {fileID: 0}
-    - target: {fileID: -4216859302048453862, guid: 1d80d71c22a6e0840973c31ef38edb3b,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: -927199367670048503, guid: 1d80d71c22a6e0840973c31ef38edb3b,
         type: 3}
@@ -155,15 +214,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1d80d71c22a6e0840973c31ef38edb3b, type: 3}
---- !u!1 &7865185940965092602 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: 1d80d71c22a6e0840973c31ef38edb3b,
-    type: 3}
-  m_PrefabInstance: {fileID: 2163748618175100403}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6592593835074264809 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: 1d80d71c22a6e0840973c31ef38edb3b,
+    type: 3}
+  m_PrefabInstance: {fileID: 2163748618175100403}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &8438082130433333286 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -1504981713932161579, guid: 1d80d71c22a6e0840973c31ef38edb3b,
     type: 3}
   m_PrefabInstance: {fileID: 2163748618175100403}
   m_PrefabAsset: {fileID: 0}

@@ -32,7 +32,7 @@ public class ButtonInteract : MonoBehaviour
 
     private void FadeToColor(Image image, Color color){
         Graphic graphic = image.GetComponent<Graphic>();
-        graphic.CrossFadeColor(color, fadeDuration, true, true);
+        graphic.CrossFadeColor(color, fadeDuration, true, false);
     }
 
     public void BorderNormalise(){

@@ -19,15 +19,19 @@ public class MapController : MonoBehaviour
     [SerializeField] private Vector3 innerBottomLeft;
     [SerializeField] private Vector3 innerTopRight;
 
+    [Header("Tutorial Alien Spawning Area")]
+    [SerializeField] private Vector3 tutorialBottomLeft;
+    [SerializeField] private Vector3 tutorialTopRight;
+
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
-    
-    [Header("Testing")]
+
     private bool[,] availableBuildingPositions;
     private bool[,] alienExclusionArea;
     private bool[,] availableAlienPositions;
     private LayerMask groundLayerMask;
 
-    [SerializeField] private List<Vector3> alienSpawnablePositions;
+    private List<Vector3> alienSpawnablePositions;
+    private List<Vector3> tutorialAlienSpawnablePositions;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -56,6 +60,7 @@ public class MapController : MonoBehaviour
         availableAlienPositions = new bool[xMax + 1, zMax + 1];
         alienExclusionArea = new bool[xMax + 1, zMax + 1];
         alienSpawnablePositions = new List<Vector3>();
+        tutorialAlienSpawnablePositions = new List<Vector3>();
         groundLayerMask = LayerMask.GetMask("Ground");
     }
 
@@ -87,6 +92,22 @@ public class MapController : MonoBehaviour
                 if (availableAlienPositions[i, j])
                 {
                     alienSpawnablePositions.Add(new Vector3(i, alienSpawnHeight, j));
+                }
+            }
+        }
+
+        int tuteAlienXMin = (int)Mathf.Round(tutorialBottomLeft.x);
+        int tuteAlienXMax = (int)Mathf.Round(tutorialTopRight.x);
+        int tuteAlienZMin = (int)Mathf.Round(tutorialBottomLeft.z);
+        int tuteAlienZMax = (int)Mathf.Round(tutorialTopRight.z);
+
+        for (int i = tuteAlienXMin; i <= tuteAlienXMax; i++)
+        {
+            for (int j = tuteAlienZMin; j <= tuteAlienZMax; j++)
+            {
+                if (availableBuildingPositions[i, j])
+                { 
+                    tutorialAlienSpawnablePositions.Add(new Vector3(i, alienSpawnHeight, j));
                 }
             }
         }
@@ -148,7 +169,7 @@ public class MapController : MonoBehaviour
         if (alien)
         {
             //Check if in alien exclusion area
-            if (alienExclusionArea[(int)position.x, (int)position.z])
+            if (StageManager.Instance.CurrentStage.ID != EStage.Combat && alienExclusionArea[(int)position.x, (int)position.z]) //Need to be able to spawn within the exclusion area during the tutorial
             {
                 //Debug.Log($"Can't spawn an alien at {position}, which is within the alien exclusion area.");
                 return false;       
@@ -203,33 +224,43 @@ public class MapController : MonoBehaviour
         return true;
     }
 
+    ///// <summary>
+    ///// Gets a random position that an alien could legally be spawned at.
+    ///// </summary>
+    ///// <returns>A position for an alien to spawn at.</returns>
+    //public Vector3 RandomAlienSpawnablePos(List<Vector3> temporarilyUnavailablePositions)
+    //{
+    //    List<Vector3> availablePositions = new List<Vector3>((StageManager.Instance.CurrentStage.ID == EStage.Combat ? tutorialAlienSpawnablePositions : alienSpawnablePositions));
+
+    //    foreach (Vector3 p in temporarilyUnavailablePositions)
+    //    {
+    //        if (availablePositions.Contains(p))
+    //        {
+    //            availablePositions.Remove(p);
+    //        }
+    //    }
+
+    //    //Debug.Log($"Getting alien spawnable position, available positions: {availablePositions.Count}");
+
+    //    switch (availablePositions.Count)
+    //    {
+    //        case 0:
+    //            return new Vector3 (-1, AlienFactory.Instance.AlienSpawnHeight, -1);
+    //        case 1:
+    //            return availablePositions[0];
+    //        default:
+    //            return availablePositions[Random.Range(0, availablePositions.Count)];
+    //    }
+    //}
+
+
     /// <summary>
-    /// Gets a random position that an alien could legally be spawned at.
+    /// Gets the current list of alien spawnable positions.
     /// </summary>
-    /// <returns>A position for an alien to spawn at.</returns>
-    public Vector3 RandomAlienSpawnablePos(List<Vector3> temporarilyUnavailablePositions)
+    /// <returns>The current list of alien spawnable positions.</returns>
+    public List<Vector3> GetAlienSpawnablePositions()
     {
-        List<Vector3> availablePositions = new List<Vector3>(alienSpawnablePositions);
-
-        foreach (Vector3 p in temporarilyUnavailablePositions)
-        {
-            if (availablePositions.Contains(p))
-            {
-                availablePositions.Remove(p);
-            }
-        }
-
-        //Debug.Log($"Getting alien spawnable position, available positions: {availablePositions.Count}");
-
-        switch (availablePositions.Count)
-        {
-            case 0:
-                return new Vector3 (-1, AlienFactory.Instance.AlienSpawnHeight, -1);
-            case 1:
-                return availablePositions[0];
-            default:
-                return availablePositions[Random.Range(0, availablePositions.Count)];
-        }
+        return StageManager.Instance.CurrentStage.ID == EStage.Combat ? tutorialAlienSpawnablePositions : alienSpawnablePositions;
     }
 
     //Entity Registration Methods------------------------------------------------------------------
@@ -285,16 +316,24 @@ public class MapController : MonoBehaviour
         int x = (int)Mathf.Round(position.x);
         int z = (int)Mathf.Round(position.z);
 
-        if (x >= 0 && x <= xMax && z >= 0 && z <= zMax && availableAlienPositions[x, z])
+        if (x >= 0 && x <= xMax && z >= 0 && z <= zMax)
         {
-            availableAlienPositions[x, z] = false;
-            Vector3 pos = new Vector3(x, AlienFactory.Instance.AlienSpawnHeight, z);
-            alienSpawnablePositions.Remove(pos);
+            if (StageManager.Instance.CurrentStage.ID == EStage.Combat)
+            {
+                Vector3 pos = new Vector3(x, AlienFactory.Instance.AlienSpawnHeight, z);
+                tutorialAlienSpawnablePositions.Remove(pos);
+                return;
+            }
+            else if (availableAlienPositions[x, z])
+            {
+                availableAlienPositions[x, z] = false;
+                Vector3 pos = new Vector3(x, AlienFactory.Instance.AlienSpawnHeight, z);
+                alienSpawnablePositions.Remove(pos);
+                return;
+            }
         }
-        else
-        {
-            Debug.LogError($"{gameObject.name} can't update the availability of position {position}, which is outside the bounds of (0,0) to ({xMax},{zMax})");
-        }
+
+        //Debug.LogError($"{gameObject.name} can't update the availability of position {position}, which is outside the bounds of (0,0) to ({xMax},{zMax})");
     }
 
     /// <summary>
@@ -331,7 +370,7 @@ public class MapController : MonoBehaviour
         }
         else
         {
-            Debug.LogError($"{gameObject.name} can't update the availability of position {position}, which is outside the bounds of (0,0) to ({xMax},{zMax})");
+            //Debug.LogError($"{gameObject.name} can't update the availability of position {position}, which is outside the bounds of (0,0) to ({xMax},{zMax})");
         }
     }
 }

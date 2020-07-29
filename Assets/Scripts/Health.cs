@@ -1,39 +1,42 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using UnityEngine.Events;
 
 /// <summary>
 /// A health component for anything that needs to track health, durability, etc.
 /// </summary>
 public class Health : MonoBehaviour
 {
-    //Private Fields---------------------------------------------------------------------------------------------------------------------------------
+	//Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
-    //Serialized Fields----------------------------------------------------------------------------
+	//Serialized Fields----------------------------------------------------------------------------
 
-    [SerializeField] private float health;
+	[SerializeField] private float maxHealth;
 
-    //Non-Serialized Fields------------------------------------------------------------------------
+	//Non-Serialized Fields------------------------------------------------------------------------
 
-    private float startingHealth;
+	private Actor actor;
+    private float currentHealth;
 
-    //Public Properties------------------------------------------------------------------------------------------------------------------------------
+	//Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    //Basic Public Properties----------------------------------------------------------------------
+	//Basic Public Properties----------------------------------------------------------------------
+
+	public UnityAction<float, Transform> onDamaged;
+	public UnityAction<float> onHealed;
+	public UnityAction onDie;
+
+	/// <summary>
+	/// How much health, durability, etc. this entity currently has.
+	/// </summary>
+	public float CurrentHealth { get => currentHealth; set => currentHealth = value; }
 
     /// <summary>
-    /// How much health, durability, etc. something currently has.
+    /// The maximum health, durability, etc. this entity can have.
     /// </summary>
-    public float Value
-    {
-        get => health; //set => health = value;
-
-        set
-        {
-            health = value;
-            //Debug.Log($"{gameObject.name}'s health updated to {health}");
-        }
-    }
+    public float MaxHealth { get => maxHealth; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -43,10 +46,65 @@ public class Health : MonoBehaviour
     /// </summary>
     private void Awake()
     {
-        startingHealth = health;
-    }
+		currentHealth = maxHealth;
+		actor = GetComponent<Actor>();
+	}
 
-    //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
+	//Triggered Methods------------------------------------------------------------------------------------------------------------------------------
+
+	/// <summary>
+	/// Damage the object and trigger things that would happen when the object gets damaged.
+	/// </summary>
+	/// <param name="amount">The amount of damage to take.</param>
+	/// <param name="attackerActor">The attacker who did damage.</param>
+	public void TakeDamage(float amount, Actor attackerActor)
+	{
+        //Friendly fire OFF: If the attacker does not have the same tag as this object, take damage from the attacker
+		if (actor.Affiliation != attackerActor.Affiliation)
+		{
+			float healthBefore = currentHealth;
+			currentHealth -= amount;
+			currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
+			float trueDamageAmount = healthBefore - currentHealth;
+
+			//If the object has taken damage, do damage related stuffs (ie. animations, sounds, etc)
+			if (trueDamageAmount > 0f && onDamaged != null)
+			{
+				onDamaged.Invoke(trueDamageAmount, attackerActor.transform);
+			}
+
+			HandleDeath();
+		}
+	}
+
+	/// <summary>
+	/// Heal the object and trigger things that would happen when the object gets healed.
+	/// </summary>
+	/// <param name="amount">The amount of healing to give.</param>
+	public void Heal(float amount)
+	{
+		float healthBefore = currentHealth;
+		currentHealth += amount;
+		currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
+		float trueHealAmount = currentHealth - healthBefore;
+
+        //If the object has been healed, do heal related stuffs (ie. animations, sounds, etc)
+        if (trueHealAmount > 0f && onHealed != null)
+		{
+			onHealed.Invoke(trueHealAmount);
+		}
+	}
+
+	/// <summary>
+	/// Trigger things that would happen when the obejct dies.
+	/// </summary>
+	public void HandleDeath()
+	{
+		if (IsDead() && onDie != null)
+		{
+			onDie?.Invoke();
+		}
+	}
 
     /// <summary>
     /// Checks if health is 0 or less.
@@ -54,7 +112,7 @@ public class Health : MonoBehaviour
     /// <returns>Is the object this health class is a component of dead?</returns>
     public bool IsDead()
     {
-        return health <= 0;
+        return currentHealth <= 0;
     }
 
     /// <summary>
@@ -62,6 +120,6 @@ public class Health : MonoBehaviour
     /// </summary>
     public void Reset()
     {
-        health = startingHealth;
+		currentHealth = maxHealth;
     }
 }

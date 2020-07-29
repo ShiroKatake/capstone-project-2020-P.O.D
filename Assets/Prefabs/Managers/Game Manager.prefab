@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 6577456260396280564}
   - component: {fileID: 8421924202713650533}
   - component: {fileID: 6577456260396280566}
-  - component: {fileID: 6227503964386302997}
+  - component: {fileID: 3751654114936324664}
   - component: {fileID: 6577456260396280555}
   - component: {fileID: 5301063456322420980}
   - component: {fileID: 3892250182970023661}
@@ -24,6 +24,7 @@ GameObject:
   - component: {fileID: 4887592665430866259}
   - component: {fileID: 7159494093081347056}
   - component: {fileID: 7712896613637118947}
+  - component: {fileID: 4151841228902256699}
   - component: {fileID: 4078778705944399297}
   m_Layer: 0
   m_Name: Game Manager
@@ -109,12 +110,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   respawnDelay: 30
   maxSwarmRadius: 5
+  maxSwarmCount: 4
   maxSwarmSize: 2
-  maxSwarmCount: 5
   defencePenaltyThreshold: 300
   nonDefencePenaltyThreshold: 300
   penaltyIncrement: 3
   penaltyCooldown: 90
+  spawningFrameTimeLimit: 5
   spawnAliens: 1
   spawnAlienNow: 0
   ignoreDayNightCycle: 0
@@ -171,7 +173,11 @@ MonoBehaviour:
   - {fileID: 0}
   winAmount: 500
   terraformers: []
---- !u!114 &6227503964386302997
+  AtmosphereVal: 0
+  HumidityVal: 0
+  BiodiversityVal: 0
+  TotalVal: 0
+--- !u!114 &3751654114936324664
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -180,11 +186,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 6577456260396280556}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c0232d8ae4acaf43bbc96ed37d4c40d, type: 3}
+  m_Script: {fileID: 11500000, guid: d7fc4aad8e7680a44a675c09ec3e7e18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiManager: {fileID: 0}
-  goMessage: {fileID: 0}
+  constructionFinishedFX: {fileID: 7598014629204696912, guid: 9a30dc8a4a1a76241acc06f41a0df0e0,
+    type: 3}
+  pooledFX: 3
 --- !u!114 &6577456260396280555
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -200,14 +207,14 @@ MonoBehaviour:
   gamepad: 0
   operatingSystem: 0
   playerID: 0
-  buttons:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  fusionReactor: {fileID: 0}
+  iceDrill: {fileID: 0}
+  boiler: {fileID: 0}
+  greenhouse: {fileID: 0}
+  incinerator: {fileID: 0}
+  shotgunTurret: {fileID: 0}
+  machineGunTurret: {fileID: 0}
+  buttonClickEventManagers: []
   buildingUIParent: {fileID: 0}
 --- !u!114 &5301063456322420980
 MonoBehaviour:
@@ -240,7 +247,8 @@ MonoBehaviour:
   zMax: 200
   innerBottomLeft: {x: 60, y: 0, z: 60}
   innerTopRight: {x: 140, y: 0, z: 140}
-  alienSpawnablePositions: []
+  tutorialBottomLeft: {x: 85, y: 0, z: 85}
+  tutorialTopRight: {x: 115, y: 0, z: 115}
 --- !u!114 &4650057477837480150
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -268,6 +276,7 @@ MonoBehaviour:
   mineralPrefab: {fileID: 6920960518473543034, guid: 4cce8f281ac35a346bc3e16f60d137a7,
     type: 3}
   pooledMinerals: 10
+  oreCount: 10
 --- !u!114 &4887592665430866259
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -296,6 +305,7 @@ MonoBehaviour:
   orePrefab: {fileID: 293440447126890837, guid: d37174262cff0824bb2285fd3464f7f1,
     type: 3}
   pooledOres: 2
+  oreValue: 5
 --- !u!114 &7712896613637118947
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -313,6 +323,18 @@ MonoBehaviour:
   - {fileID: 7149408986218459655, guid: 773aaa485da8789468f5379df4dc3f73, type: 3}
   - {fileID: 5384837878179198461, guid: de4e687dbf5140f4fa3ce41858265555, type: 3}
   pooledProjectiles: 50
+--- !u!114 &4151841228902256699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6577456260396280556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98c236ad8eb67d74c8adc45db5c39c0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &4078778705944399297
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -328,7 +350,7 @@ MonoBehaviour:
   ore: 200
   powerConsumption: 0
   powerSupply: 100
-  waterConsumption: 0
-  waterSupply: 100
   wasteConsumption: 0
   wasteSupply: 0
+  waterConsumption: 0
+  waterSupply: 100

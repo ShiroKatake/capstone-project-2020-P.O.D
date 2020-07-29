@@ -1,17 +1,34 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
+using TMPro;
 
 public class GOMessageController : MonoBehaviour
 {
-    [SerializeField] Text message;
+    [SerializeField] private TextMeshProUGUI message;
+	[TextArea]
+	[SerializeField] private string winMessage;
+	[TextArea]
+	[SerializeField] private string loseMessage;
 
-    public void SetText(bool win){
+	[Header("Testing")]
+	[SerializeField] private bool victory;
+	[SerializeField] private bool defeat;
+
+	private void Update()
+	{
+		if (victory)
+		{
+			SetText(true);
+		} else if (defeat)
+		{
+			SetText(false);
+		}
+	}
+
+	public void SetText(bool win){
         if (win) {
-            message.text = "Congratulations!!\nYou have WON!!!";
+            message.text = winMessage;
         } else {
-            message.text = "Bummer!!\nYou have Lost...\nTry again next time!!";
+            message.text = loseMessage;
         }
     }
 }

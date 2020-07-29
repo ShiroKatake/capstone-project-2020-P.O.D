@@ -386,6 +386,24 @@ MonoBehaviour:
       _behaviorId: 0
       _userAssignable: 1
       _categoryId: 7
+    - _id: 19
+      _name: DialogueRead
+      _type: 1
+      _descriptiveName: DialogueRead
+      _positiveDescriptiveName: 
+      _negativeDescriptiveName: 
+      _behaviorId: 0
+      _userAssignable: 1
+      _categoryId: 8
+    - _id: 20
+      _name: Heal
+      _type: 1
+      _descriptiveName: Heal
+      _positiveDescriptiveName: 
+      _negativeDescriptiveName: 
+      _behaviorId: 0
+      _userAssignable: 1
+      _categoryId: 9
     actionCategories:
     - _name: Default
       _descriptiveName: Default
@@ -422,6 +440,16 @@ MonoBehaviour:
       _tag: 
       _id: 7
       _userAssignable: 1
+    - _name: Dialogue
+      _descriptiveName: Dialogue
+      _tag: 
+      _id: 8
+      _userAssignable: 1
+    - _name: Healing
+      _descriptiveName: Healing
+      _tag: 
+      _id: 9
+      _userAssignable: 1
     actionCategoryMap:
       list:
       - categoryId: 0
@@ -438,6 +466,10 @@ MonoBehaviour:
         actionIds: 0e0000000f0000001000000011000000
       - categoryId: 7
         actionIds: 12000000
+      - categoryId: 8
+        actionIds: 13000000
+      - categoryId: 9
+        actionIds: 14000000
     inputBehaviors:
     - _id: 0
       _name: Default
@@ -569,7 +601,7 @@ MonoBehaviour:
         _modifierKey2: 0
         _modifierKey3: 0
       - _actionCategoryId: 0
-        _actionId: 2
+        _actionId: 3
         _elementType: 1
         _elementIdentifierId: -1
         _axisRange: 0
@@ -580,7 +612,7 @@ MonoBehaviour:
         _modifierKey2: 0
         _modifierKey3: 0
       - _actionCategoryId: 0
-        _actionId: 3
+        _actionId: 2
         _elementType: 1
         _elementIdentifierId: -1
         _axisRange: 0
@@ -591,7 +623,7 @@ MonoBehaviour:
         _modifierKey2: 0
         _modifierKey3: 0
       - _actionCategoryId: 0
-        _actionId: 4
+        _actionId: 5
         _elementType: 1
         _elementIdentifierId: -1
         _axisRange: 0
@@ -602,7 +634,7 @@ MonoBehaviour:
         _modifierKey2: 0
         _modifierKey3: 0
       - _actionCategoryId: 0
-        _actionId: 5
+        _actionId: 6
         _elementType: 1
         _elementIdentifierId: -1
         _axisRange: 0
@@ -613,7 +645,7 @@ MonoBehaviour:
         _modifierKey2: 0
         _modifierKey3: 0
       - _actionCategoryId: 0
-        _actionId: 6
+        _actionId: 4
         _elementType: 1
         _elementIdentifierId: -1
         _axisRange: 0
@@ -722,6 +754,28 @@ MonoBehaviour:
         _modifierKey1: 0
         _modifierKey2: 0
         _modifierKey3: 0
+      - _actionCategoryId: 0
+        _actionId: 19
+        _elementType: 1
+        _elementIdentifierId: -1
+        _axisRange: 0
+        _invert: 0
+        _axisContribution: 0
+        _keyboardKeyCode: 122
+        _modifierKey1: 0
+        _modifierKey2: 0
+        _modifierKey3: 0
+      - _actionCategoryId: 0
+        _actionId: 20
+        _elementType: 1
+        _elementIdentifierId: -1
+        _axisRange: 0
+        _invert: 0
+        _axisContribution: 0
+        _keyboardKeyCode: 101
+        _modifierKey1: 0
+        _modifierKey2: 0
+        _modifierKey3: 0
     mouseMaps:
     - id: 0
       categoryId: 0
@@ -768,8 +822,8 @@ MonoBehaviour:
     controllerMapLayoutManagerRuleSets: []
     controllerMapEnablerRuleSets: []
     playerIdCounter: 2
-    actionIdCounter: 19
-    actionCategoryIdCounter: 8
+    actionIdCounter: 21
+    actionCategoryIdCounter: 10
     inputBehaviorIdCounter: 1
     mapCategoryIdCounter: 1
     joystickLayoutIdCounter: 1
