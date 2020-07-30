@@ -27,13 +27,16 @@ public class HoveringDialogueInitializer : MonoBehaviour
 		rectTransform = GetComponent<RectTransform>();
 	}
 
-	//Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
+    //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
 
-	/// <summary>
-	/// Update() is run every frame.
-	/// </summary>
-	void Update()
-	{
-		rectTransform.sizeDelta = new Vector2(contentRectTransform.sizeDelta.x + padding * 2, contentRectTransform.sizeDelta.y + padding * 2);
-	}
+    /// <summary>
+    /// Update() is run every frame.
+    /// </summary>
+    void Update()
+    {
+        if (!PauseMenuManager.Paused)
+        {
+            rectTransform.sizeDelta = new Vector2(contentRectTransform.sizeDelta.x + padding * 2, contentRectTransform.sizeDelta.y + padding * 2);
+        }
+    }
 }

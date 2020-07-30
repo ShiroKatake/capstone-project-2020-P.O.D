@@ -16,6 +16,7 @@ public class ColourTag
     [SerializeField] private char openingTag;
     [SerializeField] private char closingTag;
     [SerializeField] private Color colour;
+    [SerializeField] [TextArea] private string notes;
 
     //Non-Serialized Fields------------------------------------------------------------------------
 

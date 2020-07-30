@@ -40,12 +40,15 @@ public class MaterialFlashColor : MonoBehaviour
 	/// </summary>
 	private void Update()
     {
-        if (materialFlashColor.a > 0)
-		{
-			Debug.Log("change");
-			materialFlashColor.a = Mathf.Clamp01(materialFlashColor.a - flashSpeed * Time.deltaTime);
-			material.SetColor("_Flash", materialFlashColor);
-		}
+        if (!PauseMenuManager.Paused)
+        {
+            if (materialFlashColor.a > 0)
+            {
+                Debug.Log("change");
+                materialFlashColor.a = Mathf.Clamp01(materialFlashColor.a - flashSpeed * Time.deltaTime);
+                material.SetColor("_Flash", materialFlashColor);
+            }
+        }
     }
 
 	//Triggered Methods------------------------------------------------------------------------------------------------------------------------------

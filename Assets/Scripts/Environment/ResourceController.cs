@@ -204,9 +204,12 @@ public class ResourceController : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        //For testing by changing resource values in the inspector.
-        CheckResourceSupply();
-	}
+        if (!PauseMenuManager.Paused)
+        {
+            //For testing by changing resource values in the inspector.
+            CheckResourceSupply();
+        }
+    }
 
     //Recurring Methods (Update())------------------------------------------------------------------------------------------------------------------  
 
