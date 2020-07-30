@@ -17,8 +17,8 @@ public class ToolTips : MonoBehaviour
     {
         IceDrill,
         FusionReactor,
-        Incinorator,
-        Boilier,
+        Incinerator,
+        Boiler,
         Greenhouse,
         Shotgun,
         MachineGun,
@@ -96,15 +96,16 @@ public class ToolTips : MonoBehaviour
 
     public void Update()
     {
-        if (tooltipLocationDictionary[currentImage] != null)
+        if (!PauseMenuManager.Paused)
         {
-            if (current_tooltip != null)
+            if (tooltipLocationDictionary[currentImage] != null)
             {
-                current_tooltip.transform.position = tooltipLocationDictionary[currentImage].position;
+                if (current_tooltip != null)
+                {
+                    current_tooltip.transform.position = tooltipLocationDictionary[currentImage].position;
+                }
             }
-
         }
-       
     }
     public void ShowtoolTip(Etooltips toolImage)
     {

@@ -95,8 +95,12 @@ public class BuildingSpawningController : MonoBehaviour
 
         while (true)
         {
-            GetInput();
-            CheckBuildingSpawning();
+            if (!PauseMenuManager.Paused)
+            {
+                GetInput();
+                CheckBuildingSpawning();
+            }
+
             yield return null;
         }
     }
@@ -181,7 +185,7 @@ public class BuildingSpawningController : MonoBehaviour
             //Place it or cancel building it
             if (placeBuilding && resourcesAvailable && placementValid)
             {
-                console.SubmitCustomMessage($"Placement successful. Constructing {heldBuilding.BuildingType}.", false, 0);
+                console.SubmitCustomMessage($"Placement successful. Constructing {heldBuilding.ConsoleName}.", false, 0);
 
                 Vector3 spawnPos = heldBuilding.transform.position;
                 spawnPos.y = 0.02f;
@@ -199,35 +203,35 @@ public class BuildingSpawningController : MonoBehaviour
                 if (placeBuilding)
                 {
                     AudioManager.Instance.PlaySound(AudioManager.ESound.Negative_UI);
-                    string errorMessage = $"Cannot build {heldBuilding.BuildingType}.";
+                    string errorMessage = $"<Cannot build {heldBuilding.ConsoleName}.>";
 
                     if (!placementValid)
                     {
-                        errorMessage += "~    - Invalid location.";
+                        errorMessage += "~<- Invalid location.>";
                         //Debug.Log("You cannot place a building there; it would occupy the same space as something else, or exceed the bounds of the map.");
                     }
 
                     if (ResourceController.Instance.Ore < heldBuilding.OreCost)
                     {
-                        errorMessage += "~    - Insufficient ore.";
+                        errorMessage += "~<- Insufficient +minerals&.>";
                         //Debug.Log("You have insufficient ore to build this building.");
                     }
 
                     if (ResourceController.Instance.PowerSupply < ResourceController.Instance.PowerConsumption + heldBuilding.PowerConsumption)
                     {
-                        errorMessage += "~    - Insufficient power.";
+                        errorMessage += "~<- Insufficient [power].>";
                         //Debug.Log("You have insufficient power to maintain this building.");
                     }
 
                     if (ResourceController.Instance.WaterSupply < ResourceController.Instance.WaterConsumption + heldBuilding.WaterConsumption)
                     {
-                        errorMessage += "~    - Insufficient water.";
+                        errorMessage += "~<- Insufficient /water\\.>";
                         //Debug.Log("You have insufficient water to maintain this building.");
                     }
 
                     if (ResourceController.Instance.WasteSupply < ResourceController.Instance.WasteConsumption + heldBuilding.WasteConsumption)
                     {
-                        errorMessage += "~    - Insufficient waste.";
+                        errorMessage += "~<- Insufficient {waste}.>";
                         //Debug.Log("You have insufficient waste to maintain this building.");
                     }
 
@@ -351,21 +355,52 @@ public class BuildingSpawningController : MonoBehaviour
             && ResourceController.Instance.WaterSupply >= ResourceController.Instance.WaterConsumption + heldBuilding.WaterConsumption;
     }
 
-    private void ChangeTooltip(EBuilding selectedbuilding)
+    /// <summary>
+    /// Change the active tooltip.
+    /// </summary>
+    /// <param name="selectedBuilding">The building the player has selected to build.</param>
+    private void ChangeTooltip(EBuilding selectedBuilding)
     {
-        if (selectedbuilding == EBuilding.FusionReactor)
-            tooltip = ToolTips.Etooltips.FusionReactor;
-        if (selectedbuilding == EBuilding.IceDrill)
-            tooltip = ToolTips.Etooltips.IceDrill;
-        if (selectedbuilding == EBuilding.Greenhouse)
-            tooltip = ToolTips.Etooltips.Greenhouse;
-        if (selectedbuilding == EBuilding.Boiler)
-            tooltip = ToolTips.Etooltips.Boilier;
-        if (selectedbuilding == EBuilding.Incinerator)
-            tooltip = ToolTips.Etooltips.Incinorator;
-        if (selectedbuilding == EBuilding.ShortRangeTurret)
-            tooltip = ToolTips.Etooltips.Shotgun;
-        if (selectedbuilding == EBuilding.LongRangeTurret)
-            tooltip = ToolTips.Etooltips.MachineGun;
+        //if (selectedBuilding == EBuilding.FusionReactor)
+        //    tooltip = ToolTips.Etooltips.FusionReactor;
+        //if (selectedBuilding == EBuilding.IceDrill)
+        //    tooltip = ToolTips.Etooltips.IceDrill;
+        //if (selectedBuilding == EBuilding.Greenhouse)
+        //    tooltip = ToolTips.Etooltips.Greenhouse;
+        //if (selectedBuilding == EBuilding.Boiler)
+        //    tooltip = ToolTips.Etooltips.Boiler;
+        //if (selectedBuilding == EBuilding.Incinerator)
+        //    tooltip = ToolTips.Etooltips.Incinerator;
+        //if (selectedBuilding == EBuilding.ShortRangeTurret)
+        //    tooltip = ToolTips.Etooltips.Shotgun;
+        //if (selectedBuilding == EBuilding.LongRangeTurret)
+        //    tooltip = ToolTips.Etooltips.MachineGun;
+
+        switch(selectedBuilding)
+        {
+            case EBuilding.FusionReactor:
+                tooltip = ToolTips.Etooltips.FusionReactor;
+                break;
+            case EBuilding.IceDrill:
+                tooltip = ToolTips.Etooltips.IceDrill;
+                break;
+            case EBuilding.Greenhouse:
+                tooltip = ToolTips.Etooltips.Greenhouse;
+                break;
+            case EBuilding.Boiler:
+                tooltip = ToolTips.Etooltips.Boiler;
+                break;
+            case EBuilding.Incinerator:
+                tooltip = ToolTips.Etooltips.Incinerator;
+                break;
+            case EBuilding.ShortRangeTurret:
+                tooltip = ToolTips.Etooltips.Shotgun;
+                break;
+            case EBuilding.LongRangeTurret:
+                tooltip = ToolTips.Etooltips.MachineGun;
+                break;
+            default:
+                break;
+        }
     }
 }

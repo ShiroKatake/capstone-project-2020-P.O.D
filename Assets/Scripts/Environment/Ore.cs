@@ -55,16 +55,19 @@ public class Ore : MonoBehaviour
 		interpolationPercent = 0;
 	}
 
-	//Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
+    //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
 
-	/// <summary>
-	/// Update() is run every frame.
-	/// </summary>
-	void Update()
+    /// <summary>
+    /// Update() is run every frame.
+    /// </summary>
+    void Update()
     {
-		interpolationPercent += Time.deltaTime;
-		transform.position = CurveTowards(p0, p1, p2, interpolationPercent, speed);
-	}
+        if (!PauseMenuManager.Paused)
+        {
+            interpolationPercent += Time.deltaTime;
+            transform.position = CurveTowards(p0, p1, p2, interpolationPercent, speed);
+        }
+    }
 
 	//Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 	
