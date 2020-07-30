@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Events;
 
 /// <summary>
 /// The player. Player controls the player's movement, shooting and healing. For building spawning, see BuildingSpawningController.
@@ -59,6 +60,7 @@ public class PlayerController : MonoBehaviour
 
     //Healing variables
     private bool healing;
+	private bool isHealing;
 
     //Other
     private Player playerInputManager;
@@ -73,12 +75,15 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public static PlayerController Instance { get; protected set; }
 
-    //Basic Public Properties----------------------------------------------------------------------
+	//Basic Public Properties----------------------------------------------------------------------
 
-    /// <summary>
-    /// How close the player needs to be to the cryo egg to heal themselves.
-    /// </summary>
-    public float HealingRange { get => healingRange; }
+	public UnityAction onPlayerHeal;
+	public UnityAction onPlayerHealCancelled;
+
+	/// <summary>
+	/// How close the player needs to be to the cryo egg to heal themselves.
+	/// </summary>
+	public float HealingRange { get => healingRange; }
 
     /// <summary>
     /// POD's movement speed.
@@ -363,7 +368,17 @@ public class PlayerController : MonoBehaviour
         if (healing)
         {
             health.Heal(healingSpeed * Time.deltaTime);
-        }
+			onPlayerHeal?.Invoke();
+			isHealing = true;
+		}
+		else
+		{
+			if (isHealing)
+			{
+				onPlayerHealCancelled?.Invoke();
+				isHealing = false;
+			}
+		}
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
