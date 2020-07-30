@@ -5915,6 +5915,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Map
       objectReference: {fileID: 0}
+    - target: {fileID: 5630249266004542495, guid: 172bd19aa70452548bcdbc2cfdc6614a,
+        type: 3}
+      propertyPath: m_CullingMask.m_Bits
+      value: 7991
+      objectReference: {fileID: 0}
     - target: {fileID: 5918192188894873832, guid: 172bd19aa70452548bcdbc2cfdc6614a,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -9777,6 +9782,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4078778705944399297, guid: 9d619d0761b687e479a1231dab8ebf39,
+        type: 3}
+      propertyPath: ore
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4078778705944399297, guid: 9d619d0761b687e479a1231dab8ebf39,
+        type: 3}
+      propertyPath: powerSupply
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 4887592665430866259, guid: 9d619d0761b687e479a1231dab8ebf39,
         type: 3}
       propertyPath: camera
@@ -9947,6 +9962,18 @@ PrefabInstance:
       propertyPath: bars.Array.data[2]
       value: 
       objectReference: {fileID: 695173646}
+    - target: {fileID: 7712896613637118947, guid: 9d619d0761b687e479a1231dab8ebf39,
+        type: 3}
+      propertyPath: projectilePrefabs.Array.data[1]
+      value: 
+      objectReference: {fileID: 7263093150868635065, guid: 85b4c26e2e308424b9459fced12ff21c,
+        type: 3}
+    - target: {fileID: 7712896613637118947, guid: 9d619d0761b687e479a1231dab8ebf39,
+        type: 3}
+      propertyPath: projectilePrefabs.Array.data[2]
+      value: 
+      objectReference: {fileID: 7263093150868635065, guid: 741497a96c519ec46b2d899d046f37ce,
+        type: 3}
     - target: {fileID: 8421924202713650533, guid: 9d619d0761b687e479a1231dab8ebf39,
         type: 3}
       propertyPath: clockTimer
