@@ -235,7 +235,7 @@ public class PlayerController : MonoBehaviour
         if (shooting) //No-shooting conditions checked for in GetInput() when determining the value of shooting.
         {
             timeOfLastShot = Time.time;
-            Projectile projectile = ProjectileFactory.Instance.GetProjectile(EProjectileType.PODLaserBolt, transform, barrelTip.position);
+            Projectile projectile = ProjectileFactory.Instance.GetProjectile(EProjectileType.PODLaserBolt, transform, barrelTip);
             AudioManager.Instance.PlaySound(AudioManager.ESound.Laser_POD, this.gameObject);
             Vector3 vector = barrelTip.position - barrelMagazine.position;
             projectile.Shoot(vector.normalized, 0);
