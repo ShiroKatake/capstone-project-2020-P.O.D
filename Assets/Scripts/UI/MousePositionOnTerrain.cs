@@ -23,7 +23,7 @@ public class MousePositionOnTerrain : MonoBehaviour
 
         Instance = this;
         
-        plane = new Plane(/*Vector3.up*/ new Vector3(0,1,0), -0.5f);
+        plane = new Plane(Vector3.up, 0);
     }
 
     // Start is called before the first frame update
@@ -51,8 +51,11 @@ public class MousePositionOnTerrain : MonoBehaviour
 
         float dist;
         ray = camera.ScreenPointToRay(ReInput.controllers.Mouse.screenPosition);
-        if (plane.Raycast(ray, out dist)){
+
+        if (plane.Raycast(ray, out dist))
+        {
             worldPosition = ray.GetPoint(dist);
+            //Debug.DrawLine(worldPosition, worldPosition + Vector3.up * 10);
         }
 
         //print("World Position from GameManager: " + worldPosition);
