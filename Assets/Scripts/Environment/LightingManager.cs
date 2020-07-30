@@ -13,19 +13,22 @@ public class LightingManager : MonoBehaviour {
 	[SerializeField] private Light sunLightSource;
 	[SerializeField] private LightingPreset preset;
 
-	
-	//Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
 
-	/// <summary>
-	/// Update() is run every frame.
-	/// </summary>
-	private void Update()
-	{
-		float cycleDuration = ClockController.Instance.CycleDuration;
-		if (preset == null)
-			return;
-		UpdateLighting(ClockController.Instance.Time24hr / cycleDuration);
-	}
+    //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Update() is run every frame.
+    /// </summary>
+    private void Update()
+    {
+        if (!PauseMenuManager.Paused)
+        {
+            float cycleDuration = ClockController.Instance.CycleDuration;
+            if (preset == null)
+                return;
+            UpdateLighting(ClockController.Instance.Time24hr / cycleDuration);
+        }
+    }
 
 	//Recurring Methods (Update())-------------------------------------------------------------------------------------------------------------------
 

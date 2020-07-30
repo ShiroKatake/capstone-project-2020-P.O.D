@@ -34,48 +34,61 @@ public class GreenBarController : MonoBehaviour
     // thinking about using a switch case statement here...
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.I)){
-            ChangeGreen(10);
-        }
+        if (!PauseMenuManager.Paused)
+        {
+            if (Input.GetKeyDown(KeyCode.I))
+            {
+                ChangeGreen(10);
+            }
 
-        else if (Input.GetKeyDown(KeyCode.U)){
-            ChangeGreen(-10);
-        }
+            else if (Input.GetKeyDown(KeyCode.U))
+            {
+                ChangeGreen(-10);
+            }
 
-        else if (Input.GetKeyDown(KeyCode.O)){
-            ChangeGreenSmall1(10);
-        }
+            else if (Input.GetKeyDown(KeyCode.O))
+            {
+                ChangeGreenSmall1(10);
+            }
 
-        else if (Input.GetKeyDown(KeyCode.P)){
-            ChangeGreenSmall1(-10);
-        }
+            else if (Input.GetKeyDown(KeyCode.P))
+            {
+                ChangeGreenSmall1(-10);
+            }
 
-        else if (Input.GetKeyDown(KeyCode.K)){
-            ChangeGreenSmall2(10);
-        }
+            else if (Input.GetKeyDown(KeyCode.K))
+            {
+                ChangeGreenSmall2(10);
+            }
 
-        else if (Input.GetKeyDown(KeyCode.L)){
-            ChangeGreenSmall2(-10);
-        }
+            else if (Input.GetKeyDown(KeyCode.L))
+            {
+                ChangeGreenSmall2(-10);
+            }
 
-        else if (Input.GetKeyDown(KeyCode.N)){
-            ChangeGreenSmall3(10);
-        }
+            else if (Input.GetKeyDown(KeyCode.N))
+            {
+                ChangeGreenSmall3(10);
+            }
 
-        else if (Input.GetKeyDown(KeyCode.M)){
-            ChangeGreenSmall3(-10);
-        }
+            else if (Input.GetKeyDown(KeyCode.M))
+            {
+                ChangeGreenSmall3(-10);
+            }
 
-        else if (Input.GetKeyDown(KeyCode.Space)){
-            greenBarSmall1.gameObject.SetActive(true);
-            greenBarSmall2.gameObject.SetActive(true);
-            greenBarSmall3.gameObject.SetActive(true);
-        }
+            else if (Input.GetKeyDown(KeyCode.Space))
+            {
+                greenBarSmall1.gameObject.SetActive(true);
+                greenBarSmall2.gameObject.SetActive(true);
+                greenBarSmall3.gameObject.SetActive(true);
+            }
 
-        else if (Input.GetKeyUp(KeyCode.Space)){
-            greenBarSmall1.gameObject.SetActive(false);
-            greenBarSmall2.gameObject.SetActive(false);
-            greenBarSmall3.gameObject.SetActive(false);
+            else if (Input.GetKeyUp(KeyCode.Space))
+            {
+                greenBarSmall1.gameObject.SetActive(false);
+                greenBarSmall2.gameObject.SetActive(false);
+                greenBarSmall3.gameObject.SetActive(false);
+            }
         }
     }
 

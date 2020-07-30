@@ -64,32 +64,37 @@ public class EnvironmentalController : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        float tpf = Time.deltaTime;
-        UpdateParameters();
-        CalculateBuildingDeltas(tpf);
+        if (!PauseMenuManager.Paused)
+        {
+            float tpf = Time.deltaTime;
+            UpdateParameters();
+            CalculateBuildingDeltas(tpf);
 
-        UpdateTotalValue();
+            UpdateTotalValue();
 
-        progress.SetBarValue(TotalVal);
-        progressProportion = TotalVal / winAmount;
-        if (TotalVal >= winAmount){
-            Win = true;
-        }
-        bars[0].SetBarValue(bioRatio);
-        bars[1].SetBarValue(humRatio);
-        bars[2].SetBarValue(atmosRatio);
+            progress.SetBarValue(TotalVal);
+            progressProportion = TotalVal / winAmount;
+            if (TotalVal >= winAmount)
+            {
+                Win = true;
+            }
+            bars[0].SetBarValue(bioRatio);
+            bars[1].SetBarValue(humRatio);
+            bars[2].SetBarValue(atmosRatio);
 
-		float x = 0;
-        foreach (RatioBars r in bars){
-            if (r.CurrentValue > x){
-                x = r.CurrentValue;
+            float x = 0;
+            foreach (RatioBars r in bars)
+            {
+                if (r.CurrentValue > x)
+                {
+                    x = r.CurrentValue;
+                }
+            }
+            foreach (RatioBars r in bars)
+            {
+                r.SetMaxRenderBarValue(maxRenderBarValue);
             }
         }
-        foreach(RatioBars r in bars){
-            r.SetMaxRenderBarValue(maxRenderBarValue);
-        }
-
-
     }
 
     private void UpdateTotalValue() {

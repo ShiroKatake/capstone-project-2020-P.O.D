@@ -48,6 +48,10 @@ public class DialogueBox : MonoBehaviour
     [SerializeField] private bool appendDialogue;
     [SerializeField] private int lerpTextInterval;
 
+    [Header("Logging Dialogue")]
+    [SerializeField] private bool logDialogue;
+    [SerializeField] private Color logColour;
+
     [Header("Cull Overflowing Text")]
     [SerializeField] private bool cullOverflow;
     [SerializeField] private int lines;
@@ -86,7 +90,7 @@ public class DialogueBox : MonoBehaviour
 
     //Dialogue lerping special characters
     private char newLineMarker;
-    private ColourTag colourTag;
+    private List<ColourTag> colourTags;
 
     //Dialogue lerping
     private bool lerpFinished;
@@ -99,6 +103,9 @@ public class DialogueBox : MonoBehaviour
 
     //Dialogue timer
     private float dialogueTimer;
+
+    //Logging dialogue
+    private string logColourName;
 
     //Test variable for players spamming LMB or Z
     //private int lastUpdate;
@@ -198,7 +205,7 @@ public class DialogueBox : MonoBehaviour
         lastDialogueKey = "";
 
         //Dialogue lerping special characters
-        colourTag = null;
+        colourTags = new List<ColourTag>();
 
         //Dialogue lerping
         lerpFinished = true;
@@ -211,6 +218,9 @@ public class DialogueBox : MonoBehaviour
 
         //Dialogue timer
         dialogueTimer = 0;
+
+        //Dialogue logging
+        logColourName = $"#{ColorUtility.ToHtmlStringRGB(logColour)}";
 
         //Test variable for players spamming LMB or Z
         //lastUpdate = 0;
@@ -268,21 +278,19 @@ public class DialogueBox : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        //lastUpdate++;
-
-        
-        
-
-        if (clickable)
+        if (!PauseMenuManager.Paused)
         {
-            dialogueTimer += Time.deltaTime;
-            GetInput();
-            CheckDialogueRead();
+            if (clickable)
+            {
+                dialogueTimer += Time.deltaTime;
+                GetInput();
+                CheckDialogueRead();
+            }
+
+            UpdateDialogueBoxState();
+            LerpDialogue();
+            //CullOverflow();
         }
-        
-        UpdateDialogueBoxState();
-        LerpDialogue();
-        CullOverflow();
     }
 
     //Recurring Methods (Update())-------------------------------------------------------------------------------------------------------------------
@@ -341,7 +349,7 @@ public class DialogueBox : MonoBehaviour
                 StartCoroutine(Activate(dialogueQueue.Dequeue()));
             }
         }
-        else if (deactivationSubmitted && activated && (tweenOut || fadeOut))
+        else if (deactivationSubmitted && activated && clickable && (tweenOut || fadeOut))
         {
             lastDialogueKey = currentDialogueKey;
             currentDialogueKey = "";
@@ -385,65 +393,21 @@ public class DialogueBox : MonoBehaviour
         if (!lerpFinished && !changing)
         {
             //Reset variables
-            colourTag = null;
+            //colourTag = null;
+            colourTags.Clear();
             pendingText = "";
             pendingColouredText = "";
 
             //Get string of new letters to be added
             foreach (char c in currentText.Substring(0, lerpTextMaxIndex))
             {
-                if (colourTag == null)
-                {
-                    //Check for opening colour tag
-                    if (DialogueBoxManager.Instance.ColourTags != null && DialogueBoxManager.Instance.ColourTags.Count > 0)
-                    {
-                        foreach (ColourTag t in DialogueBoxManager.Instance.ColourTags)
-                        {
-                            if (c == t.OpeningTag)
-                            {
-                                colourTag = t;
-                                break;
-                            }
-                        }
-                    }
-
-                    //Add if not coloured
-                    if (colourTag == null)
-                    {
-                        if (c == newLineMarker)
-                        {
-                            pendingText += "<br>";
-                        }
-                        else
-                        {
-                            pendingText += c;
-                        }
-                    }
-                }
-                else
-                {
-                    //Check for closing colour tag
-                    if (c == newLineMarker)
-                    {
-                        pendingColouredText += "<br>";
-                    }
-                    else if (c == colourTag.ClosingTag)
-                    {
-                        pendingText += $"<color={colourTag.ColourName}><b>{pendingColouredText}</b></color>";
-                        pendingColouredText = "";
-                        colourTag = null;
-                    }
-                    else
-                    {
-                        pendingColouredText += c;
-                    }
-                }            
+                pendingText += CheckForSpecialCharacters(c, "<br>");
             }
 
             //Add if coloured
-            if (colourTag != null)
+            if (colourTags.Count > 0)
             {
-                pendingText += $"<color={colourTag.ColourName}><b>{pendingColouredText}</b></color>";
+                pendingText += $"</b></color>";
             }
 
             //Add all pending text
@@ -462,6 +426,62 @@ public class DialogueBox : MonoBehaviour
             {
                 lerpFinished = true;
             }
+        }
+    }
+
+    /// <summary>
+    /// Checks if the passed character is a special character and needs a custom string returned, or is a regular text character that should be returned as is.
+    /// </summary>
+    /// <param name="c">The character to be assessed.</param>
+    /// <param name="newLine">What to return if the character is a new line marker.</param>
+    /// <returns>The string to be appended to the text to be displayed.</returns>
+    private string CheckForSpecialCharacters(char c, string newLine)
+    {
+        //Check for new line marker
+        if (c == newLineMarker)
+        {
+            return newLine;
+        }
+        //Check for closing colour tag
+        else if (colourTags.Count > 0 && c == colourTags[colourTags.Count - 1].ClosingTag)
+        {
+            string result = $"</b></color>";
+            colourTags.RemoveAt(colourTags.Count - 1);
+
+            if (colourTags.Count > 0)
+            {
+                result += $"<color={colourTags[colourTags.Count - 1].ColourName}><b>";
+            }
+
+            return result;
+        }
+        //Check for opening colour tag
+        else if (DialogueBoxManager.Instance.ColourTags != null && DialogueBoxManager.Instance.ColourTags.Count > 0)
+        {
+            foreach (ColourTag t in DialogueBoxManager.Instance.ColourTags)
+            {
+                if (c == t.OpeningTag)
+                {
+                    string result = "";
+
+                    if (colourTags.Count > 0)
+                    {
+                        result += $"</b></color>";
+                    }
+
+                    colourTags.Add(t);
+                    result += $"<color={colourTags[colourTags.Count - 1].ColourName}><b>";
+                    return result;
+                }
+            }
+
+            //Else just a regular character
+            return $"{c}";
+        }
+        //Else just a regular character
+        else
+        {
+            return $"{c}";
         }
     }
 
@@ -519,11 +539,6 @@ public class DialogueBox : MonoBehaviour
         {
             int num = IdGenerator.Instance.GetNextId();
             string id = (error ? $"error {num}" : $"message {num}");
-
-            if (error)
-            {
-                message = $"<{message}>";
-            }
 
             dialogue[id] = new List<string>() { message };
             SubmitDialogue(id, delay, false, false);
@@ -610,6 +625,12 @@ public class DialogueBox : MonoBehaviour
 
         if (dialogue.ContainsKey(submission.key) && dialogue[submission.key].Count > 0)
         {
+            while (dialogueIndex < dialogue[currentDialogueKey].Count)
+            {
+                LogDialogue();
+                dialogueIndex++;
+            }
+
             acceptingSubmissions = true;
             changing = true;
             lastDialogueKey = currentDialogueKey;
@@ -633,6 +654,30 @@ public class DialogueBox : MonoBehaviour
     }
 
     /// <summary>
+    /// Adds the currently displaying line of dialogue to the dialogue log (or the most recently added line if it's an appending dialogue box).
+    /// </summary>
+    private void LogDialogue()
+    {
+        string raw = dialogue[currentDialogueKey][dialogueIndex];
+
+        if (logDialogue && raw != "" && raw != " ")
+        {
+            //Reset variables
+            string result = $"<color={logColourName}>" + (PauseMenuManager.Instance.DialogueLog.text != "" ? $"<br>{id}: " : $"{id}: ");
+            colourTags.Clear();
+
+            //Get string of new letters to be added
+            foreach (char c in raw)
+            {
+                result += CheckForSpecialCharacters(c, $"<br>{id}: ");
+            }
+
+            result += "</color>";
+            PauseMenuManager.Instance.DialogueLog.text += $"{result}";
+        }        
+    }
+
+    /// <summary>
     /// Displays the next line of dialogue in one hit.
     /// </summary>
     private void DisplayNext()
@@ -648,6 +693,7 @@ public class DialogueBox : MonoBehaviour
             textBox.text = "";
         }
 
+        LogDialogue();
         currentText = dialogue[currentDialogueKey][dialogueIndex];
         dialogueIndex++;
         lerpTextMaxIndex = currentText.Length - 1;
@@ -670,6 +716,7 @@ public class DialogueBox : MonoBehaviour
             textBox.text = "";
         }
 
+        LogDialogue();
         currentText = dialogue[currentDialogueKey][dialogueIndex];
         dialogueIndex++;
         lerpTextMaxIndex = 0;
@@ -711,6 +758,15 @@ public class DialogueBox : MonoBehaviour
     {
         dialogueTimer = 0;
         deactivating = true;
+
+        if (lastDialogueKey != "")
+        {
+            while (dialogueIndex < dialogue[lastDialogueKey].Count)
+            {
+                LogDialogue();
+                dialogueIndex++;
+            }
+        }
 
         if (fadeOut)
         {

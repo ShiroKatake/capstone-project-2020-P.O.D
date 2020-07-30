@@ -60,7 +60,7 @@ public class StageWin : Stage
     protected override IEnumerator Execution()
     {
         goMessage.SetText(true);
-        uiManager.GetComponent<UIAppearScript>().ToggleVisibility();
+        uiManager.GetComponent<UIManager>().SetGameOverCanvasActive(true);
         yield return null;
     }
 }

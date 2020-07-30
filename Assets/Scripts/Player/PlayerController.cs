@@ -61,7 +61,7 @@ public class PlayerController : MonoBehaviour
     private bool healing;
 
     //Other
-    private Rewired.Player playerInputManager;
+    private Player playerInputManager;
     private bool repsawn;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
@@ -85,10 +85,23 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public float MovementSpeed { get => movementSpeed; }
 
+    //Complex Public Properties--------------------------------------------------------------------
+
     /// <summary>
     /// POD's Rewired player input manager.
     /// </summary>
-    public Player PlayerInputManager { get => playerInputManager; }
+    public Player PlayerInputManager
+    {
+        get
+        {
+            if (playerInputManager == null)
+            {
+                playerInputManager = ReInput.players.GetPlayer(GetComponent<PlayerID>().Value);
+            }
+
+            return playerInputManager;
+        }
+    }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -131,11 +144,15 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         //Input manager checks every frame, not at fixed update's rate, so calls to input manager should be made every frame
-        GetInput();
+        if (!PauseMenuManager.Paused)
+        {
+            GetInput();
+        }
     }
 
     /// <summary>
     /// FixedUpdate() is run at a fixed interval independant of framerate.
+    /// If Time.timeScale == 0, FixedUpdate will not be called.
     /// </summary>
     private void FixedUpdate()
     {

@@ -67,8 +67,11 @@ public class MineralCollectionController : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        GetInput();
-        CollectMinerals();
+        if (!PauseMenuManager.Paused)
+        {
+            GetInput();
+            CollectMinerals();
+        }
     }
 
     //Recurring Methods (Update())------------------------------------------------------------------------------------------------------------------  
@@ -97,6 +100,7 @@ public class MineralCollectionController : MonoBehaviour
 				//Debug.Log("Raycast hit minerals");
 				Mineral mineral = hit.collider.GetComponentInParent<Mineral>();
 				DisplayMineralInfo(mineral);
+
 				if (collectMinerals && mineral != null)
                 {
                     mineral.Mine();
@@ -106,7 +110,8 @@ public class MineralCollectionController : MonoBehaviour
                     //ResourceController.Instance.Ore += mined; (Moved this function to Ore.cs)
                 }
 			}
-			else {
+			else
+            {
 				HideMineralInfo();
                 AudioManager.Instance.StopSound(AudioManager.ESound.Mining, this.gameObject);
             }

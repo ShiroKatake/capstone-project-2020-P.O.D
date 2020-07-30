@@ -107,11 +107,14 @@ public class ClockController : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        if (!paused)
+        if (!PauseMenuManager.Paused)
         {
-            UpdateTime();
-            CheckDayNight();
-            UpdateClock();
+            if (!paused)
+            {
+                UpdateTime();
+                CheckDayNight();
+                UpdateClock();
+            }
         }
     }
 

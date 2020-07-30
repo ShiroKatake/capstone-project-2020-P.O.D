@@ -25,12 +25,15 @@ public class ChangeColor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.C))
+        if (!PauseMenuManager.Paused)
         {
-            curColor = image.color;
-            newColor = UnityEngine.Random.ColorHSV(0f,1f,1f,1f,0.5f,1f);
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                curColor = image.color;
+                newColor = UnityEngine.Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f);
+            }
+            curColor = Color.Lerp(curColor, newColor, fadeRate * Time.deltaTime);
+            image.GetComponent<Image>().color = curColor;
         }
-        curColor = Color.Lerp(curColor, newColor, fadeRate*Time.deltaTime);
-        image.GetComponent<Image>().color = curColor;
     }
 }

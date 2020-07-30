@@ -124,9 +124,12 @@ public class AudioManager : MonoBehaviour
 
     private void Update()
     {
-        if (bgSwitching)
+        if (!PauseMenuManager.Paused)
         {
-            CheckBackgroundSound();
+            if (bgSwitching)
+            {
+                CheckBackgroundSound();
+            }
         }
     }
 
