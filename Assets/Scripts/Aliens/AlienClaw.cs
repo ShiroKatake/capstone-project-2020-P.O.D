@@ -27,6 +27,6 @@ public class AlienClaw : MonoBehaviour
 		AudioManager.Instance.PlaySound(AudioManager.ESound.Damage_To_Building, this.gameObject);
 		damageable.TakeDamage(damage, alienActor);
 		gameObject.SetActive(false);
-		Debug.Log(damageable + " " + damageable.CurrentHealth);
+		//Debug.Log(damageable + " " + damageable.CurrentHealth);
 	}
 }
