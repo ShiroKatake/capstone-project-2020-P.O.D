@@ -13,7 +13,10 @@ public class AlienController : MonoBehaviour
     //Serialized Fields----------------------------------------------------------------------------
 
     [Header("Spawning Stats")]
-    [SerializeField] private float respawnDelay;
+    [Tooltip("How long the game should wait between the death of all of each wave of aliens before spawning more.")]
+    [SerializeField] private float waveDelay;
+    [Tooltip("How long the game should wait between spawning each swarm of aliens in a wave.")]
+    [SerializeField] private float swarmDelay;
 
     [Header("Swarm Stats")]
 	[Tooltip("How much space 1 swarm takes.")]
@@ -88,7 +91,7 @@ public class AlienController : MonoBehaviour
 
         Instance = this;
         aliens = new List<Alien>();
-        timeOfLastDeath = respawnDelay * -1;
+        timeOfLastDeath = waveDelay * -1;
         timeOfLastPenalty = penaltyCooldown * -1;
         spawnCountPenalty = 0;
         groundLayerMask = LayerMask.GetMask("Ground");
@@ -152,7 +155,7 @@ public class AlienController : MonoBehaviour
             if (spawnableStages.Contains(StageManager.Instance.CurrentStage.ID) 
                 && !ClockController.Instance.Daytime 
                 && aliens.Count == 0 
-                && Time.time - timeOfLastDeath > respawnDelay)
+                && Time.time - timeOfLastDeath > waveDelay)
             {
                 //Reset start time
                 loopStopwatch.Restart();
@@ -198,6 +201,7 @@ public class AlienController : MonoBehaviour
                             swarmCentre = GetRandomPosition(availablePositions);
                             swarmRadius = 0;
                             swarmSize = 0;
+                            yield return new WaitForSeconds(swarmDelay);
                         }
 
                         availableOffsets.AddRange(swarmOffsets[swarmRadius]);
