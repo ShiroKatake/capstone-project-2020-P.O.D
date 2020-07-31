@@ -178,7 +178,7 @@ public class TurretShooting : CollisionListener, IMessenger
     /// </summary>
     private void Shoot()
     {
-        if (/*shoot || (*/target != null && Time.time - timeOfLastShot > shotCooldown)//)
+        if (/*shoot || (*/target != null && Time.time - timeOfLastShot > shotCooldown && !target.Health.IsDead())//)
         {
             //shoot = false;
             timeOfLastShot = Time.time;
