@@ -34,6 +34,11 @@ public class AudioManager : MonoBehaviour
         Alien_Moves,
         Alien_Takes_Damage,
         Alien_Dies,
+        Win,
+        Lose,
+        Day_Shift,
+        Night_Shift,
+        Attacked
     }
 
     [System.Serializable]
@@ -512,7 +517,7 @@ public class AudioManager : MonoBehaviour
 
             currentBackgroundTrack.Play();
         }
-        else if (Time.time >= timeStamp + 2f)
+        else if (Time.time >= timeStamp + 3f)
         {
             timeStamp = 0f;
             bgSwitchControl = false;
@@ -542,7 +547,14 @@ public class AudioManager : MonoBehaviour
         currentBackgroundTrack.volume = Mathf.Lerp(0f, volumeControlBackground, volumeControlTimer);
     }
 
-
+    public void StopBackGroundMusic()
+    {
+        currentBackgroundTrack.Stop();
+    }
+    public void StartBackGroundMusic()
+    {
+        currentBackgroundTrack.Play();
+    }
 }
 
 

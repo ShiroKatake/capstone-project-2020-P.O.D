@@ -11,13 +11,20 @@ public class ResourceController : MonoBehaviour
 
     //Serialized Fields----------------------------------------------------------------------------                                                    
 
+    [Header("Resource Supplies")]
     [SerializeField] private int ore;
-    [SerializeField] private int powerConsumption;
     [SerializeField] private int powerSupply;
-    [SerializeField] private int wasteConsumption;
     [SerializeField] private int wasteSupply;
-    [SerializeField] private int waterConsumption;
     [SerializeField] private int waterSupply;
+
+    [Header("Resource Consumption")]
+    [SerializeField] private int powerConsumption;
+    [SerializeField] private int wasteConsumption;
+    [SerializeField] private int waterConsumption;
+
+    [Header("Testing")]
+    [SerializeField] private bool getDeveloperResources;
+    [SerializeField] private int developerResources;
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
@@ -206,12 +213,27 @@ public class ResourceController : MonoBehaviour
     {
         if (!PauseMenuManager.Paused)
         {
-            //For testing by changing resource values in the inspector.
+            CheckDeveloperResources();
             CheckResourceSupply();
         }
     }
 
     //Recurring Methods (Update())------------------------------------------------------------------------------------------------------------------  
+
+    /// <summary>
+    /// Checks if the developer has requested extra resources in the inspector, and grants them one batch of them if so.
+    /// </summary>
+    private void CheckDeveloperResources()
+    {
+        if (getDeveloperResources)
+        {
+            ore += developerResources;
+            powerSupply += developerResources;
+            wasteSupply += developerResources;
+            waterSupply += developerResources;
+            getDeveloperResources = false;
+        }
+    }
 
     /// <summary>
     /// Check if there is sufficient or insufficient supplies of either resource, and shutdown and restore buildings appropriately.

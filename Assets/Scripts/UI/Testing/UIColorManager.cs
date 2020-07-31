@@ -116,7 +116,7 @@ public class UIColorManager : MonoBehaviour
 	{
 		foreach (Image border in UIBorders)
 		{
-			border.GetComponent<Image>().color = color;
+			//border.GetComponent<Image>().color = color;
 		}
 	}
 

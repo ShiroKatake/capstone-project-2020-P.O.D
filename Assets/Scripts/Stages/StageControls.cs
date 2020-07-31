@@ -15,6 +15,7 @@ public class StageControls : Stage
     [SerializeField] private UIElementStatusController uiBorderUIEC;
     [SerializeField] private UIElementStatusController consoleUIEC;
     [SerializeField] private UIElementStatusController buildingAndResourcesBarUIEC;
+    [SerializeField] private UIElementStatusController miniMapBorderUIEC;
     [SerializeField] private UIElementStatusController miniMapUIEC;
     [SerializeField] private UIElementStatusController mineralsHighlightUIEC;
 
@@ -201,7 +202,7 @@ public class StageControls : Stage
 
         console.SubmitDialogue("minerals detected", 0, false, false);
         buildingAndResourcesBarUIEC.Visible = true;
-        miniMapUIEC.Visible = true;
+        miniMapBorderUIEC.Visible = true;
         yield return new WaitForSeconds(2);
 
         console.ClearDialogue();
@@ -209,7 +210,7 @@ public class StageControls : Stage
         cat.SubmitDialogue("gather minerals", 0, true, false);
         game.SubmitDialogue("lmb", 1, true, false);
         ResourceTextManager.Instance.FadeIn();
-        //TODO: activate minimap and fade it in
+        miniMapUIEC.Visible = true;
         float startingMinerals = ResourceController.Instance.Ore;
 
         while (ResourceController.Instance.Ore < startingMinerals + 4)

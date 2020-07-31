@@ -15,6 +15,7 @@ public class UIElementStatusController : MonoBehaviour
     [SerializeField] private Image border;
     [SerializeField] private Image fill;
     [SerializeField] private Image image;
+    [SerializeField] private RawImage rawImage;
     [SerializeField] private Text textBox;
 
     [Header("Visibility Stats")]
@@ -39,6 +40,7 @@ public class UIElementStatusController : MonoBehaviour
     private float finalBorderOpacity;
     private float finalFillOpacity;
     private float finalImageOpacity;
+    private float finalRawImageOpacity;
     private float finalTextOpacity;
 
     private bool interactable;
@@ -120,6 +122,17 @@ public class UIElementStatusController : MonoBehaviour
         get
         {
             return image != null;
+        }
+    }
+    
+    /// <summary>
+    /// Does this UI element have a raw image component for images?
+    /// </summary>
+    public bool HasRawImage
+    {
+        get
+        {
+            return rawImage != null;
         }
     }
 
@@ -232,6 +245,17 @@ public class UIElementStatusController : MonoBehaviour
             }
         }
 
+        if (rawImage != null)
+        {
+            graphics.Add(rawImage);
+
+            if (!visibleOnAwake)
+            {
+                finalRawImageOpacity = rawImage.color.a;
+                rawImage.enabled = false;
+            }
+        }
+
         if (textBox != null)
         {
             graphics.Add(textBox);
@@ -268,6 +292,7 @@ public class UIElementStatusController : MonoBehaviour
         bool borderFinished = (border == null);
         bool fillFinished = (fill == null);
         bool imageFinished = (image == null);
+        bool rawImageFinished = (rawImage == null);
         bool textBoxFinished = (textBox == null);
 
         yield return null;
@@ -280,14 +305,16 @@ public class UIElementStatusController : MonoBehaviour
                 if (!borderFinished) { borderFinished = UpdateOpacityOfGraphic(border, true, 1, 0.67f * finalBorderOpacity); }
                 if (!fillFinished) { fillFinished = UpdateOpacityOfGraphic(fill, true, 1, 0.67f * finalFillOpacity); } 
                 if (!imageFinished) { imageFinished = UpdateOpacityOfGraphic(image, true, 1, 0.67f * finalImageOpacity); } 
+                if (!rawImageFinished) { rawImageFinished = UpdateOpacityOfGraphic(rawImage, true, 1, 0.67f * finalRawImageOpacity); } 
                 if (!textBoxFinished) { textBoxFinished = UpdateOpacityOfGraphic(textBox, true, 1, 0.67f * finalTextOpacity); }
                 //Debug.Log($"Incrementing {this}.image.color.a, alpha is {image.color.a}, finished incrementing up to {0.67f * finalOpacity} is {image.color.a >= 0.67f * finalOpacity}");
             }
-            while (!borderFinished || !fillFinished || !imageFinished || !textBoxFinished);
+            while (!borderFinished || !fillFinished || !imageFinished || !rawImageFinished || !textBoxFinished);
 
             borderFinished = (border == null);
             fillFinished = (fill == null);
             imageFinished = (image == null);
+            rawImageFinished = (rawImage == null);
             textBoxFinished = (textBox == null);
 
             do
@@ -296,11 +323,12 @@ public class UIElementStatusController : MonoBehaviour
                 if (!borderFinished) { borderFinished = UpdateOpacityOfGraphic(border, false, 1, 0); }
                 if (!fillFinished) { fillFinished = UpdateOpacityOfGraphic(fill, false, 1, 0); }
                 if (!imageFinished) { imageFinished = UpdateOpacityOfGraphic(image, false, 1, 0); }
+                if (!rawImageFinished) { rawImageFinished = UpdateOpacityOfGraphic(rawImage, false, 1, 0); }
                 if (!textBoxFinished) { textBoxFinished = UpdateOpacityOfGraphic(textBox, false, 1, 0); }
 
                 //Debug.Log($"Decrementing {this}.image.color.a, alpha is {image.color.a}, finished decrementing to 0 is {image.color.a <= 0}");
             }
-            while (!borderFinished || !fillFinished || !imageFinished || !textBoxFinished);
+            while (!borderFinished || !fillFinished || !imageFinished || !rawImageFinished || !textBoxFinished);
 
             flickers++;
         }
@@ -308,6 +336,7 @@ public class UIElementStatusController : MonoBehaviour
         borderFinished = (border == null);
         fillFinished = (fill == null);
         imageFinished = (image == null);
+        rawImageFinished = (rawImage == null);
         textBoxFinished = (textBox == null);
 
         do
@@ -316,14 +345,16 @@ public class UIElementStatusController : MonoBehaviour
             if (!borderFinished) { borderFinished = UpdateOpacityOfGraphic(border, true, 1.25f, finalBorderOpacity); }
             if (!fillFinished) { fillFinished = UpdateOpacityOfGraphic(fill, true, 1.25f, finalFillOpacity); }
             if (!imageFinished) { imageFinished = UpdateOpacityOfGraphic(image, true, 1.25f, finalImageOpacity); } 
+            if (!rawImageFinished) { rawImageFinished = UpdateOpacityOfGraphic(rawImage, true, 1.25f, finalRawImageOpacity); } 
             if (!textBoxFinished) { textBoxFinished = UpdateOpacityOfGraphic(textBox, true, 1.25f, finalTextOpacity); }
             //Debug.Log($"Incrementing {this}.image.color.a, alpha is {image.color.a}, finished incrementing up to {finalOpacity} is {image.color.a >= finalOpacity}");
         }
-        while (!borderFinished || !fillFinished || !imageFinished || !textBoxFinished);
+        while (!borderFinished || !fillFinished || !imageFinished || !rawImageFinished || !textBoxFinished);
 
         borderFinished = (border == null);
         fillFinished = (fill == null);
         imageFinished = (image == null);
+        rawImageFinished = (rawImage == null);
         textBoxFinished = (textBox == null);
 
         if (flickerOutOnComplete)
@@ -334,10 +365,11 @@ public class UIElementStatusController : MonoBehaviour
                 if (!borderFinished) { borderFinished = UpdateOpacityOfGraphic(border, false, 1.25f, 0); } 
                 if (!fillFinished) { fillFinished = UpdateOpacityOfGraphic(fill, false, 1.25f, 0); } 
                 if (!imageFinished) { imageFinished = UpdateOpacityOfGraphic(image, false, 1.25f, 0); }
+                if (!rawImageFinished) { rawImageFinished = UpdateOpacityOfGraphic(rawImage, false, 1.25f, 0); }
                 if (!textBoxFinished) { textBoxFinished = UpdateOpacityOfGraphic(textBox, false, 1.25f, 0); }
                 //Debug.Log($"Decrementing {this}.image.color.a, alpha is {image.color.a}, finished decrementing down to {0} is {image.color.a <= 0}");
             }
-            while (!borderFinished || !fillFinished || !imageFinished || !textBoxFinished);
+            while (!borderFinished || !fillFinished || !imageFinished || !rawImageFinished || !textBoxFinished);
         }
 
         finishedFlickeringIn = true;

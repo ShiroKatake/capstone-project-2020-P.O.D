@@ -48,7 +48,7 @@ MonoBehaviour:
     sound: 2
     clip: {fileID: 8300000, guid: 49de022317ef4da4ca9beaa77abcfd1c, type: 3}
     loop: 1
-    volume: 0.1
+    volume: 0.05
     pitch: 1
     minDistance: 0
     maxDistance: 0
@@ -72,7 +72,7 @@ MonoBehaviour:
     sound: 5
     clip: {fileID: 8300000, guid: f48bce149ca34f54ba46a4108510c2cc, type: 3}
     loop: 1
-    volume: 0.427
+    volume: 0.1
     pitch: 1
     minDistance: 0
     maxDistance: 0
@@ -136,7 +136,7 @@ MonoBehaviour:
     sound: 14
     clip: {fileID: 8300000, guid: 66e0c45c9168f8043bfa710e14978727, type: 3}
     loop: 1
-    volume: 0.2
+    volume: 0.1
     pitch: 1
     minDistance: 0
     maxDistance: 8
@@ -144,7 +144,7 @@ MonoBehaviour:
     sound: 15
     clip: {fileID: 8300000, guid: 1c66bca0baaf33f43be0f6a375f497f2, type: 3}
     loop: 1
-    volume: 1
+    volume: 0.5
     pitch: 1
     minDistance: 0
     maxDistance: 8
@@ -159,8 +159,8 @@ MonoBehaviour:
   - name: Boiler Idle
     sound: 18
     clip: {fileID: 8300000, guid: f131c8358d5357d4c83150998ff8d060, type: 3}
-    loop: 1
-    volume: 0.2
+    loop: 0
+    volume: 0.1
     pitch: 1
     minDistance: 0
     maxDistance: 8
@@ -202,6 +202,46 @@ MonoBehaviour:
     loop: 0
     volume: 0.1
     pitch: 1
+    minDistance: 0
+    maxDistance: 0
+  - name: Win
+    sound: 23
+    clip: {fileID: 8300000, guid: b1969d928315709468ce08b420607d13, type: 3}
+    loop: 0
+    volume: 1
+    pitch: 1
+    minDistance: 0
+    maxDistance: 0
+  - name: Losing
+    sound: 24
+    clip: {fileID: 8300000, guid: a9cb72cdca40b9d4a8e432a962ce2efb, type: 3}
+    loop: 0
+    volume: 1
+    pitch: 1
+    minDistance: 0
+    maxDistance: 0
+  - name: Day Transition
+    sound: 25
+    clip: {fileID: 8300000, guid: 8b7bccc60839c9048ba2594711569219, type: 3}
+    loop: 0
+    volume: 0.1
+    pitch: 1
+    minDistance: 0
+    maxDistance: 0
+  - name: Night Transition
+    sound: 26
+    clip: {fileID: 8300000, guid: 17d0972c4be339144b5a301d32dfbd0c, type: 3}
+    loop: 0
+    volume: 0.1
+    pitch: 1
+    minDistance: 0
+    maxDistance: 0
+  - name: Attack!
+    sound: 27
+    clip: {fileID: 8300000, guid: 2f6cd0b9094d0284e80db0b13976cb00, type: 3}
+    loop: 0
+    volume: 0.2
+    pitch: 0.3
     minDistance: 0
     maxDistance: 0
   BackGroundSounds:

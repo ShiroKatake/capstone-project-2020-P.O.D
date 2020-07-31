@@ -15,6 +15,7 @@ public class StageSkippedTutorial : Stage
     [SerializeField] private UIElementStatusController uiBorder;
     [SerializeField] private UIElementStatusController console;
     [SerializeField] private UIElementStatusController buildingAndResourcesBar;
+    [SerializeField] private UIElementStatusController miniMapBorder;
     [SerializeField] private UIElementStatusController miniMap;
     [SerializeField] private UIElementStatusController clock;
 
@@ -115,9 +116,9 @@ public class StageSkippedTutorial : Stage
 
         consoleDB.SubmitDialogue("system check", 0, false, false);
         buildingAndResourcesBar.Visible = true;
-        miniMap.Visible = true;
+        miniMapBorder.Visible = true;
 
-        while (!buildingAndResourcesBar.FinishedFlickeringIn || !miniMap.FinishedFlickeringIn || consoleDB.LerpingDialogue)
+        while (!buildingAndResourcesBar.FinishedFlickeringIn || !miniMapBorder.FinishedFlickeringIn || consoleDB.LerpingDialogue)
         {
             yield return null;
         }
@@ -125,9 +126,9 @@ public class StageSkippedTutorial : Stage
         consoleDB.SubmitDialogue("initialising functions", 0, false, false);
         ResourceTextManager.Instance.FadeIn();
         clock.Visible = true;
-        //TODO: miniMapContent.Visible = true;
+        miniMap.Visible = true;
 
-        while (!clock.FinishedFlickeringIn /*|| !miniMapContent.FinishedFlickeringIn*/ || consoleDB.LerpingDialogue)
+        while (!clock.FinishedFlickeringIn || !miniMap.FinishedFlickeringIn || consoleDB.LerpingDialogue)
         {
             yield return null;
         }

@@ -328,8 +328,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   projectilePrefabs:
   - {fileID: 7263093150868635065, guid: 496aae763b28c0941aee53c7530873a3, type: 3}
-  - {fileID: 7149408986218459655, guid: 773aaa485da8789468f5379df4dc3f73, type: 3}
-  - {fileID: 5384837878179198461, guid: de4e687dbf5140f4fa3ce41858265555, type: 3}
+  - {fileID: 7263093150868635065, guid: 85b4c26e2e308424b9459fced12ff21c, type: 3}
+  - {fileID: 7263093150868635065, guid: 741497a96c519ec46b2d899d046f37ce, type: 3}
   pooledProjectiles: 50
 --- !u!114 &4151841228902256699
 MonoBehaviour:
@@ -356,12 +356,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ore: 0
-  powerConsumption: 0
   powerSupply: 0
-  wasteConsumption: 0
   wasteSupply: 0
-  waterConsumption: 0
   waterSupply: 0
+  powerConsumption: 0
+  wasteConsumption: 0
+  waterConsumption: 0
+  getDeveloperResources: 0
+  developerResources: 1000
 --- !u!114 &3607602877255847704
 MonoBehaviour:
   m_ObjectHideFlags: 0

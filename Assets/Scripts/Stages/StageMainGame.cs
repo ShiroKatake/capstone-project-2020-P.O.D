@@ -57,11 +57,15 @@ public class StageMainGame: Stage
             if (EnvironmentalController.Instance.Win)
             {
                 StageManager.Instance.SetStage(EStage.Win);
+                AudioManager.Instance.PlaySound(AudioManager.ESound.Win);
+                AudioManager.Instance.StopBackGroundMusic();
                 break;
             }
             else if (CryoEgg.Instance.Health.IsDead())
             {
                 StageManager.Instance.SetStage(EStage.Lose);
+                AudioManager.Instance.PlaySound(AudioManager.ESound.Lose);
+                AudioManager.Instance.StopBackGroundMusic();
                 break;
             }
             else
