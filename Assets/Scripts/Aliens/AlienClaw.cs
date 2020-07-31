@@ -17,11 +17,6 @@ public class AlienClaw : MonoBehaviour
 	{
 		Health damageable = collidedWith.GetComponentInParent<Health>();    //Gets component in itself or its parent(s)
 
-		//if (damageable == null)
-		//{
-		//	damageable = collidedWith.transform.parent.GetComponent<Health>();
-		//}
-
         if (damageable == null)
 		{
 			Debug.Log($"{this} cannot find {collidedWith.gameObject}'s Health component in it or its parent.");
@@ -35,7 +30,6 @@ public class AlienClaw : MonoBehaviour
             AudioManager.Instance.PlaySound(AudioManager.ESound.Damage_To_Building, this.gameObject);
             damageable.TakeDamage(damage, alienActor);
             gameObject.SetActive(false);
-            //Debug.Log(damageable + " " + damageable.CurrentHealth);
         }
     }
 }

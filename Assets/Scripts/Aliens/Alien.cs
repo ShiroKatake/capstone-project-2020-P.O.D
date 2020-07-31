@@ -34,9 +34,8 @@ public class Alien : MonoBehaviour, IMessenger
     private Rigidbody rigidbody;
 	private Actor actor;
 
-
-    //Movement
-    private bool moving;
+	//Movement
+	private bool moving;
     private float speed;
     
     //Targeting
@@ -100,7 +99,6 @@ public class Alien : MonoBehaviour, IMessenger
 
 		health.onDamaged += OnDamaged;
 		health.onDie += OnDie;
-
 	}
 
     /// <summary>
@@ -279,15 +277,13 @@ public class Alien : MonoBehaviour, IMessenger
 		if (onAttack != null)
 		{
 			onAttack.Invoke();
-            Transform damage = this.transform;
-            DamagePointer.Jump_Static(damage);
+            DamagePointer.Jump_Static(transform);
         }
 		else
 		{
 			Debug.Log("No script for Alien FX attached, doing damage without visuals . . .");
 			UnsheathClaw();
-            Transform damage = this.transform;
-            DamagePointer.Jump_Static(damage);
+            DamagePointer.Jump_Static(transform);
         }
 	}
 
@@ -305,6 +301,7 @@ public class Alien : MonoBehaviour, IMessenger
 		{
 			Debug.Log("No script for Alien FX attached, taking damage without visuals . . .");
 		}
+
 		ShotBy(attackerTransform);
 	}
 
@@ -365,7 +362,6 @@ public class Alien : MonoBehaviour, IMessenger
 	public void DestroyAlien()
 	{
 		AlienFactory.Instance.DestroyAlien(this);
-       
 	}
 
 	/// <summary>
