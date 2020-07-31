@@ -80,7 +80,7 @@ public class ProjectileFactory : MonoBehaviour
     /// <param name="owner">The player or turret firing the projectile from their weapon.</param>
     /// <param name="position">The position the Projectile should be instantiated at.</param>
     /// <returns>A new projectile.</returns>
-    public Projectile GetProjectile(EProjectileType type, Transform owner, Vector3 position)
+    public Projectile GetProjectile(EProjectileType type, Transform owner, Transform barrelTip)
     {
         Projectile projectile;
 
@@ -96,8 +96,9 @@ public class ProjectileFactory : MonoBehaviour
 
         projectile.Owner = owner;
         projectile.transform.parent = null;
-        projectile.transform.position = position;
-        return projectile;
+        projectile.transform.position = barrelTip.position;
+		projectile.transform.rotation = barrelTip.rotation;
+		return projectile;
     }
 
     /// <summary>

@@ -15,19 +15,27 @@ public class AlienClaw : MonoBehaviour
 	/// <param name="collidedWith">The other Collider involved in this collision.</param>
 	private void OnTriggerEnter(Collider collidedWith)
 	{
-		Health damageable = collidedWith.GetComponent<Health>();
-		if (damageable == null)
+		Health damageable = collidedWith.GetComponentInParent<Health>();    //Gets component in itself or its parent(s)
+
+		//if (damageable == null)
+		//{
+		//	damageable = collidedWith.transform.parent.GetComponent<Health>();
+		//}
+
+        if (damageable == null)
 		{
-			damageable = collidedWith.transform.parent.GetComponent<Health>();
-			
-		} else if (damageable == null)
-		{
-			Debug.Log("None");
-			return;
+			Debug.Log($"{this} cannot find {collidedWith.gameObject}'s Health component in it or its parent.");
 		}
-		AudioManager.Instance.PlaySound(AudioManager.ESound.Damage_To_Building, this.gameObject);
-		damageable.TakeDamage(damage, alienActor);
-		gameObject.SetActive(false);
-		Debug.Log(damageable + " " + damageable.CurrentHealth);
-	}
+        else if (alienActor == null)
+        {
+            Debug.Log($"{this} is missing it's alien's Actor component.");
+        }
+        else
+        {
+            AudioManager.Instance.PlaySound(AudioManager.ESound.Damage_To_Building, this.gameObject);
+            damageable.TakeDamage(damage, alienActor);
+            gameObject.SetActive(false);
+            //Debug.Log(damageable + " " + damageable.CurrentHealth);
+        }
+    }
 }
