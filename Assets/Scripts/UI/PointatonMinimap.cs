@@ -6,32 +6,30 @@ using System.Collections.Specialized;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-public class PointatonMinimap : MonoBehaviour {
+public class PointatonMinimap : MonoBehaviour
+{
 
 
     [SerializeField] private List<Pointer> pointerList;
-    [SerializeField] private GameObject cryoegg;
-
-    private void Start()
-    {
-        CreatePointer(cryoegg.transform, "CryoEgg Pointer");
-        Debug.Log("I have been created from the PointatonMinimap");
-    }
 
     private void Awake()
     {
         pointerList = new List<Pointer>();
     }
+
+    private void Start()
+    {
+        CreatePointer(CryoEgg.Instance.transform, "CryoEgg Pointer");
+        //Debug.Log("I have been created from the PointatonMinimap");
+    }
+
     private void Update()
     {
         foreach (Pointer pointer in pointerList)
         {
             pointer.Update();
-        }
-      
-        
+        }    
     }
-
 
     public Pointer CreatePointer(Transform targetPosition, string pointerObject)
     {
@@ -43,11 +41,13 @@ public class PointatonMinimap : MonoBehaviour {
         pointerList.Add(pointer);
         return pointer;
     }
+
     public void DestroyPointers(Pointer pointer)
     {
         pointerList.Remove(pointer);
         pointer.destroySelf();
     }
+
     public class Pointer
     {
         private Transform targetPosition;
@@ -58,23 +58,23 @@ public class PointatonMinimap : MonoBehaviour {
         private float clockShift = 40f;
         private Camera minimapCamera;
 
-
         public Pointer (Transform targetPosition, GameObject pointerGameObject, Camera minimapCamera)
         {
             this.targetPosition = targetPosition;
             this.pointerGameObject = pointerGameObject;
             this.minimapCamera = minimapCamera;
             pointerRectTransform = pointerGameObject.GetComponent<RectTransform>();
-
         }
 
         public void Update()
         {
             Vector3 toPosition = new Vector3(targetPosition.position.x, targetPosition.position.y, targetPosition.position.z);
-
-
             Vector3 targetPositionScreenPoint = minimapCamera.WorldToScreenPoint(toPosition);
-            if (targetPositionScreenPoint.x <= boardersize || targetPositionScreenPoint.x >= minimapCamera.pixelWidth - boardersize || targetPositionScreenPoint.y <= boardersize || targetPositionScreenPoint.y >= minimapCamera.pixelHeight - boardersize)
+
+            if (targetPositionScreenPoint.x <= boardersize 
+                || targetPositionScreenPoint.x >= minimapCamera.pixelWidth - boardersize 
+                || targetPositionScreenPoint.y <= boardersize 
+                || targetPositionScreenPoint.y >= minimapCamera.pixelHeight - boardersize)
             {
                 isOffScreen = true;
             }
@@ -87,11 +87,11 @@ public class PointatonMinimap : MonoBehaviour {
                 if (cappedTargetScreenPosition.x >= minimapCamera.pixelWidth - boardersize) cappedTargetScreenPosition.x = minimapCamera.pixelWidth - boardersize;
                 if (cappedTargetScreenPosition.y <= boardersize) cappedTargetScreenPosition.y = boardersize;
                 if (cappedTargetScreenPosition.y >= minimapCamera.pixelHeight - boardersize) cappedTargetScreenPosition.y = minimapCamera.pixelHeight - boardersize;
+
                 if (cappedTargetScreenPosition.y >= minimapCamera.pixelHeight - boardersize - clockShift && cappedTargetScreenPosition.x >= minimapCamera.pixelWidth - boardersize - clockShift)
                 {
                     if (cappedTargetScreenPosition.x >= minimapCamera.pixelWidth - boardersize - clockShift) cappedTargetScreenPosition.x = minimapCamera.pixelWidth - boardersize - clockShift;
                     if (cappedTargetScreenPosition.y >= minimapCamera.pixelHeight - boardersize - clockShift) cappedTargetScreenPosition.y = minimapCamera.pixelHeight - boardersize - clockShift;
-
                 }
 
                 Vector3 pointerWorldPosision = minimapCamera.ScreenToWorldPoint(cappedTargetScreenPosition);
@@ -104,8 +104,6 @@ public class PointatonMinimap : MonoBehaviour {
                 pointerRectTransform.position = pointerWorldPosision;
                 pointerRectTransform.localPosition = new Vector3(pointerRectTransform.localPosition.x, pointerRectTransform.localPosition.y, 0f);
             }
-
-          
         }
 
         public void destroySelf()
@@ -122,7 +120,5 @@ public class PointatonMinimap : MonoBehaviour {
         {
             this.pointerGameObject.SetActive(false);
         }
-
     }
-
 }
