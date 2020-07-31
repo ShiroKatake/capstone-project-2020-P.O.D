@@ -16,6 +16,7 @@ public class Mineral : MonoBehaviour
 	private int oreCount;
 	[SerializeField] private float oreSpawnRate = 1f;
 	[SerializeField] private float oreCurveRadius = 2;
+	[SerializeField] private Transform miningPoint;
 
 	//Non-Serialized Fields------------------------------------------------------------------------
 
@@ -39,6 +40,7 @@ public class Mineral : MonoBehaviour
     /// </summary>
     public int OreCount { get => oreCount; }
 
+	public Vector3 MiningPoint { get => miningPoint.position; }
     //Complex Public Properties----------------------------------------------------------------------
 
     /// <summary>
@@ -163,7 +165,6 @@ public class Mineral : MonoBehaviour
     /// </summary>
     public void Reset()
     {
-        DisableColliders();
         StartCoroutine(DespawnMineral());
 	}
 
@@ -190,8 +191,8 @@ public class Mineral : MonoBehaviour
         {
             transform.position += new Vector3(0, -1 * Time.deltaTime, 0);//TODO: swap for de-spawn shader/animation
             yield return null;
-        }
-
+		}
+		DisableColliders();
 		oreCount = initialCount;
 		transform.position = ObjectPool.Instance.transform.position;
         transform.parent = ObjectPool.Instance.transform;
