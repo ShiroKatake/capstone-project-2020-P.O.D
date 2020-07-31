@@ -16,20 +16,28 @@ public class AlienController : MonoBehaviour
     [SerializeField] private float respawnDelay;
 
     [Header("Swarm Stats")]
-	[Tooltip("How much space 1 swarm takes.")]
+	[Tooltip("How much space a swarm takes.")]
 	[SerializeField] private int maxSwarmRadius;
-	[Tooltip("How many swarms should be in 1 night.")]
+	[Tooltip("How many swarms should be in a night.")]
 	[SerializeField] private int maxSwarmCount;
 	[Tooltip("How many aliens can be in a swarm.")]
 	[SerializeField] private int maxSwarmSize;
+	[Tooltip("How many extra aliens will spawn per existing building.")]
+	[SerializeField] private int alienMultiplier;
 
-    [Header("Penalty Stats")]
-    [SerializeField] private float defencePenaltyThreshold;
-    [SerializeField] private float nonDefencePenaltyThreshold;
-    [SerializeField] private int penaltyIncrement;
-    [SerializeField] private float penaltyCooldown;
+	[Header("Penalty Stats")]
+	[Tooltip("If the player takes this long to build a defence building, they'll get penalised.")]
+	[SerializeField] private float defencePenaltyThreshold;
+	[Tooltip("If the player takes this long to build a non defence building, they'll get penalised.")]
+	[SerializeField] private float nonDefencePenaltyThreshold;
+	[Tooltip("How long a penalty interval is before the game punishes the player again.")]
+	[SerializeField] private float penaltyCooldown;
+	[Tooltip("Number of aliens to punish the player every penalty interval.")]
+	[SerializeField] private int penaltyIncrement;
+	[Tooltip("How long the player needs to be AFK before the game starts punishing.")]
+	[SerializeField] private float timeOfLastPenalty;
 
-    [Header("Spawning Time Limit Per Frame (Milliseconds)")]
+	[Header("Spawning Time Limit Per Frame (Milliseconds)")]
     [SerializeField] private float spawningFrameTimeLimit;
 
     [Header("For Testing")]
@@ -53,7 +61,6 @@ public class AlienController : MonoBehaviour
 
     //Penalty Incrementation
     private int spawnCountPenalty;
-    private float timeOfLastPenalty;
 
     //PublicProperties-------------------------------------------------------------------------------------------------------------------------------
 
@@ -166,7 +173,7 @@ public class AlienController : MonoBehaviour
 
                 //Spawn aliens
                 EStage currentStage = StageManager.Instance.CurrentStage.ID;
-                int spawnCount = (currentStage == EStage.Combat ? 3 : BuildingController.Instance.BuildingCount * 3 + spawnCountPenalty);
+                int spawnCount = (currentStage == EStage.Combat ? 3 : BuildingController.Instance.BuildingCount * alienMultiplier + spawnCountPenalty);
                 Vector3 swarmCentre = Vector3.zero;
                 int swarmSize = 0;
                 int swarmRadius = 0;
