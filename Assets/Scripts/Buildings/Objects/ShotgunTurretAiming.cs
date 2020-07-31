@@ -93,7 +93,7 @@ public class ShotgunTurretAiming : TurretAiming
     protected override void Aim()
     {
         //Turret rotation on turret base's local horizontal axis. All other local values remain static.
-        if (currentTurretRotation != targetTurretRotation)
+        if (true)
         {
             float deltaAngle = Mathf.DeltaAngle(currentTurretRotation, targetTurretRotation);
             float rotationDirection = MathUtility.Instance.Sign(deltaAngle);
@@ -110,7 +110,7 @@ public class ShotgunTurretAiming : TurretAiming
         }
 
         //Barrel pivoting on barrel pivot's local vertical axis. All other local values remain static.
-        if (currentBarrelElevation != targetBarrelElevation)
+        if (true)
         {
             float deltaAngle = Mathf.DeltaAngle(currentBarrelElevation, targetBarrelElevation);
             float pivotDirection = MathUtility.Instance.Sign(deltaAngle);
