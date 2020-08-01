@@ -121,6 +121,18 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 23800000, guid: 097e13101b43b594385a68bbd30dde0e, type: 2}
+--- !u!114 &23013387 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 433020471365899721, guid: 9e7595dc8e91f594fb56c845983b5fac,
+    type: 3}
+  m_PrefabInstance: {fileID: 1445816504}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!20 &41833865 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 4635870161075411412, guid: 435f7674b2b881b4896020642be86b13,
@@ -670,12 +682,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 594604be9d0b0c548bb4d484fc83f878, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &882170064 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6533320398353285700, guid: 9e7595dc8e91f594fb56c845983b5fac,
+    type: 3}
+  m_PrefabInstance: {fileID: 1445816504}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97335b3d8af8d9141a331358af6c3300, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &916147508 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8675943398540051251, guid: 435f7674b2b881b4896020642be86b13,
     type: 3}
   m_PrefabInstance: {fileID: 4635870160120624295}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &920337849 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7191830422312699477, guid: 9e7595dc8e91f594fb56c845983b5fac,
+    type: 3}
+  m_PrefabInstance: {fileID: 1445816504}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97335b3d8af8d9141a331358af6c3300, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &943880576 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4528282982050965522, guid: 9e7595dc8e91f594fb56c845983b5fac,
@@ -1372,18 +1408,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9e7595dc8e91f594fb56c845983b5fac, type: 3}
---- !u!114 &1445816505 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6309912171680464121, guid: 9e7595dc8e91f594fb56c845983b5fac,
-    type: 3}
-  m_PrefabInstance: {fileID: 1445816504}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97335b3d8af8d9141a331358af6c3300, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1445816506 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3885950429090063900, guid: 9e7595dc8e91f594fb56c845983b5fac,
@@ -1702,18 +1726,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1579461514 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 808446894517300084, guid: 9e7595dc8e91f594fb56c845983b5fac,
-    type: 3}
-  m_PrefabInstance: {fileID: 1445816504}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1611698422
 GameObject:
   m_ObjectHideFlags: 0
@@ -2216,7 +2228,7 @@ PrefabInstance:
         type: 3}
       propertyPath: clock
       value: 
-      objectReference: {fileID: 1445816505}
+      objectReference: {fileID: 0}
     - target: {fileID: 1629162378140240872, guid: 7ec13c4878030604f886d212027c72e6,
         type: 3}
       propertyPath: fusionReactor
@@ -2351,12 +2363,12 @@ PrefabInstance:
         type: 3}
       propertyPath: miniMap
       value: 
-      objectReference: {fileID: 1445816506}
+      objectReference: {fileID: 920337849}
     - target: {fileID: 4952588298347314997, guid: 7ec13c4878030604f886d212027c72e6,
         type: 3}
       propertyPath: clock
       value: 
-      objectReference: {fileID: 1445816505}
+      objectReference: {fileID: 882170064}
     - target: {fileID: 4952588298347314997, guid: 7ec13c4878030604f886d212027c72e6,
         type: 3}
       propertyPath: fusionReactor
@@ -2461,7 +2473,7 @@ PrefabInstance:
         type: 3}
       propertyPath: miniMapUIEC
       value: 
-      objectReference: {fileID: 1445816506}
+      objectReference: {fileID: 920337849}
     - target: {fileID: 7691648321688888052, guid: 7ec13c4878030604f886d212027c72e6,
         type: 3}
       propertyPath: mineralsHighlightUIEC
@@ -9996,7 +10008,7 @@ PrefabInstance:
         type: 3}
       propertyPath: clockTimer
       value: 
-      objectReference: {fileID: 1579461514}
+      objectReference: {fileID: 23013387}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9d619d0761b687e479a1231dab8ebf39, type: 3}
 --- !u!114 &5216131016438606744 stripped
