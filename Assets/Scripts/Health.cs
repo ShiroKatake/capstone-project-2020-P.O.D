@@ -18,7 +18,7 @@ public class Health : MonoBehaviour
 	//Non-Serialized Fields------------------------------------------------------------------------
 
 	private Actor actor;
-    private float currentHealth;
+    [SerializeField] private float currentHealth;
 
 	//Public Properties------------------------------------------------------------------------------------------------------------------------------
 
