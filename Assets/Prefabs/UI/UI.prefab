@@ -97,6 +97,11 @@ MonoBehaviour:
   flickerInSpeed: 1
   flickerCount: 4
   flickerOutOnComplete: 1
+  tweensIn: 0
+  tweenDuration: 0
+  tutorialStartAnchor: {fileID: 0}
+  skipTutorialStartAnchor: {fileID: 0}
+  finishedAnchor: {fileID: 0}
   interactableOnAwake: 0
 --- !u!1 &14240262597763624
 GameObject:
@@ -204,6 +209,42 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -700, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &321680661469876667
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7092774362534190538}
+  m_Layer: 5
+  m_Name: Shotgun Turret Anchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &7092774362534190538
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 321680661469876667}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4528282982346513304}
+  m_Father: {fileID: 4528282982005485690}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 210, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &347580277722142257
@@ -846,6 +887,11 @@ MonoBehaviour:
   flickerInSpeed: 2
   flickerCount: 2
   flickerOutOnComplete: 0
+  tweensIn: 0
+  tweenDuration: 0
+  tutorialStartAnchor: {fileID: 0}
+  skipTutorialStartAnchor: {fileID: 0}
+  finishedAnchor: {fileID: 0}
   interactableOnAwake: 0
 --- !u!114 &8880507035171191458
 MonoBehaviour:
@@ -1817,6 +1863,11 @@ MonoBehaviour:
   flickerInSpeed: 2
   flickerCount: 2
   flickerOutOnComplete: 0
+  tweensIn: 0
+  tweenDuration: 0
+  tutorialStartAnchor: {fileID: 0}
+  skipTutorialStartAnchor: {fileID: 0}
+  finishedAnchor: {fileID: 0}
   interactableOnAwake: 0
 --- !u!1 &1355278588383777653
 GameObject:
@@ -2201,6 +2252,11 @@ MonoBehaviour:
   flickerInSpeed: 1
   flickerCount: 4
   flickerOutOnComplete: 1
+  tweensIn: 0
+  tweenDuration: 0
+  tutorialStartAnchor: {fileID: 0}
+  skipTutorialStartAnchor: {fileID: 0}
+  finishedAnchor: {fileID: 0}
   interactableOnAwake: 0
 --- !u!1 &1747345764712188987
 GameObject:
@@ -3032,6 +3088,11 @@ MonoBehaviour:
   flickerInSpeed: 2
   flickerCount: 2
   flickerOutOnComplete: 0
+  tweensIn: 0
+  tweenDuration: 0
+  tutorialStartAnchor: {fileID: 0}
+  skipTutorialStartAnchor: {fileID: 0}
+  finishedAnchor: {fileID: 0}
   interactableOnAwake: 0
 --- !u!1 &2344040262811819263
 GameObject:
@@ -3121,6 +3182,42 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ShowMaskGraphic: 0
+--- !u!1 &2553712917273333746
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6948860571769700972}
+  m_Layer: 5
+  m_Name: Fusion Reactor Anchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &6948860571769700972
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2553712917273333746}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4528282981065271660}
+  m_Father: {fileID: 4528282982005485690}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -300, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2658291504888176791
 GameObject:
   m_ObjectHideFlags: 0
@@ -3350,6 +3447,145 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 4
+--- !u!1 &2735855695980888046
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7115680562366086086}
+  m_Layer: 5
+  m_Name: Boiler Anchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &7115680562366086086
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2735855695980888046}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4528282980658916500}
+  m_Father: {fileID: 4528282982005485690}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -90, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &2743917130103833822
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6759608468573763876}
+  - component: {fileID: 1319428315911909299}
+  - component: {fileID: 2756559700348374788}
+  - component: {fileID: 2532479517155010452}
+  m_Layer: 5
+  m_Name: Machine Gun Turret Highlight
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &6759608468573763876
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2743917130103833822}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4528282982575996859}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 38.000008}
+  m_SizeDelta: {x: 78, y: 78}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &1319428315911909299
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2743917130103833822}
+  m_CullTransparentMesh: 0
+--- !u!114 &2756559700348374788
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2743917130103833822}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 1, b: 0, a: 1}
+  m_RaycastTarget: 0
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 446f0191a416b8e46919084d2ca46b31, type: 3}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 0
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!114 &2532479517155010452
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2743917130103833822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97335b3d8af8d9141a331358af6c3300, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 0}
+  border: {fileID: 2756559700348374788}
+  fill: {fileID: 0}
+  image: {fileID: 0}
+  rawImage: {fileID: 0}
+  textBox: {fileID: 0}
+  visibleOnAwake: 0
+  flickersIn: 1
+  flickerInSpeed: 1
+  flickerCount: 4
+  flickerOutOnComplete: 1
+  tweensIn: 0
+  tweenDuration: 0
+  tutorialStartAnchor: {fileID: 0}
+  skipTutorialStartAnchor: {fileID: 0}
+  finishedAnchor: {fileID: 0}
+  interactableOnAwake: 0
 --- !u!1 &2774470749788565278
 GameObject:
   m_ObjectHideFlags: 0
@@ -3447,6 +3683,114 @@ MonoBehaviour:
   flickerInSpeed: 1
   flickerCount: 4
   flickerOutOnComplete: 1
+  tweensIn: 0
+  tweenDuration: 0
+  tutorialStartAnchor: {fileID: 0}
+  skipTutorialStartAnchor: {fileID: 0}
+  finishedAnchor: {fileID: 0}
+  interactableOnAwake: 0
+--- !u!1 &2779650089953974252
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1547652400589284258}
+  - component: {fileID: 2891380558790439955}
+  - component: {fileID: 5403245344541605709}
+  - component: {fileID: 5394457118809542479}
+  m_Layer: 5
+  m_Name: Shotgun Turret Highlight
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1547652400589284258
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2779650089953974252}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4528282982346513304}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 38.000008}
+  m_SizeDelta: {x: 78, y: 78}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &2891380558790439955
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2779650089953974252}
+  m_CullTransparentMesh: 0
+--- !u!114 &5403245344541605709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2779650089953974252}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 1, b: 0, a: 1}
+  m_RaycastTarget: 0
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 446f0191a416b8e46919084d2ca46b31, type: 3}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 0
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5394457118809542479
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2779650089953974252}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97335b3d8af8d9141a331358af6c3300, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 0}
+  border: {fileID: 5403245344541605709}
+  fill: {fileID: 0}
+  image: {fileID: 0}
+  rawImage: {fileID: 0}
+  textBox: {fileID: 0}
+  visibleOnAwake: 0
+  flickersIn: 1
+  flickerInSpeed: 1
+  flickerCount: 4
+  flickerOutOnComplete: 1
+  tweensIn: 0
+  tweenDuration: 0
+  tutorialStartAnchor: {fileID: 0}
+  skipTutorialStartAnchor: {fileID: 0}
+  finishedAnchor: {fileID: 0}
   interactableOnAwake: 0
 --- !u!1 &2962267615890149388
 GameObject:
@@ -3545,6 +3889,11 @@ MonoBehaviour:
   flickerInSpeed: 1
   flickerCount: 4
   flickerOutOnComplete: 1
+  tweensIn: 0
+  tweenDuration: 0
+  tutorialStartAnchor: {fileID: 0}
+  skipTutorialStartAnchor: {fileID: 0}
+  finishedAnchor: {fileID: 0}
   interactableOnAwake: 0
 --- !u!1 &2981128077904983316
 GameObject:
@@ -3692,6 +4041,42 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &3218895902817437539
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9140418158706306239}
+  m_Layer: 5
+  m_Name: Machine Gun Turret Anchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &9140418158706306239
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3218895902817437539}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4528282982575996859}
+  m_Father: {fileID: 4528282982005485690}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 300, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &3289787877130680793
 GameObject:
   m_ObjectHideFlags: 0
@@ -3897,6 +4282,42 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 0
   m_VerticalFit: 2
+--- !u!1 &3546847074146725781
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3291444241612269218}
+  m_Layer: 5
+  m_Name: Ice Drill Anchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &3291444241612269218
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3546847074146725781}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4528282980782118900}
+  m_Father: {fileID: 4528282982005485690}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -210, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &3663632094679797709
 GameObject:
   m_ObjectHideFlags: 0
@@ -4448,6 +4869,11 @@ MonoBehaviour:
   flickerInSpeed: 1
   flickerCount: 4
   flickerOutOnComplete: 1
+  tweensIn: 0
+  tweenDuration: 0
+  tutorialStartAnchor: {fileID: 0}
+  skipTutorialStartAnchor: {fileID: 0}
+  finishedAnchor: {fileID: 0}
   interactableOnAwake: 0
 --- !u!1 &4508745434454739129
 GameObject:
@@ -4737,7 +5163,7 @@ GameObject:
   - component: {fileID: 191879953628767242}
   - component: {fileID: 6550139056606552756}
   m_Layer: 5
-  m_Name: Boiler
+  m_Name: Boiler Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4759,12 +5185,12 @@ RectTransform:
   - {fileID: 7916720035788875412}
   - {fileID: 3991350352854182949}
   - {fileID: 3064092175062983941}
-  m_Father: {fileID: 4528282982005485690}
-  m_RootOrder: 3
+  m_Father: {fileID: 7115680562366086086}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -90, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 78, y: 78}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4528282980658916504
@@ -4979,6 +5405,11 @@ MonoBehaviour:
   flickerInSpeed: 0.5
   flickerCount: 0
   flickerOutOnComplete: 0
+  tweensIn: 1
+  tweenDuration: 0.5
+  tutorialStartAnchor: {fileID: 488501010506863426}
+  skipTutorialStartAnchor: {fileID: 3767412788552262536}
+  finishedAnchor: {fileID: 7115680562366086086}
   interactableOnAwake: 0
 --- !u!1 &4528282980772847866
 GameObject:
@@ -5070,7 +5501,7 @@ GameObject:
   - component: {fileID: 9139308172849391375}
   - component: {fileID: 6947550878621997391}
   m_Layer: 5
-  m_Name: IceDrill
+  m_Name: Ice Drill Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5092,12 +5523,12 @@ RectTransform:
   - {fileID: 3696664235160258073}
   - {fileID: 2283546817147885283}
   - {fileID: 1082864067683055733}
-  m_Father: {fileID: 4528282982005485690}
-  m_RootOrder: 2
+  m_Father: {fileID: 3291444241612269218}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -210, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 78, y: 78}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4528282980782118903
@@ -5313,6 +5744,11 @@ MonoBehaviour:
   flickerInSpeed: 0.5
   flickerCount: 0
   flickerOutOnComplete: 0
+  tweensIn: 1
+  tweenDuration: 0.5
+  tutorialStartAnchor: {fileID: 488501010506863426}
+  skipTutorialStartAnchor: {fileID: 3767412788552262536}
+  finishedAnchor: {fileID: 3291444241612269218}
   interactableOnAwake: 0
 --- !u!1 &4528282980806117135
 GameObject:
@@ -5779,7 +6215,7 @@ GameObject:
   - component: {fileID: 5393390950055720603}
   - component: {fileID: 6423223947723147842}
   m_Layer: 5
-  m_Name: FusionReactor
+  m_Name: Fusion Reactor Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5801,12 +6237,12 @@ RectTransform:
   - {fileID: 5317760498097868761}
   - {fileID: 7503690921027231870}
   - {fileID: 9068322137151257361}
-  m_Father: {fileID: 4528282982005485690}
-  m_RootOrder: 1
+  m_Father: {fileID: 6948860571769700972}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -300, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 78, y: 78}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4528282981065271664
@@ -6021,6 +6457,11 @@ MonoBehaviour:
   flickerInSpeed: 0.5
   flickerCount: 0
   flickerOutOnComplete: 0
+  tweensIn: 1
+  tweenDuration: 0.5
+  tutorialStartAnchor: {fileID: 488501010506863426}
+  skipTutorialStartAnchor: {fileID: 3767412788552262536}
+  finishedAnchor: {fileID: 6948860571769700972}
   interactableOnAwake: 0
 --- !u!1 &4528282981135839340
 GameObject:
@@ -6224,7 +6665,7 @@ GameObject:
   - component: {fileID: 2889783531340412160}
   - component: {fileID: 6568876604321424781}
   m_Layer: 5
-  m_Name: GreenHouse
+  m_Name: Greenhouse Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6246,8 +6687,8 @@ RectTransform:
   - {fileID: 6497852025624964608}
   - {fileID: 7624757569748065190}
   - {fileID: 5343349639558350978}
-  m_Father: {fileID: 4528282982005485690}
-  m_RootOrder: 4
+  m_Father: {fileID: 2586886005198298604}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -6467,6 +6908,11 @@ MonoBehaviour:
   flickerInSpeed: 0.5
   flickerCount: 0
   flickerOutOnComplete: 0
+  tweensIn: 1
+  tweenDuration: 0.5
+  tutorialStartAnchor: {fileID: 488501010506863426}
+  skipTutorialStartAnchor: {fileID: 3767412788552262536}
+  finishedAnchor: {fileID: 2586886005198298604}
   interactableOnAwake: 0
 --- !u!1 &4528282981196499383
 GameObject:
@@ -6543,6 +6989,11 @@ MonoBehaviour:
   flickerInSpeed: 2
   flickerCount: 2
   flickerOutOnComplete: 0
+  tweensIn: 0
+  tweenDuration: 0
+  tutorialStartAnchor: {fileID: 0}
+  skipTutorialStartAnchor: {fileID: 0}
+  finishedAnchor: {fileID: 0}
   interactableOnAwake: 0
 --- !u!1 &4528282981236161978
 GameObject:
@@ -6993,6 +7444,11 @@ MonoBehaviour:
   flickerInSpeed: 0.5
   flickerCount: 0
   flickerOutOnComplete: 0
+  tweensIn: 0
+  tweenDuration: 0
+  tutorialStartAnchor: {fileID: 0}
+  skipTutorialStartAnchor: {fileID: 0}
+  finishedAnchor: {fileID: 0}
   interactableOnAwake: 0
 --- !u!1 &4528282981436915138
 GameObject:
@@ -7487,6 +7943,11 @@ MonoBehaviour:
   flickerInSpeed: 0.5
   flickerCount: 0
   flickerOutOnComplete: 0
+  tweensIn: 0
+  tweenDuration: 0
+  tutorialStartAnchor: {fileID: 0}
+  skipTutorialStartAnchor: {fileID: 0}
+  finishedAnchor: {fileID: 0}
   interactableOnAwake: 0
 --- !u!1 &4528282981751309071
 GameObject:
@@ -7658,6 +8119,11 @@ MonoBehaviour:
   flickerInSpeed: 2
   flickerCount: 2
   flickerOutOnComplete: 0
+  tweensIn: 0
+  tweenDuration: 0
+  tutorialStartAnchor: {fileID: 0}
+  skipTutorialStartAnchor: {fileID: 0}
+  finishedAnchor: {fileID: 0}
   interactableOnAwake: 0
 --- !u!1 &4528282981967245736
 GameObject:
@@ -7787,6 +8253,11 @@ MonoBehaviour:
   flickerInSpeed: 0.5
   flickerCount: 0
   flickerOutOnComplete: 0
+  tweensIn: 0
+  tweenDuration: 0
+  tutorialStartAnchor: {fileID: 0}
+  skipTutorialStartAnchor: {fileID: 0}
+  finishedAnchor: {fileID: 0}
   interactableOnAwake: 0
 --- !u!1 &4528282982005485689
 GameObject:
@@ -7817,13 +8288,13 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4276295127332042982}
-  - {fileID: 4528282981065271660}
-  - {fileID: 4528282980782118900}
-  - {fileID: 4528282980658916500}
-  - {fileID: 4528282981183931572}
-  - {fileID: 4528282982050965519}
-  - {fileID: 4528282982346513304}
-  - {fileID: 4528282982575996859}
+  - {fileID: 6948860571769700972}
+  - {fileID: 3291444241612269218}
+  - {fileID: 7115680562366086086}
+  - {fileID: 2586886005198298604}
+  - {fileID: 3217570646940240497}
+  - {fileID: 7092774362534190538}
+  - {fileID: 9140418158706306239}
   m_Father: {fileID: 437762844162004883}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -7861,7 +8332,7 @@ GameObject:
   - component: {fileID: 3203137726954581347}
   - component: {fileID: 8126381566869788200}
   m_Layer: 5
-  m_Name: Incinerator
+  m_Name: Incinerator Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7883,12 +8354,12 @@ RectTransform:
   - {fileID: 5832468428779863659}
   - {fileID: 8510304989118044849}
   - {fileID: 4967231485759548433}
-  m_Father: {fileID: 4528282982005485690}
-  m_RootOrder: 5
+  m_Father: {fileID: 3217570646940240497}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 90, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 78, y: 78}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4528282982050965523
@@ -8103,6 +8574,11 @@ MonoBehaviour:
   flickerInSpeed: 0.5
   flickerCount: 0
   flickerOutOnComplete: 0
+  tweensIn: 1
+  tweenDuration: 0.5
+  tutorialStartAnchor: {fileID: 488501010506863426}
+  skipTutorialStartAnchor: {fileID: 3767412788552262536}
+  finishedAnchor: {fileID: 3217570646940240497}
   interactableOnAwake: 0
 --- !u!1 &4528282982072529219
 GameObject:
@@ -8267,7 +8743,7 @@ GameObject:
   - component: {fileID: 3476920369442892326}
   - component: {fileID: 5976878004857127873}
   m_Layer: 5
-  m_Name: ShogunTurret
+  m_Name: Shotgun Turret Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8288,12 +8764,13 @@ RectTransform:
   - {fileID: 4528282981037921722}
   - {fileID: 3772200448285976315}
   - {fileID: 6345081979526387266}
-  m_Father: {fileID: 4528282982005485690}
-  m_RootOrder: 6
+  - {fileID: 1547652400589284258}
+  m_Father: {fileID: 7092774362534190538}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 210, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 78, y: 78}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4528282982346513308
@@ -8508,6 +8985,11 @@ MonoBehaviour:
   flickerInSpeed: 0.5
   flickerCount: 0
   flickerOutOnComplete: 0
+  tweensIn: 1
+  tweenDuration: 0.5
+  tutorialStartAnchor: {fileID: 7082492700404330732}
+  skipTutorialStartAnchor: {fileID: 3767412788552262536}
+  finishedAnchor: {fileID: 7092774362534190538}
   interactableOnAwake: 0
 --- !u!1 &4528282982474148228
 GameObject:
@@ -8599,7 +9081,7 @@ GameObject:
   - component: {fileID: 5248215847985658801}
   - component: {fileID: 4249380639338491681}
   m_Layer: 5
-  m_Name: MachineGunTurret
+  m_Name: Machine Gun Turret Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8620,12 +9102,13 @@ RectTransform:
   - {fileID: 4528282980772847867}
   - {fileID: 1560795699714774101}
   - {fileID: 6989547609583830706}
-  m_Father: {fileID: 4528282982005485690}
-  m_RootOrder: 7
+  - {fileID: 6759608468573763876}
+  m_Father: {fileID: 9140418158706306239}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 300, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 78, y: 78}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4528282982575996863
@@ -8840,6 +9323,11 @@ MonoBehaviour:
   flickerInSpeed: 0.5
   flickerCount: 0
   flickerOutOnComplete: 0
+  tweensIn: 1
+  tweenDuration: 0.5
+  tutorialStartAnchor: {fileID: 7082492700404330732}
+  skipTutorialStartAnchor: {fileID: 3767412788552262536}
+  finishedAnchor: {fileID: 9140418158706306239}
   interactableOnAwake: 0
 --- !u!1 &4528282982590775340
 GameObject:
@@ -9313,6 +9801,42 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 0
   m_VerticalFit: 2
+--- !u!1 &5090919146813309128
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2586886005198298604}
+  m_Layer: 5
+  m_Name: Greenhouse Anchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2586886005198298604
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5090919146813309128}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4528282981183931572}
+  m_Father: {fileID: 4528282982005485690}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &5634279322722868805
 GameObject:
   m_ObjectHideFlags: 0
@@ -9650,6 +10174,42 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &6056580234061929835
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3217570646940240497}
+  m_Layer: 5
+  m_Name: Incinerator Anchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &3217570646940240497
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6056580234061929835}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4528282982050965519}
+  m_Father: {fileID: 4528282982005485690}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 90, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &6106152842301644204
 GameObject:
   m_ObjectHideFlags: 0
@@ -10921,6 +11481,11 @@ MonoBehaviour:
   flickerInSpeed: 1
   flickerCount: 4
   flickerOutOnComplete: 1
+  tweensIn: 0
+  tweenDuration: 0
+  tutorialStartAnchor: {fileID: 0}
+  skipTutorialStartAnchor: {fileID: 0}
+  finishedAnchor: {fileID: 0}
   interactableOnAwake: 0
 --- !u!1 &8460550060133514048
 GameObject:
@@ -11019,6 +11584,11 @@ MonoBehaviour:
   flickerInSpeed: 1
   flickerCount: 4
   flickerOutOnComplete: 1
+  tweensIn: 0
+  tweenDuration: 0
+  tutorialStartAnchor: {fileID: 0}
+  skipTutorialStartAnchor: {fileID: 0}
+  finishedAnchor: {fileID: 0}
   interactableOnAwake: 0
 --- !u!1 &8464238376523888194
 GameObject:
@@ -11537,6 +12107,11 @@ MonoBehaviour:
   flickerInSpeed: 1
   flickerCount: 4
   flickerOutOnComplete: 1
+  tweensIn: 0
+  tweenDuration: 0
+  tutorialStartAnchor: {fileID: 0}
+  skipTutorialStartAnchor: {fileID: 0}
+  finishedAnchor: {fileID: 0}
   interactableOnAwake: 0
 --- !u!1 &8743136946682179662
 GameObject:
@@ -11635,6 +12210,11 @@ MonoBehaviour:
   flickerInSpeed: 1
   flickerCount: 4
   flickerOutOnComplete: 1
+  tweensIn: 0
+  tweenDuration: 0
+  tutorialStartAnchor: {fileID: 0}
+  skipTutorialStartAnchor: {fileID: 0}
+  finishedAnchor: {fileID: 0}
   interactableOnAwake: 0
 --- !u!1 &8948498784268079996
 GameObject:
@@ -11733,6 +12313,11 @@ MonoBehaviour:
   flickerInSpeed: 1
   flickerCount: 4
   flickerOutOnComplete: 1
+  tweensIn: 0
+  tweenDuration: 0
+  tutorialStartAnchor: {fileID: 0}
+  skipTutorialStartAnchor: {fileID: 0}
+  finishedAnchor: {fileID: 0}
   interactableOnAwake: 0
 --- !u!1 &8991409991600488117
 GameObject:
@@ -11831,6 +12416,11 @@ MonoBehaviour:
   flickerInSpeed: 1
   flickerCount: 4
   flickerOutOnComplete: 1
+  tweensIn: 0
+  tweenDuration: 0
+  tutorialStartAnchor: {fileID: 0}
+  skipTutorialStartAnchor: {fileID: 0}
+  finishedAnchor: {fileID: 0}
   interactableOnAwake: 0
 --- !u!1 &9114200132526626308
 GameObject:
@@ -12039,6 +12629,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: adf3464973acc184c946d90c2b49c1b1, type: 3}
+--- !u!114 &3863062295736060388 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4081969117853759321, guid: adf3464973acc184c946d90c2b49c1b1,
+    type: 3}
+  m_PrefabInstance: {fileID: 953157807707012797}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1329989833404019359}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &2647383470585378577 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2992411899632503212, guid: adf3464973acc184c946d90c2b49c1b1,
@@ -12063,15 +12665,3 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 953157807707012797}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &3863062295736060388 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4081969117853759321, guid: adf3464973acc184c946d90c2b49c1b1,
-    type: 3}
-  m_PrefabInstance: {fileID: 953157807707012797}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1329989833404019359}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

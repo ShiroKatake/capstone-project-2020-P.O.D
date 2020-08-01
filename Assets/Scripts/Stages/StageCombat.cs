@@ -14,6 +14,8 @@ public class StageCombat : Stage
     
     [SerializeField] private UIElementStatusController shotgunTurret;
     [SerializeField] private UIElementStatusController machineGunTurret;
+    [SerializeField] private UIElementStatusController shotgunTurretHighlight;
+    [SerializeField] private UIElementStatusController machineGunTurretHighlight;
     [SerializeField] private UIElementStatusController turretsHighlight;
 
     //Non-Serialized Fields------------------------------------------------------------------------
@@ -119,7 +121,9 @@ public class StageCombat : Stage
         machineGunTurret.Visible = true;
         shotgunTurret.Interactable = true;
         machineGunTurret.Interactable = true;
-        turretsHighlight.Visible = true;
+        shotgunTurretHighlight.Visible = true;
+        machineGunTurretHighlight.Visible = true;
+        //turretsHighlight.Visible = true;
 
         while (!BuildingController.Instance.HasBuiltBuilding(EBuilding.ShortRangeTurret) || !BuildingController.Instance.HasBuiltBuilding(EBuilding.LongRangeTurret))
         {

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -20,20 +21,22 @@ public class UIElementStatusController : MonoBehaviour
 
     [Header("Visibility Stats")]
     [SerializeField] private bool visibleOnAwake;
+
+    [Header("Fading / Flickering Stats")]
     [SerializeField] private bool flickersIn;
     [SerializeField] private float flickerInSpeed;
     [SerializeField] private int flickerCount;
     [SerializeField] private bool flickerOutOnComplete;
 
+    [Header("Tweening Stats")]
+    [SerializeField] private bool tweensIn;
+    [SerializeField] private float tweenDuration;
+    [SerializeField] private RectTransform tutorialStartAnchor;
+    [SerializeField] private RectTransform skipTutorialStartAnchor;
+    [SerializeField] private RectTransform finishedAnchor;
+
     [Header("Interactability")]
     [SerializeField] private bool interactableOnAwake;
-
-    //[Header("Interactability Requirements - Resources")]
-    //[SerializeField] private bool requiresResources;
-    //[SerializeField] private int requiredOre;
-    //[SerializeField] private int requiredPower;
-    //[SerializeField] private int requiredWater;
-    //[SerializeField] private int requiredWaste;
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
@@ -48,6 +51,9 @@ public class UIElementStatusController : MonoBehaviour
     private bool finishedFlickeringIn;
 
     private List<Graphic> graphics;
+
+    private RectTransform rectTransform;
+    //private Vector2 startPos;
 
     //Public Properties------------------------------------------------------------------------------------------------------------
 
@@ -204,6 +210,9 @@ public class UIElementStatusController : MonoBehaviour
     /// </summary>
     private void Awake()
     {
+        rectTransform = GetComponent<RectTransform>();
+        //startPos = rectTransform.position;
+
         if (button != null)
         {
             interactable = interactableOnAwake;
@@ -268,18 +277,6 @@ public class UIElementStatusController : MonoBehaviour
         }
     }
 
-    ///// <summary>
-    ///// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
-    ///// Start() runs after Awake().
-    ///// </summary>
-    //private void Start()
-    //{
-    //    if (button != null && requiresResources)
-    //    {
-    //        StartCoroutine(CheckInteractable());
-    //    }
-    //}
-
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
@@ -294,6 +291,12 @@ public class UIElementStatusController : MonoBehaviour
         bool imageFinished = (image == null);
         bool rawImageFinished = (rawImage == null);
         bool textBoxFinished = (textBox == null);
+
+        if (tweensIn)
+        {
+            rectTransform.parent = (StageManager.Instance.SkipTutorial ? skipTutorialStartAnchor : tutorialStartAnchor);
+            rectTransform.localPosition = Vector2.zero;
+        }
 
         yield return null;
 
@@ -351,6 +354,11 @@ public class UIElementStatusController : MonoBehaviour
         }
         while (!borderFinished || !fillFinished || !imageFinished || !rawImageFinished || !textBoxFinished);
 
+        if (tweensIn)
+        {
+            yield return StartCoroutine(TweenIn());
+        }
+
         borderFinished = (border == null);
         fillFinished = (fill == null);
         imageFinished = (image == null);
@@ -400,23 +408,23 @@ public class UIElementStatusController : MonoBehaviour
         }
     }
 
-    ///// <summary>
-    ///// Checks if the button should be interactable.
-    ///// </summary>
-    //private IEnumerator CheckInteractable()
-    //{
-    //    while (true)
-    //    {
-    //        button.interactable = interactable && (!requiresResources ||
-    //                (
-    //                       requiredOre <= ResourceController.Instance.Ore
-    //                    && requiredPower <= ResourceController.Instance.SurplusPower
-    //                    && requiredWaste <= ResourceController.Instance.SurplusWaste
-    //                    && requiredWater <= ResourceController.Instance.SurplusWater
-    //                )
-    //            );
+    /// <summary>
+    /// Tweens the UI element from the chosen anchor position back to its normal position.
+    /// </summary>
+    private IEnumerator TweenIn()
+    {
+        bool tweening = true;
+        rectTransform.parent = finishedAnchor;
 
-    //        yield return null;
-    //    }
-    //}
+        rectTransform.DOAnchorPos(Vector2.zero, tweenDuration).SetEase(Ease.InBack).SetUpdate(true).OnComplete(
+                delegate
+                {
+                    tweening = false;
+                });
+
+        while (tweening)
+        {
+            yield return null;
+        }
+    }
 }
