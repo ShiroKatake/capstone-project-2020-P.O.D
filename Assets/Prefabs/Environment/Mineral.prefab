@@ -85,7 +85,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5310840099434856588}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0.5}
+  m_LocalPosition: {x: 0, y: 0.7, z: 0.5}
   m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_Children: []
   m_Father: {fileID: 5136758428388025279}
@@ -151,9 +151,10 @@ GameObject:
   m_Component:
   - component: {fileID: 5136758428388025279}
   - component: {fileID: 2181151351687923271}
-  - component: {fileID: 6920960518473543034}
-  - component: {fileID: 7797008365469057430}
   - component: {fileID: 2033458020145386998}
+  - component: {fileID: 7797008365469057430}
+  - component: {fileID: 6920960518473543034}
+  - component: {fileID: 8257607867930290455}
   m_Layer: 9
   m_Name: Mineral
   m_TagString: Planet
@@ -191,7 +192,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.69420445, y: 0.6004691, z: 0.57503366}
   m_Center: {x: -0.15289778, y: 0.31523252, z: 0.14442825}
---- !u!114 &6920960518473543034
+--- !u!114 &2033458020145386998
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -200,13 +201,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 7795659470375798990}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a453fd883c91b9a4590f866d99bccec5, type: 3}
+  m_Script: {fileID: 11500000, guid: ff4b731bcf6e0b44db2de812be8a741e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  placed: 0
-  oreSpawnRate: 0.75
-  oreCurveRadius: 2
-  miningPoint: {fileID: 1105329115834965487}
+  objectRenderer: {fileID: 8438082130433333286}
 --- !u!114 &7797008365469057430
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -235,7 +233,7 @@ MonoBehaviour:
 
     Hold left click
     to mine'
---- !u!114 &2033458020145386998
+--- !u!114 &6920960518473543034
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -244,10 +242,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 7795659470375798990}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff4b731bcf6e0b44db2de812be8a741e, type: 3}
+  m_Script: {fileID: 11500000, guid: a453fd883c91b9a4590f866d99bccec5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectRenderer: {fileID: 8438082130433333286}
+  placed: 0
+  oreSpawnRate: 0.75
+  oreCurveRadius: 2
+  miningPoint: {fileID: 1105329115834965487}
+--- !u!114 &8257607867930290455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7795659470375798990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b30d5185928fec48add2dba5ae890e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  name: Mineral
+  executing: 1
 --- !u!1001 &2163748618175100403
 PrefabInstance:
   m_ObjectHideFlags: 0
