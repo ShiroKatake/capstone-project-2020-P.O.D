@@ -5,6 +5,9 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Controls the status (visibile, interactable, fading in/out, tweening) of a UI element and its component pieces.
+/// </summary>
 public class UIElementStatusController : MonoBehaviour
 {
     //Fields-----------------------------------------------------------------------------------------------------------------------------------------
@@ -33,8 +36,6 @@ public class UIElementStatusController : MonoBehaviour
     [SerializeField] private float tweenDuration;
     [SerializeField] private TweenAnchorManager tutorialAnchorManager;
     [SerializeField] private TweenAnchorManager skipTutorialAnchorManager;
-    //[SerializeField] private RectTransform tutorialStartAnchor;
-    //[SerializeField] private RectTransform skipTutorialStartAnchor;
     [SerializeField] private RectTransform finishedAnchor;
 
     [Header("Interactability")]
@@ -286,7 +287,6 @@ public class UIElementStatusController : MonoBehaviour
     /// </summary>
     private IEnumerator FlickerIn()
     {
-        //Debug.Log($"{this} has started flickering in");
         int flickers = 0;
         bool borderFinished = (border == null);
         bool fillFinished = (fill == null);
@@ -330,7 +330,6 @@ public class UIElementStatusController : MonoBehaviour
                 if (!imageFinished) { imageFinished = UpdateOpacityOfGraphic(image, true, 1, 0.67f * finalImageOpacity); } 
                 if (!rawImageFinished) { rawImageFinished = UpdateOpacityOfGraphic(rawImage, true, 1, 0.67f * finalRawImageOpacity); } 
                 if (!textBoxFinished) { textBoxFinished = UpdateOpacityOfGraphic(textBox, true, 1, 0.67f * finalTextOpacity); }
-                //Debug.Log($"Incrementing {this}.image.color.a, alpha is {image.color.a}, finished incrementing up to {0.67f * finalOpacity} is {image.color.a >= 0.67f * finalOpacity}");
             }
             while (!borderFinished || !fillFinished || !imageFinished || !rawImageFinished || !textBoxFinished);
 
@@ -348,8 +347,6 @@ public class UIElementStatusController : MonoBehaviour
                 if (!imageFinished) { imageFinished = UpdateOpacityOfGraphic(image, false, 1, 0); }
                 if (!rawImageFinished) { rawImageFinished = UpdateOpacityOfGraphic(rawImage, false, 1, 0); }
                 if (!textBoxFinished) { textBoxFinished = UpdateOpacityOfGraphic(textBox, false, 1, 0); }
-
-                //Debug.Log($"Decrementing {this}.image.color.a, alpha is {image.color.a}, finished decrementing to 0 is {image.color.a <= 0}");
             }
             while (!borderFinished || !fillFinished || !imageFinished || !rawImageFinished || !textBoxFinished);
 
@@ -370,7 +367,6 @@ public class UIElementStatusController : MonoBehaviour
             if (!imageFinished) { imageFinished = UpdateOpacityOfGraphic(image, true, 1.25f, finalImageOpacity); } 
             if (!rawImageFinished) { rawImageFinished = UpdateOpacityOfGraphic(rawImage, true, 1.25f, finalRawImageOpacity); } 
             if (!textBoxFinished) { textBoxFinished = UpdateOpacityOfGraphic(textBox, true, 1.25f, finalTextOpacity); }
-            //Debug.Log($"Incrementing {this}.image.color.a, alpha is {image.color.a}, finished incrementing up to {finalOpacity} is {image.color.a >= finalOpacity}");
         }
         while (!borderFinished || !fillFinished || !imageFinished || !rawImageFinished || !textBoxFinished);
 
@@ -395,7 +391,6 @@ public class UIElementStatusController : MonoBehaviour
                 if (!imageFinished) { imageFinished = UpdateOpacityOfGraphic(image, false, 1.25f, 0); }
                 if (!rawImageFinished) { rawImageFinished = UpdateOpacityOfGraphic(rawImage, false, 1.25f, 0); }
                 if (!textBoxFinished) { textBoxFinished = UpdateOpacityOfGraphic(textBox, false, 1.25f, 0); }
-                //Debug.Log($"Decrementing {this}.image.color.a, alpha is {image.color.a}, finished decrementing down to {0} is {image.color.a <= 0}");
             }
             while (!borderFinished || !fillFinished || !imageFinished || !rawImageFinished || !textBoxFinished);
         }
