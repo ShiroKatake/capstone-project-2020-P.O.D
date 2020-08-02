@@ -31,8 +31,10 @@ public class UIElementStatusController : MonoBehaviour
     [Header("Tweening Stats")]
     [SerializeField] private bool tweensIn;
     [SerializeField] private float tweenDuration;
-    [SerializeField] private RectTransform tutorialStartAnchor;
-    [SerializeField] private RectTransform skipTutorialStartAnchor;
+    [SerializeField] private TweenAnchorManager tutorialAnchorManager;
+    [SerializeField] private TweenAnchorManager skipTutorialAnchorManager;
+    //[SerializeField] private RectTransform tutorialStartAnchor;
+    //[SerializeField] private RectTransform skipTutorialStartAnchor;
     [SerializeField] private RectTransform finishedAnchor;
 
     [Header("Interactability")]
@@ -53,7 +55,8 @@ public class UIElementStatusController : MonoBehaviour
     private List<Graphic> graphics;
 
     private RectTransform rectTransform;
-    //private Vector2 startPos;
+    private TweenAnchorManager tweenAnchorManager;
+    private AnchorSet tweenAnchorSet;
 
     //Public Properties------------------------------------------------------------------------------------------------------------
 
@@ -211,7 +214,6 @@ public class UIElementStatusController : MonoBehaviour
     private void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
-        //startPos = rectTransform.position;
 
         if (button != null)
         {
@@ -294,8 +296,26 @@ public class UIElementStatusController : MonoBehaviour
 
         if (tweensIn)
         {
-            rectTransform.parent = (StageManager.Instance.SkipTutorial ? skipTutorialStartAnchor : tutorialStartAnchor);
-            rectTransform.localPosition = Vector2.zero;
+            tweenAnchorManager = (StageManager.Instance.SkipTutorial ? skipTutorialAnchorManager : tutorialAnchorManager);
+
+            if (tweenAnchorManager == null)
+            {
+                tweensIn = false;
+            }
+            else
+            {
+                tweenAnchorSet = tweenAnchorManager.RegisterButton(rectTransform);
+
+                if (tweenAnchorSet != null)
+                {
+                    rectTransform.parent = tweenAnchorSet.anchor;
+                    rectTransform.localPosition = Vector2.zero;
+                }
+                else
+                {
+                    Debug.LogError($"{this} needs a not null tween start anchor.");
+                }
+            }
         }
 
         yield return null;
@@ -413,8 +433,14 @@ public class UIElementStatusController : MonoBehaviour
     /// </summary>
     private IEnumerator TweenIn()
     {
+        while (tweenAnchorManager.SlideAnchors && tweenAnchorSet.anchor.localPosition != tweenAnchorSet.targetLocalPosition)
+        {
+            yield return null;
+        }
+
         bool tweening = true;
         rectTransform.parent = finishedAnchor;
+        tweenAnchorManager.DeRegisterButton(rectTransform);
 
         rectTransform.DOAnchorPos(Vector2.zero, tweenDuration).SetEase(Ease.InBack).SetUpdate(true).OnComplete(
                 delegate

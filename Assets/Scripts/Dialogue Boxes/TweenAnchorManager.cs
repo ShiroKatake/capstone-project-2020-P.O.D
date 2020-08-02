@@ -23,14 +23,24 @@ public class TweenAnchorManager : MonoBehaviour
 
     [Tooltip("The rect transforms that building buttons should child themselves to. If they're sliding anchors, make sure to order them in the list the same as their order in the scene.")]
     [SerializeField] private List<RectTransform> anchors;
-    [Tooltip("When an anchor is vacated, should the others slide in to fill it's spot")]
+    [Tooltip("When an anchor is vacated, should the others slide in to fill its spot?")]
     [SerializeField] private bool slideAnchors;
+    [Tooltip("How fast should anchors slide towards their target position?")]
     [SerializeField] private float slideSpeed;
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
     private List<AnchorSet> anchorSets;
     private int index;
+
+    //Public Properties------------------------------------------------------------------------------------------------------------------------------
+
+    //Basic Public Properties----------------------------------------------------------------------
+
+    /// <summary>
+    /// When an anchor is vacated, should the others slide in to fill its spot?
+    /// </summary>
+    public bool SlideAnchors { get => slideAnchors; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -58,12 +68,23 @@ public class TweenAnchorManager : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        foreach (AnchorSet a in anchorSets)
+        if (slideAnchors)
         {
-            if (a.anchor.localPosition != a.targetLocalPosition)
+            //bool moved = false;
+
+            foreach (AnchorSet a in anchorSets)
             {
-                a.anchor.localPosition = Vector3.MoveTowards(a.anchor.localPosition, a.targetLocalPosition, slideSpeed * Time.deltaTime);
+                if (a.anchor.localPosition != a.targetLocalPosition)
+                {
+                    a.anchor.localPosition = Vector3.MoveTowards(a.anchor.localPosition, a.targetLocalPosition, slideSpeed * Time.deltaTime);
+                    //moved = true;
+                }
             }
+
+            //if (!moved)
+            //{
+            //    UpdateAnchorOrder(0);
+            //}
         }
     }
 
@@ -72,18 +93,21 @@ public class TweenAnchorManager : MonoBehaviour
     /// <summary>
     /// Register a building button and have it paired with an anchor.
     /// </summary>
-    /// <param name="button">The RectTransform component of the button being registered.</param>
-    public void RegisterButton(RectTransform button)
+    /// <param name="button">The anchor set of the button being registered.</param>
+    public AnchorSet RegisterButton(RectTransform button)
     {
         if (index < anchorSets.Count)
         {
             anchorSets[index].button = button;
             index++;
+            return anchorSets[index - 1];
         }
         else
         {
             Debug.Log($"{this}.RegisterButton() cannot execute because it does not have any unassigned anchors remaining to assign button {button} to.");
         }
+
+        return null;
     }
 
     /// <summary>
@@ -101,20 +125,7 @@ public class TweenAnchorManager : MonoBehaviour
 
                 if (slideAnchors)
                 {
-                    //Slide anchors' target positions to the next in line
-                    Vector2 lastPos = anchorSets[anchorSets.Count - 1].targetLocalPosition;
-
-                    for (int j = anchorSets.Count - 1; j > i; j--)
-                    {                        
-                        anchorSets[j].targetLocalPosition = anchorSets[j - 1].targetLocalPosition;
-                    }
-
-                    //Put deregistered anchor set at the back of the list
-                    AnchorSet a = anchorSets[i];
-                    anchorSets.RemoveAt(i);
-                    a.targetLocalPosition = lastPos;
-                    a.anchor.localPosition = a.targetLocalPosition;
-                    anchorSets.Add(a);
+                    UpdateAnchorOrder(i);
 
                     //Check if any anchors have buttons
                     foreach (AnchorSet set in anchorSets)
@@ -136,5 +147,27 @@ public class TweenAnchorManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// Move the just de-registered anchor to the back of the list, and those that were behind it forwards.
+    /// </summary>
+    /// <param name="i">The index of the anchor that just got de-registered.</param>
+    private void UpdateAnchorOrder(int i)
+    {
+        //Slide anchors' target positions to the next in line
+        Vector2 lastPos = anchorSets[anchorSets.Count - 1].targetLocalPosition;
+
+        for (int j = anchorSets.Count - 1; j > i; j--)
+        {
+            anchorSets[j].targetLocalPosition = anchorSets[j - 1].targetLocalPosition;
+        }
+
+        //Put deregistered anchor set at the back of the list
+        AnchorSet a = anchorSets[i];
+        anchorSets.RemoveAt(i);
+        a.targetLocalPosition = lastPos;
+        a.anchor.localPosition = a.targetLocalPosition;
+        anchorSets.Add(a);
     }
 }
