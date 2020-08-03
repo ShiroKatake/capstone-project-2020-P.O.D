@@ -117,7 +117,7 @@ public class TurretShooting : CollisionListener, IMessenger
                 break;
             case 1:
                 //Get only visible target
-                if (target != visibleTargets[0])
+                if (target != visibleTargets[0] && !visibleTargets[0].Health.IsDead())
                 {
                     target = visibleTargets[0];
                 }
@@ -139,7 +139,7 @@ public class TurretShooting : CollisionListener, IMessenger
                     {
                         distance = Vector3.Distance(transform.position, a.transform.position);
 
-                        if (bestTarget == null || distance < bestDistance)
+                        if ((bestTarget == null || distance < bestDistance) && !a.Health.IsDead())
                         {
                             bestTarget = a;
                             bestDistance = distance;
@@ -156,7 +156,7 @@ public class TurretShooting : CollisionListener, IMessenger
                     {
                         distance = Vector3.Distance(transform.position, a.transform.position);
 
-                        if (bestTarget == null || distance > bestDistance)
+                        if ((bestTarget == null || distance > bestDistance) && !a.Health.IsDead())
                         {
                             bestTarget = a;
                             bestDistance = distance;
@@ -178,7 +178,7 @@ public class TurretShooting : CollisionListener, IMessenger
     /// </summary>
     private void Shoot()
     {
-        if (/*shoot || (*/target != null && Time.time - timeOfLastShot > shotCooldown)//)
+        if (/*shoot || (*/target != null && Time.time - timeOfLastShot > shotCooldown && !target.Health.IsDead())//)
         {
             //shoot = false;
             timeOfLastShot = Time.time;

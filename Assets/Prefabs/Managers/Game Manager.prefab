@@ -109,14 +109,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b339f3ae52348242844769182c55c03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  respawnDelay: 30
+  waveDelay: 0
+  swarmDelay: 0
   maxSwarmRadius: 5
   maxSwarmCount: 4
   maxSwarmSize: 2
+  alienMultiplier: 3
   defencePenaltyThreshold: 300
   nonDefencePenaltyThreshold: 300
-  penaltyIncrement: 3
   penaltyCooldown: 90
+  penaltyIncrement: 3
+  timeOfLastPenalty: 0
   spawningFrameTimeLimit: 5
   spawnAliens: 1
   spawnAlienNow: 0
@@ -149,7 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c726ccb10547304cb13fd02b274303e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cycleDuration: 240
+  cycleDuration: 360
   clockTimer: {fileID: 0}
   day: {r: 0.5882353, g: 0.95686275, b: 1, a: 1}
   night: {r: 0.019607844, g: 0, b: 0.3764706, a: 1}
@@ -172,7 +175,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  winAmount: 500
+  winAmount: 800
   terraformers: []
   AtmosphereVal: 0
   HumidityVal: 0
