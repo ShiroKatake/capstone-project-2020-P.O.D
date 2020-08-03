@@ -36,7 +36,6 @@ public class MachineGunTurretAiming : TurretAiming
     /// </summary>
     public override void Reset()
     {
-        //Debug.Log("MachineGunTurretAiming.Reset()");
         base.Reset();
         armColliderPivot.localRotation = Quaternion.Euler(rotationColliderOffset);
         armModelPivot.localRotation = Quaternion.Euler(rotationColliderOffset + rotationModelCounterOffset);
@@ -74,8 +73,6 @@ public class MachineGunTurretAiming : TurretAiming
         //Setup
         rotationTargeter.LookAt(shooter.Target.transform.position + crawlerPositionOffset);
         elevationTargeter.LookAt(shooter.Target.transform.position + crawlerPositionOffset);
-        //rotationTargeter.LookAt(target.position);
-        //elevationTargeter.LookAt(target.position);
         float rawRotation = rotationTargeter.rotation.eulerAngles.y;
         float rawElevation = elevationTargeter.rotation.eulerAngles.x + elevationColliderOffset.z;
 
@@ -96,39 +93,36 @@ public class MachineGunTurretAiming : TurretAiming
     protected override void Aim()
     {
         //Turret rotation on turret base's local horizontal axis. All other local values remain static.
-        //if (currentTurretRotation != targetTurretRotation)
-        if (true)
-        {
-            float deltaAngle = Mathf.DeltaAngle(currentTurretRotation, targetTurretRotation);
-            float rotationDirection = MathUtility.Instance.Sign(deltaAngle);
-            deltaAngle = MathUtility.Instance.FloatMagnitude(deltaAngle);
-            float fixedUpdateRotation = rotationSpeed * Time.fixedDeltaTime;
+        //if (currentTurretRotation != targetTurretRotation)  //Left here in comments in case we want to put it back into usage for optimisation purposes.
+        //{
+        float deltaRotation = Mathf.DeltaAngle(currentTurretRotation, targetTurretRotation);
+        float rotationDirection = MathUtility.Instance.Sign(deltaRotation);
+        deltaRotation = MathUtility.Instance.FloatMagnitude(deltaRotation);
+        float fixedUpdateRotation = rotationSpeed * Time.fixedDeltaTime;
 
-            currentTurretRotation += rotationDirection * Mathf.Min(deltaAngle, fixedUpdateRotation);
-            currentTurretRotation = MathUtility.Instance.NormaliseAngle(currentTurretRotation);
-            armColliderPivot.localRotation = Quaternion.Euler(rotationColliderOffset.x + currentTurretRotation, rotationColliderOffset.y, rotationColliderOffset.z);
-            armModelPivot.localRotation = Quaternion.Euler(
-                currentTurretRotation + rotationColliderOffset.x + rotationModelCounterOffset.x,
-                rotationColliderOffset.y + rotationModelCounterOffset.y,
-                rotationColliderOffset.z + rotationModelCounterOffset.z);
-        }
+        currentTurretRotation += rotationDirection * Mathf.Min(deltaRotation, fixedUpdateRotation);
+        currentTurretRotation = MathUtility.Instance.NormaliseAngle(currentTurretRotation);
+        armColliderPivot.localRotation = Quaternion.Euler(rotationColliderOffset.x + currentTurretRotation, rotationColliderOffset.y, rotationColliderOffset.z);
+        armModelPivot.localRotation = Quaternion.Euler(
+            currentTurretRotation + rotationColliderOffset.x + rotationModelCounterOffset.x,
+            rotationColliderOffset.y + rotationModelCounterOffset.y,
+            rotationColliderOffset.z + rotationModelCounterOffset.z);
+        //}
 
         //Barrel pivoting on barrel pivot's local vertical axis. All other local values remain static.
-        //if (currentBarrelElevation != targetBarrelElevation)
-        if (true)
-        {
-            float deltaAngle = Mathf.DeltaAngle(currentBarrelElevation, targetBarrelElevation);
-            float pivotDirection = MathUtility.Instance.Sign(deltaAngle);
-            deltaAngle = MathUtility.Instance.FloatMagnitude(deltaAngle);
-            float fixedUpdatePivot = elevationSpeed * Time.fixedDeltaTime;
+        //if (currentBarrelElevation != targetBarrelElevation)  //Left here in comments in case we want to put it back into usage for optimisation purposes.
+        //{
+        float deltaElevation = Mathf.DeltaAngle(currentBarrelElevation, targetBarrelElevation);
+        float elevationDirection = MathUtility.Instance.Sign(deltaElevation);
+        deltaElevation = MathUtility.Instance.FloatMagnitude(deltaElevation);
+        float fixedUpdateElevation = elevationSpeed * Time.fixedDeltaTime;
 
-            currentBarrelElevation += pivotDirection * Mathf.Min(deltaAngle, fixedUpdatePivot);
-            //barrelColliderPivot.localRotation = Quaternion.Euler(elevationColliderOffset.x, elevationColliderOffset.z, - elevationColliderOffset.y - currentBarrelElevation);
-            barrelColliderPivot.localRotation = Quaternion.Euler(elevationColliderOffset.x, elevationColliderOffset.y + currentBarrelElevation, elevationColliderOffset.z);
-            barrelModelPivot.localRotation = Quaternion.Euler(
-                elevationColliderOffset.x + elevationModelCounterOffset.x,
-                elevationColliderOffset.y + elevationModelCounterOffset.y + currentBarrelElevation,
-                elevationColliderOffset.z + elevationModelCounterOffset.z);
-        }
+        currentBarrelElevation += elevationDirection * Mathf.Min(deltaElevation, fixedUpdateElevation);
+        barrelColliderPivot.localRotation = Quaternion.Euler(elevationColliderOffset.x, elevationColliderOffset.y + currentBarrelElevation, elevationColliderOffset.z);
+        barrelModelPivot.localRotation = Quaternion.Euler(
+            elevationColliderOffset.x + elevationModelCounterOffset.x,
+            elevationColliderOffset.y + elevationModelCounterOffset.y + currentBarrelElevation,
+            elevationColliderOffset.z + elevationModelCounterOffset.z);
+        //}
     }
 }

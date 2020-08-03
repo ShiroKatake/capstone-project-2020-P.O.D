@@ -42,10 +42,6 @@ public class Building : CollisionListener
 
     [Header("Building")]
     [SerializeField] private float buildTime;
-    [SerializeField] private float buildStartHeight;
-    [SerializeField] private float boingInterval;
-    [SerializeField] private float smallBoingMultiplier;
-    [SerializeField] private float largeBoingMultiplier;
 
     [Header("Offsets of Cliff Detection Raycasts from Position")]
     [SerializeField] private List<Vector3> cliffRaycastOffsets;

@@ -1750,6 +1750,12 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!108 &1580090399 stripped
+Light:
+  m_CorrespondingSourceObject: {fileID: 5630249266004542495, guid: 172bd19aa70452548bcdbc2cfdc6614a,
+    type: 3}
+  m_PrefabInstance: {fileID: 2858349196187435951}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1611698422
 GameObject:
   m_ObjectHideFlags: 0
@@ -2577,6 +2583,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1204471631436493623, guid: 172bd19aa70452548bcdbc2cfdc6614a,
+        type: 3}
+      propertyPath: m_Name
+      value: Mineral (54.8025, 0.0003, 179.0325)
+      objectReference: {fileID: 0}
     - target: {fileID: 5630249265997957760, guid: 172bd19aa70452548bcdbc2cfdc6614a,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2989,6 +3000,11 @@ PrefabInstance:
       propertyPath: sunContainer
       value: 
       objectReference: {fileID: 125290598}
+    - target: {fileID: 5301063456322420980, guid: 9d619d0761b687e479a1231dab8ebf39,
+        type: 3}
+      propertyPath: sunLightSource
+      value: 
+      objectReference: {fileID: 1580090399}
     - target: {fileID: 6577456260396280552, guid: 9d619d0761b687e479a1231dab8ebf39,
         type: 3}
       propertyPath: cryoEgg
