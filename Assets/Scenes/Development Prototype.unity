@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -2537,41 +2537,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 678855468602654218, guid: 172bd19aa70452548bcdbc2cfdc6614a,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 678855469377132918, guid: 172bd19aa70452548bcdbc2cfdc6614a,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.103
-      objectReference: {fileID: 0}
-    - target: {fileID: 678855469854003774, guid: 172bd19aa70452548bcdbc2cfdc6614a,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1089656254458211382, guid: 172bd19aa70452548bcdbc2cfdc6614a,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1540003238353953824, guid: 172bd19aa70452548bcdbc2cfdc6614a,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1567629856518320219, guid: 172bd19aa70452548bcdbc2cfdc6614a,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4548085817571365472, guid: 172bd19aa70452548bcdbc2cfdc6614a,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5630249265997957760, guid: 172bd19aa70452548bcdbc2cfdc6614a,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2631,26 +2596,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Map
-      objectReference: {fileID: 0}
-    - target: {fileID: 6981577642743196702, guid: 172bd19aa70452548bcdbc2cfdc6614a,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.100300014
-      objectReference: {fileID: 0}
-    - target: {fileID: 7736719452914034910, guid: 172bd19aa70452548bcdbc2cfdc6614a,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8945435230752710620, guid: 172bd19aa70452548bcdbc2cfdc6614a,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8995795509142851912, guid: 172bd19aa70452548bcdbc2cfdc6614a,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 172bd19aa70452548bcdbc2cfdc6614a, type: 3}
@@ -3169,21 +3114,11 @@ PrefabInstance:
       propertyPath: bars.Array.data[2]
       value: 
       objectReference: {fileID: 695173646}
-    - target: {fileID: 6577456260396280566, guid: 9d619d0761b687e479a1231dab8ebf39,
-        type: 3}
-      propertyPath: winAmount
-      value: 800
-      objectReference: {fileID: 0}
     - target: {fileID: 8421924202713650533, guid: 9d619d0761b687e479a1231dab8ebf39,
         type: 3}
       propertyPath: clockTimer
       value: 
       objectReference: {fileID: 1579461514}
-    - target: {fileID: 8421924202713650533, guid: 9d619d0761b687e479a1231dab8ebf39,
-        type: 3}
-      propertyPath: cycleDuration
-      value: 360
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9d619d0761b687e479a1231dab8ebf39, type: 3}
 --- !u!114 &5216131016438606744 stripped
