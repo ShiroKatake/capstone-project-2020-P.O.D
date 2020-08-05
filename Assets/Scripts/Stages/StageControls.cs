@@ -212,7 +212,6 @@ public class StageControls : Stage
 
         yield return new WaitForSeconds(0.5f);
 
-        console.SubmitDialogue("planet unlivable", 0, false, false);
         console.SubmitDialogue("launch cat", 0, false, false);
         cat.SubmitDialogue("need minerals", 2, true, false);
 
@@ -221,8 +220,8 @@ public class StageControls : Stage
             yield return null;
         }
 
-        console.SubmitDialogue("scan minerals", 0, false, false);
-        console.SubmitDialogue("minerals detected", 0, false, false);
+        console.ClearDialogue();
+        console.SubmitDialogue("detect minerals", 0, false, false);
         buildingAndResourcesBarUIEC.Visible = true;
         miniMapBorderUIEC.Visible = true;
 
@@ -231,7 +230,6 @@ public class StageControls : Stage
             yield return null;
         }
 
-        console.ClearDialogue();
         console.SubmitDialogue("task gather minerals", 0, false, false);
         cat.SubmitDialogue("gather minerals", 0, true, false);
         game.SubmitDialogue("lmb", 1, true, false);

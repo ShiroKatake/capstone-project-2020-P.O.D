@@ -131,8 +131,26 @@ public class StageTerraforming : Stage
         fusionReactor.Interactable = true;
         fusionReactorHighlight.Visible = true;
 
-        while (!BuildingController.Instance.HasBuiltBuilding(EBuilding.FusionReactor))
+        while (BuildingController.Instance.BuiltBuildingsCount(EBuilding.FusionReactor) == 0)
         {
+            bool placedFusionReactor = BuildingController.Instance.PlacedBuildingsCount(EBuilding.FusionReactor) > 0;
+
+            //Keep fusion reactor button interactable only while it needs to be placed
+            if (placedFusionReactor)
+            {
+                if (fusionReactor.Interactable)
+                {
+                    fusionReactor.Interactable = false;
+                }
+            }
+            else
+            {
+                if (!fusionReactor.Interactable)
+                {
+                    fusionReactor.Interactable = true;
+                }
+            }
+
             yield return null;
         }
 
@@ -151,8 +169,26 @@ public class StageTerraforming : Stage
         iceDrill.Interactable = true;
         iceDrillHighlight.Visible = true;
 
-        while (!BuildingController.Instance.HasBuiltBuilding(EBuilding.IceDrill))
+        while (BuildingController.Instance.BuiltBuildingsCount(EBuilding.IceDrill) == 0)
         {
+            bool placedIceDrill = BuildingController.Instance.PlacedBuildingsCount(EBuilding.IceDrill) > 0;
+
+            //Keep ice drill button interactable only while it needs to be placed
+            if (placedIceDrill)
+            {
+                if (iceDrill.Interactable)
+                {
+                    iceDrill.Interactable = false;
+                }
+            }
+            else
+            {
+                if (!iceDrill.Interactable)
+                {
+                    iceDrill.Interactable = true;
+                }
+            }
+
             yield return null;
         }
 

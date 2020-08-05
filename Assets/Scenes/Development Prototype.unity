@@ -1804,18 +1804,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97335b3d8af8d9141a331358af6c3300, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1445816528 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7903655690946496537, guid: 9e7595dc8e91f594fb56c845983b5fac,
-    type: 3}
-  m_PrefabInstance: {fileID: 1445816504}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97335b3d8af8d9141a331358af6c3300, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1445816529 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 840230826730628676, guid: 9e7595dc8e91f594fb56c845983b5fac,
@@ -2488,7 +2476,7 @@ PrefabInstance:
         type: 3}
       propertyPath: turretsHighlight
       value: 
-      objectReference: {fileID: 1445816528}
+      objectReference: {fileID: 0}
     - target: {fileID: 3011167280432518999, guid: 7ec13c4878030604f886d212027c72e6,
         type: 3}
       propertyPath: machineGunTurretHighlight
@@ -2499,6 +2487,31 @@ PrefabInstance:
       propertyPath: shotgunTurretHighlight
       value: 
       objectReference: {fileID: 1445816514}
+    - target: {fileID: 3011167280432518999, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: fusionReactor
+      value: 
+      objectReference: {fileID: 1445816525}
+    - target: {fileID: 3011167280432518999, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: iceDrill
+      value: 
+      objectReference: {fileID: 1445816527}
+    - target: {fileID: 3011167280432518999, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: boiler
+      value: 
+      objectReference: {fileID: 1445816521}
+    - target: {fileID: 3011167280432518999, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: greenhouse
+      value: 
+      objectReference: {fileID: 1445816519}
+    - target: {fileID: 3011167280432518999, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: incinerator
+      value: 
+      objectReference: {fileID: 1445816523}
     - target: {fileID: 4952588298347314997, guid: 7ec13c4878030604f886d212027c72e6,
         type: 3}
       propertyPath: uiBorder
@@ -2607,7 +2620,7 @@ PrefabInstance:
     - target: {fileID: 7009541622833408660, guid: 7ec13c4878030604f886d212027c72e6,
         type: 3}
       propertyPath: skipTutorial
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7691648321688888052, guid: 7ec13c4878030604f886d212027c72e6,
         type: 3}
@@ -4194,7 +4207,7 @@ PrefabInstance:
     - target: {fileID: 9033323265905847547, guid: 485364eaa1338b94285a4b76d671c4a2,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 194.68
+      value: 190
       objectReference: {fileID: 0}
     - target: {fileID: 9033323265905847547, guid: 485364eaa1338b94285a4b76d671c4a2,
         type: 3}
