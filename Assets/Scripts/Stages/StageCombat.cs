@@ -11,7 +11,7 @@ public class StageCombat : Stage
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
     //Serialized Fields----------------------------------------------------------------------------
-    
+
     [SerializeField] private UIElementStatusController shotgunTurret;
     [SerializeField] private UIElementStatusController machineGunTurret;
     [SerializeField] private UIElementStatusController shotgunTurretHighlight;
@@ -83,13 +83,31 @@ public class StageCombat : Stage
     /// </note>
     protected override IEnumerator Execution()
     {
-        //Wait for aliens to spawn
+        yield return StartCoroutine(WaitForNightTime());
+        yield return StartCoroutine(AlienWalkthrough());
+        yield return StartCoroutine(BuildTurrets());
+        yield return StartCoroutine(Shooting());
+        yield return StartCoroutine(Healing());
+        yield return StartCoroutine(CompleteStage());
+        StageManager.Instance.SetStage(EStage.MainGame);
+    }
+
+    /// <summary>
+    /// Stalls the tutorial until the sun goes down.
+    /// </summary>
+    private IEnumerator WaitForNightTime()
+    {
         while (ClockController.Instance.Daytime)
         {
             yield return null;
         }
+    }
 
-        //Help from DOG, aliens bad
+    /// <summary>
+    /// Introduces the player to aliens.
+    /// </summary>
+    private IEnumerator AlienWalkthrough()
+    {
         ClockController.Instance.Paused = true;
         console.SubmitDialogue("launch dog", 0, false, false);
 
@@ -112,8 +130,13 @@ public class StageCombat : Stage
         {
             yield return null;
         }
+    }
 
-        //Build Turrets
+    /// <summary>
+    /// Teaches the player about turrets.
+    /// </summary>
+    private IEnumerator BuildTurrets()
+    {
         console.ClearDialogue();
         console.SubmitDialogue("task build turret", 0, false, false);
         dog.SubmitDialogue("build turret", 0, true, false);
@@ -123,14 +146,18 @@ public class StageCombat : Stage
         machineGunTurret.Interactable = true;
         shotgunTurretHighlight.Visible = true;
         machineGunTurretHighlight.Visible = true;
-        //turretsHighlight.Visible = true;
 
         while (!BuildingController.Instance.HasBuiltBuilding(EBuilding.ShortRangeTurret) || !BuildingController.Instance.HasBuiltBuilding(EBuilding.LongRangeTurret))
         {
             yield return null;
         }
+    }
 
-        //If player doesn't know, here's how to shoot
+    /// <summary>
+    /// Teaches the player how to shoot.
+    /// </summary>
+    private IEnumerator Shooting()
+    {
         if (!ProjectileManager.Instance.HasProjectileWithOwner(PlayerController.Instance.transform))
         {
             console.ClearDialogue();
@@ -148,8 +175,13 @@ public class StageCombat : Stage
                 dog.DialogueRead = true;
             }
         }
+    }
 
-        //If player doesn't know how, here's how to heal
+    /// <summary>
+    /// Teaches the player how to heal themselves.
+    /// </summary>
+    private IEnumerator Healing()
+    {
         if (!playerInputManager.GetButtonDown("Heal") || Vector3.Distance(PlayerController.Instance.transform.position, CryoEgg.Instance.transform.position) >= PlayerController.Instance.HealingRange)
         {
             console.ClearDialogue();
@@ -167,7 +199,13 @@ public class StageCombat : Stage
                 dog.DialogueRead = true;
             }
         }
+    }
 
+    /// <summary>
+    /// Concludes the tutorial.
+    /// </summary>
+    private IEnumerator CompleteStage()
+    {
         if (game.Activated)
         {
             game.SubmitDeactivation();
@@ -184,6 +222,5 @@ public class StageCombat : Stage
         console.SubmitDialogue("dog closed", 0, false, false);
         game.SubmitDialogue("finished tutorial", 0, true, false);
         ClockController.Instance.Paused = false;
-        StageManager.Instance.SetStage(EStage.MainGame);
     }
 }

@@ -93,25 +93,41 @@ public class StageSkippedTutorial : Stage
     /// </note>
     protected override IEnumerator Execution()
     {
-        //Switch the clock off
+        yield return StartCoroutine(Setup());
+        yield return StartCoroutine(EnableUI());
+        yield return StartCoroutine(EnableBuildingBarContent());
+        yield return StartCoroutine(BeginGame());        
+        StageManager.Instance.SetStage(EStage.MainGame);
+    }
+
+    /// <summary>
+    /// Sets up the clock.
+    /// </summary>
+    private IEnumerator Setup()
+    {
         ClockController.Instance.Paused = true;
         ClockController.Instance.SetTime(0);
         yield return new WaitForSeconds(3);
+    }
 
-        //Enable UI
+    /// <summary>
+    /// Brings the UI online.
+    /// </summary>
+    private IEnumerator EnableUI()
+    {
         uiBorder.Visible = true;
         console.Visible = true;
         buildingAndResourcesBar.Visible = true;
         miniMapBorder.Visible = true;
 
-        while (!uiBorder.FinishedFlickeringIn 
+        while (!uiBorder.FinishedFlickeringIn
             || !console.FinishedFlickeringIn
             || !buildingAndResourcesBar.FinishedFlickeringIn
             || !miniMapBorder.FinishedFlickeringIn)
         {
             yield return null;
         }
-        
+
         ClockController.Instance.Paused = false;
         consoleDB.SubmitDialogue("blank", 0, false, false);
         consoleDB.SubmitDialogue("system check", 0, false, false);
@@ -120,8 +136,13 @@ public class StageSkippedTutorial : Stage
         ResourceTextManager.Instance.FadeIn();
         miniMap.Visible = true;
         clock.Visible = true;
+    }
 
-        //Enable Building Buttons and Progress/Ratio Bars
+    /// <summary>
+    /// Brings the contents of the building bar online.
+    /// </summary>
+    private IEnumerator EnableBuildingBarContent()
+    {
         yield return new WaitForSeconds(0.15f);
         progressBar.Visible = true;
         fusionReactor.Visible = true;
@@ -148,10 +169,14 @@ public class StageSkippedTutorial : Stage
         machineGunTurret.Visible = true;
         machineGunTurret.Interactable = true;
         yield return new WaitForSeconds(0.15f);
+    }
 
-        //Begin Game
-        consoleDB.SubmitDialogue("buildings ready", 0, false, false);
+    /// <summary>
+    /// Starts the game.
+    /// </summary>
+    private IEnumerator BeginGame()
+    {
         consoleDB.SubmitDialogue("begin game", 0, false, false);
-        StageManager.Instance.SetStage(EStage.MainGame);
+        yield return null;
     }
 }

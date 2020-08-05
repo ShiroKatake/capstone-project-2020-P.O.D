@@ -98,7 +98,18 @@ public class StageTerraforming : Stage
     /// </note>
     protected override IEnumerator Execution()
     {
-        //Yay minerals for building
+        yield return StartCoroutine(BuildFusionReactor());
+        yield return StartCoroutine(BuildIceDrill());
+        yield return StartCoroutine(TerraformingWalkthrough());
+        yield return StartCoroutine(StageComplete());        
+        StageManager.Instance.SetStage(EStage.Combat);
+    }
+
+    /// <summary>
+    /// Teaches the player about the fusion reactor.
+    /// </summary>
+    private IEnumerator BuildFusionReactor()
+    {
         cat.SubmitDialogue("enough for building", 0, false, false);
 
         while (!cat.DialogueRead || !cat.AcceptingSubmissions)
@@ -113,7 +124,6 @@ public class StageTerraforming : Stage
             yield return null;
         }
 
-        //Build fusion reactor
         console.ClearDialogue();
         console.SubmitDialogue("task build fusion reactor", 0, false, false);
         cat.SubmitDialogue("build fusion reactor", 0, true, false);
@@ -121,13 +131,19 @@ public class StageTerraforming : Stage
         fusionReactor.Interactable = true;
         fusionReactorHighlight.Visible = true;
 
-        while(!BuildingController.Instance.HasBuiltBuilding(EBuilding.FusionReactor))
+        while (!BuildingController.Instance.HasBuiltBuilding(EBuilding.FusionReactor))
         {
             yield return null;
         }
 
-        //Build ice drill
         fusionReactor.Interactable = false;
+    }
+
+    /// <summary>
+    /// Teaches the player about the ice drill.
+    /// </summary>
+    private IEnumerator BuildIceDrill()
+    {
         console.ClearDialogue();
         console.SubmitDialogue("task build ice drill", 0, false, false);
         cat.SubmitDialogue("build ice drill", 0, true, false);
@@ -140,20 +156,23 @@ public class StageTerraforming : Stage
             yield return null;
         }
 
-        //Yay power and water
+        iceDrill.Interactable = false;
         console.ClearDialogue();
         cat.SubmitDialogue("got power and water", 0, false, false);
-        fusionReactor.Interactable = true;
 
         while (!cat.DialogueRead || !cat.AcceptingSubmissions)
         {
             yield return null;
         }
+    }
 
-        //Here's the terraformers
+    /// <summary>
+    /// Teaches the player about terraforming.
+    /// </summary>
+    private IEnumerator TerraformingWalkthrough()
+    {
         cat.SubmitDialogue("boiler", 0, false, false);
         boiler.Visible = true;
-        boiler.Interactable = true;
         boilerHighlight.Visible = true;
         humidityBar.Visible = true;
         humidityBarHighlight.Visible = true;
@@ -167,7 +186,6 @@ public class StageTerraforming : Stage
         humidityBarHighlight.Visible = false;
         cat.SubmitDialogue("greenhouse", 0, false, false);
         greenhouse.Visible = true;
-        greenhouse.Interactable = true;
         greenhouseHighlight.Visible = true;
         biodiversityBar.Visible = true;
         biodiversityBarHighlight.Visible = true;
@@ -181,7 +199,6 @@ public class StageTerraforming : Stage
         biodiversityBarHighlight.Visible = false;
         cat.SubmitDialogue("incinerator", 0, false, false);
         incinerator.Visible = true;
-        incinerator.Interactable = true;
         incineratorHighlight.Visible = true;
         atmosphereBar.Visible = true;
         atmosphereBarHighlight.Visible = true;
@@ -193,6 +210,7 @@ public class StageTerraforming : Stage
 
         incineratorHighlight.Visible = false;
         atmosphereBarHighlight.Visible = false;
+
         cat.SubmitDialogue("buildings important", 0, false, false);
 
         while (!cat.DialogueRead || !cat.AcceptingSubmissions)
@@ -208,7 +226,13 @@ public class StageTerraforming : Stage
         {
             yield return null;
         }
+    }
 
+    /// <summary>
+    /// Concludes the terraforming stage of the tutorial.
+    /// </summary>
+    private IEnumerator StageComplete()
+    {
         cat.SubmitDialogue("good luck", 0, true, false);
         clock.Visible = true;
         ClockController.Instance.Paused = false;
@@ -219,6 +243,10 @@ public class StageTerraforming : Stage
         }
 
         console.SubmitDialogue("cat closed", 1, false, false);
-        StageManager.Instance.SetStage(EStage.Combat);
+        fusionReactor.Interactable = true;
+        iceDrill.Interactable = true;
+        boiler.Interactable = true;
+        greenhouse.Interactable = true;
+        incinerator.Interactable = true;
     }
 }
