@@ -350,9 +350,9 @@ public class BuildingSpawningController : MonoBehaviour
     private bool CheckResourcesAvailable()
     {
         return ResourceController.Instance.Ore >= heldBuilding.OreCost
-            && ResourceController.Instance.PowerSupply >= ResourceController.Instance.PowerConsumption + heldBuilding.PowerConsumption
-            && ResourceController.Instance.WasteSupply >= ResourceController.Instance.WasteConsumption + heldBuilding.WasteConsumption
-            && ResourceController.Instance.WaterSupply >= ResourceController.Instance.WaterConsumption + heldBuilding.WaterConsumption;
+            && (ResourceController.Instance.PowerSupply >= ResourceController.Instance.PowerConsumption + heldBuilding.PowerConsumption || heldBuilding.PowerConsumption == 0)
+            && (ResourceController.Instance.WasteSupply >= ResourceController.Instance.WasteConsumption + heldBuilding.WasteConsumption || heldBuilding.WasteConsumption == 0)
+            && (ResourceController.Instance.WaterSupply >= ResourceController.Instance.WaterConsumption + heldBuilding.WaterConsumption || heldBuilding.WaterConsumption == 0);
     }
 
     /// <summary>
@@ -361,21 +361,6 @@ public class BuildingSpawningController : MonoBehaviour
     /// <param name="selectedBuilding">The building the player has selected to build.</param>
     private void ChangeTooltip(EBuilding selectedBuilding)
     {
-        //if (selectedBuilding == EBuilding.FusionReactor)
-        //    tooltip = ToolTips.Etooltips.FusionReactor;
-        //if (selectedBuilding == EBuilding.IceDrill)
-        //    tooltip = ToolTips.Etooltips.IceDrill;
-        //if (selectedBuilding == EBuilding.Greenhouse)
-        //    tooltip = ToolTips.Etooltips.Greenhouse;
-        //if (selectedBuilding == EBuilding.Boiler)
-        //    tooltip = ToolTips.Etooltips.Boiler;
-        //if (selectedBuilding == EBuilding.Incinerator)
-        //    tooltip = ToolTips.Etooltips.Incinerator;
-        //if (selectedBuilding == EBuilding.ShortRangeTurret)
-        //    tooltip = ToolTips.Etooltips.Shotgun;
-        //if (selectedBuilding == EBuilding.LongRangeTurret)
-        //    tooltip = ToolTips.Etooltips.MachineGun;
-
         switch(selectedBuilding)
         {
             case EBuilding.FusionReactor:
