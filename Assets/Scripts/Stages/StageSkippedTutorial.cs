@@ -100,97 +100,58 @@ public class StageSkippedTutorial : Stage
 
         //Enable UI
         uiBorder.Visible = true;
-
-        while (!uiBorder.FinishedFlickeringIn)
-        {
-            yield return null;
-        }
-
         console.Visible = true;
-        consoleDB.SubmitDialogue("blank", 0, false, false);
-
-        while (!console.FinishedFlickeringIn)
-        {
-            yield return null;
-        }
-
-        consoleDB.SubmitDialogue("system check", 0, false, false);
         buildingAndResourcesBar.Visible = true;
         miniMapBorder.Visible = true;
 
-        while (!buildingAndResourcesBar.FinishedFlickeringIn || !miniMapBorder.FinishedFlickeringIn || consoleDB.LerpingDialogue)
+        while (!uiBorder.FinishedFlickeringIn 
+            || !console.FinishedFlickeringIn
+            || !buildingAndResourcesBar.FinishedFlickeringIn
+            || !miniMapBorder.FinishedFlickeringIn)
         {
             yield return null;
         }
-
-        consoleDB.SubmitDialogue("initialising functions", 0, false, false);
-        ResourceTextManager.Instance.FadeIn();
-        clock.Visible = true;
-        miniMap.Visible = true;
-
-        while (!clock.FinishedFlickeringIn || !miniMap.FinishedFlickeringIn || consoleDB.LerpingDialogue)
-        {
-            yield return null;
-        }
-
-        //Enable Building Buttons
+        
         ClockController.Instance.Paused = false;
+        consoleDB.SubmitDialogue("blank", 0, false, false);
+        consoleDB.SubmitDialogue("system check", 0, false, false);
+        consoleDB.SubmitDialogue("initialising functions", 0, false, false);
         consoleDB.SubmitDialogue("clock gps inventory online", 0, false, false);
+        ResourceTextManager.Instance.FadeIn();
+        miniMap.Visible = true;
+        clock.Visible = true;
+
+        //Enable Building Buttons and Progress/Ratio Bars
+        yield return new WaitForSeconds(0.15f);
+        progressBar.Visible = true;
         fusionReactor.Visible = true;
+        fusionReactor.Interactable = true;
         yield return new WaitForSeconds(0.15f);
         iceDrill.Visible = true;
+        iceDrill.Interactable = true;
         yield return new WaitForSeconds(0.15f);
         boiler.Visible = true;
-        yield return new WaitForSeconds(0.15f);
-        greenhouse.Visible = true;
-        yield return new WaitForSeconds(0.15f);
-        incinerator.Visible = true;
-        yield return new WaitForSeconds(0.15f);
-        shotgunTurret.Visible = true;
-        yield return new WaitForSeconds(0.15f);
-        machineGunTurret.Visible = true;
-
-        while (!fusionReactor.FinishedFlickeringIn 
-            || !iceDrill.FinishedFlickeringIn 
-            || !boiler.FinishedFlickeringIn
-            || !greenhouse.FinishedFlickeringIn
-            || !incinerator.FinishedFlickeringIn
-            || !shotgunTurret.FinishedFlickeringIn
-            || !machineGunTurret.FinishedFlickeringIn 
-            || consoleDB.LerpingDialogue
-        )
-        {
-            yield return null;
-        }
-
-        //Enable Progress/Ratio Bars
-        consoleDB.SubmitDialogue("buildings ready", 0, false, false);
-        progressBar.Visible = true;
-        yield return new WaitForSeconds(0.15f);
+        boiler.Interactable = true;
         humidityBar.Visible = true;
         yield return new WaitForSeconds(0.15f);
+        greenhouse.Visible = true;
+        greenhouse.Interactable = true;
         biodiversityBar.Visible = true;
         yield return new WaitForSeconds(0.15f);
+        incinerator.Visible = true;
+        incinerator.Interactable = true;
         atmosphereBar.Visible = true;
-
-        while (!progressBar.FinishedFlickeringIn
-            || !humidityBar.FinishedFlickeringIn
-            || !biodiversityBar.FinishedFlickeringIn
-            || !atmosphereBar.FinishedFlickeringIn
-        )
-        {
-            yield return null;
-        }
+        yield return new WaitForSeconds(0.15f);
+        shotgunTurret.Visible = true;
+        shotgunTurret.Interactable = true;
+        yield return new WaitForSeconds(0.15f);
+        machineGunTurret.Visible = true;
+        machineGunTurret.Interactable = true;
+        yield return new WaitForSeconds(0.15f);
 
         //Begin Game
+        consoleDB.SubmitDialogue("buildings ready", 0, false, false);
         consoleDB.SubmitDialogue("begin game", 0, false, false);
-        fusionReactor.Interactable = true;
-        iceDrill.Interactable = true;
-        boiler.Interactable = true;
-        greenhouse.Interactable = true;
-        incinerator.Interactable = true;
-        shotgunTurret.Interactable = true;
-        machineGunTurret.Interactable = true;
         StageManager.Instance.SetStage(EStage.MainGame);
     }
 }

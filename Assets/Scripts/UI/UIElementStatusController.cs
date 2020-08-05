@@ -1,9 +1,13 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Controls the status (visibile, interactable, fading in/out, tweening) of a UI element and its component pieces.
+/// </summary>
 public class UIElementStatusController : MonoBehaviour
 {
     //Fields-----------------------------------------------------------------------------------------------------------------------------------------
@@ -20,20 +24,22 @@ public class UIElementStatusController : MonoBehaviour
 
     [Header("Visibility Stats")]
     [SerializeField] private bool visibleOnAwake;
+
+    [Header("Fading / Flickering Stats")]
     [SerializeField] private bool flickersIn;
     [SerializeField] private float flickerInSpeed;
     [SerializeField] private int flickerCount;
     [SerializeField] private bool flickerOutOnComplete;
 
+    [Header("Tweening Stats")]
+    [SerializeField] private bool tweensIn;
+    [SerializeField] private float tweenDuration;
+    [SerializeField] private TweenAnchorManager tutorialAnchorManager;
+    [SerializeField] private TweenAnchorManager skipTutorialAnchorManager;
+    [SerializeField] private RectTransform finishedAnchor;
+
     [Header("Interactability")]
     [SerializeField] private bool interactableOnAwake;
-
-    //[Header("Interactability Requirements - Resources")]
-    //[SerializeField] private bool requiresResources;
-    //[SerializeField] private int requiredOre;
-    //[SerializeField] private int requiredPower;
-    //[SerializeField] private int requiredWater;
-    //[SerializeField] private int requiredWaste;
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
@@ -48,6 +54,10 @@ public class UIElementStatusController : MonoBehaviour
     private bool finishedFlickeringIn;
 
     private List<Graphic> graphics;
+
+    private RectTransform rectTransform;
+    private TweenAnchorManager tweenAnchorManager;
+    private AnchorSet tweenAnchorSet;
 
     //Public Properties------------------------------------------------------------------------------------------------------------
 
@@ -204,6 +214,8 @@ public class UIElementStatusController : MonoBehaviour
     /// </summary>
     private void Awake()
     {
+        rectTransform = GetComponent<RectTransform>();
+
         if (button != null)
         {
             interactable = interactableOnAwake;
@@ -268,18 +280,6 @@ public class UIElementStatusController : MonoBehaviour
         }
     }
 
-    ///// <summary>
-    ///// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
-    ///// Start() runs after Awake().
-    ///// </summary>
-    //private void Start()
-    //{
-    //    if (button != null && requiresResources)
-    //    {
-    //        StartCoroutine(CheckInteractable());
-    //    }
-    //}
-
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
@@ -287,13 +287,36 @@ public class UIElementStatusController : MonoBehaviour
     /// </summary>
     private IEnumerator FlickerIn()
     {
-        //Debug.Log($"{this} has started flickering in");
         int flickers = 0;
         bool borderFinished = (border == null);
         bool fillFinished = (fill == null);
         bool imageFinished = (image == null);
         bool rawImageFinished = (rawImage == null);
         bool textBoxFinished = (textBox == null);
+
+        if (tweensIn)
+        {
+            tweenAnchorManager = (StageManager.Instance.SkipTutorial ? skipTutorialAnchorManager : tutorialAnchorManager);
+
+            if (tweenAnchorManager == null)
+            {
+                tweensIn = false;
+            }
+            else
+            {
+                tweenAnchorSet = tweenAnchorManager.RegisterButton(rectTransform);
+
+                if (tweenAnchorSet != null)
+                {
+                    rectTransform.parent = tweenAnchorSet.anchor;
+                    rectTransform.localPosition = Vector2.zero;
+                }
+                else
+                {
+                    Debug.LogError($"{this} needs a not null tween start anchor.");
+                }
+            }
+        }
 
         yield return null;
 
@@ -307,7 +330,6 @@ public class UIElementStatusController : MonoBehaviour
                 if (!imageFinished) { imageFinished = UpdateOpacityOfGraphic(image, true, 1, 0.67f * finalImageOpacity); } 
                 if (!rawImageFinished) { rawImageFinished = UpdateOpacityOfGraphic(rawImage, true, 1, 0.67f * finalRawImageOpacity); } 
                 if (!textBoxFinished) { textBoxFinished = UpdateOpacityOfGraphic(textBox, true, 1, 0.67f * finalTextOpacity); }
-                //Debug.Log($"Incrementing {this}.image.color.a, alpha is {image.color.a}, finished incrementing up to {0.67f * finalOpacity} is {image.color.a >= 0.67f * finalOpacity}");
             }
             while (!borderFinished || !fillFinished || !imageFinished || !rawImageFinished || !textBoxFinished);
 
@@ -325,8 +347,6 @@ public class UIElementStatusController : MonoBehaviour
                 if (!imageFinished) { imageFinished = UpdateOpacityOfGraphic(image, false, 1, 0); }
                 if (!rawImageFinished) { rawImageFinished = UpdateOpacityOfGraphic(rawImage, false, 1, 0); }
                 if (!textBoxFinished) { textBoxFinished = UpdateOpacityOfGraphic(textBox, false, 1, 0); }
-
-                //Debug.Log($"Decrementing {this}.image.color.a, alpha is {image.color.a}, finished decrementing to 0 is {image.color.a <= 0}");
             }
             while (!borderFinished || !fillFinished || !imageFinished || !rawImageFinished || !textBoxFinished);
 
@@ -347,9 +367,13 @@ public class UIElementStatusController : MonoBehaviour
             if (!imageFinished) { imageFinished = UpdateOpacityOfGraphic(image, true, 1.25f, finalImageOpacity); } 
             if (!rawImageFinished) { rawImageFinished = UpdateOpacityOfGraphic(rawImage, true, 1.25f, finalRawImageOpacity); } 
             if (!textBoxFinished) { textBoxFinished = UpdateOpacityOfGraphic(textBox, true, 1.25f, finalTextOpacity); }
-            //Debug.Log($"Incrementing {this}.image.color.a, alpha is {image.color.a}, finished incrementing up to {finalOpacity} is {image.color.a >= finalOpacity}");
         }
         while (!borderFinished || !fillFinished || !imageFinished || !rawImageFinished || !textBoxFinished);
+
+        if (tweensIn)
+        {
+            yield return StartCoroutine(TweenIn());
+        }
 
         borderFinished = (border == null);
         fillFinished = (fill == null);
@@ -367,7 +391,6 @@ public class UIElementStatusController : MonoBehaviour
                 if (!imageFinished) { imageFinished = UpdateOpacityOfGraphic(image, false, 1.25f, 0); }
                 if (!rawImageFinished) { rawImageFinished = UpdateOpacityOfGraphic(rawImage, false, 1.25f, 0); }
                 if (!textBoxFinished) { textBoxFinished = UpdateOpacityOfGraphic(textBox, false, 1.25f, 0); }
-                //Debug.Log($"Decrementing {this}.image.color.a, alpha is {image.color.a}, finished decrementing down to {0} is {image.color.a <= 0}");
             }
             while (!borderFinished || !fillFinished || !imageFinished || !rawImageFinished || !textBoxFinished);
         }
@@ -400,23 +423,29 @@ public class UIElementStatusController : MonoBehaviour
         }
     }
 
-    ///// <summary>
-    ///// Checks if the button should be interactable.
-    ///// </summary>
-    //private IEnumerator CheckInteractable()
-    //{
-    //    while (true)
-    //    {
-    //        button.interactable = interactable && (!requiresResources ||
-    //                (
-    //                       requiredOre <= ResourceController.Instance.Ore
-    //                    && requiredPower <= ResourceController.Instance.SurplusPower
-    //                    && requiredWaste <= ResourceController.Instance.SurplusWaste
-    //                    && requiredWater <= ResourceController.Instance.SurplusWater
-    //                )
-    //            );
+    /// <summary>
+    /// Tweens the UI element from the chosen anchor position back to its normal position.
+    /// </summary>
+    private IEnumerator TweenIn()
+    {
+        while (tweenAnchorManager.SlideAnchors && tweenAnchorSet.anchor.localPosition != tweenAnchorSet.targetLocalPosition)
+        {
+            yield return null;
+        }
 
-    //        yield return null;
-    //    }
-    //}
+        bool tweening = true;
+        rectTransform.parent = finishedAnchor;
+        tweenAnchorManager.DeRegisterButton(rectTransform);
+
+        rectTransform.DOAnchorPos(Vector2.zero, tweenDuration).SetEase(Ease.InBack).SetUpdate(true).OnComplete(
+                delegate
+                {
+                    tweening = false;
+                });
+
+        while (tweening)
+        {
+            yield return null;
+        }
+    }
 }

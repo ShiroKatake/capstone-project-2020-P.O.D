@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &26415010305429678
+--- !u!1 &296241123171381912
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,37 +8,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7694997801588937915}
-  m_Layer: 9
-  m_Name: Hover Anchor
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7694997801588937915
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 26415010305429678}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.833, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 5136758428388025279}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &4491054417667809119
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1105329115834965487}
+  - component: {fileID: 3826354825512792104}
   m_Layer: 9
   m_Name: Mining Point
   m_TagString: Untagged
@@ -46,21 +16,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1105329115834965487
+--- !u!4 &3826354825512792104
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4491054417667809119}
+  m_GameObject: {fileID: 296241123171381912}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: -0.198, y: -0.132, z: 0.414}
   m_LocalScale: {x: 1.532125, y: 1.5321246, z: 1.5321246}
   m_Children: []
-  m_Father: {fileID: 6592593835074264809}
+  m_Father: {fileID: 7003803995739255598}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &5310840099434856588
+--- !u!1 &4184622261024177513
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -68,8 +38,161 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 45486609135246634}
-  - component: {fileID: 2178039041823773614}
+  - component: {fileID: 5802048310640982396}
+  m_Layer: 9
+  m_Name: Hover Anchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5802048310640982396
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4184622261024177513}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.833, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 9009016861537865336}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6224156609436656905
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9009016861537865336}
+  - component: {fileID: 2596916794322004864}
+  - component: {fileID: 2771772890060208177}
+  - component: {fileID: 6231735338423790673}
+  - component: {fileID: 6504090002235424957}
+  - component: {fileID: 5248928955905557712}
+  m_Layer: 9
+  m_Name: Mineral (11.0695, 2.5, 143.5072)
+  m_TagString: Planet
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9009016861537865336
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6224156609436656905}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -88.930504, y: 2.5, z: 43.507156}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 7003803995739255598}
+  - {fileID: 5802048310640982396}
+  - {fileID: 4246474838257758445}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &2596916794322004864
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6224156609436656905}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.69420445, y: 0.6004691, z: 0.57503366}
+  m_Center: {x: -0.15289778, y: 0.31523252, z: 0.14442825}
+--- !u!114 &2771772890060208177
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6224156609436656905}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff4b731bcf6e0b44db2de812be8a741e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectRenderer: {fileID: 5716490093892154849}
+--- !u!114 &6231735338423790673
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6224156609436656905}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a5cbf71e1cb5844ab693645a4a84b3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anchorPoint: {fileID: 5802048310640982396}
+  dialogueName: Mineral Deposit
+  objectClass: 
+  oreCost: 
+  powerCost: 
+  waterCost: 
+  wasteCost: 
+  buildTime: 
+  powerProductionAmount: 
+  waterProductionAmount: 
+  wasteProductionAmount: 
+  description: 'Provides material for constructing buildings.
+
+
+    Hold left click
+    to mine'
+--- !u!114 &6504090002235424957
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6224156609436656905}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a453fd883c91b9a4590f866d99bccec5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  placed: 1
+  oreSpawnRate: 0.75
+  oreCurveRadius: 2
+  miningPoint: {fileID: 3826354825512792104}
+--- !u!114 &5248928955905557712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6224156609436656905}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b30d5185928fec48add2dba5ae890e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  name: Mineral
+  executing: 1
+  update: 1
+--- !u!1 &8357835826670923083
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4246474838257758445}
+  - component: {fileID: 2627544106852777577}
   m_Layer: 13
   m_Name: Minimap icon
   m_TagString: Untagged
@@ -77,27 +200,27 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &45486609135246634
+--- !u!4 &4246474838257758445
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5310840099434856588}
+  m_GameObject: {fileID: 8357835826670923083}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0.7, z: 0.5}
   m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_Children: []
-  m_Father: {fileID: 5136758428388025279}
+  m_Father: {fileID: 9009016861537865336}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
---- !u!212 &2178039041823773614
+--- !u!212 &2627544106852777577
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5310840099434856588}
+  m_GameObject: {fileID: 8357835826670923083}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -141,135 +264,12 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &7795659470375798990
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5136758428388025279}
-  - component: {fileID: 2181151351687923271}
-  - component: {fileID: 2033458020145386998}
-  - component: {fileID: 7797008365469057430}
-  - component: {fileID: 6920960518473543034}
-  - component: {fileID: 8257607867930290455}
-  m_Layer: 9
-  m_Name: Mineral
-  m_TagString: Planet
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &5136758428388025279
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7795659470375798990}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 6592593835074264809}
-  - {fileID: 7694997801588937915}
-  - {fileID: 45486609135246634}
-  m_Father: {fileID: 0}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &2181151351687923271
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7795659470375798990}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.67067814, y: 0.6259719, z: 0.602481}
-  m_Center: {x: -0.16466093, y: 0.3024811, z: 0.13070458}
---- !u!114 &2033458020145386998
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7795659470375798990}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff4b731bcf6e0b44db2de812be8a741e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  objectRenderer: {fileID: 8438082130433333286}
---- !u!114 &7797008365469057430
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7795659470375798990}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a5cbf71e1cb5844ab693645a4a84b3a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  anchorPoint: {fileID: 7694997801588937915}
-  dialogueName: Mineral Deposit
-  objectClass: 
-  oreCost: 
-  powerCost: 
-  waterCost: 
-  wasteCost: 
-  buildTime: 
-  powerProductionAmount: 
-  waterProductionAmount: 
-  wasteProductionAmount: 
-  description: 'Provides material for constructing buildings.
-
-
-    Hold left click
-    to mine'
---- !u!114 &6920960518473543034
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7795659470375798990}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a453fd883c91b9a4590f866d99bccec5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  placed: 0
-  oreSpawnRate: 0.75
-  oreCurveRadius: 2
-  miningPoint: {fileID: 1105329115834965487}
---- !u!114 &8257607867930290455
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7795659470375798990}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b30d5185928fec48add2dba5ae890e8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  name: Mineral
-  executing: 1
-  update: 0
---- !u!1001 &2163748618175100403
+--- !u!1001 &2614399433452181556
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 5136758428388025279}
+    m_TransformParent: {fileID: 9009016861537865336}
     m_Modifications:
     - target: {fileID: -4216859302048453862, guid: 1d80d71c22a6e0840973c31ef38edb3b,
         type: 3}
@@ -343,15 +343,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1d80d71c22a6e0840973c31ef38edb3b, type: 3}
---- !u!4 &6592593835074264809 stripped
+--- !u!4 &7003803995739255598 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: 1d80d71c22a6e0840973c31ef38edb3b,
     type: 3}
-  m_PrefabInstance: {fileID: 2163748618175100403}
+  m_PrefabInstance: {fileID: 2614399433452181556}
   m_PrefabAsset: {fileID: 0}
---- !u!23 &8438082130433333286 stripped
+--- !u!23 &5716490093892154849 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: -1504981713932161579, guid: 1d80d71c22a6e0840973c31ef38edb3b,
     type: 3}
-  m_PrefabInstance: {fileID: 2163748618175100403}
+  m_PrefabInstance: {fileID: 2614399433452181556}
   m_PrefabAsset: {fileID: 0}

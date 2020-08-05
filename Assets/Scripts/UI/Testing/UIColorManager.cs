@@ -47,7 +47,7 @@ public class UIColorManager : MonoBehaviour
         backgroundNewColor = backgroundDay;
         borderNewColor = borderDay;
 
-		SetBackgroundColor(backgroundCurColor);
+        SetBackgroundColor(backgroundCurColor);
 		SetBorderColor(borderCurColor);
 
     }
@@ -108,8 +108,13 @@ public class UIColorManager : MonoBehaviour
 	{
 		foreach (Image background in UIBackgrounds)
 		{
-			background.GetComponent<Image>().color = color;
-		}
+            if (background.color.a < 0)
+            {
+                color.a = background.color.a;
+            }
+
+            background.color = color;
+        }
 	}
 
 	public void SetBorderColor(Color color)
