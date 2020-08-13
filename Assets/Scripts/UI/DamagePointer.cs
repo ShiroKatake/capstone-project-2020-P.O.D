@@ -44,7 +44,7 @@ public class DamagePointer : MonoBehaviour
             {
                 if (count <= 0)
                 {
-                    AudioManager.Instance.PlaySound(AudioManager.ESound.Attacked);
+                    AudioManager.Instance.PlaySound(AudioManager.ESound.Attacked, this.gameObject);
                     count = 2;
                 }
                 else
