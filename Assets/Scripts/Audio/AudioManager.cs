@@ -11,34 +11,9 @@ public class AudioManager : MonoBehaviour
     //gonna break these up later
     public enum ESound
     {
-        DayTimeLvlOne,
-        NightTime,
-        Player_Hover,
-        Laser_POD,
-        Collected_Minerals,
-        Mining,
-        Damage_To_Player,
-        Damage_To_Building,
-        Explosion,
-        Negative_UI,
-        Building_Materialises,
-        Building_Completes,
-        ShotGun_Shoot,
-        MachineGun_Shoot,
-        WaterDrill_Idle,
-        Reactor_Idle,
-        Greenhouse_Idle,
-        Incinorator_Idle,
-        Boiler_Idle,
-        Turret_Idle,
-        Alien_Moves,
-        Alien_Takes_Damage,
-        Alien_Dies,
-        Win,
-        Lose,
-        Day_Shift,
-        Night_Shift,
-        Attacked
+        DayTimeLvlOne, NightTime, Player_Hover, Laser_POD, Collected_Minerals, Mining, Damage_To_Player, Damage_To_Building, Explosion, Negative_UI,
+        Building_Materialises, Building_Completes, ShotGun_Shoot, MachineGun_Shoot, WaterDrill_Idle, Reactor_Idle, Greenhouse_Idle, Incinorator_Idle,
+        Boiler_Idle, Turret_Idle, Alien_Moves, Alien_Takes_Damage, Alien_Dies, Win, Lose, Day_Shift, Night_Shift, Attacked
     }
 
     [System.Serializable]
@@ -73,6 +48,7 @@ public class AudioManager : MonoBehaviour
 
     //private Dictionary<ESound, float> soundTimerDictionary;
     private Dictionary<GameObject, Dictionary<ESound, float>> gameObjectAudioTimerDictionary;
+    private Dictionary<ESound, float> UIAudioTimerDictionary;
     private Dictionary<ESound, AudioSource> audioSourceReferenceDictionary;
     private GameObject oneShotGameObject;
     private AudioSource oneShotAudioSource;
@@ -91,6 +67,7 @@ public class AudioManager : MonoBehaviour
         }
         Instance = this;
         gameObjectAudioTimerDictionary = new Dictionary<GameObject, Dictionary<ESound, float>>();
+        UIAudioTimerDictionary = new Dictionary<ESound, float>();
         audioSourceReferenceDictionary = new Dictionary<ESound, AudioSource>();
 
         foreach (SoundClip s in BackGroundSounds)
@@ -172,7 +149,7 @@ public class AudioManager : MonoBehaviour
             AudioSource[] sources = obj.GetComponents<AudioSource>();
             foreach (AudioSource source in sources)
             {
-                oneShotAudioSource = source;
+                //oneShotAudioSource = source;
                 if (source.clip == GetAudio(sound).Clip)
                 {
                     tmp = false;
@@ -247,9 +224,19 @@ public class AudioManager : MonoBehaviour
             s.Source.pitch = s.Pitch;
             s.Source.loop = s.Loop;
             audioSourceReferenceDictionary.Add(sound, s.Source);
+            if (UIAudioTimerDictionary.ContainsKey(sound))
+                {
+                    UIAudioTimerDictionary[sound] = Time.time;
+                }
+                else
+                {
+                    UIAudioTimerDictionary.Add(sound, Time.time);
+                }
         }
         //oneShotAudioSource.PlayOneShot(GetAudio(sound).Clip);
-        audioSourceReferenceDictionary[sound].PlayOneShot(GetAudio(sound).Clip);
+        if (CanPlaySound(sound)){
+            audioSourceReferenceDictionary[sound].PlayOneShot(GetAudio(sound).Clip);
+        }
         //}
         //}
     }
@@ -293,7 +280,6 @@ public class AudioManager : MonoBehaviour
             Debug.LogError("The object has no audio sources!");
         }
     }
-
 
     private SoundClip GetAudio(ESound sound)
     {
@@ -485,6 +471,58 @@ public class AudioManager : MonoBehaviour
         {
             Debug.Log("Sound: " + sound.ToString() + " cannot be found");
             return false;
+        }
+    }
+
+    private bool CanPlaySound(ESound sound) {
+        switch (sound) {
+            case (ESound.Attacked):
+                if (UIAudioTimerDictionary.ContainsKey(sound))
+                    {
+                        bool tmp = false;
+                        AudioSource[] sources = this.GetComponents<AudioSource>();
+                        foreach (AudioSource s in sources)
+                        {
+                            if (s.clip == GetAudio(sound).Clip)
+                            {
+                                if (!s.isPlaying)
+                                {
+                                    s.Play();
+                                }
+                                else
+                                {
+                                    tmp = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (tmp)
+                        {
+                            float lastTimePlayed = UIAudioTimerDictionary[sound];
+                            float delay = GetAudio(sound).Clip.length + 300f;
+                            //if (Time.time == 0f)
+                            if (lastTimePlayed + delay < Time.time)
+                            {
+                                UIAudioTimerDictionary[sound] = Time.time;
+                                return true;
+                            }
+                            else
+                            {
+                                return false;
+                            }
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                //break;
+            default: return true;
+
         }
     }
 
