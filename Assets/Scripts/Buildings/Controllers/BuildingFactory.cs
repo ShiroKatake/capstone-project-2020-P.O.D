@@ -142,6 +142,7 @@ public class BuildingFactory : MonoBehaviour
 
         if (buildings[buildingType].Count > 0)
         {
+            Debug.Log("BuildingFactory.GetBuilding(), retrieving building");
             building = buildings[buildingType][0];
             buildings[buildingType].RemoveAt(0);
             building.transform.parent = null;
@@ -149,8 +150,12 @@ public class BuildingFactory : MonoBehaviour
         }
         else
         {
+            Debug.Log("BuildingFactory.GetBuilding(), creating building");
             building = CreateBuilding(buildingType, false);
         }
+
+        Debug.Log($"BuildingFactory(), new building organised ({building}), building collider position is {building.Collider.position} (world) / {building.Collider.localPosition} (local), building model position is {building.Model.position} (world) / {building.Model.localPosition} (local)");
+
 
         building.Id = IdGenerator.Instance.GetNextId();
         building.Active = true;
@@ -160,6 +165,7 @@ public class BuildingFactory : MonoBehaviour
             EnvironmentalController.Instance.RegisterBuilding(building.Terraformer);
         }
 
+        Debug.Log($"BuildingFactory(), returning building ({building}), building collider position is {building.Collider.position} (world) / {building.Collider.localPosition} (local), building model position is {building.Model.position} (world) / {building.Model.localPosition} (local)");
         return building;
     }
 

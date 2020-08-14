@@ -74,6 +74,12 @@ public class Building : CollisionListener
     private TurretAiming turretAimer;
     private TurretShooting turretShooter;
 
+    [Header("Testing")]
+    [SerializeField] private Transform collider;
+    [SerializeField] private Transform model;
+    public Transform Collider { get => collider; }
+    public Transform Model { get => model; }
+
     private Dictionary<string, List<CollisionReporter>> groupedReporters;
 
     //Positioning
@@ -462,6 +468,7 @@ public class Building : CollisionListener
     /// <param name="position">Where the building is to be placed.</param>
     public void Place(Vector3 position)
     {
+        Debug.Log($"{this}.Placed() (start), collider position is {collider.position} (world) / {collider.localPosition} (local), model position is {model.position} (world) / {model.localPosition} (local)");
         placed = true; //Needs to occur before its position gets set to be on the ground so that it triggers the building Foundation at the proper time.
         ResourceController.Instance.Ore -= oreCost;
 		ResourceController.Instance.PowerConsumption += powerConsumption;
@@ -481,6 +488,7 @@ public class Building : CollisionListener
         transform.position = position;
         BuildingController.Instance.RegisterBuilding(this);
         animator.enabled = true;
+        Debug.Log($"{this}.Placed() (finished), collider position is {collider.position} (world) / {collider.localPosition} (local), model position is {model.position} (world) / {model.localPosition} (local)");
     }
 
     /// <summary>
