@@ -98,7 +98,7 @@ GameObject:
   m_Layer: 10
   m_Name: Fusion Reactor
   m_TagString: Building
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 2800000, guid: 6162f834aa5f039429ef184e0e935851, type: 3}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -151,6 +151,7 @@ MonoBehaviour:
   - {x: 0.25, y: 0, z: 0.25}
   buildingFoundationOffsets:
   - {x: 0, y: -0.45, z: 0}
+  model: {fileID: 8372951081081303490}
   rendererMaterialSets:
   - renderer: {fileID: 3018881853560271061}
     opaque: {fileID: 2100000, guid: c3b1016b873b8294589543b2ac716e0c, type: 2}
@@ -167,7 +168,6 @@ MonoBehaviour:
     type: 3}
   fxSize: 1
   collider: {fileID: 3167873814941227850}
-  model: {fileID: 8372951081081303490}
   active: 0
   operational: 0
 --- !u!114 &-8028724317887167732

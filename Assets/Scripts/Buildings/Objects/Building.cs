@@ -49,7 +49,8 @@ public class Building : CollisionListener
     [Header("Offsets of Foundations from Position")]
     [SerializeField] private List<Vector3> buildingFoundationOffsets;
 
-    [Header("Renderers and Materials")]
+    [Header("Model, Materials, etc.")]
+    [SerializeField] private Transform model;
     [SerializeField] private List<RendererMaterialSet> rendererMaterialSets;
     [SerializeField] private Material buildingErrorMaterial;
 
@@ -73,13 +74,6 @@ public class Building : CollisionListener
     private Terraformer terraformer;
     private TurretAiming turretAimer;
     private TurretShooting turretShooter;
-
-    [Header("Testing")]
-    [SerializeField] private Transform collider;
-    [SerializeField] private Transform model;
-    public Transform Collider { get => collider; }
-    public Transform Model { get => model; }
-
     private Dictionary<string, List<CollisionReporter>> groupedReporters;
 
     //Positioning
@@ -140,6 +134,11 @@ public class Building : CollisionListener
     /// The Building's Health component.
     /// </summary>
     public Health Health { get => health; }
+
+    /// <summary>
+    /// The transform of the building's model.
+    /// </summary>
+    public Transform Model { get => model; }
 
     /// <summary>
     /// How much ore it costs to build this building.
@@ -468,7 +467,7 @@ public class Building : CollisionListener
     /// <param name="position">Where the building is to be placed.</param>
     public void Place(Vector3 position)
     {
-        Debug.Log($"{this}.Placed() (start), collider position is {collider.position} (world) / {collider.localPosition} (local), model position is {model.position} (world) / {model.localPosition} (local)");
+        //Debug.Log($"{this}.Placed() (start), collider position is {collider.position} (world) / {collider.localPosition} (local), model position is {model.position} (world) / {model.localPosition} (local)");
         placed = true; //Needs to occur before its position gets set to be on the ground so that it triggers the building Foundation at the proper time.
         ResourceController.Instance.Ore -= oreCost;
 		ResourceController.Instance.PowerConsumption += powerConsumption;
@@ -488,7 +487,7 @@ public class Building : CollisionListener
         transform.position = position;
         BuildingController.Instance.RegisterBuilding(this);
         animator.enabled = true;
-        Debug.Log($"{this}.Placed() (finished), collider position is {collider.position} (world) / {collider.localPosition} (local), model position is {model.position} (world) / {model.localPosition} (local)");
+        //Debug.Log($"{this}.Placed() (finished), collider position is {collider.position} (world) / {collider.localPosition} (local), model position is {model.position} (world) / {model.localPosition} (local)");
     }
 
     /// <summary>

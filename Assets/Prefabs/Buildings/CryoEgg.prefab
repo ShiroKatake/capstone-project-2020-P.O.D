@@ -17,7 +17,7 @@ GameObject:
   m_Layer: 10
   m_Name: CryoEgg
   m_TagString: Building
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 2800000, guid: d4387ea1b573d36438de37e55dc63970, type: 3}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -60,6 +60,7 @@ MonoBehaviour:
   buildTime: 0
   cliffRaycastOffsets: []
   buildingFoundationOffsets: []
+  model: {fileID: 6656095491460926229}
   rendererMaterialSets:
   - renderer: {fileID: 8230535307009674714}
     opaque: {fileID: 2100000, guid: 355600a759edc5d46913d08651964d6b, type: 2}
@@ -71,7 +72,6 @@ MonoBehaviour:
   constructionFinishedFX: {fileID: 0}
   fxSize: 1
   collider: {fileID: 8586582078626057228}
-  model: {fileID: 6656095491460926229}
   active: 0
   operational: 1
 --- !u!114 &4025372026840351080
