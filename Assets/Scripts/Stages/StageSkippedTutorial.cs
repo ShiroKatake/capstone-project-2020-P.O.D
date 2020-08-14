@@ -131,8 +131,6 @@ public class StageSkippedTutorial : Stage
         ClockController.Instance.Paused = false;
         consoleDB.SubmitDialogue("blank", 0, false, false);
         consoleDB.SubmitDialogue("system check", 0, false, false);
-        consoleDB.SubmitDialogue("initialising functions", 0, false, false);
-        consoleDB.SubmitDialogue("clock gps inventory online", 0, false, false);
         ResourceTextManager.Instance.FadeIn();
         miniMap.Visible = true;
         clock.Visible = true;
