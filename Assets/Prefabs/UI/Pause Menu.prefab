@@ -566,7 +566,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 3597305364051933026}
   m_Direction: 2
   m_Value: 1.0000001
-  m_Size: 0.53638476
+  m_Size: 0.5363848
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1275,16 +1275,15 @@ MonoBehaviour:
   fadeDuration: 0.1
   border: {fileID: 3759640605019075894}
   fill: {fileID: 3781561110021965596}
+  icon: {fileID: 0}
   borderNormal: {r: 0.5882353, g: 0.9568628, b: 1, a: 1}
   borderHighlight: {r: 0, g: 0.9000001, b: 1, a: 1}
-  borderPressed: {r: 0, g: 0, b: 0, a: 0}
-  borderSelect: {r: 0, g: 0, b: 0, a: 0}
-  borderDiabled: {r: 0, g: 0, b: 0, a: 0}
+  borderUninteractable: {r: 0, g: 0, b: 0, a: 0}
   fillNormal: {r: 0.1764706, g: 0.40000004, b: 0.48627454, a: 1}
   fillHighlight: {r: 0.36, g: 0.8186667, b: 1, a: 1}
-  fillPressed: {r: 0, g: 0, b: 0, a: 0}
-  fillSelect: {r: 0, g: 0, b: 0, a: 0}
-  fillDiabled: {r: 0, g: 0, b: 0, a: 0}
+  fillUninteractable: {r: 0, g: 0, b: 0, a: 0}
+  iconInteractable: {r: 0, g: 0, b: 0, a: 0}
+  iconUninteractable: {r: 0, g: 0, b: 0, a: 0}
 --- !u!114 &1736926072090473334
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1303,18 +1302,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 4691752490524782690}
-          m_MethodName: BorderHighlighted
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 4691752490524782690}
-          m_MethodName: FillHighlighted
+          m_MethodName: SetHighlighted
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -1329,18 +1317,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 4691752490524782690}
-          m_MethodName: BorderNormalise
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 4691752490524782690}
-          m_MethodName: FillNormalise
+          m_MethodName: SetNormal
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -1469,16 +1446,15 @@ MonoBehaviour:
   fadeDuration: 0.1
   border: {fileID: 3618386650037657916}
   fill: {fileID: 2279072412244064682}
+  icon: {fileID: 0}
   borderNormal: {r: 0.5882353, g: 0.9568628, b: 1, a: 1}
   borderHighlight: {r: 0, g: 0.9000001, b: 1, a: 1}
-  borderPressed: {r: 0, g: 0, b: 0, a: 0}
-  borderSelect: {r: 0, g: 0, b: 0, a: 0}
-  borderDiabled: {r: 0, g: 0, b: 0, a: 0}
+  borderUninteractable: {r: 0, g: 0, b: 0, a: 0}
   fillNormal: {r: 0.1764706, g: 0.40000004, b: 0.48627454, a: 1}
   fillHighlight: {r: 0.36, g: 0.8186667, b: 1, a: 1}
-  fillPressed: {r: 0, g: 0, b: 0, a: 0}
-  fillSelect: {r: 0, g: 0, b: 0, a: 0}
-  fillDiabled: {r: 0, g: 0, b: 0, a: 0}
+  fillUninteractable: {r: 0, g: 0, b: 0, a: 0}
+  iconInteractable: {r: 0, g: 0, b: 0, a: 0}
+  iconUninteractable: {r: 0, g: 0, b: 0, a: 0}
 --- !u!114 &1670038743080557192
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1497,18 +1473,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 8407852820091173225}
-          m_MethodName: BorderHighlighted
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 8407852820091173225}
-          m_MethodName: FillHighlighted
+          m_MethodName: SetHighlighted
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -1523,18 +1488,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 8407852820091173225}
-          m_MethodName: BorderNormalise
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 8407852820091173225}
-          m_MethodName: FillNormalise
+          m_MethodName: SetNormal
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -2010,16 +1964,15 @@ MonoBehaviour:
   fadeDuration: 0.1
   border: {fileID: 7104642508275913643}
   fill: {fileID: 2867774710576430017}
+  icon: {fileID: 0}
   borderNormal: {r: 0.5882353, g: 0.9568628, b: 1, a: 1}
   borderHighlight: {r: 0, g: 0.9000001, b: 1, a: 1}
-  borderPressed: {r: 0, g: 0, b: 0, a: 0}
-  borderSelect: {r: 0, g: 0, b: 0, a: 0}
-  borderDiabled: {r: 0, g: 0, b: 0, a: 0}
+  borderUninteractable: {r: 0, g: 0, b: 0, a: 0}
   fillNormal: {r: 0.1764706, g: 0.40000004, b: 0.48627454, a: 1}
   fillHighlight: {r: 0.36, g: 0.8186667, b: 1, a: 1}
-  fillPressed: {r: 0, g: 0, b: 0, a: 0}
-  fillSelect: {r: 0, g: 0, b: 0, a: 0}
-  fillDiabled: {r: 0, g: 0, b: 0, a: 0}
+  fillUninteractable: {r: 0, g: 0, b: 0, a: 0}
+  iconInteractable: {r: 0, g: 0, b: 0, a: 0}
+  iconUninteractable: {r: 0, g: 0, b: 0, a: 0}
 --- !u!114 &8387416024984498002
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2038,18 +1991,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 4277323729353989986}
-          m_MethodName: BorderHighlighted
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 4277323729353989986}
-          m_MethodName: FillHighlighted
+          m_MethodName: SetHighlighted
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -2064,18 +2006,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 4277323729353989986}
-          m_MethodName: BorderNormalise
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 4277323729353989986}
-          m_MethodName: FillNormalise
+          m_MethodName: SetNormal
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -2960,16 +2891,15 @@ MonoBehaviour:
   fadeDuration: 0.1
   border: {fileID: 5261150154473458621}
   fill: {fileID: 6704924014784682893}
+  icon: {fileID: 0}
   borderNormal: {r: 0.5882353, g: 0.9568628, b: 1, a: 1}
   borderHighlight: {r: 0, g: 0.9000001, b: 1, a: 1}
-  borderPressed: {r: 0, g: 0, b: 0, a: 0}
-  borderSelect: {r: 0, g: 0, b: 0, a: 0}
-  borderDiabled: {r: 0, g: 0, b: 0, a: 0}
+  borderUninteractable: {r: 0, g: 0, b: 0, a: 0}
   fillNormal: {r: 0.1764706, g: 0.40000004, b: 0.48627454, a: 1}
   fillHighlight: {r: 0.36, g: 0.8186667, b: 1, a: 1}
-  fillPressed: {r: 0, g: 0, b: 0, a: 0}
-  fillSelect: {r: 0, g: 0, b: 0, a: 0}
-  fillDiabled: {r: 0, g: 0, b: 0, a: 0}
+  fillUninteractable: {r: 0, g: 0, b: 0, a: 0}
+  iconInteractable: {r: 0, g: 0, b: 0, a: 0}
+  iconUninteractable: {r: 0, g: 0, b: 0, a: 0}
 --- !u!114 &2664143268554009517
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2988,18 +2918,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 12153761762383398}
-          m_MethodName: BorderHighlighted
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 12153761762383398}
-          m_MethodName: FillHighlighted
+          m_MethodName: SetHighlighted
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -3014,18 +2933,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 12153761762383398}
-          m_MethodName: BorderNormalise
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 12153761762383398}
-          m_MethodName: FillNormalise
+          m_MethodName: SetNormal
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -3197,7 +3105,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8679618311001883485}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 

@@ -123,23 +123,45 @@ public class BuildingController : MonoBehaviour
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
-
+    
     /// <summary>
     /// Checks if a building of the specified type has been placed and built.
     /// </summary>
     /// <param name="buildingType">The type of building you want to check for.</param>
     /// <returns>Whether a building of the specified type has been placed and built.</returns>
-    public bool HasBuiltBuilding(EBuilding buildingType)
+    public int BuiltBuildingsCount(EBuilding buildingType)
     {
+        int result = 0;
+
         foreach (Building b in buildings)
         {
             if (b.BuildingType == buildingType && b.Built)
             {
-                return true;
+                result++;
             }
         }
 
-        return false;
+        return result;
+    }
+
+    /// <summary>
+    /// Checks if a building of the specified type has been placed.
+    /// </summary>
+    /// <param name="buildingType">The type of building you want to check for.</param>
+    /// <returns>Whether a building of the specified type has been placed.</returns>
+    public int PlacedBuildingsCount(EBuilding buildingType)
+    {
+        int result = 0;
+
+        foreach (Building b in buildings)
+        {
+            if (b.BuildingType == buildingType && b.Placed)
+            {
+                result++;
+            }
+        }
+
+        return result;
     }
 
     /// <summary>

@@ -54,6 +54,7 @@ public class UIElementStatusController : MonoBehaviour
     private bool finishedFlickeringIn;
 
     private List<Graphic> graphics;
+    private ButtonInteract buttonInteract;
 
     private RectTransform rectTransform;
     private TweenAnchorManager tweenAnchorManager;
@@ -87,6 +88,11 @@ public class UIElementStatusController : MonoBehaviour
             if (/*!requiresResources && */button != null /*&& button.interactable != interactable*/)
             {
                 button.interactable = interactable;
+            }
+
+            if (buttonInteract != null)
+            {
+                buttonInteract.OnInteractableChanged(button.interactable);
             }
         }
     }
@@ -220,6 +226,13 @@ public class UIElementStatusController : MonoBehaviour
         {
             interactable = interactableOnAwake;
             button.interactable = interactableOnAwake;
+
+            buttonInteract = button.GetComponent<ButtonInteract>();
+
+            if (buttonInteract != null)
+            {
+                buttonInteract.OnInteractableChanged(button.interactable);
+            }
         }
 
         graphics = new List<Graphic>();

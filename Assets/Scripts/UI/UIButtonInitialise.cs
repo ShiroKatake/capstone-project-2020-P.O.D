@@ -11,7 +11,7 @@ public class UIButtonInitialise : MonoBehaviour
 
     public void Initialise(){
         foreach (ButtonInteract btn in buttons){
-            btn.SetDefault();
+            btn.SetNormal();
         }
     }
 }

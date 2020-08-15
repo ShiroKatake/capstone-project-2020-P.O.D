@@ -92,40 +92,53 @@ public class StageControls : Stage
     /// </note>
     protected override IEnumerator Execution()
     {
-        //Set the player's health ready for the healing section of the tutorial
-        PlayerController.Instance.GetComponent<Health>().CurrentHealth = PlayerController.Instance.GetComponent<Health>().MaxHealth * 0.25f;
+        yield return StartCoroutine(Setup());
+        yield return StartCoroutine(EnableUI());
+        yield return StartCoroutine(MovementControls());
+        yield return StartCoroutine(MiningControls());
+        StageManager.Instance.SetStage(EStage.Terraforming);
+    }
 
-        //Switch the clock off
+    /// <summary>
+    /// Sets up the player's health and the time.
+    /// </summary>
+    private IEnumerator Setup()
+    {
+        PlayerController.Instance.GetComponent<Health>().CurrentHealth = PlayerController.Instance.GetComponent<Health>().MaxHealth * 0.25f;  //Set the player's health ready for the healing section of the tutorial
+
         ClockController.Instance.Paused = true;
         ClockController.Instance.SetTime(ClockController.Instance.HalfCycleDuration * 0.2f);
         yield return new WaitForSeconds(3);
+    }
 
-        //Enable UI
+    /// <summary>
+    /// Brings the UI online
+    /// </summary>
+    private IEnumerator EnableUI()
+    {
         uiBorderUIEC.Visible = true;
-
-        while (!uiBorderUIEC.FinishedFlickeringIn)
-        {
-            yield return null;
-        }
-
         consoleUIEC.Visible = true;
         console.SubmitDialogue("blank", 0, false, false);
 
-        while (!consoleUIEC.FinishedFlickeringIn)
+        while (!uiBorderUIEC.FinishedFlickeringIn || !consoleUIEC.FinishedFlickeringIn)
         {
             yield return null;
         }
 
-        //Movement controls: WASD
         console.SubmitDialogue("ai online", 0, false, false);
-        yield return new WaitForSeconds(2);
+    }
 
+    /// <summary>
+    /// Walks the player through the movement controls.
+    /// </summary>
+    private IEnumerator MovementControls()
+    {
         console.SubmitDialogue("calibrate movement", 0, false, false);
+        game.SubmitDialogue("wasd", 1, true, false);
         w.SubmitDialogue("w", 1, false, true);
         a.SubmitDialogue("a", 1, false, true);
         s.SubmitDialogue("s", 1, false, true);
         d.SubmitDialogue("d", 1, false, true);
-        game.SubmitDialogue("wasd", 1, true, false);
 
         while (!w.Clickable || !a.Clickable || !s.Clickable || !d.Clickable || !game.Clickable)
         {
@@ -140,7 +153,7 @@ public class StageControls : Stage
             yield return null;
 
             moveVertical = -playerInputManager.GetAxis("Vertical");
-            moveHorizontal  = playerInputManager.GetAxis("Horizontal");
+            moveHorizontal = playerInputManager.GetAxis("Horizontal");
 
             if (moveVertical != 0)
             {
@@ -161,51 +174,62 @@ public class StageControls : Stage
                 {
                     a.SubmitDeactivation();
                 }
-                
+
                 if (moveHorizontal > 0 && d.Activated)
                 {
                     d.SubmitDeactivation();
                 }
-            }            
+            }
         }
 
-        //Assess planet livability
         if (game.Activated)
         {
             game.SubmitDeactivation();
         }
 
         console.SubmitDialogue("systems online", 0, false, false);
+
+        while (console.LerpingDialogue)
+        {
+            yield return null;
+        }
+
         yield return new WaitForSeconds(2);
+    }
 
-        console.SubmitDialogue("welcome pod", 0, false, false);
-        yield return new WaitForSeconds(3);
-
+    /// <summary>
+    /// Walks the player through mining.
+    /// </summary>
+    private IEnumerator MiningControls()
+    {
         console.ClearDialogue();
         console.SubmitDialogue("planet livability", 0, false, false);
-        yield return new WaitForSeconds(2);
 
-        console.SubmitDialogue("planet unlivable", 0, false, false);
-        yield return new WaitForSeconds(2);
+        while (console.LerpingDialogue)
+        {
+            yield return null;
+        }
 
-        //Minerals controls: LMB
+        yield return new WaitForSeconds(0.5f);
+
         console.SubmitDialogue("launch cat", 0, false, false);
         cat.SubmitDialogue("need minerals", 2, true, false);
-        
+
         while (!cat.DialogueRead)
         {
             yield return null;
         }
 
-        console.SubmitDialogue("scan minerals", 0, false, false);
-        yield return new WaitForSeconds(2);
-
-        console.SubmitDialogue("minerals detected", 0, false, false);
+        console.ClearDialogue();
+        console.SubmitDialogue("detect minerals", 0, false, false);
         buildingAndResourcesBarUIEC.Visible = true;
         miniMapBorderUIEC.Visible = true;
-        yield return new WaitForSeconds(2);
 
-        console.ClearDialogue();
+        while (!miniMapBorderUIEC.FinishedFlickeringIn)
+        {
+            yield return null;
+        }
+
         console.SubmitDialogue("task gather minerals", 0, false, false);
         cat.SubmitDialogue("gather minerals", 0, true, false);
         game.SubmitDialogue("lmb", 1, true, false);
@@ -218,7 +242,6 @@ public class StageControls : Stage
             yield return null;
         }
 
-        //Finished controls stage
         if (game.Activated)
         {
             game.SubmitDeactivation();
@@ -233,7 +256,5 @@ public class StageControls : Stage
         {
             yield return null;
         }
-
-        StageManager.Instance.SetStage(EStage.Terraforming);
     }
 }

@@ -277,7 +277,7 @@ RectTransform:
   m_Children:
   - {fileID: 4528282982346513304}
   m_Father: {fileID: 4528282982005485690}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -970,7 +970,7 @@ MonoBehaviour:
   fadeSpeed: 0
   dismissable: 0
   appendDialogue: 1
-  lerpTextInterval: 3
+  lerpTextInterval: 6
   logDialogue: 1
   logColour: {r: 0, g: 1, b: 0, a: 1}
   cullOverflow: 1
@@ -1029,7 +1029,7 @@ MonoBehaviour:
   textBox: {fileID: 0}
   visibleOnAwake: 0
   flickersIn: 1
-  flickerInSpeed: 2
+  flickerInSpeed: 4
   flickerCount: 2
   flickerOutOnComplete: 0
   tweensIn: 0
@@ -2336,7 +2336,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: S
-  background: {fileID: 0}
+  background: {fileID: 4550100198890986874}
   border: {fileID: 6811120901257622525}
   textBox: {fileID: 2828616292427314828}
   offScreenPos: {x: 0, y: -650}
@@ -2461,7 +2461,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: D
-  background: {fileID: 0}
+  background: {fileID: 6552465837694384376}
   border: {fileID: 3677859059361645377}
   textBox: {fileID: 6651371265486642101}
   offScreenPos: {x: 1050, y: -45}
@@ -2893,7 +2893,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.1764706, g: 0.40000004, b: 0.48627454, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -3029,7 +3029,7 @@ GameObject:
   - component: {fileID: 1756344808723784956}
   - component: {fileID: 1370610219509641046}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3102,7 +3102,7 @@ GameObject:
   - component: {fileID: 8741110709704480614}
   - component: {fileID: 1712435567168549826}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3175,7 +3175,7 @@ GameObject:
   - component: {fileID: 6895990744098467578}
   - component: {fileID: 1708878713714258182}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3527,7 +3527,7 @@ MonoBehaviour:
   textBox: {fileID: 0}
   visibleOnAwake: 0
   flickersIn: 1
-  flickerInSpeed: 2
+  flickerInSpeed: 4
   flickerCount: 2
   flickerOutOnComplete: 0
   tweensIn: 0
@@ -3731,7 +3731,7 @@ RectTransform:
   m_Children:
   - {fileID: 4528282981065271660}
   m_Father: {fileID: 4528282982005485690}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -4032,7 +4032,7 @@ RectTransform:
   m_Children:
   - {fileID: 4528282980658916500}
   m_Father: {fileID: 4528282982005485690}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -4612,7 +4612,7 @@ GameObject:
   - component: {fileID: 1835912047723420301}
   - component: {fileID: 8213098921932911717}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4702,7 +4702,7 @@ RectTransform:
   m_Children:
   - {fileID: 4528282982575996859}
   m_Father: {fileID: 4528282982005485690}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -4979,7 +4979,7 @@ RectTransform:
   m_Children:
   - {fileID: 4528282980782118900}
   m_Father: {fileID: 4528282982005485690}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -4998,7 +4998,7 @@ GameObject:
   - component: {fileID: 2111660533919458834}
   - component: {fileID: 6938558425073580407}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5089,7 +5089,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4528282980782118900}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -5117,7 +5117,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.5882353, g: 0.9568628, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -5340,7 +5340,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: A
-  background: {fileID: 0}
+  background: {fileID: 4021721502223470060}
   border: {fileID: 1183104403005522375}
   textBox: {fileID: 8297769724439245550}
   offScreenPos: {x: -1050, y: -45}
@@ -5379,7 +5379,7 @@ GameObject:
   - component: {fileID: 5820518226812930101}
   - component: {fileID: 6709285651695328998}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5941,18 +5941,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 4528282980658916501}
-          m_MethodName: BorderHighlighted
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 4528282980658916501}
-          m_MethodName: FillHighlighted
+          m_MethodName: SetHighlighted
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -5967,18 +5956,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 4528282980658916501}
-          m_MethodName: BorderNormalise
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 4528282980658916501}
-          m_MethodName: FillNormalise
+          m_MethodName: SetNormal
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -6003,16 +5981,15 @@ MonoBehaviour:
   fadeDuration: 0.1
   border: {fileID: 4528282981136870260}
   fill: {fileID: 4528282980871887151}
+  icon: {fileID: 1708878713714258182}
   borderNormal: {r: 0, g: 1, b: 0.98823535, a: 1}
   borderHighlight: {r: 0, g: 1, b: 0.98823535, a: 1}
-  borderPressed: {r: 0, g: 0, b: 0, a: 0}
-  borderSelect: {r: 0, g: 0, b: 0, a: 0}
-  borderDiabled: {r: 0, g: 0, b: 0, a: 0}
+  borderUninteractable: {r: 0.33, g: 0.33, b: 0.33, a: 1}
   fillNormal: {r: 0.03137255, g: 0.16078432, b: 0.23529413, a: 1}
   fillHighlight: {r: 0.043137256, g: 0.7803922, b: 0.77647066, a: 1}
-  fillPressed: {r: 0, g: 0, b: 0, a: 0}
-  fillSelect: {r: 0, g: 0, b: 0, a: 0}
-  fillDiabled: {r: 0, g: 0, b: 0, a: 0}
+  fillUninteractable: {r: 0.21698111, g: 0.21698111, b: 0.21698111, a: 1}
+  iconInteractable: {r: 1, g: 1, b: 1, a: 1}
+  iconUninteractable: {r: 0.5, g: 0.5, b: 0.5, a: 0.5019608}
 --- !u!114 &4528282980658916505
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6070,7 +6047,7 @@ MonoBehaviour:
   textBox: {fileID: 0}
   visibleOnAwake: 0
   flickersIn: 1
-  flickerInSpeed: 0.5
+  flickerInSpeed: 1
   flickerCount: 0
   flickerOutOnComplete: 0
   tweensIn: 1
@@ -6137,7 +6114,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.5882353, g: 0.9568628, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -6187,8 +6164,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 3673927181716732140}
-  - {fileID: 8414105241510160025}
   - {fileID: 3696664235160258073}
+  - {fileID: 8414105241510160025}
   - {fileID: 2283546817147885283}
   - {fileID: 1082864067683055733}
   m_Father: {fileID: 3291444241612269218}
@@ -6279,18 +6256,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 4528282980782118902}
-          m_MethodName: BorderHighlighted
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 4528282980782118902}
-          m_MethodName: FillHighlighted
+          m_MethodName: SetHighlighted
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -6305,18 +6271,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 4528282980782118902}
-          m_MethodName: BorderNormalise
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 4528282980782118902}
-          m_MethodName: FillNormalise
+          m_MethodName: SetNormal
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -6341,16 +6296,15 @@ MonoBehaviour:
   fadeDuration: 0.1
   border: {fileID: 4550432712909149442}
   fill: {fileID: 6083567140978022828}
+  icon: {fileID: 7171766509266209443}
   borderNormal: {r: 0.57254905, g: 0.9333334, b: 0.97647065, a: 1}
   borderHighlight: {r: 0, g: 0.8932042, b: 1, a: 1}
-  borderPressed: {r: 0, g: 0, b: 0, a: 0}
-  borderSelect: {r: 0, g: 0, b: 0, a: 0}
-  borderDiabled: {r: 0, g: 0, b: 0, a: 0}
-  fillNormal: {r: 0.257931, g: 0.5826208, b: 0.704, a: 1}
+  borderUninteractable: {r: 0.33, g: 0.33, b: 0.33, a: 1}
+  fillNormal: {r: 0.0664, g: 0.34030002, b: 0.498, a: 1}
   fillHighlight: {r: 0.503, g: 0.8619445, b: 1, a: 1}
-  fillPressed: {r: 0, g: 0, b: 0, a: 0}
-  fillSelect: {r: 0, g: 0, b: 0, a: 0}
-  fillDiabled: {r: 0, g: 0, b: 0, a: 0}
+  fillUninteractable: {r: 0.21698111, g: 0.21698111, b: 0.21698111, a: 1}
+  iconInteractable: {r: 1, g: 1, b: 1, a: 1}
+  iconUninteractable: {r: 0.5, g: 0.5, b: 0.5, a: 0.5019608}
 --- !u!114 &4528282980782118905
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6409,7 +6363,7 @@ MonoBehaviour:
   textBox: {fileID: 0}
   visibleOnAwake: 0
   flickersIn: 1
-  flickerInSpeed: 0.5
+  flickerInSpeed: 1
   flickerCount: 0
   flickerOutOnComplete: 0
   tweensIn: 1
@@ -6695,7 +6649,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.5882353, g: 0.9568628, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -6993,18 +6947,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 4528282981065271661}
-          m_MethodName: BorderHighlighted
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 4528282981065271661}
-          m_MethodName: FillHighlighted
+          m_MethodName: SetHighlighted
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -7019,18 +6962,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 4528282981065271661}
-          m_MethodName: BorderNormalise
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 4528282981065271661}
-          m_MethodName: FillNormalise
+          m_MethodName: SetNormal
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -7055,16 +6987,15 @@ MonoBehaviour:
   fadeDuration: 0.1
   border: {fileID: 4528282981613849403}
   fill: {fileID: 4528282981515449481}
+  icon: {fileID: 6938558425073580407}
   borderNormal: {r: 0.57254905, g: 0.9333334, b: 0.97647065, a: 1}
   borderHighlight: {r: 0, g: 0.8932042, b: 1, a: 1}
-  borderPressed: {r: 0, g: 0, b: 0, a: 0}
-  borderSelect: {r: 0, g: 0, b: 0, a: 0}
-  borderDiabled: {r: 0, g: 0, b: 0, a: 0}
-  fillNormal: {r: 0.257931, g: 0.5826208, b: 0.704, a: 1}
+  borderUninteractable: {r: 0.33, g: 0.33, b: 0.33, a: 1}
+  fillNormal: {r: 0.0664, g: 0.34030002, b: 0.498, a: 1}
   fillHighlight: {r: 0.503, g: 0.8619445, b: 1, a: 1}
-  fillPressed: {r: 0, g: 0, b: 0, a: 0}
-  fillSelect: {r: 0, g: 0, b: 0, a: 0}
-  fillDiabled: {r: 0, g: 0, b: 0, a: 0}
+  fillUninteractable: {r: 0.21698111, g: 0.21698111, b: 0.21698111, a: 1}
+  iconInteractable: {r: 1, g: 1, b: 1, a: 1}
+  iconUninteractable: {r: 0.5, g: 0.5, b: 0.5, a: 0.5019608}
 --- !u!114 &4528282981065271665
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7122,7 +7053,7 @@ MonoBehaviour:
   textBox: {fileID: 0}
   visibleOnAwake: 0
   flickersIn: 1
-  flickerInSpeed: 0.5
+  flickerInSpeed: 1
   flickerCount: 0
   flickerOutOnComplete: 0
   tweensIn: 1
@@ -7187,7 +7118,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   visibleOnAwake: 0
-  fadeInSpeed: 1
+  fadeInSpeed: 2
   ore: {fileID: 6080990814396580658}
   water: {fileID: 6905713005873955943}
   power: {fileID: 7371966420870863399}
@@ -7443,18 +7374,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 4528282981183931573}
-          m_MethodName: BorderHighlighted
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 4528282981183931573}
-          m_MethodName: FillHighlighted
+          m_MethodName: SetHighlighted
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -7469,18 +7389,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 4528282981183931573}
-          m_MethodName: BorderNormalise
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 4528282981183931573}
-          m_MethodName: FillNormalise
+          m_MethodName: SetNormal
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -7505,16 +7414,15 @@ MonoBehaviour:
   fadeDuration: 0.1
   border: {fileID: 4528282981591850915}
   fill: {fileID: 4528282980806117137}
+  icon: {fileID: 8213098921932911717}
   borderNormal: {r: 0.78823537, g: 1, b: 0.5764706, a: 1}
   borderHighlight: {r: 0.78823537, g: 1, b: 0.5764706, a: 1}
-  borderPressed: {r: 0, g: 0, b: 0, a: 0}
-  borderSelect: {r: 0, g: 0, b: 0, a: 0}
-  borderDiabled: {r: 0, g: 0, b: 0, a: 0}
+  borderUninteractable: {r: 0.33, g: 0.33, b: 0.33, a: 1}
   fillNormal: {r: 0.03137255, g: 0.16078432, b: 0.23529413, a: 1}
   fillHighlight: {r: 0.62352943, g: 0.82745105, b: 0.4156863, a: 1}
-  fillPressed: {r: 0, g: 0, b: 0, a: 0}
-  fillSelect: {r: 0, g: 0, b: 0, a: 0}
-  fillDiabled: {r: 0, g: 0, b: 0, a: 0}
+  fillUninteractable: {r: 0.21698111, g: 0.21698111, b: 0.21698111, a: 1}
+  iconInteractable: {r: 1, g: 1, b: 1, a: 1}
+  iconUninteractable: {r: 0.5, g: 0.5, b: 0.5, a: 0.5019608}
 --- !u!114 &4528282981183931577
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7573,7 +7481,7 @@ MonoBehaviour:
   textBox: {fileID: 0}
   visibleOnAwake: 0
   flickersIn: 1
-  flickerInSpeed: 0.5
+  flickerInSpeed: 1
   flickerCount: 0
   flickerOutOnComplete: 0
   tweensIn: 1
@@ -8109,7 +8017,7 @@ MonoBehaviour:
   textBox: {fileID: 0}
   visibleOnAwake: 0
   flickersIn: 1
-  flickerInSpeed: 0.5
+  flickerInSpeed: 1
   flickerCount: 0
   flickerOutOnComplete: 0
   tweensIn: 0
@@ -8176,7 +8084,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.1764706, g: 0.40000004, b: 0.48627454, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -8249,7 +8157,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.1764706, g: 0.40000004, b: 0.48627454, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -8468,7 +8376,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.5882353, g: 0.9568628, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -8608,7 +8516,7 @@ MonoBehaviour:
   textBox: {fileID: 0}
   visibleOnAwake: 0
   flickersIn: 1
-  flickerInSpeed: 0.5
+  flickerInSpeed: 1
   flickerCount: 0
   flickerOutOnComplete: 0
   tweensIn: 0
@@ -8675,7 +8583,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.1764706, g: 0.40000004, b: 0.48627454, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -8784,7 +8692,7 @@ MonoBehaviour:
   textBox: {fileID: 0}
   visibleOnAwake: 0
   flickersIn: 1
-  flickerInSpeed: 2
+  flickerInSpeed: 4
   flickerCount: 2
   flickerOutOnComplete: 0
   tweensIn: 0
@@ -8918,7 +8826,7 @@ MonoBehaviour:
   textBox: {fileID: 0}
   visibleOnAwake: 0
   flickersIn: 1
-  flickerInSpeed: 0.5
+  flickerInSpeed: 1
   flickerCount: 0
   flickerOutOnComplete: 0
   tweensIn: 0
@@ -8955,7 +8863,6 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 4276295127332042982}
   - {fileID: 6948860571769700972}
   - {fileID: 3291444241612269218}
   - {fileID: 7115680562366086086}
@@ -9110,18 +9017,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 4528282982050965520}
-          m_MethodName: BorderHighlighted
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 4528282982050965520}
-          m_MethodName: FillHighlighted
+          m_MethodName: SetHighlighted
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -9136,18 +9032,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 4528282982050965520}
-          m_MethodName: BorderNormalise
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 4528282982050965520}
-          m_MethodName: FillNormalise
+          m_MethodName: SetNormal
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -9172,16 +9057,15 @@ MonoBehaviour:
   fadeDuration: 0.1
   border: {fileID: 4528282982590775342}
   fill: {fileID: 4528282982474148230}
+  icon: {fileID: 1370610219509641046}
   borderNormal: {r: 1, g: 0.67058825, b: 0.9803922, a: 1}
   borderHighlight: {r: 1, g: 0.67058825, b: 0.9803922, a: 1}
-  borderPressed: {r: 0, g: 0, b: 0, a: 0}
-  borderSelect: {r: 0, g: 0, b: 0, a: 0}
-  borderDiabled: {r: 0, g: 0, b: 0, a: 0}
+  borderUninteractable: {r: 0.33, g: 0.33, b: 0.33, a: 1}
   fillNormal: {r: 0.03137255, g: 0.16078432, b: 0.23529413, a: 1}
   fillHighlight: {r: 0.8431373, g: 0.5137255, b: 0.8235295, a: 1}
-  fillPressed: {r: 0, g: 0, b: 0, a: 0}
-  fillSelect: {r: 0, g: 0, b: 0, a: 0}
-  fillDiabled: {r: 0, g: 0, b: 0, a: 0}
+  fillUninteractable: {r: 0.21698111, g: 0.21698111, b: 0.21698111, a: 1}
+  iconInteractable: {r: 1, g: 1, b: 1, a: 1}
+  iconUninteractable: {r: 0.5, g: 0.5, b: 0.5, a: 0.5019608}
 --- !u!114 &4528282982050965524
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9239,7 +9123,7 @@ MonoBehaviour:
   textBox: {fileID: 0}
   visibleOnAwake: 0
   flickersIn: 1
-  flickerInSpeed: 0.5
+  flickerInSpeed: 1
   flickerCount: 0
   flickerOutOnComplete: 0
   tweensIn: 1
@@ -9521,18 +9405,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 4528282982346513305}
-          m_MethodName: BorderHighlighted
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 4528282982346513305}
-          m_MethodName: FillHighlighted
+          m_MethodName: SetHighlighted
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -9547,18 +9420,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 4528282982346513305}
-          m_MethodName: BorderNormalise
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 4528282982346513305}
-          m_MethodName: FillNormalise
+          m_MethodName: SetNormal
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -9583,16 +9445,15 @@ MonoBehaviour:
   fadeDuration: 0.1
   border: {fileID: 4528282981037921723}
   fill: {fileID: 4528282981751309073}
+  icon: {fileID: 6709285651695328998}
   borderNormal: {r: 0.57254905, g: 0.9333334, b: 0.97647065, a: 1}
   borderHighlight: {r: 0, g: 0.8932042, b: 1, a: 1}
-  borderPressed: {r: 0, g: 0, b: 0, a: 0}
-  borderSelect: {r: 0, g: 0, b: 0, a: 0}
-  borderDiabled: {r: 0, g: 0, b: 0, a: 0}
-  fillNormal: {r: 0.257931, g: 0.5826208, b: 0.704, a: 1}
+  borderUninteractable: {r: 0.33, g: 0.33, b: 0.33, a: 1}
+  fillNormal: {r: 0.0664, g: 0.34030002, b: 0.498, a: 1}
   fillHighlight: {r: 0.503, g: 0.8619445, b: 1, a: 1}
-  fillPressed: {r: 0, g: 0, b: 0, a: 0}
-  fillSelect: {r: 0, g: 0, b: 0, a: 0}
-  fillDiabled: {r: 0, g: 0, b: 0, a: 0}
+  fillUninteractable: {r: 0.21698111, g: 0.21698111, b: 0.21698111, a: 1}
+  iconInteractable: {r: 1, g: 1, b: 1, a: 1}
+  iconUninteractable: {r: 0.5, g: 0.5, b: 0.5, a: 0.5019608}
 --- !u!114 &4528282982346513309
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9650,7 +9511,7 @@ MonoBehaviour:
   textBox: {fileID: 0}
   visibleOnAwake: 0
   flickersIn: 1
-  flickerInSpeed: 0.5
+  flickerInSpeed: 1
   flickerCount: 0
   flickerOutOnComplete: 0
   tweensIn: 1
@@ -9859,18 +9720,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 4528282982575996860}
-          m_MethodName: BorderHighlighted
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 4528282982575996860}
-          m_MethodName: FillHighlighted
+          m_MethodName: SetHighlighted
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -9885,18 +9735,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 4528282982575996860}
-          m_MethodName: BorderNormalise
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 4528282982575996860}
-          m_MethodName: FillNormalise
+          m_MethodName: SetNormal
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -9921,16 +9760,15 @@ MonoBehaviour:
   fadeDuration: 0.1
   border: {fileID: 4528282980772847868}
   fill: {fileID: 4528282981436915140}
+  icon: {fileID: 1712435567168549826}
   borderNormal: {r: 0.57254905, g: 0.9333334, b: 0.97647065, a: 1}
   borderHighlight: {r: 0, g: 0.8932042, b: 1, a: 1}
-  borderPressed: {r: 0, g: 0, b: 0, a: 0}
-  borderSelect: {r: 0, g: 0, b: 0, a: 0}
-  borderDiabled: {r: 0, g: 0, b: 0, a: 0}
-  fillNormal: {r: 0.257931, g: 0.5826208, b: 0.704, a: 1}
+  borderUninteractable: {r: 0.33, g: 0.33, b: 0.33, a: 1}
+  fillNormal: {r: 0.0664, g: 0.34030002, b: 0.498, a: 1}
   fillHighlight: {r: 0.503, g: 0.8619445, b: 1, a: 1}
-  fillPressed: {r: 0, g: 0, b: 0, a: 0}
-  fillSelect: {r: 0, g: 0, b: 0, a: 0}
-  fillDiabled: {r: 0, g: 0, b: 0, a: 0}
+  fillUninteractable: {r: 0.21698111, g: 0.21698111, b: 0.21698111, a: 1}
+  iconInteractable: {r: 1, g: 1, b: 1, a: 1}
+  iconUninteractable: {r: 0.5, g: 0.5, b: 0.5, a: 0.5019608}
 --- !u!114 &4528282982575996800
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9988,7 +9826,7 @@ MonoBehaviour:
   textBox: {fileID: 0}
   visibleOnAwake: 0
   flickersIn: 1
-  flickerInSpeed: 0.5
+  flickerInSpeed: 1
   flickerCount: 0
   flickerOutOnComplete: 0
   tweensIn: 1
@@ -10571,7 +10409,7 @@ RectTransform:
   m_Children:
   - {fileID: 4528282981183931572}
   m_Father: {fileID: 4528282982005485690}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -11054,7 +10892,7 @@ RectTransform:
   m_Children:
   - {fileID: 4528282982050965519}
   m_Father: {fileID: 4528282982005485690}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -11919,7 +11757,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: W
-  background: {fileID: 0}
+  background: {fileID: 274552269767544940}
   border: {fileID: 3126037177304159035}
   textBox: {fileID: 6215056844978048223}
   offScreenPos: {x: 0, y: 650}
@@ -12177,7 +12015,7 @@ GameObject:
   - component: {fileID: 6664438077564471405}
   - component: {fileID: 7171766509266209443}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12195,7 +12033,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4528282980782118900}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -13818,109 +13656,6 @@ RectTransform:
   m_AnchoredPosition: {x: -600, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &8948498784268079996
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4276295127332042982}
-  - component: {fileID: 8418639591832117839}
-  - component: {fileID: 2562509192640748311}
-  - component: {fileID: 7903655690946496537}
-  m_Layer: 5
-  m_Name: Turrets Highlight
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!224 &4276295127332042982
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8948498784268079996}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 4528282982005485690}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 254.99998, y: 0.125}
-  m_SizeDelta: {x: 220, y: 123}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &8418639591832117839
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8948498784268079996}
-  m_CullTransparentMesh: 0
---- !u!114 &2562509192640748311
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8948498784268079996}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 1, b: 0, a: 1}
-  m_RaycastTarget: 0
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 446f0191a416b8e46919084d2ca46b31, type: 3}
-  m_Type: 1
-  m_PreserveAspect: 0
-  m_FillCenter: 0
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!114 &7903655690946496537
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8948498784268079996}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97335b3d8af8d9141a331358af6c3300, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  button: {fileID: 0}
-  border: {fileID: 2562509192640748311}
-  fill: {fileID: 0}
-  image: {fileID: 0}
-  rawImage: {fileID: 0}
-  textBox: {fileID: 0}
-  visibleOnAwake: 0
-  flickersIn: 1
-  flickerInSpeed: 1
-  flickerCount: 4
-  flickerOutOnComplete: 1
-  tweensIn: 0
-  tweenDuration: 0
-  tutorialAnchorManager: {fileID: 0}
-  skipTutorialAnchorManager: {fileID: 0}
-  finishedAnchor: {fileID: 0}
-  interactableOnAwake: 0
 --- !u!1 &8991409991600488117
 GameObject:
   m_ObjectHideFlags: 0
@@ -14224,16 +13959,43 @@ PrefabInstance:
       propertyPath: image
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 4095989408005920929, guid: adf3464973acc184c946d90c2b49c1b1,
+        type: 3}
+      propertyPath: flickerInSpeed
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 5029449342436753532, guid: adf3464973acc184c946d90c2b49c1b1,
         type: 3}
       propertyPath: m_Name
       value: ClockAndMinimap
       objectReference: {fileID: 0}
+    - target: {fileID: 5766969260412025441, guid: adf3464973acc184c946d90c2b49c1b1,
+        type: 3}
+      propertyPath: flickerInSpeed
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6309912171680464121, guid: adf3464973acc184c946d90c2b49c1b1,
+        type: 3}
+      propertyPath: flickerInSpeed
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: adf3464973acc184c946d90c2b49c1b1, type: 3}
---- !u!224 &2647383470585378577 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 2992411899632503212, guid: adf3464973acc184c946d90c2b49c1b1,
+--- !u!114 &3863062295736060388 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4081969117853759321, guid: adf3464973acc184c946d90c2b49c1b1,
+    type: 3}
+  m_PrefabInstance: {fileID: 953157807707012797}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1329989833404019359}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &1329989833404019359 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2256120126282222626, guid: adf3464973acc184c946d90c2b49c1b1,
     type: 3}
   m_PrefabInstance: {fileID: 953157807707012797}
   m_PrefabAsset: {fileID: 0}
@@ -14249,21 +14011,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &1329989833404019359 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2256120126282222626, guid: adf3464973acc184c946d90c2b49c1b1,
+--- !u!224 &2647383470585378577 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 2992411899632503212, guid: adf3464973acc184c946d90c2b49c1b1,
     type: 3}
   m_PrefabInstance: {fileID: 953157807707012797}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &3863062295736060388 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4081969117853759321, guid: adf3464973acc184c946d90c2b49c1b1,
-    type: 3}
-  m_PrefabInstance: {fileID: 953157807707012797}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1329989833404019359}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
