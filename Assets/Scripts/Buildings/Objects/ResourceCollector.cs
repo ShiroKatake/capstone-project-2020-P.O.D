@@ -27,6 +27,16 @@ public class ResourceCollector : MonoBehaviour
     /// </summary>
     public Building Building { get => building; }
 
+    /// <summary>
+    /// The rate at which this building collects its resource.
+    /// </summary>
+    public int CollectionRate { get => collectionRate; }
+
+    /// <summary>
+    /// The resource this building collects.
+    /// </summary>
+    public EResource Resource { get => resource; }
+
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>

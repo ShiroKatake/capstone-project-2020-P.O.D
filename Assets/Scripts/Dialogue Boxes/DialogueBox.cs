@@ -741,6 +741,11 @@ public class DialogueBox : MonoBehaviour
     {
         textBox.text = "";
         dialogueStash = "";
+
+        if (appendDialogue)
+        {
+            SubmitDialogue("blank", 0, false, false);
+        }
     }
 
     /// <summary>
