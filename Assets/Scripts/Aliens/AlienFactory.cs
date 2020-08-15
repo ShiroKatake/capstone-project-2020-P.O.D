@@ -62,21 +62,22 @@ public class AlienFactory : MonoBehaviour
     /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
     /// Start() runs after Awake().
     /// </summary>
-    private void Start() {
+    private void Start()
+    {
         objectPool = ObjectPool.Instance.transform;
 
         for (int i = 0; i < pooledAliens; i++)
         {
             Alien alien = Instantiate(alienPrefab, objectPool.position, new Quaternion()); 
             alien.transform.parent = objectPool;
+            alien.GetComponentInChildren<SkinnedMeshRenderer>().enabled = false;
 
             foreach (Collider c in alien.GetComponents<Collider>())
             {
                 c.enabled = false;
             }
 
-            alienPool.Add(alien);
-            
+            alienPool.Add(alien);            
         }
     }
 
@@ -97,8 +98,9 @@ public class AlienFactory : MonoBehaviour
             alienPool.Remove(alien);
             alien.transform.parent = null;
             alien.transform.position = position;
+            alien.Renderer.enabled = true;
 
-            foreach (Collider c in alien.GetComponents<Collider>())
+            foreach (Collider c in alien.Colliders)
             {
                 c.enabled = true;
             }

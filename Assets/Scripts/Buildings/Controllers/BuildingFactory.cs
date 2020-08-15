@@ -159,6 +159,8 @@ public class BuildingFactory : MonoBehaviour
             buildings[buildingType].RemoveAt(0);
             building.transform.parent = null;
             building.SetCollidersEnabled("Placement", true);
+            building.SetMeshRenderersEnabled(true);
+            building.SetParticleSystemsEnabled(true);
         }
         else
         {
@@ -167,7 +169,6 @@ public class BuildingFactory : MonoBehaviour
         }
 
         //Debug.Log($"BuildingFactory(), new building organised ({building}), building collider position is {building.Collider.position} (world) / {building.Collider.localPosition} (local), building model position is {building.Model.position} (world) / {building.Model.localPosition} (local)");
-
 
         building.Id = IdGenerator.Instance.GetNextId();
         building.Active = true;
@@ -229,6 +230,8 @@ public class BuildingFactory : MonoBehaviour
             building.transform.position = objectPool.position;
             building.transform.parent = objectPool;
             building.SetCollidersEnabled("Placement", false);
+            building.SetMeshRenderersEnabled(false);
+            building.SetParticleSystemsEnabled(false);
         }
 
         return building;
@@ -309,6 +312,8 @@ public class BuildingFactory : MonoBehaviour
         {
             buildingFoundation.transform.position = objectPool.transform.position;
             buildingFoundation.transform.parent = objectPool;
+            buildingFoundation.Collider.enabled = false;
+            buildingFoundation.Renderer.enabled = false;
         }
 
         return buildingFoundation;
@@ -321,6 +326,7 @@ public class BuildingFactory : MonoBehaviour
     public void DestroyBuildingFoundation(BuildingFoundation buildingFoundation)
     {
         buildingFoundation.Collider.enabled = false;
+        buildingFoundation.Renderer.enabled = false;
         buildingFoundation.transform.position = objectPool.position;
         buildingFoundation.transform.parent = objectPool;
         buildingFoundations.Add(buildingFoundation);

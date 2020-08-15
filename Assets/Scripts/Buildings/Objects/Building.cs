@@ -66,6 +66,7 @@ public class Building : CollisionListener
 	//Components
 	private Animator animator;
     private Health health;
+    private List<GameObject> particleSystems;
     private MeshRenderer parentRenderer;
     private List<MeshRenderer> allRenderers;
     private ResourceCollector resourceCollector;
@@ -266,6 +267,14 @@ public class Building : CollisionListener
         normalBuildTime = buildTime;
         groundLayerMask = LayerMask.GetMask("Ground");
 
+        particleSystems = new List<GameObject>();
+        ParticleSystem[] particleSystemsRaw = GetComponentsInChildren<ParticleSystem>();
+
+        foreach (ParticleSystem p in particleSystemsRaw)
+        {
+            particleSystems.Add(p.gameObject);
+        }
+
         foreach (CollisionReporter c in collisionReporters)
         {
             if (!groupedReporters.ContainsKey(c.Purpose))
@@ -313,6 +322,30 @@ public class Building : CollisionListener
         foreach (CollisionReporter r in groupedReporters[purpose])
         {
             r.SetCollidersEnabled(enabled);
+        }
+    }
+
+    /// <summary>
+    /// Enables or disables all mesh renderers attached to the building's models.
+    /// </summary>
+    /// <param name="enabled">Whether the mesh renderers will be enabled or disabled.</param>
+    public void SetMeshRenderersEnabled(bool enabled)
+    {
+        foreach (RendererMaterialSet s in rendererMaterialSets)
+        {
+            s.renderer.enabled = enabled;
+        }
+    }
+
+    /// <summary>
+    /// Enables or disables the game objects of all particle systems attached to the building's models.
+    /// </summary>
+    /// <param name="enabled">Whether the game objects of the particle systems will be enabled or disabled.</param>
+    public void SetParticleSystemsEnabled(bool enabled)
+    {
+        foreach (GameObject p in particleSystems)
+        {
+            p.SetActive(enabled);
         }
     }
 
@@ -544,9 +577,11 @@ public class Building : CollisionListener
         foreach (RendererMaterialSet r in rendererMaterialSets)
         {
             r.renderer.material = r.transparent;
+            r.renderer.enabled = false;
         }
 
         SetCollidersEnabled("Body", false);
+        SetParticleSystemsEnabled(false);
     }
 
     //ICollisionListener Triggered Methods---------------------------------------------------------
