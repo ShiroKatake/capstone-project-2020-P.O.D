@@ -317,6 +317,9 @@ public class Alien : MonoBehaviour, IMessenger
 			{
 				c.enabled = false;
 			}
+
+            navMeshAgent.enabled = false;
+
 			onDie.Invoke();
 		}
 		else
@@ -392,7 +395,7 @@ public class Alien : MonoBehaviour, IMessenger
     /// </summary>
     public void Reset()
     {
-        navMeshAgent.enabled = false;
+        //navMeshAgent.enabled = false;
         MessageDispatcher.Instance.SendMessage("Turret", new Message(gameObject.name, "Alien", this.gameObject, "Dead"));
         MessageDispatcher.Instance.Unsubscribe("Alien", this);
         moving = false;
