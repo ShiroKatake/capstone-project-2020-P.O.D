@@ -361,7 +361,7 @@ public class Alien : MonoBehaviour, IMessenger
 	/// </summary>
 	public void DestroyAlien()
 	{
-		AlienFactory.Instance.DestroyAlien(this);
+		AlienFactory.Instance.Destroy(this);
 	}
 
 	/// <summary>

@@ -6,14 +6,14 @@ using UnityEngine;
 /// <summary>
 /// Factory class for aliens.
 /// </summary>
-public class AlienFactory : Factory<AlienFactory>
+public class AlienFactory : Factory<AlienFactory, Alien>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
     //Serialized Fields----------------------------------------------------------------------------
 
-    [Header("Game Objects")]
-    [SerializeField] private Alien alienPrefab;
+    //[Header("Game Objects")]
+    //[SerializeField] private Alien alienPrefab;
 
     [Header("Stats")]
     [SerializeField] private int pooledAliens;
@@ -22,8 +22,8 @@ public class AlienFactory : Factory<AlienFactory>
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
-    private Transform objectPool;
-    private List<Alien> alienPool;
+    //private Transform objectPool;
+    //private List<Alien> alienPool;
    
     //PublicProperties-------------------------------------------------------------------------------------------------------------------------------
 
@@ -56,7 +56,7 @@ public class AlienFactory : Factory<AlienFactory>
 
         //Instance = this;
         base.Awake();
-        alienPool = new List<Alien>();        
+        //alienPool = new List<Alien>();        
     }
 
     /// <summary>
@@ -65,12 +65,12 @@ public class AlienFactory : Factory<AlienFactory>
     /// </summary>
     private void Start()
     {
-        Debug.Log("AlienFactory.Start()");
-        objectPool = ObjectPool.Instance.transform;
+        //objectPool = ObjectPool.Instance.transform;
+        base.Start();
 
         for (int i = 0; i < pooledAliens; i++)
         {
-            Alien alien = Instantiate(alienPrefab, objectPool.position, new Quaternion()); 
+            Alien alien = Instantiate(prefab, objectPool.position, new Quaternion()); 
             alien.transform.parent = objectPool;
 
             foreach (Collider c in alien.GetComponents<Collider>())
@@ -78,52 +78,64 @@ public class AlienFactory : Factory<AlienFactory>
                 c.enabled = false;
             }
 
-            alienPool.Add(alien);
-            
+            pool.Add(alien);            
         }
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
-    /// <summary>
-    /// Retrieves Enemies from a pool if there's any available, and instantiates a new alien if there isn't one.
-    /// </summary>
-    /// <param name="position">The position the alien should be instantiated at.</param>
-    /// <returns>A new alien.</returns>
-    public Alien GetAlien(Vector3 position)
+    ///// <summary>
+    ///// Retrieves Enemies from a pool if there's any available, and instantiates a new alien if there isn't one.
+    ///// </summary>
+    ///// <param name="position">The position the alien should be instantiated at.</param>
+    ///// <returns>A new alien.</returns>
+    //public Alien Get(Vector3 position)
+    ////public Alien GetAlien(Vector3 position)
+    //{
+    //    Alien alien;        
+
+    //    if (pool.Count > 0)
+    //    {
+    //        alien = pool[0];
+    //        pool.Remove(alien);
+    //        alien.transform.parent = null;
+    //        alien.transform.position = position;
+
+    //        foreach (Collider c in alien.GetComponents<Collider>())
+    //        {
+    //            c.enabled = true;
+    //        }
+    //    }
+    //    else
+    //    {
+    //        alien = Instantiate(prefab, position, new Quaternion());
+    //    }
+
+    //    return alien;
+    //}
+
+    protected override Alien GetRetrievalSetup(Alien result)
     {
-        Alien alien;        
-
-        if (alienPool.Count > 0)
+        foreach (Collider c in result.GetComponents<Collider>())
         {
-            alien = alienPool[0];
-            alienPool.Remove(alien);
-            alien.transform.parent = null;
-            alien.transform.position = position;
-
-            foreach (Collider c in alien.GetComponents<Collider>())
-            {
-                c.enabled = true;
-            }
-        }
-        else
-        {
-            alien = Instantiate(alienPrefab, position, new Quaternion());
+            c.enabled = true;
         }
 
-        return alien;
+        return result;
     }
 
     /// <summary>
     /// Handles the destruction of aliens.
     /// </summary>
     /// <param name="alien">The alien to be destroyed.</param>
-    public void DestroyAlien(Alien alien)
+    public override void Destroy(Alien alien)
+    //public void DestroyAlien(Alien alien)
     {
         alien.Reset();
         AlienController.Instance.DeRegisterAlien(alien);
-        alien.transform.position = objectPool.position;
-        alien.transform.parent = objectPool;
-        alienPool.Add(alien);
+        base.Destroy(alien);
+        //alien.transform.position = objectPool.position;
+        //alien.transform.parent = objectPool;
+        //pool.Add(alien);
     }
 }

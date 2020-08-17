@@ -5,8 +5,8 @@ using UnityEngine;
 /// <summary>
 /// A base class for serializable singletons.
 /// </summary>
-/// <typeparam name="T">The type of the singleton.</typeparam>
-public abstract class SerializableSingleton<T> : MonoBehaviour where T: SerializableSingleton<T>, new()
+/// <typeparam name="Type">The type of the singleton.</typeparam>
+public abstract class SerializableSingleton<Type> : MonoBehaviour where Type: SerializableSingleton<Type>, new()
 {
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -15,7 +15,7 @@ public abstract class SerializableSingleton<T> : MonoBehaviour where T: Serializ
     /// <summary>
     /// This singleton's singleton public property of type T.
     /// </summary>
-    public static T Instance { get; protected set; }
+    public static Type Instance { get; protected set; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -30,6 +30,6 @@ public abstract class SerializableSingleton<T> : MonoBehaviour where T: Serializ
             Debug.Log($"There should never be 2 or more instances of {this}");
         }
 
-        Instance = this as T;
+        Instance = this as Type;
     }
 }

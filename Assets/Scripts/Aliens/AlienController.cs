@@ -225,7 +225,7 @@ public class AlienController : SerializableSingleton<AlienController>
                         RaycastHit rayHit;
                         NavMeshHit navHit;
                         Physics.Raycast(spawnPos, Vector3.down, out rayHit, 25, groundLayerMask);
-                        Alien alien = AlienFactory.Instance.GetAlien(new Vector3(spawnPos.x, rayHit.point.y, spawnPos.z));
+                        Alien alien = AlienFactory.Instance.Get(new Vector3(spawnPos.x, rayHit.point.y, spawnPos.z));
                         alien.Setup(IdGenerator.Instance.GetNextId());
 
                         if (NavMesh.SamplePosition(alien.transform.position, out navHit, 1, NavMesh.AllAreas))
@@ -236,7 +236,7 @@ public class AlienController : SerializableSingleton<AlienController>
                         else
                         {
                             MapController.Instance.RegisterOffMeshPosition(spawnPos);
-                            AlienFactory.Instance.DestroyAlien(alien);
+                            AlienFactory.Instance.Destroy(alien);
                             i--;
                         }
                         

@@ -5,14 +5,14 @@ using UnityEngine;
 /// <summary>
 /// A base class for non-serializable singletons.
 /// </summary>
-/// <typeparam name="T">The type of the singleton.</typeparam>
-public abstract class Singleton<T> where T : Singleton<T>, new()
+/// <typeparam name="Type">The type of the singleton.</typeparam>
+public abstract class Singleton<Type> where Type : Singleton<Type>, new()
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
-    private static T instance = null;
+    private static Type instance = null;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -21,13 +21,13 @@ public abstract class Singleton<T> where T : Singleton<T>, new()
     /// <summary>
     /// This singleton's singleton public property of type T.
     /// </summary>
-    public static T Instance
+    public static Type Instance
     {
         get
         {
             if (instance == null)
             {
-                instance = new T();
+                instance = new Type();
             }
 
             return instance;
