@@ -15,7 +15,8 @@ public class TurretShooting : CollisionListener, IMessenger
     [SerializeField] private Transform barrelMagazine;
     [SerializeField] private Transform barrelTip;
 
-    [Header("Shooting Stats")]
+	[Header("Shooting Stats")]
+	[SerializeField] private float detectionRadius;
     [SerializeField] private EProjectileType projectileType;
     [SerializeField] private bool targetClosest;
     [SerializeField] private float numProjectiles;
@@ -37,6 +38,7 @@ public class TurretShooting : CollisionListener, IMessenger
     //Shooting Variables
     //[SerializeField] private bool shoot;
     private float timeOfLastShot;
+	private SphereCollider detectionCollider;
 
     //Public Properties----------------------------------------------------------------------------
 
@@ -45,17 +47,23 @@ public class TurretShooting : CollisionListener, IMessenger
     /// </summary>
     public Alien Target { get => target; }
 
-    //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// How wide the turret shooting range is.
+	/// </summary>
+	public float DetectionRadius { get => detectionRadius; }
 
-    /// <summary>
-    /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
-    /// Awake() runs before Start().
-    /// </summary>
-    private void Awake()
+	//Initialization Methods-------------------------------------------------------------------------------------------------------------------------
+
+	/// <summary>
+	/// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
+	/// Awake() runs before Start().
+	/// </summary>
+	private void Awake()
     {
         building = gameObject.GetComponent<Building>();
         collisionReporters = GetCollisionReporters();
-    }
+		detectionCollider = GetComponentInChildren<SphereCollider>();
+	}
 
     /// <summary>
     /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
@@ -63,7 +71,8 @@ public class TurretShooting : CollisionListener, IMessenger
     /// </summary>
     private void Start()
     {
-        Reset();
+		detectionCollider.radius = detectionRadius;
+		Reset();
     }
 
     /// <summary>
