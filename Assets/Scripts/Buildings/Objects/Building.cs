@@ -481,7 +481,9 @@ public class Building : CollisionListener
         transform.position = position;
         BuildingController.Instance.RegisterBuilding(this);
         animator.enabled = true;
-    }
+
+		TurretRangeFXFactory.Instance.HideRange();
+	}
 
     /// <summary>
     /// Handles what should happen once the building has been built.
@@ -540,7 +542,9 @@ public class Building : CollisionListener
         }
 
         SetCollidersEnabled("Body", false);
-    }
+
+		TurretRangeFXFactory.Instance.HideRange();
+	}
 
     //ICollisionListener Triggered Methods---------------------------------------------------------
 
