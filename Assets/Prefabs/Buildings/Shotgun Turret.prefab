@@ -293,6 +293,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 40
+  currentHealth: 0
 --- !u!114 &7957306087969153787
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -347,6 +348,7 @@ MonoBehaviour:
   collisionReporters: []
   barrelMagazine: {fileID: 6578390048626754263}
   barrelTip: {fileID: 1873128266348440701}
+  detectionRadius: 15
   projectileType: 2
   targetClosest: 1
   numProjectiles: 10
