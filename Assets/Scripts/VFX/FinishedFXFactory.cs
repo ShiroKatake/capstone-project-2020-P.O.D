@@ -38,7 +38,7 @@ public class FinishedFXFactory : MonoBehaviour
 	{
 		if (Instance != null)
 		{
-			Debug.LogError("There should never be more than one OreFactory.");
+			Debug.LogError("There should never be more than one FinishedFXFactory.");
 		}
 
 		Instance = this;
