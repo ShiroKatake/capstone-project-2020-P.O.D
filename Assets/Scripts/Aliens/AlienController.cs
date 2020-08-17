@@ -6,7 +6,7 @@ using UnityEngine.AI;
 /// <summary>
 /// Controller class for aliens.
 /// </summary>
-public class AlienController : MonoBehaviour
+public class AlienController : SerializableSingleton<AlienController>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
@@ -69,10 +69,10 @@ public class AlienController : MonoBehaviour
 
     //Singleton Public Property--------------------------------------------------------------------
 
-    /// <summary>
-    /// AlienController's singleton public property.
-    /// </summary>
-    public static AlienController Instance { get; protected set; }
+    ///// <summary>
+    ///// AlienController's singleton public property.
+    ///// </summary>
+    //public static AlienController Instance { get; protected set; }
 
     //Basic Public Properties----------------------------------------------------------------------
 
@@ -91,12 +91,13 @@ public class AlienController : MonoBehaviour
     /// </summary>
     private void Awake()
     {
-        if (Instance != null)
-        {
-            Debug.LogError("There should never be 2 or more AlienControllers.");
-        }
+        //if (Instance != null)
+        //{
+        //    Debug.LogError("There should never be 2 or more AlienControllers.");
+        //}
 
-        Instance = this;
+        //Instance = this;
+        base.Awake();
         aliens = new List<Alien>();
         timeOfLastDeath = waveDelay * -1;
         timeOfLastPenalty = penaltyCooldown * -1;

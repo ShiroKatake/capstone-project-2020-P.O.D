@@ -6,7 +6,7 @@ using UnityEngine;
 /// <summary>
 /// Factory class for aliens.
 /// </summary>
-public class AlienFactory : MonoBehaviour
+public class AlienFactory : Factory<AlienFactory>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
@@ -29,10 +29,10 @@ public class AlienFactory : MonoBehaviour
 
     //Singleton Public Property--------------------------------------------------------------------
 
-    /// <summary>
-    /// AlienController's singleton public property.
-    /// </summary>
-    public static AlienFactory Instance { get; protected set; }
+    ///// <summary>
+    ///// AlienController's singleton public property.
+    ///// </summary>
+    //public static AlienFactory Instance { get; protected set; }
 
     //Basic Public Properties----------------------------------------------------------------------
 
@@ -47,14 +47,15 @@ public class AlienFactory : MonoBehaviour
     /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
     /// Awake() runs before Start().
     /// </summary>
-    void Awake()
+    protected override void Awake()
     {
-        if (Instance != null)
-        {
-            Debug.LogError("There should never be 2 or more AlienFactories.");
-        }
+        //if (Instance != null)
+        //{
+        //    Debug.LogError("There should never be 2 or more AlienFactories.");
+        //}
 
-        Instance = this;
+        //Instance = this;
+        base.Awake();
         alienPool = new List<Alien>();        
     }
 
@@ -62,7 +63,9 @@ public class AlienFactory : MonoBehaviour
     /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
     /// Start() runs after Awake().
     /// </summary>
-    private void Start() {
+    private void Start()
+    {
+        Debug.Log("AlienFactory.Start()");
         objectPool = ObjectPool.Instance.transform;
 
         for (int i = 0; i < pooledAliens; i++)
