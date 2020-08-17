@@ -301,4 +301,14 @@ public class TurretShooting : CollisionListener, IMessenger
             }
         }
     }
+
+	/// <summary>
+	/// Draws a sphere to help visuallising the radius of the turret range (as the detection hitbox will only/should only be updated in play mode now).
+	/// </summary>
+	void OnDrawGizmosSelected()
+	{
+		// Draw a yellow sphere at the transform's position
+		Gizmos.color = new Color(0.45f, 0.77f, 0.49f);
+		Gizmos.DrawWireSphere(new Vector3(transform.position.x, transform.position.y -0.5f, transform.position.z), detectionRadius);
+	}
 }
