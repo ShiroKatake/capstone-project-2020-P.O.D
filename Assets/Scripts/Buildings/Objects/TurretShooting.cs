@@ -303,7 +303,7 @@ public class TurretShooting : CollisionListener, IMessenger
     }
 
 	/// <summary>
-	/// Draws a sphere to help visuallising the radius of the turret range (as the detection hitbox will only/should only be updated in play mode now).
+	/// Draws a sphere to help visuallising the radius of the turret detection range (as the detection hitbox will only/should only be updated in play mode now).
 	/// </summary>
 	void OnDrawGizmosSelected()
 	{
