@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 /// <summary>
 /// A factory class for buildings.
@@ -45,14 +46,18 @@ public class BuildingFactory : MonoBehaviour
     //private List<GameObject> pipeBoxes;
     private Transform objectPool;
 
-    //Public Properties------------------------------------------------------------------------------------------------------------------------------
+	//Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    //Singleton Public Property--------------------------------------------------------------------                                                    
+	//Basic Public Properties----------------------------------------------------------------------
 
-    /// <summary>
-    /// BuildingFactory's singleton public property.
-    /// </summary>
-    public static BuildingFactory Instance { get; protected set; }
+	public UnityAction<Transform> onGetTurret;
+
+	//Singleton Public Property--------------------------------------------------------------------                                                    
+
+	/// <summary>
+	/// BuildingFactory's singleton public property.
+	/// </summary>
+	public static BuildingFactory Instance { get; protected set; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -151,8 +156,8 @@ public class BuildingFactory : MonoBehaviour
         {
             building = CreateBuilding(buildingType, false);
         }
-
-        building.Id = IdGenerator.Instance.GetNextId();
+		
+		building.Id = IdGenerator.Instance.GetNextId();
         building.Active = true;
 
         if (building.Terraformer != null)
@@ -160,7 +165,13 @@ public class BuildingFactory : MonoBehaviour
             EnvironmentalController.Instance.RegisterBuilding(building.Terraformer);
         }
 
-        return building;
+		if (buildingType == EBuilding.LongRangeTurret || buildingType == EBuilding.ShortRangeTurret)
+		{
+			//Debug.Log("Displaying Range.");
+			onGetTurret?.Invoke(building.transform);
+		}
+
+		return building;
     }
 
     /// <summary>
