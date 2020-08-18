@@ -142,7 +142,7 @@ public class BuildingSpawningController : SerializableSingleton<BuildingSpawning
             //Instantiate the appropriate building, positioning it properly.
             if (heldBuilding == null)
             {
-                heldBuilding = BuildingFactory.Instance.GetBuilding(selectedBuildingType);
+                heldBuilding = BuildingFactory.Instance.Get(selectedBuildingType);
                 heldBuilding.transform.position = MousePositionToBuildingPosition(transform.position, heldBuilding.Size.DiameterRoundedUp);
                 ChangeTooltip(selectedBuildingType);
               
@@ -151,10 +151,9 @@ public class BuildingSpawningController : SerializableSingleton<BuildingSpawning
             //Instantiate the appropriate building and postion it properly, replacing the old one.
             else if (heldBuilding.BuildingType != selectedBuildingType)
             {
-                Vector3 pos;
-                pos = MousePositionToBuildingPosition(heldBuilding.transform.position, heldBuilding.Size.DiameterRoundedUp);
-                BuildingFactory.Instance.DestroyBuilding(heldBuilding, false, false);
-                heldBuilding = BuildingFactory.Instance.GetBuilding(selectedBuildingType);
+                Vector3 pos = MousePositionToBuildingPosition(heldBuilding.transform.position, heldBuilding.Size.DiameterRoundedUp);
+                BuildingFactory.Instance.Destroy(heldBuilding, false, false);
+                heldBuilding = BuildingFactory.Instance.Get(selectedBuildingType);
                 heldBuilding.transform.position = pos;
 
                 ChangeTooltip(selectedBuildingType);
@@ -226,7 +225,7 @@ public class BuildingSpawningController : SerializableSingleton<BuildingSpawning
                     console.SubmitCustomMessage(errorMessage, true, 0);
                 }
 
-                BuildingFactory.Instance.DestroyBuilding(heldBuilding, false, false);
+                BuildingFactory.Instance.Destroy(heldBuilding, false, false);
                 heldBuilding = null;
                 spawnBuilding = false;
                 placeBuilding = false;

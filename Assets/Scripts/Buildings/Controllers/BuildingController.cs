@@ -97,7 +97,7 @@ public class BuildingController : SerializableSingleton<BuildingController>
         {
             Building b = destroyedBuildings[0];
             destroyedBuildings.RemoveAt(0);
-            BuildingFactory.Instance.DestroyBuilding(b, true, true);
+            BuildingFactory.Instance.Destroy(b, true, true);
         }
     }
 

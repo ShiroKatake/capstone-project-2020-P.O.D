@@ -92,6 +92,16 @@ public class AlienFactory : Factory<AlienFactory, Alien, ENone>
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
+    
+    /// <summary>
+    /// Retrieves an alien from the pool if there's any available, and instantiates a new alien if there isn't one.
+    /// </summary>
+    /// <param name="position">The position the alien should be instantiated at.</param>
+    /// <returns>A new alien.</returns>
+    public Alien Get(Vector3 position)
+    {
+        return Get(ENone.None, position);
+    }
 
     ///// <summary>
     ///// Retrieves Enemies from a pool if there's any available, and instantiates a new alien if there isn't one.

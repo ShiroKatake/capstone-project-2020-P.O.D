@@ -89,7 +89,7 @@ public class BuildingFoundation : MonoBehaviour
         {
             //Debug.Log($"BuildingFoundation {id} OnTriggerEnter() triggered by a building.");
             building.BuildTime -= buildTimeReduction;
-            BuildingFactory.Instance.DestroyBuildingFoundation(this);
+            BuildingFoundationFactory.Instance.Destroy(this);
         }
     }
 }

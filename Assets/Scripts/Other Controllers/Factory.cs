@@ -117,6 +117,7 @@ public class Factory<FactoryType, ProductType, ProductEnum> : SerializableSingle
 
     /// <summary>
     /// Retrieves a [ProductType] from the pool if there's any available, instantiates a new one if none are available, then sets its position.
+    /// Note: if overloaded by a child class rather than overridden, it'll usually be better to use the overload than this unless calling from within the overloaded method.
     /// </summary>
     /// <param name="type">The type of [ProductType] that you want to retrieve.</param>
     /// <param name="position">The position [ProductType] should be instantiated at.</param>
@@ -131,6 +132,7 @@ public class Factory<FactoryType, ProductType, ProductEnum> : SerializableSingle
 
     /// <summary>
     /// Retrieves a [ProductType] from the pool if there's any available, and instantiates a new one if none are available.
+    /// Note: if overloaded by a child class rather than overridden, it'll usually be better to use the overload than this unless calling from within the overloaded method.
     /// </summary>
     /// <param name="type">The type of [ProductType] that you want to retrieve.</param>
     /// <returns>A new instance of [ProductType].</returns>
@@ -141,7 +143,7 @@ public class Factory<FactoryType, ProductType, ProductEnum> : SerializableSingle
         if (pool.ContainsKey(type) && pool[type].Count > 0)
         {
             result = pool[type][0];
-            pool[type].Remove(result);
+            pool[type].RemoveAt(0);
             result.transform.parent = null;
             result = GetRetrievalSetup(result);
         }
@@ -184,6 +186,7 @@ public class Factory<FactoryType, ProductType, ProductEnum> : SerializableSingle
 
     /// <summary>
     /// Handles the destruction of [ProductType]s.
+    /// Note: if overloaded by a child class rather than overridden, it'll usually be better to use the overload than this unless calling from within the overloaded method.
     /// </summary>
     /// <param name="type">The type of the [ProductType] to be destroyed.</param>
     /// <param name="toDestroy">The [ProductType] to be destroyed.</param>
