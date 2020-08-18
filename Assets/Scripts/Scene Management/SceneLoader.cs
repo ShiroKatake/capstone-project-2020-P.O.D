@@ -8,7 +8,7 @@ using UnityEngine.UI;
 /// <summary>
 /// Handles the changing of scenes.
 /// </summary>
-public class SceneLoader : MonoBehaviour
+public class SceneLoader : SerializableSingleton<SceneLoader>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
@@ -29,10 +29,10 @@ public class SceneLoader : MonoBehaviour
 
     //Singleton Public Property--------------------------------------------------------------------                                                    
 
-    /// <summary>
-    /// SceneLoader's singleton public property.
-    /// </summary>
-    public static SceneLoader Instance { get; protected set; }
+    ///// <summary>
+    ///// SceneLoader's singleton public property.
+    ///// </summary>
+    //public static SceneLoader Instance { get; protected set; }
 
     //Basic Public Properties----------------------------------------------------------------------
 
@@ -52,14 +52,15 @@ public class SceneLoader : MonoBehaviour
     /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
     /// Awake() runs before Start().
     /// </summary>
-    private void Awake()
+    protected override void Awake()
     {
-        if (Instance != null)
-        {
-            Debug.LogError("There should never be more than one SceneLoader.");
-        }
+        //if (Instance != null)
+        //{
+        //    Debug.LogError("There should never be more than one SceneLoader.");
+        //}
 
-        Instance = this;
+        //Instance = this;
+        base.Awake();
         DontDestroyOnLoad(gameObject);
         graphics = new List<Graphic>() { background, textBox };
         loadingScene = false;

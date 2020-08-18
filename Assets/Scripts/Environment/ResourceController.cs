@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// A manager class for resource gathering and usage.
 /// </summary>
-public class ResourceController : MonoBehaviour
+public class ResourceController : SerializableSingleton<ResourceController>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
@@ -39,10 +39,10 @@ public class ResourceController : MonoBehaviour
 
     //Singleton Public Property--------------------------------------------------------------------                                                    
 
-    /// <summary>
-    /// ResourceController's singleton public property.
-    /// </summary>
-    public static ResourceController Instance { get; protected set; }
+    ///// <summary>
+    ///// ResourceController's singleton public property.
+    ///// </summary>
+    //public static ResourceController Instance { get; protected set; }
 
     //Basic Public Properties----------------------------------------------------------------------                                                                                                                          
 
@@ -190,19 +190,19 @@ public class ResourceController : MonoBehaviour
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
-    /// <summary>
-    /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
-    /// Awake() runs before Start().
-    /// </summary>
-    private void Awake()
-    {
-        if (Instance != null)
-        {
-            Debug.LogError("There should never be more than one [CLASSNAME].");
-        }
+    ///// <summary>
+    ///// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
+    ///// Awake() runs before Start().
+    ///// </summary>
+    //private void Awake()
+    //{
+    //    if (Instance != null)
+    //    {
+    //        Debug.LogError("There should never be more than one [CLASSNAME].");
+    //    }
 
-        Instance = this;
-    }
+    //    Instance = this;
+    //}
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
 

@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// A factory class for FX when buildings finished constructing.
 /// </summary>
-public class FinishedFXFactory : MonoBehaviour
+public class FinishedFXFactory : SerializableSingleton<FinishedFXFactory>
 {
 	//Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
@@ -23,10 +23,10 @@ public class FinishedFXFactory : MonoBehaviour
 
 	//Singleton Public Property--------------------------------------------------------------------                                                    
 
-	/// <summary>
-	/// MineralFactory's singleton public property.
-	/// </summary>
-	public static FinishedFXFactory Instance { get; protected set; }
+	///// <summary>
+	///// MineralFactory's singleton public property.
+	///// </summary>
+	//public static FinishedFXFactory Instance { get; protected set; }
 
 	//Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -34,14 +34,15 @@ public class FinishedFXFactory : MonoBehaviour
 	/// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
 	/// Awake() runs before Start().
 	/// </summary>
-	void Awake()
+	protected override void Awake()
 	{
-		if (Instance != null)
-		{
-			Debug.LogError("There should never be more than one OreFactory.");
-		}
+        //if (Instance != null)
+        //{
+        //	Debug.LogError("There should never be more than one OreFactory.");
+        //}
 
-		Instance = this;
+        //Instance = this;
+        base.Awake();
 		IdGenerator idGenerator = IdGenerator.Instance;
 
 		Add(pooledFX);

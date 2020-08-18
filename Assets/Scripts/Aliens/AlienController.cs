@@ -89,7 +89,7 @@ public class AlienController : SerializableSingleton<AlienController>
     /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
     /// Awake() runs before Start().
     /// </summary>
-    private void Awake()
+    protected override void Awake()
     {
         //if (Instance != null)
         //{

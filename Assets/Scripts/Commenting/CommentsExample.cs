@@ -8,7 +8,9 @@ using UnityEngine;
 /// See CommentsTemplate for copy-and-paste examples. If CommentsExample clashes with CommentsTemplate,
 /// assume CommentsTemplate is correct.
 /// </summary>
-public class CommentsExample : MonoBehaviour
+public class CommentsExample : MonoBehaviour                                                                                                           //If the class needs to be singleton, it should inherit from SerializableSingleton
+                                                                                                                                                       //if it needs to be a MonoBehaviour as well, or from Singleton if it should be
+                                                                                                                                                       //instantiated only when it's called in code.
 {
     //Note: the comments here are just the organisational ones separating methods and fields and whatnot.                                              //You don't need to put all your comments out here. I just put the
     //For descriptive / explanatory comments, put them above or to the right of code as you see fit and                                                //explanatory ones out here because it was clear and made sense.

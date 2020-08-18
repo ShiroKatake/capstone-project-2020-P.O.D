@@ -50,7 +50,7 @@ public class ColourTag
 /// <summary>
 /// A manager class for the dialogue boxes.
 /// </summary>
-public class DialogueBoxManager : MonoBehaviour
+public class DialogueBoxManager : SerializableSingleton<DialogueBoxManager>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
@@ -70,10 +70,10 @@ public class DialogueBoxManager : MonoBehaviour
 
     //Singleton Public Property--------------------------------------------------------------------                                                    
 
-    /// <summary>
-    /// DialogueBoxManager's singleton public property.
-    /// </summary>
-    public static DialogueBoxManager Instance { get; protected set; }
+    ///// <summary>
+    ///// DialogueBoxManager's singleton public property.
+    ///// </summary>
+    //public static DialogueBoxManager Instance { get; protected set; }
 
     //Basic Public Properties----------------------------------------------------------------------
 
@@ -93,15 +93,15 @@ public class DialogueBoxManager : MonoBehaviour
     /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
     /// Awake() runs before Start().
     /// </summary>
-    private void Awake()
+    protected override void Awake()
     {
-        if (Instance != null)
-        {
-            Debug.LogError("There should never be more than one DialogueBoxManager.");
-        }
+        //if (Instance != null)
+        //{
+        //    Debug.LogError("There should never be more than one DialogueBoxManager.");
+        //}
 
-        Instance = this;
-
+        //Instance = this;
+        base.Awake();
         GetDialogueBoxes();
         LoadDialogueData();
         NameColourTags();

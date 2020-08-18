@@ -15,7 +15,7 @@ using Random = UnityEngine.Random;
 /// <summary>
 /// A manager class for the current stage of the game
 /// </summary>
-public class StageManager : MonoBehaviour
+public class StageManager : SerializableSingleton<StageManager>
 {
     //Fields-----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -32,10 +32,10 @@ public class StageManager : MonoBehaviour
 
     //Singleton Public Property--------------------------------------------------------------------
 
-    /// <summary>
-    /// StageManager's singleton public property.
-    /// </summary>
-    public static StageManager Instance { get; protected set; }
+    ///// <summary>
+    ///// StageManager's singleton public property.
+    ///// </summary>
+    //public static StageManager Instance { get; protected set; }
 
     //Basic Public Properties----------------------------------------------------------------------
 
@@ -51,19 +51,19 @@ public class StageManager : MonoBehaviour
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
-    /// <summary>
-    /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
-    /// Awake() runs before Start().
-    /// </summary>
-    private void Awake()
-    {
-        if (Instance != null)
-        {
-            Debug.LogError("There should never be 2 or more StageManagers.");
-        }
+    ///// <summary>
+    ///// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
+    ///// Awake() runs before Start().
+    ///// </summary>
+    //private void Awake()
+    //{
+    //    if (Instance != null)
+    //    {
+    //        Debug.LogError("There should never be 2 or more StageManagers.");
+    //    }
 
-        Instance = this;
-    }
+    //    Instance = this;
+    //}
 
     /// <summary>
     /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 

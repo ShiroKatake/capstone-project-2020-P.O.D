@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// A controller class for tracking which parts of the map have buildings, can be spawned to by aliens, etc.
 /// </summary>
-public class MapController : MonoBehaviour
+public class MapController : SerializableSingleton<MapController>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
@@ -37,10 +37,10 @@ public class MapController : MonoBehaviour
 
     //Singleton Public Property--------------------------------------------------------------------                                                    
 
-    /// <summary>
-    /// MapController's singleton public property.
-    /// </summary>
-    public static MapController Instance { get; protected set; }
+    ///// <summary>
+    ///// MapController's singleton public property.
+    ///// </summary>
+    //public static MapController Instance { get; protected set; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -48,14 +48,16 @@ public class MapController : MonoBehaviour
     /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
     /// Awake() runs before Start().
     /// </summary>
-    private void Awake()
+    protected override void Awake()
     {
-        if (Instance != null)
-        {
-            Debug.LogError("There should never be more than one MapController.");
-        }
+        //if (Instance != null)
+        //{
+        //    Debug.LogError("There should never be more than one MapController.");
+        //}
 
-        Instance = this;
+        //Instance = this;
+
+        base.Awake();
         availableBuildingPositions = new bool[xMax + 1 , zMax + 1];
         availableAlienPositions = new bool[xMax + 1, zMax + 1];
         alienExclusionArea = new bool[xMax + 1, zMax + 1];

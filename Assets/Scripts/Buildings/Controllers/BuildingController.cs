@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// A manager class for buildings.
 /// </summary>
-public class BuildingController : MonoBehaviour
+public class BuildingController : SerializableSingleton<BuildingController>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
@@ -25,10 +25,10 @@ public class BuildingController : MonoBehaviour
 
     //Singleton Public Property--------------------------------------------------------------------                                                    
 
-    /// <summary>
-    /// BuildingController's singleton public property.
-    /// </summary>
-    public static BuildingController Instance { get; protected set; }
+    ///// <summary>
+    ///// BuildingController's singleton public property.
+    ///// </summary>
+    //public static BuildingController Instance { get; protected set; }
 
     //Basic Public Properties----------------------------------------------------------------------                                                                                                                          
 
@@ -54,19 +54,19 @@ public class BuildingController : MonoBehaviour
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
-    /// <summary>
-    /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
-    /// Awake() runs before Start().
-    /// </summary>
-    private void Awake()
-    {
-        if (Instance != null)
-        {
-            Debug.LogError("There should never be more than one BuildingController.");
-        }
+    ///// <summary>
+    ///// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
+    ///// Awake() runs before Start().
+    ///// </summary>
+    //private void Awake()
+    //{
+    //    if (Instance != null)
+    //    {
+    //        Debug.LogError("There should never be more than one BuildingController.");
+    //    }
 
-        Instance = this;
-    }
+    //    Instance = this;
+    //}
 
     /// <summary>
     /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 

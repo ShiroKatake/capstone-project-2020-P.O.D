@@ -3,21 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BuildingSelectionHUD : MonoBehaviour
+public class BuildingSelectionHUD : SerializableSingleton<BuildingSelectionHUD>
 {
     private List<ButtonClickEventManager> buttons;
     private ButtonClickEventManager button;
     private EBuilding selectedBuildingType;
 
-    public static BuildingSelectionHUD Instance { get; protected set; }
+    //public static BuildingSelectionHUD Instance { get; protected set; }
 
-    void Awake(){
-        if (Instance != null)
-        {
-            Debug.Log("There should never be 2 or more BuildingSelectionHUDs in the scene.");
-        }
+    protected override void Awake(){
+        //if (Instance != null)
+        //{
+        //    Debug.Log("There should never be 2 or more BuildingSelectionHUDs in the scene.");
+        //}
 
-        Instance = this;
+        //Instance = this;
+        base.Awake();
         selectedBuildingType = EBuilding.FusionReactor;
         buttons = new List<ButtonClickEventManager>(GetComponentsInChildren<ButtonClickEventManager>());
     }

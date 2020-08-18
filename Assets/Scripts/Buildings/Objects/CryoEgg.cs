@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// A component class gathering all the bits of cryo egg needed by aliens because there's always that one stupid alien that can't find them.
 /// </summary>
-public class CryoEgg : MonoBehaviour
+public class CryoEgg : SerializableSingleton<CryoEgg>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
@@ -19,10 +19,10 @@ public class CryoEgg : MonoBehaviour
 
     //Singleton Public Property--------------------------------------------------------------------                                                    
 
-    /// <summary>
-    /// CryoEgg's singleton public property.
-    /// </summary>
-    public static CryoEgg Instance { get; protected set; }
+    ///// <summary>
+    ///// CryoEgg's singleton public property.
+    ///// </summary>
+    //public static CryoEgg Instance { get; protected set; }
 
     //Basic Public Properties----------------------------------------------------------------------                                                                                                                          
 
@@ -43,17 +43,17 @@ public class CryoEgg : MonoBehaviour
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
-    /// <summary>
-    /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
-    /// Awake() runs before Start().
-    /// </summary>
-    private void Awake()
-    {
-        if (Instance != null)
-        {
-            Debug.LogError("There should never be more than one CryoEgg.");
-        }
+    ///// <summary>
+    ///// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
+    ///// Awake() runs before Start().
+    ///// </summary>
+    //private void Awake()
+    //{
+    //    if (Instance != null)
+    //    {
+    //        Debug.LogError("There should never be more than one CryoEgg.");
+    //    }
 
-        Instance = this;
-    }
+    //    Instance = this;
+    //}
 }

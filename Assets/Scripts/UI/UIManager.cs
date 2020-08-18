@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UIManager : MonoBehaviour
+public class UIManager : SerializableSingleton<UIManager>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
@@ -27,10 +27,10 @@ public class UIManager : MonoBehaviour
 
     //Singleton Public Property--------------------------------------------------------------------
 
-    /// <summary>
-    /// UIManager's singleton public property.
-    /// </summary>
-    public static UIManager Instance { get; protected set; }
+    ///// <summary>
+    ///// UIManager's singleton public property.
+    ///// </summary>
+    //public static UIManager Instance { get; protected set; }
 
     //Basic Public Properties----------------------------------------------------------------------
 
@@ -55,14 +55,16 @@ public class UIManager : MonoBehaviour
     /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
     /// Awake() runs before Start().
     /// </summary>
-    private void Awake()
+    protected override void Awake()
     {
-        if (Instance != null)
-        {
-            Debug.LogError("There should never be 2 or more UIManagers.");
-        }
+        //if (Instance != null)
+        //{
+        //    Debug.LogError("There should never be 2 or more UIManagers.");
+        //}
 
-        Instance = this;
+        //Instance = this;
+
+        base.Awake();
 
         pauseInitialiser = pauseMenuCanvas.GetComponent<UIButtonInitialise>();
         gameOverInitialiser = gameOverCanvas.GetComponent<UIButtonInitialise>();

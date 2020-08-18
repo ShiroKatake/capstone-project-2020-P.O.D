@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// A manager class for projectiles.
 /// </summary>
-public class ProjectileManager : MonoBehaviour
+public class ProjectileManager : SerializableSingleton<ProjectileManager>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
@@ -17,26 +17,26 @@ public class ProjectileManager : MonoBehaviour
 
     //Singleton Public Property--------------------------------------------------------------------                                                    
 
-    /// <summary>
-    /// ProjectileManager's singleton public property.
-    /// </summary>
-    public static ProjectileManager Instance { get; protected set; }
+    ///// <summary>
+    ///// ProjectileManager's singleton public property.
+    ///// </summary>
+    //public static ProjectileManager Instance { get; protected set; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
-    /// <summary>
-    /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
-    /// Awake() runs before Start().
-    /// </summary>
-    private void Awake()
-    {
-        if (Instance != null)
-        {
-            Debug.LogError("There should never be more than one BuildingController.");
-        }
+    ///// <summary>
+    ///// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
+    ///// Awake() runs before Start().
+    ///// </summary>
+    //private void Awake()
+    //{
+    //    if (Instance != null)
+    //    {
+    //        Debug.LogError("There should never be more than one BuildingController.");
+    //    }
 
-        Instance = this;
-    }
+    //    Instance = this;
+    //}
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 

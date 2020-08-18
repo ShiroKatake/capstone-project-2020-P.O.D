@@ -6,7 +6,7 @@ using Rewired;
 /// <summary>
 /// A controller class for building spawning.
 /// </summary>
-public class BuildingSpawningController : MonoBehaviour
+public class BuildingSpawningController : SerializableSingleton<BuildingSpawningController>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
@@ -39,10 +39,10 @@ public class BuildingSpawningController : MonoBehaviour
 
     //Singleton Public Property--------------------------------------------------------------------                                                    
 
-    /// <summary>
-    /// BuildingSpawningController's singleton public property.
-    /// </summary>
-    public static BuildingSpawningController Instance { get; protected set; }
+    ///// <summary>
+    ///// BuildingSpawningController's singleton public property.
+    ///// </summary>
+    //public static BuildingSpawningController Instance { get; protected set; }
 
     //Basic Public Properties----------------------------------------------------------------------
 
@@ -57,14 +57,15 @@ public class BuildingSpawningController : MonoBehaviour
     /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
     /// Awake() runs before Start().
     /// </summary>
-    private void Awake()
+    protected override void Awake()
     {
-        if (Instance != null)
-        {
-            Debug.LogError("There should never be more than one BuildingSpawningController.");
-        }
+        //if (Instance != null)
+        //{
+        //    Debug.LogError("There should never be more than one BuildingSpawningController.");
+        //}
 
-        Instance = this;
+        //Instance = this;
+        base.Awake();
         cycleBuildingSelection = false;
         cyclingBuildingSelection = false;
         spawnBuilding = false;

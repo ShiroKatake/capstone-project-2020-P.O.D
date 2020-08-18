@@ -7,7 +7,7 @@ using UnityEngine.Events;
 /// <summary>
 /// The player. Player controls the player's movement, shooting and healing. For building spawning, see BuildingSpawningController.
 /// </summary>
-public class PlayerController : MonoBehaviour
+public class PlayerController : SerializableSingleton<PlayerController>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
@@ -71,10 +71,10 @@ public class PlayerController : MonoBehaviour
 
     //Singleton Public Property--------------------------------------------------------------------
 
-    /// <summary>
-    /// Singleton public property for the player controller.
-    /// </summary>
-    public static PlayerController Instance { get; protected set; }
+    ///// <summary>
+    ///// Singleton public property for the player controller.
+    ///// </summary>
+    //public static PlayerController Instance { get; protected set; }
 
 	//Basic Public Properties----------------------------------------------------------------------
 
@@ -115,14 +115,15 @@ public class PlayerController : MonoBehaviour
     /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
     /// Awake() runs before Start().
     /// </summary>
-    void Awake()
+    protected override void Awake()
     {
-        if (Instance != null)
-        {
-            Debug.LogError("There should never be 2 or more Players.");
-        }
+        //if (Instance != null)
+        //{
+        //    Debug.LogError("There should never be 2 or more Players.");
+        //}
 
-        Instance = this;
+        //Instance = this;
+        base.Awake();
         health = GetComponent<Health>();
         rigidbody = GetComponent<Rigidbody>();
         charCon = GetComponent<CharacterController>();

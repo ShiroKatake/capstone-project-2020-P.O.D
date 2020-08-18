@@ -7,7 +7,7 @@ using Rewired;
 /// <summary>
 /// A manager class for getting the right input values from the player's current input device(s) without having to specify the device-specific input for what you're after.
 /// </summary>
-public class InputController : MonoBehaviour
+public class InputController : SerializableSingleton<InputController>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
@@ -52,10 +52,10 @@ public class InputController : MonoBehaviour
 
     //Singleton Public Property--------------------------------------------------------------------
 
-    /// <summary>
-    /// InputController's singleton public property.
-    /// </summary>
-    public static InputController Instance { get; protected set; }
+    ///// <summary>
+    ///// InputController's singleton public property.
+    ///// </summary>
+    //public static InputController Instance { get; protected set; }
 
     //Basic Public Properties----------------------------------------------------------------------
 
@@ -71,14 +71,15 @@ public class InputController : MonoBehaviour
     /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
     /// Awake() runs before Start().
     /// </summary>
-    void Awake()
+    protected override void Awake()
     {
-        if (Instance != null)
-        {
-            Debug.LogError("There should never be 2 or more InputControllers.");
-        }
+        //if (Instance != null)
+        //{
+        //    Debug.LogError("There should never be 2 or more InputControllers.");
+        //}
 
-        Instance = this;
+        //Instance = this;
+        base.Awake();
 
         switch (gamepad)
         {

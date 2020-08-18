@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-public class ResourceTextManager : MonoBehaviour
+public class ResourceTextManager : SerializableSingleton<ResourceTextManager>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
     //Serialized Fields----------------------------------------------------------------------------                                                    
@@ -24,7 +24,7 @@ public class ResourceTextManager : MonoBehaviour
     private float opacity;
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
     //Singleton Public Property--------------------------------------------------------------------            
-    public static ResourceTextManager Instance {get; protected set;}
+    //public static ResourceTextManager Instance {get; protected set;}
     //think about using custom setters and getters here...
     /*
     int x {
@@ -39,13 +39,15 @@ public class ResourceTextManager : MonoBehaviour
     /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
     /// Awake() runs before Start().
     /// </summary>
-    private void Awake()
+    protected override void Awake()
     {
-        if (Instance != null)
-        {
-            Debug.Log("There should never be 2 or more Resource Text Managers in the scene.");
-        }
-        Instance = this;
+        //if (Instance != null)
+        //{
+        //    Debug.Log("There should never be 2 or more Resource Text Managers in the scene.");
+        //}
+        //Instance = this;
+        base.Awake();
+
         if (!visibleOnAwake)
         {
             List<Graphic> initialisationGraphics = new List<Graphic>() { ore, water, power, waste, oreIcon, waterIcon, powerIcon, wasteIcon };
