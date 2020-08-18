@@ -41,13 +41,6 @@ public class StageCombat : SerializableSingleton<StageCombat>, IStage
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    ////Singleton Public Property----------------------------------------------------------------------------------------------------------------------
-
-    ///// <summary>
-    ///// StageCombat's singleton public property.
-    ///// </summary>
-    //public StageCombat Instance { get; protected set; }
-
     //Basic Public Properties----------------------------------------------------------------------
 
     /// <summary>
@@ -60,21 +53,6 @@ public class StageCombat : SerializableSingleton<StageCombat>, IStage
     }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
-
-    /// <summary>
-    /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
-    /// Awake() runs before Start().
-    /// </summary>
-    protected override void Awake()
-    {
-        //if (Instance != null)
-        //{
-        //    Debug.LogError("TThere should never be more than one StageCombat.");
-        //}
-
-        //Instance = this;
-        base.Awake();
-    }
 
     /// <summary>
     /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 

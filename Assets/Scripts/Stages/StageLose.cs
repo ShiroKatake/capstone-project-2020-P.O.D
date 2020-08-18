@@ -16,13 +16,6 @@ public class StageLose : SerializableSingleton<StageLose>, IStage
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    ////Singleton Public Property----------------------------------------------------------------------------------------------------------------------
-
-    ///// <summary>
-    ///// StageLose's singleton public property.
-    ///// </summary>
-    //public StageLose Instance { get; protected set; }
-
     //Basic Public Properties----------------------------------------------------------------------
 
     /// <summary>
@@ -31,23 +24,6 @@ public class StageLose : SerializableSingleton<StageLose>, IStage
     public EStage GetID()
     {
         return EStage.Lose;
-    }
-
-    //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
-
-    /// <summary>
-    /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
-    /// Awake() runs before Start().
-    /// </summary>
-    protected override void Awake()
-    {
-        //if (Instance != null)
-        //{
-        //    Debug.LogError("There should never be more than one StageFinishedTutorial.");
-        //}
-
-        //Instance = this;
-        base.Awake();
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------

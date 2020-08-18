@@ -9,13 +9,6 @@ public class StageMainGame: SerializableSingleton<StageMainGame>, IStage
 {
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    ////Singleton Public Property----------------------------------------------------------------------------------------------------------------------
-
-    ///// <summary>
-    ///// StageMAinGame's singleton public property.
-    ///// </summary>
-    //public StageMainGame Instance { get; protected set; }
-
     //Basic Public Properties----------------------------------------------------------------------
 
     /// <summary>
@@ -24,23 +17,6 @@ public class StageMainGame: SerializableSingleton<StageMainGame>, IStage
     public EStage GetID()
     {
         return EStage.MainGame;
-    }
-
-    //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
-
-    /// <summary>
-    /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
-    /// Awake() runs before Start().
-    /// </summary>
-    protected override void Awake()
-    {
-        //if (Instance != null)
-        //{
-        //    Debug.LogError("There should never be more than one StageFinishedTutorial.");
-        //}
-
-        //Instance = this;
-        base.Awake();
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------

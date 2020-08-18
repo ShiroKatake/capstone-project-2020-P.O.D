@@ -40,12 +40,7 @@ public class StageSkippedTutorial : SerializableSingleton<StageSkippedTutorial>,
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    ////Singleton Public Property----------------------------------------------------------------------------------------------------------------------
-
-    ///// <summary>
-    ///// StageSkippedTutorial's singleton public property.
-    ///// </summary>
-    //public StageSkippedTutorial Instance { get; protected set; }
+    //Basic Public Properties----------------------------------------------------------------------
 
     /// <summary>
     /// The ID of StageSkippedTutorial. 
@@ -56,21 +51,6 @@ public class StageSkippedTutorial : SerializableSingleton<StageSkippedTutorial>,
     }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
-
-    /// <summary>
-    /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
-    /// Awake() runs before Start().
-    /// </summary>
-    protected override void Awake()
-    {
-        //if (Instance != null)
-        //{
-        //    Debug.LogError("There should never be more than one StageFinishedTutorial.");
-        //}
-
-        //Instance = this;
-        base.Awake();
-    }
 
     /// <summary>
     /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 

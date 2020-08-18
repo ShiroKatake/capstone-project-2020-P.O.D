@@ -45,12 +45,7 @@ public class StageTerraforming : SerializableSingleton<StageTerraforming>, IStag
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    ////Singleton Public Property----------------------------------------------------------------------------------------------------------------------
-
-    ///// <summary>
-    ///// StageTerraforming's singleton public property.
-    ///// </summary>
-    //public StageTerraforming Instance { get; protected set; }
+    //Basic Public Properties----------------------------------------------------------------------
 
     /// <summary>
     /// The ID of StageTerraforming. 
@@ -63,21 +58,6 @@ public class StageTerraforming : SerializableSingleton<StageTerraforming>, IStag
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
-    /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
-    /// Awake() runs before Start().
-    /// </summary>
-    private void Awake()
-    {
-        //if (Instance != null)
-        //{
-        //    Debug.LogError("There should never be more than one StageTerraforming.");
-        //}
-
-        //Instance = this;
-        base.Awake();
-    }
-
-    /// <summary>
     /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
     /// Start() runs after Awake().
     /// </summary>
@@ -88,14 +68,6 @@ public class StageTerraforming : SerializableSingleton<StageTerraforming>, IStag
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
-
-    ///// <summary>
-    ///// The main behaviour of StageTerraforming.
-    ///// </summary>
-    //public override void StartExecution()
-    //{
-    //    StartCoroutine(Execution());
-    //}
 
     /// <summary>
     /// The main behaviour of the stage. 

@@ -16,13 +16,6 @@ public class StageWin : SerializableSingleton<StageWin>, IStage
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    ////Singleton Public Property----------------------------------------------------------------------------------------------------------------------
-
-    ///// <summary>
-    ///// StageWin's singleton public property.
-    ///// </summary>
-    //public StageWin Instance { get; protected set; }
-
     //Basic Public Properties----------------------------------------------------------------------
 
     /// <summary>
@@ -31,23 +24,6 @@ public class StageWin : SerializableSingleton<StageWin>, IStage
     public EStage GetID()
     {
         return EStage.Win;
-    }
-
-    //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
-
-    /// <summary>
-    /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
-    /// Awake() runs before Start().
-    /// </summary>
-    protected override void Awake()
-    {
-        //if (Instance != null)
-        //{
-        //    Debug.LogError("There should never be more than one StageFinishedTutorial.");
-        //}
-
-        //Instance = this;
-        base.Awake();
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
