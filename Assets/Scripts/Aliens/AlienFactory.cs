@@ -6,7 +6,7 @@ using UnityEngine;
 /// <summary>
 /// Factory class for aliens.
 /// </summary>
-public class AlienFactory : Factory<AlienFactory, Alien>
+public class AlienFactory : Factory<AlienFactory, Alien, ENoEnum>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
@@ -55,8 +55,9 @@ public class AlienFactory : Factory<AlienFactory, Alien>
         //}
 
         //Instance = this;
+        id = "AlienFactory";
         base.Awake();
-        //alienPool = new List<Alien>();        
+        //alienPool = new List<Alien>();      
     }
 
     /// <summary>
@@ -70,7 +71,7 @@ public class AlienFactory : Factory<AlienFactory, Alien>
 
         for (int i = 0; i < pooledAliens; i++)
         {
-            Alien alien = Instantiate(prefab, objectPool.position, new Quaternion()); 
+            Alien alien = Instantiate(prefabs[ENoEnum.None], objectPool.position, new Quaternion()); 
             alien.transform.parent = objectPool;
 
             foreach (Collider c in alien.GetComponents<Collider>())
@@ -78,7 +79,7 @@ public class AlienFactory : Factory<AlienFactory, Alien>
                 c.enabled = false;
             }
 
-            pool.Add(alien);            
+            pool[ENoEnum.None].Add(alien);            
         }
     }
 
@@ -114,6 +115,11 @@ public class AlienFactory : Factory<AlienFactory, Alien>
     //    return alien;
     //}
 
+    /// <summary>
+    /// Does extra setup for the alien before returning it from Get().
+    /// </summary>
+    /// <param name="result">The alien to return.</param>
+    /// <returns>The now-setup alien.</returns>
     protected override Alien GetRetrievalSetup(Alien result)
     {
         foreach (Collider c in result.GetComponents<Collider>())
@@ -128,12 +134,22 @@ public class AlienFactory : Factory<AlienFactory, Alien>
     /// Handles the destruction of aliens.
     /// </summary>
     /// <param name="alien">The alien to be destroyed.</param>
-    public override void Destroy(Alien alien)
+    public void Destroy(Alien alien)
+    {
+        Destroy(ENoEnum.None, alien);
+    }
+
+    /// <summary>
+    /// Handles the destruction of aliens.
+    /// </summary>
+    /// <param name="type">The type of the alien to be destroyed.</param>
+    /// <param name="alien">The alien to be destroyed.</param>
+    public override void Destroy(ENoEnum type, Alien alien)
     //public void DestroyAlien(Alien alien)
     {
         alien.Reset();
         AlienController.Instance.DeRegisterAlien(alien);
-        base.Destroy(alien);
+        base.Destroy(type, alien);
         //alien.transform.position = objectPool.position;
         //alien.transform.parent = objectPool;
         //pool.Add(alien);
