@@ -11,28 +11,7 @@ public class IdGenerator : Singleton<IdGenerator>
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
-    //private static IdGenerator instance = null;
     private int nextId;
-
-    //Public Properties------------------------------------------------------------------------------------------------------------------------------
-
-    //Singleton Public Property--------------------------------------------------------------------                                                    
-
-    ///// <summary>
-    ///// IdGenerator's singleton public property.
-    ///// </summary>
-    //public static IdGenerator Instance
-    //{
-    //    get
-    //    {
-    //        if (instance == null)
-    //        {
-    //            instance = new IdGenerator();
-    //        }
-
-    //        return instance;
-    //    }
-    //}
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -52,7 +31,6 @@ public class IdGenerator : Singleton<IdGenerator>
     /// </summary>
     public int GetNextId()
     {
-        //Debug.Log("ID Generator is generating a new ID.");
         nextId++;
         return nextId;
     }

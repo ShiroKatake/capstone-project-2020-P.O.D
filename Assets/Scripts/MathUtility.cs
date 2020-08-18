@@ -7,36 +7,6 @@ using UnityEngine;
 /// </summary>
 public class MathUtility : Singleton<MathUtility>
 {
-    //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
-
-    //Serialized Fields----------------------------------------------------------------------------                                                    
-
-
-
-    //Non-Serialized Fields------------------------------------------------------------------------                                                    
-
-    //private static MathUtility instance;
-
-    //Public Properties------------------------------------------------------------------------------------------------------------------------------
-
-    //Singleton Public Property--------------------------------------------------------------------                                                    
-
-    ///// <summary>
-    ///// MathUtility's singleton public property.
-    ///// </summary>
-    //public static MathUtility Instance
-    //{
-    //    get
-    //    {
-    //        if (instance == null)
-    //        {
-    //            instance = new MathUtility();
-    //        }
-
-    //        return instance;
-    //    }
-    //}
-
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>

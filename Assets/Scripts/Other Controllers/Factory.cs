@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// An empty enum.
+/// An empty enum for factories with only one product prefab.
 /// </summary>
 public enum ENoEnum
 {
