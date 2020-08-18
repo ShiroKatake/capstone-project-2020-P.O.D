@@ -504,8 +504,8 @@ public class Building : CollisionListener
     /// </summary>
 	public void SpawnFinishedFX()
 	{
-		FinishedFX fx = FinishedFXFactory.Instance.Get(transform.position);
-		//fx.transform.position = transform.position;
+		FinishedFX fx = FinishedFXFactory.Instance.Get();
+		fx.transform.position = transform.position;
 		fx.transform.localScale = new Vector3(fxSize, fxSize, fxSize);
 		fx.gameObject.SetActive(true);
 	}
