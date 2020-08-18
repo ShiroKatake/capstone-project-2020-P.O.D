@@ -6,7 +6,7 @@ using UnityEngine;
 /// <summary>
 /// Factory class for aliens.
 /// </summary>
-public class AlienFactory : Factory<AlienFactory, Alien, ENoEnum>
+public class AlienFactory : Factory<AlienFactory, Alien, ENone>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
@@ -15,8 +15,8 @@ public class AlienFactory : Factory<AlienFactory, Alien, ENoEnum>
     //[Header("Game Objects")]
     //[SerializeField] private Alien alienPrefab;
 
-    [Header("Stats")]
-    [SerializeField] private int pooledAliens;
+    //[Header("Stats")]
+    //[SerializeField] private int pooledAliens;
     [SerializeField] private float alienSpawnHeight;
 
 
@@ -64,22 +64,30 @@ public class AlienFactory : Factory<AlienFactory, Alien, ENoEnum>
     /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
     /// Start() runs after Awake().
     /// </summary>
-    private void Start()
+    protected override void Start()
     {
         //objectPool = ObjectPool.Instance.transform;
         base.Start();
 
-        for (int i = 0; i < pooledAliens; i++)
-        {
-            Alien alien = Instantiate(prefabs[ENoEnum.None], objectPool.position, new Quaternion()); 
-            alien.transform.parent = objectPool;
+        //for (int i = 0; i < pooledAliens; i++)
+        //{
+        //    Alien alien = Instantiate(prefabs[ENone.None], objectPool.position, new Quaternion()); 
+        //    alien.transform.parent = objectPool;
 
-            foreach (Collider c in alien.GetComponents<Collider>())
+        //    foreach (Collider c in alien.GetComponents<Collider>())
+        //    {
+        //        c.enabled = false;
+        //    }
+
+        //    pool[ENone.None].Add(alien);            
+        //}
+
+        foreach (Alien a in pool[ENone.None])
+        {
+            foreach (Collider c in a.GetComponents<Collider>())
             {
                 c.enabled = false;
             }
-
-            pool[ENoEnum.None].Add(alien);            
         }
     }
 
@@ -136,7 +144,7 @@ public class AlienFactory : Factory<AlienFactory, Alien, ENoEnum>
     /// <param name="alien">The alien to be destroyed.</param>
     public void Destroy(Alien alien)
     {
-        Destroy(ENoEnum.None, alien);
+        Destroy(ENone.None, alien);
     }
 
     /// <summary>
@@ -144,7 +152,7 @@ public class AlienFactory : Factory<AlienFactory, Alien, ENoEnum>
     /// </summary>
     /// <param name="type">The type of the alien to be destroyed.</param>
     /// <param name="alien">The alien to be destroyed.</param>
-    public override void Destroy(ENoEnum type, Alien alien)
+    public override void Destroy(ENone type, Alien alien)
     //public void DestroyAlien(Alien alien)
     {
         alien.Reset();

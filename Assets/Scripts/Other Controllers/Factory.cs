@@ -6,7 +6,7 @@ using UnityEngine;
 /// <summary>
 /// An empty enum for factories with only one product prefab.
 /// </summary>
-public enum ENoEnum
+public enum ENone
 {
     None
 }
@@ -57,6 +57,7 @@ public class Factory<FactoryType, ProductType, ProductEnum> : SerializableSingle
 
     [SerializeField] protected List<ProductEnum> productEnums;
     [SerializeField] protected List<ProductType> productPrefabs;
+    [SerializeField] protected List<int> productQuantities;
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
@@ -80,19 +81,13 @@ public class Factory<FactoryType, ProductType, ProductEnum> : SerializableSingle
             Debug.LogError("Please set this factory's ID before calling Factory.Awake().");
         }
 
-        if (productEnums.Count != productPrefabs.Count)
+        if (productEnums.Count != productPrefabs.Count || productEnums.Count != productQuantities.Count || productPrefabs.Count != productQuantities.Count)
         {
-            Debug.LogError($"{id}'s enum and prefab lists do not match in their lengths.");
+            Debug.LogError($"The lengths of {id}'s enum, prefab and quantity lists do not match.");
         }
 
         pool = new Dictionary<ProductEnum, List<ProductType>>();
         prefabs = new Dictionary<ProductEnum, ProductType>();
-
-        for (int i = 0; i < productEnums.Count; i++)
-        {
-            pool[productEnums[i]] = new List<ProductType>();
-            prefabs[productEnums[i]] = productPrefabs[i];
-        }
     }
 
     /// <summary>
@@ -102,6 +97,20 @@ public class Factory<FactoryType, ProductType, ProductEnum> : SerializableSingle
     protected virtual void Start()
     {
         objectPool = ObjectPool.Instance.transform;
+
+        for (int i = 0; i < productEnums.Count; i++)
+        {
+            pool[productEnums[i]] = new List<ProductType>();
+            prefabs[productEnums[i]] = productPrefabs[i];
+
+            for (int j = 0; j < productQuantities[i]; j++)
+            {
+                ProductType newProduct = Create(productEnums[i]);
+                newProduct.transform.position = objectPool.position;
+                newProduct.transform.parent = objectPool;
+                pool[productEnums[i]].Add(newProduct);
+            }
+        }
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
