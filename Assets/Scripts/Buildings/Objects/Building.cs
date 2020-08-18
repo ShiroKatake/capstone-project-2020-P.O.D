@@ -499,12 +499,15 @@ public class Building : CollisionListener
         AudioManager.Instance.PlaySound(AudioManager.ESound.Building_Completes, gameObject);
     }
 
+    /// <summary>
+    /// Spawns a "building finished" particle effect.
+    /// </summary>
 	public void SpawnFinishedFX()
 	{
-		GameObject fx = FinishedFXFactory.Instance.Get();
-		fx.transform.position = transform.position;
+		FinishedFX fx = FinishedFXFactory.Instance.Get(transform.position);
+		//fx.transform.position = transform.position;
 		fx.transform.localScale = new Vector3(fxSize, fxSize, fxSize);
-		fx.SetActive(true);
+		fx.gameObject.SetActive(true);
 	}
 
     /// <summary>

@@ -133,7 +133,6 @@ public class Factory<FactoryType, ProductType, ProductEnum> : SerializableSingle
     /// <summary>
     /// Creates a new [ProductType].
     /// </summary>
-    /// <param name="position">The position [ProductType] should be instantiated at.</param>
     /// <returns>A building of the specified type.</returns>
     protected virtual ProductType Create(ProductEnum type)
     {

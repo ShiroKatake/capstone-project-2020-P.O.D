@@ -13,7 +13,7 @@ public class FinishedFX : MonoBehaviour
 	{
 		if (partSys.isStopped)
 		{
-			FinishedFXFactory.Instance.ReturnToPool(gameObject);
+			FinishedFXFactory.Instance.Destroy(this);
 		}
 	}
 }
