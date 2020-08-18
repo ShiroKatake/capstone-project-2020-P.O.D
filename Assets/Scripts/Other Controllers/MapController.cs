@@ -156,7 +156,7 @@ public class MapController : SerializableSingleton<MapController>
         if (alien)
         {
             //Check if in alien exclusion area
-            if (StageManager.Instance.CurrentStage.ID != EStage.Combat && alienExclusionArea[(int)position.x, (int)position.z]) //Need to be able to spawn within the exclusion area during the tutorial
+            if (StageManager.Instance.CurrentStage.GetID() != EStage.Combat && alienExclusionArea[(int)position.x, (int)position.z]) //Need to be able to spawn within the exclusion area during the tutorial
             {
                 //Debug.Log($"Can't spawn an alien at {position}, which is within the alien exclusion area.");
                 return false;       
@@ -217,7 +217,7 @@ public class MapController : SerializableSingleton<MapController>
     ///// <returns>A position for an alien to spawn at.</returns>
     //public Vector3 RandomAlienSpawnablePos(List<Vector3> temporarilyUnavailablePositions)
     //{
-    //    List<Vector3> availablePositions = new List<Vector3>((StageManager.Instance.CurrentStage.ID == EStage.Combat ? tutorialAlienSpawnablePositions : alienSpawnablePositions));
+    //    List<Vector3> availablePositions = new List<Vector3>((StageManager.Instance.CurrentStage.GetID() == EStage.Combat ? tutorialAlienSpawnablePositions : alienSpawnablePositions));
 
     //    foreach (Vector3 p in temporarilyUnavailablePositions)
     //    {
@@ -247,7 +247,7 @@ public class MapController : SerializableSingleton<MapController>
     /// <returns>The current list of alien spawnable positions.</returns>
     public List<Vector3> GetAlienSpawnablePositions()
     {
-        return StageManager.Instance.CurrentStage.ID == EStage.Combat ? tutorialAlienSpawnablePositions : alienSpawnablePositions;
+        return StageManager.Instance.CurrentStage.GetID() == EStage.Combat ? tutorialAlienSpawnablePositions : alienSpawnablePositions;
     }
 
     //Entity Registration Methods------------------------------------------------------------------
@@ -305,7 +305,7 @@ public class MapController : SerializableSingleton<MapController>
 
         if (x >= 0 && x <= xMax && z >= 0 && z <= zMax)
         {
-            if (StageManager.Instance.CurrentStage.ID == EStage.Combat)
+            if (StageManager.Instance.CurrentStage.GetID() == EStage.Combat)
             {
                 Vector3 pos = new Vector3(x, AlienFactory.Instance.AlienSpawnHeight, z);
                 tutorialAlienSpawnablePositions.Remove(pos);

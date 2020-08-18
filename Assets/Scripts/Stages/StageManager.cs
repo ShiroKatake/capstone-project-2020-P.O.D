@@ -1,16 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
-
-using DG.Tweening;
-using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
-using Random = UnityEngine.Random;
-
-
 
 /// <summary>
 /// A manager class for the current stage of the game
@@ -25,8 +16,8 @@ public class StageManager : SerializableSingleton<StageManager>
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
-    private Dictionary<EStage, Stage> stages;
-    private Stage currentStage;
+    private Dictionary<EStage, IStage> stages;
+    private IStage currentStage;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -35,7 +26,7 @@ public class StageManager : SerializableSingleton<StageManager>
     /// <summary>
     /// The current stage of the game.
     /// </summary>
-    public Stage CurrentStage { get => currentStage; }
+    public IStage CurrentStage { get => currentStage; }
 
     /// <summary>
     /// Whether the player has elected to skip the tutorial or not.
@@ -64,18 +55,18 @@ public class StageManager : SerializableSingleton<StageManager>
     /// </summary>
     private void GetStages()
     {
-        stages = new Dictionary<EStage, Stage>();
-        Stage[] stageList = GetComponents<Stage>();
+        stages = new Dictionary<EStage, IStage>();
+        IStage[] stageList = GetComponents<IStage>();
 
-        foreach (Stage s in stageList)
+        foreach (IStage s in stageList)
         {
-            if (!stages.ContainsKey(s.ID))
+            if (!stages.ContainsKey(s.GetID()))
             {
-                stages[s.ID] = s;
+                stages[s.GetID()] = s;
             }
             else
             {
-                Debug.Log($"There there is more than one stage being processed by StageManager with the ID {s.ID}. Each stage should have a unique ID. Go back and check their Awake() methods.");
+                Debug.Log($"There there is more than one stage being processed by StageManager with the ID {s.GetID()}. Each stage should have a unique ID. Go back and check their Awake() methods.");
             }
         }
     }
@@ -86,7 +77,7 @@ public class StageManager : SerializableSingleton<StageManager>
     public void BeginGame()
     {
         currentStage = stages[(skipTutorial ? EStage.SkippedTutorial : EStage.Controls)];
-        currentStage.StartExecution();
+        StartCoroutine(currentStage.Execution());
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
@@ -96,7 +87,7 @@ public class StageManager : SerializableSingleton<StageManager>
     /// </summary>
     /// <param name="stage">The particular stage you want to retrieve.</param>
     /// <returns>The stage you wanted to retrieve.</returns>
-    public Stage GetStage(EStage stage)
+    public IStage GetStage(EStage stage)
     {
         if (stages.ContainsKey(stage))
         {
@@ -115,7 +106,7 @@ public class StageManager : SerializableSingleton<StageManager>
         if (stages.ContainsKey(stage))
         {
             currentStage = stages[stage];
-            currentStage.StartExecution();
+            StartCoroutine(currentStage.Execution());
         }
         else
         {

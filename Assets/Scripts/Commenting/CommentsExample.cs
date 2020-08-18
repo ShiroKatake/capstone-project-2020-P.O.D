@@ -92,12 +92,7 @@ public class CommentsExample : MonoBehaviour                                    
     //Method summary comment
     private void Awake()
     {
-        if (Instance != null)                                                                                                                          //Example of how to do singletons if the script is always attached to an in-scene object from 
-        {                                                                                                                                              //the start
-            Debug.LogError("There should never be 2 or more CommentsExamples.");
-        }
 
-        Instance = this;
     }
 
     //Method summary comment

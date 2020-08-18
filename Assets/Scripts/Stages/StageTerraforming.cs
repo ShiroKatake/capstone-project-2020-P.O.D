@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// The stage of the game where the player is introduced to the buildings and how terraforming works.
 /// </summary>
-public class StageTerraforming : Stage
+public class StageTerraforming : SerializableSingleton<StageTerraforming>, IStage
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
@@ -45,12 +45,20 @@ public class StageTerraforming : Stage
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    //Singleton Public Property----------------------------------------------------------------------------------------------------------------------
+    ////Singleton Public Property----------------------------------------------------------------------------------------------------------------------
+
+    ///// <summary>
+    ///// StageTerraforming's singleton public property.
+    ///// </summary>
+    //public StageTerraforming Instance { get; protected set; }
 
     /// <summary>
-    /// StageTerraforming's singleton public property.
+    /// The ID of StageTerraforming. 
     /// </summary>
-    public StageTerraforming Instance { get; protected set; }
+    public EStage GetID()
+    {
+        return EStage.Terraforming;
+    }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -60,13 +68,13 @@ public class StageTerraforming : Stage
     /// </summary>
     private void Awake()
     {
-        if (Instance != null)
-        {
-            Debug.LogError("There should never be more than one StageTerraforming.");
-        }
+        //if (Instance != null)
+        //{
+        //    Debug.LogError("There should never be more than one StageTerraforming.");
+        //}
 
-        Instance = this;
-        id = EStage.Terraforming;
+        //Instance = this;
+        base.Awake();
     }
 
     /// <summary>
@@ -81,13 +89,13 @@ public class StageTerraforming : Stage
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
-    /// <summary>
-    /// The main behaviour of StageTerraforming.
-    /// </summary>
-    public override void StartExecution()
-    {
-        StartCoroutine(Execution());
-    }
+    ///// <summary>
+    ///// The main behaviour of StageTerraforming.
+    ///// </summary>
+    //public override void StartExecution()
+    //{
+    //    StartCoroutine(Execution());
+    //}
 
     /// <summary>
     /// The main behaviour of the stage. 
@@ -96,7 +104,7 @@ public class StageTerraforming : Stage
     /// If the stage follows a linear path, use while(waiting){yield return null} statements to delay behaviour. If the stage can loop back on itself or
     /// jump ahead, use an initial yield return null followed by while(step > -1){switch(step){/*stage content*/}.
     /// </note>
-    protected override IEnumerator Execution()
+    public IEnumerator Execution()
     {
         yield return StartCoroutine(BuildFusionReactor());
         yield return StartCoroutine(BuildIceDrill());

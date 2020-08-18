@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// The stage of the game where the player is just left to do their own thing and play the game.
 /// </summary>
-public class StageSkippedTutorial : Stage
+public class StageSkippedTutorial : SerializableSingleton<StageSkippedTutorial>, IStage
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
@@ -40,12 +40,20 @@ public class StageSkippedTutorial : Stage
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    //Singleton Public Property----------------------------------------------------------------------------------------------------------------------
+    ////Singleton Public Property----------------------------------------------------------------------------------------------------------------------
+
+    ///// <summary>
+    ///// StageSkippedTutorial's singleton public property.
+    ///// </summary>
+    //public StageSkippedTutorial Instance { get; protected set; }
 
     /// <summary>
-    /// StageSkippedTutorial's singleton public property.
+    /// The ID of StageSkippedTutorial. 
     /// </summary>
-    public StageSkippedTutorial Instance { get; protected set; }
+    public EStage GetID()
+    {
+        return EStage.SkippedTutorial;
+    }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -53,15 +61,15 @@ public class StageSkippedTutorial : Stage
     /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
     /// Awake() runs before Start().
     /// </summary>
-    private void Awake()
+    protected override void Awake()
     {
-        if (Instance != null)
-        {
-            Debug.LogError("There should never be more than one StageFinishedTutorial.");
-        }
+        //if (Instance != null)
+        //{
+        //    Debug.LogError("There should never be more than one StageFinishedTutorial.");
+        //}
 
-        Instance = this;
-        id = EStage.SkippedTutorial;
+        //Instance = this;
+        base.Awake();
     }
 
     /// <summary>
@@ -77,21 +85,13 @@ public class StageSkippedTutorial : Stage
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
-    /// The main behaviour of StageFinishedTutorial.
-    /// </summary>
-    public override void StartExecution()
-    {
-        StartCoroutine(Execution());
-    }
-
-    /// <summary>
     /// The main behaviour of the stage. 
     /// </summary>
     /// <note>
     /// If the stage follows a linear path, use while(waiting){yield return null} statements to delay behaviour. If the stage can loop back on itself or
     /// jump ahead, use an initial yield return null followed by while(step > -1){switch(step){/*stage content*/}.
     /// </note>
-    protected override IEnumerator Execution()
+    public IEnumerator Execution()
     {
         yield return StartCoroutine(Setup());
         yield return StartCoroutine(EnableUI());

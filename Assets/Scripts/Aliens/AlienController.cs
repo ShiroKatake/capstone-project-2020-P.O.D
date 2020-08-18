@@ -145,9 +145,9 @@ public class AlienController : SerializableSingleton<AlienController>
             yield return null;
         }
 
-        while (spawnAliens && !gameOverStages.Contains(StageManager.Instance.CurrentStage.ID))
+        while (spawnAliens && !gameOverStages.Contains(StageManager.Instance.CurrentStage.GetID()))
         {
-            if (spawnableStages.Contains(StageManager.Instance.CurrentStage.ID) 
+            if (spawnableStages.Contains(StageManager.Instance.CurrentStage.GetID()) 
                 && !ClockController.Instance.Daytime 
                 && aliens.Count == 0 
                 && Time.time - timeOfLastDeath > waveDelay)
@@ -163,7 +163,7 @@ public class AlienController : SerializableSingleton<AlienController>
                 }
 
                 //Spawn aliens
-                EStage currentStage = StageManager.Instance.CurrentStage.ID;
+                EStage currentStage = StageManager.Instance.CurrentStage.GetID();
                 int spawnCount = (currentStage == EStage.Combat ? 3 : BuildingController.Instance.BuildingCount * alienMultiplier + spawnCountPenalty);
                 Vector3 swarmCentre = Vector3.zero;
                 int swarmSize = 0;

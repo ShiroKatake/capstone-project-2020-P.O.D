@@ -2464,31 +2464,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3011167280432518999, guid: 7ec13c4878030604f886d212027c72e6,
         type: 3}
-      propertyPath: shotgunTurret
-      value: 
-      objectReference: {fileID: 1445816517}
-    - target: {fileID: 3011167280432518999, guid: 7ec13c4878030604f886d212027c72e6,
-        type: 3}
-      propertyPath: machineGunTurret
-      value: 
-      objectReference: {fileID: 1445816516}
-    - target: {fileID: 3011167280432518999, guid: 7ec13c4878030604f886d212027c72e6,
-        type: 3}
-      propertyPath: turretsHighlight
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 3011167280432518999, guid: 7ec13c4878030604f886d212027c72e6,
-        type: 3}
-      propertyPath: machineGunTurretHighlight
-      value: 
-      objectReference: {fileID: 1445816505}
-    - target: {fileID: 3011167280432518999, guid: 7ec13c4878030604f886d212027c72e6,
-        type: 3}
-      propertyPath: shotgunTurretHighlight
-      value: 
-      objectReference: {fileID: 1445816514}
-    - target: {fileID: 3011167280432518999, guid: 7ec13c4878030604f886d212027c72e6,
-        type: 3}
       propertyPath: fusionReactor
       value: 
       objectReference: {fileID: 1445816525}
@@ -2512,6 +2487,26 @@ PrefabInstance:
       propertyPath: incinerator
       value: 
       objectReference: {fileID: 1445816523}
+    - target: {fileID: 3011167280432518999, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: shotgunTurret
+      value: 
+      objectReference: {fileID: 1445816517}
+    - target: {fileID: 3011167280432518999, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: machineGunTurret
+      value: 
+      objectReference: {fileID: 1445816516}
+    - target: {fileID: 3011167280432518999, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: shotgunTurretHighlight
+      value: 
+      objectReference: {fileID: 1445816514}
+    - target: {fileID: 3011167280432518999, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: machineGunTurretHighlight
+      value: 
+      objectReference: {fileID: 1445816505}
     - target: {fileID: 4952588298347314997, guid: 7ec13c4878030604f886d212027c72e6,
         type: 3}
       propertyPath: uiBorder
@@ -2620,7 +2615,7 @@ PrefabInstance:
     - target: {fileID: 7009541622833408660, guid: 7ec13c4878030604f886d212027c72e6,
         type: 3}
       propertyPath: skipTutorial
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7691648321688888052, guid: 7ec13c4878030604f886d212027c72e6,
         type: 3}
@@ -4207,7 +4202,7 @@ PrefabInstance:
     - target: {fileID: 9033323265905847547, guid: 485364eaa1338b94285a4b76d671c4a2,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 194.68
+      value: 190
       objectReference: {fileID: 0}
     - target: {fileID: 9033323265905847547, guid: 485364eaa1338b94285a4b76d671c4a2,
         type: 3}

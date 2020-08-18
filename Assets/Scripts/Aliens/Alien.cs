@@ -124,7 +124,7 @@ public class Alien : MonoBehaviour, IMessenger
             c.enabled = true;
         }
 
-        if (StageManager.Instance.CurrentStage.ID == EStage.MainGame)
+        if (StageManager.Instance.CurrentStage.GetID() == EStage.MainGame)
         {
             navMeshAgent.enabled = true;
             moving = true;
