@@ -13,8 +13,7 @@ public class BuildingSpawningController : SerializableSingleton<BuildingSpawning
     //Serialized Fields----------------------------------------------------------------------------
 
     [SerializeField] private bool printInputs;
-    [SerializeField] private Camera camera;
-    
+    [SerializeField] private Camera camera;    
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
@@ -195,31 +194,26 @@ public class BuildingSpawningController : SerializableSingleton<BuildingSpawning
                     if (!placementValid)
                     {
                         errorMessage += "~<- Invalid location.>";
-                        //Debug.Log("You cannot place a building there; it would occupy the same space as something else, or exceed the bounds of the map.");
                     }
 
                     if (ResourceController.Instance.Ore < heldBuilding.OreCost)
                     {
                         errorMessage += "~<- Insufficient +minerals&.>";
-                        //Debug.Log("You have insufficient ore to build this building.");
                     }
 
                     if (ResourceController.Instance.PowerSupply < ResourceController.Instance.PowerConsumption + heldBuilding.PowerConsumption)
                     {
                         errorMessage += "~<- Insufficient [power].>";
-                        //Debug.Log("You have insufficient power to maintain this building.");
                     }
 
                     if (ResourceController.Instance.WaterSupply < ResourceController.Instance.WaterConsumption + heldBuilding.WaterConsumption)
                     {
                         errorMessage += "~<- Insufficient /water\\.>";
-                        //Debug.Log("You have insufficient water to maintain this building.");
                     }
 
                     if (ResourceController.Instance.WasteSupply < ResourceController.Instance.WasteConsumption + heldBuilding.WasteConsumption)
                     {
                         errorMessage += "~<- Insufficient {waste}.>";
-                        //Debug.Log("You have insufficient waste to maintain this building.");
                     }
 
                     console.SubmitCustomMessage(errorMessage, true, 0);

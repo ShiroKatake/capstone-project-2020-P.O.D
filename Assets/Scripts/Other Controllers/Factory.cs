@@ -22,35 +22,6 @@ public class Factory<FactoryType, ProductType, ProductEnum> : SerializableSingle
     where ProductType : MonoBehaviour
     where ProductEnum : Enum
 {
-    //Would use a single list of this, but Unity doesn't want to serialize two variable types together, it seems. Separate lists seems to be the only way it'll let me do it.
-    ///// <summary>
-    ///// A serializable key-value pair for prefabs and their enum values.
-    ///// </summary>
-    //[SerializeField]
-    //public class ProductEnumPrefabPair
-    //{
-    //    //Private Fields-----------------------------------------------------------------------------------------------------------------------------
-
-    //    //Serialized Fields------------------------------------------------------------------------
-
-    //    [SerializeField] private ProductEnum productEnum;
-    //    [SerializeField] private ProductType productPrefab;
-
-    //    //Public Properties--------------------------------------------------------------------------------------------------------------------------
-
-    //    //Basic Public Properties------------------------------------------------------------------
-
-    //    /// <summary>
-    //    /// The [ProductEnum] value of this prefab.
-    //    /// </summary>
-    //    public ProductEnum ProductEnum { get => productEnum; }
-
-    //    /// <summary>
-    //    /// The [ProductType] prefab for [ProductEnum].
-    //    /// </summary>
-    //    public ProductType ProductPrefab { get => productPrefab; }
-    //}
-
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
     //Serialized Fields----------------------------------------------------------------------------
@@ -61,7 +32,6 @@ public class Factory<FactoryType, ProductType, ProductEnum> : SerializableSingle
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
-    protected string id;
     protected Dictionary<ProductEnum, ProductType> prefabs;
     protected Dictionary<ProductEnum, List<ProductType>> pool;
     protected Transform objectPool;
@@ -76,14 +46,9 @@ public class Factory<FactoryType, ProductType, ProductEnum> : SerializableSingle
     {
         base.Awake();
 
-        if (id == "")
-        {
-            Debug.LogError("Please set this factory's ID before calling Factory.Awake().");
-        }
-
         if (productEnums.Count != productPrefabs.Count || productEnums.Count != productQuantities.Count || productPrefabs.Count != productQuantities.Count)
         {
-            Debug.LogError($"The lengths of {id}'s enum, prefab and quantity lists do not match.");
+            Debug.LogError($"The lengths of {this}'s enum, prefab and quantity lists do not match.");
         }
 
         pool = new Dictionary<ProductEnum, List<ProductType>>();
@@ -179,7 +144,7 @@ public class Factory<FactoryType, ProductType, ProductEnum> : SerializableSingle
         }
         else
         {
-            Debug.LogError($"{id} does not have a prefab of [ProductEnum] value {type}");
+            Debug.LogError($"{this} does not have a prefab of [ProductEnum] value {type}");
             return null;
         }
     }
@@ -201,7 +166,7 @@ public class Factory<FactoryType, ProductType, ProductEnum> : SerializableSingle
         }
         else
         {
-            Debug.LogError($"{id} does not have a list objects of [ProductEnum] value {type}.");
+            Debug.LogError($"{this} does not have a list objects of [ProductEnum] value {type}.");
         }
     }
 }
