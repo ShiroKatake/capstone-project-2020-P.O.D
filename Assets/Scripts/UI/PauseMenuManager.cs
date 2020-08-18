@@ -32,13 +32,6 @@ public class PauseMenuManager : SerializableSingleton<PauseMenuManager>
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    //Singleton Public Property--------------------------------------------------------------------                                                    
-
-    ///// <summary>
-    ///// PauseMenuManager's singleton public property.
-    ///// </summary>
-    //public static PauseMenuManager Instance { get; protected set; }
-
     //Basic Public Properties----------------------------------------------------------------------
 
     /// <summary>
@@ -59,12 +52,6 @@ public class PauseMenuManager : SerializableSingleton<PauseMenuManager>
     /// </summary>
     protected override void Awake()
     {
-        //if (Instance != null)
-        //{
-        //    Debug.LogError("There should never be more than one SceneLoader.");
-        //}
-
-        //Instance = this;
         base.Awake();
         canvas.SetActive(true);
         buttonInitialiser = GetComponentInChildren<UIButtonInitialise>();

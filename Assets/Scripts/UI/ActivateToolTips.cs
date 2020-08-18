@@ -7,7 +7,7 @@ public class ActivateToolTips : MonoBehaviour
     [SerializeField] private ToolTips.Etooltips selection;
     public void tooltipON()
     {
-        ToolTips.Instance.ShowtoolTip(selection);
+        ToolTips.Instance.ShowToolTip(selection);
     }
     public void tooltipOff()
     {

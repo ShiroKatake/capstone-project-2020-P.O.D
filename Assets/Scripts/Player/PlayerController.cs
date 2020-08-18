@@ -69,13 +69,6 @@ public class PlayerController : SerializableSingleton<PlayerController>
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    //Singleton Public Property--------------------------------------------------------------------
-
-    ///// <summary>
-    ///// Singleton public property for the player controller.
-    ///// </summary>
-    //public static PlayerController Instance { get; protected set; }
-
 	//Basic Public Properties----------------------------------------------------------------------
 
 	public UnityAction onPlayerHeal;
@@ -117,12 +110,6 @@ public class PlayerController : SerializableSingleton<PlayerController>
     /// </summary>
     protected override void Awake()
     {
-        //if (Instance != null)
-        //{
-        //    Debug.LogError("There should never be 2 or more Players.");
-        //}
-
-        //Instance = this;
         base.Awake();
         health = GetComponent<Health>();
         rigidbody = GetComponent<Rigidbody>();

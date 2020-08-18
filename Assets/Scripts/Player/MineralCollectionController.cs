@@ -23,15 +23,6 @@ public class MineralCollectionController : SerializableSingleton<MineralCollecti
 	private bool isOnMineral;
     private LayerMask mineralsLayerMask;
 
-	//Public Properties------------------------------------------------------------------------------------------------------------------------------
-
-	//Singleton Public Property--------------------------------------------------------------------                                                    
-
-	///// <summary>
-	///// MineralCollectionController's singleton public property.
-	///// </summary>
-	//public static MineralCollectionController Instance { get; protected set; }
-
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
@@ -40,12 +31,6 @@ public class MineralCollectionController : SerializableSingleton<MineralCollecti
     /// </summary>
     protected override void Awake()
     {
-        //if (Instance != null)
-        //{
-        //    Debug.LogError("There should never be more than one MineralCollectionController.");
-        //}
-
-        //Instance = this;
         base.Awake();
         mineralsLayerMask = LayerMask.GetMask("Minerals");
     }

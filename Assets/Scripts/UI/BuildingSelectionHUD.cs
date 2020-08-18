@@ -9,15 +9,7 @@ public class BuildingSelectionHUD : SerializableSingleton<BuildingSelectionHUD>
     private ButtonClickEventManager button;
     private EBuilding selectedBuildingType;
 
-    //public static BuildingSelectionHUD Instance { get; protected set; }
-
     protected override void Awake(){
-        //if (Instance != null)
-        //{
-        //    Debug.Log("There should never be 2 or more BuildingSelectionHUDs in the scene.");
-        //}
-
-        //Instance = this;
         base.Awake();
         selectedBuildingType = EBuilding.FusionReactor;
         buttons = new List<ButtonClickEventManager>(GetComponentsInChildren<ButtonClickEventManager>());

@@ -36,13 +36,6 @@ public class ClockController : SerializableSingleton<ClockController>
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    //Singleton Public Property--------------------------------------------------------------------                                                    
-
-    ///// <summary>
-    ///// DayNightCycleController's singleton public property.
-    ///// </summary>
-    //public static ClockController Instance { get; protected set; }
-
     //Basic Public Properties----------------------------------------------------------------------                                                                                                                          
 
     /// <summary>
@@ -83,12 +76,6 @@ public class ClockController : SerializableSingleton<ClockController>
     /// </summary>
     protected override void Awake()
     {
-        //if (Instance != null)
-        //{
-        //    Debug.LogError("There should never be more than one DayNightCycleController.");
-        //}
-
-        //Instance = this;
         base.Awake();
         halfCycleDuration = cycleDuration * 0.5f;
         daytime = true;

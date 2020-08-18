@@ -21,13 +21,6 @@ public class FinishedFXFactory : SerializableSingleton<FinishedFXFactory>
 
 	//Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-	//Singleton Public Property--------------------------------------------------------------------                                                    
-
-	///// <summary>
-	///// MineralFactory's singleton public property.
-	///// </summary>
-	//public static FinishedFXFactory Instance { get; protected set; }
-
 	//Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
 	/// <summary>
@@ -36,15 +29,8 @@ public class FinishedFXFactory : SerializableSingleton<FinishedFXFactory>
 	/// </summary>
 	protected override void Awake()
 	{
-        //if (Instance != null)
-        //{
-        //	Debug.LogError("There should never be more than one OreFactory.");
-        //}
-
-        //Instance = this;
         base.Awake();
 		IdGenerator idGenerator = IdGenerator.Instance;
-
 		Add(pooledFX);
 	}
 

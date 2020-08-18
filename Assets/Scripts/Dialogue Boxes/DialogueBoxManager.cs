@@ -68,13 +68,6 @@ public class DialogueBoxManager : SerializableSingleton<DialogueBoxManager>
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    //Singleton Public Property--------------------------------------------------------------------                                                    
-
-    ///// <summary>
-    ///// DialogueBoxManager's singleton public property.
-    ///// </summary>
-    //public static DialogueBoxManager Instance { get; protected set; }
-
     //Basic Public Properties----------------------------------------------------------------------
 
     /// <summary>
@@ -95,12 +88,6 @@ public class DialogueBoxManager : SerializableSingleton<DialogueBoxManager>
     /// </summary>
     protected override void Awake()
     {
-        //if (Instance != null)
-        //{
-        //    Debug.LogError("There should never be more than one DialogueBoxManager.");
-        //}
-
-        //Instance = this;
         base.Awake();
         GetDialogueBoxes();
         LoadDialogueData();

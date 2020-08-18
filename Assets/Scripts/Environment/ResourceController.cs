@@ -35,15 +35,6 @@ public class ResourceController : SerializableSingleton<ResourceController>
     private bool wasteAvailable = false;
     private bool waterAvailable = false;
 
-    //Public Properties------------------------------------------------------------------------------------------------------------------------------
-
-    //Singleton Public Property--------------------------------------------------------------------                                                    
-
-    ///// <summary>
-    ///// ResourceController's singleton public property.
-    ///// </summary>
-    //public static ResourceController Instance { get; protected set; }
-
     //Basic Public Properties----------------------------------------------------------------------                                                                                                                          
 
     /// <summary>
@@ -187,22 +178,6 @@ public class ResourceController : SerializableSingleton<ResourceController>
             CheckResourceSupply();
         }
     }
-
-    //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
-
-    ///// <summary>
-    ///// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
-    ///// Awake() runs before Start().
-    ///// </summary>
-    //private void Awake()
-    //{
-    //    if (Instance != null)
-    //    {
-    //        Debug.LogError("There should never be more than one [CLASSNAME].");
-    //    }
-
-    //    Instance = this;
-    //}
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
 

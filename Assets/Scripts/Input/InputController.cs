@@ -13,11 +13,6 @@ public class InputController : SerializableSingleton<InputController>
 
     //Serialized Fields----------------------------------------------------------------------------
 
-    [Header("Settings")]
-    //dont think these fields are necessary anymore
-    [SerializeField] private EGamepad gamepad;
-    [SerializeField] private EOperatingSystem operatingSystem;
-
     [Header("Player Selection Settings")]
     [SerializeField] private int playerID = 0;
     [SerializeField] private Rewired.Player player;
@@ -36,34 +31,10 @@ public class InputController : SerializableSingleton<InputController>
     // needs to be renamed...
     [SerializeField] private GameObject buildingUIParent;
 
-
-
     //Non-Serialized Fields------------------------------------------------------------------------
-
-    // probably not needed with the new rewired system
-    //Prefixes
-    private string gamepadPrefix;
-    private string osPrefix;
 
     //ClickedButton
     private ButtonClickEventManager clickedButton;
-
-    //Public Properties------------------------------------------------------------------------------------------------------------------------------
-
-    //Singleton Public Property--------------------------------------------------------------------
-
-    ///// <summary>
-    ///// InputController's singleton public property.
-    ///// </summary>
-    //public static InputController Instance { get; protected set; }
-
-    //Basic Public Properties----------------------------------------------------------------------
-
-    // probably not needed with rewired...
-    /// <summary>
-    /// The input device(s) the player is using.
-    /// </summary>
-    public EGamepad Gamepad { get => gamepad; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -73,39 +44,7 @@ public class InputController : SerializableSingleton<InputController>
     /// </summary>
     protected override void Awake()
     {
-        //if (Instance != null)
-        //{
-        //    Debug.LogError("There should never be 2 or more InputControllers.");
-        //}
-
-        //Instance = this;
         base.Awake();
-
-        switch (gamepad)
-        {
-            case EGamepad.XboxController:
-                gamepadPrefix = "XB";
-                break;
-            case EGamepad.DualShockController:
-                gamepadPrefix = "DS";
-                break;
-            case EGamepad.MouseAndKeyboard:
-            default:
-                gamepadPrefix = "MK";
-                break;
-        }
-
-        switch (operatingSystem)
-        {
-            case EOperatingSystem.Mac:
-                osPrefix = "M";
-                break;
-            case EOperatingSystem.Windows:
-            default:
-                osPrefix = "W";
-                break;
-        }
-
         buttonClickEventManagers = new List<ButtonClickEventManager>(buildingUIParent.GetComponentsInChildren<ButtonClickEventManager>());
         player = ReInput.players.GetPlayer(playerID);
     }

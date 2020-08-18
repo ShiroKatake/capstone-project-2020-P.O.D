@@ -13,31 +13,6 @@ public class ProjectileManager : SerializableSingleton<ProjectileManager>
 
     private List<Projectile> projectiles = new List<Projectile>();
 
-    //Public Properties------------------------------------------------------------------------------------------------------------------------------
-
-    //Singleton Public Property--------------------------------------------------------------------                                                    
-
-    ///// <summary>
-    ///// ProjectileManager's singleton public property.
-    ///// </summary>
-    //public static ProjectileManager Instance { get; protected set; }
-
-    //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
-
-    ///// <summary>
-    ///// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
-    ///// Awake() runs before Start().
-    ///// </summary>
-    //private void Awake()
-    //{
-    //    if (Instance != null)
-    //    {
-    //        Debug.LogError("There should never be more than one BuildingController.");
-    //    }
-
-    //    Instance = this;
-    //}
-
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>

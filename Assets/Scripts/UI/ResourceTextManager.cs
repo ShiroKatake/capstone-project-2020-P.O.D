@@ -23,8 +23,7 @@ public class ResourceTextManager : SerializableSingleton<ResourceTextManager>
     private List<Graphic> graphics;
     private float opacity;
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
-    //Singleton Public Property--------------------------------------------------------------------            
-    //public static ResourceTextManager Instance {get; protected set;}
+
     //think about using custom setters and getters here...
     /*
     int x {
@@ -41,11 +40,6 @@ public class ResourceTextManager : SerializableSingleton<ResourceTextManager>
     /// </summary>
     protected override void Awake()
     {
-        //if (Instance != null)
-        //{
-        //    Debug.Log("There should never be 2 or more Resource Text Managers in the scene.");
-        //}
-        //Instance = this;
         base.Awake();
 
         if (!visibleOnAwake)

@@ -19,13 +19,6 @@ public class CommentsTemplate : MonoBehaviour
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    ////Singleton Public Property--------------------------------------------------------------------                                                    
-
-    ///// <summary>
-    ///// [CLASSNAME]'s singleton public property.
-    ///// </summary>
-    //public static CommentsTemplate Instance { get; protected set; }
-
     //Basic Public Properties----------------------------------------------------------------------                                                                                                                          
 
 

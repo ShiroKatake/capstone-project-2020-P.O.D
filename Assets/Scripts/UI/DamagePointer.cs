@@ -6,7 +6,6 @@ using UnityEngine.Rendering;
 
 public class DamagePointer : SerializableSingleton<DamagePointer>
 {
-//    private static DamagePointer Instance;
     [SerializeField] private GameObject pointer;
     private Transform location;
     [SerializeField]private Camera minimapCamera;
@@ -20,7 +19,6 @@ public class DamagePointer : SerializableSingleton<DamagePointer>
     private float count = 0;
     protected override void Awake()
     {
-        //Instance = this;
         base.Awake();
         pointerRectTransform = pointer.GetComponent<RectTransform>();
         pointer.SetActive(false);

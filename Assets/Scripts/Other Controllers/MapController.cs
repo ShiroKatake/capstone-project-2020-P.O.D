@@ -33,15 +33,6 @@ public class MapController : SerializableSingleton<MapController>
     private List<Vector3> alienSpawnablePositions;
     private List<Vector3> tutorialAlienSpawnablePositions;
 
-    //Public Properties------------------------------------------------------------------------------------------------------------------------------
-
-    //Singleton Public Property--------------------------------------------------------------------                                                    
-
-    ///// <summary>
-    ///// MapController's singleton public property.
-    ///// </summary>
-    //public static MapController Instance { get; protected set; }
-
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
@@ -50,12 +41,6 @@ public class MapController : SerializableSingleton<MapController>
     /// </summary>
     protected override void Awake()
     {
-        //if (Instance != null)
-        //{
-        //    Debug.LogError("There should never be more than one MapController.");
-        //}
-
-        //Instance = this;
 
         base.Awake();
         availableBuildingPositions = new bool[xMax + 1 , zMax + 1];

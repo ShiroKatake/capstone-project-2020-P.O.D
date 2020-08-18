@@ -48,12 +48,6 @@ public class HoveringDialogueManager : SerializableSingleton<HoveringDialogueMan
 	private Camera playerCamera;
 	private HoverDialogueBoxPreset presetWithMineral;
 
-	//Public Properties------------------------------------------------------------------------------------------------------------------------------
-
-	////Singleton Public Property--------------------------------------------------------------------   
-
-	//public static HoveringDialogueManager Instance { get; protected set; }
-
 	//Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 	
 	/// <summary>
@@ -62,12 +56,6 @@ public class HoveringDialogueManager : SerializableSingleton<HoveringDialogueMan
 	/// </summary>
 	protected override void Awake()
 	{
-        //if (Instance != null)
-        //{
-        //	Debug.LogError("There should never be more than one HoveringDialogueManager.");
-        //}
-
-        //Instance = this;
         base.Awake();
 		playerCamera = Camera.main;
 

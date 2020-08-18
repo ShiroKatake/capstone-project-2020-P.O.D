@@ -36,18 +36,10 @@ public class EnvironmentalController : SerializableSingleton<EnvironmentalContro
 
     private float progressProportion = 0;
 
-    //public static EnvironmentalController Instance { get; protected set; }
-
     public List<Terraformer> Terraformers { get => terraformers; }
     public float ProgressProportion { get => progressProportion; }
     protected override void Awake()
     {
-        //if (Instance != null)
-        //{
-        //    Debug.LogError("There should never be more than one EnvironmentalController.");
-        //}
-
-        //Instance = this;
         base.Awake();
         progress.SetMax(winAmount);
         progress.SetBarValue(TotalVal);

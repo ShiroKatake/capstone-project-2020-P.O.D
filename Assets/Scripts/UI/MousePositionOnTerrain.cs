@@ -11,17 +11,9 @@ public class MousePositionOnTerrain : SerializableSingleton<MousePositionOnTerra
     private Vector3 worldPosition;
     private Ray ray;
 
-    //public static MousePositionOnTerrain Instance {get; protected set;}
-
     public Vector3 GetWorldPosition {get => worldPosition;}
 
     protected override void Awake() {
-        //if (Instance != null)
-        //{
-        //    Debug.LogError("There should never be 2 or more Mouse Position On Terrain's.");
-        //}
-
-        //Instance = this;
         base.Awake();
         plane = new Plane(Vector3.up, 0);
     }

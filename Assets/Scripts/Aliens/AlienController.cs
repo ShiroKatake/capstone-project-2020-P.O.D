@@ -67,13 +67,6 @@ public class AlienController : SerializableSingleton<AlienController>
 
     //PublicProperties-------------------------------------------------------------------------------------------------------------------------------
 
-    //Singleton Public Property--------------------------------------------------------------------
-
-    ///// <summary>
-    ///// AlienController's singleton public property.
-    ///// </summary>
-    //public static AlienController Instance { get; protected set; }
-
     //Basic Public Properties----------------------------------------------------------------------
 
     /// <summary>
@@ -91,12 +84,6 @@ public class AlienController : SerializableSingleton<AlienController>
     /// </summary>
     protected override void Awake()
     {
-        //if (Instance != null)
-        //{
-        //    Debug.LogError("There should never be 2 or more AlienControllers.");
-        //}
-
-        //Instance = this;
         base.Awake();
         aliens = new List<Alien>();
         timeOfLastDeath = waveDelay * -1;

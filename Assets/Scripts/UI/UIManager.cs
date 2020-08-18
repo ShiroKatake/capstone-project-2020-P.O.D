@@ -25,13 +25,6 @@ public class UIManager : SerializableSingleton<UIManager>
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    //Singleton Public Property--------------------------------------------------------------------
-
-    ///// <summary>
-    ///// UIManager's singleton public property.
-    ///// </summary>
-    //public static UIManager Instance { get; protected set; }
-
     //Basic Public Properties----------------------------------------------------------------------
 
     /// <summary>
@@ -57,15 +50,7 @@ public class UIManager : SerializableSingleton<UIManager>
     /// </summary>
     protected override void Awake()
     {
-        //if (Instance != null)
-        //{
-        //    Debug.LogError("There should never be 2 or more UIManagers.");
-        //}
-
-        //Instance = this;
-
         base.Awake();
-
         pauseInitialiser = pauseMenuCanvas.GetComponent<UIButtonInitialise>();
         gameOverInitialiser = gameOverCanvas.GetComponent<UIButtonInitialise>();
     }

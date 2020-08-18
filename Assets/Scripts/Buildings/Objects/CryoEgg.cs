@@ -17,13 +17,6 @@ public class CryoEgg : SerializableSingleton<CryoEgg>
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    //Singleton Public Property--------------------------------------------------------------------                                                    
-
-    ///// <summary>
-    ///// CryoEgg's singleton public property.
-    ///// </summary>
-    //public static CryoEgg Instance { get; protected set; }
-
     //Basic Public Properties----------------------------------------------------------------------                                                                                                                          
 
     /// <summary>
@@ -40,20 +33,4 @@ public class CryoEgg : SerializableSingleton<CryoEgg>
     /// The CryoEgg's Size component.
     /// </summary>
     public Size Size { get => size; }
-
-    //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
-
-    ///// <summary>
-    ///// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
-    ///// Awake() runs before Start().
-    ///// </summary>
-    //private void Awake()
-    //{
-    //    if (Instance != null)
-    //    {
-    //        Debug.LogError("There should never be more than one CryoEgg.");
-    //    }
-
-    //    Instance = this;
-    //}
 }

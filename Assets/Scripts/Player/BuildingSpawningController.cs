@@ -37,13 +37,6 @@ public class BuildingSpawningController : SerializableSingleton<BuildingSpawning
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    //Singleton Public Property--------------------------------------------------------------------                                                    
-
-    ///// <summary>
-    ///// BuildingSpawningController's singleton public property.
-    ///// </summary>
-    //public static BuildingSpawningController Instance { get; protected set; }
-
     //Basic Public Properties----------------------------------------------------------------------
 
     /// <summary>
@@ -59,12 +52,6 @@ public class BuildingSpawningController : SerializableSingleton<BuildingSpawning
     /// </summary>
     protected override void Awake()
     {
-        //if (Instance != null)
-        //{
-        //    Debug.LogError("There should never be more than one BuildingSpawningController.");
-        //}
-
-        //Instance = this;
         base.Awake();
         cycleBuildingSelection = false;
         cyclingBuildingSelection = false;

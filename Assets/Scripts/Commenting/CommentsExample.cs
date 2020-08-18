@@ -39,10 +39,6 @@ public class CommentsExample : MonoBehaviour                                    
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    //Singleton Public Property--------------------------------------------------------------------                                                    //If the class needs to be a singleton
-
-    public static CommentsExample Instance { get; protected set; }
-
     //Basic Public Properties----------------------------------------------------------------------                                                                                                                          //Public properties that are just get and/or set properties; listed in alphabetical order
 
     public string SomeOtherSerializedVariable { get => someOtherSerializedVariable; set => someOtherSerializedVariable = value; }

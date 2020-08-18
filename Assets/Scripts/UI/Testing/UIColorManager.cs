@@ -32,15 +32,7 @@ public class UIColorManager : SerializableSingleton<UIColorManager>
     private float t = 0;
     private float et = 0;
 
-    //public static UIColorManager Instance {get; protected set;}
-
     protected override void Awake() {
-        //if (Instance != null)
-        //{
-        //    Debug.LogError("There should never be 2 or more Color Managers.");
-        //}
-
-        //Instance = this;
         base.Awake();
         backgroundCurColor = backgroundDay;
         borderCurColor = borderDay;

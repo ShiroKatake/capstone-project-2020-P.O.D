@@ -27,13 +27,6 @@ public class SceneLoader : SerializableSingleton<SceneLoader>
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    //Singleton Public Property--------------------------------------------------------------------                                                    
-
-    ///// <summary>
-    ///// SceneLoader's singleton public property.
-    ///// </summary>
-    //public static SceneLoader Instance { get; protected set; }
-
     //Basic Public Properties----------------------------------------------------------------------
 
     /// <summary>
@@ -54,12 +47,6 @@ public class SceneLoader : SerializableSingleton<SceneLoader>
     /// </summary>
     protected override void Awake()
     {
-        //if (Instance != null)
-        //{
-        //    Debug.LogError("There should never be more than one SceneLoader.");
-        //}
-
-        //Instance = this;
         base.Awake();
         DontDestroyOnLoad(gameObject);
         graphics = new List<Graphic>() { background, textBox };

@@ -13,15 +13,6 @@ public class MessageDispatcher : SerializableSingleton<MessageDispatcher>
 
     private Dictionary<string, List<IMessenger>> subscribers;
 
-    //Public Properties------------------------------------------------------------------------------------------------------------------------------
-
-    //Singleton Public Property--------------------------------------------------------------------                                                    
-
-    ///// <summary>
-    ///// MessageDispatcher's singleton public property.
-    ///// </summary>
-    //public static MessageDispatcher Instance { get; protected set; }
-
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
@@ -30,12 +21,6 @@ public class MessageDispatcher : SerializableSingleton<MessageDispatcher>
     /// </summary>
     protected override void Awake()
     {
-        //if (Instance != null)
-        //{
-        //    Debug.LogError("There should never be more than one MessageBoard.");
-        //}
-
-        //Instance = this;
         base.Awake();
         subscribers = new Dictionary<string, List<IMessenger>>();
     }

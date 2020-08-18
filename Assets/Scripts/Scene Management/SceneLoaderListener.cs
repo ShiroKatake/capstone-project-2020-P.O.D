@@ -21,13 +21,6 @@ public class SceneLoaderListener : SerializableSingleton<SceneLoaderListener>
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    //Singleton Public Property--------------------------------------------------------------------
-
-    ///// <summary>
-    ///// SceneLoaderListener's singleton public property.
-    ///// </summary>
-    //public static SceneLoaderListener Instance { get; protected set; }
-
     //Basic Public Properties----------------------------------------------------------------------
 
     /// <summary>
@@ -43,12 +36,6 @@ public class SceneLoaderListener : SerializableSingleton<SceneLoaderListener>
     /// </summary>
     protected override void Awake()
     {
-        //if (Instance != null)
-        //{
-        //    Debug.LogError("There should never be 2 or more SceneLoaderListeners at once.");
-        //}
-
-        //Instance = this;
         base.Awake();
         sceneLoaderInstantiatedOnAwake = false;
 

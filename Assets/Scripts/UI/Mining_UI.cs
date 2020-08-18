@@ -9,7 +9,7 @@ public class Mining_UI : MonoBehaviour
   
     void OnMouseOver()
     {
-        ToolTips.Instance.ShowtoolTip(reference);
+        ToolTips.Instance.ShowToolTip(reference);
         Debug.Log("Hovering over a mineral");
     }
 

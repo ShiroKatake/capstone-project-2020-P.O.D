@@ -8,8 +8,6 @@ using UnityEngine;
 
 public class PipeManager : SerializableSingleton<PipeManager> {
 
-    //public static PipeManager Instance { get; protected set; }
-
     List<PipeBuilding> buildings = new List<PipeBuilding>();
     List<PipeNode> nodes = new List<PipeNode>();
 
@@ -17,14 +15,6 @@ public class PipeManager : SerializableSingleton<PipeManager> {
     List<Label> labels = new List<Label>();
 
     MeshFilter meshFilter;
-
-    //private void Awake() {
-    //    if (Instance != null) {
-    //        Debug.LogError("There should never be more than one Pipe manager");
-    //    }
-
-    //    Instance = this;
-    //}
 
     // Start is called before the first frame update
     void Start() {
