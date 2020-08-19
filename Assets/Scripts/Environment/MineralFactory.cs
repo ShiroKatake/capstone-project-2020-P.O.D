@@ -11,16 +11,12 @@ public class MineralFactory : Factory<MineralFactory, Mineral, ENone>
 
     //Serialized Fields----------------------------------------------------------------------------                                                    
 
-    //[SerializeField] private Mineral mineralPrefab;
-    //[SerializeField] private int pooledMinerals;
     [Header("Mineral Stats")]
 	[SerializeField] private int oreCount;
     [SerializeField] private bool destroySpentMinerals;
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
-    //private Transform objectPool;
-    //private List<Mineral> minerals;
     private List<Mineral> despawningMinerals;
     private List<Mineral> despawnedMinerals;
 
@@ -28,10 +24,9 @@ public class MineralFactory : Factory<MineralFactory, Mineral, ENone>
 
     //Singleton Public Property--------------------------------------------------------------------                                                    
 
-    ///// <summary>
-    ///// MineralFactory's singleton public property.
-    ///// </summary>
-    //public static MineralFactory Instance { get; protected set; }
+    /// <summary>
+    /// How much ore should a single mineral node yield in total.
+    /// </summary>
 	public int OreCount { get => oreCount;}
 
 	//Initialization Methods-------------------------------------------------------------------------------------------------------------------------
@@ -42,14 +37,6 @@ public class MineralFactory : Factory<MineralFactory, Mineral, ENone>
 	/// </summary>
 	protected override void Awake()
     {
-        //if (Instance != null)
-        //{
-        //    Debug.LogError("There should never be more than one BuildingFactory.");
-        //}
-
-        //Instance = this;
-        //IdGenerator idGenerator = IdGenerator.Instance;
-        //minerals = new List<Mineral>();
         base.Awake();
         despawningMinerals = new List<Mineral>();
         despawnedMinerals = new List<Mineral>();        
@@ -68,20 +55,6 @@ public class MineralFactory : Factory<MineralFactory, Mineral, ENone>
             m.DisableColliders();
         }
     }
-
-    ///// <summary>
-    ///// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
-    ///// Start() runs after Awake().
-    ///// </summary>
-    //private void Start()
-    //{
-    //    objectPool = ObjectPool.Instance.transform;
-
-    //    for (int i = 0; i < pooledMinerals; i++)
-    //    {
-    //        minerals.Add(CreateMineral(true));
-    //    }
-    //}
 
     //Triggered Methods -----------------------------------------------------------------------------------------------------------------------------
 
@@ -104,21 +77,7 @@ public class MineralFactory : Factory<MineralFactory, Mineral, ENone>
     public override Mineral Get(ENone type, Vector3 position)
     {
         Mineral mineral = base.Get(type, position);
-
-        //if (minerals.Count > 0)
-        //{
-        //    mineral = minerals[0];
-        //    minerals.RemoveAt(0);
-        //    mineral.transform.parent = null;
-        //    mineral.EnableColliders();
-        //}
-        //else
-        //{
-        //    mineral = CreateMineral(false);
-        //}
-
         mineral.Id = IdGenerator.Instance.GetNextId();
-        //mineral.transform.position = position;
         MapController.Instance.RegisterMineral(mineral);
         return mineral;
     }
@@ -133,24 +92,6 @@ public class MineralFactory : Factory<MineralFactory, Mineral, ENone>
         mineral.EnableColliders();
         return mineral;
     }
-
-    ///// <summary>
-    ///// Creates mineral nodes.
-    ///// </summary>
-    ///// <returns>A mineral node.</returns>
-    //private Mineral CreateMineral(bool pooling)
-    //{
-    //    Mineral mineral = Instantiate(mineralPrefab);
-
-    //    if (pooling)
-    //    {
-    //        mineral.transform.position = objectPool.transform.position;
-    //        mineral.transform.parent = objectPool;
-    //        mineral.DisableColliders();
-    //    }
-
-    //    return mineral;
-    //}
 
     /// <summary>
     /// Destroy a mineral node.

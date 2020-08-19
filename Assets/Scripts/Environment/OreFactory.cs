@@ -12,43 +12,18 @@ public class OreFactory : Factory<OreFactory, Ore, ENone>
 	//Serialized Fields----------------------------------------------------------------------------                                                    
 
     [Header("Ore Stats")]
-	//[SerializeField] private Ore orePrefab;
-	//[SerializeField] private int pooledOres;
 	[SerializeField] private int oreValue;
-
-	//Non-Serialized Fields------------------------------------------------------------------------
-
-	//private Transform objectPool;
-	//private Queue<Ore> ores = new Queue<Ore>();
 
 	//Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-	//Singleton Public Property--------------------------------------------------------------------                                                    
+	//Basic Public Properties----------------------------------------------------------------------                                                    
 
-	///// <summary>
-	///// MineralFactory's singleton public property.
-	///// </summary>
-	//public static OreFactory Instance { get; protected set; }
+    /// <summary>
+    /// How much ore should ore nodes yield.
+    /// </summary>
 	public int OreValue { get => oreValue; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
-
-    ///// <summary>
-    ///// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
-    ///// Awake() runs before Start().
-    ///// </summary>
-    //protected override void Awake()
-    //   {
-    //	if (Instance != null)
-    //	{
-    //		Debug.LogError("There should never be more than one OreFactory.");
-    //	}
-
-    //	Instance = this;
-    //	IdGenerator idGenerator = IdGenerator.Instance;
-
-    //	AddOres(pooledOres);
-    //}
 
     /// <summary>
     /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
@@ -64,18 +39,8 @@ public class OreFactory : Factory<OreFactory, Ore, ENone>
         }
     }
 
-    ///// <summary>
-    ///// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
-    ///// Start() runs after Awake().
-    ///// </summary>
-    //private void Start()
-    //{
-    //    objectPool = ObjectPool.Instance.transform;
-    //}
-
     //Triggered Methods -----------------------------------------------------------------------------------------------------------------------------
-
-
+    
     /// <summary>
     /// Get a new ore.
     /// </summary>
@@ -84,31 +49,6 @@ public class OreFactory : Factory<OreFactory, Ore, ENone>
     {
         return Get(ENone.None);
     }
-
-    ///// <summary>
-    ///// Generate a mineral ore from the pool. If there's no ores in the pool add one.
-    ///// </summary>
-    //public Ore Get()
-    //{
-    //	if (ores.Count == 0)
-    //	{
-    //		AddOres(1);
-    //	}
-    //	return ores.Dequeue();
-    //}
-
-    //   /// <summary>
-    //   /// Add ores into the pool.
-    //   /// </summary>
-    //   private void AddOres(int count)
-    //{
-    //	for (int i = 0; i < count; i++)
-    //	{
-    //		Ore ore = Instantiate(orePrefab);
-    //		ore.gameObject.SetActive(false);
-    //		ores.Enqueue(ore);
-    //	}
-    //}
 
     /// <summary>
     /// Destroy an ore.
@@ -128,6 +68,5 @@ public class OreFactory : Factory<OreFactory, Ore, ENone>
 	{
 		ore.gameObject.SetActive(false);
         base.Destroy(type, ore);
-		//ores.Enqueue(ore);
 	}
 }

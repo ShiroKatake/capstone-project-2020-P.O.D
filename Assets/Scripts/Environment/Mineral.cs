@@ -13,13 +13,13 @@ public class Mineral : MonoBehaviour
 	//Serialized Fields----------------------------------------------------------------------------
 
     [SerializeField] private bool placed;
-	private int oreCount;
 	[SerializeField] private float oreSpawnRate = 1f;
 	[SerializeField] private float oreCurveRadius = 2;
 	[SerializeField] private Transform miningPoint;
 
 	//Non-Serialized Fields------------------------------------------------------------------------
 
+	private int oreCount;
 	private int initialCount;
     private int id;
     private List<Collider> colliders;
