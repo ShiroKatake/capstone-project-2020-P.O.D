@@ -286,7 +286,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mineralPrefab: {fileID: 6920960518473543034, guid: 4cce8f281ac35a346bc3e16f60d137a7,
     type: 3}
-  pooledMinerals: 10
+  pooledMinerals: 0
   oreCount: 10
 --- !u!114 &4887592665430866259
 MonoBehaviour:
@@ -329,11 +329,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ced650d805923324ea132ed606689792, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectilePrefabs:
-  - {fileID: 7263093150868635065, guid: 496aae763b28c0941aee53c7530873a3, type: 3}
-  - {fileID: 7263093150868635065, guid: 85b4c26e2e308424b9459fced12ff21c, type: 3}
-  - {fileID: 7263093150868635065, guid: 741497a96c519ec46b2d899d046f37ce, type: 3}
-  pooledProjectiles: 50
+  pooledProjectiles:
+  - prefab: {fileID: 7263093150868635065, guid: 496aae763b28c0941aee53c7530873a3,
+      type: 3}
+    pooledCopies: 10
+  - prefab: {fileID: 7263093150868635065, guid: 85b4c26e2e308424b9459fced12ff21c,
+      type: 3}
+    pooledCopies: 50
+  - prefab: {fileID: 7263093150868635065, guid: 741497a96c519ec46b2d899d046f37ce,
+      type: 3}
+    pooledCopies: 50
 --- !u!114 &4151841228902256699
 MonoBehaviour:
   m_ObjectHideFlags: 0

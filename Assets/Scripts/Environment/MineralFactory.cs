@@ -81,7 +81,8 @@ public class MineralFactory : MonoBehaviour
             mineral = minerals[0];
             minerals.RemoveAt(0);
             mineral.transform.parent = null;
-            mineral.EnableColliders();
+            mineral.SetCollidersEnabled(true);
+            mineral.SetMeshRenderersEnabled(true);
         }
         else
         {
@@ -106,7 +107,8 @@ public class MineralFactory : MonoBehaviour
         {
             mineral.transform.position = objectPool.transform.position;
             mineral.transform.parent = objectPool;
-            mineral.DisableColliders();
+            mineral.SetCollidersEnabled(false);
+            mineral.SetMeshRenderersEnabled(false);
         }
 
         return mineral;

@@ -40,6 +40,7 @@ public class BuildingFactory : MonoBehaviour
     //Non-Serialized Fields------------------------------------------------------------------------
 
     private Dictionary<EBuilding, List<Building>> buildings;
+    private Dictionary<EBuilding, Building> prefabs;
     private List<BuildingFoundation> buildingFoundations;
     //private List<GameObject> pipes;
     //private List<GameObject> pipeBoxes;
@@ -68,6 +69,7 @@ public class BuildingFactory : MonoBehaviour
         }
 
         Instance = this;
+
         buildings = new Dictionary<EBuilding, List<Building>>();
         buildings[EBuilding.FusionReactor] = new List<Building>();
         buildings[EBuilding.IceDrill] = new List<Building>();
@@ -76,6 +78,16 @@ public class BuildingFactory : MonoBehaviour
         buildings[EBuilding.Incinerator] = new List<Building>();
         buildings[EBuilding.ShortRangeTurret] = new List<Building>();
         buildings[EBuilding.LongRangeTurret] = new List<Building>();
+
+        prefabs = new Dictionary<EBuilding, Building>();
+        prefabs[EBuilding.FusionReactor] = fusionReactorPrefab;
+        prefabs[EBuilding.IceDrill] = iceDrillPrefab;
+        prefabs[EBuilding.Boiler] = boilerPrefab;
+        prefabs[EBuilding.Greenhouse] = greenhousePrefab;
+        prefabs[EBuilding.Incinerator] = incineratorPrefab;
+        prefabs[EBuilding.ShortRangeTurret] = shortRangeTurretPrefab;
+        prefabs[EBuilding.LongRangeTurret] = longRangeTurretPrefab;
+
         buildingFoundations = new List<BuildingFoundation>();        
     }
 
@@ -142,15 +154,21 @@ public class BuildingFactory : MonoBehaviour
 
         if (buildings[buildingType].Count > 0)
         {
+            //Debug.Log("BuildingFactory.GetBuilding(), retrieving building");
             building = buildings[buildingType][0];
             buildings[buildingType].RemoveAt(0);
             building.transform.parent = null;
             building.SetCollidersEnabled("Placement", true);
+            building.SetMeshRenderersEnabled(true);
+            building.SetParticleSystemsEnabled(true);
         }
         else
         {
+            //Debug.Log("BuildingFactory.GetBuilding(), creating building");
             building = CreateBuilding(buildingType, false);
         }
+
+        //Debug.Log($"BuildingFactory(), new building organised ({building}), building collider position is {building.Collider.position} (world) / {building.Collider.localPosition} (local), building model position is {building.Model.position} (world) / {building.Model.localPosition} (local)");
 
         building.Id = IdGenerator.Instance.GetNextId();
         building.Active = true;
@@ -160,6 +178,13 @@ public class BuildingFactory : MonoBehaviour
             EnvironmentalController.Instance.RegisterBuilding(building.Terraformer);
         }
 
+        if (building.Model.localPosition != prefabs[buildingType].Model.localPosition)
+        {
+            //Debug.Log($"Correcting local position for {building}'s model");
+            building.Model.localPosition = prefabs[buildingType].Model.localPosition;
+        }
+
+        //Debug.Log($"BuildingFactory(), returning building ({building}), building collider position is {building.Collider.position} (world) / {building.Collider.localPosition} (local), building model position is {building.Model.position} (world) / {building.Model.localPosition} (local)");
         return building;
     }
 
@@ -205,6 +230,8 @@ public class BuildingFactory : MonoBehaviour
             building.transform.position = objectPool.position;
             building.transform.parent = objectPool;
             building.SetCollidersEnabled("Placement", false);
+            building.SetMeshRenderersEnabled(false);
+            building.SetParticleSystemsEnabled(false);
         }
 
         return building;
@@ -285,6 +312,8 @@ public class BuildingFactory : MonoBehaviour
         {
             buildingFoundation.transform.position = objectPool.transform.position;
             buildingFoundation.transform.parent = objectPool;
+            buildingFoundation.Collider.enabled = false;
+            buildingFoundation.Renderer.enabled = false;
         }
 
         return buildingFoundation;
@@ -297,6 +326,7 @@ public class BuildingFactory : MonoBehaviour
     public void DestroyBuildingFoundation(BuildingFoundation buildingFoundation)
     {
         buildingFoundation.Collider.enabled = false;
+        buildingFoundation.Renderer.enabled = false;
         buildingFoundation.transform.position = objectPool.position;
         buildingFoundation.transform.parent = objectPool;
         buildingFoundations.Add(buildingFoundation);

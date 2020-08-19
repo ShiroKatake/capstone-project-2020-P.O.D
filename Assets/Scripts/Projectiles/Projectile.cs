@@ -21,7 +21,9 @@ public class Projectile : MonoBehaviour
 
     //Components
     private Collider collider;
+    private Light light;
     private Rigidbody rigidbody;
+    private MeshRenderer renderer;
 
     //Other
     private bool active = false;
@@ -44,9 +46,19 @@ public class Projectile : MonoBehaviour
     public Collider Collider { get => collider; }
 
     /// <summary>
+    /// The projectile's light component.
+    /// </summary>
+    public Light Light { get => light; }
+
+    /// <summary>
     /// The entity that fired the projectile. Should only be set by ProjectileFactory.
     /// </summary>
     public Transform Owner { get => owner; set => owner = value; }
+
+    /// <summary>
+    /// The projectile's mesh renderer component.
+    /// </summary>
+    public MeshRenderer Renderer { get => renderer; }
 
     /// <summary>
     /// The projectile's rigidbody component.
@@ -67,8 +79,9 @@ public class Projectile : MonoBehaviour
     private void Awake()
     {
         collider = GetComponent<Collider>();
+        light = GetComponentInChildren<Light>();
+        renderer = GetComponentInChildren<MeshRenderer>();
         rigidbody = GetComponent<Rigidbody>();
-
 	}
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------

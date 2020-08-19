@@ -4,6 +4,34 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
+/// A serializable pair of a projectile prefab and the number of copies to initially add to the pool.
+/// </summary>
+[Serializable]
+public class PooledProjectile
+{
+    //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
+
+    //Serialized Fields----------------------------------------------------------------------------   
+
+    [SerializeField] private Projectile prefab;
+    [SerializeField] private int pooledCopies;
+
+    //Public Properties------------------------------------------------------------------------------------------------------------------------------
+
+    //Basic Public Properties----------------------------------------------------------------------    
+
+    /// <summary>
+    /// The prefab of the projectile to be pooled.
+    /// </summary>
+    public Projectile Prefab { get => prefab; }
+
+    /// <summary>
+    /// The number of projectiles of this type to be pooled.
+    /// </summary>
+    public int PooledCopies { get => pooledCopies; }
+}
+
+/// <summary>
 /// A factory class for ammunition.
 /// </summary>
 public class ProjectileFactory : MonoBehaviour
@@ -12,8 +40,7 @@ public class ProjectileFactory : MonoBehaviour
 
     //Serialized Fields----------------------------------------------------------------------------                                                    
 
-    [SerializeField] private List<Projectile> projectilePrefabs;
-    [SerializeField] private int pooledProjectiles;
+    [SerializeField] private List<PooledProjectile> pooledProjectiles;
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
@@ -56,20 +83,21 @@ public class ProjectileFactory : MonoBehaviour
     {
         objectPool = ObjectPool.Instance.transform;
 
-        foreach (Projectile p in projectilePrefabs)
+        foreach (PooledProjectile p in pooledProjectiles)
         {
-            prefabs[p.Type] = p;
-            projectiles[p.Type] = new List<Projectile>();
+            prefabs[p.Prefab.Type] = p.Prefab;
+            projectiles[p.Prefab.Type] = new List<Projectile>();
 
-            for (int i = 0; i < pooledProjectiles; i++)
+            for (int i = 0; i < p.PooledCopies; i++)
             {
-                Projectile q = CreateProjectile(p.Type);
+                Projectile q = CreateProjectile(p.Prefab.Type);
                 q.transform.SetPositionAndRotation(objectPool.position, q.transform.rotation);
                 q.transform.parent = objectPool;
+                q.Light.enabled = false;
+                q.Renderer.enabled = false;
                 projectiles[q.Type].Add(q);
             }
         } 
-
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
@@ -88,6 +116,8 @@ public class ProjectileFactory : MonoBehaviour
         {
             projectile = projectiles[type][0];
             projectiles[type].RemoveAt(0);
+            projectile.Light.enabled = true;
+            projectile.Renderer.enabled = true;
         }
         else
         {
@@ -121,6 +151,8 @@ public class ProjectileFactory : MonoBehaviour
         ProjectileManager.Instance.DeRegisterProjectile(projectile);
         projectile.Active = false;
         projectile.Collider.enabled = false;
+        projectile.Light.enabled = false;
+        projectile.Renderer.enabled = false;
         projectile.Rigidbody.velocity = Vector3.zero;
         projectile.Rigidbody.isKinematic = true;
         projectile.transform.position = objectPool.position;
