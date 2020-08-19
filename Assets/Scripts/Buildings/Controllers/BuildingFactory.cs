@@ -22,6 +22,8 @@ public class BuildingFactory : Factory<BuildingFactory, Building, EBuilding>
             foreach (Building b in l)
             {
                 b.SetCollidersEnabled("Placement", false);
+                b.SetMeshRenderersEnabled(false);
+                b.SetParticleSystemsEnabled(false);
             }
         }
     }
@@ -36,6 +38,9 @@ public class BuildingFactory : Factory<BuildingFactory, Building, EBuilding>
     public override Building Get(EBuilding buildingType)
     {
         Building building = base.Get(buildingType);
+
+        //Debug.Log($"BuildingFactory(), new building organised ({building}), building collider position is {building.Collider.position} (world) / {building.Collider.localPosition} (local), building model position is {building.Model.position} (world) / {building.Model.localPosition} (local)");
+
         building.Id = IdGenerator.Instance.GetNextId();
         building.Active = true;
 
@@ -44,18 +49,27 @@ public class BuildingFactory : Factory<BuildingFactory, Building, EBuilding>
             EnvironmentalController.Instance.RegisterBuilding(building.Terraformer);
         }
 
+        if (building.Model.localPosition != prefabs[buildingType].Model.localPosition)
+        {
+            //Debug.Log($"Correcting local position for {building}'s model");
+            building.Model.localPosition = prefabs[buildingType].Model.localPosition;
+        }
+
+        //Debug.Log($"BuildingFactory(), returning building ({building}), building collider position is {building.Collider.position} (world) / {building.Collider.localPosition} (local), building model position is {building.Model.position} (world) / {building.Model.localPosition} (local)");
         return building;
     }
 
     /// <summary>
     /// Custom modifications to a building after Get() retrieves one from the pool.
     /// </summary>
-    /// <param name="result">The building being modified.</param>
+    /// <param name="building">The building being modified.</param>
     /// <returns>The modified building.</returns>
-    protected override Building GetRetrievalSetup(Building result)
+    protected override Building GetRetrievalSetup(Building building)
     {
-        result.SetCollidersEnabled("Placement", true);
-        return result;
+        building.SetCollidersEnabled("Placement", true);
+        building.SetMeshRenderersEnabled(true);
+        building.SetParticleSystemsEnabled(true);
+        return building;
     }
 
     /// <summary>

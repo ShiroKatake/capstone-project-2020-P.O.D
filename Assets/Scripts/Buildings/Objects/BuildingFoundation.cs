@@ -17,6 +17,7 @@ public class BuildingFoundation : MonoBehaviour
     //Non-Serialized Fields------------------------------------------------------------------------
 
     private Collider collider;
+    private MeshRenderer renderer;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -26,6 +27,11 @@ public class BuildingFoundation : MonoBehaviour
     /// The building foundation's collider component.
     /// </summary>
     public Collider Collider { get => collider; }
+
+    /// <summary>
+    /// The building foundation's mesh renderer component.
+    /// </summary>
+    public MeshRenderer Renderer { get => renderer; }
 
     //Complex Public Properties--------------------------------------------------------------------
 
@@ -55,6 +61,7 @@ public class BuildingFoundation : MonoBehaviour
     private void Awake()
     {
         collider = GetComponent<Collider>();
+        renderer = GetComponent<MeshRenderer>();
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
@@ -64,6 +71,7 @@ public class BuildingFoundation : MonoBehaviour
     /// </summary>
     public void Activate()
     {
+        renderer.enabled = true;
         StartCoroutine(EnableCollider());
     }
 

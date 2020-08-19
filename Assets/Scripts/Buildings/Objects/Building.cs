@@ -49,7 +49,8 @@ public class Building : CollisionListener
     [Header("Offsets of Foundations from Position")]
     [SerializeField] private List<Vector3> buildingFoundationOffsets;
 
-    [Header("Renderers and Materials")]
+    [Header("Model, Materials, etc.")]
+    [SerializeField] private Transform model;
     [SerializeField] private List<RendererMaterialSet> rendererMaterialSets;
     [SerializeField] private Material buildingErrorMaterial;
 
@@ -65,6 +66,7 @@ public class Building : CollisionListener
 	//Components
 	private Animator animator;
     private Health health;
+    private List<GameObject> particleSystems;
     private MeshRenderer parentRenderer;
     private List<MeshRenderer> allRenderers;
     private ResourceCollector resourceCollector;
@@ -73,7 +75,6 @@ public class Building : CollisionListener
     private Terraformer terraformer;
     private TurretAiming turretAimer;
     private TurretShooting turretShooter;
-
     private Dictionary<string, List<CollisionReporter>> groupedReporters;
 
     //Positioning
@@ -134,6 +135,11 @@ public class Building : CollisionListener
     /// The Building's Health component.
     /// </summary>
     public Health Health { get => health; }
+
+    /// <summary>
+    /// The transform of the building's model.
+    /// </summary>
+    public Transform Model { get => model; }
 
     /// <summary>
     /// How much ore it costs to build this building.
@@ -261,6 +267,14 @@ public class Building : CollisionListener
         normalBuildTime = buildTime;
         groundLayerMask = LayerMask.GetMask("Ground");
 
+        particleSystems = new List<GameObject>();
+        ParticleSystem[] particleSystemsRaw = GetComponentsInChildren<ParticleSystem>();
+
+        foreach (ParticleSystem p in particleSystemsRaw)
+        {
+            particleSystems.Add(p.gameObject);
+        }
+
         foreach (CollisionReporter c in collisionReporters)
         {
             if (!groupedReporters.ContainsKey(c.Purpose))
@@ -308,6 +322,30 @@ public class Building : CollisionListener
         foreach (CollisionReporter r in groupedReporters[purpose])
         {
             r.SetCollidersEnabled(enabled);
+        }
+    }
+
+    /// <summary>
+    /// Enables or disables all mesh renderers attached to the building's models.
+    /// </summary>
+    /// <param name="enabled">Whether the mesh renderers will be enabled or disabled.</param>
+    public void SetMeshRenderersEnabled(bool enabled)
+    {
+        foreach (RendererMaterialSet s in rendererMaterialSets)
+        {
+            s.renderer.enabled = enabled;
+        }
+    }
+
+    /// <summary>
+    /// Enables or disables the game objects of all particle systems attached to the building's models.
+    /// </summary>
+    /// <param name="enabled">Whether the game objects of the particle systems will be enabled or disabled.</param>
+    public void SetParticleSystemsEnabled(bool enabled)
+    {
+        foreach (GameObject p in particleSystems)
+        {
+            p.SetActive(enabled);
         }
     }
 
@@ -462,6 +500,7 @@ public class Building : CollisionListener
     /// <param name="position">Where the building is to be placed.</param>
     public void Place(Vector3 position)
     {
+        //Debug.Log($"{this}.Placed() (start), collider position is {collider.position} (world) / {collider.localPosition} (local), model position is {model.position} (world) / {model.localPosition} (local)");
         placed = true; //Needs to occur before its position gets set to be on the ground so that it triggers the building Foundation at the proper time.
         ResourceController.Instance.Ore -= oreCost;
 		ResourceController.Instance.PowerConsumption += powerConsumption;
@@ -481,6 +520,7 @@ public class Building : CollisionListener
         transform.position = position;
         BuildingController.Instance.RegisterBuilding(this);
         animator.enabled = true;
+        //Debug.Log($"{this}.Placed() (finished), collider position is {collider.position} (world) / {collider.localPosition} (local), model position is {model.position} (world) / {model.localPosition} (local)");
     }
 
     /// <summary>
@@ -540,9 +580,11 @@ public class Building : CollisionListener
         foreach (RendererMaterialSet r in rendererMaterialSets)
         {
             r.renderer.material = r.transparent;
+            r.renderer.enabled = false;
         }
 
         SetCollidersEnabled("Body", false);
+        SetParticleSystemsEnabled(false);
     }
 
     //ICollisionListener Triggered Methods---------------------------------------------------------

@@ -52,7 +52,8 @@ public class MineralFactory : Factory<MineralFactory, Mineral, ENone>
 
         foreach (Mineral m in pool[ENone.None])
         {
-            m.DisableColliders();
+            m.SetCollidersEnabled(false);
+            m.SetMeshRenderersEnabled(false);
         }
     }
 
@@ -89,7 +90,8 @@ public class MineralFactory : Factory<MineralFactory, Mineral, ENone>
     /// <returns>The modified mineral.</returns>
     protected override Mineral GetRetrievalSetup(Mineral mineral)
     {
-        mineral.EnableColliders();
+        mineral.SetMeshRenderersEnabled(true);
+        mineral.SetCollidersEnabled(true);
         return mineral;
     }
 

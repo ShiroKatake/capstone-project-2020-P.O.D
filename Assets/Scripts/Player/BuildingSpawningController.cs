@@ -142,18 +142,20 @@ public class BuildingSpawningController : SerializableSingleton<BuildingSpawning
             if (heldBuilding == null)
             {
                 heldBuilding = BuildingFactory.Instance.Get(selectedBuildingType);
-                heldBuilding.transform.position = MousePositionToBuildingPosition(transform.position, heldBuilding.Size.DiameterRoundedUp);
+                heldBuilding.transform.position = MousePositionToPotentialBuildingPosition(transform.position, heldBuilding.Size.DiameterRoundedUp);
                 ChangeTooltip(selectedBuildingType);
-              
+                //Debug.Log($"BuildingSpawningController(), new heldBuilding ({heldBuilding}) (from null), building collider position is {heldBuilding.Collider.position} (world) / {heldBuilding.Collider.localPosition} (local), building model position is {heldBuilding.Model.position} (world) / {heldBuilding.Model.localPosition} (local)");
+
                 // put tooltip spawn here
             }
             //Instantiate the appropriate building and postion it properly, replacing the old one.
             else if (heldBuilding.BuildingType != selectedBuildingType)
             {
-                Vector3 pos = MousePositionToBuildingPosition(heldBuilding.transform.position, heldBuilding.Size.DiameterRoundedUp);
+                Vector3 pos = MousePositionToPotentialBuildingPosition(heldBuilding.transform.position, heldBuilding.Size.DiameterRoundedUp);
                 BuildingFactory.Instance.Destroy(heldBuilding, false, false);
                 heldBuilding = BuildingFactory.Instance.Get(selectedBuildingType);
                 heldBuilding.transform.position = pos;
+                //Debug.Log($"BuildingSpawningController(), new heldBuilding ({heldBuilding}) (from update), building collider position is {heldBuilding.Collider.position} (world) / {heldBuilding.Collider.localPosition} (local), building model position is {heldBuilding.Model.position} (world) / {heldBuilding.Model.localPosition} (local)");
 
                 ChangeTooltip(selectedBuildingType);
                
@@ -161,8 +163,11 @@ public class BuildingSpawningController : SerializableSingleton<BuildingSpawning
             }
             else //Move the building where you want it
             {
-                heldBuilding.transform.position = MousePositionToBuildingPosition(heldBuilding.transform.position, heldBuilding.Size.DiameterRoundedUp);
+                heldBuilding.transform.position = MousePositionToPotentialBuildingPosition(heldBuilding.transform.position, heldBuilding.Size.DiameterRoundedUp);
+                //Debug.Log($"BuildingSpawningController(), update heldBuilding ({heldBuilding}) position, building collider position is {heldBuilding.Collider.position} (world) / {heldBuilding.Collider.localPosition} (local), building model position is {heldBuilding.Model.position} (world) / {heldBuilding.Model.localPosition} (local)");
             }
+
+            //Debug.Log($"BuildingSpawningController.CheckBuildingSpawning(), {heldBuilding}.transform.position is {heldBuilding.transform.position}");
 
             bool placementValid = heldBuilding.IsPlacementValid();
             bool resourcesAvailable = CheckResourcesAvailable();
@@ -171,12 +176,14 @@ public class BuildingSpawningController : SerializableSingleton<BuildingSpawning
             //Place it or cancel building it
             if (placeBuilding && resourcesAvailable && placementValid)
             {
+                //Debug.Log($"BuildingSpawningController(), placeBuilding successful ({heldBuilding}) (start), building collider position is {heldBuilding.Collider.position} (world) / {heldBuilding.Collider.localPosition} (local), building model position is {heldBuilding.Model.position} (world) / {heldBuilding.Model.localPosition} (local)");
                 console.SubmitCustomMessage($"Placement successful. Constructing {heldBuilding.ConsoleName}.", false, 0);
 
                 Vector3 spawnPos = heldBuilding.transform.position;
                 spawnPos.y = 0.02f;
                 PipeManager.Instance.RegisterPipeBuilding(spawnPos);
                 spawnPos.y = GetStandardisedPlacementHeight(spawnPos, true);
+                //Debug.Log($"BuildingSpawningController(), placeBuilding ({heldBuilding}) successful (ready to place), new spawnPos is {spawnPos}, building collider position is {heldBuilding.Collider.position} (world) / {heldBuilding.Collider.localPosition} (local), building model position is {heldBuilding.Model.position} (world) / {heldBuilding.Model.localPosition} (local)");
                 heldBuilding.Place(spawnPos);
 
                 heldBuilding = null;
@@ -234,7 +241,7 @@ public class BuildingSpawningController : SerializableSingleton<BuildingSpawning
     /// <param name="backup">The value to return if the mouse is off the screen or something else fails.</param>
     /// <param name="radius">The building's radius.</param>
     /// <returns>Snapped-to-grid building position.</returns>
-    private Vector3 MousePositionToBuildingPosition(Vector3 backup, int radius)
+    private Vector3 MousePositionToPotentialBuildingPosition(Vector3 backup, int radius)
     {
         RaycastHit hit;
         Ray ray = camera.ScreenPointToRay(ReInput.controllers.Mouse.screenPosition);
@@ -300,14 +307,17 @@ public class BuildingSpawningController : SerializableSingleton<BuildingSpawning
 
             if (hit.point.y >= 2.5f - errorMargin)
             {
+                //Debug.Log($"BuildingSpawningController.GetStandardisedPlacementHeight(), hit at ~2.5f, setting height to 2.5f");
                 result = 2.5f;
             }
             else if (hit.point.y >= -errorMargin)
             {
+                //Debug.Log($"BuildingSpawningController.GetStandardisedPlacementHeight(), hit at ~0f, setting height to 0f");
                 result = 0;
             }
             else if (hit.point.y >= -2.5f - errorMargin)
             {
+                //Debug.Log($"BuildingSpawningController.GetStandardisedPlacementHeight(), hit at ~-2.5f, setting height to -2.5f");
                 result = -2.5f;
             }
             else

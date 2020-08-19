@@ -62,6 +62,8 @@ public class AlienFactory : Factory<AlienFactory, Alien, ENone>
     /// <returns>The now-setup alien.</returns>
     protected override Alien GetRetrievalSetup(Alien result)
     {
+        result.Renderer.enabled = true;
+
         foreach (Collider c in result.GetComponents<Collider>())
         {
             c.enabled = true;

@@ -8,13 +8,35 @@ using UnityEngine;
 /// </summary>
 public class ProjectileFactory : Factory<ProjectileFactory, Projectile, EProjectileType>
 {
+    //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
+    
+    /// <summary>
+    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
+    /// Start() runs after Awake().
+    /// </summary>
+    protected override void Start()
+    {
+        base.Start();
+
+        foreach (List<Projectile> l in pool.Values)
+        {
+            foreach (Projectile p in l)
+            {
+                p.Light.enabled = false;
+                p.Renderer.enabled = false;
+                p.Collider.enabled = false;
+            }
+        }
+    }
+
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
     /// Retrieves Projectiles from a pool if there's any available, and instantiates a new Projectile if there isn't one.
     /// </summary>
+    /// <param name="type">The type of projectile to get.</param>
     /// <param name="owner">The player or turret firing the projectile from their weapon.</param>
-    /// <param name="position">The position the Projectile should be instantiated at.</param>
+    /// <param name="barrelTip">The transform of the barrel tip it's being fired from.</param>
     /// <returns>A new projectile.</returns>
     public Projectile Get(EProjectileType type, Transform owner, Transform barrelTip)
     {
@@ -25,13 +47,14 @@ public class ProjectileFactory : Factory<ProjectileFactory, Projectile, EProject
     }
 
     /// <summary>
-    /// Instantiates a new Projectile.
+    /// Custom modifications to a projectile after Get() retrieves it from the pool.
     /// </summary>
-    /// <returns>A new Projectile.</returns>
-    protected override Projectile Create(EProjectileType type)
+    /// <param name="projectile">The projectile being modified.</param>
+    /// <returns>The modified projectile.</returns>
+    protected override Projectile GetRetrievalSetup(Projectile projectile)
     {
-        Projectile projectile = base.Create(type);
-        projectile.Collider.enabled = false;
+        projectile.Light.enabled = true;
+        projectile.Renderer.enabled = true;
         return projectile;
     }
 
@@ -54,6 +77,8 @@ public class ProjectileFactory : Factory<ProjectileFactory, Projectile, EProject
         ProjectileManager.Instance.DeRegisterProjectile(projectile);
         projectile.Active = false;
         projectile.Collider.enabled = false;
+        projectile.Light.enabled = false;
+        projectile.Renderer.enabled = false;
         projectile.Rigidbody.velocity = Vector3.zero;
         projectile.Rigidbody.isKinematic = true;
         base.Destroy(type, projectile);
