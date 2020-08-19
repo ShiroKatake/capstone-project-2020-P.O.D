@@ -26,6 +26,7 @@ public class Factory<FactoryType, ProductType, ProductEnum> : SerializableSingle
 
     //Serialized Fields----------------------------------------------------------------------------
 
+    [Header("Pooling")]
     [SerializeField] protected List<ProductEnum> productEnums;
     [SerializeField] protected List<ProductType> productPrefabs;
     [SerializeField] protected List<int> productQuantities;

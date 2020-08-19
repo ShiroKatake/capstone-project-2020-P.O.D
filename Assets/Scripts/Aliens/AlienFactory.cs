@@ -12,6 +12,7 @@ public class AlienFactory : Factory<AlienFactory, Alien, ENone>
 
     //Serialized Fields----------------------------------------------------------------------------
 
+    [Header("Alien Stats")]
     [SerializeField] private float alienSpawnHeight;
    
     //PublicProperties-------------------------------------------------------------------------------------------------------------------------------

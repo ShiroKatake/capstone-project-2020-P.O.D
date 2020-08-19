@@ -105,6 +105,7 @@ public class Mineral : MonoBehaviour
     private void Start()
 	{
 		oreCount = MineralFactory.Instance.OreCount;
+
 		if (placed)
         {
             MapController.Instance.RegisterMineral(this);
@@ -128,7 +129,7 @@ public class Mineral : MonoBehaviour
 
 			if (oreCount <= 0)
 			{
-				MineralFactory.Instance.DestroyMineral(this);
+				MineralFactory.Instance.Destroy(this);
 			}
 
 			timer = oreSpawnRate;

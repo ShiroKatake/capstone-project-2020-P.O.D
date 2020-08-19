@@ -287,10 +287,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81afa3c8ee557624ca60ccaac224663c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mineralPrefab: {fileID: 6920960518473543034, guid: 4cce8f281ac35a346bc3e16f60d137a7,
-    type: 3}
-  pooledMinerals: 10
+  productEnums: 00000000
+  productPrefabs:
+  - {fileID: 6920960518473543034, guid: 4cce8f281ac35a346bc3e16f60d137a7, type: 3}
+  productQuantities: 00000000
   oreCount: 10
+  destroySpentMinerals: 1
 --- !u!114 &4887592665430866259
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -316,9 +318,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a4dc077d5b973b48a80ab01d657f106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  orePrefab: {fileID: 293440447126890837, guid: d37174262cff0824bb2285fd3464f7f1,
-    type: 3}
-  pooledOres: 2
+  productEnums: 00000000
+  productPrefabs:
+  - {fileID: 293440447126890837, guid: d37174262cff0824bb2285fd3464f7f1, type: 3}
+  productQuantities: 01000000
   oreValue: 1
 --- !u!114 &7712896613637118947
 MonoBehaviour:
@@ -332,11 +335,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ced650d805923324ea132ed606689792, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectilePrefabs:
+  productEnums: 010000000200000003000000
+  productPrefabs:
   - {fileID: 7263093150868635065, guid: 496aae763b28c0941aee53c7530873a3, type: 3}
   - {fileID: 7263093150868635065, guid: 85b4c26e2e308424b9459fced12ff21c, type: 3}
   - {fileID: 7263093150868635065, guid: 741497a96c519ec46b2d899d046f37ce, type: 3}
-  pooledProjectiles: 50
+  productQuantities: 0a0000003200000032000000
 --- !u!114 &4151841228902256699
 MonoBehaviour:
   m_ObjectHideFlags: 0

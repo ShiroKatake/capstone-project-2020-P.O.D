@@ -80,7 +80,7 @@ public class Projectile : MonoBehaviour
     {
         if (active && (transform.position.y < 0 || Time.time - timeOfLastShot > lifespan))
         {
-            ProjectileFactory.Instance.DestroyProjectile(this);
+            ProjectileFactory.Instance.Destroy(this);
         }
     }
 
@@ -165,7 +165,7 @@ public class Projectile : MonoBehaviour
         if (!collidedWith.CompareTag("Projectile") && !collidedWith.CompareTag("Pit Walls") && !collidedWith.isTrigger && (!collidedWith.CompareTag(owner.tag) || leftOwnerCollider))
         {
             //Debug.Log($"ProjectileCollision, not {owner.tag} or Projectile or Pit Walls; tag is {collidedWith.tag}; position is {transform.position}");
-            ProjectileFactory.Instance.DestroyProjectile(this);
+            ProjectileFactory.Instance.Destroy(this);
         }
 
         //ProjectileFactory.Instance.DestroyProjectile(this);
