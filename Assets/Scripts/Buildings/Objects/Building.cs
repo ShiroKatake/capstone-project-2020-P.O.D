@@ -180,6 +180,11 @@ public class Building : CollisionListener
     /// </summary>
     public int WaterConsumption { get => waterConsumption; }
 
+    /// <summary>
+    /// How much water this building requires per second to function.
+    /// </summary>
+    public GameObject CurrentRangeFX { get; set; }
+
     //Complex Public Properties--------------------------------------------------------------------                                                    
 
     /// <summary>
@@ -482,7 +487,7 @@ public class Building : CollisionListener
         BuildingController.Instance.RegisterBuilding(this);
         animator.enabled = true;
 
-		TurretRangeFXFactory.Instance.HideRange();
+		TurretRangeFXFactory.Instance.ReturnToPool(CurrentRangeFX);
 	}
 
     /// <summary>
@@ -543,7 +548,7 @@ public class Building : CollisionListener
 
         SetCollidersEnabled("Body", false);
 
-		TurretRangeFXFactory.Instance.HideRange();
+		TurretRangeFXFactory.Instance.ReturnToPool(CurrentRangeFX);
 	}
 
     //ICollisionListener Triggered Methods---------------------------------------------------------

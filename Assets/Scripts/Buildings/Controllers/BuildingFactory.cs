@@ -168,7 +168,10 @@ public class BuildingFactory : MonoBehaviour
 		if (buildingType == EBuilding.LongRangeTurret || buildingType == EBuilding.ShortRangeTurret)
 		{
 			//Debug.Log("Displaying Range.");
-			onGetTurret?.Invoke(building.transform);
+			//onGetTurret?.Invoke(building.transform);
+
+			building.CurrentRangeFX = TurretRangeFXFactory.Instance.Get();
+			TurretRangeFXFactory.Instance.OnGetTurret(building.transform, building.CurrentRangeFX);
 		}
 
 		return building;
