@@ -1,12 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 /// <summary>
 /// A factory class for buildings.
 /// </summary>
 public class BuildingFactory : Factory<BuildingFactory, Building, EBuilding>
 {
+	//Public Properties------------------------------------------------------------------------------------------------------------------------------
+
+	//Basic Public Properties----------------------------------------------------------------------
+
+	public UnityAction<Transform> onGetTurret;
+
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
@@ -55,8 +62,15 @@ public class BuildingFactory : Factory<BuildingFactory, Building, EBuilding>
             building.Model.localPosition = prefabs[buildingType].Model.localPosition;
         }
 
+		if (buildingType == EBuilding.LongRangeTurret || buildingType == EBuilding.ShortRangeTurret)
+		{
+			//Debug.Log("Displaying Range.");
+			onGetTurret?.Invoke(building.transform);
+		}
+
         //Debug.Log($"BuildingFactory(), returning building ({building}), building collider position is {building.Collider.position} (world) / {building.Collider.localPosition} (local), building model position is {building.Model.position} (world) / {building.Model.localPosition} (local)");
-        return building;
+
+		return building;
     }
 
     /// <summary>

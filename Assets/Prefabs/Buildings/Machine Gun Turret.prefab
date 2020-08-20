@@ -127,7 +127,7 @@ GameObject:
   - component: {fileID: 8296713845122639256}
   - component: {fileID: 6060698008655809382}
   - component: {fileID: 1773151326889726547}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Arm Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -549,6 +549,7 @@ MonoBehaviour:
   collisionReporters: []
   barrelMagazine: {fileID: 6727844688691865855}
   barrelTip: {fileID: 3455601484792482889}
+  detectionRadius: 15
   projectileType: 3
   targetClosest: 1
   numProjectiles: 1
@@ -862,7 +863,7 @@ GameObject:
   - component: {fileID: 797846877218066313}
   - component: {fileID: 8148922935997584703}
   - component: {fileID: 769589036067752886}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Barrel Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -942,7 +943,7 @@ GameObject:
   - component: {fileID: 7351240215580495256}
   - component: {fileID: 4782078366129761194}
   - component: {fileID: 957260111606721453}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Body Model
   m_TagString: Untagged
   m_Icon: {fileID: 2800000, guid: 716b13899e1a12542b844f6d58c4a238, type: 3}

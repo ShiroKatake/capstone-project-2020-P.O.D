@@ -28,6 +28,7 @@ GameObject:
   - component: {fileID: 4151841228902256699}
   - component: {fileID: 4078778705944399297}
   - component: {fileID: 3607602877255847704}
+  - component: {fileID: 6293543869217059979}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -389,3 +390,16 @@ MonoBehaviour:
   sceneLoaderPrefab: {fileID: 4921356873257255501, guid: 82928ef9969e85f4b8a1954494ac065f,
     type: 3}
   skipTutorialToggle: {fileID: 0}
+--- !u!114 &6293543869217059979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6577456260396280556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86469b3f5d03a974989a5df4cac3d508, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  turretRangeDecal: {fileID: 11400000, guid: b3eb0142baf21154e87c77521a13151b, type: 2}
