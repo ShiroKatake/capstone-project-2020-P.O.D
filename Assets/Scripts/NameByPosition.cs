@@ -10,26 +10,23 @@ public class NameByPosition : MonoBehaviour
     //Serialized Fields----------------------------------------------------------------------------
 
     [SerializeField] private string name;
-    [SerializeField] private bool executing;
-    [SerializeField] private bool update;
-
-    //Non-Serialized Fields------------------------------------------------------------------------
-
-    private Vector3 currentPosition;
-    private Vector3 previousPosition;
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
-    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
-    /// Start() runs after Awake().
+    /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
+    /// Awake() runs before Start().
     /// </summary>
-    private void Start()
+    private void Awake()
     {
-        currentPosition = Vector3.zero;
-        previousPosition = Vector3.zero;
+        if (!Application.isEditor || Application.isPlaying)
+        {
+            Debug.LogError($"You left NameByPosition enabled for {this}, which is gonna impact performance. Please disable this script on the prefab / game object and go again. This should only be enabled for the instant you need to rename a lot of somethings quickly.");
+            this.enabled = false;
+        }
     }
 
+#if UNITY_EDITOR
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
@@ -37,15 +34,8 @@ public class NameByPosition : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        if (executing)
-        {
-            previousPosition = currentPosition;
-            currentPosition = transform.position;
-
-            if (update || previousPosition != currentPosition)
-            {
-                gameObject.name = $"{name} ({currentPosition.x}, {currentPosition.y}, {currentPosition.z})";
-            }
-        }
+        gameObject.name = $"{name} ({transform.position.x}, {transform.position.y}, {transform.position.z})";
+        this.enabled = false;
     }
+#endif
 }
