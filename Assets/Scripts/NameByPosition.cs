@@ -9,6 +9,7 @@ public class NameByPosition : MonoBehaviour
 
     //Serialized Fields----------------------------------------------------------------------------
 
+    [SerializeField] private GameObject namedGameObject;
     [SerializeField] private string name;
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
@@ -34,7 +35,7 @@ public class NameByPosition : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        gameObject.name = $"{name} ({transform.position.x}, {transform.position.y}, {transform.position.z})";
+        namedGameObject.name = $"{name} ({transform.position.x}, {transform.position.y}, {transform.position.z})";
         this.enabled = false;
     }
 #endif

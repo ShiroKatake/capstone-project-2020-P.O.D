@@ -27,6 +27,7 @@ public class Factory<FactoryType, ProductType, ProductEnum> : SerializableSingle
     //Serialized Fields----------------------------------------------------------------------------
 
     [Header("Pooling")]
+    [SerializeField] protected bool deactivateGameObjectInPool;
     [SerializeField] protected List<ProductEnum> productEnums;
     [SerializeField] protected List<ProductType> productPrefabs;
     [SerializeField] protected List<int> productQuantities;
@@ -72,11 +73,6 @@ public class Factory<FactoryType, ProductType, ProductEnum> : SerializableSingle
             for (int j = 0; j < productQuantities[i]; j++)
             {
                 Destroy(productEnums[i], Create(productEnums[i]));
-                //ProductType newProduct = Create(productEnums[i]);
-                //newProduct.transform.position = objectPool.position;
-                //newProduct.transform.parent = objectPool;
-                //newProduct.gameObject.SetActive(false);
-                //pool[productEnums[i]].Add(newProduct);
             }
         }
     }
@@ -112,7 +108,12 @@ public class Factory<FactoryType, ProductType, ProductEnum> : SerializableSingle
         {
             result = pool[type][0];
             pool[type].RemoveAt(0);
-            result.gameObject.SetActive(true);
+
+            if (deactivateGameObjectInPool)
+            {
+                result.gameObject.SetActive(true);
+            }
+
             result.transform.parent = null;
             result = GetRetrievalSetup(result);
         }
@@ -162,7 +163,11 @@ public class Factory<FactoryType, ProductType, ProductEnum> : SerializableSingle
     {
         toDestroy.transform.position = objectPool.position;
         toDestroy.transform.parent = objectPool;
-        toDestroy.gameObject.SetActive(false);
+
+        if (deactivateGameObjectInPool)
+        {
+            toDestroy.gameObject.SetActive(false);
+        }
 
         if (pool.ContainsKey(type))
         {

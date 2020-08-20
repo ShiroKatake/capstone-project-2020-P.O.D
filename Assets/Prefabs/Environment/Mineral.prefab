@@ -30,6 +30,51 @@ Transform:
   m_Father: {fileID: 5136758428388025279}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &854492811077697361
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1613965916595863698}
+  - component: {fileID: 2439699766214532874}
+  m_Layer: 0
+  m_Name: MineralNamer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1613965916595863698
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 854492811077697361}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5136758428388025279}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2439699766214532874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 854492811077697361}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b30d5185928fec48add2dba5ae890e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  namedGameObject: {fileID: 7795659470375798990}
+  name: Mineral
 --- !u!1 &4491054417667809119
 GameObject:
   m_ObjectHideFlags: 0
@@ -154,7 +199,6 @@ GameObject:
   - component: {fileID: 2033458020145386998}
   - component: {fileID: 7797008365469057430}
   - component: {fileID: 6920960518473543034}
-  - component: {fileID: 8257607867930290455}
   m_Layer: 9
   m_Name: Mineral
   m_TagString: Planet
@@ -176,6 +220,7 @@ Transform:
   - {fileID: 6592593835074264809}
   - {fileID: 7694997801588937915}
   - {fileID: 45486609135246634}
+  - {fileID: 1613965916595863698}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -249,21 +294,6 @@ MonoBehaviour:
   oreSpawnRate: 0.75
   oreCurveRadius: 2
   miningPoint: {fileID: 1105329115834965487}
---- !u!114 &8257607867930290455
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7795659470375798990}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b30d5185928fec48add2dba5ae890e8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  name: Mineral
-  executing: 1
-  update: 0
 --- !u!1001 &2163748618175100403
 PrefabInstance:
   m_ObjectHideFlags: 0

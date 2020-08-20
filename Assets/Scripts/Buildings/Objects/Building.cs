@@ -500,6 +500,7 @@ public class Building : CollisionListener
     /// <param name="position">Where the building is to be placed.</param>
     public void Place(Vector3 position)
     {
+        Debug.Log("Start Place");
         //Debug.Log($"{this}.Placed() (start), collider position is {collider.position} (world) / {collider.localPosition} (local), model position is {model.position} (world) / {model.localPosition} (local)");
         placed = true; //Needs to occur before its position gets set to be on the ground so that it triggers the building Foundation at the proper time.
         ResourceController.Instance.Ore -= oreCost;
@@ -520,9 +521,10 @@ public class Building : CollisionListener
         transform.position = position;
         BuildingController.Instance.RegisterBuilding(this);
         animator.enabled = true;
-		TurretRangeFXFactory.Instance.HideRange();
+        TurretRangeFXFactory.Instance.HideRange();
 
         //Debug.Log($"{this}.Placed() (finished), collider position is {collider.position} (world) / {collider.localPosition} (local), model position is {model.position} (world) / {model.localPosition} (local)");
+        Debug.Log("Finish Place");
 	}
 
     /// <summary>
@@ -530,6 +532,7 @@ public class Building : CollisionListener
     /// </summary>
     public void FinishBuilding()
     {
+        Debug.Log("Start Finish Building");
         built = true;
         Operational = true; //Using property to trigger activation of any resource collector component attached.
 
@@ -539,6 +542,7 @@ public class Building : CollisionListener
         }
         AudioManager.Instance.PlaySound(idleSound, gameObject);
         AudioManager.Instance.PlaySound(AudioManager.ESound.Building_Completes, gameObject);
+        Debug.Log("Finish Finish Building");
     }
 
     /// <summary>
@@ -546,17 +550,20 @@ public class Building : CollisionListener
     /// </summary>
 	public void SpawnFinishedFX()
 	{
+        Debug.Log("Start SpawnFinishedFX");
 		FinishedFX fx = FinishedFXFactory.Instance.Get();
 		fx.transform.position = transform.position;
 		fx.transform.localScale = new Vector3(fxSize, fxSize, fxSize);
 		fx.gameObject.SetActive(true);
-	}
+        Debug.Log("Finish SpawnFinishedFX");
+    }
 
     /// <summary>
     /// Resets Building to its initial values when it is returned to the building pool.
     /// </summary>
     public void Reset()
     {
+        Debug.Log("Start Reset");
         placed = false; //Needs to occur first so that BuildingFoundations know to ignore this building
         active = false;
         colliding = false;
@@ -588,6 +595,7 @@ public class Building : CollisionListener
         SetCollidersEnabled("Body", false);
         SetParticleSystemsEnabled(false);
 		TurretRangeFXFactory.Instance.HideRange();
+        Debug.Log("Finish Reset");
 	}
 
     //ICollisionListener Triggered Methods---------------------------------------------------------
