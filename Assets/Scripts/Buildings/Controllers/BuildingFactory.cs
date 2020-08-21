@@ -67,8 +67,8 @@ public class BuildingFactory : Factory<BuildingFactory, Building, EBuilding>
 			//Debug.Log("Displaying Range.");
 			//onGetTurret?.Invoke(building.transform);
 
-			building.CurrentRangeFX = TurretRangeFXFactory.Instance.Get();
-			TurretRangeFXFactory.Instance.OnGetTurret(building.transform, building.CurrentRangeFX);
+			building.TurretRangeFX = TurretRangeFXFactory.Instance.Get();
+			TurretRangeFXFactory.Instance.OnGetTurret(building.transform, building.TurretRangeFX);
 		}
 
         //Debug.Log($"BuildingFactory(), returning building ({building}), building collider position is {building.Collider.position} (world) / {building.Collider.localPosition} (local), building model position is {building.Model.position} (world) / {building.Model.localPosition} (local)");

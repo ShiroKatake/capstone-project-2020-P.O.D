@@ -66,6 +66,7 @@ public class Building : CollisionListener
     [Header("Testing")]
 	//Components
 	private Animator animator;
+    private TurretRangeFX turretRangeFX;
     private FusionReactorBeam fusionReactorBeam;
     private Health health;
     private List<GameObject> particleSystems;
@@ -184,9 +185,9 @@ public class Building : CollisionListener
     public int WaterConsumption { get => waterConsumption; }
 
     /// <summary>
-    /// How much water this building requires per second to function.
+    /// This building's TurretRangeFX decal if it's a turret.
     /// </summary>
-    public GameObject CurrentRangeFX { get; set; }
+    public TurretRangeFX TurretRangeFX { get => turretRangeFX; set => turretRangeFX = value; }
 
     //Complex Public Properties--------------------------------------------------------------------                                                    
 
@@ -536,7 +537,7 @@ public class Building : CollisionListener
         animator.enabled = true;
         //TurretRangeFXFactory.Instance.HideRange();
         //Debug.Log($"{this}.Placed() (finished), collider position is {collider.position} (world) / {collider.localPosition} (local), model position is {model.position} (world) / {model.localPosition} (local)");
-		TurretRangeFXFactory.Instance.ReturnToPool(CurrentRangeFX);
+		TurretRangeFXFactory.Instance.Destroy(turretRangeFX);
         //Debug.Log("Finish Place");
 	}
 
@@ -619,7 +620,7 @@ public class Building : CollisionListener
 
         SetParticleSystemsEnabled(false);
 		//TurretRangeFXFactory.Instance.HideRange();
-		TurretRangeFXFactory.Instance.ReturnToPool(CurrentRangeFX);
+		TurretRangeFXFactory.Instance.Destroy(turretRangeFX);
         //Debug.Log("Finish Reset");
 	}
 

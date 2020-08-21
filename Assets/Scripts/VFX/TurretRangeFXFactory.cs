@@ -2,175 +2,145 @@
 using kTools.Decals;
 using System.Collections.Generic;
 
-public class TurretRangeFXFactory : MonoBehaviour
+public class TurretRangeFXFactory : Factory<TurretRangeFXFactory, TurretRangeFX, ENone>
 {
-	////Private Fields---------------------------------------------------------------------------------------------------------------------------------  
-
-	////Serialized Fields----------------------------------------------------------------------------
-
-	//[SerializeField] private DecalData turretRangeDecal;
-
-	////Non-Serialized Fields------------------------------------------------------------------------
-
-	//private Decal currentDecal;
-	//private const float BASE_SPRITE_RADIUS = 2.1f;
-	//private const float DECAL_HEIGHT = 4.5f;
-
-	////Singleton Public Property--------------------------------------------------------------------                                                    
-
-	///// <summary>
-	///// MineralFactory's singleton public property.
-	///// </summary>
-	//public static TurretRangeFXFactory Instance { get; protected set; }
-
-	////Initialization Methods-------------------------------------------------------------------------------------------------------------------------
-
-	///// <summary>
-	///// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
-	///// Awake() runs before Start().
-	///// </summary>
-	//void Awake()
-	//{
-	//	if (Instance != null)
-	//	{
-	//		Debug.LogError("There should never be more than one TurretRangeFXFactory.");
-	//	}
-
-	//	Instance = this;
-	//	IdGenerator idGenerator = IdGenerator.Instance;
-	//}
-
-	///// <summary>
-	///// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
-	///// Start() runs after Awake().
-	///// </summary>
-	//private void Start()
-	//{
-	//	BuildingFactory.Instance.onGetTurret += OnGetTurret;
-	//}
-
-	///// <summary>
-	///// If the player is placing a turret, display the turret range.
-	///// </summary
-	//private void OnGetTurret(Transform turretTransform)
-	//{
-	//	float radius = turretTransform.GetComponent<TurretShooting>().DetectionRadius;
-	//	currentDecal = DecalSystem.GetDecal(turretRangeDecal, new Vector3(0f, DECAL_HEIGHT, 0f), -turretTransform.up, turretTransform.localScale * radius * BASE_SPRITE_RADIUS);
-	//	currentDecal.transform.SetParent(turretTransform, false);
-	//}
-
-	///// <summary>
-	///// Hides the turret range.
-	///// </summary
-	//public void HideRange()
-	//{
-	//	if (currentDecal != null)
-	//	{
-	//		DecalSystem.RemoveDecal(currentDecal);
-	//	}
-	//}
-
 	//Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
-	//Serialized Fields----------------------------------------------------------------------------                                                    
+	////Serialized Fields----------------------------------------------------------------------------                                                    
 
-	[SerializeField] private GameObject turretRangeFX;
-	[SerializeField] private int pooledFX;
+	//[SerializeField] private GameObject turretRangeFX;
+	//[SerializeField] private int pooledFX;
 
 	//Non-Serialized Fields------------------------------------------------------------------------
 
-	private Transform objectPool;
-	private Queue<GameObject> objects = new Queue<GameObject>();
+	//private Transform objectPool;
+	//private Queue<GameObject> objects = new Queue<GameObject>();
 	private const float BASE_SPRITE_RADIUS = 2.1f;
 	private const float DECAL_HEIGHT = 4.5f;
 
-	//Public Properties------------------------------------------------------------------------------------------------------------------------------
+    ////Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-	//Singleton Public Property--------------------------------------------------------------------                                                    
+    ////Singleton Public Property--------------------------------------------------------------------                                                    
 
-	/// <summary>
-	/// TurretRangeFXFactory's singleton public property.
-	/// </summary>
-	public static TurretRangeFXFactory Instance { get; protected set; }
+    ///// <summary>
+    ///// TurretRangeFXFactory's singleton public property.
+    ///// </summary>
+    //public static TurretRangeFXFactory Instance { get; protected set; }
 
-	//Initialization Methods-------------------------------------------------------------------------------------------------------------------------
+    //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
-	/// <summary>
-	/// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
-	/// Awake() runs before Start().
-	/// </summary>
-	void Awake()
-	{
-		if (Instance != null)
-		{
-			Debug.LogError("There should never be more than one TurretRangeFXFactory.");
-		}
+    ///// <summary>
+    ///// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
+    ///// Awake() runs before Start().
+    ///// </summary>
+    //void Awake()
+    //{
+    //	if (Instance != null)
+    //	{
+    //		Debug.LogError("There should never be more than one TurretRangeFXFactory.");
+    //	}
 
-		Instance = this;
-		IdGenerator idGenerator = IdGenerator.Instance;
+    //	Instance = this;
+    //	IdGenerator idGenerator = IdGenerator.Instance;
 
-		Add(pooledFX);
-	}
+    //	Add(pooledFX);
+    //}
 
-	/// <summary>
-	/// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
-	/// Start() runs after Awake().
-	/// </summary>
-	private void Start()
-	{
-		objectPool = ObjectPool.Instance.transform;
-	}
+    /// <summary>
+    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
+    /// Start() runs after Awake().
+    /// </summary>
+    protected override void Start()
+    {
+        base.Start();
 
-	//Triggered Methods -----------------------------------------------------------------------------------------------------------------------------
+        foreach (TurretRangeFX fx in pool[ENone.None])
+        {
+            fx.gameObject.SetActive(false);
+        }
 
-	/// <summary>
-	/// Generate an objectfrom the pool. If there's no object in the pool add one.
-	/// </summary>
-	public GameObject Get()
-	{
-		if (objects.Count == 0)
-		{
-			Add(1);
-		}
-		return objects.Dequeue();
-	}
+        //objectPool = ObjectPool.Instance.transform;
+    }
 
-	/// <summary>
-	/// Add object into the pool.
-	/// </summary>
-	private void Add(int count)
-	{
-		for (int i = 0; i < count; i++)
-		{
-			GameObject fx = Instantiate(turretRangeFX);
-			fx.gameObject.SetActive(false);
-			objects.Enqueue(fx);
-		}
-	}
+    //Triggered Methods -----------------------------------------------------------------------------------------------------------------------------
 
-	/// <summary>
-	/// Return object back into the pool.
-	/// </summary>
-	public void ReturnToPool(GameObject fx)
-	{
-		if (fx != null)
-		{
-			fx.transform.SetParent(null);
-			fx.gameObject.SetActive(false);
-			objects.Enqueue(fx);
-		}
-	}
+    /// <summary>
+    /// Retrieves a TurretRangeFX from the pool if there's any available, or instantiates a new one if none are available.
+    /// </summary>
+    /// <returns>A new instance of TurretRangeFX.</returns>
+    public TurretRangeFX Get()
+    {
+        return base.Get(ENone.None);
+    }
+
+    //   /// <summary>
+    //   /// Generate an objectfrom the pool. If there's no object in the pool add one.
+    //   /// </summary>
+    //   public GameObject Get()
+    //{
+    //	if (objects.Count == 0)
+    //	{
+    //		Add(1);
+    //	}
+    //	return objects.Dequeue();
+    //}
+
+    ///// <summary>
+    ///// Add object into the pool.
+    ///// </summary>
+    //private void Add(int count)
+    //{
+    //	for (int i = 0; i < count; i++)
+    //	{
+    //		GameObject fx = Instantiate(turretRangeFX);
+    //		fx.gameObject.SetActive(false);
+    //		objects.Enqueue(fx);
+    //	}
+    //}
+
+    /// <summary>
+    /// Handles the destruction of TurretRangeFXs.
+    /// </summary>
+    /// <param name="fx">The TurretRangeFX to be destroyed.</param>
+    public void Destroy(TurretRangeFX fx)
+    {
+        Destroy(ENone.None, fx);
+    }
+
+    /// <summary>
+    /// Handles the destruction of TurretRangeFXs.
+    /// </summary>
+    /// <param name="type">The type of TurretRangeFX to be destroyed.</param>
+    /// <param name="fx">The TurretRangeFX to be destroyed.</param>
+    public override void Destroy(ENone type, TurretRangeFX fx)
+    {
+        fx.gameObject.SetActive(false);
+        base.Destroy(type, fx);
+    }
+
+	///// <summary>
+	///// Return object back into the pool.
+	///// </summary>
+	//public void ReturnToPool(GameObject fx)
+	//{
+	//	if (fx != null)
+	//	{
+	//		fx.transform.SetParent(null);
+	//		fx.gameObject.SetActive(false);
+	//		objects.Enqueue(fx);
+	//	}
+	//}
 
 	/// <summary>
 	/// If the player is placing a turret, display the turret range.
 	/// </summary
-	public void OnGetTurret(Transform turretTransform, GameObject currentFX)
+	public void OnGetTurret(Transform turretTransform, TurretRangeFX currentFX)
 	{
 		float radius = turretTransform.GetComponent<TurretShooting>().DetectionRadius;
 
 		currentFX.transform.position = new Vector3(0f, DECAL_HEIGHT, 0f);
 		currentFX.transform.localScale = turretTransform.localScale * radius * BASE_SPRITE_RADIUS;
 		currentFX.transform.SetParent(turretTransform, false);
-		currentFX.SetActive(true);
+		currentFX.gameObject.SetActive(true);
 	}
 }

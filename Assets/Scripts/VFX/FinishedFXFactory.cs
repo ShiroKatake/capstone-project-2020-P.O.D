@@ -10,7 +10,7 @@ public class FinishedFXFactory : Factory<FinishedFXFactory, FinishedFX, ENone>
     //Triggered Methods -----------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
-    /// Retrieves a FinishedFX from the pool if there's any available, instantiates a new one if none are available, then sets its position.
+    /// Retrieves a FinishedFX from the pool if there's any available, or instantiates a new one if none are available.
     /// </summary>
     /// <returns>A new instance of FinishedFX.</returns>
     public FinishedFX Get()
