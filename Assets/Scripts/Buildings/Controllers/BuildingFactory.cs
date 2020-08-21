@@ -65,7 +65,10 @@ public class BuildingFactory : Factory<BuildingFactory, Building, EBuilding>
 		if (buildingType == EBuilding.LongRangeTurret || buildingType == EBuilding.ShortRangeTurret)
 		{
 			//Debug.Log("Displaying Range.");
-			onGetTurret?.Invoke(building.transform);
+			//onGetTurret?.Invoke(building.transform);
+
+			building.CurrentRangeFX = TurretRangeFXFactory.Instance.Get();
+			TurretRangeFXFactory.Instance.OnGetTurret(building.transform, building.CurrentRangeFX);
 		}
 
         //Debug.Log($"BuildingFactory(), returning building ({building}), building collider position is {building.Collider.position} (world) / {building.Collider.localPosition} (local), building model position is {building.Model.position} (world) / {building.Model.localPosition} (local)");

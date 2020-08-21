@@ -183,6 +183,11 @@ public class Building : CollisionListener
     /// </summary>
     public int WaterConsumption { get => waterConsumption; }
 
+    /// <summary>
+    /// How much water this building requires per second to function.
+    /// </summary>
+    public GameObject CurrentRangeFX { get; set; }
+
     //Complex Public Properties--------------------------------------------------------------------                                                    
 
     /// <summary>
@@ -243,7 +248,7 @@ public class Building : CollisionListener
     {
         if (!awake)
         {
-            Debug.Log("Building Awake()");
+            //Debug.Log("Building Awake()");
             animator = GetComponent<Animator>();
 
             if (animator == null)
@@ -529,9 +534,9 @@ public class Building : CollisionListener
         transform.position = position;
         BuildingController.Instance.RegisterBuilding(this);
         animator.enabled = true;
-        TurretRangeFXFactory.Instance.HideRange();
-
+        //TurretRangeFXFactory.Instance.HideRange();
         //Debug.Log($"{this}.Placed() (finished), collider position is {collider.position} (world) / {collider.localPosition} (local), model position is {model.position} (world) / {model.localPosition} (local)");
+		TurretRangeFXFactory.Instance.ReturnToPool(CurrentRangeFX);
         //Debug.Log("Finish Place");
 	}
 
@@ -611,8 +616,10 @@ public class Building : CollisionListener
         }
 
         SetCollidersEnabled("Body", false);
+
         SetParticleSystemsEnabled(false);
-		TurretRangeFXFactory.Instance.HideRange();
+		//TurretRangeFXFactory.Instance.HideRange();
+		TurretRangeFXFactory.Instance.ReturnToPool(CurrentRangeFX);
         //Debug.Log("Finish Reset");
 	}
 
