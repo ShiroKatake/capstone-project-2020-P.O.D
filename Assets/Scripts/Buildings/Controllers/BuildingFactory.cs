@@ -66,7 +66,6 @@ public class BuildingFactory : Factory<BuildingFactory, Building, EBuilding>
 		{
 			//Debug.Log("Displaying Range.");
 			//onGetTurret?.Invoke(building.transform);
-
 			building.TurretRangeFX = TurretRangeFXFactory.Instance.Get();
 			TurretRangeFXFactory.Instance.OnGetTurret(building.transform, building.TurretRangeFX);
 		}
