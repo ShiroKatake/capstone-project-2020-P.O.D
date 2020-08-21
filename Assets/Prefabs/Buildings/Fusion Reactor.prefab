@@ -91,6 +91,7 @@ GameObject:
   - component: {fileID: 2103360942000820280}
   - component: {fileID: 7989155517478719925}
   - component: {fileID: -8028724317887167732}
+  - component: {fileID: 6384879192915982547}
   - component: {fileID: 8835600581987182225}
   - component: {fileID: -6151874320592601714}
   - component: {fileID: -3725313067051829311}
@@ -167,9 +168,11 @@ MonoBehaviour:
   constructionFinishedFX: {fileID: 5264390033885133910, guid: 9a30dc8a4a1a76241acc06f41a0df0e0,
     type: 3}
   fxSize: 1
-  collider: {fileID: 3167873814941227850}
+  awake: 0
   active: 0
+  placed: 0
   operational: 0
+  built: 0
 --- !u!114 &-8028724317887167732
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -183,6 +186,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   affiliation: 0
+--- !u!114 &6384879192915982547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1531695208761868921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6f637207fdd5a540b67ba39ebbe330d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  beam: {fileID: 5075361585617950831}
 --- !u!114 &8835600581987182225
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -688,6 +704,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 49a1fa4ffc3acb3469301dade190dbea, type: 3}
+--- !u!1 &5075361585617950831 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 623500914955328112, guid: 49a1fa4ffc3acb3469301dade190dbea,
+    type: 3}
+  m_PrefabInstance: {fileID: 5676876114125963807}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5175116665452867939 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 655807625986143100, guid: 49a1fa4ffc3acb3469301dade190dbea,
