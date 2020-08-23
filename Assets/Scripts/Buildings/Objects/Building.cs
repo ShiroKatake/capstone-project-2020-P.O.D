@@ -537,7 +537,11 @@ public class Building : CollisionListener
         animator.enabled = true;
         //TurretRangeFXFactory.Instance.HideRange();
         //Debug.Log($"{this}.Placed() (finished), collider position is {collider.position} (world) / {collider.localPosition} (local), model position is {model.position} (world) / {model.localPosition} (local)");
-		TurretRangeFXFactory.Instance.Destroy(turretRangeFX);
+
+        if (turretRangeFX != null)
+        {
+            TurretRangeFXFactory.Instance.Destroy(turretRangeFX);
+        }
         //Debug.Log("Finish Place");
 	}
 
