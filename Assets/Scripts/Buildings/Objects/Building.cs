@@ -604,6 +604,7 @@ public class Building : CollisionListener
             case EBuilding.LongRangeTurret:
                 turretAimer.Reset();
                 turretShooter.Reset();
+                TurretRangeFXFactory.Instance.Destroy(turretRangeFX);
                 break;
             case EBuilding.FusionReactor:
                 fusionReactorBeam.Deactivate();
@@ -621,10 +622,7 @@ public class Building : CollisionListener
         }
 
         SetCollidersEnabled("Body", false);
-
-        SetParticleSystemsEnabled(false);
-		//TurretRangeFXFactory.Instance.HideRange();
-		TurretRangeFXFactory.Instance.Destroy(turretRangeFX);
+        SetParticleSystemsEnabled(false);		
         //Debug.Log("Finish Reset");
 	}
 
