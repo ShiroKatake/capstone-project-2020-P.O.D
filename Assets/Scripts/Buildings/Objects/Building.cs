@@ -292,9 +292,9 @@ public class Building : CollisionListener
                 groupedReporters[c.Purpose].Add(c);
             }
 
-            if (size.DiameterRoundedUp < 1 || size.DiameterRoundedUp > 3)
+            if (size.DiameterRoundedUp < 1 || size.DiameterRoundedUp > 4)
             {
-                Debug.LogError("Building.Size.RadiusRoundedUp is invalid. It needs to be between 1 and 3.");
+                Debug.LogError("Building.Size.RadiusRoundedUp is invalid. It needs to be between 1 and 4.");
             }
 
             awake = true;
@@ -431,12 +431,12 @@ public class Building : CollisionListener
         {
             if (r.gameObject.GetComponent<MouseClickThrough>() != null)
             {
-                //Debug.Log("Over UI");
+                Debug.Log("Over UI");
                 return true;
             }
         }
 
-        //Debug.Log("Not Over UI");
+        Debug.Log("Not Over UI");
         return false;
     }
 
@@ -445,7 +445,9 @@ public class Building : CollisionListener
     /// </summary>
     private bool CheckInPit()
     {
-        return transform.position.y < -0.1f;
+        bool result = transform.position.y < -0.1f;
+        Debug.Log($"{this} in pit: {result}");
+        return result;
     }
 
     /// <summary>
@@ -482,7 +484,7 @@ public class Building : CollisionListener
                 }
             }
         }
-
+        Debug.Log($"{this} colliding: {colliding}");
         return colliding;
     }
 
@@ -501,10 +503,12 @@ public class Building : CollisionListener
 
             if (!Physics.Raycast(raycastPos, Vector3.down, out hit, 20, groundLayerMask) || hit.distance > maxDistance)
             {
+                Debug.Log($"{this} on cliff");
                 return true;
             }
         }
 
+        Debug.Log($"{this} not on cliff");
         return false;
     }
 

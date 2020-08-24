@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 880952307760529665}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.5, z: 0}
-  m_LocalScale: {x: 2.9, y: 2.9, z: 2.9}
+  m_LocalScale: {x: 3.9, y: 3.9, z: 3.9}
   m_Children:
   - {fileID: 8586582078626057228}
   - {fileID: 8659336876441333313}
@@ -71,9 +71,11 @@ MonoBehaviour:
   idleSound: 0
   constructionFinishedFX: {fileID: 0}
   fxSize: 1
-  collider: {fileID: 8586582078626057228}
+  awake: 0
   active: 0
+  placed: 0
   operational: 1
+  built: 0
 --- !u!114 &4025372026840351080
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -128,7 +130,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e087b4d1f91fcb941a830564ec25c878, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radius: 1.3
+  radius: 1.8
 --- !u!1 &6702033319860156753
 GameObject:
   m_ObjectHideFlags: 0
@@ -227,7 +229,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: 7f0aae4afb486f14caa65c22c7809c42,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 1.13
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 7f0aae4afb486f14caa65c22c7809c42,
         type: 3}
