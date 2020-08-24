@@ -6,15 +6,14 @@ using Rewired;
 /// <summary>
 /// A controller class for building spawning.
 /// </summary>
-public class BuildingSpawningController : MonoBehaviour
+public class BuildingSpawningController : SerializableSingleton<BuildingSpawningController>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
     //Serialized Fields----------------------------------------------------------------------------
 
     [SerializeField] private bool printInputs;
-    [SerializeField] private Camera camera;
-    
+    [SerializeField] private Camera camera;    
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
@@ -37,13 +36,6 @@ public class BuildingSpawningController : MonoBehaviour
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    //Singleton Public Property--------------------------------------------------------------------                                                    
-
-    /// <summary>
-    /// BuildingSpawningController's singleton public property.
-    /// </summary>
-    public static BuildingSpawningController Instance { get; protected set; }
-
     //Basic Public Properties----------------------------------------------------------------------
 
     /// <summary>
@@ -57,14 +49,9 @@ public class BuildingSpawningController : MonoBehaviour
     /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
     /// Awake() runs before Start().
     /// </summary>
-    private void Awake()
+    protected override void Awake()
     {
-        if (Instance != null)
-        {
-            Debug.LogError("There should never be more than one BuildingSpawningController.");
-        }
-
-        Instance = this;
+        base.Awake();
         cycleBuildingSelection = false;
         cyclingBuildingSelection = false;
         spawnBuilding = false;
@@ -154,20 +141,21 @@ public class BuildingSpawningController : MonoBehaviour
             //Instantiate the appropriate building, positioning it properly.
             if (heldBuilding == null)
             {
-                heldBuilding = BuildingFactory.Instance.GetBuilding(selectedBuildingType);
-                heldBuilding.transform.position = MousePositionToBuildingPosition(transform.position, heldBuilding.Size.DiameterRoundedUp);
+                heldBuilding = BuildingFactory.Instance.Get(selectedBuildingType);
+                heldBuilding.transform.position = MousePositionToPotentialBuildingPosition(transform.position, heldBuilding.Size.DiameterRoundedUp);
                 ChangeTooltip(selectedBuildingType);
-              
+                //Debug.Log($"BuildingSpawningController(), new heldBuilding ({heldBuilding}) (from null), building collider position is {heldBuilding.Collider.position} (world) / {heldBuilding.Collider.localPosition} (local), building model position is {heldBuilding.Model.position} (world) / {heldBuilding.Model.localPosition} (local)");
+
                 // put tooltip spawn here
             }
             //Instantiate the appropriate building and postion it properly, replacing the old one.
             else if (heldBuilding.BuildingType != selectedBuildingType)
             {
-                Vector3 pos;
-                pos = MousePositionToBuildingPosition(heldBuilding.transform.position, heldBuilding.Size.DiameterRoundedUp);
-                BuildingFactory.Instance.DestroyBuilding(heldBuilding, false, false);
-                heldBuilding = BuildingFactory.Instance.GetBuilding(selectedBuildingType);
+                Vector3 pos = MousePositionToPotentialBuildingPosition(heldBuilding.transform.position, heldBuilding.Size.DiameterRoundedUp);
+                BuildingFactory.Instance.Destroy(heldBuilding, false, false);
+                heldBuilding = BuildingFactory.Instance.Get(selectedBuildingType);
                 heldBuilding.transform.position = pos;
+                //Debug.Log($"BuildingSpawningController(), new heldBuilding ({heldBuilding}) (from update), building collider position is {heldBuilding.Collider.position} (world) / {heldBuilding.Collider.localPosition} (local), building model position is {heldBuilding.Model.position} (world) / {heldBuilding.Model.localPosition} (local)");
 
                 ChangeTooltip(selectedBuildingType);
                
@@ -175,8 +163,11 @@ public class BuildingSpawningController : MonoBehaviour
             }
             else //Move the building where you want it
             {
-                heldBuilding.transform.position = MousePositionToBuildingPosition(heldBuilding.transform.position, heldBuilding.Size.DiameterRoundedUp);
+                heldBuilding.transform.position = MousePositionToPotentialBuildingPosition(heldBuilding.transform.position, heldBuilding.Size.DiameterRoundedUp);
+                //Debug.Log($"BuildingSpawningController(), update heldBuilding ({heldBuilding}) position, building collider position is {heldBuilding.Collider.position} (world) / {heldBuilding.Collider.localPosition} (local), building model position is {heldBuilding.Model.position} (world) / {heldBuilding.Model.localPosition} (local)");
             }
+
+            //Debug.Log($"BuildingSpawningController.CheckBuildingSpawning(), {heldBuilding}.transform.position is {heldBuilding.transform.position}");
 
             bool placementValid = heldBuilding.IsPlacementValid();
             bool resourcesAvailable = CheckResourcesAvailable();
@@ -185,12 +176,14 @@ public class BuildingSpawningController : MonoBehaviour
             //Place it or cancel building it
             if (placeBuilding && resourcesAvailable && placementValid)
             {
+                //Debug.Log($"BuildingSpawningController(), placeBuilding successful ({heldBuilding}) (start), building collider position is {heldBuilding.Collider.position} (world) / {heldBuilding.Collider.localPosition} (local), building model position is {heldBuilding.Model.position} (world) / {heldBuilding.Model.localPosition} (local)");
                 console.SubmitCustomMessage($"Placement successful. Constructing {heldBuilding.ConsoleName}.", false, 0);
 
                 Vector3 spawnPos = heldBuilding.transform.position;
                 spawnPos.y = 0.02f;
                 PipeManager.Instance.RegisterPipeBuilding(spawnPos);
                 spawnPos.y = GetStandardisedPlacementHeight(spawnPos, true);
+                //Debug.Log($"BuildingSpawningController(), placeBuilding ({heldBuilding}) successful (ready to place), new spawnPos is {spawnPos}, building collider position is {heldBuilding.Collider.position} (world) / {heldBuilding.Collider.localPosition} (local), building model position is {heldBuilding.Model.position} (world) / {heldBuilding.Model.localPosition} (local)");
                 heldBuilding.Place(spawnPos);
 
                 heldBuilding = null;
@@ -208,37 +201,32 @@ public class BuildingSpawningController : MonoBehaviour
                     if (!placementValid)
                     {
                         errorMessage += "~<- Invalid location.>";
-                        //Debug.Log("You cannot place a building there; it would occupy the same space as something else, or exceed the bounds of the map.");
                     }
 
                     if (ResourceController.Instance.Ore < heldBuilding.OreCost)
                     {
                         errorMessage += "~<- Insufficient +minerals&.>";
-                        //Debug.Log("You have insufficient ore to build this building.");
                     }
 
                     if (ResourceController.Instance.PowerSupply < ResourceController.Instance.PowerConsumption + heldBuilding.PowerConsumption)
                     {
                         errorMessage += "~<- Insufficient [power].>";
-                        //Debug.Log("You have insufficient power to maintain this building.");
                     }
 
                     if (ResourceController.Instance.WaterSupply < ResourceController.Instance.WaterConsumption + heldBuilding.WaterConsumption)
                     {
                         errorMessage += "~<- Insufficient /water\\.>";
-                        //Debug.Log("You have insufficient water to maintain this building.");
                     }
 
                     if (ResourceController.Instance.WasteSupply < ResourceController.Instance.WasteConsumption + heldBuilding.WasteConsumption)
                     {
                         errorMessage += "~<- Insufficient {waste}.>";
-                        //Debug.Log("You have insufficient waste to maintain this building.");
                     }
 
                     console.SubmitCustomMessage(errorMessage, true, 0);
                 }
 
-                BuildingFactory.Instance.DestroyBuilding(heldBuilding, false, false);
+                BuildingFactory.Instance.Destroy(heldBuilding, false, false);
                 heldBuilding = null;
                 spawnBuilding = false;
                 placeBuilding = false;
@@ -253,7 +241,7 @@ public class BuildingSpawningController : MonoBehaviour
     /// <param name="backup">The value to return if the mouse is off the screen or something else fails.</param>
     /// <param name="radius">The building's radius.</param>
     /// <returns>Snapped-to-grid building position.</returns>
-    private Vector3 MousePositionToBuildingPosition(Vector3 backup, int radius)
+    private Vector3 MousePositionToPotentialBuildingPosition(Vector3 backup, int radius)
     {
         RaycastHit hit;
         Ray ray = camera.ScreenPointToRay(ReInput.controllers.Mouse.screenPosition);
@@ -319,14 +307,17 @@ public class BuildingSpawningController : MonoBehaviour
 
             if (hit.point.y >= 2.5f - errorMargin)
             {
+                //Debug.Log($"BuildingSpawningController.GetStandardisedPlacementHeight(), hit at ~2.5f, setting height to 2.5f");
                 result = 2.5f;
             }
             else if (hit.point.y >= -errorMargin)
             {
+                //Debug.Log($"BuildingSpawningController.GetStandardisedPlacementHeight(), hit at ~0f, setting height to 0f");
                 result = 0;
             }
             else if (hit.point.y >= -2.5f - errorMargin)
             {
+                //Debug.Log($"BuildingSpawningController.GetStandardisedPlacementHeight(), hit at ~-2.5f, setting height to -2.5f");
                 result = -2.5f;
             }
             else

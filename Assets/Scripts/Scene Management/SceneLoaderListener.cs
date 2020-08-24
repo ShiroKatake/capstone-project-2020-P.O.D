@@ -6,7 +6,7 @@ using UnityEngine.UI;
 /// <summary>
 /// Instantiates SceneLoader if it's not instantiated and triggers its scene changing methods.
 /// </summary>
-public class SceneLoaderListener : MonoBehaviour
+public class SceneLoaderListener : SerializableSingleton<SceneLoaderListener>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
@@ -21,13 +21,6 @@ public class SceneLoaderListener : MonoBehaviour
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    //Singleton Public Property--------------------------------------------------------------------
-
-    /// <summary>
-    /// SceneLoaderListener's singleton public property.
-    /// </summary>
-    public static SceneLoaderListener Instance { get; protected set; }
-
     //Basic Public Properties----------------------------------------------------------------------
 
     /// <summary>
@@ -41,14 +34,9 @@ public class SceneLoaderListener : MonoBehaviour
     /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
     /// Awake() runs before Start().
     /// </summary>
-    private void Awake()
+    protected override void Awake()
     {
-        if (Instance != null)
-        {
-            Debug.LogError("There should never be 2 or more SceneLoaderListeners at once.");
-        }
-
-        Instance = this;
+        base.Awake();
         sceneLoaderInstantiatedOnAwake = false;
 
         try

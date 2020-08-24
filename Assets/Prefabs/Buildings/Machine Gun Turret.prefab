@@ -127,7 +127,7 @@ GameObject:
   - component: {fileID: 8296713845122639256}
   - component: {fileID: 6060698008655809382}
   - component: {fileID: 1773151326889726547}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Arm Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -444,6 +444,7 @@ MonoBehaviour:
   - {x: -0.5, y: -0.45, z: 0.5}
   - {x: 0.5, y: -0.45, z: -0.5}
   - {x: 0.5, y: -0.45, z: 0.5}
+  model: {fileID: 7351240215580495256}
   rendererMaterialSets:
   - renderer: {fileID: 957260111606721453}
     opaque: {fileID: 2100000, guid: c482fb16132166141865d2f3518f1897, type: 2}
@@ -463,6 +464,7 @@ MonoBehaviour:
   constructionFinishedFX: {fileID: 5264390033885133910, guid: 9a30dc8a4a1a76241acc06f41a0df0e0,
     type: 3}
   fxSize: 1.5
+  collider: {fileID: 7185075788765746384}
   active: 0
   operational: 0
 --- !u!114 &2320425670518256764
@@ -491,6 +493,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 30
+  currentHealth: 0
 --- !u!114 &8965008406432620709
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -546,6 +549,7 @@ MonoBehaviour:
   collisionReporters: []
   barrelMagazine: {fileID: 6727844688691865855}
   barrelTip: {fileID: 3455601484792482889}
+  detectionRadius: 15
   projectileType: 3
   targetClosest: 1
   numProjectiles: 1
@@ -859,7 +863,7 @@ GameObject:
   - component: {fileID: 797846877218066313}
   - component: {fileID: 8148922935997584703}
   - component: {fileID: 769589036067752886}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Barrel Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -939,10 +943,10 @@ GameObject:
   - component: {fileID: 7351240215580495256}
   - component: {fileID: 4782078366129761194}
   - component: {fileID: 957260111606721453}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Body Model
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 2800000, guid: 716b13899e1a12542b844f6d58c4a238, type: 3}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1

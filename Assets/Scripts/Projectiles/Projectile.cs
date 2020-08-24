@@ -21,7 +21,9 @@ public class Projectile : MonoBehaviour
 
     //Components
     private Collider collider;
+    private Light light;
     private Rigidbody rigidbody;
+    private MeshRenderer renderer;
 
     //Other
     private bool active = false;
@@ -44,9 +46,19 @@ public class Projectile : MonoBehaviour
     public Collider Collider { get => collider; }
 
     /// <summary>
+    /// The projectile's light component.
+    /// </summary>
+    public Light Light { get => light; }
+
+    /// <summary>
     /// The entity that fired the projectile. Should only be set by ProjectileFactory.
     /// </summary>
     public Transform Owner { get => owner; set => owner = value; }
+
+    /// <summary>
+    /// The projectile's mesh renderer component.
+    /// </summary>
+    public MeshRenderer Renderer { get => renderer; }
 
     /// <summary>
     /// The projectile's rigidbody component.
@@ -67,8 +79,9 @@ public class Projectile : MonoBehaviour
     private void Awake()
     {
         collider = GetComponent<Collider>();
+        light = GetComponentInChildren<Light>();
+        renderer = GetComponentInChildren<MeshRenderer>();
         rigidbody = GetComponent<Rigidbody>();
-
 	}
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
@@ -80,7 +93,7 @@ public class Projectile : MonoBehaviour
     {
         if (active && (transform.position.y < 0 || Time.time - timeOfLastShot > lifespan))
         {
-            ProjectileFactory.Instance.DestroyProjectile(this);
+            ProjectileFactory.Instance.Destroy(this);
         }
     }
 
@@ -165,7 +178,7 @@ public class Projectile : MonoBehaviour
         if (!collidedWith.CompareTag("Projectile") && !collidedWith.CompareTag("Pit Walls") && !collidedWith.isTrigger && (!collidedWith.CompareTag(owner.tag) || leftOwnerCollider))
         {
             //Debug.Log($"ProjectileCollision, not {owner.tag} or Projectile or Pit Walls; tag is {collidedWith.tag}; position is {transform.position}");
-            ProjectileFactory.Instance.DestroyProjectile(this);
+            ProjectileFactory.Instance.Destroy(this);
         }
 
         //ProjectileFactory.Instance.DestroyProjectile(this);

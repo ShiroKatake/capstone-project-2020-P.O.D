@@ -6,33 +6,16 @@ using UnityEngine;
 /// <summary>
 /// Factory class for aliens.
 /// </summary>
-public class AlienFactory : MonoBehaviour
+public class AlienFactory : Factory<AlienFactory, Alien, ENone>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
     //Serialized Fields----------------------------------------------------------------------------
 
-    [Header("Game Objects")]
-    [SerializeField] private Alien alienPrefab;
-
-    [Header("Stats")]
-    [SerializeField] private int pooledAliens;
+    [Header("Alien Stats")]
     [SerializeField] private float alienSpawnHeight;
-
-
-    //Non-Serialized Fields------------------------------------------------------------------------
-
-    private Transform objectPool;
-    private List<Alien> alienPool;
    
     //PublicProperties-------------------------------------------------------------------------------------------------------------------------------
-
-    //Singleton Public Property--------------------------------------------------------------------
-
-    /// <summary>
-    /// AlienController's singleton public property.
-    /// </summary>
-    public static AlienFactory Instance { get; protected set; }
 
     //Basic Public Properties----------------------------------------------------------------------
 
@@ -44,83 +27,69 @@ public class AlienFactory : MonoBehaviour
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
-    /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
-    /// Awake() runs before Start().
-    /// </summary>
-    void Awake()
-    {
-        if (Instance != null)
-        {
-            Debug.LogError("There should never be 2 or more AlienFactories.");
-        }
-
-        Instance = this;
-        alienPool = new List<Alien>();        
-    }
-
-    /// <summary>
     /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
     /// Start() runs after Awake().
     /// </summary>
-    private void Start() {
-        objectPool = ObjectPool.Instance.transform;
+    protected override void Start()
+    {
+        base.Start();
 
-        for (int i = 0; i < pooledAliens; i++)
+        foreach (Alien a in pool[ENone.None])
         {
-            Alien alien = Instantiate(alienPrefab, objectPool.position, new Quaternion()); 
-            alien.transform.parent = objectPool;
-
-            foreach (Collider c in alien.GetComponents<Collider>())
+            foreach (Collider c in a.GetComponents<Collider>())
             {
                 c.enabled = false;
             }
-
-            alienPool.Add(alien);
-            
         }
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
-
+    
     /// <summary>
-    /// Retrieves Enemies from a pool if there's any available, and instantiates a new alien if there isn't one.
+    /// Retrieves an alien from the pool if there's any available, and instantiates a new alien if there isn't one.
     /// </summary>
     /// <param name="position">The position the alien should be instantiated at.</param>
     /// <returns>A new alien.</returns>
-    public Alien GetAlien(Vector3 position)
+    public Alien Get(Vector3 position)
     {
-        Alien alien;        
+        return Get(ENone.None, position);
+    }
 
-        if (alienPool.Count > 0)
-        {
-            alien = alienPool[0];
-            alienPool.Remove(alien);
-            alien.transform.parent = null;
-            alien.transform.position = position;
+    /// <summary>
+    /// Does extra setup for the alien before returning it from Get().
+    /// </summary>
+    /// <param name="result">The alien to return.</param>
+    /// <returns>The now-setup alien.</returns>
+    protected override Alien GetRetrievalSetup(Alien result)
+    {
+        result.Renderer.enabled = true;
 
-            foreach (Collider c in alien.GetComponents<Collider>())
-            {
-                c.enabled = true;
-            }
-        }
-        else
+        foreach (Collider c in result.GetComponents<Collider>())
         {
-            alien = Instantiate(alienPrefab, position, new Quaternion());
+            c.enabled = true;
         }
 
-        return alien;
+        return result;
     }
 
     /// <summary>
     /// Handles the destruction of aliens.
     /// </summary>
     /// <param name="alien">The alien to be destroyed.</param>
-    public void DestroyAlien(Alien alien)
+    public void Destroy(Alien alien)
+    {
+        Destroy(ENone.None, alien);
+    }
+
+    /// <summary>
+    /// Handles the destruction of aliens.
+    /// </summary>
+    /// <param name="type">The type of the alien to be destroyed.</param>
+    /// <param name="alien">The alien to be destroyed.</param>
+    public override void Destroy(ENone type, Alien alien)
     {
         alien.Reset();
         AlienController.Instance.DeRegisterAlien(alien);
-        alien.transform.position = objectPool.position;
-        alien.transform.parent = objectPool;
-        alienPool.Add(alien);
+        base.Destroy(type, alien);
     }
 }

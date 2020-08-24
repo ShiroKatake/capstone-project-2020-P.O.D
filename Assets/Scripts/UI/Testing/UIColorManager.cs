@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIColorManager : MonoBehaviour
+public class UIColorManager : SerializableSingleton<UIColorManager>
 {
     [SerializeField] private List<Image> UIBackgrounds = new List<Image>();
     [SerializeField] private List<Image> UIBorders = new List<Image>();
@@ -32,16 +32,8 @@ public class UIColorManager : MonoBehaviour
     private float t = 0;
     private float et = 0;
 
-    public static UIColorManager Instance {get; protected set;}
-
-    private void Awake() {
-        if (Instance != null)
-        {
-            Debug.LogError("There should never be 2 or more Color Managers.");
-        }
-
-        Instance = this;
-
+    protected override void Awake() {
+        base.Awake();
         backgroundCurColor = backgroundDay;
         borderCurColor = borderDay;
         backgroundNewColor = backgroundDay;

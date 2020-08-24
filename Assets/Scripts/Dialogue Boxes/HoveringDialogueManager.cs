@@ -7,7 +7,7 @@ using UnityEngine.UI;
 /// <summary>
 /// Controls what to put in the hovering dialogue box and handling showing/hiding.
 /// </summary>
-public class HoveringDialogueManager : MonoBehaviour
+public class HoveringDialogueManager : SerializableSingleton<HoveringDialogueManager>
 {
 	//Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
@@ -48,28 +48,16 @@ public class HoveringDialogueManager : MonoBehaviour
 	private Camera playerCamera;
 	private HoverDialogueBoxPreset presetWithMineral;
 
-	//Public Properties------------------------------------------------------------------------------------------------------------------------------
-
-	//Singleton Public Property--------------------------------------------------------------------   
-
-	public static HoveringDialogueManager Instance { get; protected set; }
-
 	//Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 	
 	/// <summary>
 	/// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
 	/// Awake() runs before Start().
 	/// </summary>
-	private void Awake()
+	protected override void Awake()
 	{
-		if (Instance != null)
-		{
-			Debug.LogError("There should never be more than one HoveringDialogueManager.");
-		}
-
+        base.Awake();
 		playerCamera = Camera.main;
-
-		Instance = this;
 
 		//Get all "editable" text fields
 		HoveringDialogueDemi_TextElement[] hoveringDialogueTexts = hoverDialogueObject.GetComponentsInChildren<HoveringDialogueDemi_TextElement>(true);

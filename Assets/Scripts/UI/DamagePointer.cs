@@ -4,9 +4,8 @@ using System.Reflection;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-public class DamagePointer : MonoBehaviour
+public class DamagePointer : SerializableSingleton<DamagePointer>
 {
-    private static DamagePointer Instance;
     [SerializeField] private GameObject pointer;
     private Transform location;
     [SerializeField]private Camera minimapCamera;
@@ -18,9 +17,9 @@ public class DamagePointer : MonoBehaviour
 
 
     private float count = 0;
-    private void Awake()
+    protected override void Awake()
     {
-        Instance = this;
+        base.Awake();
         pointerRectTransform = pointer.GetComponent<RectTransform>();
         pointer.SetActive(false);
         location = this.transform;

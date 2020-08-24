@@ -5,44 +5,15 @@ using UnityEngine;
 /// <summary>
 /// A singleton class for reusable maths methods that don't seem to be included in Mathf or any other classes or libraries or that have been put together because people can't be bothered Googling the actual methods.
 /// </summary>
-public class MathUtility
+public class MathUtility : Singleton<MathUtility>
 {
-    //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
-
-    //Serialized Fields----------------------------------------------------------------------------                                                    
-
-
-
-    //Non-Serialized Fields------------------------------------------------------------------------                                                    
-
-    private static MathUtility instance;
-
-    //Public Properties------------------------------------------------------------------------------------------------------------------------------
-
-    //Singleton Public Property--------------------------------------------------------------------                                                    
-
-    /// <summary>
-    /// MathUtility's singleton public property.
-    /// </summary>
-    public static MathUtility Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
-                instance = new MathUtility();
-            }
-
-            return instance;
-        }
-    }
-
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
     /// MathUtility's constructor method.
+    /// WARNING: DO NOT CALL IN-CODE. IT IS ONLY PUBLIC FOR SINGLETON.INSTANCE TO USE.
     /// </summary>
-    private MathUtility()
+    public MathUtility()
     {
 
     }

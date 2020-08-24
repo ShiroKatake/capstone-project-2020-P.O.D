@@ -28,11 +28,12 @@ public class Alien : MonoBehaviour, IMessenger
     [Header("Testing")]
     
     //Componenets
+	private Actor actor;
     private List<Collider> colliders;
     private Health health;
     private NavMeshAgent navMeshAgent;
+    private SkinnedMeshRenderer renderer;
     private Rigidbody rigidbody;
-	private Actor actor;
 
 	//Movement
 	private bool moving;
@@ -64,6 +65,11 @@ public class Alien : MonoBehaviour, IMessenger
     public List<Collider> BodyColliders { get => bodyColliders; }
 
     /// <summary>
+    /// Alien's collider components.
+    /// </summary>
+    public List<Collider> Colliders { get => colliders; }
+
+    /// <summary>
     /// Alien's Health component.
     /// </summary>
     public Health Health { get => health; }
@@ -73,6 +79,11 @@ public class Alien : MonoBehaviour, IMessenger
     /// </summary>
     public NavMeshAgent NavMeshAgent { get => navMeshAgent; }
 
+    /// <summary>
+    /// Alien's MeshRenderer component.
+    /// </summary>
+    public SkinnedMeshRenderer Renderer { get => renderer; }
+
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
@@ -81,9 +92,11 @@ public class Alien : MonoBehaviour, IMessenger
     /// </summary>
     void Awake()
     {
+		actor = GetComponent<Actor>();
         colliders = new List<Collider>(GetComponents<Collider>());
         health = GetComponent<Health>();
 		navMeshAgent = GetComponent<NavMeshAgent>();
+        renderer = GetComponentInChildren<SkinnedMeshRenderer>();
         rigidbody = GetComponent<Rigidbody>();
 
         visibleAliens = new List<Transform>();
@@ -92,7 +105,6 @@ public class Alien : MonoBehaviour, IMessenger
         navMeshAgent.enabled = false;
         speed = navMeshAgent.speed;
 
-		actor = GetComponent<Actor>();
 
 		alienWeapon = GetComponentInChildren<AlienClaw>();
 		alienWeapon.gameObject.SetActive(false);
@@ -114,6 +126,7 @@ public class Alien : MonoBehaviour, IMessenger
         targetHealth = CryoEgg.Instance.GetComponent<Health>();
         timeOfLastAttack = attackCooldown * -1;
         MessageDispatcher.Instance.Subscribe("Alien", this);
+        renderer.enabled = true;
 
         //Rotate to face the Cryo egg
         Vector3 targetRotation = CryoEgg.Instance.transform.position - transform.position;
@@ -124,7 +137,7 @@ public class Alien : MonoBehaviour, IMessenger
             c.enabled = true;
         }
 
-        if (StageManager.Instance.CurrentStage.ID == EStage.MainGame)
+        if (StageManager.Instance.CurrentStage.GetID() == EStage.MainGame)
         {
             navMeshAgent.enabled = true;
             moving = true;
@@ -317,6 +330,9 @@ public class Alien : MonoBehaviour, IMessenger
 			{
 				c.enabled = false;
 			}
+
+            navMeshAgent.enabled = false;
+
 			onDie.Invoke();
 		}
 		else
@@ -361,7 +377,7 @@ public class Alien : MonoBehaviour, IMessenger
 	/// </summary>
 	public void DestroyAlien()
 	{
-		AlienFactory.Instance.DestroyAlien(this);
+		AlienFactory.Instance.Destroy(this);
 	}
 
 	/// <summary>
@@ -392,7 +408,8 @@ public class Alien : MonoBehaviour, IMessenger
     /// </summary>
     public void Reset()
     {
-        navMeshAgent.enabled = false;
+        //navMeshAgent.enabled = false;
+        renderer.enabled = false;
         MessageDispatcher.Instance.SendMessage("Turret", new Message(gameObject.name, "Alien", this.gameObject, "Dead"));
         MessageDispatcher.Instance.Unsubscribe("Alien", this);
         moving = false;

@@ -7,10 +7,10 @@ public class ActivateToolTips : MonoBehaviour
     [SerializeField] private ToolTips.Etooltips selection;
     public void tooltipON()
     {
-        ToolTips.showTooltip_Static(selection);
+        ToolTips.Instance.ShowToolTip(selection);
     }
     public void tooltipOff()
     {
-        ToolTips.hideToolTip_Static();
+        ToolTips.Instance.HideToolTip();
     }
 }

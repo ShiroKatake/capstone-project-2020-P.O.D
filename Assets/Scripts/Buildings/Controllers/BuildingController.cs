@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// A manager class for buildings.
 /// </summary>
-public class BuildingController : MonoBehaviour
+public class BuildingController : SerializableSingleton<BuildingController>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
@@ -22,13 +22,6 @@ public class BuildingController : MonoBehaviour
     private float timeLastNonDefenceWasBuilt;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
-
-    //Singleton Public Property--------------------------------------------------------------------                                                    
-
-    /// <summary>
-    /// BuildingController's singleton public property.
-    /// </summary>
-    public static BuildingController Instance { get; protected set; }
 
     //Basic Public Properties----------------------------------------------------------------------                                                                                                                          
 
@@ -53,20 +46,6 @@ public class BuildingController : MonoBehaviour
     public float TimeLastNonDefenceWasBuilt { get => timeLastNonDefenceWasBuilt; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
-
-    /// <summary>
-    /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
-    /// Awake() runs before Start().
-    /// </summary>
-    private void Awake()
-    {
-        if (Instance != null)
-        {
-            Debug.LogError("There should never be more than one BuildingController.");
-        }
-
-        Instance = this;
-    }
 
     /// <summary>
     /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
@@ -118,7 +97,7 @@ public class BuildingController : MonoBehaviour
         {
             Building b = destroyedBuildings[0];
             destroyedBuildings.RemoveAt(0);
-            BuildingFactory.Instance.DestroyBuilding(b, true, true);
+            BuildingFactory.Instance.Destroy(b, true, true);
         }
     }
 

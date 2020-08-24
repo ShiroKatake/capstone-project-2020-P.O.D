@@ -7,7 +7,7 @@ using UnityEngine.Events;
 /// <summary>
 /// A player script for collecting minerals.
 /// </summary>
-public class MineralCollectionController : MonoBehaviour
+public class MineralCollectionController : SerializableSingleton<MineralCollectionController>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
@@ -23,29 +23,15 @@ public class MineralCollectionController : MonoBehaviour
 	private bool isOnMineral;
     private LayerMask mineralsLayerMask;
 
-	//Public Properties------------------------------------------------------------------------------------------------------------------------------
-
-	//Singleton Public Property--------------------------------------------------------------------                                                    
-
-	/// <summary>
-	/// MineralCollectionController's singleton public property.
-	/// </summary>
-	public static MineralCollectionController Instance { get; protected set; }
-
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
     /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
     /// Awake() runs before Start().
     /// </summary>
-    private void Awake()
+    protected override void Awake()
     {
-        if (Instance != null)
-        {
-            Debug.LogError("There should never be more than one MineralCollectionController.");
-        }
-
-        Instance = this;
+        base.Awake();
         mineralsLayerMask = LayerMask.GetMask("Minerals");
     }
 

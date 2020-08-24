@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// The stage of the game where the player is introduced to the buildings and how terraforming works.
 /// </summary>
-public class StageTerraforming : Stage
+public class StageTerraforming : SerializableSingleton<StageTerraforming>, IStage
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
@@ -45,29 +45,17 @@ public class StageTerraforming : Stage
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    //Singleton Public Property----------------------------------------------------------------------------------------------------------------------
+    //Basic Public Properties----------------------------------------------------------------------
 
     /// <summary>
-    /// StageTerraforming's singleton public property.
+    /// The ID of StageTerraforming. 
     /// </summary>
-    public StageTerraforming Instance { get; protected set; }
+    public EStage GetID()
+    {
+        return EStage.Terraforming;
+    }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
-
-    /// <summary>
-    /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
-    /// Awake() runs before Start().
-    /// </summary>
-    private void Awake()
-    {
-        if (Instance != null)
-        {
-            Debug.LogError("There should never be more than one StageTerraforming.");
-        }
-
-        Instance = this;
-        id = EStage.Terraforming;
-    }
 
     /// <summary>
     /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
@@ -82,21 +70,13 @@ public class StageTerraforming : Stage
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
-    /// The main behaviour of StageTerraforming.
-    /// </summary>
-    public override void StartExecution()
-    {
-        StartCoroutine(Execution());
-    }
-
-    /// <summary>
     /// The main behaviour of the stage. 
     /// </summary>
     /// <note>
     /// If the stage follows a linear path, use while(waiting){yield return null} statements to delay behaviour. If the stage can loop back on itself or
     /// jump ahead, use an initial yield return null followed by while(step > -1){switch(step){/*stage content*/}.
     /// </note>
-    protected override IEnumerator Execution()
+    public IEnumerator Execution()
     {
         yield return StartCoroutine(BuildFusionReactor());
         yield return StartCoroutine(BuildIceDrill());

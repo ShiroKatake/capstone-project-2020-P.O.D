@@ -6,7 +6,7 @@ using UnityEngine.UI;
 /// <summary>
 /// A class to control the clock in the UI and the day-night cycle.
 /// </summary>
-public class ClockController : MonoBehaviour
+public class ClockController : SerializableSingleton<ClockController>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
@@ -35,13 +35,6 @@ public class ClockController : MonoBehaviour
     private RectTransform rectTransform;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
-
-    //Singleton Public Property--------------------------------------------------------------------                                                    
-
-    /// <summary>
-    /// DayNightCycleController's singleton public property.
-    /// </summary>
-    public static ClockController Instance { get; protected set; }
 
     //Basic Public Properties----------------------------------------------------------------------                                                                                                                          
 
@@ -81,14 +74,9 @@ public class ClockController : MonoBehaviour
     /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
     /// Awake() runs before Start().
     /// </summary>
-    private void Awake()
+    protected override void Awake()
     {
-        if (Instance != null)
-        {
-            Debug.LogError("There should never be more than one DayNightCycleController.");
-        }
-
-        Instance = this;
+        base.Awake();
         halfCycleDuration = cycleDuration * 0.5f;
         daytime = true;
 

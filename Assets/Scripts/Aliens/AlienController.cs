@@ -6,7 +6,7 @@ using UnityEngine.AI;
 /// <summary>
 /// Controller class for aliens.
 /// </summary>
-public class AlienController : MonoBehaviour
+public class AlienController : SerializableSingleton<AlienController>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
@@ -67,13 +67,6 @@ public class AlienController : MonoBehaviour
 
     //PublicProperties-------------------------------------------------------------------------------------------------------------------------------
 
-    //Singleton Public Property--------------------------------------------------------------------
-
-    /// <summary>
-    /// AlienController's singleton public property.
-    /// </summary>
-    public static AlienController Instance { get; protected set; }
-
     //Basic Public Properties----------------------------------------------------------------------
 
     /// <summary>
@@ -89,14 +82,9 @@ public class AlienController : MonoBehaviour
     /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
     /// Awake() runs before Start().
     /// </summary>
-    private void Awake()
+    protected override void Awake()
     {
-        if (Instance != null)
-        {
-            Debug.LogError("There should never be 2 or more AlienControllers.");
-        }
-
-        Instance = this;
+        base.Awake();
         aliens = new List<Alien>();
         timeOfLastDeath = waveDelay * -1;
         timeOfLastPenalty = penaltyCooldown * -1;
@@ -157,9 +145,9 @@ public class AlienController : MonoBehaviour
             yield return null;
         }
 
-        while (spawnAliens && !gameOverStages.Contains(StageManager.Instance.CurrentStage.ID))
+        while (spawnAliens && !gameOverStages.Contains(StageManager.Instance.CurrentStage.GetID()))
         {
-            if (spawnableStages.Contains(StageManager.Instance.CurrentStage.ID) 
+            if (spawnableStages.Contains(StageManager.Instance.CurrentStage.GetID()) 
                 && !ClockController.Instance.Daytime 
                 && aliens.Count == 0 
                 && Time.time - timeOfLastDeath > waveDelay)
@@ -175,7 +163,7 @@ public class AlienController : MonoBehaviour
                 }
 
                 //Spawn aliens
-                EStage currentStage = StageManager.Instance.CurrentStage.ID;
+                EStage currentStage = StageManager.Instance.CurrentStage.GetID();
                 int spawnCount = (currentStage == EStage.Combat ? 3 : BuildingController.Instance.BuildingCount * alienMultiplier + spawnCountPenalty);
                 Vector3 swarmCentre = Vector3.zero;
                 int swarmSize = 0;
@@ -224,7 +212,7 @@ public class AlienController : MonoBehaviour
                         RaycastHit rayHit;
                         NavMeshHit navHit;
                         Physics.Raycast(spawnPos, Vector3.down, out rayHit, 25, groundLayerMask);
-                        Alien alien = AlienFactory.Instance.GetAlien(new Vector3(spawnPos.x, rayHit.point.y, spawnPos.z));
+                        Alien alien = AlienFactory.Instance.Get(new Vector3(spawnPos.x, rayHit.point.y, spawnPos.z));
                         alien.Setup(IdGenerator.Instance.GetNextId());
 
                         if (NavMesh.SamplePosition(alien.transform.position, out navHit, 1, NavMesh.AllAreas))
@@ -235,7 +223,7 @@ public class AlienController : MonoBehaviour
                         else
                         {
                             MapController.Instance.RegisterOffMeshPosition(spawnPos);
-                            AlienFactory.Instance.DestroyAlien(alien);
+                            AlienFactory.Instance.Destroy(alien);
                             i--;
                         }
                         

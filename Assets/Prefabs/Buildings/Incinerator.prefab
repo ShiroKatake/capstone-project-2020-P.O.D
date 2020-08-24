@@ -118,7 +118,7 @@ GameObject:
   m_Layer: 10
   m_Name: Incinerator
   m_TagString: Building
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 2800000, guid: 5eb455722d58d684f8c08c16161556fc, type: 3}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -179,6 +179,7 @@ MonoBehaviour:
   - {x: -1, y: -0.45, z: -1}
   - {x: -1, y: -0.45, z: 0}
   - {x: -1, y: -0.45, z: 1}
+  model: {fileID: 4215405745183885993}
   rendererMaterialSets:
   - renderer: {fileID: 1506364897671728230}
     opaque: {fileID: 2100000, guid: 32e5f86707429ae4e8b436122f0f6636, type: 2}
@@ -190,6 +191,7 @@ MonoBehaviour:
   constructionFinishedFX: {fileID: 5264390033885133910, guid: 9a30dc8a4a1a76241acc06f41a0df0e0,
     type: 3}
   fxSize: 2.5
+  collider: {fileID: 787108383731677139}
   active: 0
   operational: 0
 --- !u!114 &1097937831683221508
@@ -218,6 +220,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 50
+  currentHealth: 0
 --- !u!114 &-703308631334502526
 MonoBehaviour:
   m_ObjectHideFlags: 0

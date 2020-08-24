@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// A dispatcher for messages.
 /// </summary>
-public class MessageDispatcher : MonoBehaviour
+public class MessageDispatcher : SerializableSingleton<MessageDispatcher>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
@@ -13,29 +13,15 @@ public class MessageDispatcher : MonoBehaviour
 
     private Dictionary<string, List<IMessenger>> subscribers;
 
-    //Public Properties------------------------------------------------------------------------------------------------------------------------------
-
-    //Singleton Public Property--------------------------------------------------------------------                                                    
-
-    /// <summary>
-    /// MessageDispatcher's singleton public property.
-    /// </summary>
-    public static MessageDispatcher Instance { get; protected set; }
-
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
     /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
     /// Awake() runs before Start().
     /// </summary>
-    private void Awake()
+    protected override void Awake()
     {
-        if (Instance != null)
-        {
-            Debug.LogError("There should never be more than one MessageBoard.");
-        }
-
-        Instance = this;
+        base.Awake();
         subscribers = new Dictionary<string, List<IMessenger>>();
     }
 

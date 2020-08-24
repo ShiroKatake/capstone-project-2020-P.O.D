@@ -93,7 +93,7 @@ public class Ore : MonoBehaviour
 		{
 			//Debug.Log("Collected " + value + " ores.");
 			ResourceController.Instance.Ore += value;
-			OreFactory.Instance.ReturnToPool(this);
+			OreFactory.Instance.Destroy(this);
 		}
 	}
 }

@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class EnvironmentalController : MonoBehaviour {
+public class EnvironmentalController : SerializableSingleton<EnvironmentalController> {
     //testing variable
     //[SerializeField] private Text var;
     [SerializeField] private ProgressBar progress;
@@ -36,19 +36,11 @@ public class EnvironmentalController : MonoBehaviour {
 
     private float progressProportion = 0;
 
-    public static EnvironmentalController Instance { get; protected set; }
-
     public List<Terraformer> Terraformers { get => terraformers; }
     public float ProgressProportion { get => progressProportion; }
-    private void Awake()
+    protected override void Awake()
     {
-        if (Instance != null)
-        {
-            Debug.LogError("There should never be more than one EnvironmentalController.");
-        }
-
-        Instance = this;
-
+        base.Awake();
         progress.SetMax(winAmount);
         progress.SetBarValue(TotalVal);
         bars[0].SetMaxBarValue(1);

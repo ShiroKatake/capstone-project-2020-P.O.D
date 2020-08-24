@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6577456260396280554}
   - component: {fileID: 6577456260396280552}
   - component: {fileID: 6577456260396280567}
+  - component: {fileID: 5109866260622748205}
   - component: {fileID: 6577456260396280553}
   - component: {fileID: 6577456260396280564}
   - component: {fileID: 8421924202713650533}
@@ -27,6 +28,7 @@ GameObject:
   - component: {fileID: 4151841228902256699}
   - component: {fileID: 4078778705944399297}
   - component: {fileID: 3607602877255847704}
+  - component: {fileID: 6293543869217059979}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -73,30 +75,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d3aff46ccea6cf46a5548ffc2b50ebd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fusionReactorPrefab: {fileID: 7989155517478719925, guid: 24cf1029333088241ba2e0353577d9d1,
-    type: 3}
-  iceDrillPrefab: {fileID: 6356630498027900237, guid: 2863a907b049ebd4b92f73a71635ec1d,
-    type: 3}
-  boilerPrefab: {fileID: 2427136214263755661, guid: 0332084ab57deef4aa60fa1089c3c8cb,
-    type: 3}
-  greenhousePrefab: {fileID: 9054559055595012424, guid: 588682734d3c4d347bd6ed96a5858e1a,
-    type: 3}
-  incineratorPrefab: {fileID: 6057790016772902916, guid: a1ed15bf36ab48b499fe23ef5ceb8ca6,
-    type: 3}
-  shortRangeTurretPrefab: {fileID: 276844957512759736, guid: c70a812886afc7d40ac547ba1ec4bc8a,
-    type: 3}
-  longRangeTurretPrefab: {fileID: 276844957512759736, guid: fa376f85c4e268445b5be711efbccc8a,
-    type: 3}
-  buildingFoundationPrefab: {fileID: 7603203994333413329, guid: 701537750ff06cf4e87099996e3e14b2,
-    type: 3}
-  pooledFusionReactors: 10
-  pooledIceDrills: 10
-  pooledBoilers: 10
-  pooledGreenhouses: 10
-  pooledIncinerators: 10
-  pooledShortRangeTurrets: 10
-  pooledLongRangeTurrets: 10
-  pooledBuildingFoundations: 20
+  deactivateGameObjectInPool: 1
+  productEnums: 02000000030000000400000005000000060000000700000008000000
+  productPrefabs:
+  - {fileID: 7989155517478719925, guid: 24cf1029333088241ba2e0353577d9d1, type: 3}
+  - {fileID: 6356630498027900237, guid: 2863a907b049ebd4b92f73a71635ec1d, type: 3}
+  - {fileID: 2427136214263755661, guid: 0332084ab57deef4aa60fa1089c3c8cb, type: 3}
+  - {fileID: 9054559055595012424, guid: 588682734d3c4d347bd6ed96a5858e1a, type: 3}
+  - {fileID: 6057790016772902916, guid: a1ed15bf36ab48b499fe23ef5ceb8ca6, type: 3}
+  - {fileID: 276844957512759736, guid: c70a812886afc7d40ac547ba1ec4bc8a, type: 3}
+  - {fileID: 276844957512759736, guid: fa376f85c4e268445b5be711efbccc8a, type: 3}
+  productQuantities: 0a0000000a0000000a0000000a0000000a0000000a0000000a000000
+--- !u!114 &5109866260622748205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6577456260396280556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27571c0b991c1794fa553984b64eea29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deactivateGameObjectInPool: 1
+  productEnums: 00000000
+  productPrefabs:
+  - {fileID: 7603203994333413329, guid: 701537750ff06cf4e87099996e3e14b2, type: 3}
+  productQuantities: 14000000
 --- !u!114 &6577456260396280553
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -136,9 +142,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b7e2fda8e5699243a6ced0a90519911, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  alienPrefab: {fileID: 130242450852513669, guid: 9599bfef95d4b624988f58aeb615f4ee,
-    type: 3}
-  pooledAliens: 20
+  deactivateGameObjectInPool: 1
+  productEnums: 00000000
+  productPrefabs:
+  - {fileID: 130242450852513669, guid: 9599bfef95d4b624988f58aeb615f4ee, type: 3}
+  productQuantities: 14000000
   alienSpawnHeight: 5
 --- !u!114 &8421924202713650533
 MonoBehaviour:
@@ -193,9 +201,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7fc4aad8e7680a44a675c09ec3e7e18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  constructionFinishedFX: {fileID: 7598014629204696912, guid: 9a30dc8a4a1a76241acc06f41a0df0e0,
-    type: 3}
-  pooledFX: 3
+  deactivateGameObjectInPool: 1
+  productEnums: 00000000
+  productPrefabs:
+  - {fileID: 5264390033885133910, guid: 9a30dc8a4a1a76241acc06f41a0df0e0, type: 3}
+  productQuantities: 03000000
 --- !u!114 &6577456260396280555
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -208,8 +218,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e45559ce62b3d72469b093e76e863f90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gamepad: 0
-  operatingSystem: 0
   playerID: 0
   fusionReactor: {fileID: 0}
   iceDrill: {fileID: 0}
@@ -284,10 +292,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81afa3c8ee557624ca60ccaac224663c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mineralPrefab: {fileID: 6920960518473543034, guid: 4cce8f281ac35a346bc3e16f60d137a7,
-    type: 3}
-  pooledMinerals: 10
+  deactivateGameObjectInPool: 1
+  productEnums: 00000000
+  productPrefabs:
+  - {fileID: 6920960518473543034, guid: 4cce8f281ac35a346bc3e16f60d137a7, type: 3}
+  productQuantities: 00000000
   oreCount: 10
+  destroySpentMinerals: 1
 --- !u!114 &4887592665430866259
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -313,9 +324,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a4dc077d5b973b48a80ab01d657f106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  orePrefab: {fileID: 293440447126890837, guid: d37174262cff0824bb2285fd3464f7f1,
-    type: 3}
-  pooledOres: 2
+  deactivateGameObjectInPool: 1
+  productEnums: 00000000
+  productPrefabs:
+  - {fileID: 293440447126890837, guid: d37174262cff0824bb2285fd3464f7f1, type: 3}
+  productQuantities: 01000000
   oreValue: 1
 --- !u!114 &7712896613637118947
 MonoBehaviour:
@@ -329,11 +342,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ced650d805923324ea132ed606689792, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectilePrefabs:
+  deactivateGameObjectInPool: 1
+  productEnums: 010000000200000003000000
+  productPrefabs:
   - {fileID: 7263093150868635065, guid: 496aae763b28c0941aee53c7530873a3, type: 3}
   - {fileID: 7263093150868635065, guid: 85b4c26e2e308424b9459fced12ff21c, type: 3}
   - {fileID: 7263093150868635065, guid: 741497a96c519ec46b2d899d046f37ce, type: 3}
-  pooledProjectiles: 50
+  productQuantities: 0a0000003200000032000000
 --- !u!114 &4151841228902256699
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -382,3 +397,20 @@ MonoBehaviour:
   sceneLoaderPrefab: {fileID: 4921356873257255501, guid: 82928ef9969e85f4b8a1954494ac065f,
     type: 3}
   skipTutorialToggle: {fileID: 0}
+--- !u!114 &6293543869217059979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6577456260396280556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86469b3f5d03a974989a5df4cac3d508, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deactivateGameObjectInPool: 1
+  productEnums: 00000000
+  productPrefabs:
+  - {fileID: 1141022706116924874, guid: a5d44fe86f6865b4bb6c5707b8ec0dea, type: 3}
+  productQuantities: 02000000

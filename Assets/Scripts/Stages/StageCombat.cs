@@ -6,7 +6,7 @@ using UnityEngine;
 /// <summary>
 /// The game stage that takes the player through the combat mechanics.
 /// </summary>
-public class StageCombat : Stage
+public class StageCombat : SerializableSingleton<StageCombat>, IStage
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
@@ -41,29 +41,18 @@ public class StageCombat : Stage
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    //Singleton Public Property----------------------------------------------------------------------------------------------------------------------
+    //Basic Public Properties----------------------------------------------------------------------
 
     /// <summary>
-    /// StageCombat's singleton public property.
+    /// The ID of StageCombat. 
     /// </summary>
-    public StageCombat Instance { get; protected set; }
+    /// <returns></returns>
+    public EStage GetID()
+    {
+        return EStage.Combat;
+    }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
-
-    /// <summary>
-    /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
-    /// Awake() runs before Start().
-    /// </summary>
-    private void Awake()
-    {
-        if (Instance != null)
-        {
-            Debug.LogError("TThere should never be more than one StageCombat.");
-        }
-
-        Instance = this;
-        id = EStage.Combat;
-    }
 
     /// <summary>
     /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
@@ -81,21 +70,13 @@ public class StageCombat : Stage
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
-    /// The main behaviour of StageCombat.
-    /// </summary>
-    public override void StartExecution()
-    {
-        StartCoroutine(Execution());
-    }
-
-    /// <summary>
     /// The main behaviour of the stage. 
     /// </summary>
     /// <note>
     /// If the stage follows a linear path, use while(waiting){yield return null} statements to delay behaviour. If the stage can loop back on itself or
     /// jump ahead, use an initial yield return null followed by while(step > -1){switch(step){/*stage content*/}.
     /// </note>
-    protected override IEnumerator Execution()
+    public IEnumerator Execution()
     {
         yield return StartCoroutine(WaitForNightTime());
         yield return StartCoroutine(AlienWalkthrough());

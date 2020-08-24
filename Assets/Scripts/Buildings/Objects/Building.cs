@@ -49,22 +49,27 @@ public class Building : CollisionListener
     [Header("Offsets of Foundations from Position")]
     [SerializeField] private List<Vector3> buildingFoundationOffsets;
 
-    [Header("Renderers and Materials")]
+    [Header("Model, Materials, etc.")]
+    [SerializeField] private Transform model;
     [SerializeField] private List<RendererMaterialSet> rendererMaterialSets;
     [SerializeField] private Material buildingErrorMaterial;
 
     [Header("Sound Library")]
     [SerializeField] private AudioManager.ESound idleSound;
 
-	[Header("Effects")]
+    [Header("Effects")]
 	[SerializeField] private FinishedFX constructionFinishedFX;
 	[SerializeField] private float fxSize = 1f;
 
 	//Non-Serialized Fields------------------------------------------------------------------------                                                    
 
+    [Header("Testing")]
 	//Components
 	private Animator animator;
+    private TurretRangeFX turretRangeFX;
+    private FusionReactorBeam fusionReactorBeam;
     private Health health;
+    private List<GameObject> particleSystems;
     private MeshRenderer parentRenderer;
     private List<MeshRenderer> allRenderers;
     private ResourceCollector resourceCollector;
@@ -73,7 +78,6 @@ public class Building : CollisionListener
     private Terraformer terraformer;
     private TurretAiming turretAimer;
     private TurretShooting turretShooter;
-
     private Dictionary<string, List<CollisionReporter>> groupedReporters;
 
     //Positioning
@@ -84,12 +88,12 @@ public class Building : CollisionListener
     LayerMask groundLayerMask;
 
     //Other
+    [SerializeField] private bool awake;
     [SerializeField] private bool active = false;
-    private bool placed = false;
+    [SerializeField] private bool placed = false;
     [SerializeField] private bool operational = false;
-    private bool built;
+    [SerializeField] private bool built;
     private float normalBuildTime;
-    private bool boinging = false;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -99,11 +103,6 @@ public class Building : CollisionListener
     /// Whether the building is active and in the scene, or has been pooled and is inactive. Active should only be set in BuildingFactory.
     /// </summary>
     public bool Active { get => active; set => active = value; }
-
-    /// <summary>
-    /// Is the building going "boing" to indicate that it has finished building?
-    /// </summary>
-    public bool Boinging { get => boinging; }
 
     /// <summary>
     /// The position of building foundations relative to the building's transform.position value.
@@ -134,6 +133,11 @@ public class Building : CollisionListener
     /// The Building's Health component.
     /// </summary>
     public Health Health { get => health; }
+
+    /// <summary>
+    /// The transform of the building's model.
+    /// </summary>
+    public Transform Model { get => model; }
 
     /// <summary>
     /// How much ore it costs to build this building.
@@ -179,6 +183,11 @@ public class Building : CollisionListener
     /// How much water this building requires per second to function.
     /// </summary>
     public int WaterConsumption { get => waterConsumption; }
+
+    /// <summary>
+    /// This building's TurretRangeFX decal if it's a turret.
+    /// </summary>
+    public TurretRangeFX TurretRangeFX { get => turretRangeFX; set => turretRangeFX = value; }
 
     //Complex Public Properties--------------------------------------------------------------------                                                    
 
@@ -238,42 +247,57 @@ public class Building : CollisionListener
     /// </summary>
     private void Awake()
     {
-        animator = GetComponent<Animator>();
-
-		if (animator == null)
-		{
-			Debug.Log($"{this} building is missing an animator component.");
-		}
-
-        health = GetComponent<Health>();
-        size = GetComponent<Size>();
-        parentRenderer = GetComponentInChildren<MeshRenderer>();
-        allRenderers = new List<MeshRenderer>(parentRenderer.GetComponentsInChildren<MeshRenderer>());
-        rigidbody = GetComponentInChildren<Rigidbody>();
-        resourceCollector = GetComponent<ResourceCollector>();
-        terraformer = GetComponent<Terraformer>();
-        turretAimer = GetComponent<TurretAiming>();
-        turretShooter = GetComponent<TurretShooting>();
-        collisionReporters = GetCollisionReporters();
-        groupedReporters = new Dictionary<string, List<CollisionReporter>>();
-        otherColliders = new List<Collider>();
-        normalScale = transform.localScale;
-        normalBuildTime = buildTime;
-        groundLayerMask = LayerMask.GetMask("Ground");
-
-        foreach (CollisionReporter c in collisionReporters)
+        if (!awake)
         {
-            if (!groupedReporters.ContainsKey(c.Purpose))
+            //Debug.Log("Building Awake()");
+            animator = GetComponent<Animator>();
+
+            if (animator == null)
             {
-                groupedReporters[c.Purpose] = new List<CollisionReporter>();
+                Debug.Log($"{this} building is missing an animator component.");
             }
 
-            groupedReporters[c.Purpose].Add(c);
-        }
+            fusionReactorBeam = GetComponent<FusionReactorBeam>();
+            health = GetComponent<Health>();
+            size = GetComponent<Size>();
+            parentRenderer = GetComponentInChildren<MeshRenderer>();
+            allRenderers = new List<MeshRenderer>(parentRenderer.GetComponentsInChildren<MeshRenderer>());
+            rigidbody = GetComponentInChildren<Rigidbody>();
+            resourceCollector = GetComponent<ResourceCollector>();
+            terraformer = GetComponent<Terraformer>();
+            turretAimer = GetComponent<TurretAiming>();
+            turretShooter = GetComponent<TurretShooting>();
+            collisionReporters = GetCollisionReporters();
+            groupedReporters = new Dictionary<string, List<CollisionReporter>>();
+            otherColliders = new List<Collider>();
+            normalScale = transform.localScale;
+            normalBuildTime = buildTime;
+            groundLayerMask = LayerMask.GetMask("Ground");
 
-        if (size.DiameterRoundedUp < 1 || size.DiameterRoundedUp > 3)
-        {
-            Debug.LogError("Building.Size.RadiusRoundedUp is invalid. It needs to be between 1 and 3.");
+            particleSystems = new List<GameObject>();
+            ParticleSystem[] particleSystemsRaw = GetComponentsInChildren<ParticleSystem>();
+
+            foreach (ParticleSystem p in particleSystemsRaw)
+            {
+                particleSystems.Add(p.gameObject);
+            }
+
+            foreach (CollisionReporter c in collisionReporters)
+            {
+                if (!groupedReporters.ContainsKey(c.Purpose))
+                {
+                    groupedReporters[c.Purpose] = new List<CollisionReporter>();
+                }
+
+                groupedReporters[c.Purpose].Add(c);
+            }
+
+            if (size.DiameterRoundedUp < 1 || size.DiameterRoundedUp > 3)
+            {
+                Debug.LogError("Building.Size.RadiusRoundedUp is invalid. It needs to be between 1 and 3.");
+            }
+
+            awake = true;
         }
     }
 
@@ -312,11 +336,36 @@ public class Building : CollisionListener
     }
 
     /// <summary>
+    /// Enables or disables all mesh renderers attached to the building's models.
+    /// </summary>
+    /// <param name="enabled">Whether the mesh renderers will be enabled or disabled.</param>
+    public void SetMeshRenderersEnabled(bool enabled)
+    {
+        foreach (RendererMaterialSet s in rendererMaterialSets)
+        {
+            s.renderer.enabled = enabled;
+        }
+    }
+
+    /// <summary>
+    /// Enables or disables the game objects of all particle systems attached to the building's models.
+    /// </summary>
+    /// <param name="enabled">Whether the game objects of the particle systems will be enabled or disabled.</param>
+    public void SetParticleSystemsEnabled(bool enabled)
+    {
+        foreach (GameObject p in particleSystems)
+        {
+            p.SetActive(enabled);
+        }
+    }
+
+    /// <summary>
     /// Checks if the building is colliding while being placed, and updates colour appropriately.
     /// </summary>
     /// <returns>Is this building colliding with something?</returns>
     public bool IsPlacementValid()
     {
+        //Debug.Log("Start IsPlacementValid");
         if (active)
         {
             if (!placed)
@@ -355,13 +404,16 @@ public class Building : CollisionListener
             else
             {
                 Debug.Log($"Building {id} ran IsPlacementValid(), even though it's already placed.");
+                //Debug.Log("Finished IsPlacementValid");
                 return false;
             }
         }
         else
         {
+            //Debug.Log("Finished IsPlacementValid");
             return true;
         }
+
     }
 
     /// <summary>
@@ -462,6 +514,8 @@ public class Building : CollisionListener
     /// <param name="position">Where the building is to be placed.</param>
     public void Place(Vector3 position)
     {
+        //Debug.Log("Start Place");
+        //Debug.Log($"{this}.Placed() (start), collider position is {collider.position} (world) / {collider.localPosition} (local), model position is {model.position} (world) / {model.localPosition} (local)");
         placed = true; //Needs to occur before its position gets set to be on the ground so that it triggers the building Foundation at the proper time.
         ResourceController.Instance.Ore -= oreCost;
 		ResourceController.Instance.PowerConsumption += powerConsumption;
@@ -481,13 +535,22 @@ public class Building : CollisionListener
         transform.position = position;
         BuildingController.Instance.RegisterBuilding(this);
         animator.enabled = true;
-    }
+        //TurretRangeFXFactory.Instance.HideRange();
+        //Debug.Log($"{this}.Placed() (finished), collider position is {collider.position} (world) / {collider.localPosition} (local), model position is {model.position} (world) / {model.localPosition} (local)");
+
+        if (turretRangeFX != null)
+        {
+            TurretRangeFXFactory.Instance.Destroy(turretRangeFX);
+        }
+        //Debug.Log("Finish Place");
+	}
 
     /// <summary>
     /// Handles what should happen once the building has been built.
     /// </summary>
     public void FinishBuilding()
     {
+        //Debug.Log("Start Finish Building");
         built = true;
         Operational = true; //Using property to trigger activation of any resource collector component attached.
 
@@ -495,23 +558,31 @@ public class Building : CollisionListener
         {
             turretShooter.Place();
         }
+
         AudioManager.Instance.PlaySound(idleSound, gameObject);
         AudioManager.Instance.PlaySound(AudioManager.ESound.Building_Completes, gameObject);
+        //Debug.Log("Finish Finish Building");
     }
 
+    /// <summary>
+    /// Spawns a "building finished" particle effect.
+    /// </summary>
 	public void SpawnFinishedFX()
 	{
-		GameObject fx = FinishedFXFactory.Instance.Get();
+        //Debug.Log("Start SpawnFinishedFX");
+		FinishedFX fx = FinishedFXFactory.Instance.Get();
 		fx.transform.position = transform.position;
 		fx.transform.localScale = new Vector3(fxSize, fxSize, fxSize);
-		fx.SetActive(true);
-	}
+		fx.gameObject.SetActive(true);
+       // Debug.Log("Finish SpawnFinishedFX");
+    }
 
     /// <summary>
     /// Resets Building to its initial values when it is returned to the building pool.
     /// </summary>
     public void Reset()
     {
+        //Debug.Log("Start Reset");
         placed = false; //Needs to occur first so that BuildingFoundations know to ignore this building
         active = false;
         colliding = false;
@@ -519,7 +590,6 @@ public class Building : CollisionListener
 
         //TODO: reset animator? i.e. disable and set animation progress back to 0?
         animator.enabled = false;
-
         health.Reset();
         Operational = false;
 
@@ -528,19 +598,33 @@ public class Building : CollisionListener
         transform.localScale = normalScale;
         buildTime = normalBuildTime;
 
-        if (buildingType == EBuilding.ShortRangeTurret || buildingType == EBuilding.LongRangeTurret)
+        switch (buildingType)
         {
-            turretAimer.Reset();
-            turretShooter.Reset();
+            case EBuilding.ShortRangeTurret:
+            case EBuilding.LongRangeTurret:
+                turretAimer.Reset();
+                turretShooter.Reset();
+                TurretRangeFXFactory.Instance.Destroy(turretRangeFX);
+                break;
+            case EBuilding.FusionReactor:
+                fusionReactorBeam.Deactivate();
+                break;
         }
 
         foreach (RendererMaterialSet r in rendererMaterialSets)
         {
-            r.renderer.material = r.transparent;
+            for (int i = 0; i < r.renderer.materials.Length; i++)
+            {
+                r.renderer.materials[i] = r.opaque;
+            }
+
+            r.renderer.enabled = false;
         }
 
         SetCollidersEnabled("Body", false);
-    }
+        SetParticleSystemsEnabled(false);		
+        //Debug.Log("Finish Reset");
+	}
 
     //ICollisionListener Triggered Methods---------------------------------------------------------
 

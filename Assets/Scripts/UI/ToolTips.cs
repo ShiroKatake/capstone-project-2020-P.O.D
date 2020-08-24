@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ToolTips : MonoBehaviour
+public class ToolTips : SerializableSingleton<ToolTips>
 {
     //All variables being set up setting up an Enum to direct what tooltip should pop up
-    private static ToolTips instance;
     [SerializeField] private Camera uiCamera;
 
     private GameObject current_tooltip;
@@ -41,12 +40,9 @@ public class ToolTips : MonoBehaviour
     //Array of tool tips
     [SerializeField] private ToolTip[] tooltipImages;
 
-    
-
-    private void Awake()
+    protected override void Awake()
     {
-        instance = this;
-       
+        base.Awake();
         
             //spriteRenderer = tooltip.GetComponent<SpriteRenderer>();
         //Builds the dictionary
@@ -107,7 +103,7 @@ public class ToolTips : MonoBehaviour
             }
         }
     }
-    public void ShowtoolTip(Etooltips toolImage)
+    public void ShowToolTip(Etooltips toolImage)
     {
         //mousefollow(toolImage);
         //updateLocation(toolImage);
@@ -132,23 +128,10 @@ public class ToolTips : MonoBehaviour
 
     //}
     // removes the tooltip from view
-    private void HideToolTip()
+    public void HideToolTip()
     {
         GameObject tobeKilled = this.transform.GetChild(transform.childCount - 1).gameObject;
         Destroy(tobeKilled);
         //gameObject.SetActive(false);
-    }
-
- 
-    // What is to be called from other classes when they want to show or hide the tool tip remotely
-    public static void showTooltip_Static(Etooltips toolImage)
-    {
-        instance.ShowtoolTip(toolImage);
-    }
-
-    public static void hideToolTip_Static()
-    {
-        instance.HideToolTip();
-    }
-    
+    }   
 }

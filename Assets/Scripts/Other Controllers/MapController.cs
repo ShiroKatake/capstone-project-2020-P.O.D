@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// A controller class for tracking which parts of the map have buildings, can be spawned to by aliens, etc.
 /// </summary>
-public class MapController : MonoBehaviour
+public class MapController : SerializableSingleton<MapController>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
@@ -33,29 +33,16 @@ public class MapController : MonoBehaviour
     private List<Vector3> alienSpawnablePositions;
     private List<Vector3> tutorialAlienSpawnablePositions;
 
-    //Public Properties------------------------------------------------------------------------------------------------------------------------------
-
-    //Singleton Public Property--------------------------------------------------------------------                                                    
-
-    /// <summary>
-    /// MapController's singleton public property.
-    /// </summary>
-    public static MapController Instance { get; protected set; }
-
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
     /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
     /// Awake() runs before Start().
     /// </summary>
-    private void Awake()
+    protected override void Awake()
     {
-        if (Instance != null)
-        {
-            Debug.LogError("There should never be more than one MapController.");
-        }
 
-        Instance = this;
+        base.Awake();
         availableBuildingPositions = new bool[xMax + 1 , zMax + 1];
         availableAlienPositions = new bool[xMax + 1, zMax + 1];
         alienExclusionArea = new bool[xMax + 1, zMax + 1];
@@ -169,7 +156,7 @@ public class MapController : MonoBehaviour
         if (alien)
         {
             //Check if in alien exclusion area
-            if (StageManager.Instance.CurrentStage.ID != EStage.Combat && alienExclusionArea[(int)position.x, (int)position.z]) //Need to be able to spawn within the exclusion area during the tutorial
+            if (StageManager.Instance.CurrentStage.GetID() != EStage.Combat && alienExclusionArea[(int)position.x, (int)position.z]) //Need to be able to spawn within the exclusion area during the tutorial
             {
                 //Debug.Log($"Can't spawn an alien at {position}, which is within the alien exclusion area.");
                 return false;       
@@ -230,7 +217,7 @@ public class MapController : MonoBehaviour
     ///// <returns>A position for an alien to spawn at.</returns>
     //public Vector3 RandomAlienSpawnablePos(List<Vector3> temporarilyUnavailablePositions)
     //{
-    //    List<Vector3> availablePositions = new List<Vector3>((StageManager.Instance.CurrentStage.ID == EStage.Combat ? tutorialAlienSpawnablePositions : alienSpawnablePositions));
+    //    List<Vector3> availablePositions = new List<Vector3>((StageManager.Instance.CurrentStage.GetID() == EStage.Combat ? tutorialAlienSpawnablePositions : alienSpawnablePositions));
 
     //    foreach (Vector3 p in temporarilyUnavailablePositions)
     //    {
@@ -260,7 +247,7 @@ public class MapController : MonoBehaviour
     /// <returns>The current list of alien spawnable positions.</returns>
     public List<Vector3> GetAlienSpawnablePositions()
     {
-        return StageManager.Instance.CurrentStage.ID == EStage.Combat ? tutorialAlienSpawnablePositions : alienSpawnablePositions;
+        return StageManager.Instance.CurrentStage.GetID() == EStage.Combat ? tutorialAlienSpawnablePositions : alienSpawnablePositions;
     }
 
     //Entity Registration Methods------------------------------------------------------------------
@@ -318,7 +305,7 @@ public class MapController : MonoBehaviour
 
         if (x >= 0 && x <= xMax && z >= 0 && z <= zMax)
         {
-            if (StageManager.Instance.CurrentStage.ID == EStage.Combat)
+            if (StageManager.Instance.CurrentStage.GetID() == EStage.Combat)
             {
                 Vector3 pos = new Vector3(x, AlienFactory.Instance.AlienSpawnHeight, z);
                 tutorialAlienSpawnablePositions.Remove(pos);
