@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Updates a game object's name based on it's world space position.
+/// Snaps objects' x and z coordinates to an integer position.
 /// </summary>
 [ExecuteInEditMode]
-public class NameByPosition : MonoBehaviour
+public class SnapToGrid : MonoBehaviour
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
     //Serialized Fields----------------------------------------------------------------------------
 
-    [SerializeField] private GameObject namedGameObject;
-    [SerializeField] private string name;
+    [SerializeField] Transform gameObjectToPosition;
+    //[SerializeField] Vector3 offset;
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -25,7 +25,7 @@ public class NameByPosition : MonoBehaviour
     {
         if (!Application.isEditor || Application.isPlaying)
         {
-            Debug.LogError($"You left NameByPosition enabled for {this}, which is gonna impact performance. Please disable this script on the prefab / game object and go again. This should only be enabled for the instant you need to rename a lot of somethings quickly.");
+            Debug.LogError($"You left SnapToGrid enabled for {this}, which is gonna impact performance. Please disable this script on the prefab / game object and go again. This should only be enabled for the instant you need to snap-to-grid a lot of somethings quickly.");
             this.enabled = false;
         }
     }
@@ -38,7 +38,11 @@ public class NameByPosition : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        namedGameObject.name = $"{name} ({transform.position.x}, {transform.position.y}, {transform.position.z})";
+        Vector3 position = gameObjectToPosition.position;
+        position.x = Mathf.Round(position.x);
+        position.z = Mathf.Round(position.z);
+        //position += offset;
+        gameObjectToPosition.position = position;
         this.enabled = false;
     }
 #endif
