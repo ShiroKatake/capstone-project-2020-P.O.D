@@ -60,20 +60,25 @@ MonoBehaviour:
   wasteConsumption: 0
   buildTime: 10
   cliffRaycastOffsets:
-  - {x: -0.6, y: 0, z: -0.6}
-  - {x: -0.95, y: 0, z: 0}
-  - {x: -0.6, y: 0, z: 0.6}
-  - {x: 0, y: 0, z: -0.95}
+  - {x: -0.875, y: 0, z: -0.875}
+  - {x: -1.3, y: 0, z: 0}
+  - {x: -0.875, y: 0, z: 0.875}
+  - {x: 0, y: 0, z: -1.3}
   - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0.95}
-  - {x: 0.6, y: 0, z: -0.6}
-  - {x: 0.95, y: 0, z: 0}
-  - {x: 0.6, y: 0, z: 0.6}
+  - {x: 0, y: 0, z: 1.3}
+  - {x: 0.875, y: 0, z: -0.875}
+  - {x: 1.3, y: 0, z: 0}
+  - {x: 0.875, y: 0, z: 0.875}
   buildingFoundationOffsets:
-  - {x: 0.5, y: -0.45, z: -0.5}
-  - {x: 0.5, y: -0.45, z: 0.5}
-  - {x: -0.5, y: -0.45, z: -0.5}
-  - {x: -0.5, y: -0.45, z: 0.5}
+  - {x: -1, y: -0.45, z: -1}
+  - {x: -1, y: -0.45, z: 0}
+  - {x: -1, y: -0.45, z: 1}
+  - {x: 0, y: -0.45, z: -1}
+  - {x: 0, y: -0.45, z: 0}
+  - {x: 0, y: -0.45, z: 1}
+  - {x: 1, y: -0.45, z: -1}
+  - {x: 1, y: -0.45, z: 0}
+  - {x: 1, y: -0.45, z: 1}
   model: {fileID: 4595218341875925051}
   rendererMaterialSets:
   - renderer: {fileID: 1270843474368464628}
@@ -86,9 +91,11 @@ MonoBehaviour:
   constructionFinishedFX: {fileID: 5264390033885133910, guid: 9a30dc8a4a1a76241acc06f41a0df0e0,
     type: 3}
   fxSize: 1.5
-  collider: {fileID: 514400051476016873}
+  awake: 0
   active: 0
+  placed: 0
   operational: 0
+  built: 0
 --- !u!114 &6987495701241030554
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -128,7 +135,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e087b4d1f91fcb941a830564ec25c878, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radius: 0.75
+  radius: 1.5
 --- !u!114 &-5340766545175857894
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -226,7 +233,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3444443224165547048}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.48, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6609532187631785789}
@@ -243,7 +250,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.9, y: 2, z: 1.9}
+  m_Size: {x: 2.9, y: 3, z: 2.9}
   m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!114 &2831621559602170470
 MonoBehaviour:
@@ -293,8 +300,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5797989508795119653}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0.293, z: -0.084}
-  m_LocalScale: {x: 0.17, y: 0.17, z: 0.17}
+  m_LocalPosition: {x: 0.0025004, y: 0.77897006, z: -0.074064}
+  m_LocalScale: {x: 0.275, y: 0.275, z: 0.275}
   m_Children:
   - {fileID: 4595218341875925051}
   m_Father: {fileID: 6609532187631785789}
