@@ -51,15 +51,6 @@ public class OreFactory : Factory<OreFactory, Ore, ENone>
         return base.Get(type);
     }
 
-    ///// <summary>
-    ///// Destroy an ore.
-    ///// </summary>
-    ///// <param name="ore">The ore to destroy.</param>
-    //public void Destroy(Ore ore)
-    //{
-    //    Destroy(ENone.None, ore);
-    //}
-
     /// <summary>
     /// Destroy an ore.
     /// </summary>

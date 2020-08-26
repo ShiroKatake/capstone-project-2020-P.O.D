@@ -9,16 +9,6 @@ public class BuildingFoundationFactory : Factory<BuildingFoundationFactory, Buil
 {
     //Triggered Methods (Building Foundations)-------------------------------------------------------------------------------------------------------
 
-    ///// <summary>
-    ///// Get a building foundation from BuildingFactory.
-    ///// </summary>
-    ///// <param name="position">The position the building foundation should be instantiated at.</param>
-    ///// <returns>A building foundation.</returns>
-    //public BuildingFoundation Get(Vector3 position)
-    //{
-    //    return Get(ENone.None, position);
-    //}
-
     /// <summary>
     /// Get a building foundation from BuildingFactory.
     /// </summary>
@@ -32,15 +22,6 @@ public class BuildingFoundationFactory : Factory<BuildingFoundationFactory, Buil
         buildingFoundation.Activate();
         return buildingFoundation;
     }
-
-    ///// <summary>
-    ///// Destroy a building foundation.
-    ///// </summary>
-    ///// <param name="buildingFoundation">The building foundation to be destroyed.</param>
-    //public void Destroy(BuildingFoundation buildingFoundation)
-    //{
-    //    Destroy(ENone.None, buildingFoundation);
-    //}
 
     /// <summary>
     /// Destroy a building foundation.

@@ -73,15 +73,6 @@ public class AlienFactory : Factory<AlienFactory, Alien, ENone>
         return result;
     }
 
-    ///// <summary>
-    ///// Handles the destruction of aliens.
-    ///// </summary>
-    ///// <param name="alien">The alien to be destroyed.</param>
-    //public void Destroy(Alien alien)
-    //{
-    //    Destroy(ENone.None, alien);
-    //}
-
     /// <summary>
     /// Handles the destruction of aliens.
     /// </summary>

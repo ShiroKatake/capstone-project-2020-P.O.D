@@ -59,16 +59,6 @@ public class MineralFactory : Factory<MineralFactory, Mineral, ENone>
 
     //Triggered Methods -----------------------------------------------------------------------------------------------------------------------------
 
-    ///// <summary>
-    ///// Get a new mineral node.
-    ///// </summary>
-    ///// <param name="position">The position the mineral should be instantiated at.</param>
-    ///// <returns>A mineral node.</returns>
-    //public override Mineral Get(Vector3 position, ENone type = ENone.None)
-    //{
-    //    return Get(position, ENone.None);
-    //}
-
     /// <summary>
     /// Get a new mineral node.
     /// </summary>
@@ -94,15 +84,6 @@ public class MineralFactory : Factory<MineralFactory, Mineral, ENone>
         mineral.SetCollidersEnabled(true);
         return mineral;
     }
-
-    ///// <summary>
-    ///// Destroy a mineral node.
-    ///// </summary>
-    ///// <param name="mineral">The mineral to destroy.</param>
-    //public void Destroy(Mineral mineral)
-    //{
-    //    Destroy(ENone.None, mineral);
-    //}
 
     /// <summary>
     /// Destroy a mineral node.

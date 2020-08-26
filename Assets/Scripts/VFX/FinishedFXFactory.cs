@@ -30,15 +30,6 @@ public class FinishedFXFactory : Factory<FinishedFXFactory, FinishedFX, ENone>
         return fx;
     }
 
-    ///// <summary>
-    ///// Handles the destruction of FinishedFXs.
-    ///// </summary>
-    ///// <param name="fx">The FinishedFX to be destroyed.</param>
-    //public void Destroy(FinishedFX fx)
-    //{
-    //    Destroy(ENone.None, fx);
-    //}
-
     /// <summary>
     /// Handles the destruction of FinishedFXs.
     /// </summary>
