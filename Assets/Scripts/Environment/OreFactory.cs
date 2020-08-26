@@ -40,33 +40,34 @@ public class OreFactory : Factory<OreFactory, Ore, ENone>
     }
 
     //Triggered Methods -----------------------------------------------------------------------------------------------------------------------------
-    
+
     /// <summary>
     /// Get a new ore.
     /// </summary>
+    /// <param name="type">The type of ore to instantiate. Should be left as default value of ENone.None.</param>
     /// <returns>An ore.</returns>
-    public Ore Get()
+    public override Ore Get(ENone type = ENone.None)
     {
-        return Get(ENone.None);
+        return base.Get(type);
     }
+
+    ///// <summary>
+    ///// Destroy an ore.
+    ///// </summary>
+    ///// <param name="ore">The ore to destroy.</param>
+    //public void Destroy(Ore ore)
+    //{
+    //    Destroy(ENone.None, ore);
+    //}
 
     /// <summary>
     /// Destroy an ore.
     /// </summary>
     /// <param name="ore">The ore to destroy.</param>
-    public void Destroy(Ore ore)
-    {
-        Destroy(ENone.None, ore);
-    }
-
-    /// <summary>
-    /// Destroy an ore.
-    /// </summary>
-    /// <param name="type">The type of ore to destroy.</param>
-    /// <param name="ore">The ore to destroy.</param>
-	public override void Destroy(ENone type, Ore ore)
+    /// <param name="type">The type of ore to destroy. Should be left as default value of ENone.None.</param>
+	public override void Destroy(Ore ore, ENone type = ENone.None)
 	{
 		ore.gameObject.SetActive(false);
-        base.Destroy(type, ore);
+        base.Destroy(ore, type);
 	}
 }

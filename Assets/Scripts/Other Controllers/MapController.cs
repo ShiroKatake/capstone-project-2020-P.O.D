@@ -112,25 +112,25 @@ public class MapController : SerializableSingleton<MapController>
     public bool PositionAvailableForBuilding(Building building)
     {
         Vector3 buildingPos = building.transform.position;
-        string positions = "";
+        //string positions = "";
 
-        foreach (Vector3 offset in building.BuildingFoundationOffsets)
-        {
-            positions += $"{offset}, ";
-        }
+        //foreach (Vector3 offset in building.BuildingFoundationOffsets)
+        //{
+        //    positions += $"{offset}, ";
+        //}
 
-        Debug.Log($"MapController checking positions [{positions}] available for building");
+        //Debug.Log($"MapController checking positions [{positions}] available for building");
 
         foreach (Vector3 offset in building.BuildingFoundationOffsets)
         {
             if (!PositionAvailableForSpawning(buildingPos + offset, false))
             {
-                Debug.Log($"MapController.PositionAvailableForBuilding returned false for position {buildingPos + offset}");
+                //Debug.Log($"MapController.PositionAvailableForBuilding returned false for position {buildingPos + offset}");
                 return false;
             }
         }
 
-        Debug.Log("MapController.PositionAvailableForBuilding returned true");
+        //Debug.Log("MapController.PositionAvailableForBuilding returned true");
         return true;
     }
 
