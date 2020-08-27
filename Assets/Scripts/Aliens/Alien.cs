@@ -17,8 +17,10 @@ public class Alien : MonoBehaviour, IMessenger
     [Header("Components")]
     [SerializeField] private List<Collider> bodyColliders;
 	[SerializeField] private AlienClaw alienWeapon;
+
 	[Header("Stats")] 
     [SerializeField] private int id;
+    [SerializeField] private EAlien type;
     [SerializeField] private float attackRange;
     [SerializeField] private float damage;
     [SerializeField] private float attackCooldown;
@@ -83,6 +85,11 @@ public class Alien : MonoBehaviour, IMessenger
     /// Alien's MeshRenderer component.
     /// </summary>
     public SkinnedMeshRenderer Renderer { get => renderer; }
+
+    /// <summary>
+    /// Alien's EAlien type.
+    /// </summary>
+    public EAlien Type { get => type; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -377,7 +384,7 @@ public class Alien : MonoBehaviour, IMessenger
 	/// </summary>
 	public void DestroyAlien()
 	{
-		AlienFactory.Instance.Destroy(this);
+		AlienFactory.Instance.Destroy(this, type);
 	}
 
 	/// <summary>

@@ -172,6 +172,8 @@ public class AlienController : SerializableSingleton<AlienController>
                 float offsetMultiplier = 2;
                 List<Vector3> availableOffsets = new List<Vector3>();
                 List<Vector3> availablePositions = MapController.Instance.GetAlienSpawnablePositions();
+                float crawlerFrequency = 0.2f;
+                float cumulativeCrawlerFrequency = 0;
 
                 for (int i = 0; i < spawnCount; i++)
                 //for (int i = 0; i < 100; i++)
@@ -212,18 +214,25 @@ public class AlienController : SerializableSingleton<AlienController>
                         RaycastHit rayHit;
                         NavMeshHit navHit;
                         Physics.Raycast(spawnPos, Vector3.down, out rayHit, 25, groundLayerMask);
-                        Alien alien = AlienFactory.Instance.Get(new Vector3(spawnPos.x, rayHit.point.y, spawnPos.z));
+                        Alien alien = AlienFactory.Instance.Get(new Vector3(spawnPos.x, rayHit.point.y, spawnPos.z), (cumulativeCrawlerFrequency >= 1 ? EAlien.Crawler : EAlien.Scuttler));
                         alien.Setup(IdGenerator.Instance.GetNextId());
 
                         if (NavMesh.SamplePosition(alien.transform.position, out navHit, 1, NavMesh.AllAreas))
                         {
                             aliens.Add(alien);
                             swarmSize++;
+
+                            if (cumulativeCrawlerFrequency >= 1)
+                            {
+                                cumulativeCrawlerFrequency -= 1;
+                            }
+
+                            cumulativeCrawlerFrequency += crawlerFrequency;
                         }
                         else
                         {
                             MapController.Instance.RegisterOffMeshPosition(spawnPos);
-                            AlienFactory.Instance.Destroy(alien);
+                            AlienFactory.Instance.Destroy(alien, alien.Type);
                             i--;
                         }
                         
