@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIColorManager : MonoBehaviour
+public class UIColorManager : SerializableSingleton<UIColorManager>
 {
-    [SerializeField] private Image UIBackground;
-    [SerializeField] private Image UIForeground;
+    [SerializeField] private List<Image> UIBackgrounds = new List<Image>();
+    [SerializeField] private List<Image> UIBorders = new List<Image>();
 
     [SerializeField] private Color alienAttackBackground;
-    [SerializeField] private Color alienAttackForeground;
+    [SerializeField] private Color alienAttackBorder;
     [SerializeField] private Color backgroundDay;
     [SerializeField] private Color backgroundNight;
-    [SerializeField] private Color foregroundDay;
-    [SerializeField] private Color foregroundNight;
+    [SerializeField] private Color borderDay;
+    [SerializeField] private Color borderNight;
     
     [SerializeField] private float duration = 0;
     private float eDuration = 0.5f;
@@ -22,43 +22,35 @@ public class UIColorManager : MonoBehaviour
     private Color eBackgroundCurColor;
     private Color backgroundNewColor;
     private Color eBackgroundNewColor;
-    private Color foregroundCurColor;
-    private Color eForegroundCurColor;
-    private Color foregroundNewColor;
-    private Color eForegroundNewColor;
+    private Color borderCurColor;
+    private Color eBorderCurColor;
+    private Color borderNewColor;
+    private Color eBorderNewColor;
 
     private bool alienPhaseOne = false;
     private bool alienPhaseTwo = false;
     private float t = 0;
     private float et = 0;
 
-    public static UIColorManager Instance {get; protected set;}
-
-    private void Awake() {
-        if (Instance != null)
-        {
-            Debug.LogError("There should never be 2 or more Color Managers.");
-        }
-
-        Instance = this;
-
+    protected override void Awake() {
+        base.Awake();
         backgroundCurColor = backgroundDay;
-        foregroundCurColor = foregroundDay;
+        borderCurColor = borderDay;
         backgroundNewColor = backgroundDay;
-        foregroundNewColor = foregroundDay;
+        borderNewColor = borderDay;
 
-        UIBackground.GetComponent<Image>().color = backgroundCurColor;
-        UIForeground.GetComponent<Image>().color = foregroundCurColor;
+        SetBackgroundColor(backgroundCurColor);
+		SetBorderColor(borderCurColor);
 
     }
 
     public void ColorUpdate() {
-        if (Player.Instance.RewiredPlayer.GetButton("EnemyAttack") && !alienPhaseOne && !alienPhaseTwo){
+        if (PlayerController.Instance.PlayerInputManager.GetButton("EnemyAttack") && !alienPhaseOne && !alienPhaseTwo){
             eBackgroundCurColor = backgroundCurColor;
-            eForegroundCurColor = foregroundCurColor;
+            eBorderCurColor = borderCurColor;
 
             eBackgroundNewColor = alienAttackBackground;
-            eForegroundCurColor = alienAttackForeground;
+            eBorderCurColor = alienAttackBorder;
 
             alienPhaseOne = true;
 
@@ -71,7 +63,7 @@ public class UIColorManager : MonoBehaviour
 
         //for smooth transition replace first cur color field with starting color field
         backgroundCurColor = Color.Lerp(backgroundCurColor, backgroundNewColor, t);
-        foregroundCurColor = Color.Lerp(foregroundCurColor, foregroundNewColor, t);
+        borderCurColor = Color.Lerp(borderCurColor, borderNewColor, t);
 
         if (alienPhaseOne || alienPhaseTwo){
             if (et<1){
@@ -79,14 +71,14 @@ public class UIColorManager : MonoBehaviour
             }
 
             eBackgroundCurColor = Color.Lerp(eBackgroundCurColor, eBackgroundNewColor, et);
-            eForegroundCurColor = Color.Lerp(eForegroundCurColor, eForegroundNewColor, et);
+            eBorderCurColor = Color.Lerp(eBorderCurColor, eBorderNewColor, et);
             
-            UIBackground.GetComponent<Image>().color = eBackgroundCurColor;
-            UIForeground.GetComponent<Image>().color = eForegroundCurColor;
+            SetBackgroundColor(eBackgroundCurColor);
+            SetBorderColor(eBorderCurColor);
 
         } else {
-            UIBackground.GetComponent<Image>().color = backgroundCurColor;
-            UIForeground.GetComponent<Image>().color = foregroundCurColor;
+			SetBackgroundColor(backgroundCurColor);
+			SetBorderColor(borderCurColor);
         }
 
         if (et >= 1 && alienPhaseOne){
@@ -95,7 +87,7 @@ public class UIColorManager : MonoBehaviour
             et = 0;
 
             eBackgroundNewColor = backgroundCurColor;
-            eForegroundNewColor = foregroundNewColor;
+            eBorderNewColor = borderNewColor;
         } else if (et >= 1 && alienPhaseTwo) {
             alienPhaseTwo = false;
             et = 0;
@@ -104,19 +96,40 @@ public class UIColorManager : MonoBehaviour
         
     }
 
-    public void SetNight(){
+	public void SetBackgroundColor(Color color)
+	{
+		foreach (Image background in UIBackgrounds)
+		{
+            if (background.color.a < 0)
+            {
+                color.a = background.color.a;
+            }
+
+            background.color = color;
+        }
+	}
+
+	public void SetBorderColor(Color color)
+	{
+		foreach (Image border in UIBorders)
+		{
+			//border.GetComponent<Image>().color = color;
+		}
+	}
+
+	public void SetNight(){
         backgroundCurColor = backgroundDay;
-        foregroundCurColor = foregroundDay;
+        borderCurColor = borderDay;
         backgroundNewColor = backgroundNight;
-        foregroundNewColor = foregroundNight;
+        borderNewColor = borderNight;
         t = 0;
     }
 
     public void SetDay(){
         backgroundCurColor = backgroundNight;
-        foregroundCurColor = foregroundNight;
+        borderCurColor = borderNight;
         backgroundNewColor = backgroundDay;
-        foregroundNewColor = foregroundDay;
+        borderNewColor = borderDay;
         t = 0;
     }
 }

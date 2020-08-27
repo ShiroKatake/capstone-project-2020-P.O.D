@@ -5,37 +5,35 @@ using UnityEngine;
 /// <summary>
 /// A manager class for resource gathering and usage.
 /// </summary>
-public class ResourceController : MonoBehaviour
+public class ResourceController : SerializableSingleton<ResourceController>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
     //Serialized Fields----------------------------------------------------------------------------                                                    
 
+    [Header("Resource Supplies")]
     [SerializeField] private int ore;
-    [SerializeField] private int powerConsumption;
     [SerializeField] private int powerSupply;
-    [SerializeField] private int waterConsumption;
-    [SerializeField] private int waterSupply;
-    [SerializeField] private int wasteConsumption;
     [SerializeField] private int wasteSupply;
+    [SerializeField] private int waterSupply;
+
+    [Header("Resource Consumption")]
+    [SerializeField] private int powerConsumption;
+    [SerializeField] private int wasteConsumption;
+    [SerializeField] private int waterConsumption;
+
+    [Header("Testing")]
+    [SerializeField] private bool getDeveloperResources;
+    [SerializeField] private int developerResources;
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
     //Resource Consumption
 
     //Resource Availability
-    private bool powerAvailable = true;
-    private bool wasteAvailable = true;
-    private bool waterAvailable = true;
-
-    //Public Properties------------------------------------------------------------------------------------------------------------------------------
-
-    //Singleton Public Property--------------------------------------------------------------------                                                    
-
-    /// <summary>
-    /// ResourceController's singleton public property.
-    /// </summary>
-    public static ResourceController Instance { get; protected set; }
+    private bool powerAvailable = false;
+    private bool wasteAvailable = false;
+    private bool waterAvailable = false;
 
     //Basic Public Properties----------------------------------------------------------------------                                                                                                                          
 
@@ -77,6 +75,39 @@ public class ResourceController : MonoBehaviour
         {
             powerSupply = value;
             CheckResourceSupply();
+        }
+    }
+
+    /// <summary>
+    /// How much power the player has to spare.
+    /// </summary>
+    public int SurplusPower
+    {
+        get
+        {
+            return powerSupply - PowerConsumption;
+        }
+    }
+
+    /// <summary>
+    /// How much waste the player has to spare.
+    /// </summary>
+    public int SurplusWaste
+    {
+        get
+        {
+            return wasteSupply - wasteConsumption;
+        }
+    }
+
+    /// <summary>
+    /// How much water the player has to spare.
+    /// </summary>
+    public int SurplusWater
+    {
+        get
+        {
+            return waterSupply - waterConsumption;
         }
     }
 
@@ -148,30 +179,6 @@ public class ResourceController : MonoBehaviour
         }
     }
 
-    //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
-
-    /// <summary>
-    /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
-    /// Awake() runs before Start().
-    /// </summary>
-    private void Awake()
-    {
-        if (Instance != null)
-        {
-            Debug.LogError("There should never be more than one [CLASSNAME].");
-        }
-
-        Instance = this;
-    }
-
-    private void Start()
-    {
-        ResourceTextManager.Instance.SetMetalText(ore.ToString());
-        ResourceTextManager.Instance.SetWaterText(waterSupply.ToString());
-        ResourceTextManager.Instance.SetEnergyUsedText(PowerConsumption.ToString());
-        ResourceTextManager.Instance.SetEnergyMaxText(PowerSupply.ToString());
-    }
-
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
@@ -179,11 +186,29 @@ public class ResourceController : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        //For testing by changing resource values in the inspector.
-        CheckResourceSupply();
+        if (!PauseMenuManager.Paused)
+        {
+            CheckDeveloperResources();
+            CheckResourceSupply();
+        }
     }
 
     //Recurring Methods (Update())------------------------------------------------------------------------------------------------------------------  
+
+    /// <summary>
+    /// Checks if the developer has requested extra resources in the inspector, and grants them one batch of them if so.
+    /// </summary>
+    private void CheckDeveloperResources()
+    {
+        if (getDeveloperResources)
+        {
+            ore += developerResources;
+            powerSupply += developerResources;
+            wasteSupply += developerResources;
+            waterSupply += developerResources;
+            getDeveloperResources = false;
+        }
+    }
 
     /// <summary>
     /// Check if there is sufficient or insufficient supplies of either resource, and shutdown and restore buildings appropriately.
@@ -196,19 +221,19 @@ public class ResourceController : MonoBehaviour
         bool initialWasteStatus = wasteAvailable;
 
         //Check if power needs to be updated
-        if ((powerAvailable && powerSupply < powerConsumption) || (!powerAvailable && powerSupply >= powerConsumption))
+        if ((powerAvailable && powerSupply < powerConsumption) || (!powerAvailable && powerSupply >= powerConsumption && powerSupply != 0))
         {
             powerAvailable = !powerAvailable;
         }
 
         //Check if water needs to be updated
-        if ((waterAvailable && waterSupply < waterConsumption) || (!waterAvailable && waterSupply >= waterConsumption))
+        if ((waterAvailable && waterSupply < waterConsumption) || (!waterAvailable && waterSupply >= waterConsumption && waterSupply != 0))
         {
             waterAvailable = !waterAvailable;
         }
 
         //Check if waste needs to be updated
-        if ((wasteAvailable && wasteSupply < wasteConsumption) || (!wasteAvailable && wasteSupply >= wasteConsumption))
+        if ((wasteAvailable && wasteSupply < wasteConsumption) || (!wasteAvailable && wasteSupply >= wasteConsumption && wasteSupply != 0))
         {
             wasteAvailable = !wasteAvailable;
         }

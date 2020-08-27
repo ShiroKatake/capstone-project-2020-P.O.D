@@ -6,7 +6,7 @@ using UnityEngine.UI;
 /// <summary>
 /// A class to control the clock in the UI and the day-night cycle.
 /// </summary>
-public class ClockController : MonoBehaviour
+public class ClockController : SerializableSingleton<ClockController>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
@@ -25,20 +25,16 @@ public class ClockController : MonoBehaviour
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
-    private bool daytime;
 	[SerializeField] private float time12hr;
     [SerializeField] private float time24hr;
     private float halfCycleDuration;
+
+    private bool daytime;
+    private bool paused;
+
     private RectTransform rectTransform;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
-
-    //Singleton Public Property--------------------------------------------------------------------                                                    
-
-    /// <summary>
-    /// DayNightCycleController's singleton public property.
-    /// </summary>
-    public static ClockController Instance { get; protected set; }
 
     //Basic Public Properties----------------------------------------------------------------------                                                                                                                          
 
@@ -58,6 +54,11 @@ public class ClockController : MonoBehaviour
     public float HalfCycleDuration { get => halfCycleDuration; }
 
     /// <summary>
+    /// Is the day night cycle paused?
+    /// </summary>
+    public bool Paused { get => paused; set => paused = value; }
+
+    /// <summary>
     /// The time elapsed in seconds since the start of the current day or night. Equivalent to 12-hour time.
     /// </summary>
     public float Time12hr { get => time12hr; }
@@ -73,14 +74,9 @@ public class ClockController : MonoBehaviour
     /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
     /// Awake() runs before Start().
     /// </summary>
-    private void Awake()
+    protected override void Awake()
     {
-        if (Instance != null)
-        {
-            Debug.LogError("There should never be more than one DayNightCycleController.");
-        }
-
-        Instance = this;
+        base.Awake();
         halfCycleDuration = cycleDuration * 0.5f;
         daytime = true;
 
@@ -99,9 +95,15 @@ public class ClockController : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        UpdateTime();
-        CheckDayNight();
-        UpdateClock();
+        if (!PauseMenuManager.Paused)
+        {
+            if (!paused)
+            {
+                UpdateTime();
+                CheckDayNight();
+                UpdateClock();
+            }
+        }
     }
 
     //Recurring Methods (Update())------------------------------------------------------------------------------------------------------------------  
@@ -129,6 +131,7 @@ public class ClockController : MonoBehaviour
                 //clockTimer.color = night;
                 //clockBackground.color = night;
                 UIColorManager.Instance.SetNight();
+                AudioManager.Instance.SwitchBackgroundTrack(AudioManager.ESound.NightTime);
             }
         }
         else
@@ -141,6 +144,7 @@ public class ClockController : MonoBehaviour
                 //clockTimer.color = day;
                 //clockBackground.color = day;
                 UIColorManager.Instance.SetDay();
+                AudioManager.Instance.SwitchBackgroundTrack(AudioManager.ESound.DayTimeLvlOne);
             }
         }
     }
@@ -152,8 +156,35 @@ public class ClockController : MonoBehaviour
     {
         //rectTransform.Rotate(new Vector3(0,0,360 * (time24hr / cycleDuration)));
         //rectTransform.Rotate(new Vector3(0,0,180));
-        clockTimer.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, (360 * (time24hr / cycleDuration))));
+        //clockTimer.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, (360 * (time24hr / cycleDuration))));
+        clockTimer.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, (180 - 360 * (time24hr / cycleDuration))));
         //clockTimer.fillAmount = 1 - (time12hr / halfCycleDuration);
         UIColorManager.Instance.ColorUpdate();
+    }
+
+    //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Manually sets the time of day.
+    /// </summary>
+    /// <param name="time">The 24-hour-equivalent time in seconds since the start of the day-night cycle that you want to set the clock to.</param>
+    public void SetTime(float time)
+    {
+        while (time >= cycleDuration)
+        {
+            time -= cycleDuration;
+        }
+
+        time24hr = time;
+
+        if (time >= halfCycleDuration)
+        {
+            time -= halfCycleDuration;
+        }
+
+        time12hr = time;
+
+        CheckDayNight();
+        UpdateClock();
     }
 }

@@ -5,41 +5,21 @@ using UnityEngine;
 /// <summary>
 /// Generates unique ID numbers.
 /// </summary>
-public class IdGenerator
+public class IdGenerator : Singleton<IdGenerator>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
-    private static IdGenerator instance = null;
     private int nextId;
-
-    //Public Properties------------------------------------------------------------------------------------------------------------------------------
-
-    //Singleton Public Property--------------------------------------------------------------------                                                    
-
-    /// <summary>
-    /// IdGenerator's singleton public property.
-    /// </summary>
-    public static IdGenerator Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
-                instance = new IdGenerator();
-            }
-
-            return instance;
-        }
-    }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
-    /// IdGenerator's constructor method.
+    /// IdGenerator's constructor method. 
+    /// WARNING: DO NOT CALL IN-CODE. IT IS ONLY PUBLIC FOR SINGLETON.INSTANCE TO USE.
     /// </summary>
-    private IdGenerator()
+    public IdGenerator()
     {
         nextId = -1;
     }
@@ -51,7 +31,6 @@ public class IdGenerator
     /// </summary>
     public int GetNextId()
     {
-        //Debug.Log("ID Generator is generating a new ID.");
         nextId++;
         return nextId;
     }

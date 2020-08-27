@@ -11,6 +11,8 @@ public class CollisionReporter : MonoBehaviour
 
     //Serialized Fields----------------------------------------------------------------------------
 
+    [SerializeField] private string purpose;
+    [SerializeField] private List<CollisionListener> collisionListeners;
     [SerializeField] private bool reportOnCollisionEnter;
     [SerializeField] private bool reportOnCollisionExit;
     [SerializeField] private bool reportOnCollisionStay;
@@ -18,13 +20,20 @@ public class CollisionReporter : MonoBehaviour
     [SerializeField] private bool reportOnTriggerExit;
     [SerializeField] private bool reportOnTriggerStay;
     
+    //Non-Serialized Fields------------------------------------------------------------------------
+
+    //Components
+    private List<Collider> colliders;
+    private Rigidbody rigidbody;
+
     //TODO: check if reportX switches are turned off when no longer needed AND reportX switches are reset properly when a building is pooled
 
-    //Non-Serialized Fields------------------------------------------------------------------------                                                    
-
-    private List<ICollisionListener> collisionListeners;
-
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
+    
+    /// <summary>
+    /// The purpose of the colliders attached to the collision reporter.
+    /// </summary>
+    public string Purpose { get => purpose; }
 
     /// <summary>
     /// Should CollisionReporter report OnCollisionEnter messages to its ICollisionListeners?
@@ -56,6 +65,11 @@ public class CollisionReporter : MonoBehaviour
     /// </summary>
     public bool ReportOnTriggerStay { get => reportOnTriggerStay; set => reportOnTriggerStay = value; }
 
+    /// <summary>
+    /// This collision reporter's rigidbody component.
+    /// </summary>
+    public Rigidbody Rigidbody { get => rigidbody; }
+
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
@@ -64,10 +78,45 @@ public class CollisionReporter : MonoBehaviour
     /// </summary>
     private void Awake()
     {
-        collisionListeners = new List<ICollisionListener>(GetComponentsInParent<ICollisionListener>());
+        colliders = new List<Collider>(GetComponents<Collider>());
+        rigidbody = GetComponent<Rigidbody>();
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Does this collision reporter report to the given collision listener?
+    /// </summary>
+    /// <param name="collisionListener">The collision listener that this collision reporter might report to.</param>
+    /// <returns>Whether this collision reporter reports to the given collision listener or not.</returns>
+    public bool ReportsTo(CollisionListener collisionListener)
+    {
+        return collisionListeners.Contains(collisionListener);
+    }
+
+    /// <summary>
+    /// Sets the enabled property of all of the collision reporter's colliders to the passed value.
+    /// </summary>
+    /// <param name="value">What the colliders' enabled properties are being set to.</param>
+    public void SetCollidersEnabled(bool value)
+    {
+        foreach (Collider c in colliders)
+        {
+            c.enabled = value;
+        }
+    }
+
+    /// <summary>
+    /// Sets the isTrigger property of all of the collision reporter's colliders to the passed value.
+    /// </summary>
+    /// <param name="value">What the colliders' isTrigger properties are being set to.</param>
+    public void SetCollidersIsTrigger(bool value)
+    {
+        foreach (Collider c in colliders)
+        {
+            c.isTrigger = value;
+        }
+    }
 
     /// <summary>
     /// OnCollisionEnter is called when this collider/rigidbody has begun touching another rigidbody/collider.
@@ -78,7 +127,7 @@ public class CollisionReporter : MonoBehaviour
         if (reportOnCollisionEnter)
         {
             //Debug.Log("CollisionReporter.OnCollisionEnter()");
-            foreach (ICollisionListener l in collisionListeners)
+            foreach (CollisionListener l in collisionListeners)
             {
                 l.OnCollisionEnter(collision);
             }
@@ -94,7 +143,7 @@ public class CollisionReporter : MonoBehaviour
         if (reportOnCollisionExit)
         {
             //Debug.Log("CollisionReporter.OnCollisionExit()");
-            foreach (ICollisionListener l in collisionListeners)
+            foreach (CollisionListener l in collisionListeners)
             {
                 l.OnCollisionExit(collision);
             }
@@ -110,7 +159,7 @@ public class CollisionReporter : MonoBehaviour
         if (reportOnCollisionStay)
         {
             //Debug.Log("CollisionReporter.OnCollisionStay()");
-            foreach (ICollisionListener l in collisionListeners)
+            foreach (CollisionListener l in collisionListeners)
             {
                 l.OnCollisionStay(collision);
             }
@@ -126,7 +175,7 @@ public class CollisionReporter : MonoBehaviour
         if (reportOnTriggerEnter)
         {
             //Debug.Log("CollisionReporter.OnTriggerEnter()");
-            foreach (ICollisionListener l in collisionListeners)
+            foreach (CollisionListener l in collisionListeners)
             {
                 l.OnTriggerEnter(other);
             }
@@ -142,7 +191,7 @@ public class CollisionReporter : MonoBehaviour
         if (reportOnTriggerExit)
         {
             //Debug.Log("CollisionReporter.OnTriggerExit()");
-            foreach (ICollisionListener l in collisionListeners)
+            foreach (CollisionListener l in collisionListeners)
             {
                 l.OnTriggerExit(other);
             }
@@ -158,7 +207,7 @@ public class CollisionReporter : MonoBehaviour
         if (reportOnTriggerStay)
         {
             //Debug.Log("CollisionReporter.OnTriggerStay()");
-            foreach (ICollisionListener l in collisionListeners)
+            foreach (CollisionListener l in collisionListeners)
             {
                 l.OnTriggerStay(other);
             }

@@ -11,46 +11,110 @@ public class ButtonInteract : MonoBehaviour
     [Header("Button Images")]
     [SerializeField] private Image border;
     [SerializeField] private Image fill;
+    [SerializeField] private Image icon;
 
     [Header("Border Colors")]
     [SerializeField] private Color borderNormal;
     [SerializeField] private Color borderHighlight;
-    [SerializeField] private Color borderPressed;
-    [SerializeField] private Color borderSelect;
-    [SerializeField] private Color borderDiabled;
+    [SerializeField] private Color borderUninteractable;
 
     [Header("Fill Colors")]
     [SerializeField] private Color fillNormal;
     [SerializeField] private Color fillHighlight;
-    [SerializeField] private Color fillPressed;
-    [SerializeField] private Color fillSelect;
-    [SerializeField] private Color fillDiabled;
+    [SerializeField] private Color fillUninteractable;
 
-    private void Awake() {
-        BorderNormalise();
-        FillNormalise();
+    [Header("Image Colors")]
+    [SerializeField] private Color iconInteractable;
+    [SerializeField] private Color iconUninteractable;
+
+    private bool interactable;
+    private bool highlighted;
+
+    private void Awake()
+    {
+        interactable = true;
+        highlighted = false;
+        SetNormal();
     }
 
-    private void FadeToColor(Image image, Color color){
+    public void SetDefault()
+    {
+        SetNormal();
+    }
+
+    private void FadeToColor(Image image, Color color)
+    {
         Graphic graphic = image.GetComponent<Graphic>();
-        graphic.CrossFadeColor(color, fadeDuration, true, true);
+        graphic.CrossFadeColor(color, fadeDuration, true, false);
     }
 
-    public void BorderNormalise(){
-        FadeToColor(border, borderNormal);
-    }
-    public void BorderHighlighted(){
-        FadeToColor(border, borderHighlight);
+    public void SetNormal()
+    {
+        highlighted = false;
+
+        if (interactable)
+        {
+            FadeToColor(border, borderNormal);
+            FadeToColor(fill, fillNormal);
+        }
     }
 
-    public void FillNormalise(){
-        FadeToColor(fill, fillNormal);
-    }
-    public void FillHighlighted(){
-        FadeToColor(fill, fillHighlight);
+    public void SetHighlighted()
+    {
+        highlighted = true;
+
+        if (interactable)
+        {
+            FadeToColor(border, borderHighlight);
+            FadeToColor(fill, fillHighlight);
+        }
     }
 
-    public void SayYes(){
+    private void SetInteractable()
+    {
+        if (icon != null)
+        {
+            FadeToColor(icon, iconInteractable);
+        }
+
+        if (highlighted)
+        {
+            SetHighlighted();
+        }
+        else
+        {
+            SetNormal();
+        }
+    }
+
+    private void SetUninteractable()
+    {
+        FadeToColor(border, borderUninteractable);
+        FadeToColor(fill, fillUninteractable);
+
+        if (icon != null)
+        {
+            FadeToColor(icon, iconUninteractable);
+        }
+    }
+
+
+    public void SayYes()
+    {
         print("Button has been pressed");
+    }
+
+    public void OnInteractableChanged(bool interactable)
+    {
+        this.interactable = interactable;
+
+        if (interactable)
+        {
+            SetInteractable();
+        }
+        else
+        {
+            SetUninteractable();
+        }
     }
 }

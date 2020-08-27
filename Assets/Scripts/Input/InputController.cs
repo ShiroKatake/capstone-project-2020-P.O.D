@@ -1,57 +1,40 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Rewired;
 
 /// <summary>
 /// A manager class for getting the right input values from the player's current input device(s) without having to specify the device-specific input for what you're after.
 /// </summary>
-public class InputController : MonoBehaviour
+public class InputController : SerializableSingleton<InputController>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
     //Serialized Fields----------------------------------------------------------------------------
 
-    [Header("Settings")]
-    //dont think these fields are necessary anymore
-    [SerializeField] private EGamepad gamepad;
-    [SerializeField] private EOperatingSystem operatingSystem;
-
     [Header("Player Selection Settings")]
     [SerializeField] private int playerID = 0;
     [SerializeField] private Rewired.Player player;
 
-    [Header("Buttons")]
-    [SerializeField] private List<ButtonClickEventManager> buttons;
+    [Header("Building Buttons")]
+    [SerializeField] private Button fusionReactor;
+    [SerializeField] private Button iceDrill;
+    [SerializeField] private Button boiler;
+    [SerializeField] private Button greenhouse;
+    [SerializeField] private Button incinerator;
+    [SerializeField] private Button shotgunTurret;
+    [SerializeField] private Button machineGunTurret;
+
+    [Header("ButtonsClickEventManagers")]
+    [SerializeField] private List<ButtonClickEventManager> buttonClickEventManagers;
     // needs to be renamed...
     [SerializeField] private GameObject buildingUIParent;
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
-    // probably not needed with the new rewired system
-    //Prefixes
-    private string gamepadPrefix;
-    private string osPrefix;
-
     //ClickedButton
     private ButtonClickEventManager clickedButton;
-
-    //Public Properties------------------------------------------------------------------------------------------------------------------------------
-
-    //Singleton Public Property--------------------------------------------------------------------
-
-    /// <summary>
-    /// InputController's singleton public property.
-    /// </summary>
-    public static InputController Instance { get; protected set; }
-
-    //Basic Public Properties----------------------------------------------------------------------
-
-    // probably not needed with rewired...
-    /// <summary>
-    /// The input device(s) the player is using.
-    /// </summary>
-    public EGamepad Gamepad { get => gamepad; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -59,41 +42,10 @@ public class InputController : MonoBehaviour
     /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
     /// Awake() runs before Start().
     /// </summary>
-    void Awake()
+    protected override void Awake()
     {
-        if (Instance != null)
-        {
-            Debug.LogError("There should never be 2 or more InputControllers.");
-        }
-
-        Instance = this;
-
-        switch (gamepad)
-        {
-            case EGamepad.XboxController:
-                gamepadPrefix = "XB";
-                break;
-            case EGamepad.DualShockController:
-                gamepadPrefix = "DS";
-                break;
-            case EGamepad.MouseAndKeyboard:
-            default:
-                gamepadPrefix = "MK";
-                break;
-        }
-
-        switch (operatingSystem)
-        {
-            case EOperatingSystem.Mac:
-                osPrefix = "M";
-                break;
-            case EOperatingSystem.Windows:
-            default:
-                osPrefix = "W";
-                break;
-        }
-
-        buttons = new List<ButtonClickEventManager>(buildingUIParent.GetComponentsInChildren<ButtonClickEventManager>());
+        base.Awake();
+        buttonClickEventManagers = new List<ButtonClickEventManager>(buildingUIParent.GetComponentsInChildren<ButtonClickEventManager>());
         player = ReInput.players.GetPlayer(playerID);
     }
 
@@ -151,13 +103,13 @@ public class InputController : MonoBehaviour
 
             //Custom
             case "CycleBuilding":
-                return player.GetButton("IceDrill")
-                    || player.GetButton("Reactor")
-                    || player.GetButton("Incinerator")
-                    || player.GetButton("Boiler")
-                    || player.GetButton("GreenHouse")
-                    || player.GetButton("Turret1")
-                    || player.GetButton("Turret2")
+                return (player.GetButton("Reactor") && fusionReactor.interactable)
+                    || (player.GetButton("IceDrill") && iceDrill.interactable)
+                    || (player.GetButton("Boiler") && boiler.interactable)
+                    || (player.GetButton("GreenHouse") && greenhouse.interactable)
+                    || (player.GetButton("Incinerator") && incinerator.interactable)
+                    || (player.GetButton("Turret1") && shotgunTurret.interactable)
+                    || (player.GetButton("Turret2") && machineGunTurret.interactable)
                     || CheckUIButtonClicked();
                 /*if (gamepad == EGamepad.MouseAndKeyboard)
                 {
@@ -177,13 +129,13 @@ public class InputController : MonoBehaviour
                 }*/
 
             case "SpawnBuilding":
-                return player.GetButton("IceDrill")
-                    || player.GetButton("Reactor")
-                    || player.GetButton("Incinerator")
-                    || player.GetButton("Boiler")
-                    || player.GetButton("GreenHouse")
-                    || player.GetButton("Turret1")
-                    || player.GetButton("Turret2")
+                return (player.GetButton("Reactor") && fusionReactor.interactable)
+                    || (player.GetButton("IceDrill") && iceDrill.interactable)
+                    || (player.GetButton("Boiler") && boiler.interactable)
+                    || (player.GetButton("GreenHouse") && greenhouse.interactable)
+                    || (player.GetButton("Incinerator") && incinerator.interactable)
+                    || (player.GetButton("Turret1") && shotgunTurret.interactable)
+                    || (player.GetButton("Turret2") && machineGunTurret.interactable)
                     || CheckUIButtonClicked();
                 /*if (gamepad == EGamepad.MouseAndKeyboard)
                 {
@@ -503,7 +455,7 @@ public class InputController : MonoBehaviour
     /// <returns>Was a UI button for building clicked by the player?</returns>
     private bool CheckUIButtonClicked()
     {
-        foreach (ButtonClickEventManager b in buttons)
+        foreach (ButtonClickEventManager b in buttonClickEventManagers)
         {
             if (b.Clicked)
             {
