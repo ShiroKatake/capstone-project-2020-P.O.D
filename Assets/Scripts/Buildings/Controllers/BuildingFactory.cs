@@ -8,12 +8,6 @@ using UnityEngine.Events;
 /// </summary>
 public class BuildingFactory : Factory<BuildingFactory, Building, EBuilding>
 {
-    //Private Fields---------------------------------------------------------------------------------------------------------------------------------
-
-    //Non-Serialized Fields------------------------------------------------------------------------
-
-    private Vector3 normalScale;
-
 	//Public Properties------------------------------------------------------------------------------------------------------------------------------
 
 	//Basic Public Properties----------------------------------------------------------------------
@@ -21,16 +15,6 @@ public class BuildingFactory : Factory<BuildingFactory, Building, EBuilding>
 	public UnityAction<Transform> onGetTurret;
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
-
-    /// <summary>
-    /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
-    /// Awake() runs before Start().
-    /// </summary>
-    protected override void Awake()
-    {
-        base.Awake();
-        normalScale = new Vector3(1, 1, 1);
-    }
 
     /// <summary>
     /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
@@ -101,7 +85,6 @@ public class BuildingFactory : Factory<BuildingFactory, Building, EBuilding>
         building.SetCollidersEnabled("Placement", true);
         building.SetMeshRenderersEnabled(true);
         building.SetParticleSystemsEnabled(true);
-        building.transform.localScale = normalScale;
         return building;
     }
 
@@ -111,7 +94,7 @@ public class BuildingFactory : Factory<BuildingFactory, Building, EBuilding>
     /// </summary>
     /// <param name="building">The building to be destroyed.</param>
     /// <param name="consumingResources">Is the building consuming resources and does that consumption need to be cancelled now that it's being destroyed?</param>
-    /// <param name="killed">Was the building destroyed while placed, and therefore needs to leave behind foundations?</param>
+    /// <param name="consumingResources">Was the building destroyed while placed, and therefore needs to leave behind foundations?</param>
     public void Destroy(Building building, bool consumingResources, bool killed)
     {
         BuildingController.Instance.DeRegisterBuilding(building);
@@ -128,39 +111,15 @@ public class BuildingFactory : Factory<BuildingFactory, Building, EBuilding>
             ResourceController.Instance.WasteConsumption -= building.WasteConsumption;
         }
 
-        building.Killed = killed;
-        base.Destroy(building, building.BuildingType);
-    }
-
-    /// <summary>
-    /// Pools the building passed to it.
-    /// </summary>
-    /// <param name="toPool">The building to be pooled.</param>
-    /// <param name="type">The type of building.</param>
-    protected override void PoolNextItem(Building toPool, EBuilding type)
-    {
-        if (deactivateGameObjectInPool)
+        if (killed)
         {
-            toPool.gameObject.SetActive(true);
-        }
-
-        if (toPool.Killed)
-        {
-            foreach (Vector3 offset in toPool.BuildingFoundationOffsets)
+            foreach (Vector3 offset in building.BuildingFoundationOffsets)
             {
-                BuildingFoundationFactory.Instance.Get(toPool.transform.position + offset);
+                BuildingFoundationFactory.Instance.Get(building.transform.position + offset);
             }
-
-            toPool.Killed = false;
         }
 
-        toPool.Reset();
-
-        if (deactivateGameObjectInPool)
-        {
-            toPool.gameObject.SetActive(false);
-        }
-
-        base.PoolNextItem(toPool, type);
+        building.Reset();
+        Destroy(building, building.BuildingType);
     }
 }

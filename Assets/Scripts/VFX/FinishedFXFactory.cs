@@ -37,6 +37,7 @@ public class FinishedFXFactory : Factory<FinishedFXFactory, FinishedFX, ENone>
     /// <param name="type">The type of the FinishedFX to be destroyed. Should be left as default value of ENone.None.</param>
     public override void Destroy(FinishedFX fx, ENone type = ENone.None)
     {
+        fx.gameObject.SetActive(false);
         base.Destroy(fx, type);
     }
 }

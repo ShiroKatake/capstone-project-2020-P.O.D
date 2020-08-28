@@ -30,17 +30,7 @@ public class BuildingFoundationFactory : Factory<BuildingFoundationFactory, Buil
     /// <param name="type">The type of building foundation to destroy. Should be left as default value of ENone.None.</param>
     public override void Destroy(BuildingFoundation buildingFoundation, ENone type = ENone.None)
     {
+        buildingFoundation.Collider.enabled = false;
         base.Destroy(buildingFoundation, type);
-    }
-
-    /// <summary>
-    /// Pools the building foundation passed to it.
-    /// </summary>
-    /// <param name="toPool">The building foundation to be pooled.</param>
-    /// <param name="type">The type of building foundation.</param>
-    protected override void PoolNextItem(BuildingFoundation toPool, ENone type)
-    {
-        toPool.Collider.enabled = false;
-        base.PoolNextItem(toPool, type);
     }
 }

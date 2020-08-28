@@ -75,22 +75,12 @@ public class ProjectileFactory : Factory<ProjectileFactory, Projectile, EProject
     public override void Destroy(Projectile projectile, EProjectileType type)
     {
         ProjectileManager.Instance.DeRegisterProjectile(projectile);
+        projectile.Active = false;
+        projectile.Collider.enabled = false;
+        projectile.Light.enabled = false;
+        projectile.Renderer.enabled = false;
+        projectile.Rigidbody.velocity = Vector3.zero;
+        projectile.Rigidbody.isKinematic = true;
         base.Destroy(projectile, type);
-    }
-
-    /// <summary>
-    /// Pools the projectile passed to it.
-    /// </summary>
-    /// <param name="toPool">The projectile to be pooled.</param>
-    /// <param name="type">The type of projectile.</param>
-    protected override void PoolNextItem(Projectile toPool, EProjectileType type)
-    {
-        toPool.Active = false;
-        toPool.Collider.enabled = false;
-        toPool.Light.enabled = false;
-        toPool.Renderer.enabled = false;
-        toPool.Rigidbody.velocity = Vector3.zero;
-        toPool.Rigidbody.isKinematic = true;
-        base.PoolNextItem(toPool, type);
     }
 }
