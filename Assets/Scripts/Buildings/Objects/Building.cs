@@ -95,6 +95,9 @@ public class Building : CollisionListener
     [SerializeField] private bool built;
     private float normalBuildTime;
 
+    private bool consumingResources;
+    private bool killed;
+
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
     //Basic Public Properties----------------------------------------------------------------------
@@ -129,10 +132,20 @@ public class Building : CollisionListener
     /// </summary>
     public string ConsoleName { get => consoleName; }
 
+    ///// <summary>
+    ///// Was this building consuming resources when it was destroyed?
+    ///// </summary>
+    //public bool ConsumingResources { get => consumingResources; set => consumingResources = value; }
+
     /// <summary>
     /// The Building's Health component.
     /// </summary>
     public Health Health { get => health; }
+
+    /// <summary>
+    /// Was this building killed when it was destroyed?
+    /// </summary>
+    public bool Killed { get => killed; set => killed = value; }
 
     /// <summary>
     /// The transform of the building's model.
@@ -616,15 +629,20 @@ public class Building : CollisionListener
 
         switch (buildingType)
         {
+            case EBuilding.FusionReactor:
+                fusionReactorBeam.Deactivate();
+                break;
             case EBuilding.ShortRangeTurret:
             case EBuilding.LongRangeTurret:
                 turretAimer.Reset();
                 turretShooter.Reset();
-                TurretRangeFXFactory.Instance.Destroy(turretRangeFX);
-                break;
-            case EBuilding.FusionReactor:
-                fusionReactorBeam.Deactivate();
-                break;
+
+                if (turretRangeFX != null)
+                {
+                    TurretRangeFXFactory.Instance.Destroy(turretRangeFX);
+                }
+
+                break;           
         }
 
         foreach (RendererMaterialSet r in rendererMaterialSets)

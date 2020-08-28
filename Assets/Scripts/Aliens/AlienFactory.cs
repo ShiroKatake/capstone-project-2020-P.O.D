@@ -80,8 +80,18 @@ public class AlienFactory : Factory<AlienFactory, Alien, ENone>
     /// <param name="type">The type of the alien to be destroyed.</param>
     public override void Destroy(Alien alien, ENone type = ENone.None)
     {
-        alien.Reset();
         AlienController.Instance.DeRegisterAlien(alien);
         base.Destroy(alien, type);
+    }
+
+    /// <summary>
+    /// Pools the alien passed to it.
+    /// </summary>
+    /// <param name="toPool">The alien to be pooled.</param>
+    /// <param name="type">The type of alien.</param>
+    protected override void PoolNextItem(Alien toPool, ENone type)
+    {
+        toPool.Reset();
+        base.PoolNextItem(toPool, type);
     }
 }

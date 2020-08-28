@@ -58,7 +58,6 @@ public class OreFactory : Factory<OreFactory, Ore, ENone>
     /// <param name="type">The type of ore to destroy. Should be left as default value of ENone.None.</param>
 	public override void Destroy(Ore ore, ENone type = ENone.None)
 	{
-		ore.gameObject.SetActive(false);
         base.Destroy(ore, type);
 	}
 }

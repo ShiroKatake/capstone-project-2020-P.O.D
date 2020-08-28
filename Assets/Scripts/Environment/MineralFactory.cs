@@ -93,52 +93,24 @@ public class MineralFactory : Factory<MineralFactory, Mineral, ENone>
     public override void Destroy(Mineral mineral, ENone type = ENone.None)
     {
         MapController.Instance.DeRegisterMineral(mineral);
-        mineral.Reset();
-        despawningMinerals.Add(mineral);
-
-        if (despawningMinerals.Count == 1)
-        {
-            StartCoroutine(PoolDespawningMinerals());
-        }
+        base.Destroy(mineral, type);
     }
 
     /// <summary>
     /// Transfers despawned minerals to the minerals pool when they're finished despawning.
     /// </summary>
-    private IEnumerator PoolDespawningMinerals()
-    {
-        while (despawningMinerals.Count > 0)
+    /// <param name="toPool">The mineral to be pooled.</param> 
+    /// <param name="type">The type of mineral.</param>
+    protected override void PoolNextItem(Mineral toPool, ENone type)
+    {        
+        if (destroySpentMinerals)
         {
-            for (int i = 0; i < despawningMinerals.Count; i++)
-            {
-                if (!despawningMinerals[i].Despawning)
-                {
-                    despawnedMinerals.Add(despawningMinerals[i]);
-                    despawningMinerals.RemoveAt(i);
-                    i--;
-                }
-            }
-
-            if (despawnedMinerals.Count > 0)
-            {
-                do
-                {
-                    Mineral toDestroy = despawnedMinerals[0];
-                    despawnedMinerals.RemoveAt(0);
-
-                    if (destroySpentMinerals)
-                    {
-                        GameObject.Destroy(toDestroy.gameObject);
-                    }
-                    else
-                    {
-                        base.Destroy(toDestroy, ENone.None);
-                    }
-                }
-                while (!destroySpentMinerals && despawnedMinerals.Count > 0);
-            }
-
-            yield return null;
-        }        
+            GameObject.Destroy(toPool.gameObject);
+        }
+        else
+        {
+            toPool.Reset();
+            base.PoolNextItem(toPool, type);
+        }  
     }
 }

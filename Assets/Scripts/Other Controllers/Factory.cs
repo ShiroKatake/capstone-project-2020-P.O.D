@@ -37,6 +37,7 @@ public class Factory<FactoryType, ProductType, ProductEnum> : SerializableSingle
     protected Dictionary<ProductEnum, ProductType> prefabs;
     protected Dictionary<ProductEnum, List<ProductType>> pool;
     protected Transform objectPool;
+    protected List<(ProductEnum, ProductType)> toPool;
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -55,6 +56,7 @@ public class Factory<FactoryType, ProductType, ProductEnum> : SerializableSingle
 
         pool = new Dictionary<ProductEnum, List<ProductType>>();
         prefabs = new Dictionary<ProductEnum, ProductType>();
+        toPool = new List<(ProductEnum, ProductType)>();
     }
 
     /// <summary>
@@ -169,13 +171,44 @@ public class Factory<FactoryType, ProductType, ProductEnum> : SerializableSingle
             toDestroy.gameObject.SetActive(false);
         }
 
+        toPool.Add((type, toDestroy));
+        
+        if (toPool.Count == 1)
+        {
+            StartCoroutine(Pooling());
+        }
+    }
+
+    /// <summary>
+    /// Pools [ProductType]s at the Factory's own pace, so they're not retrieved from the pool before the [ProductType] is ready.
+    /// </summary>
+    private IEnumerator Pooling()
+    {
+        while (toPool.Count > 0)
+        {
+            yield return null;
+            ProductEnum e = toPool[0].Item1;
+            ProductType p = toPool[0].Item2;
+            toPool.RemoveAt(0);
+            PoolNextItem(p, e);            
+        }
+    }
+
+    /// <summary>
+    /// Pools a [ProductType] that is ready to be pooled.
+    /// </summary>
+    /// <param name="toPool">The [ProductType] being pooled.</param>
+    /// <param name="type">The type of the [ProductType] being pooled.</param>
+    protected virtual void PoolNextItem(ProductType toPool, ProductEnum type)
+    {
         if (pool.ContainsKey(type))
         {
-            pool[type].Add(toDestroy);
+            pool[type].Add(toPool);
         }
         else
         {
-            Debug.LogError($"{this} does not have a list objects of [ProductEnum] value {type}.");
+            Debug.LogError($"{this} does not have a list objects of [ProductEnum] value {type}. Destroying {toPool}.");
+            GameObject.Destroy(toPool.gameObject);
         }
     }
 }
