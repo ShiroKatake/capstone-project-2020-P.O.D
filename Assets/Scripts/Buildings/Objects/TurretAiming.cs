@@ -1,6 +1,35 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+/// <summary>
+/// Offsets for turrets to use when aiming at aliens based on their type.
+/// </summary>
+[Serializable]
+public class AlienPositionOffset
+{
+    //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
+
+    //Serialized Fields----------------------------------------------------------------------------           
+
+    [SerializeField] private EAlien type;
+    [SerializeField] private Vector3 offset;
+
+    //Public Properties------------------------------------------------------------------------------------------------------------------------------  
+
+    //Basic Public Properties----------------------------------------------------------------------           
+
+    /// <summary>
+    /// The type of alien.
+    /// </summary>
+    public EAlien Type { get => type; }
+
+    /// <summary>
+    /// The position offset to be applied to the alien when aiming.
+    /// </summary>
+    public Vector3 Offset { get => offset; }
+}
 
 /// <summary>
 /// A base component class for aiming the gun part of buildings that shoot.
@@ -20,8 +49,7 @@ public class TurretAiming : MonoBehaviour
     [SerializeField] protected float maxBarrelElevation;
 
     [Header("Aiming Offsets")]
-    [SerializeField] protected Vector3 crawlerPositionOffset;
-    //[SerializeField] protected Vector3 targetHornetPositionOffset;
+    [SerializeField] protected List<AlienPositionOffset> alienPositionOffsetByType;
     [SerializeField] protected Vector3 rotationColliderOffset;
     [SerializeField] protected Vector3 rotationModelCounterOffset;
     [SerializeField] protected Vector3 elevationColliderOffset;
@@ -41,6 +69,7 @@ public class TurretAiming : MonoBehaviour
     /*[SerializeField]*/ protected float currentBarrelElevation;
     /*[SerializeField]*/ protected float targetBarrelElevation;
     //[SerializeField] protected Transform target;
+    protected Dictionary<EAlien, Vector3> alienPositionOffsets;
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -53,6 +82,13 @@ public class TurretAiming : MonoBehaviour
         building = gameObject.GetComponent<Building>();
         shooter = gameObject.GetComponent<TurretShooting>();
         //collisionReporters = GetCollisionReporters();
+
+        alienPositionOffsets = new Dictionary<EAlien, Vector3>();
+
+        foreach (AlienPositionOffset o in alienPositionOffsetByType)
+        {
+            alienPositionOffsets[o.Type] = o.Offset;
+        }
     }
 
     /// <summary>

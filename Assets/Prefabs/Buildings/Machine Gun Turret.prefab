@@ -365,10 +365,9 @@ GameObject:
   - component: {fileID: 2387721251791164881}
   - component: {fileID: 6978301388140795322}
   - component: {fileID: 276844957512759736}
-  - component: {fileID: 2320425670518256764}
   - component: {fileID: 1219818938998714957}
-  - component: {fileID: 8965008406432620709}
   - component: {fileID: -6100819924566361332}
+  - component: {fileID: 8965008406432620709}
   - component: {fileID: 3380677155783403710}
   - component: {fileID: 8629933168825371649}
   m_Layer: 10
@@ -464,22 +463,11 @@ MonoBehaviour:
   constructionFinishedFX: {fileID: 5264390033885133910, guid: 9a30dc8a4a1a76241acc06f41a0df0e0,
     type: 3}
   fxSize: 1.5
-  collider: {fileID: 7185075788765746384}
+  awake: 0
   active: 0
+  placed: 0
   operational: 0
---- !u!114 &2320425670518256764
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2740937295730065718}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5bfa9bda77c9c3488923b65c75f29e0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  affiliation: 0
+  built: 0
 --- !u!114 &1219818938998714957
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -494,19 +482,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 30
   currentHealth: 0
---- !u!114 &8965008406432620709
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2740937295730065718}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e087b4d1f91fcb941a830564ec25c878, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  radius: 0.75
 --- !u!114 &-6100819924566361332
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -523,7 +498,11 @@ MonoBehaviour:
   elevationSpeed: 20
   minBarrelElevation: -10
   maxBarrelElevation: 10
-  crawlerPositionOffset: {x: 0, y: 0.75, z: 0}
+  alienPositionOffsetByType:
+  - type: 1
+    offset: {x: 0, y: 0.75, z: 0}
+  - type: 2
+    offset: {x: 0, y: 0, z: 0}
   rotationColliderOffset: {x: 180, y: -90, z: -90}
   rotationModelCounterOffset: {x: 90, y: 0, z: 0}
   elevationColliderOffset: {x: 0, y: 0, z: 0}
@@ -534,6 +513,19 @@ MonoBehaviour:
   armModelPivot: {fileID: 4031274663492664482}
   barrelColliderPivot: {fileID: 5451464881631675756}
   barrelModelPivot: {fileID: 5877666295754112639}
+--- !u!114 &8965008406432620709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2740937295730065718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e087b4d1f91fcb941a830564ec25c878, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 0.75
 --- !u!114 &3380677155783403710
 MonoBehaviour:
   m_ObjectHideFlags: 0

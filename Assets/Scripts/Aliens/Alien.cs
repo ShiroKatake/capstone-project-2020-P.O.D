@@ -126,7 +126,7 @@ public class Alien : MonoBehaviour, IMessenger
     public void Setup(int id)
     {
         this.id = id;
-        gameObject.name = $"Alien {id}";
+        gameObject.name = $"{type} {id}";
         health.Reset();
 
         target = CryoEgg.Instance.ColliderTransform;
