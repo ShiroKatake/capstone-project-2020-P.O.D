@@ -16,10 +16,11 @@ public class FusionReactorBeam : MonoBehaviour
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------  
 
     /// <summary>
-    /// Disables the fusion reactor beam object.
+    /// Enables/disables the fusion reactor beam object.
     /// </summary>
-    public void Deactivate()
+    /// <param name="active">Should the beam be active or not?</param>
+    public void SetBeamActive(bool active)
     {
-        beam.SetActive(false);
+        beam.SetActive(active);
     }
 }

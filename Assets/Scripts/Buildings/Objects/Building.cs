@@ -61,7 +61,14 @@ public class Building : CollisionListener
 	[SerializeField] private FinishedFX constructionFinishedFX;
 	[SerializeField] private float fxSize = 1f;
 
-	//Non-Serialized Fields------------------------------------------------------------------------                                                    
+    [Header("Animation Controllers")]
+    [SerializeField] private Animator baseAnimator;
+    //[SerializeField] private AnimatorController animatorController;
+    //[SerializeField] private Animator constructionAnimator;
+    //[SerializeField] private Animator activeAnimator;
+    //[SerializeField] private Animator inactiveAnimator;
+
+    //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
     [Header("Testing")]
 	//Components
@@ -388,14 +395,7 @@ public class Building : CollisionListener
 
                     if (change)
                     {
-                        List<Material> materials = new List<Material>();
-
-                        for (int i = 0; i < r.count; i++)
-                        {
-                            materials.Add(currentMaterial);
-                        }
-
-                        r.renderer.materials = materials.ToArray();
+                        UpdateRendererMaterials(r.renderer, currentMaterial, r.renderer.materials.Length);
                     }
                 }
 
@@ -524,6 +524,19 @@ public class Building : CollisionListener
         return false;
     }
 
+
+    private void UpdateRendererMaterials(Renderer renderer, Material material, int count)
+    {
+        List<Material> materials = new List<Material>();
+
+        for (int i = 0; i < count; i++)
+        {
+            materials.Add(material);
+        }
+
+        renderer.materials = materials.ToArray();
+    }
+
     /// <summary>
     /// Places the building, using up the appropriate resources, positioning and solidifying it, and triggering Build().
     /// </summary>
@@ -542,16 +555,16 @@ public class Building : CollisionListener
 
         foreach (RendererMaterialSet r in rendererMaterialSets)
         {
+            UpdateRendererMaterials(r.renderer, r.opaque, r.renderer.materials.Length);
+
             for (int i = 0; i < r.renderer.materials.Length; i++)
             {
-                r.renderer.materials[i] = r.opaque;
+                Debug.Log($"Renderer material is {r.renderer.materials[i]}; intended material is {r.opaque}");
             }
         }
 
         transform.position = position;
         BuildingController.Instance.RegisterBuilding(this);
-        animator.enabled = true;
-        //TurretRangeFXFactory.Instance.HideRange();
         //Debug.Log($"{this}.Placed() (finished), collider position is {collider.position} (world) / {collider.localPosition} (local), model position is {model.position} (world) / {model.localPosition} (local)");
 
         if (turretRangeFX != null)
@@ -559,26 +572,52 @@ public class Building : CollisionListener
             TurretRangeFXFactory.Instance.Destroy(turretRangeFX);
         }
         //Debug.Log("Finish Place");
-	}
 
-    /// <summary>
-    /// Handles what should happen once the building has been built.
-    /// </summary>
-    public void FinishBuilding()
+        //AnimatorOverrideController animatorController = new AnimatorOverrideController(animator.runtimeAnimatorController);
+        //Destroy(animator);
+        //gameObject.AddComponent(typeof(Animator));
+        //animator = gameObject.GetComponent<Animator>();
+        //animator.runtimeAnimatorController = baseAnimator.runtimeAnimatorController;
+        //animator.runtimeAnimatorController = animatorController;
+
+
+        animator.enabled = true;
+        //StartCoroutine(ConstructionAnimation());
+    }
+
+
+    private IEnumerator ConstructionAnimation()
     {
-        //Debug.Log("Start Finish Building");
-        built = true;
-        Operational = true; //Using property to trigger activation of any resource collector component attached.
+        float timeElapsed = 0;
 
-        if (turretShooter != null)
+        while (timeElapsed < buildTime)
         {
-            turretShooter.Place();
+            foreach (RendererMaterialSet r in rendererMaterialSets)
+            {
+                for (int i = 0; i < r.renderer.materials.Length; i++)
+                {
+                    r.renderer.materials[i].SetFloat("_DissolveAmount", timeElapsed / buildTime);
+                }
+            }
+
+            timeElapsed += Time.deltaTime;
+            yield return null;
         }
 
-        AudioManager.Instance.PlaySound(idleSound, gameObject);
-        AudioManager.Instance.PlaySound(AudioManager.ESound.Building_Completes, gameObject);
-        //Debug.Log("Finish Finish Building");
+        SpawnFinishedFX();
+        FinishBuilding();
     }
+
+    //public void SetMaterialsOpaque()
+    //{
+    //    foreach (RendererMaterialSet r in rendererMaterialSets)
+    //    {
+    //        for (int i = 0; i < r.renderer.materials.Length; i++)
+    //        {
+    //            r.renderer.materials[i] = r.opaque;
+    //        }
+    //    }
+    //}
 
     /// <summary>
     /// Spawns a "building finished" particle effect.
@@ -594,6 +633,40 @@ public class Building : CollisionListener
     }
 
     /// <summary>
+    /// Handles what should happen once the building has been built.
+    /// </summary>
+    public void FinishBuilding()
+    {
+        //Debug.Log("Start Finish Building");
+        built = true;
+        Operational = true; //Using property to trigger activation of any resource collector component attached.
+
+        switch (buildingType)
+        {
+            case EBuilding.FusionReactor:
+                if (fusionReactorBeam != null)
+                {
+                    fusionReactorBeam.SetBeamActive(true);
+                }
+
+                break;
+            case EBuilding.ShortRangeTurret:
+            case EBuilding.LongRangeTurret:
+                if (turretShooter != null)
+                {
+                    turretShooter.Place();
+                }
+
+                break;
+        }
+
+        AudioManager.Instance.PlaySound(idleSound, gameObject);
+        AudioManager.Instance.PlaySound(AudioManager.ESound.Building_Completes, gameObject);
+        //animator.enabled = false;
+        //Debug.Log("Finish Finish Building");
+    }
+
+    /// <summary>
     /// Resets Building to its initial values when it is returned to the building pool.
     /// </summary>
     public void Reset()
@@ -606,6 +679,7 @@ public class Building : CollisionListener
 
         //TODO: reset animator? i.e. disable and set animation progress back to 0?
         animator.enabled = false;
+        //Destroy(animator);
         health.Reset();
         Operational = false;
 
@@ -623,17 +697,13 @@ public class Building : CollisionListener
                 TurretRangeFXFactory.Instance.Destroy(turretRangeFX);
                 break;
             case EBuilding.FusionReactor:
-                fusionReactorBeam.Deactivate();
+                fusionReactorBeam.SetBeamActive(false);
                 break;
         }
 
         foreach (RendererMaterialSet r in rendererMaterialSets)
         {
-            for (int i = 0; i < r.renderer.materials.Length; i++)
-            {
-                r.renderer.materials[i] = r.opaque;
-            }
-
+            UpdateRendererMaterials(r.renderer, r.opaque, r.renderer.materials.Length);
             r.renderer.enabled = false;
         }
 
