@@ -22,8 +22,6 @@ public class PostConstruction : StateMachineBehaviour
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
 		Building building = animator.GetComponent<Building>();
-        //animator.enabled = false;
-        //building.SetMaterialsOpaque();
 		building.SpawnFinishedFX();
         building.FinishBuilding();
 	}
