@@ -72,7 +72,7 @@ public class Factory<FactoryType, ProductType, ProductEnum> : SerializableSingle
 
             for (int j = 0; j < productQuantities[i]; j++)
             {
-                Destroy(productEnums[i], Create(productEnums[i]));
+                Destroy(Create(productEnums[i]), productEnums[i]);
             }
         }
     }
@@ -83,10 +83,10 @@ public class Factory<FactoryType, ProductType, ProductEnum> : SerializableSingle
     /// Retrieves a [ProductType] from the pool if there's any available, instantiates a new one if none are available, then sets its position.
     /// Note: if overloaded by a child class rather than overridden, it'll usually be better to use the overload than this unless calling from within the overloaded method.
     /// </summary>
-    /// <param name="type">The type of [ProductType] that you want to retrieve.</param>
     /// <param name="position">The position [ProductType] should be instantiated at.</param>
+    /// <param name="type">The type of [ProductType] that you want to retrieve.</param>
     /// <returns>A new instance of [ProductType].</returns>
-    public virtual ProductType Get(ProductEnum type, Vector3 position)
+    public virtual ProductType Get(Vector3 position, ProductEnum type)
     {
         ProductType result = Get(type);
         result.transform.position = position;
@@ -157,9 +157,9 @@ public class Factory<FactoryType, ProductType, ProductEnum> : SerializableSingle
     /// Handles the destruction of [ProductType]s.
     /// Note: if overloaded by a child class rather than overridden, it'll usually be better to use the overload than this unless calling from within the overloaded method.
     /// </summary>
-    /// <param name="type">The type of the [ProductType] to be destroyed.</param>
     /// <param name="toDestroy">The [ProductType] to be destroyed.</param>
-    public virtual void Destroy(ProductEnum type, ProductType toDestroy)
+    /// <param name="type">The type of the [ProductType] to be destroyed.</param>
+    public virtual void Destroy(ProductType toDestroy, ProductEnum type)
     {
         toDestroy.transform.position = objectPool.position;
         toDestroy.transform.parent = objectPool;

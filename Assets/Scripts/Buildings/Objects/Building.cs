@@ -11,9 +11,6 @@ public struct RendererMaterialSet
     public MeshRenderer renderer;
     public Material opaque;
     public Material transparent;
-    [Tooltip("Some models require a material to be applied multiple times to cover the whole model. How many times should a material be applied to this renderer's model?")]
-    [Range(1, 99)]
-    public int count;
 }
 
 /// <summary>
@@ -61,7 +58,7 @@ public class Building : CollisionListener
 	[SerializeField] private FinishedFX constructionFinishedFX;
 	[SerializeField] private float fxSize = 1f;
 
-	//Non-Serialized Fields------------------------------------------------------------------------                                                    
+    //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
     [Header("Testing")]
 	//Components
@@ -365,7 +362,6 @@ public class Building : CollisionListener
     /// <returns>Is this building colliding with something?</returns>
     public bool IsPlacementValid()
     {
-        //Debug.Log("Start IsPlacementValid");
         if (active)
         {
             if (!placed)
@@ -375,27 +371,14 @@ public class Building : CollisionListener
                 foreach (RendererMaterialSet r in rendererMaterialSets)
                 {
                     Material currentMaterial = (validPlacement ? r.transparent : buildingErrorMaterial);
-                    bool change = false;
 
                     for (int i = 0; i < r.renderer.materials.Length; i++)
                     {
                         if (r.renderer.materials[i] != currentMaterial)
                         {
-                            change = true;
+                            UpdateRendererMaterials(r.renderer, currentMaterial, r.renderer.materials.Length);
                             break;
                         }
-                    }
-
-                    if (change)
-                    {
-                        List<Material> materials = new List<Material>();
-
-                        for (int i = 0; i < r.count; i++)
-                        {
-                            materials.Add(currentMaterial);
-                        }
-
-                        r.renderer.materials = materials.ToArray();
                     }
                 }
 
@@ -404,13 +387,11 @@ public class Building : CollisionListener
             else
             {
                 Debug.Log($"Building {id} ran IsPlacementValid(), even though it's already placed.");
-                //Debug.Log("Finished IsPlacementValid");
                 return false;
             }
         }
         else
         {
-            //Debug.Log("Finished IsPlacementValid");
             return true;
         }
 
@@ -525,13 +506,29 @@ public class Building : CollisionListener
     }
 
     /// <summary>
+    /// Gives a renderer a specified number of copies of the required material.
+    /// </summary>
+    /// <param name="renderer">The renderer getting its material(s) updated.</param>
+    /// <param name="material">The material to apply to the renderer.</param>
+    /// <param name="count">How many times the material needs to be applied to the renderer for every model the renderer is responsible for to be covered.</param>
+    private void UpdateRendererMaterials(Renderer renderer, Material material, int count)
+    {
+        List<Material> materials = new List<Material>();
+
+        for (int i = 0; i < count; i++)
+        {
+            materials.Add(material);
+        }
+
+        renderer.materials = materials.ToArray();
+    }
+
+    /// <summary>
     /// Places the building, using up the appropriate resources, positioning and solidifying it, and triggering Build().
     /// </summary>
     /// <param name="position">Where the building is to be placed.</param>
     public void Place(Vector3 position)
     {
-        //Debug.Log("Start Place");
-        //Debug.Log($"{this}.Placed() (start), collider position is {collider.position} (world) / {collider.localPosition} (local), model position is {model.position} (world) / {model.localPosition} (local)");
         placed = true; //Needs to occur before its position gets set to be on the ground so that it triggers the building Foundation at the proper time.
         ResourceController.Instance.Ore -= oreCost;
 		ResourceController.Instance.PowerConsumption += powerConsumption;
@@ -539,34 +536,38 @@ public class Building : CollisionListener
 		ResourceController.Instance.WasteConsumption += wasteConsumption;
 		SetCollidersEnabled("Placement", false);
         SetCollidersEnabled("Body", true);
-
-        foreach (RendererMaterialSet r in rendererMaterialSets)
-        {
-            for (int i = 0; i < r.renderer.materials.Length; i++)
-            {
-                r.renderer.materials[i] = r.opaque;
-            }
-        }
-
         transform.position = position;
         BuildingController.Instance.RegisterBuilding(this);
-        animator.enabled = true;
-        //TurretRangeFXFactory.Instance.HideRange();
-        //Debug.Log($"{this}.Placed() (finished), collider position is {collider.position} (world) / {collider.localPosition} (local), model position is {model.position} (world) / {model.localPosition} (local)");
 
         if (turretRangeFX != null)
         {
             TurretRangeFXFactory.Instance.Destroy(turretRangeFX);
         }
-        //Debug.Log("Finish Place");
-	}
+
+        foreach (RendererMaterialSet r in rendererMaterialSets)
+        {
+            UpdateRendererMaterials(r.renderer, r.opaque, r.renderer.materials.Length);
+        }
+
+        animator.enabled = true;
+    }
+
+    /// <summary>
+    /// Spawns a "building finished" particle effect.
+    /// </summary>
+	public void SpawnFinishedFX()
+	{
+		FinishedFX fx = FinishedFXFactory.Instance.Get();
+		fx.transform.position = transform.position;
+		fx.transform.localScale = new Vector3(fxSize, fxSize, fxSize);
+		fx.gameObject.SetActive(true);
+    }
 
     /// <summary>
     /// Handles what should happen once the building has been built.
     /// </summary>
     public void FinishBuilding()
     {
-        //Debug.Log("Start Finish Building");
         built = true;
         Operational = true; //Using property to trigger activation of any resource collector component attached.
 
@@ -577,20 +578,6 @@ public class Building : CollisionListener
 
         AudioManager.Instance.PlaySound(idleSound, gameObject);
         AudioManager.Instance.PlaySound(AudioManager.ESound.Building_Completes, gameObject);
-        //Debug.Log("Finish Finish Building");
-    }
-
-    /// <summary>
-    /// Spawns a "building finished" particle effect.
-    /// </summary>
-	public void SpawnFinishedFX()
-	{
-        //Debug.Log("Start SpawnFinishedFX");
-		FinishedFX fx = FinishedFXFactory.Instance.Get();
-		fx.transform.position = transform.position;
-		fx.transform.localScale = new Vector3(fxSize, fxSize, fxSize);
-		fx.gameObject.SetActive(true);
-       // Debug.Log("Finish SpawnFinishedFX");
     }
 
     /// <summary>
@@ -598,13 +585,11 @@ public class Building : CollisionListener
     /// </summary>
     public void Reset()
     {
-        //Debug.Log("Start Reset");
         placed = false; //Needs to occur first so that BuildingFoundations know to ignore this building
         active = false;
         colliding = false;
         built = false;
 
-        //TODO: reset animator? i.e. disable and set animation progress back to 0?
         animator.enabled = false;
         health.Reset();
         Operational = false;
@@ -616,30 +601,25 @@ public class Building : CollisionListener
 
         switch (buildingType)
         {
+            case EBuilding.FusionReactor:
+                fusionReactorBeam.SetBeamActive(false);
+                break;
             case EBuilding.ShortRangeTurret:
             case EBuilding.LongRangeTurret:
                 turretAimer.Reset();
                 turretShooter.Reset();
                 TurretRangeFXFactory.Instance.Destroy(turretRangeFX);
-                break;
-            case EBuilding.FusionReactor:
-                fusionReactorBeam.Deactivate();
-                break;
+                break;            
         }
 
         foreach (RendererMaterialSet r in rendererMaterialSets)
         {
-            for (int i = 0; i < r.renderer.materials.Length; i++)
-            {
-                r.renderer.materials[i] = r.opaque;
-            }
-
+            UpdateRendererMaterials(r.renderer, r.opaque, r.renderer.materials.Length);
             r.renderer.enabled = false;
         }
 
         SetCollidersEnabled("Body", false);
         SetParticleSystemsEnabled(false);		
-        //Debug.Log("Finish Reset");
 	}
 
     //ICollisionListener Triggered Methods---------------------------------------------------------

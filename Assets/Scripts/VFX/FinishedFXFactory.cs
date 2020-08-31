@@ -12,10 +12,11 @@ public class FinishedFXFactory : Factory<FinishedFXFactory, FinishedFX, ENone>
     /// <summary>
     /// Retrieves a FinishedFX from the pool if there's any available, or instantiates a new one if none are available.
     /// </summary>
+    /// <param name="type">The type of FinishedFX to instantiate. Should be left as default value of ENone.None.</param>
     /// <returns>A new instance of FinishedFX.</returns>
-    public FinishedFX Get()
+    public override FinishedFX Get(ENone type = ENone.None)
     {
-        return base.Get(ENone.None);
+        return base.Get(type);
     }
 
     /// <summary>
@@ -33,19 +34,10 @@ public class FinishedFXFactory : Factory<FinishedFXFactory, FinishedFX, ENone>
     /// Handles the destruction of FinishedFXs.
     /// </summary>
     /// <param name="fx">The FinishedFX to be destroyed.</param>
-    public void Destroy(FinishedFX fx)
-    {
-        Destroy(ENone.None, fx);
-    }
-
-    /// <summary>
-    /// Handles the destruction of FinishedFXs.
-    /// </summary>
-    /// <param name="type">The type of the FinishedFX to be destroyed.</param>
-    /// <param name="fx">The FinishedFX to be destroyed.</param>
-    public override void Destroy(ENone type, FinishedFX fx)
+    /// <param name="type">The type of the FinishedFX to be destroyed. Should be left as default value of ENone.None.</param>
+    public override void Destroy(FinishedFX fx, ENone type = ENone.None)
     {
         fx.gameObject.SetActive(false);
-        base.Destroy(type, fx);
+        base.Destroy(fx, type);
     }
 }
