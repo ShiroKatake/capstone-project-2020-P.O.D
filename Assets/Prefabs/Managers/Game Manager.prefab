@@ -29,6 +29,7 @@ GameObject:
   - component: {fileID: 4078778705944399297}
   - component: {fileID: 3607602877255847704}
   - component: {fileID: 6293543869217059979}
+  - component: {fileID: 6142445074608009270}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -409,8 +410,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86469b3f5d03a974989a5df4cac3d508, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deactivateGameObjectInPool: 1
-  productEnums: 00000000
-  productPrefabs:
-  - {fileID: 1141022706116924874, guid: a5d44fe86f6865b4bb6c5707b8ec0dea, type: 3}
-  productQuantities: 02000000
+  turretRangeFX: {fileID: 0}
+--- !u!114 &6142445074608009270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6577456260396280556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32f529d20d81c114481a6564653c3015, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buildingArea: {fileID: 0}
+  placementGrid: {fileID: 0}
+  validColor: {r: 0, g: 1, b: 0.2391901, a: 0.22745098}
+  invalidColor: {r: 1, g: 0, b: 0, a: 0.22745098}
+  maxPossibleSize: 3
