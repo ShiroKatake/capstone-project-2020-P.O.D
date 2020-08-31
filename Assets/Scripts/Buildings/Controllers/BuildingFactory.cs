@@ -94,7 +94,7 @@ public class BuildingFactory : Factory<BuildingFactory, Building, EBuilding>
 
     /// <summary>
     /// Destroy a building.
-    /// Note: it's probably better to call this method or another overload of Destroy() defined in BuildingFactory than Factory's base version of destroy.
+    /// Note: it's probably better to call this method or another overload of Destroy() defined in BuildingFactory than Factory's version of destroy.
     /// </summary>
     /// <param name="building">The building to be destroyed.</param>
     /// <param name="consumingResources">Is the building consuming resources and does that consumption need to be cancelled now that it's being destroyed?</param>
@@ -124,6 +124,6 @@ public class BuildingFactory : Factory<BuildingFactory, Building, EBuilding>
         }
 
         building.Reset();
-        Destroy(building, building.BuildingType);
+        Destroy(building.BuildingType, building);
     }
 }

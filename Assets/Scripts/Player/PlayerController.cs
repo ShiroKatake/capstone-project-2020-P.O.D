@@ -223,7 +223,7 @@ public class PlayerController : SerializableSingleton<PlayerController>
         if (shooting) //No-shooting conditions checked for in GetInput() when determining the value of shooting.
         {
             timeOfLastShot = Time.time;
-            Projectile projectile = ProjectileFactory.Instance.Get(transform, barrelTip, EProjectileType.PODLaserBolt);
+            Projectile projectile = ProjectileFactory.Instance.Get(EProjectileType.PODLaserBolt, transform, barrelTip);
             AudioManager.Instance.PlaySound(AudioManager.ESound.Laser_POD, this.gameObject);
             Vector3 vector = barrelTip.position - barrelMagazine.position;
             projectile.Shoot(vector.normalized, 0);

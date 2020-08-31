@@ -13,11 +13,20 @@ public class BuildingFoundationFactory : Factory<BuildingFoundationFactory, Buil
     /// Get a building foundation from BuildingFactory.
     /// </summary>
     /// <param name="position">The position the building foundation should be instantiated at.</param>
-    /// <param name="type">The type of building foundation to instantiate. Should be left as default value of ENone.None.</param>
     /// <returns>A building foundation.</returns>
-    public override BuildingFoundation Get(Vector3 position, ENone type = ENone.None)
+    public BuildingFoundation Get(Vector3 position)
     {
-        BuildingFoundation buildingFoundation = base.Get(position, type);
+        return Get(ENone.None, position);
+    }
+
+    /// <summary>
+    /// Get a building foundation from BuildingFactory.
+    /// </summary>
+    /// <param name="position">The position the building foundation should be instantiated at.</param>
+    /// <returns>A building foundation.</returns>
+    public override BuildingFoundation Get(ENone type, Vector3 position)
+    {
+        BuildingFoundation buildingFoundation = base.Get(ENone.None, position);
         buildingFoundation.Id = IdGenerator.Instance.GetNextId();
         buildingFoundation.Activate();
         return buildingFoundation;
@@ -27,10 +36,18 @@ public class BuildingFoundationFactory : Factory<BuildingFoundationFactory, Buil
     /// Destroy a building foundation.
     /// </summary>
     /// <param name="buildingFoundation">The building foundation to be destroyed.</param>
-    /// <param name="type">The type of building foundation to destroy. Should be left as default value of ENone.None.</param>
-    public override void Destroy(BuildingFoundation buildingFoundation, ENone type = ENone.None)
+    public void Destroy(BuildingFoundation buildingFoundation)
+    {
+        Destroy(ENone.None, buildingFoundation);
+    }
+
+    /// <summary>
+    /// Destroy a building foundation.
+    /// </summary>
+    /// <param name="buildingFoundation">The building foundation to be destroyed.</param>
+    public override void Destroy(ENone type, BuildingFoundation buildingFoundation)
     {
         buildingFoundation.Collider.enabled = false;
-        base.Destroy(buildingFoundation, type);
+        base.Destroy(type, buildingFoundation);
     }
 }

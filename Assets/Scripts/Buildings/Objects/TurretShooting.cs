@@ -194,7 +194,7 @@ public class TurretShooting : CollisionListener, IMessenger
             
             for(int i = 0; i < numProjectiles; i++)
             {
-                Projectile projectile = ProjectileFactory.Instance.Get(transform, barrelTip, projectileType);
+                Projectile projectile = ProjectileFactory.Instance.Get(projectileType, transform, barrelTip);
                 Vector3 vector = barrelTip.position - barrelMagazine.position;
 
                 if (yAxisVariance > 0 || zAxisVariance > 0)

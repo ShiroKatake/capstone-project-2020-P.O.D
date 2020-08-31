@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// Updates a game object's name based on it's world space position.
-/// </summary>
 [ExecuteInEditMode]
 public class NameByPosition : MonoBehaviour
 {

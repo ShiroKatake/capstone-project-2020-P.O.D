@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class PostConstruction : StateMachineBehaviour
 {
-
-
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     //override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     //{
@@ -22,8 +20,9 @@ public class PostConstruction : StateMachineBehaviour
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
 		Building building = animator.GetComponent<Building>();
-		building.SpawnFinishedFX();
         building.FinishBuilding();
+		building.SpawnFinishedFX();
+
 	}
 
     // OnStateMove is called right after Animator.OnAnimatorMove()

@@ -34,13 +34,13 @@ public class ProjectileFactory : Factory<ProjectileFactory, Projectile, EProject
     /// <summary>
     /// Retrieves Projectiles from a pool if there's any available, and instantiates a new Projectile if there isn't one.
     /// </summary>
+    /// <param name="type">The type of projectile to get.</param>
     /// <param name="owner">The player or turret firing the projectile from their weapon.</param>
     /// <param name="barrelTip">The transform of the barrel tip it's being fired from.</param>
-    /// <param name="type">The type of projectile to get.</param>
     /// <returns>A new projectile.</returns>
-    public Projectile Get(Transform owner, Transform barrelTip, EProjectileType type)
+    public Projectile Get(EProjectileType type, Transform owner, Transform barrelTip)
     {
-        Projectile projectile = Get(barrelTip.position, type);
+        Projectile projectile = Get(type, barrelTip.position);
         projectile.Owner = owner;
 		projectile.transform.rotation = barrelTip.rotation;
 		return projectile;
@@ -64,15 +64,15 @@ public class ProjectileFactory : Factory<ProjectileFactory, Projectile, EProject
     /// <param name="projectile">The projectile to destroy.</param>
     public void Destroy(Projectile projectile)
     {
-        Destroy(projectile, projectile.Type);
+        Destroy(projectile.Type, projectile);
     }
 
     /// <summary>
     /// Handles the destruction of projectiles.
     /// </summary>
-    /// <param name="projectile">The projectile to destroy.</param>
     /// <param name="type">The type of projectile to destroy.</param>
-    public override void Destroy(Projectile projectile, EProjectileType type)
+    /// <param name="projectile">The projectile to destroy.</param>
+    public override void Destroy(EProjectileType type, Projectile projectile)
     {
         ProjectileManager.Instance.DeRegisterProjectile(projectile);
         projectile.Active = false;
@@ -81,6 +81,6 @@ public class ProjectileFactory : Factory<ProjectileFactory, Projectile, EProject
         projectile.Renderer.enabled = false;
         projectile.Rigidbody.velocity = Vector3.zero;
         projectile.Rigidbody.isKinematic = true;
-        base.Destroy(projectile, type);
+        base.Destroy(type, projectile);
     }
 }
