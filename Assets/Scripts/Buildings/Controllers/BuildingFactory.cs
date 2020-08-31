@@ -12,15 +12,19 @@ public class BuildingFactory : Factory<BuildingFactory, Building, EBuilding>
 
 	//Basic Public Properties----------------------------------------------------------------------
 
-	public UnityAction<Transform> onGetTurret;
+	public UnityAction<Building> onPlacement;
+	public UnityAction<Building> onBuildingHasRange;
+	public UnityAction onPlacementValid;
+	public UnityAction onPlacementInvalid;
+	public UnityAction onPlacementFail;
 
-    //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
+	//Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
-    /// <summary>
-    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
-    /// Start() runs after Awake().
-    /// </summary>
-    protected override void Start()
+	/// <summary>
+	/// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
+	/// Start() runs after Awake().
+	/// </summary>
+	protected override void Start()
     {
         base.Start();
 
@@ -65,12 +69,12 @@ public class BuildingFactory : Factory<BuildingFactory, Building, EBuilding>
 		if (buildingType == EBuilding.LongRangeTurret || buildingType == EBuilding.ShortRangeTurret)
 		{
 			//Debug.Log("Displaying Range.");
-			//onGetTurret?.Invoke(building.transform);
-			building.TurretRangeFX = TurretRangeFXFactory.Instance.Get();
-			TurretRangeFXFactory.Instance.OnGetTurret(building.transform, building.TurretRangeFX);
+			onBuildingHasRange?.Invoke(building);
 		}
 
-        //Debug.Log($"BuildingFactory(), returning building ({building}), building collider position is {building.Collider.position} (world) / {building.Collider.localPosition} (local), building model position is {building.Model.position} (world) / {building.Model.localPosition} (local)");
+		onPlacement?.Invoke(building);
+		
+		//Debug.Log($"BuildingFactory(), returning building ({building}), building collider position is {building.Collider.position} (world) / {building.Collider.localPosition} (local), building model position is {building.Model.position} (world) / {building.Model.localPosition} (local)");
 
 		return building;
     }
