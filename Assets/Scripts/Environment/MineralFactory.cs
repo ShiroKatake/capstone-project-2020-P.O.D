@@ -63,21 +63,11 @@ public class MineralFactory : Factory<MineralFactory, Mineral, ENone>
     /// Get a new mineral node.
     /// </summary>
     /// <param name="position">The position the mineral should be instantiated at.</param>
+    /// <param name="type">The type of mineral to retrieve. Should be left as default value of ENone.None.</param>
     /// <returns>A mineral node.</returns>
-    public Mineral Get(Vector3 position)
+    public override Mineral Get(Vector3 position, ENone type = ENone.None)
     {
-        return Get(ENone.None, position);
-    }
-
-    /// <summary>
-    /// Get a new mineral node.
-    /// </summary>
-    /// <param name="type">The type of mineral to retrieve.</param>
-    /// <param name="position">The position the mineral should be instantiated at.</param>
-    /// <returns>A mineral node.</returns>
-    public override Mineral Get(ENone type, Vector3 position)
-    {
-        Mineral mineral = base.Get(type, position);
+        Mineral mineral = base.Get(position, type);
         mineral.Id = IdGenerator.Instance.GetNextId();
         MapController.Instance.RegisterMineral(mineral);
         return mineral;
@@ -99,16 +89,8 @@ public class MineralFactory : Factory<MineralFactory, Mineral, ENone>
     /// Destroy a mineral node.
     /// </summary>
     /// <param name="mineral">The mineral to destroy.</param>
-    public void Destroy(Mineral mineral)
-    {
-        Destroy(ENone.None, mineral);
-    }
-
-    /// <summary>
-    /// Destroy a mineral node.
-    /// </summary>
-    /// <param name="mineral">The mineral to destroy.</param>
-    public override void Destroy(ENone type, Mineral mineral)
+    /// <param name="type">The type of mineral to destroy. Should be left as default value of ENone.None.</param>
+    public override void Destroy(Mineral mineral, ENone type = ENone.None)
     {
         MapController.Instance.DeRegisterMineral(mineral);
         mineral.Reset();
@@ -150,7 +132,7 @@ public class MineralFactory : Factory<MineralFactory, Mineral, ENone>
                     }
                     else
                     {
-                        base.Destroy(ENone.None, toDestroy);
+                        base.Destroy(toDestroy, ENone.None);
                     }
                 }
                 while (!destroySpentMinerals && despawnedMinerals.Count > 0);
