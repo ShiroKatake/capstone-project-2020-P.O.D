@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 880952307760529665}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.5, z: 0}
-  m_LocalScale: {x: 2.9, y: 2.9, z: 2.9}
+  m_LocalScale: {x: 4.9, y: 4.9, z: 4.9}
   m_Children:
   - {fileID: 8586582078626057228}
   - {fileID: 8659336876441333313}
@@ -59,7 +59,32 @@ MonoBehaviour:
   wasteConsumption: 0
   buildTime: 0
   cliffRaycastOffsets: []
-  buildingFoundationOffsets: []
+  buildingFoundationOffsets:
+  - {x: -2, y: 0, z: -2}
+  - {x: -2, y: 0, z: -1}
+  - {x: -2, y: 0, z: 0}
+  - {x: -2, y: 0, z: 1}
+  - {x: -2, y: 0, z: 2}
+  - {x: -1, y: 0, z: -2}
+  - {x: -1, y: 0, z: -1}
+  - {x: -1, y: 0, z: 0}
+  - {x: -1, y: 0, z: 1}
+  - {x: -1, y: 0, z: 2}
+  - {x: 0, y: 0, z: -2}
+  - {x: 0, y: 0, z: -1}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 1}
+  - {x: 0, y: 0, z: 2}
+  - {x: 1, y: 0, z: -2}
+  - {x: 1, y: 0, z: -1}
+  - {x: 1, y: 0, z: 0}
+  - {x: 1, y: 0, z: 1}
+  - {x: 1, y: 0, z: 2}
+  - {x: 2, y: 0, z: -2}
+  - {x: 2, y: 0, z: -1}
+  - {x: 2, y: 0, z: 0}
+  - {x: 2, y: 0, z: 1}
+  - {x: 2, y: 0, z: 2}
   model: {fileID: 6656095491460926229}
   rendererMaterialSets:
   - renderer: {fileID: 8230535307009674714}
@@ -71,9 +96,11 @@ MonoBehaviour:
   idleSound: 0
   constructionFinishedFX: {fileID: 0}
   fxSize: 1
-  collider: {fileID: 8586582078626057228}
+  awake: 0
   active: 0
+  placed: 0
   operational: 1
+  built: 0
 --- !u!114 &4025372026840351080
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114,7 +141,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7d1fe85e34b94943ad23931779e30d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
+  maxHealth: 20
   currentHealth: 0
 --- !u!114 &-2340967334442575925
 MonoBehaviour:
@@ -128,7 +155,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e087b4d1f91fcb941a830564ec25c878, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radius: 1.3
+  radius: 2.25
 --- !u!1 &6702033319860156753
 GameObject:
   m_ObjectHideFlags: 0
@@ -156,7 +183,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6702033319860156753}
   m_LocalRotation: {x: -0.34604567, y: -0.6166461, z: -0.6166461, w: 0.34604567}
-  m_LocalPosition: {x: 0.029, y: 0.266, z: 0.052}
+  m_LocalPosition: {x: 0.029, y: 0.255, z: 0.052}
   m_LocalScale: {x: 0.068790525, y: 0.068790525, z: 0.085}
   m_Children:
   - {fileID: 6656095491460926229}
@@ -227,7 +254,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: 7f0aae4afb486f14caa65c22c7809c42,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 1.13
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 7f0aae4afb486f14caa65c22c7809c42,
         type: 3}
