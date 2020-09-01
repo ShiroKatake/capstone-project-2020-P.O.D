@@ -557,11 +557,7 @@ public class Building : CollisionListener
         SetCollidersEnabled("Body", true);
         transform.position = position;
         BuildingController.Instance.RegisterBuilding(this);
-
-        if (turretRangeFX != null)
-        {
-			BuildingFactory.Instance.onPlacementFail?.Invoke();
-        }
+		BuildingFactory.Instance.onPlacementFinished?.Invoke();
 
         foreach (RendererMaterialSet r in rendererMaterialSets)
         {
@@ -627,7 +623,7 @@ public class Building : CollisionListener
             case EBuilding.LongRangeTurret:
                 turretAimer.Reset();
                 turretShooter.Reset();
-				BuildingFactory.Instance.onPlacementFail?.Invoke();
+				BuildingFactory.Instance.onPlacementFinished?.Invoke();
 				break;
         }
 

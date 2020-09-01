@@ -12,11 +12,11 @@ public class BuildingFactory : Factory<BuildingFactory, Building, EBuilding>
 
 	//Basic Public Properties----------------------------------------------------------------------
 
-	public UnityAction<Building> onPlacement;
+	public UnityAction<Building> onPlacementStarted;
 	public UnityAction<Building> onBuildingHasRange;
 	public UnityAction onPlacementValid;
 	public UnityAction onPlacementInvalid;
-	public UnityAction onPlacementFail;
+	public UnityAction onPlacementFinished;
 
 	//Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -72,7 +72,7 @@ public class BuildingFactory : Factory<BuildingFactory, Building, EBuilding>
 			onBuildingHasRange?.Invoke(building);
 		}
 
-		onPlacement?.Invoke(building);
+		onPlacementStarted?.Invoke(building);
 		
 		//Debug.Log($"BuildingFactory(), returning building ({building}), building collider position is {building.Collider.position} (world) / {building.Collider.localPosition} (local), building model position is {building.Model.position} (world) / {building.Model.localPosition} (local)");
 

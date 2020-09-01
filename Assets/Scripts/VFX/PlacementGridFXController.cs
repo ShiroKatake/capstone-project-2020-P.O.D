@@ -56,12 +56,12 @@ public class PlacementGridFXController : MonoBehaviour
 	/// </summary>
 	void Start()
 	{
-		BuildingFactory.Instance.onPlacement += OnPlacement;
-		BuildingFactory.Instance.onPlacementFail += OnPlacementFail;
+		BuildingFactory.Instance.onPlacementStarted += OnPlacementStarted;
+		BuildingFactory.Instance.onPlacementFinished += OnPlacementFinished;
 		BuildingFactory.Instance.onPlacementInvalid += OnPlacementInvalid;
 		BuildingFactory.Instance.onPlacementValid += OnPlacementValid;
 
-		OnPlacementFail();
+		OnPlacementFinished();
 	}
 
 	//Triggered Methods------------------------------------------------------------------------------------------------------------------------------
@@ -107,7 +107,7 @@ public class PlacementGridFXController : MonoBehaviour
 	/// If the size is different then update the grid and building area accordingly.
 	/// </summary>
 	/// <param name="building">The building currently being held.</param>
-	private void OnPlacement(Building building)
+	private void OnPlacementStarted(Building building)
 	{
 		if (lastSizeX != Mathf.Sqrt(building.BuildingFoundationOffsets.Count) || lastSizeY != Mathf.Sqrt(building.BuildingFoundationOffsets.Count))
 		{
@@ -121,7 +121,7 @@ public class PlacementGridFXController : MonoBehaviour
 		placementGrid.SetActive(true);
 	}
 
-	private void OnPlacementFail()
+	private void OnPlacementFinished()
 	{
 		placementGrid.transform.SetParent(null);
 		placementGrid.SetActive(false);

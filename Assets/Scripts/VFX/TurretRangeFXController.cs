@@ -17,7 +17,7 @@ public class TurretRangeFXController : MonoBehaviour
 	private void Start()
 	{
 		BuildingFactory.Instance.onBuildingHasRange += EnableFX;
-		BuildingFactory.Instance.onPlacementFail += DisableFX;
+		BuildingFactory.Instance.onPlacementFinished += DisableFX;
 		DisableFX();
 	}
 
