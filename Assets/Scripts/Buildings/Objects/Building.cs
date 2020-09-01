@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Rewired;
+using UnityEngine.Events;
 
 [Serializable]
 public struct RendererMaterialSet
@@ -80,7 +81,9 @@ public class Building : CollisionListener
     //Positioning
     private bool colliding = false;
     private bool validPlacement = true;
-    private List<Collider> otherColliders;
+	private bool placementCurrentValid = true;
+	private bool materialChanged = false;
+	private List<Collider> otherColliders;
     Vector3 normalScale;
     LayerMask groundLayerMask;
 
@@ -92,14 +95,14 @@ public class Building : CollisionListener
     [SerializeField] private bool built;
     private float normalBuildTime;
 
-    //Public Properties------------------------------------------------------------------------------------------------------------------------------
+	//Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    //Basic Public Properties----------------------------------------------------------------------
-
-    /// <summary>
-    /// Whether the building is active and in the scene, or has been pooled and is inactive. Active should only be set in BuildingFactory.
-    /// </summary>
-    public bool Active { get => active; set => active = value; }
+	//Basic Public Properties----------------------------------------------------------------------
+    
+	/// <summary>
+	/// Whether the building is active and in the scene, or has been pooled and is inactive. Active should only be set in BuildingFactory.
+	/// </summary>
+	public bool Active { get => active; set => active = value; }
 
     /// <summary>
     /// The position of building foundations relative to the building's transform.position value.
@@ -115,7 +118,7 @@ public class Building : CollisionListener
     /// How long this building takes to builds itself when the player places it in the scene. Should only be set by BuildingFactory.
     /// </summary>
     public float BuildTime { get => buildTime; set => buildTime = value; }
-
+	
     /// <summary>
     /// Has the building been placed and been fully built?
     /// </summary>
@@ -368,21 +371,37 @@ public class Building : CollisionListener
             {
                 validPlacement = !(CheckInPit() || CheckColliding() || CheckOnCliff() || CheckMouseOverUI()) && MapController.Instance.PositionAvailableForBuilding(this);
 
-                foreach (RendererMaterialSet r in rendererMaterialSets)
-                {
-                    Material currentMaterial = (validPlacement ? r.transparent : buildingErrorMaterial);
+				if (!validPlacement && placementCurrentValid)
+				{
+					BuildingFactory.Instance.onPlacementInvalid?.Invoke();
+					placementCurrentValid = false;
+					materialChanged = false;
+				}
 
-                    for (int i = 0; i < r.renderer.materials.Length; i++)
-                    {
-                        if (r.renderer.materials[i] != currentMaterial)
-                        {
-                            UpdateRendererMaterials(r.renderer, currentMaterial, r.renderer.materials.Length);
-                            break;
-                        }
-                    }
-                }
+				else if (validPlacement && !placementCurrentValid)
+				{
+					BuildingFactory.Instance.onPlacementValid?.Invoke();
+					placementCurrentValid = true;
+					materialChanged = false;
+				}
 
-                return validPlacement;
+				if (!materialChanged)
+				{
+					foreach (RendererMaterialSet r in rendererMaterialSets)
+					{
+						Material currentMaterial = (validPlacement ? r.transparent : buildingErrorMaterial);
+
+						for (int i = 0; i < r.renderer.materials.Length; i++)
+						{
+							UpdateRendererMaterials(r.renderer, currentMaterial, r.renderer.materials.Length);
+							break;
+						}
+					}
+
+					materialChanged = true;
+				}
+
+				return validPlacement;
             }
             else
             {
@@ -538,11 +557,7 @@ public class Building : CollisionListener
         SetCollidersEnabled("Body", true);
         transform.position = position;
         BuildingController.Instance.RegisterBuilding(this);
-
-        if (turretRangeFX != null)
-        {
-            TurretRangeFXFactory.Instance.Destroy(turretRangeFX);
-        }
+		BuildingFactory.Instance.onPlacementFinished?.Invoke();
 
         foreach (RendererMaterialSet r in rendererMaterialSets)
         {
@@ -608,8 +623,8 @@ public class Building : CollisionListener
             case EBuilding.LongRangeTurret:
                 turretAimer.Reset();
                 turretShooter.Reset();
-                TurretRangeFXFactory.Instance.Destroy(turretRangeFX);
-                break;            
+				BuildingFactory.Instance.onPlacementFinished?.Invoke();
+				break;
         }
 
         foreach (RendererMaterialSet r in rendererMaterialSets)
