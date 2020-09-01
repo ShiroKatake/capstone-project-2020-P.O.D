@@ -45,25 +45,26 @@ public class NewTerrainGenerator : MonoBehaviour
         newMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         List<Vector3> verts = new List<Vector3>();
         List<int> indices = new List<int>();
-        //cubes = new List<(Vector3, Vector3, Color)>();
+        cubes = new List<(Vector3, Vector3, Color)>();
 
         // Number of layers to check
         int layers = (int)Mathf.Log(heightRes - 1, 2) + 1;
 
+        //List<((int, int), (int, int))> filledQuads = new List<((int, int), (int, int))>();
 
         //float steepness = 0;
         float steepness = smoothness;
 
-        int layerSize = heightRes;
+        int layerSize = heightRes - 1;
         List<QuadtreeChunk> chunks = new List<QuadtreeChunk>();
-        chunks.Add(new QuadtreeChunk(new Rect(0,0, layerSize-1, layerSize-1)));
+        chunks.Add(new QuadtreeChunk(new Rect(0,0, layerSize, layerSize)));
 
         bool isFinished = false;
 
         while (!isFinished) {
             QuadtreeChunk chunk = chunks[0];
             Rect quad = chunk.Quad;
-            float thisLayerSize = quad.width+1;
+            float thisLayerSize = quad.width;
 
             if (CheckForPlane(heights, quad)) {
                 
@@ -72,9 +73,9 @@ public class NewTerrainGenerator : MonoBehaviour
                 int indexLength = verts.Count;
 
                 AddQuad(verts, indices, new Vector3(chunk.Quad.xMin, height, chunk.Quad.yMin),
-                                        new Vector3(chunk.Quad.xMax+1, height, chunk.Quad.yMin),
-                                        new Vector3(chunk.Quad.xMax+1, height, chunk.Quad.yMax+1),
-                                        new Vector3(chunk.Quad.xMin, height, chunk.Quad.yMax+1));
+                                        new Vector3(chunk.Quad.xMax, height, chunk.Quad.yMin),
+                                        new Vector3(chunk.Quad.xMax, height, chunk.Quad.yMax),
+                                        new Vector3(chunk.Quad.xMin, height, chunk.Quad.yMax));
             } else {
 
                 float xMin = chunk.Quad.xMin;
@@ -88,10 +89,9 @@ public class NewTerrainGenerator : MonoBehaviour
                                         new Vector2(xMin, yMax)};
 
                 if (thisLayerSize > 1) {
-                    //thisLayerSize = (thisLayerSize+1)/ 2;
                     thisLayerSize /= 2;
 
-                    Vector2 layerQuad = new Vector2(thisLayerSize-1, thisLayerSize-1);
+                    Vector2 layerQuad = new Vector2(thisLayerSize, thisLayerSize);
 
                     chunks.Add(new QuadtreeChunk(new Rect(quad.min, layerQuad)));
                     chunks.Add(new QuadtreeChunk(new Rect(quad.min + new Vector2(0, thisLayerSize), layerQuad)));
@@ -161,20 +161,12 @@ public class NewTerrainGenerator : MonoBehaviour
     public void RegenerateHeightmap(Texture2D image) {
         // Create empty heightmap
         heights = new float[heightRes, heightRes];
-        cubes = new List<(Vector3, Vector3, Color)>();
-
 
         // Sample each pixel in the image
         for (int xx = 0; xx < heightRes; xx++) {
             for (int yy = 0; yy < heightRes; yy++) {
-                //image.filterMode = FilterMode.Point;
-
-                //cubes.Add((new Vector3(xx, 0, yy), new Vector3(1,1,1), image.GetPixel(xx, yy)));
-
-                //image.
-                //image.pixel
                 Color pixel = image.GetPixel(xx, yy);
-                cubes.Add((new Vector3(xx, 0, yy), new Vector3(1, 1, 1), pixel));
+
                 // Average values into a single float
                 //float average = (pixel.r + pixel.g + pixel.g) / 3f;
                 float average = pixel.grayscale;
@@ -320,7 +312,7 @@ public class NewTerrainGenerator : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawSphere(Vector3.zero, 1);
 
-        if (cubes != null) {
+        /*if (cubes != null) {
             //Gizmos.color = Color.cyan;
             foreach((Vector3, Vector3, Color) cube in cubes) {
                 Gizmos.color = cube.Item3;
@@ -328,7 +320,7 @@ public class NewTerrainGenerator : MonoBehaviour
             }
         }
 
-        /*if (heights != null) {
+        if (heights != null) {
 
 
             for (int xx = 0; xx < heights.GetLength(0); xx++) {
