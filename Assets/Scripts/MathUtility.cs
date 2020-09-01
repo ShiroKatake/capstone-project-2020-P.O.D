@@ -78,5 +78,25 @@ public class MathUtility : Singleton<MathUtility>
     public int Sign(float num)
     {
         return (num < 0 ? -1 : 1);
-    } 
+    }
+
+	/// <summary>
+	/// Determines whether the number is odd or not.
+	/// </summary>
+	/// <param name="num">The number to determine.</param>
+	/// <returns>whether the number is odd (true) or not (false).</returns>
+	public bool IsOdd(float num)
+	{
+		return (num % 2 == 1);
+	}
+
+	/// <summary>
+	/// Determines whether the number is even or not.
+	/// </summary>
+	/// <param name="num">The number to determine.</param>
+	/// <returns>whether the number is even (true) or not (false).</returns>
+	public bool IsEven(float num)
+	{
+		return (num % 2 == 0);
+	}
 }
