@@ -14,17 +14,25 @@ public class TilemapTerrainGeneratorEditor : Editor
 
         TilemapTerrainGenerator script = (TilemapTerrainGenerator)target;
 
-
         if (GUILayout.Button("Generate Heightmap")) {
 
-            int resolution = 32;
+            script.ConvertImageToHeightmap(script.heightmapTexture);
+
+        }
+
+        if (GUILayout.Button("Generate Mesh from Image")) {
+            script.ConvertImageToHeightmap(script.heightmapTexture);
+            script.GenerateMesh();
+            /*int resolution = 32;
 
             if (script.heightmap != null) {
                 resolution = script.heightmap.width;
             }
 
-            script.GenerateFlatMesh((resolution, resolution));
+            script.GenerateFlatMesh((resolution, resolution));*/
         }
+
+
 
         //rampMesh = EditorGUILayout.ObjectField(rampMesh, typeof(Mesh), true);
     }
