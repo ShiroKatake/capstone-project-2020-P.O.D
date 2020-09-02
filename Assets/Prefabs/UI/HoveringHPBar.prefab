@@ -161,6 +161,7 @@ GameObject:
   - component: {fileID: 5764915360147445771}
   - component: {fileID: 5764915360147445764}
   - component: {fileID: 6251930040134941615}
+  - component: {fileID: 1631629735}
   m_Layer: 5
   m_Name: HoveringHPBar
   m_TagString: Untagged
@@ -325,5 +326,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slider: {fileID: 5764915360147445764}
-  barMax: 100
-  curVal: 100
+  health: {fileID: 0}
+  fill: {fileID: 5764915359358054745}
+  border: {fileID: 5764915359910586346}
+--- !u!225 &1631629735
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5764915360147445774}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0

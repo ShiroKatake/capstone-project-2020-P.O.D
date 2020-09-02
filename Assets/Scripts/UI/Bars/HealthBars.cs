@@ -13,18 +13,21 @@ public class HealthBars : MonoBehaviour
     [SerializeField] private Image fill;
     [SerializeField] private Image border;
 
+    private UITransparencyFader fader;
     private float opacityValue;
+
+    public UITransparencyFader Fader {get => fader;}
 
 
     private void Awake() {
         slider.maxValue = health.MaxHealth;
         slider.value = health.CurrentHealth;
+
+        fader = new UITransparencyFader(this.GetComponent<CanvasGroup>());
         if (slider.maxValue != slider.value){
-            opacityValue = 1f;
-            SetVisible();
+            fader.SetVisible();
         } else {
-            opacityValue = 0f;
-            SetInvisible();
+            fader.SetInvisible();
         }
     }
 
@@ -32,49 +35,12 @@ public class HealthBars : MonoBehaviour
         slider.maxValue = health.MaxHealth;
         slider.value = health.CurrentHealth;
         
-        if (slider.value >= slider.maxValue && opacityValue != 0){
-            FadeOut();
-        } else if (slider.value < slider.maxValue && opacityValue != 1){
-            Debug.Log("Starting to Fade In");
-            FadeIn();
+        if (fader.IsFading()){
+            fader.Fade();
+        } else if (slider.value >= slider.maxValue && !fader.isTransparent()){
+            fader.StartFade(1, 0, 1f);
+        } else if (slider.value < slider.maxValue && fader.isTransparent()){
+            fader.StartFade(0, 1, 0.3f);
         }
-    }
-
-    private void FadeOut(){
-        opacityValue = Mathf.Lerp(opacityValue, 0f, 2f * Time.deltaTime);
-        Color tmpClr1 = fill.color;
-        Color tmpClr2 = border.color;
-        tmpClr1.a = opacityValue;
-        tmpClr2.a = opacityValue;
-        fill.color = tmpClr1;
-        border.color = tmpClr2;
-    }
-
-    private void FadeIn(){
-        opacityValue = Mathf.Lerp(opacityValue, 1f, 3f * Time.deltaTime);
-        Color tmpClr1 = fill.color;
-        Color tmpClr2 = border.color;
-        tmpClr1.a = opacityValue;
-        tmpClr2.a = opacityValue;
-        fill.color = tmpClr1;
-        border.color = tmpClr2;
-    }
-
-    private void SetInvisible(){
-        Color tmpClr1 = fill.color;
-        Color tmpClr2 = border.color;
-        tmpClr1.a = 0f;
-        tmpClr2.a = 0f;
-        fill.color = tmpClr1;
-        border.color = tmpClr2;
-    }
-
-    private void SetVisible(){
-        Color tmpClr1 = fill.color;
-        Color tmpClr2 = border.color;
-        tmpClr1.a = 1f;
-        tmpClr2.a = 1f;
-        fill.color = tmpClr1;
-        border.color = tmpClr2;
     }
 }
