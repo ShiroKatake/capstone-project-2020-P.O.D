@@ -7,12 +7,12 @@ using UnityEngine;
 [CustomEditor(typeof(TilemapTerrainGenerator))]
 public class TilemapTerrainGeneratorEditor : Editor
 {
-    public Object rampMesh;
+    TilemapTerrainGenerator script;
 
     public override void OnInspectorGUI() {
         DrawDefaultInspector();
 
-        TilemapTerrainGenerator script = (TilemapTerrainGenerator)target;
+        script = (TilemapTerrainGenerator)target;
 
         if (GUILayout.Button("Generate Heightmap")) {
 
@@ -23,18 +23,33 @@ public class TilemapTerrainGeneratorEditor : Editor
         if (GUILayout.Button("Generate Mesh from Image")) {
             script.ConvertImageToHeightmap(script.heightmapTexture);
             script.GenerateMesh();
-            /*int resolution = 32;
-
-            if (script.heightmap != null) {
-                resolution = script.heightmap.width;
-            }
-
-            script.GenerateFlatMesh((resolution, resolution));*/
         }
 
+        if (GUILayout.Button("Generate Cliffs from Image")) {
+            ClearChildren();
+
+            script.CreateCliffsFromImage(script.heightmapTexture);
+            
+        }
+
+        GUILayout.Space(10);
+
+        if (GUILayout.Button("Clear Children")) {
+            ClearChildren();
+        }
 
 
         //rampMesh = EditorGUILayout.ObjectField(rampMesh, typeof(Mesh), true);
     }
     
+    private void ClearChildren() {
+        Transform obj = script.transform;
+        int childNum = obj.childCount;
+
+        for (int i = obj.childCount - 1; i >= 0; i--) {
+            Transform child = obj.GetChild(i);
+            DestroyImmediate(child.gameObject, false);
+        }
+    }
+
 }
