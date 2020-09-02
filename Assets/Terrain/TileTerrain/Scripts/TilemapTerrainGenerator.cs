@@ -115,11 +115,6 @@ public class TilemapTerrainGenerator : MonoBehaviour
 
                     }
 
-                        
-                    
-
-                    
-
                     var newCliff = Instantiate(cliffObj, transform);
                     newCliff.transform.localPosition = new Vector3(xx+1, minHeight * yScale, yy+1);
                     newCliff.transform.localScale = new Vector3(1, heightDelta * yScale, 1);
@@ -174,7 +169,7 @@ public class TilemapTerrainGenerator : MonoBehaviour
     public void GenerateMesh() {
         FindMeshFilter();
         Mesh mesh = new Mesh();
-
+        mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         //HashSet<Vector3> verts = new HashSet<Vector3>();
 
         List<Vector3> verts = new List<Vector3>();
