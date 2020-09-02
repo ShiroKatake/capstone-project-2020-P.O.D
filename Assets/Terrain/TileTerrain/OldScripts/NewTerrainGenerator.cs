@@ -21,7 +21,7 @@ public class NewTerrainGenerator : MonoBehaviour
     List<Line> lines;
     List<(Vector3, Vector3, Color)> cubes;
     private int heightRes;
-    private float yScale = 3;
+    private float yScale = 2;
 
     // Start is called before the first frame update
     void Start()
@@ -56,6 +56,7 @@ public class NewTerrainGenerator : MonoBehaviour
         float steepness = smoothness;
 
         int layerSize = heightRes - 1;
+        //int layerSize = heightRes;
         List<QuadtreeChunk> chunks = new List<QuadtreeChunk>();
         chunks.Add(new QuadtreeChunk(new Rect(0,0, layerSize, layerSize)));
 
@@ -67,8 +68,8 @@ public class NewTerrainGenerator : MonoBehaviour
             float thisLayerSize = quad.width;
 
             if (CheckForPlane(heights, quad)) {
-                
-                float height = heights[(int)quad.xMin, (int)quad.yMin] * yScale;
+
+                float height = heights[(int)quad.xMin, (int)quad.yMin];// * yScale;
 
                 int indexLength = verts.Count;
 
@@ -90,6 +91,7 @@ public class NewTerrainGenerator : MonoBehaviour
 
                 if (thisLayerSize > 1) {
                     thisLayerSize /= 2;
+                    //thisLayerSize = (thisLayerSize + 1) / 2 - 1;
 
                     Vector2 layerQuad = new Vector2(thisLayerSize, thisLayerSize);
 
@@ -170,6 +172,7 @@ public class NewTerrainGenerator : MonoBehaviour
                 // Average values into a single float
                 //float average = (pixel.r + pixel.g + pixel.g) / 3f;
                 float average = pixel.grayscale;
+                //float average = pixel.r;
                 heights[xx, yy] = average;
 
             }
