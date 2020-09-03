@@ -11,9 +11,15 @@ public class TilemapTerrainGenerator : MonoBehaviour
     MeshFilter filter;
 
     [SerializeField] public Texture2D heightmapTexture;
-    [SerializeField] private GameObject straightRamp_Object;
-    [SerializeField] private GameObject innerRamp_Object;
-    [SerializeField] private GameObject outerRamp_Object;
+    [SerializeField] private GameObject straightCliff_Object;
+    [SerializeField] private GameObject innerCliff_Object;
+    [SerializeField] private GameObject outerCliff_Object;
+
+    [SerializeField] private GameObject RampStraight_Object;
+    [SerializeField] private GameObject RampLeft_Object;
+    [SerializeField] private GameObject RampRight_Object;
+    
+
 
     private float [,] heightmap;
 
@@ -35,6 +41,8 @@ public class TilemapTerrainGenerator : MonoBehaviour
 
     public void CreateCliffsFromImage(Texture2D image) {
 
+        List<(int, int)> processedRamps = new List<(int, int)>();
+
         for (int xx = 0; xx < image.width; xx += 2) {
             for (int yy = 0; yy < image.height; yy += 2) {
                 Color pixelCol = image.GetPixel(xx, yy);
@@ -42,6 +50,7 @@ public class TilemapTerrainGenerator : MonoBehaviour
                 // 0 indexed, anti-clockwise from lower left
                 float[] corners = new float[4];
 
+                // Create cliffs where green pixels exist
                 if (pixelCol.g > 0) {
                     corners[0] = pixelCol.g;
                     corners[1] = image.GetPixel(xx + 1, yy).g;
@@ -68,7 +77,7 @@ public class TilemapTerrainGenerator : MonoBehaviour
 
                     if (Mathf.Approximately(cornerSum - 2 * minHeight, 2 * maxHeight)) {
                         // If quad has straight parralel edges
-                        cliffObj = straightRamp_Object;
+                        cliffObj = straightCliff_Object;
 
                         // If X axis has same values, and lower edge raised
                         if (corners[0] == corners[1] && corners[0] == maxHeight) {
@@ -91,7 +100,7 @@ public class TilemapTerrainGenerator : MonoBehaviour
 
                         if (Mathf.Approximately(cornerSum - maxHeight, 3 * minHeight)) {
                             // If quad is an inner corner
-                            cliffObj = innerRamp_Object;
+                            cliffObj = innerCliff_Object;
 
                             if (corners[0] == maxHeight)
                                 angle = -90;
@@ -103,7 +112,7 @@ public class TilemapTerrainGenerator : MonoBehaviour
 
                         } else {
                             // If quad is an outer corner
-                            cliffObj = outerRamp_Object;
+                            cliffObj = outerCliff_Object;
 
                             if (corners[0] == minHeight)
                                 angle = 90;
@@ -120,6 +129,110 @@ public class TilemapTerrainGenerator : MonoBehaviour
                     newCliff.transform.localScale = new Vector3(1, heightDelta * yScale, 1);
                     newCliff.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.up);
 
+                }
+
+                
+
+                // Create ramps where blue pixels exist
+                if (pixelCol.b > 0) {
+                    if (!processedRamps.Contains((xx,yy))) {
+                        GameObject rampShape = RampLeft_Object;
+
+                        float thisHeight = pixelCol.b;
+
+                        float[] edgeHeights = new float[2];
+                        edgeHeights[0] = image.GetPixel(xx + 2, yy).b;  // Right
+                        edgeHeights[1] = image.GetPixel(xx, yy + 2).b;  // Up
+
+                        // Because the image is sampled from bottom left, going up and right, any matches
+                        // will be found either to the right or up from the test pixel
+
+                        // Find the edge index that corresponds to the paired tile
+                        int pairIndex = -1;
+                        for(int i = 0; i < edgeHeights.Length; i ++) {
+                            if (edgeHeights[i] != 0 && edgeHeights[i] != thisHeight) {
+                                pairIndex = i;
+                            }
+                        }
+                        if (pairIndex < 0) {
+                            Debug.LogError("Image format incorrect. No pair for ramp at (" + xx +","+yy+") was found");
+                        }
+
+                        Vector3 positionOffset = default;
+
+                        float minHeight = Mathf.Min(thisHeight, edgeHeights[pairIndex]);
+                        float maxHeight = Mathf.Max(thisHeight, edgeHeights[pairIndex]);
+                        float heightDelta = maxHeight - minHeight;
+
+                        float angle = 0;
+
+                        processedRamps.Add((xx, yy));
+
+                        // Apply position and rotation offsets
+                        switch (pairIndex) {
+                            case 0:     // Right
+                                processedRamps.Add((xx + 2, yy));
+                                positionOffset = new Vector3(2, minHeight * yScale, 1);
+
+                                float upGreenCheck = -1;
+                                float downGreenCheck = -1;
+
+                                if (Mathf.Approximately(minHeight, thisHeight)) {
+                                    // If this sample is the low pixel (Ramp going down left (-X))
+                                    angle = -90;
+                                    upGreenCheck = image.GetPixel(xx + 2, yy + 2).g;
+                                    downGreenCheck = image.GetPixel(xx + 2, yy - 2).g;
+                                } else {
+                                    // If this sample is the high pixel (Ramp going down right (+X))
+                                    angle = 90;
+                                    downGreenCheck = image.GetPixel(xx, yy + 2).g;
+                                    upGreenCheck = image.GetPixel(xx, yy - 2).g;
+                                }
+
+                                if (upGreenCheck > 0)
+                                    rampShape = RampLeft_Object;
+                                else if (downGreenCheck > 0)
+                                    rampShape = RampRight_Object;
+                                else
+                                    rampShape = RampStraight_Object;
+
+                                break;
+                            case 1:
+                                processedRamps.Add((xx, yy + 2));
+                                positionOffset = new Vector3(1, minHeight * yScale, 2);
+                                float leftGreenCheck = -1;
+                                float rightGreenCheck = -1;
+
+                                if (Mathf.Approximately(minHeight, thisHeight)) {
+                                    // If this sample is the low pixel (ramp going down down (-Z))
+                                    angle = 180;
+                                    leftGreenCheck = image.GetPixel(xx - 2, yy + 2).g;
+                                    rightGreenCheck = image.GetPixel(xx + 2, yy + 2).g;
+                                } else {
+                                    angle = 0;
+                                    leftGreenCheck = image.GetPixel(xx + 2, yy).g;
+                                    rightGreenCheck = image.GetPixel(xx - 2, yy).g;
+                                }
+
+                                if (leftGreenCheck > 0)
+                                    rampShape = RampLeft_Object;
+                                else if (rightGreenCheck > 0)
+                                    rampShape = RampRight_Object;
+                                else
+                                    rampShape = RampStraight_Object;
+
+                                break;
+                        }
+
+
+
+
+                        GameObject newRamp = Instantiate(rampShape, transform);
+                        newRamp.transform.localPosition = new Vector3(xx, 0, yy) + positionOffset;
+                        newRamp.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.up);
+                        newRamp.transform.localScale = new Vector3(1, heightDelta * yScale, 1);
+                        
+                    }
                 }
             }
         }
