@@ -564,7 +564,50 @@ public class Building : CollisionListener
             UpdateRendererMaterials(r.renderer, r.opaque, r.renderer.materials.Length);
         }
 
+        health.CurrentHealth = 0.01f;
+        StartCoroutine(ProgressUpdate());
+
         animator.enabled = true;
+    }
+
+    private IEnumerator ProgressUpdate(){
+        Debug.Log("Progress starting; starting health is: " + health.CurrentHealth);
+        /*Material shd = null;
+        for (int i = 0; i < gameObject.transform.childCount; i++){
+            Debug.Log("Child " + i + ": " + gameObject.transform.GetChild(i));
+            if (gameObject.transform.GetChild(i).name.Equals("Body Collider")){
+                Debug.Log("Found the correct Child");
+                for (int z = 0; z < gameObject.transform.GetChild(i).childCount; z++){
+                    Debug.Log("Child " + z + ": " + gameObject.transform.GetChild(i).GetChild(z));
+                    if (gameObject.transform.GetChild(i).GetChild(z).name.Equals("Base Model")){
+                        shd = gameObject.transform.GetChild(i).GetChild(z).GetComponent<Material>();
+                        Debug.Log("Child Shader: " + gameObject.transform.GetChild(i).GetChild(z).GetComponent<Material>());
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+        if (shd != null){
+            shd.GetFloat("_DissolveAmount");
+        } else {
+            Debug.Log("shd is null");
+        }*/
+        while (health.CurrentHealth < health.MaxHealth){
+            if (!PauseMenuManager.Paused){
+                Debug.Log("health is: " + health.CurrentHealth + " ; Renderer is: " + rendererMaterialSets[0].renderer.name + " ; Material is: " + rendererMaterialSets[0].renderer.materials[0]);
+                
+                }
+                if (rendererMaterialSets[0].renderer.materials[0].GetFloat("_DissolveAmount") == 1){
+                    health.CurrentHealth = 0.01f;
+                } else {
+                    health.CurrentHealth = health.MaxHealth * rendererMaterialSets[0].renderer.materials[0].GetFloat("_DissolveAmount");
+                    //health.CurrentHealth = health.MaxHealth * shd.GetPropertyDefaultFloatValue();
+                }
+                Debug.Log("health is: " + health.CurrentHealth);
+
+            yield return null;
+        }
     }
 
     /// <summary>
@@ -600,6 +643,7 @@ public class Building : CollisionListener
     /// </summary>
     public void Reset()
     {
+        StopCoroutine(ProgressUpdate());
         placed = false; //Needs to occur first so that BuildingFoundations know to ignore this building
         active = false;
         colliding = false;
