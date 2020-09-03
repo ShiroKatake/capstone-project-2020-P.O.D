@@ -298,7 +298,7 @@ public class BuildingSpawningController : SerializableSingleton<BuildingSpawning
     {
         float result = 3;
         //float errorMargin = 0.01f;
-        Vector3 raycastPos = new Vector3(pos.x, 3, pos.z);
+        Vector3 raycastPos = new Vector3(pos.x, 4, pos.z);
         RaycastHit hit;
 
         if (Physics.Raycast(raycastPos, Vector3.down, out hit, 20, groundLayerMask))

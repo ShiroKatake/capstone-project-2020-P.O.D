@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Rewired;
 
 /// <summary>
 /// A manager class for resource gathering and usage.
@@ -23,7 +24,7 @@ public class ResourceController : SerializableSingleton<ResourceController>
     [SerializeField] private int waterConsumption;
 
     [Header("Testing")]
-    [SerializeField] private bool getDeveloperResources;
+    //[SerializeField] private bool getDeveloperResources;
     [SerializeField] private int developerResources;
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
@@ -34,6 +35,7 @@ public class ResourceController : SerializableSingleton<ResourceController>
     private bool powerAvailable = false;
     private bool wasteAvailable = false;
     private bool waterAvailable = false;
+    private Player playerInputManager;
 
     //Basic Public Properties----------------------------------------------------------------------                                                                                                                          
 
@@ -178,6 +180,17 @@ public class ResourceController : SerializableSingleton<ResourceController>
             CheckResourceSupply();
         }
     }
+    
+    //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
+    /// Start() runs after Awake().
+    /// </summary>
+    private void Start()
+    {
+        playerInputManager = PlayerController.Instance.PlayerInputManager;
+    }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -200,14 +213,24 @@ public class ResourceController : SerializableSingleton<ResourceController>
     /// </summary>
     private void CheckDeveloperResources()
     {
-        if (getDeveloperResources)
+        if (Application.isEditor)
         {
-            ore += developerResources;
-            powerSupply += developerResources;
-            wasteSupply += developerResources;
-            waterSupply += developerResources;
-            getDeveloperResources = false;
+            if (playerInputManager.GetButtonDown("Get Developer Resources"))
+            {
+                ore += developerResources;
+                powerSupply += developerResources;
+                wasteSupply += developerResources;
+                waterSupply += developerResources;
+            }
+            else if (playerInputManager.GetButtonDown("Remove Developer Resources"))
+            {
+                ore = Mathf.Max(0, ore - developerResources);
+                powerSupply = Mathf.Max(0, powerSupply - developerResources);
+                wasteSupply = Mathf.Max(0, wasteSupply - developerResources);
+                waterSupply = Mathf.Max(0, waterSupply - developerResources);
+            }
         }
+
     }
 
     /// <summary>
