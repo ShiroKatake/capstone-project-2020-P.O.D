@@ -34,6 +34,13 @@ public class TilemapTerrainGeneratorEditor : Editor
 
         GUILayout.Space(10);
 
+        if (GUILayout.Button("Optimise Mesh"))
+            script.OptimiseMesh();
+        if (GUILayout.Button("Set Collision Mesh"))
+            script.OptimiseMesh();
+
+        GUILayout.Space(10);
+
         if (GUILayout.Button("Clear Children")) {
             ClearChildren();
         }

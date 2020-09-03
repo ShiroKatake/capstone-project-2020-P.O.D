@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-
+using UnityMeshSimplifier;
 
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
+[RequireComponent(typeof(MeshCollider))]
 public class TilemapTerrainGenerator : MonoBehaviour
 {
     MeshFilter filter;
+    MeshCollider collider; 
 
     [SerializeField] public Texture2D heightmapTexture;
     [SerializeField] private GameObject straightCliff_Object;
@@ -293,6 +295,7 @@ public class TilemapTerrainGenerator : MonoBehaviour
                 int[] tris = new int[6];
 
                 float height = heightmap[xx, yy] * yScale;
+
                 if (height > 0) {
 
                     tris[0] = AddVertex(verts, new Vector3(xx, height, yy));
@@ -311,47 +314,29 @@ public class TilemapTerrainGenerator : MonoBehaviour
 
         mesh.SetVertices(verts);
         mesh.SetIndices(indices, MeshTopology.Triangles, 0);
-        mesh.RecalculateNormals();
 
+        mesh.RecalculateNormals();
         filter.mesh = mesh;
     }
 
-    public void GenerateFlatMesh((int, int) size) {
+   
+
+    public void OptimiseMesh() {
         FindMeshFilter();
-        Mesh mesh = new Mesh();
+        Mesh m = filter.sharedMesh;
 
-        //HashSet<Vector3> verts = new HashSet<Vector3>();
+        m.Weld(Mathf.Epsilon, 64);
+        m.Simplify();
 
-        List<Vector3> verts = new List<Vector3>();
-        List<int> indices = new List<int>();
-        //List<Vector3> verts = new List<Vector3>();
+        m.RecalculateNormals();
 
-        double time = EditorApplication.timeSinceStartup;
+        filter.sharedMesh = m;
+    }
 
-        for (int xx = 0; xx < size.Item1; xx++) {
-            for (int yy = 0; yy < size.Item2; yy++) {
-                int[] tris = new int[6];
-
-                tris[0] = AddVertex(verts, new Vector3(xx, 0, yy));
-                tris[1] = AddVertex(verts, new Vector3(xx, 0, yy + 1));
-                tris[2] = AddVertex(verts, new Vector3(xx+1, 0, yy+1));
-
-
-                tris[3] = AddVertex(verts, new Vector3(xx, 0, yy));
-                tris[4] = AddVertex(verts, new Vector3(xx+1, 0, yy+1));
-                tris[5] = AddVertex(verts, new Vector3(xx+1, 0, yy));
-
-                indices.AddRange(tris);
-            }
-        }
-
-        mesh.SetVertices(verts);
-        mesh.SetIndices(indices, MeshTopology.Triangles, 0);
-
-        filter.mesh = mesh;
-
-        double delay = EditorApplication.timeSinceStartup - time;
-        Debug.Log(delay);
+    public void SetCollisionMesh() {
+        FindMeshFilter();
+        FindMeshCollider();
+        collider.sharedMesh = filter.sharedMesh;
     }
 
     private void FindMeshFilter() {
@@ -359,11 +344,20 @@ public class TilemapTerrainGenerator : MonoBehaviour
             filter = GetComponent<MeshFilter>();
         }
     }
+    
+    private void FindMeshCollider() {
+        if (collider == null) {
+            collider = GetComponent<MeshCollider>();
+        }
+    }
+
 
     //private void AddQuad
 
     /// <summary>
     /// Adds a vertex to the verts if it is not yet present,
+    /// 
+    /// TODO: Currently removed due to excessive generation time:
     /// Uses existing verts if already present.
     /// </summary>
     /// <param name="verts">List of vertices to check</param>
@@ -375,17 +369,6 @@ public class TilemapTerrainGenerator : MonoBehaviour
         //verts.fin
         //foundValue = verts.BinarySearch(vertex, new VectorComparer());
 
-
-
-        /*for(int i = 0; i < verts.Count; i ++) {
-            if (verts[i] == vertex) {
-                foundValue = i;
-                break;
-            }
-                //return i;
-        }
-        */
-
         if (foundValue < 0) {
             verts.Add(vertex);
             foundValue = verts.Count - 1;
@@ -395,7 +378,7 @@ public class TilemapTerrainGenerator : MonoBehaviour
         return foundValue;
     }
 
-    private void OnDrawGizmos() {
+    /*private void OnDrawGizmos() {
 
         Gizmos.color = Color.red;
         Gizmos.DrawSphere(Vector3.zero, 1);
@@ -406,6 +389,6 @@ public class TilemapTerrainGenerator : MonoBehaviour
                 Gizmos.DrawSphere(set.Item1, set.Item2);
             }
         }
-    }
+    }*/
 
 }
