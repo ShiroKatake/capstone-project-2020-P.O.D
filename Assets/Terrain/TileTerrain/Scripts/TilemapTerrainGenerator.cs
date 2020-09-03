@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityMeshSimplifier;
@@ -61,16 +62,9 @@ public class TilemapTerrainGenerator : MonoBehaviour
 
 
                     // Find the minimum and maximum heights
-                    float minHeight = corners[0];
-                    float maxHeight = corners[0];
-                    float cornerSum = 0;
-                    foreach (float corner in corners) {
-                        if (corner < minHeight)
-                            minHeight = corner;
-                        if (corner > maxHeight)
-                            maxHeight = corner;
-                        cornerSum += corner;
-                    }
+                    float minHeight = Mathf.Min(corners);
+                    float maxHeight = Mathf.Max(corners);
+                    float cornerSum = corners.Sum();
 
                     float heightDelta = maxHeight - minHeight;
 
@@ -226,9 +220,6 @@ public class TilemapTerrainGenerator : MonoBehaviour
                                 break;
                         }
 
-
-
-
                         GameObject newRamp = Instantiate(rampShape, transform);
                         newRamp.transform.localPosition = new Vector3(xx, 0, yy) + positionOffset;
                         newRamp.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.up);
@@ -250,20 +241,12 @@ public class TilemapTerrainGenerator : MonoBehaviour
         for (int xx = 0; xx < image.width; xx ++) {
             for (int yy = 0; yy < image.height; yy++) {
                 // xx,yy is pixel position.
-                // heights are average of 4 pixels surrounding a point (intersection of 4 pixels)
 
                 float sum = 0;
-                int numSamples = 0;
 
                 sum += image.GetPixel(xx, yy).r;
-                numSamples += 1;
 
-
-                float height = sum / ((float)numSamples);
-
-                spheres.Add((new Vector3(xx, height, yy), 0.2f, image.GetPixel(xx,yy)));
-
-
+                float height = sum;
 
                 heights[xx, yy] = height;
 
@@ -274,18 +257,10 @@ public class TilemapTerrainGenerator : MonoBehaviour
 
     }
 
-    private bool IsInRange((int,int) position, (int,int) delta, float maxSize) {
-        if (position.Item1 + delta.Item1 >= 0 && position.Item1 + delta.Item1 < maxSize)
-            if (position.Item2 + delta.Item2 >= 0 && position.Item2 + delta.Item2 < maxSize)
-                return true;
-        return false;
-    }
-
     public void GenerateMesh() {
         FindMeshFilter();
         Mesh mesh = new Mesh();
         mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-        //HashSet<Vector3> verts = new HashSet<Vector3>();
 
         List<Vector3> verts = new List<Vector3>();
         List<int> indices = new List<int>();
@@ -366,8 +341,7 @@ public class TilemapTerrainGenerator : MonoBehaviour
     private int AddVertex(List<Vector3> verts, Vector3 vertex) {
 
         int foundValue = -1;
-        //verts.fin
-        //foundValue = verts.BinarySearch(vertex, new VectorComparer());
+
 
         if (foundValue < 0) {
             verts.Add(vertex);
@@ -377,18 +351,5 @@ public class TilemapTerrainGenerator : MonoBehaviour
         
         return foundValue;
     }
-
-    /*private void OnDrawGizmos() {
-
-        Gizmos.color = Color.red;
-        Gizmos.DrawSphere(Vector3.zero, 1);
-
-        if (spheres != null) {
-            foreach (var set in spheres) {
-                Gizmos.color = set.Item3;
-                Gizmos.DrawSphere(set.Item1, set.Item2);
-            }
-        }
-    }*/
 
 }
