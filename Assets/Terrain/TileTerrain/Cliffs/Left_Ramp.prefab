@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7569587422208712525}
   - component: {fileID: 1465804136792253819}
   - component: {fileID: 5146238283457960322}
+  - component: {fileID: 5498853487562101229}
   m_Layer: 0
   m_Name: Left_Ramp
   m_TagString: Untagged
@@ -79,3 +80,17 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!64 &5498853487562101229
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6870182404906364254}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 7718446869861128053, guid: b8f2ed37a2f0aca4c97776eea9bec46e, type: 3}

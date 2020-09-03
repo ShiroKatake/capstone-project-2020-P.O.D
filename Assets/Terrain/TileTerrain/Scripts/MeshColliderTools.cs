@@ -1,4 +1,7 @@
-﻿using System;
+﻿//SOURCE: 
+// http://wiki.unity3d.com/index.php/Mesh_simplification_(for_MeshCollider,_lossless)
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 
