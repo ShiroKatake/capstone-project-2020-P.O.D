@@ -11,16 +11,20 @@ using UnityMeshSimplifier;
 public class TilemapTerrainGenerator : MonoBehaviour
 {
     MeshFilter filter;
-    MeshCollider collider; 
+    MeshCollider collider;
+
+    [SerializeField] public TilemapPrefabData prefabData;
 
     [SerializeField] public Texture2D heightmapTexture;
-    [SerializeField] private GameObject straightCliff_Object;
-    [SerializeField] private GameObject innerCliff_Object;
-    [SerializeField] private GameObject outerCliff_Object;
+    [SerializeField] public Texture2D itemTexture;
 
-    [SerializeField] private GameObject RampStraight_Object;
-    [SerializeField] private GameObject RampLeft_Object;
-    [SerializeField] private GameObject RampRight_Object;
+    //[SerializeField] private GameObject straightCliff_Object;
+    //[SerializeField] private GameObject innerCliff_Object;
+    //[SerializeField] private GameObject outerCliff_Object;
+
+    //[SerializeField] private GameObject RampStraight_Object;
+    //[SerializeField] private GameObject RampLeft_Object;
+    //[SerializeField] private GameObject RampRight_Object;
     
 
 
@@ -73,7 +77,7 @@ public class TilemapTerrainGenerator : MonoBehaviour
 
                     if (Mathf.Approximately(cornerSum - 2 * minHeight, 2 * maxHeight)) {
                         // If quad has straight parralel edges
-                        cliffObj = straightCliff_Object;
+                        cliffObj = prefabData.straightCliff_Prefab;
 
                         // If X axis has same values, and lower edge raised
                         if (corners[0] == corners[1] && corners[0] == maxHeight) {
@@ -96,7 +100,7 @@ public class TilemapTerrainGenerator : MonoBehaviour
 
                         if (Mathf.Approximately(cornerSum - maxHeight, 3 * minHeight)) {
                             // If quad is an inner corner
-                            cliffObj = innerCliff_Object;
+                            cliffObj = prefabData.innerCornerCliff_Prefab;
 
                             if (corners[0] == maxHeight)
                                 angle = -90;
@@ -108,7 +112,7 @@ public class TilemapTerrainGenerator : MonoBehaviour
 
                         } else {
                             // If quad is an outer corner
-                            cliffObj = outerCliff_Object;
+                            cliffObj = prefabData.outerCornerCliff_Prefab;
 
                             if (corners[0] == minHeight)
                                 angle = 90;
@@ -132,7 +136,7 @@ public class TilemapTerrainGenerator : MonoBehaviour
                 // Create ramps where blue pixels exist
                 if (pixelCol.b > 0) {
                     if (!processedRamps.Contains((xx,yy))) {
-                        GameObject rampShape = RampLeft_Object;
+                        GameObject rampShape = prefabData.leftRamp_Prefab;
 
                         float thisHeight = pixelCol.b;
 
@@ -186,11 +190,11 @@ public class TilemapTerrainGenerator : MonoBehaviour
                                 }
 
                                 if (upGreenCheck > 0)
-                                    rampShape = RampLeft_Object;
+                                    rampShape = prefabData.leftRamp_Prefab;
                                 else if (downGreenCheck > 0)
-                                    rampShape = RampRight_Object;
+                                    rampShape = prefabData.rightRamp_Prefab;
                                 else
-                                    rampShape = RampStraight_Object;
+                                    rampShape = prefabData.straightRamp_Prefab;
 
                                 break;
                             case 1:
@@ -211,11 +215,11 @@ public class TilemapTerrainGenerator : MonoBehaviour
                                 }
 
                                 if (leftGreenCheck > 0)
-                                    rampShape = RampLeft_Object;
+                                    rampShape = prefabData.leftRamp_Prefab;
                                 else if (rightGreenCheck > 0)
-                                    rampShape = RampRight_Object;
+                                    rampShape = prefabData.rightRamp_Prefab;
                                 else
-                                    rampShape = RampStraight_Object;
+                                    rampShape = prefabData.straightRamp_Prefab;
 
                                 break;
                         }
@@ -231,6 +235,34 @@ public class TilemapTerrainGenerator : MonoBehaviour
         }
     }
 
+    public void CreateMapItemsFromImage(Texture2D image) {
+        List<Color> valuesOnMap = new List<Color>();
+
+        for (int xx = 0; xx < image.width; xx += 1) {
+            for (int yy = 0; yy < image.height; yy += 1) {
+                Color pixel = image.GetPixel(xx, yy);
+                if (!valuesOnMap.Contains(pixel)) {
+                    valuesOnMap.Add(pixel);
+                }
+
+                if (pixel == new Color(0, 0.8f, 0.8f)) {
+                    //if (pixel.isEqual(new Color(0, 0.8f, 0.8f), 0.1f)) {
+                    GameObject mineral = Instantiate(prefabData.mineral_Prefab, transform);
+
+                    mineral.transform.localPosition = new Vector3(xx+0.5f, heightmap[xx, yy] * yScale, yy+0.5f);
+                }
+
+            }
+        }
+
+        string colours = "";
+
+        foreach (Color col in valuesOnMap) {
+            colours += "\n" +col.ToString();
+        }
+
+        Debug.Log(colours);
+    }
 
     public void ConvertImageToHeightmap(Texture2D image) {
         spheres = new List<(Vector3, float, Color)>();
@@ -326,8 +358,6 @@ public class TilemapTerrainGenerator : MonoBehaviour
         }
     }
 
-
-    //private void AddQuad
 
     /// <summary>
     /// Adds a vertex to the verts if it is not yet present,

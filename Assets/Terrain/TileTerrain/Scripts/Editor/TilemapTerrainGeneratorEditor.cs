@@ -14,11 +14,9 @@ public class TilemapTerrainGeneratorEditor : Editor
 
         script = (TilemapTerrainGenerator)target;
 
-        if (GUILayout.Button("Generate Heightmap")) {
-
-            script.ConvertImageToHeightmap(script.heightmapTexture);
-
-        }
+        //if (GUILayout.Button("Generate Heightmap")) {
+        //    script.ConvertImageToHeightmap(script.heightmapTexture);
+        //}
 
         if (GUILayout.Button("Generate Mesh from Image")) {
             script.ConvertImageToHeightmap(script.heightmapTexture);
@@ -29,7 +27,12 @@ public class TilemapTerrainGeneratorEditor : Editor
             ClearChildren();
 
             script.CreateCliffsFromImage(script.heightmapTexture);
-            
+        }
+
+        if (GUILayout.Button("Generate Map Items from Image")) {
+            script.ConvertImageToHeightmap(script.heightmapTexture);
+
+            script.CreateMapItemsFromImage(script.itemTexture);
         }
 
         GUILayout.Space(10);
