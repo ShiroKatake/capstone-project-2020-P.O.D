@@ -20,6 +20,8 @@ public class MathUtility : Singleton<MathUtility>
 
     //Utility Methods--------------------------------------------------------------------------------------------------------------------------------  
 
+    //Number Magnitude-----------------------------------------------------------------------------
+
     /// <summary>
     /// Returns the magnitude of a number.
     /// </summary>
@@ -50,25 +52,7 @@ public class MathUtility : Singleton<MathUtility>
         return num;
     }
 
-    /// <summary>
-    /// Converts the provided angle to an angle between 0 degrees and 360 degrees
-    /// </summary>
-    /// <param name="angle">The raw angle.</param>
-    /// <returns>The normalised angle.</returns>
-    public float NormaliseAngle(float angle)
-    {
-        while (angle > 360)
-        {
-            angle -= 360;
-        }
-
-        while (angle < 0)
-        {
-            angle += 360;
-        }
-
-        return angle;
-    }
+    //Number Properties----------------------------------------------------------------------------
 
     /// <summary>
     /// Returns the sign of a number, i.e. +1 if it's positive or 0, and -1 if it's negative.
@@ -99,4 +83,51 @@ public class MathUtility : Singleton<MathUtility>
 	{
 		return (num % 2 == 0);
 	}
+
+    //Angles---------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Converts the provided angle to an angle between 0 degrees and 360 degrees
+    /// </summary>
+    /// <param name="angle">The raw angle.</param>
+    /// <returns>The normalised angle.</returns>
+    public float NormaliseAngle(float angle)
+    {
+        while (angle > 360)
+        {
+            angle -= 360;
+        }
+
+        while (angle < 0)
+        {
+            angle += 360;
+        }
+
+        return angle;
+    }
+
+    /// <summary>
+    /// Checks if an angle is between two specified angles.
+    /// </summary>
+    /// <param name="angle">The angle being checked.</param>
+    /// <param name="a">The counter-clockwise-most bound of what's acceptable for the angle being checked.</param>
+    /// <param name="b">The clockwise-most bound of what's acceptable for the angle being checked.</param>
+    /// <returns>Whether the angle being checked is between a and b.</returns>
+    public bool AngleIsBetween(float angle, float a, float b)
+    {
+        angle = NormaliseAngle(angle);
+
+        if (a < b) //Range does not include 0/360 degrees, or 0/360 degrees is a or b.
+        {
+            return (angle >= a && angle <= b) || (angle == 0 && (a == 360 || b == 360)) || (angle == 360 && (a == 0 || b == 0));
+        }
+        else if (a > b) //Range does include 0/360 degrees, and 0/360 degrees doesn't need to be a or b.
+        {
+            return ((angle >= a && angle <= 360)) || (angle >= 0 && angle <= b);
+        }
+        else //a == b, range is only one angle.
+        {
+            return angle == a;
+        }
+    }
 }

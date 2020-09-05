@@ -118,15 +118,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   waveDelay: 0
   swarmDelay: 0
-  maxSwarmRadius: 5
-  maxSwarmCount: 4
-  maxSwarmSize: 2
-  alienMultiplier: 3
-  defencePenaltyThreshold: 300
-  nonDefencePenaltyThreshold: 300
-  penaltyCooldown: 90
-  penaltyIncrement: 3
-  timeOfLastPenalty: 0
+  wavesPerNight: 3
+  maxAliensPerBuilding: 3
+  aliensPerBuildingIncrementPerNight: 0.2
+  crawlerFrequency: 0.2
   spawningFrameTimeLimit: 5
   spawnAliens: 1
   spawnAlienNow: 0

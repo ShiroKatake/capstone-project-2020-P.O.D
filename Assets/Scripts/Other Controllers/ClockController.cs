@@ -113,8 +113,17 @@ public class ClockController : SerializableSingleton<ClockController>
     /// </summary>
     private void UpdateTime()
     {
-        time12hr += UnityEngine.Time.deltaTime;
-        time24hr += UnityEngine.Time.deltaTime;
+
+        if (daytime)
+        {
+            time12hr += UnityEngine.Time.deltaTime;
+            time24hr += UnityEngine.Time.deltaTime;
+        }
+        else if (time12hr < halfCycleDuration * AlienController.Instance.AlienKillProgress)
+        {
+            time12hr += UnityEngine.Time.deltaTime;
+            time24hr += UnityEngine.Time.deltaTime;
+        }
     }
 
     /// <summary>

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -22,7 +23,7 @@ public class AlienController : SerializableSingleton<AlienController>
 	[Tooltip("What is the maximum number of aliens that will spawn per building in a wave? (Number in inspector is the initial value for the first night.)")]
 	[SerializeField] private float maxAliensPerBuilding;
     [Tooltip("How much the max. number of aliens per wave increase each night? (Increments maxAliensPerBuilding each night.)")]
-    [SerializeField] private int aliensPerBuildingIncrementPerNight;
+    [SerializeField] private float aliensPerBuildingIncrementPerNight;
     [Tooltip("What proportion of the aliens spawned should be crawlers?")]
     [SerializeField][Range(0, 1)] private float crawlerFrequency;
 
@@ -68,9 +69,10 @@ public class AlienController : SerializableSingleton<AlienController>
     private List<EStage> gameOverStages;
 
     //Alien Spawning Per-Frame Optimisation
-    private System.Diagnostics.Stopwatch loopStopwatch;
+    private Stopwatch loopStopwatch;
 
     private int currentWave;
+    private int aliensInCurrentWave;
 
     //Penalty Incrementation
     //private int spawnCountPenalty;
@@ -83,6 +85,32 @@ public class AlienController : SerializableSingleton<AlienController>
     /// A list of all aliens
     /// </summary>
     public List<Alien> Aliens { get => aliens; }
+
+    //Complex Public Properties
+
+    /// <summary>
+    /// Percentage of waves completed in the current night, plus a portion of the current wave equal to the percentage of aliens killed in the current wave.
+    /// E.g. if there's three waves, one wave has been completed and the second wave is halfway done, should return 0.5f.
+    /// E.g. if there's three waves, two are completed and the third is halfway through, should return 0.83f.
+    /// </summary>
+    public float AlienKillProgress
+    {
+        get
+        {
+            if (currentWave == 0)
+            {
+                return 0;
+            }
+            else
+            {
+                return (
+                            currentWave - 1                                               //Start of current wave, i.e 0 for start of first wave, 1 for start of second wave, etc.
+                          + ((aliensInCurrentWave - aliens.Count) / aliensInCurrentWave)  //Plus progress % in current wave, i.e. aliens killed this wave / total aliens in wave
+                       )
+                       / wavesPerNight;                                                   //All over the number of waves
+            }
+        }
+    }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -159,17 +187,28 @@ public class AlienController : SerializableSingleton<AlienController>
         {
             currentStage = StageManager.Instance.CurrentStage.GetID();
 
-            if (spawnableStages.Contains(currentStage) 
-                && !ClockController.Instance.Daytime 
-                && aliens.Count == 0 
-                && Time.time - timeOfLastDeath > waveDelay)
+            if (ClockController.Instance.Daytime)
+            {
+                if (currentWave > 0)
+                {
+                    currentWave = 0;
+                    maxAliensPerBuilding += aliensPerBuildingIncrementPerNight;
+                }
+            }
+            else if (
+                spawnableStages.Contains(currentStage)
+                //&& !ClockController.Instance.Daytime //Nighttime already established by first if case
+                && aliens.Count == 0
+                && Time.time - timeOfLastDeath > waveDelay
+                && currentWave < wavesPerNight)
             {
                 //Reset start time
                 loopStopwatch.Restart();
 
+                //Start new wave
                 if (currentStage != EStage.Combat)
                 {
-                    currentWave += 1;
+                    currentWave += 1;//TODO: double check that currentWave number get updated appropriately
                 }
 
                 ////Check and increment penalty
@@ -180,8 +219,19 @@ public class AlienController : SerializableSingleton<AlienController>
                 //}
 
                 //Spawn aliens
-                
-                int numAliens = CalculateAliensInWave(currentStage);//(currentStage == EStage.Combat ? 3 : BuildingController.Instance.BuildingCount * aliensPerBuilding + spawnCountPenalty);
+                aliensInCurrentWave = CalculateAliensInWave(currentStage);//(currentStage == EStage.Combat ? 3 : BuildingController.Instance.BuildingCount * aliensPerBuilding + spawnCountPenalty);
+                int majorityCount = 0;
+                int minorityCount = 0;
+                int majorityMaxCount = Mathf.RoundToInt(aliensInCurrentWave * 0.7f);//TODO: double check how majority/minority affects tutorial alien spawning.
+                int minorityMaxCount = aliensInCurrentWave - majorityMaxCount;
+                float minAngle = Random.Range(0, 360);
+                float maxAngle = minAngle + 120;
+                maxAngle = (maxAngle > 360 ? maxAngle - 360 : maxAngle);
+                float cumulativeCrawlerFrequency = 0;
+                Vector3 centrePos = new Vector3(100, 1, 100);
+                MapController.Instance.ResetCurrentAlienSpawnablePositions();
+                List<Vector3> availablePositions = MapController.Instance.CurrentAlienSpawnablePositions;
+
                 //Vector3 swarmCentre = Vector3.zero;
                 //int swarmSize = 0;
                 //int swarmRadius = 0;
@@ -190,9 +240,7 @@ public class AlienController : SerializableSingleton<AlienController>
                 //List<Vector3> availableOffsets = new List<Vector3>();
                 //List<Vector3> availablePositions = MapController.Instance.GetAlienSpawnablePositions();
 
-                float cumulativeCrawlerFrequency = 0;
-
-                for (int i = 0; i < numAliens; i++)
+                for (int i = 0; i < aliensInCurrentWave; i++)
                 //for (int i = 0; i < 100; i++)
                 {
                     //if (loopStopwatch.ElapsedMilliseconds >= spawningFrameTimeLimit)
@@ -225,9 +273,19 @@ public class AlienController : SerializableSingleton<AlienController>
                     //int j = Random.Range(0, availableOffsets.Count);
                     //Vector3 spawnPos = swarmCentre + availableOffsets[j] * offsetMultiplier;
                     //availableOffsets.RemoveAt(j);
-                    Vector3 spawnPos = CalculateAlienSpawnPosition(currentStage);
 
-                    if (MapController.Instance.PositionAvailableForSpawning(spawnPos, true) || currentStage == EStage.Combat)
+                    
+                    Vector3 spawnPos = GetRandomAvailablePosition(availablePositions);
+                    centrePos.y = spawnPos.y;
+                    bool inMajority = MathUtility.Instance.AngleIsBetween(Vector3.Angle(spawnPos, centrePos), minAngle, maxAngle);
+
+                    if ((
+                               currentStage == EStage.Combat //Majority/minority spawn areas irrelevant
+                            || (inMajority && majorityCount < majorityMaxCount) //If in majority spawn area and majority spawn area not maxed out
+                            || (!inMajority && minorityCount < minorityMaxCount) //If in minority spawn area and minority spawn area not maxed out
+                        ) 
+                        && MapController.Instance.PositionAvailableForSpawning(spawnPos, true)
+                    )
                     {
                         RaycastHit rayHit;
                         NavMeshHit navHit;
@@ -252,10 +310,12 @@ public class AlienController : SerializableSingleton<AlienController>
                             AlienFactory.Instance.Destroy(alien, alien.Type);
                             i--;
                         }
-                        
-                        for (int m = -2; m <= 2; m++)
+
+                        int margin = (alien.Type == EAlien.Scuttler ? 1 : 2);
+
+                        for (int m = -margin; m <= margin; m++)
                         {
-                            for (int n = -2; n <= 2; n++)
+                            for (int n = -margin; n <= margin; n++)
                             {
                                 availablePositions.Remove(new Vector3(spawnPos.x + m, spawnPos.y, spawnPos.z + n));
 
@@ -272,13 +332,7 @@ public class AlienController : SerializableSingleton<AlienController>
                         i--;
                     }
                 }
-            }
-
-            if (currentWave == wavesPerNight)
-            {
-                maxAliensPerBuilding += aliensPerBuildingIncrementPerNight;
-                currentWave = 0;
-            }
+            }            
 
             yield return null;
         }
@@ -302,33 +356,40 @@ public class AlienController : SerializableSingleton<AlienController>
     }
 
     /// <summary>
-    /// Calculates the position that an alien should spawn at.
+    /// Picks an available position to spawn the alien at.
     /// </summary>
-    /// <param name="currentStage">The current stage of the game.</param>
-    /// <returns>The position an alien can spawn at.</returns>
-    private Vector3 CalculateAlienSpawnPosition(EStage currentStage)
+    /// <param name="availablePositions">A list of positions available for alien spawning.</param>
+    /// <returns>The position to spawn the alien at.</returns>
+    private Vector3 GetRandomAvailablePosition(List<Vector3> availablePositions)
     {
-//TODO: position calculation logic.
-        return Vector3.zero;
-    }
-
-    /// <summary>
-    /// Returns a random position from a list of Vector3 positions.
-    /// </summary>
-    /// <param name="positions">The list of Vector3 positions to choose from.</param>
-    /// <returns>The chosen Vector3 position.</returns>
-    private Vector3 GetRandomPosition(List<Vector3> positions)
-    {
-        switch (positions.Count)
+        switch (availablePositions.Count)
         {
             case 0:
-                return new Vector3(-1, AlienFactory.Instance.AlienSpawnHeight, -1);
+                return new Vector3(-1, -1, -1);
             case 1:
-                return positions[0];
+                return availablePositions[0];
             default:
-                return positions[Random.Range(0, positions.Count)];
+                return availablePositions[Random.Range(0, availablePositions.Count - 1)];
         }
     }
+
+    ///// <summary>
+    ///// Returns a random position from a list of Vector3 positions.
+    ///// </summary>
+    ///// <param name="positions">The list of Vector3 positions to choose from.</param>
+    ///// <returns>The chosen Vector3 position.</returns>
+    //private Vector3 GetRandomPosition(List<Vector3> positions)
+    //{
+    //    switch (positions.Count)
+    //    {
+    //        case 0:
+    //            return new Vector3(-1, AlienFactory.Instance.AlienSpawnHeight, -1);
+    //        case 1:
+    //            return positions[0];
+    //        default:
+    //            return positions[Random.Range(0, positions.Count)];
+    //    }
+    //}
 
     /// <summary>
     /// Removes the alien from AlienController's list of aliens.

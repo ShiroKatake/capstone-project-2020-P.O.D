@@ -31,7 +31,17 @@ public class MapController : SerializableSingleton<MapController>
     private LayerMask groundLayerMask;
 
     private List<Vector3> alienSpawnablePositions;
+    private List<Vector3> currentAlienSpawnablePositions;
     private List<Vector3> tutorialAlienSpawnablePositions;
+
+    //Public Properties------------------------------------------------------------------------------------------------------------------------------  
+
+    //Basic Public Properties----------------------------------------------------------------------    
+
+    /// <summary>
+    /// The list of positions that are spawnable in the current wave.
+    /// </summary>
+    public List<Vector3> CurrentAlienSpawnablePositions { get => currentAlienSpawnablePositions; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -105,6 +115,14 @@ public class MapController : SerializableSingleton<MapController>
     //Availabile Position Methods------------------------------------------------------------------
 
     /// <summary>
+    /// Resets the list of currently available alien spawn positions.
+    /// </summary>
+    public void ResetCurrentAlienSpawnablePositions()
+    {
+        currentAlienSpawnablePositions = new List<Vector3>(StageManager.Instance.CurrentStage.GetID() == EStage.Combat ? tutorialAlienSpawnablePositions : alienSpawnablePositions);
+    }
+
+    /// <summary>
     /// Checks if a given building can legally be placed given its size and position and the spaces available.
     /// </summary>
     /// <param name="building">The building whose placement is being checked.</param>
@@ -162,8 +180,8 @@ public class MapController : SerializableSingleton<MapController>
 
         if (alien)
         {
-            //Check if in alien exclusion area
-            if (StageManager.Instance.CurrentStage.GetID() != EStage.Combat && alienExclusionArea[(int)position.x, (int)position.z]) //Need to be able to spawn within the exclusion area during the tutorial
+            //Check if in alien exclusion area or in combat tutorial stage, which ignores exclusion area
+            if (StageManager.Instance.CurrentStage.GetID() != EStage.Combat && alienExclusionArea[(int)position.x, (int)position.z])
             {
                 //Debug.Log($"Can't spawn an alien at {position}, which is within the alien exclusion area.");
                 return false;       
@@ -216,45 +234,6 @@ public class MapController : SerializableSingleton<MapController>
         }
 
         return true;
-    }
-
-    ///// <summary>
-    ///// Gets a random position that an alien could legally be spawned at.
-    ///// </summary>
-    ///// <returns>A position for an alien to spawn at.</returns>
-    //public Vector3 RandomAlienSpawnablePos(List<Vector3> temporarilyUnavailablePositions)
-    //{
-    //    List<Vector3> availablePositions = new List<Vector3>((StageManager.Instance.CurrentStage.GetID() == EStage.Combat ? tutorialAlienSpawnablePositions : alienSpawnablePositions));
-
-    //    foreach (Vector3 p in temporarilyUnavailablePositions)
-    //    {
-    //        if (availablePositions.Contains(p))
-    //        {
-    //            availablePositions.Remove(p);
-    //        }
-    //    }
-
-    //    //Debug.Log($"Getting alien spawnable position, available positions: {availablePositions.Count}");
-
-    //    switch (availablePositions.Count)
-    //    {
-    //        case 0:
-    //            return new Vector3 (-1, AlienFactory.Instance.AlienSpawnHeight, -1);
-    //        case 1:
-    //            return availablePositions[0];
-    //        default:
-    //            return availablePositions[Random.Range(0, availablePositions.Count)];
-    //    }
-    //}
-
-
-    /// <summary>
-    /// Gets the current list of alien spawnable positions.
-    /// </summary>
-    /// <returns>The current list of alien spawnable positions.</returns>
-    public List<Vector3> GetAlienSpawnablePositions()
-    {
-        return StageManager.Instance.CurrentStage.GetID() == EStage.Combat ? tutorialAlienSpawnablePositions : alienSpawnablePositions;
     }
 
     //Entity Registration Methods------------------------------------------------------------------
@@ -316,6 +295,7 @@ public class MapController : SerializableSingleton<MapController>
             {
                 Vector3 pos = new Vector3(x, AlienFactory.Instance.AlienSpawnHeight, z);
                 tutorialAlienSpawnablePositions.Remove(pos);
+                currentAlienSpawnablePositions.Remove(pos);
                 return;
             }
             else if (availableAlienPositions[x, z])
@@ -323,6 +303,7 @@ public class MapController : SerializableSingleton<MapController>
                 availableAlienPositions[x, z] = false;
                 Vector3 pos = new Vector3(x, AlienFactory.Instance.AlienSpawnHeight, z);
                 alienSpawnablePositions.Remove(pos);
+                currentAlienSpawnablePositions.Remove(pos);
                 return;
             }
         }
@@ -359,6 +340,8 @@ public class MapController : SerializableSingleton<MapController>
                 else
                 {
                     alienSpawnablePositions.Remove(pos);
+                    tutorialAlienSpawnablePositions.Remove(pos);
+                    currentAlienSpawnablePositions?.Remove(pos);
                 }
             }
         }
