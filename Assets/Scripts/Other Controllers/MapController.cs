@@ -2,6 +2,105 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public class PositionData
+{
+    //Private Fields---------------------------------------------------------------------------------------------------------------------------------
+
+    private float angle;
+    private bool hasBuilding;
+    private bool hasMineral;
+    private bool aliensBanned;
+    private bool isInTutorialAlienSpawnArea;
+    private int x;
+    private int z;
+
+    //Public Properties------------------------------------------------------------------------------------------------------------------------------
+
+    //Simple Public Properties---------------------------------------------------------------------
+
+    /// <summary>
+    /// Is this position too close to the cryo egg or a cliff for alien spawning to be allowed, or outside the bounds of the nav mesh?
+    /// </summary>
+    public bool AliensBanned { get => aliensBanned; set => aliensBanned = value; }
+
+    /// <summary>
+    /// The angle from the centre of the map to this position.
+    /// </summary>
+    public float Angle { get => angle; }
+
+    /// <summary>
+    /// Is this position occupied by a building?
+    /// </summary>
+    public bool HasBuilding { set => hasBuilding = value; }
+
+    /// <summary>
+    /// Is this position occupied by a mineral?
+    /// </summary>
+    public bool HasMineral { set => hasMineral = value; }
+
+    /// <summary>
+    /// Is this position close enough to the cryo egg for alien spawning to be allowed during the tutorial?
+    /// </summary>
+    public bool IsInTutorialAlienSpawnArea { get => isInTutorialAlienSpawnArea; }
+
+    /// <summary>
+    /// This position's x coordinate.
+    /// </summary>
+    public int X { get => x; }
+
+    /// <summary>
+    /// This position's z coordinate.
+    /// </summary>
+    public int Z { get => z; }
+
+    //Complex Public Properties--------------------------------------------------------------------
+
+    /// <summary>
+    /// Can a building be built at this position?
+    /// </summary>
+    public bool IsBuildable
+    {
+        get
+        {
+            return !hasBuilding && !hasMineral;
+        }
+    }
+
+    /// <summary>
+    /// Can an alien be spawned at this position right now?
+    /// </summary>
+    public bool IsAlienSpawnable
+    {
+        get
+        {
+            return IsBuildable && (StageManager.Instance.CurrentStage.GetID() == EStage.Combat ? isInTutorialAlienSpawnArea : !aliensBanned);
+        }
+    }
+
+    //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// PositionData's constructor.
+    /// </summary>
+    /// <param name="x">This position's x coordinate.</param>
+    /// <param name="z">This position's z coordinate.</param>
+    /// <param name="angle">The angle of this position from the centre of the map.</param>
+    /// <param name="hasBuilding">Does this position have a building occupying it?</param>
+    /// <param name="hasMineral">Does this position have a mineral occupying it?</param>
+    /// <param name="isInTutorialAlienSpawnArea">Is this position inside the tutorial combat stage-only alien spawnable area around the cryo egg?</param>
+    /// <param name="isInAlienExclusionArea">Is this position inside the non-tutorial alien exclusion area around the cryo egg?</param>
+    public PositionData(int x, int z, float angle, bool isInTutorialAlienSpawnArea, bool isInAlienExclusionArea)
+    {
+        this.x = x;
+        this.z = z;
+        this.angle = angle;
+        this.hasBuilding = false;
+        this.hasMineral = false;
+        this.isInTutorialAlienSpawnArea = isInTutorialAlienSpawnArea;
+        this.aliensBanned = isInAlienExclusionArea;
+    }
+}
+
 /// <summary>
 /// A controller class for tracking which parts of the map have buildings, can be spawned to by aliens, etc.
 /// </summary>
@@ -14,6 +113,7 @@ public class MapController : SerializableSingleton<MapController>
     [Header("Map Size")]
     [SerializeField] private int xMax;
     [SerializeField] private int zMax;
+    [SerializeField] private Vector2 centre;
 
     [Header("No Alien Spawning Area")]
     [SerializeField] private Vector3 innerBottomLeft;
@@ -25,14 +125,18 @@ public class MapController : SerializableSingleton<MapController>
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
-    private bool[,] availableBuildingPositions;
-    private bool[,] alienExclusionArea;
-    private bool[,] availableAlienPositions;
+    //private float[,] positionAnglesFromCentre;
+    //private bool[,] availableBuildingPositions;
+    //private bool[,] alienExclusionArea;
+    //private bool[,] availableAlienPositions;
+    private PositionData[,] positions;
     private LayerMask groundLayerMask;
 
     private List<Vector3> alienSpawnablePositions;
     private List<Vector3> currentAlienSpawnablePositions;
     private List<Vector3> tutorialAlienSpawnablePositions;
+    private List<Vector3> majorityAlienSpawnablePositions;
+    private List<Vector3> minorityAlienSpawnablePositions;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------  
 
@@ -43,6 +147,16 @@ public class MapController : SerializableSingleton<MapController>
     /// </summary>
     public List<Vector3> CurrentAlienSpawnablePositions { get => currentAlienSpawnablePositions; }
 
+    /// <summary>
+    /// The list of positions that are spawnable in the current wave.
+    /// </summary>
+    public List<Vector3> MajorityAlienSpawnablePositions { get => majorityAlienSpawnablePositions; }
+
+    /// <summary>
+    /// The list of positions that are spawnable in the current wave.
+    /// </summary>
+    public List<Vector3> MinorityAlienSpawnablePositions { get => minorityAlienSpawnablePositions; }
+
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
@@ -51,11 +165,12 @@ public class MapController : SerializableSingleton<MapController>
     /// </summary>
     protected override void Awake()
     {
-
         base.Awake();
-        availableBuildingPositions = new bool[xMax + 1 , zMax + 1];
-        availableAlienPositions = new bool[xMax + 1, zMax + 1];
-        alienExclusionArea = new bool[xMax + 1, zMax + 1];
+        //positionAnglesFromCentre = new float[xMax + 1 , zMax + 1];
+        //availableBuildingPositions = new bool[xMax + 1 , zMax + 1];
+        //availableAlienPositions = new bool[xMax + 1, zMax + 1];
+        //alienExclusionArea = new bool[xMax + 1, zMax + 1];
+        positions = new PositionData[xMax + 1, zMax + 1];
         alienSpawnablePositions = new List<Vector3>();
         tutorialAlienSpawnablePositions = new List<Vector3>();
         groundLayerMask = LayerMask.GetMask("Ground");
@@ -75,36 +190,37 @@ public class MapController : SerializableSingleton<MapController>
 
         //Debug.Log($"Enemies cannot spawn within ({noAlienXMin}, {noAlienXMax}) to ({noAlienZMin}, {noAlienZMax})");
 
-        for (int i = 0; i <= xMax; i++)
-        {
-            for (int j = 0; j <= zMax; j++)
-            {
-                //Debug.Log($"Assessing position ({i},{j})");
-                availableBuildingPositions[i, j] = true;
-                availableAlienPositions[i, j] = (i < noAlienXMin || i > noAlienXMax || j < noAlienZMin || j > noAlienZMax);//((i < noAlienXMin || i > noAlienXMax) && (j < noAlienZMin || j > noAlienZMax));
-                alienExclusionArea[i, j] = !availableAlienPositions[i, j];
-
-                //Debug.Log($"available for building: {availableBuildingPositions[i, j]}, available for enemies: {availableAlienPositions[i, j]}, alien exclusion area: {alienExclusionArea[i, j]}");
-
-                if (availableAlienPositions[i, j])
-                {
-                    alienSpawnablePositions.Add(new Vector3(i, alienSpawnHeight, j));
-                }
-            }
-        }
-
         int tuteAlienXMin = (int)Mathf.Round(tutorialBottomLeft.x);
         int tuteAlienXMax = (int)Mathf.Round(tutorialTopRight.x);
         int tuteAlienZMin = (int)Mathf.Round(tutorialBottomLeft.z);
         int tuteAlienZMax = (int)Mathf.Round(tutorialTopRight.z);
 
-        for (int i = tuteAlienXMin; i <= tuteAlienXMax; i++)
+        for (int i = 0; i <= xMax; i++)
         {
-            for (int j = tuteAlienZMin; j <= tuteAlienZMax; j++)
+            for (int j = 0; j <= zMax; j++)
             {
-                if (availableBuildingPositions[i, j])
-                { 
-                    tutorialAlienSpawnablePositions.Add(new Vector3(i, alienSpawnHeight, j));
+                //Debug.Log($"Assessing position ({i},{j})");
+                positions[i, j] = new PositionData(
+                    i, //X coordinate
+                    j, //Z coordinate
+                    GetPositionAngleFromCentre(new Vector2(i, j)), //Angle from centre
+                    !(i < tuteAlienXMin || i > tuteAlienXMax || j < tuteAlienXMin || j > tuteAlienXMax), //Is inside the tutorial spawn area, i.e. is not outside it?
+                    !(i < noAlienXMin || i > noAlienXMax || j < noAlienZMin || j > noAlienZMax) //Is inside the alien exclusion area, i.e. is not outside it?
+                );
+
+                //Debug.Log($"available for building: {availableBuildingPositions[i, j]}, available for enemies: {availableAlienPositions[i, j]}, alien exclusion area: {alienExclusionArea[i, j]}");
+
+                if (positions[i, j].IsBuildable)
+                {
+                    if (!positions[i, j].AliensBanned)
+                    {
+                        alienSpawnablePositions.Add(new Vector3(i, alienSpawnHeight, j));
+                    }
+
+                    if (positions[i, j].IsInTutorialAlienSpawnArea)
+                    {
+                        tutorialAlienSpawnablePositions.Add(new Vector3(i, alienSpawnHeight, j));
+                    }
                 }
             }
         }
@@ -120,6 +236,8 @@ public class MapController : SerializableSingleton<MapController>
     public void ResetCurrentAlienSpawnablePositions()
     {
         currentAlienSpawnablePositions = new List<Vector3>(StageManager.Instance.CurrentStage.GetID() == EStage.Combat ? tutorialAlienSpawnablePositions : alienSpawnablePositions);
+        majorityAlienSpawnablePositions.Clear();
+        minorityAlienSpawnablePositions.Clear();
     }
 
     /// <summary>
@@ -164,15 +282,15 @@ public class MapController : SerializableSingleton<MapController>
         position.x = Mathf.Round(position.x);
         position.z = Mathf.Round(position.z);
 
-        //Check if out of bounds
-        if (position.x < 0 || position.x > xMax || position.z < 0 || position.z > zMax)
+        if (IsPositionOutOfBounds(position))
         {
-            //Debug.Log($"Can't spawn at {position}, which is outside the bounds of (0,0) to ({xMax},{zMax})");
             return false;
         }
 
+        PositionData positionData = positions[(int)position.x, (int)position.z];
+
         //Check if already building occupiued
-        if (!availableBuildingPositions[(int)position.x, (int)position.z])
+        if (!positionData.IsBuildable)
         {
             //Debug.Log($"Can't spawn at {position}, which is already occupied by a building.");
             return false;
@@ -180,10 +298,10 @@ public class MapController : SerializableSingleton<MapController>
 
         if (alien)
         {
-            //Check if in alien exclusion area or in combat tutorial stage, which ignores exclusion area
-            if (StageManager.Instance.CurrentStage.GetID() != EStage.Combat && alienExclusionArea[(int)position.x, (int)position.z])
+            //Check if in tutorial spawn area during combat stage of tutorial, or in alien exclusion area otherwise
+            if (StageManager.Instance.CurrentStage.GetID() == EStage.Combat ? !positionData.IsInTutorialAlienSpawnArea : positionData.AliensBanned)
             {
-                //Debug.Log($"Can't spawn an alien at {position}, which is within the alien exclusion area.");
+                //Debug.Log($"Can't spawn an alien at {position}, which is within the alien exclusion area during gameplay, or outside the tutorial spawn area during the combat stage of the tutorial.");
                 return false;       
             }
 
@@ -221,7 +339,7 @@ public class MapController : SerializableSingleton<MapController>
 
                                     if (m >= 0 && m <= xMax && n >= 0 && n <= zMax)
                                     {
-                                        alienExclusionArea[m, n] = true;
+                                        positions[m, n].AliensBanned = true;
                                     }
                                 }
                             }
@@ -236,6 +354,29 @@ public class MapController : SerializableSingleton<MapController>
         return true;
     }
 
+    /// <summary>
+    /// Checks if a position is outside the bounds of the map on the x and z axes.
+    /// </summary>
+    /// <param name="position">The position being checked.</param>
+    /// <returns>Is the position outside the bounds of the map?</returns>
+    private bool IsPositionOutOfBounds(Vector3 position)
+    {
+        return position.x < 0 || position.x > xMax || position.z < 0 || position.z > zMax;
+    }
+
+    public float GetPositionAngleFromCentre(Vector3 position)
+    {
+        if (IsPositionOutOfBounds(position))
+        {
+            Debug.LogError($"MapController.PositionAngleFromCentre(), {position} is out of bounds.");
+            return -1;
+        }
+        else
+        {
+            return positions[Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.z)].Angle;
+        }
+    }
+
     //Entity Registration Methods------------------------------------------------------------------
 
     /// <summary>
@@ -246,7 +387,7 @@ public class MapController : SerializableSingleton<MapController>
     {
         foreach (Vector3 offset in building.BuildingFoundationOffsets)
         {
-            UpdateAvailablePosition(building.gameObject, building.transform.position + offset, false);
+            UpdateAvailablePosition(building.gameObject, building.transform.position + offset, true, null);
         }
     }
     
@@ -256,7 +397,7 @@ public class MapController : SerializableSingleton<MapController>
     /// <param name="mineral">The mineral to be registered.</param>
     public void RegisterMineral(Mineral mineral)
     {
-        UpdateAvailablePosition(mineral.gameObject, mineral.transform.position, false);
+        UpdateAvailablePosition(mineral.gameObject, mineral.transform.position, null, true);
     }
     
     /// <summary>
@@ -267,7 +408,7 @@ public class MapController : SerializableSingleton<MapController>
     {
         foreach (Vector3 offset in building.BuildingFoundationOffsets)
         {
-            UpdateAvailablePosition(building.gameObject, building.transform.position + offset, true);
+            UpdateAvailablePosition(building.gameObject, building.transform.position + offset, false, null);
         }
     }
     
@@ -277,7 +418,7 @@ public class MapController : SerializableSingleton<MapController>
     /// <param name="mineral">The mineral to be deregistered.</param>
     public void DeRegisterMineral(Mineral mineral)
     {
-        UpdateAvailablePosition(mineral.gameObject, mineral.transform.position, true);
+        UpdateAvailablePosition(mineral.gameObject, mineral.transform.position, null, false);
     }
 
     /// <summary>
@@ -286,26 +427,18 @@ public class MapController : SerializableSingleton<MapController>
     /// <param name="position">The position that is not on the NavMesh</param>
     public void RegisterOffMeshPosition(Vector3 position)
     {
-        int x = (int)Mathf.Round(position.x);
-        int z = (int)Mathf.Round(position.z);
-
-        if (x >= 0 && x <= xMax && z >= 0 && z <= zMax)
+        if (!IsPositionOutOfBounds(position))
         {
-            if (StageManager.Instance.CurrentStage.GetID() == EStage.Combat)
-            {
-                Vector3 pos = new Vector3(x, AlienFactory.Instance.AlienSpawnHeight, z);
-                tutorialAlienSpawnablePositions.Remove(pos);
-                currentAlienSpawnablePositions.Remove(pos);
-                return;
-            }
-            else if (availableAlienPositions[x, z])
-            {
-                availableAlienPositions[x, z] = false;
-                Vector3 pos = new Vector3(x, AlienFactory.Instance.AlienSpawnHeight, z);
-                alienSpawnablePositions.Remove(pos);
-                currentAlienSpawnablePositions.Remove(pos);
-                return;
-            }
+            int x = Mathf.RoundToInt(position.x);
+            int z = Mathf.RoundToInt(position.z);
+            positions[x, z].AliensBanned = true;
+
+            Vector3 pos = new Vector3(x, AlienFactory.Instance.AlienSpawnHeight, z);
+            tutorialAlienSpawnablePositions.Remove(pos);
+            alienSpawnablePositions.Remove(pos);
+            currentAlienSpawnablePositions.Remove(pos);
+            majorityAlienSpawnablePositions?.Remove(pos);
+            minorityAlienSpawnablePositions?.Remove(pos);
         }
 
         //Debug.LogError($"{gameObject.name} can't update the availability of position {position}, which is outside the bounds of (0,0) to ({xMax},{zMax})");
@@ -316,8 +449,9 @@ public class MapController : SerializableSingleton<MapController>
     /// </summary>
     /// <param name="gameObject">The game object whose space(s) are having their availability updated.</param>
     /// <param name="position">The position having its availability updated.</param>
-    /// <param name="available">Is the space now available, or is it now unavailable?</param>
-    private void UpdateAvailablePosition(GameObject gameObject, Vector3 position, bool available)
+    /// <param name="hasBuilding">Is this space now occupied by a building, or is now unoccupied, or null if no change?</param>
+    /// <param name="hasMineral">Is this space now occupied by a mineral, or is now unoccupied, or null if no change?</param>
+    private void UpdateAvailablePosition(GameObject gameObject, Vector3 position, bool? hasBuilding, bool? hasMineral)
     {
         int x = (int)Mathf.Round(position.x);
         int z = (int)Mathf.Round(position.z);
@@ -325,23 +459,33 @@ public class MapController : SerializableSingleton<MapController>
         if (x >= 0 && x <= xMax && z >= 0 && z <= zMax)
         {
             //Debug.Log($"MapController.UpdateAvailablePositions() offset loop for {gameObject} at position {position}, x is {x}, z is {z}, xMax is {xMax}, zMax is {zMax}");
-            bool startingAlienAvailability = availableAlienPositions[x, z];
-            availableBuildingPositions[x, z] = available;
-            availableAlienPositions[x, z] = (availableBuildingPositions[x, z] && !alienExclusionArea[x, z]);
+            bool startingAlienAvailability = positions[x, z].IsAlienSpawnable;
 
-            if (availableAlienPositions[x, z] != startingAlienAvailability)
+            if (hasBuilding != null)
+            {
+                positions[x, z].HasBuilding = hasBuilding.Value;
+            }
+
+            if (hasMineral != null)
+            {
+                positions[x, z].HasMineral = hasMineral.Value;
+            }
+
+            if (positions[x, z].IsAlienSpawnable != startingAlienAvailability)
             {
                 Vector3 pos = new Vector3(x, AlienFactory.Instance.AlienSpawnHeight, z);
 
-                if (availableAlienPositions[x, z])
+                if (positions[x, z].IsAlienSpawnable)
                 {
-                    alienSpawnablePositions.Add(pos);
+                    (StageManager.Instance.CurrentStage.GetID() == EStage.Combat ? tutorialAlienSpawnablePositions : alienSpawnablePositions).Add(pos);
                 }
                 else
                 {
                     alienSpawnablePositions.Remove(pos);
                     tutorialAlienSpawnablePositions.Remove(pos);
                     currentAlienSpawnablePositions?.Remove(pos);
+                    majorityAlienSpawnablePositions?.Remove(pos);
+                    minorityAlienSpawnablePositions?.Remove(pos);
                 }
             }
         }
