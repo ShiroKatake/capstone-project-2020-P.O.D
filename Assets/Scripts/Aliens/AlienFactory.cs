@@ -44,15 +44,16 @@ public class AlienFactory : Factory<AlienFactory, Alien, ENone>
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
-    
+
     /// <summary>
     /// Retrieves an alien from the pool if there's any available, and instantiates a new alien if there isn't one.
     /// </summary>
     /// <param name="position">The position the alien should be instantiated at.</param>
+    /// <param name="type">The type of alien to instantiate.</param>
     /// <returns>A new alien.</returns>
-    public Alien Get(Vector3 position)
+    public override Alien Get(Vector3 position, ENone type = ENone.None)
     {
-        return Get(ENone.None, position);
+        return base.Get(position, type);
     }
 
     /// <summary>
@@ -76,20 +77,11 @@ public class AlienFactory : Factory<AlienFactory, Alien, ENone>
     /// Handles the destruction of aliens.
     /// </summary>
     /// <param name="alien">The alien to be destroyed.</param>
-    public void Destroy(Alien alien)
-    {
-        Destroy(ENone.None, alien);
-    }
-
-    /// <summary>
-    /// Handles the destruction of aliens.
-    /// </summary>
     /// <param name="type">The type of the alien to be destroyed.</param>
-    /// <param name="alien">The alien to be destroyed.</param>
-    public override void Destroy(ENone type, Alien alien)
+    public override void Destroy(Alien alien, ENone type = ENone.None)
     {
         alien.Reset();
         AlienController.Instance.DeRegisterAlien(alien);
-        base.Destroy(type, alien);
+        base.Destroy(alien, type);
     }
 }

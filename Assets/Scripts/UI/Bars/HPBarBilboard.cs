@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class HPBarBilboard : MonoBehaviour
 {
-    [SerializeField] private Transform cam = Camera.main.transform;
+    [SerializeField] private Transform cam;
 
-    private void Awake() {
-        if (cam == null) {
+    private void Awake()
+    {
+        if (cam == null)
+        {
             cam = Camera.main.transform;
         }
     }

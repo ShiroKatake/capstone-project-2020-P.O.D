@@ -12,15 +12,19 @@ public class BuildingFactory : Factory<BuildingFactory, Building, EBuilding>
 
 	//Basic Public Properties----------------------------------------------------------------------
 
-	public UnityAction<Transform> onGetTurret;
+	public UnityAction<Building> onPlacementStarted;
+	public UnityAction<Building> onBuildingHasRange;
+	public UnityAction onPlacementValid;
+	public UnityAction onPlacementInvalid;
+	public UnityAction onPlacementFinished;
 
-    //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
+	//Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
-    /// <summary>
-    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
-    /// Start() runs after Awake().
-    /// </summary>
-    protected override void Start()
+	/// <summary>
+	/// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
+	/// Start() runs after Awake().
+	/// </summary>
+	protected override void Start()
     {
         base.Start();
 
@@ -65,12 +69,12 @@ public class BuildingFactory : Factory<BuildingFactory, Building, EBuilding>
 		if (buildingType == EBuilding.LongRangeTurret || buildingType == EBuilding.ShortRangeTurret)
 		{
 			//Debug.Log("Displaying Range.");
-			//onGetTurret?.Invoke(building.transform);
-			building.TurretRangeFX = TurretRangeFXFactory.Instance.Get();
-			TurretRangeFXFactory.Instance.OnGetTurret(building.transform, building.TurretRangeFX);
+			onBuildingHasRange?.Invoke(building);
 		}
 
-        //Debug.Log($"BuildingFactory(), returning building ({building}), building collider position is {building.Collider.position} (world) / {building.Collider.localPosition} (local), building model position is {building.Model.position} (world) / {building.Model.localPosition} (local)");
+		onPlacementStarted?.Invoke(building);
+		
+		//Debug.Log($"BuildingFactory(), returning building ({building}), building collider position is {building.Collider.position} (world) / {building.Collider.localPosition} (local), building model position is {building.Model.position} (world) / {building.Model.localPosition} (local)");
 
 		return building;
     }
@@ -90,7 +94,7 @@ public class BuildingFactory : Factory<BuildingFactory, Building, EBuilding>
 
     /// <summary>
     /// Destroy a building.
-    /// Note: it's probably better to call this method or another overload of Destroy() defined in BuildingFactory than Factory's version of destroy.
+    /// Note: it's probably better to call this method or another overload of Destroy() defined in BuildingFactory than Factory's base version of destroy.
     /// </summary>
     /// <param name="building">The building to be destroyed.</param>
     /// <param name="consumingResources">Is the building consuming resources and does that consumption need to be cancelled now that it's being destroyed?</param>
@@ -120,6 +124,6 @@ public class BuildingFactory : Factory<BuildingFactory, Building, EBuilding>
         }
 
         building.Reset();
-        Destroy(building.BuildingType, building);
+        Destroy(building, building.BuildingType);
     }
 }
