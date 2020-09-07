@@ -12,12 +12,15 @@ public class TilemapTerrainGenerator : MonoBehaviour
 {
     MeshFilter filter;
     MeshCollider collider;
+    MeshRenderer renderer;
 
     [SerializeField] public TilemapPrefabData prefabData;
 
     [SerializeField] public Texture2D heightmapTexture;
     [SerializeField] public Texture2D itemTexture;
+    [SerializeField] public Texture2D resourceTexture;
 
+    [SerializeField] public int blurDistance;
     //[SerializeField] private GameObject straightCliff_Object;
     //[SerializeField] private GameObject innerCliff_Object;
     //[SerializeField] private GameObject outerCliff_Object;
@@ -38,6 +41,8 @@ public class TilemapTerrainGenerator : MonoBehaviour
     void Start()
     {
         FindMeshFilter();
+
+        GenerateResourceMasks(1024);
     }
 
     // Update is called once per frame
@@ -326,7 +331,208 @@ public class TilemapTerrainGenerator : MonoBehaviour
         filter.mesh = mesh;
     }
 
+
+    public void GenerateResourceMasks(int resolution) {
+        FindMeshRenderer();
+
+        List<Vector2> organicsTiles = new List<Vector2>();
+        List<Vector2> waterTiles = new List<Vector2>();
+        List<Vector2> naturalGasTiles = new List<Vector2>();
+
+        float scaleFactor =  (float)resolution / resourceTexture.width;
+
+
+        for (int xx = 0; xx < resourceTexture.width; xx += 1) {
+            for (int yy = 0; yy < resourceTexture.height; yy += 1) {
+                Color pixel = resourceTexture.GetPixel(xx, yy);
+
+                if (pixel.r > 0) {
+                    // Organics
+                    organicsTiles.Add(new Vector2(xx, yy));
+                } else
+                if (pixel.g > 0) {
+                    // Natural Gas
+                    naturalGasTiles.Add(new Vector2(xx, yy));
+                } else
+                if (pixel.b > 0) {
+                    // Water / Ice
+                    waterTiles.Add(new Vector2(xx, yy));
+                }
+
+            }
+        }
+
+        // Create empty masks
+        float[,] organicsIntensity = new float[resolution, resolution];
+        float[,] naturalGasIntensity = new float[resolution, resolution];
+        float[,] waterIntensity = new float[resolution, resolution];
+
+        // Clear the masks
+        for (int xx = 0; xx < resolution; xx += 1) {
+            for (int yy = 0; yy < resolution; yy += 1) {
+                organicsIntensity[xx, yy] = 0;
+                naturalGasIntensity[xx, yy] = 0;
+                waterIntensity[xx, yy] = 0;
+            }
+        }
+        /**********************
+         * Organics
+         * 
+         */
+        foreach ( Vector2 tile in organicsTiles) {
+            //organicsIntensity[(int)(tile.x * scaleFactor), (int)(tile.y * scaleFactor)] = 1;
+
+            int scaleFac = (int)scaleFactor;
+            int tileX = (int)Mathf.Floor(tile.x * scaleFactor) - scaleFac/2;
+            int tileY = (int)Mathf.Floor(tile.y * scaleFactor) - scaleFac/2;
+
+            for (int xx = tileX-blurDistance; xx < tileX + scaleFac + blurDistance + 1; xx++) {
+                for (int yy = tileY-blurDistance; yy < tileY + scaleFac + blurDistance+ 1; yy++) {
+                    float intensity = 1;
+
+                    float xOffset = xx - tileX;
+                    float yOffset = yy - tileY;
+
+                    
+                    if (xOffset < 0)
+                        intensity *= 1 - Mathf.Abs(xOffset / (float)blurDistance);
+                    if (xOffset > scaleFac)
+                        intensity *= 1 -Mathf.Abs((xOffset-scaleFac) / (float)blurDistance);
+                    
+                    if (yOffset < 0)
+                        intensity *= 1 - Mathf.Abs(yOffset / (float)blurDistance);
+                    if (yOffset > scaleFac)
+                        intensity *= 1 - Mathf.Abs((yOffset - scaleFac) / (float)blurDistance);
+
+                    organicsIntensity[xx, yy] = Mathf.Max(intensity, organicsIntensity[xx,yy]);
+                }
+            }
+        }
+
+        /**********************
+         * Natural Gas
+         * 
+         */
+        foreach (Vector2 tile in naturalGasTiles) {
+
+            int scaleFac = (int)scaleFactor;
+            int tileX = (int)Mathf.Floor(tile.x * scaleFactor) - scaleFac / 2;
+            int tileY = (int)Mathf.Floor(tile.y * scaleFactor) - scaleFac / 2;
+
+            for (int xx = tileX - blurDistance; xx < tileX + scaleFac + blurDistance + 1; xx++) {
+                for (int yy = tileY - blurDistance; yy < tileY + scaleFac + blurDistance + 1; yy++) {
+                    float intensity = 1;
+
+                    float xOffset = xx - tileX;
+                    float yOffset = yy - tileY;
+
+
+                    if (xOffset < 0)
+                        intensity *= 1 - Mathf.Abs(xOffset / (float)blurDistance);
+                    if (xOffset > scaleFac)
+                        intensity *= 1 - Mathf.Abs((xOffset - scaleFac) / (float)blurDistance);
+
+                    if (yOffset < 0)
+                        intensity *= 1 - Mathf.Abs(yOffset / (float)blurDistance);
+                    if (yOffset > scaleFac)
+                        intensity *= 1 - Mathf.Abs((yOffset - scaleFac) / (float)blurDistance);
+
+                    naturalGasIntensity[xx, yy] = Mathf.Max(intensity, naturalGasIntensity[xx, yy]);
+                }
+            }
+        }
+
+        /**********************
+         * Ice / Water
+         * 
+         */
+        foreach (Vector2 tile in waterTiles) {
+            //organicsIntensity[(int)(tile.x * scaleFactor), (int)(tile.y * scaleFactor)] = 1;
+
+            int scaleFac = (int)scaleFactor;
+            int tileX = (int)Mathf.Floor(tile.x * scaleFactor) - scaleFac / 2;
+            int tileY = (int)Mathf.Floor(tile.y * scaleFactor) - scaleFac / 2;
+
+            for (int xx = tileX - blurDistance; xx < tileX + scaleFac + blurDistance + 1; xx++) {
+                for (int yy = tileY - blurDistance; yy < tileY + scaleFac + blurDistance + 1; yy++) {
+                    float intensity = 1;
+
+                    float xOffset = xx - tileX;
+                    float yOffset = yy - tileY;
+
+
+                    if (xOffset < 0)
+                        intensity *= 1 - Mathf.Abs(xOffset / (float)blurDistance);
+                    if (xOffset > scaleFac)
+                        intensity *= 1 - Mathf.Abs((xOffset - scaleFac) / (float)blurDistance);
+
+                    if (yOffset < 0)
+                        intensity *= 1 - Mathf.Abs(yOffset / (float)blurDistance);
+                    if (yOffset > scaleFac)
+                        intensity *= 1 - Mathf.Abs((yOffset - scaleFac) / (float)blurDistance);
+
+                    waterIntensity[xx, yy] = Mathf.Max(intensity, waterIntensity[xx, yy]);
+                }
+            }
+        }
+
+        //Create mask texture
+        Texture2D organicsMask = new Texture2D(resolution, resolution);
+        Texture2D naturalGasMask = new Texture2D(resolution, resolution);
+        Texture2D waterMask = new Texture2D(resolution, resolution);
+
+        for (int xx = 0; xx < resolution; xx += 1) {
+            for (int yy = 0; yy < resolution; yy += 1) {
+
+                float organics = organicsIntensity[xx, yy];
+                Color organicsCol = new Color(organics, organics, organics);
+                organicsMask.SetPixel(xx, yy, organicsCol);
+
+                float water = waterIntensity[xx, yy];
+                Color waterCol = new Color(water, water, water);
+                waterMask.SetPixel(xx, yy, waterCol);
+
+                float gas = naturalGasIntensity[xx, yy];
+                Color gasCol = new Color(gas, gas, gas);  // IM GONNA STEP ON THE GAS
+                naturalGasMask.SetPixel(xx, yy, gasCol);
+            }
+        }
+        organicsMask.Apply();
+        naturalGasMask.Apply();
+        waterMask.Apply();
+        
+
+        renderer.sharedMaterial.SetTexture("OrganicResource_Mask", organicsMask);
+        renderer.sharedMaterial.SetTexture("GasResource_Mask", naturalGasMask);
+        renderer.sharedMaterial.SetTexture("WaterResource_Mask", waterMask);
+
+
+        organicsMask.hideFlags = HideFlags.HideAndDontSave;
+        naturalGasMask.hideFlags = HideFlags.HideAndDontSave;
+        waterMask.hideFlags = HideFlags.HideAndDontSave;
+    }
    
+
+    public void RecalculateUVs() {
+        FindMeshFilter();
+
+        Mesh m = filter.sharedMesh;
+
+        m.RecalculateBounds();
+        float xScale = m.bounds.size.x;
+        float yScale = m.bounds.size.z;
+
+        Vector3[] verts = m.vertices;
+        Vector2[] uvs = new Vector2[verts.Length];
+
+        for (int i = 0; i < uvs.Length; i ++) {
+            Vector3 pos = verts[i];
+            uvs[i] = new Vector2(pos.x/xScale, pos.z/yScale);
+        }
+        m.uv = uvs;
+
+        filter.sharedMesh = m;
+    }
 
     public void OptimiseMesh() {
         FindMeshFilter();
@@ -355,6 +561,12 @@ public class TilemapTerrainGenerator : MonoBehaviour
     private void FindMeshCollider() {
         if (collider == null) {
             collider = GetComponent<MeshCollider>();
+        }
+    }
+
+    private void FindMeshRenderer() {
+        if(renderer == null) {
+            renderer = GetComponent<MeshRenderer>();
         }
     }
 

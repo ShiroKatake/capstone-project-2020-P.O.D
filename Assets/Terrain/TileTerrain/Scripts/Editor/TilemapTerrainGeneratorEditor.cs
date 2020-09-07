@@ -37,10 +37,20 @@ public class TilemapTerrainGeneratorEditor : Editor
 
         GUILayout.Space(10);
 
+        if (GUILayout.Button("Generate Resource Masks")) {
+            
+
+            script.GenerateResourceMasks(1024);
+        }
+
+        GUILayout.Space(10);
+
         if (GUILayout.Button("Optimise Mesh"))
             script.OptimiseMesh();
         if (GUILayout.Button("Set Collision Mesh"))
             script.SetCollisionMesh();
+        if (GUILayout.Button("Recalculate UV's"))
+            script.RecalculateUVs();
 
         GUILayout.Space(10);
 
