@@ -14,6 +14,8 @@ public class TilemapTerrainGenerator : MonoBehaviour
     MeshCollider collider;
     MeshRenderer renderer;
 
+    [SerializeField] float yScale = 2;
+
     [SerializeField] public TilemapPrefabData prefabData;
 
     [SerializeField] public Texture2D heightmapTexture;
@@ -33,7 +35,7 @@ public class TilemapTerrainGenerator : MonoBehaviour
 
     private float [,] heightmap;
 
-    float yScale = 2;
+    
 
     private List<(Vector3, float, Color)> spheres;
 
