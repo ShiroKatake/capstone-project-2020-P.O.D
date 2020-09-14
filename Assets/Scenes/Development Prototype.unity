@@ -113,8 +113,8 @@ NavMeshSettings:
     ledgeDropHeight: 0
     maxJumpAcrossDistance: 0
     minRegionArea: 2
-    manualCellSize: 0
-    cellSize: 0.16666667
+    manualCellSize: 1
+    cellSize: 0.19999
     manualTileSize: 0
     tileSize: 256
     accuratePlacement: 0
@@ -2710,6 +2710,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 659786165687752996, guid: 953fe9ae95f39bd4d8a9f952c654fc00,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 659786165687752996, guid: 953fe9ae95f39bd4d8a9f952c654fc00,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 880952307760529664, guid: 953fe9ae95f39bd4d8a9f952c654fc00,
         type: 3}
       propertyPath: maxHealth
@@ -4039,6 +4049,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1176843170002625083, guid: 435f7674b2b881b4896020642be86b13,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1176843170002625083, guid: 435f7674b2b881b4896020642be86b13,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4635870159163347478, guid: 435f7674b2b881b4896020642be86b13,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5102,7 +5122,7 @@ PrefabInstance:
     - target: {fileID: 9033323265905847547, guid: 485364eaa1338b94285a4b76d671c4a2,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 190
+      value: 194.68
       objectReference: {fileID: 0}
     - target: {fileID: 9033323265905847547, guid: 485364eaa1338b94285a4b76d671c4a2,
         type: 3}

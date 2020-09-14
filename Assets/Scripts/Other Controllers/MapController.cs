@@ -222,7 +222,7 @@ public class MapController : SerializableSingleton<MapController>
                     }
                 }
                 
-                Debug.Log($"Initialised position data for position ({i},{j}). Angle from centre is {positions[i, j].Angle}");
+                //Debug.Log($"Initialised position data for position ({i},{j}). Angle from centre is {positions[i, j].Angle}");
             }
         }
     }

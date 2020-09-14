@@ -50,6 +50,8 @@ public class Alien : MonoBehaviour, IMessenger
     [SerializeField] private string shotByName;
     [SerializeField] private Transform shotByTransform;
     private float timeOfLastAttack;
+    private bool pathCalculated;
+    private NavMeshPath stashedPath;
 
     //Public Fields----------------------------------------------------------------------------------------------------------------------------------
 
@@ -112,7 +114,6 @@ public class Alien : MonoBehaviour, IMessenger
         navMeshAgent.enabled = false;
         speed = navMeshAgent.speed;
 
-
 		alienWeapon = GetComponentInChildren<AlienClaw>();
 		alienWeapon.gameObject.SetActive(false);
 
@@ -134,6 +135,8 @@ public class Alien : MonoBehaviour, IMessenger
         timeOfLastAttack = attackCooldown * -1;
         MessageDispatcher.Instance.Subscribe("Alien", this);
         renderer.enabled = true;
+        pathCalculated = false;
+        stashedPath = null;
 
         //Rotate to face the Cryo egg
         Vector3 targetRotation = CryoEgg.Instance.transform.position - transform.position;
@@ -234,6 +237,19 @@ public class Alien : MonoBehaviour, IMessenger
         target = selectedTarget;
         targetHealth = target.GetComponentInParent<Health>();   //Gets Health from target or any of its parents that has it.
         targetSize = target.GetComponentInParent<Size>();   //Gets Radius from target or any of its parents that has it.
+        pathCalculated = false;
+        StartCoroutine(DeclarePath());
+    }
+
+    private IEnumerator DeclarePath()
+    {
+        while (!navMeshAgent.hasPath)
+        {
+            yield return null;
+        }
+
+        Debug.Log("Alien.DeclarePath() submitting message");
+        MessageDispatcher.Instance.SendMessage("Alien", new Message(gameObject.name, "Alien", gameObject, "Path"));
     }
 
     /// <summary>
@@ -393,19 +409,31 @@ public class Alien : MonoBehaviour, IMessenger
 	/// <param name="message">The message to send to this messenger.</param>
 	public void Receive(Message message)
     {
-        if (message.SenderTag == "Turret" && message.MessageContents == "Dead")
+        if (message.SenderTag == "Turret")
         {
-            Transform messenger = message.SenderObject.transform;
-
-            if (shotByTransform == messenger)
+            if (message.Contents == "Dead")
             {
-                shotByName = "";
-                shotByTransform = null;
+                Transform messenger = message.SenderObject.transform;
+
+                if (shotByTransform == messenger)
+                {
+                    shotByName = "";
+                    shotByTransform = null;
+                }
+
+                if (visibleTargets.Contains(messenger))
+                {
+                    visibleTargets.Remove(messenger);
+                }
             }
-
-            if (visibleTargets.Contains(messenger))
+        }
+        else if (message.SenderTag == "Alien")
+        {
+            if (message.Contents == "Path" && !navMeshAgent.hasPath)
             {
-                visibleTargets.Remove(messenger);
+                NavMeshAgent agentWithPath = message.SenderObject.GetComponent<NavMeshAgent>();
+
+                //if (pathToStash != null && pathToStash.)
             }
         }
     }
@@ -417,7 +445,7 @@ public class Alien : MonoBehaviour, IMessenger
     {
         //navMeshAgent.enabled = false;
         renderer.enabled = false;
-        MessageDispatcher.Instance.SendMessage("Turret", new Message(gameObject.name, "Alien", this.gameObject, "Dead"));
+        MessageDispatcher.Instance.SendMessage("Turret", new Message(gameObject.name, "Alien", gameObject, "Dead"));
         MessageDispatcher.Instance.Unsubscribe("Alien", this);
         moving = false;
         shotByName = "";
