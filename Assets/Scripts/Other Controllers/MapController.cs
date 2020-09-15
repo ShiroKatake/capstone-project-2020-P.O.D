@@ -1,10 +1,45 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
+/// <summary>
+/// A serializable class for NavMeshAgents by alien type for MapController to use to pre-calculate paths from each point to the cryo egg.
+/// </summary>
+[Serializable]
+public class TypedPathfinder
+{
+    //Private Fields---------------------------------------------------------------------------------------------------------------------------------
+
+    //Serialized Fields----------------------------------------------------------------------------
+
+    [SerializeField] private EAlien type;
+    [SerializeField] private NavMeshAgent agent;
+
+    //Public Properties------------------------------------------------------------------------------------------------------------------------------
+
+    //Simple Public Properties---------------------------------------------------------------------
+
+    /// <summary>
+    /// The type of alien the agent is calculating paths for.
+    /// </summary>
+    public EAlien Type { get => type; }
+
+    /// <summary>
+    /// The nav mesh agent calculating paths for the specified type of alien.
+    /// </summary>
+    public NavMeshAgent Agent { get => agent; }
+}
+
+/// <summary>
+/// A container class for all the data on a given map position.
+/// </summary>
 public class PositionData
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
+
+    //Non-Serialized Fields------------------------------------------------------------------------
 
     private float angle;
     private bool hasBuilding;
@@ -13,6 +48,7 @@ public class PositionData
     private bool isInTutorialAlienSpawnArea;
     private int x;
     private int z;
+    private Dictionary<EAlien, NavMeshPath> paths;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -42,6 +78,11 @@ public class PositionData
     /// Is this position close enough to the cryo egg for alien spawning to be allowed during the tutorial?
     /// </summary>
     public bool IsInTutorialAlienSpawnArea { get => isInTutorialAlienSpawnArea; }
+
+    /// <summary>
+    /// The nav mesh paths from this position to the cryo egg for each type of alien.
+    /// </summary>
+    public Dictionary<EAlien, NavMeshPath> Paths { get => paths; }
 
     /// <summary>
     /// This position's x coordinate.
@@ -109,6 +150,7 @@ public class PositionData
         this.hasMineral = false;
         this.isInTutorialAlienSpawnArea = isInTutorialAlienSpawnArea;
         this.aliensBanned = isInAlienExclusionArea;
+        paths = new Dictionary<EAlien, NavMeshPath>();
     }
 }
 
@@ -133,6 +175,13 @@ public class MapController : SerializableSingleton<MapController>
     [Header("Tutorial Alien Spawning Area")]
     [SerializeField] private Vector3 tutorialBottomLeft;
     [SerializeField] private Vector3 tutorialTopRight;
+
+    [Header("Path Calculation")]
+    [SerializeField] private List<TypedPathfinder> pathfinders;
+
+    [Header("Testing")]
+    [SerializeField] private bool pauseLoop;
+    [SerializeField] private float pathfindingFrameTimeLimit;
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
@@ -225,6 +274,56 @@ public class MapController : SerializableSingleton<MapController>
                 //Debug.Log($"Initialised position data for position ({i},{j}). Angle from centre is {positions[i, j].Angle}");
             }
         }
+
+        StartCoroutine(CalculatePaths());
+    }
+
+    /// <summary>
+    /// Calculates paths from every map position to the cryo egg.
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator CalculatePaths()
+    {
+        System.Diagnostics.Stopwatch totalStopwatch = new System.Diagnostics.Stopwatch();
+        System.Diagnostics.Stopwatch loopStopwatch = new System.Diagnostics.Stopwatch();
+        totalStopwatch.Restart();
+        loopStopwatch.Restart();
+
+        NavMeshPath calculatedPath = null;
+
+        for (int i = 0; i <= xMax; i++)
+        {
+            for (int j = 0; i <= zMax; j++)
+            {
+                foreach (TypedPathfinder p in pathfinders)
+                {
+                    Vector3 pos = new Vector3(i, 5, j);
+                    RaycastHit hit;
+
+                    if (Physics.Raycast(pos, Vector3.down, out hit, 20, groundLayerMask))
+                    {
+                        pos.y = hit.point.y;
+                        p.Agent.transform.position = pos;
+                        p.Agent.enabled = true;
+
+                        if (p.Agent.CalculatePath(CryoEgg.Instance.ColliderTransform.position, calculatedPath))
+                        {
+                            positions[i, j].Paths[p.Type] = calculatedPath;
+                        }
+
+                        p.Agent.enabled = false;
+                    }
+                    
+                    if (pauseLoop && loopStopwatch.ElapsedMilliseconds >= pathfindingFrameTimeLimit)
+                    {
+                        yield return null;
+                        loopStopwatch.Restart();
+                    }
+                }                
+            }
+        }
+
+        yield return null;
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------

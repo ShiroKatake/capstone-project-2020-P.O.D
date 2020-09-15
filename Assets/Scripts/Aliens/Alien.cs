@@ -237,7 +237,19 @@ public class Alien : MonoBehaviour, IMessenger
         target = selectedTarget;
         targetHealth = target.GetComponentInParent<Health>();   //Gets Health from target or any of its parents that has it.
         targetSize = target.GetComponentInParent<Size>();   //Gets Radius from target or any of its parents that has it.
-        pathCalculated = false;
+
+        PositionData data = MapController.Instance.GetPositionData(transform.position);
+
+        if (data != null && data.Paths.ContainsKey(type) && data.Paths[type] != null)
+        {
+            navMeshAgent.SetPath(data.Paths[type]);
+            pathCalculated = true;
+        }
+        else
+        {
+            pathCalculated = false;
+        }
+        
         StartCoroutine(DeclarePath());
     }
 
@@ -248,8 +260,11 @@ public class Alien : MonoBehaviour, IMessenger
             yield return null;
         }
 
-        Debug.Log("Alien.DeclarePath() submitting message");
-        MessageDispatcher.Instance.SendMessage("Alien", new Message(gameObject.name, "Alien", gameObject, "Path"));
+        if (stashedPath == null)
+        {
+            Debug.Log("Alien.DeclarePath() submitting message");
+            MessageDispatcher.Instance.SendMessage("Alien", new Message(gameObject.name, "Alien", gameObject, "Path"));
+        }
     }
 
     /// <summary>
@@ -278,6 +293,13 @@ public class Alien : MonoBehaviour, IMessenger
     /// </summary>
     private void Move()
     {
+        if (stashedPath != null && Vector3.Distance(transform.position, navMeshAgent.pathEndPosition) <= 1)
+        {
+            navMeshAgent.SetPath(stashedPath);
+            stashedPath = null;
+            Debug.Log($"{name} applying stashed path.");
+        }
+
         if (Vector3.Distance(transform.position, PositionAtSameHeight(target.position)) > attackRange + targetSize.Radius)
         {
             AudioManager.Instance.PlaySound(AudioManager.ESound.Alien_Moves, this.gameObject);
@@ -429,11 +451,31 @@ public class Alien : MonoBehaviour, IMessenger
         }
         else if (message.SenderTag == "Alien")
         {
+            Debug.Log($"{name} received message from alien");
+
             if (message.Contents == "Path" && !navMeshAgent.hasPath)
             {
-                NavMeshAgent agentWithPath = message.SenderObject.GetComponent<NavMeshAgent>();
+                Alien ally = message.SenderObject.GetComponent<Alien>();
 
-                //if (pathToStash != null && pathToStash.)
+                if (
+                       target != null
+                    && ally != null 
+                    && ally.NavMeshAgent != null
+                    && ally.NavMeshAgent.hasPath
+                    && Vector3.Distance(message.SenderObject.transform.position, transform.position) < 5
+                    && Vector3.Distance(ally.NavMeshAgent.pathEndPosition, target.position) < 1
+                )
+                {
+                    Debug.Log($"{name} received stashable path");
+                    stashedPath = ally.NavMeshAgent.path;
+                    NavMeshPath tempPath = null;
+
+                    if (navMeshAgent.CalculatePath(ally.transform.position, tempPath))
+                    {
+                        Debug.Log($"{name} stashing path");
+                        navMeshAgent.SetPath(tempPath);
+                    }
+                }
             }
         }
     }

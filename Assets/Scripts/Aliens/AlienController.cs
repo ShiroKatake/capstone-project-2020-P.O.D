@@ -91,7 +91,7 @@ public class AlienController : SerializableSingleton<AlienController>
                 float aliensLeftInCurrentWave = spawningAliens ? aliensInCurrentWave : aliens.Count;
                 float progressInCurrentWave = (aliensInCurrentWave - aliensLeftInCurrentWave) / aliensInCurrentWave;
                 float result = (wavesCompleted + progressInCurrentWave) / wavesPerNight;
-                Debug.Log($"CurrentWave: {currentWave}, aliensInCurrentWave: {aliensInCurrentWave}, spawningAliens: {spawningAliens}, aliens.Count: {aliens.Count}, aliensLeftInCurrentWave: {aliensLeftInCurrentWave} progressInCurrentWave: {progressInCurrentWave}");
+                //Debug.Log($"CurrentWave: {currentWave}, aliensInCurrentWave: {aliensInCurrentWave}, spawningAliens: {spawningAliens}, aliens.Count: {aliens.Count}, aliensLeftInCurrentWave: {aliensLeftInCurrentWave} progressInCurrentWave: {progressInCurrentWave}");
                 return result;
             }
         }
