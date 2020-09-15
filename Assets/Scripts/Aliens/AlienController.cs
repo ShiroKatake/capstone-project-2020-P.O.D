@@ -87,11 +87,12 @@ public class AlienController : SerializableSingleton<AlienController>
             }
             else
             {
-                return (
-                            currentWave - 1                                                                                         //Start of current wave, i.e 0 for start of first wave, 1 for start of second wave, etc.
-                          + ((aliensInCurrentWave - (spawningAliens ? aliensInCurrentWave : aliens.Count)) / aliensInCurrentWave)   //Plus progress % in current wave, i.e. aliens killed this wave / total aliens in wave
-                       )
-                       / wavesPerNight;                                                                                             //All over the number of waves
+                float wavesCompleted = currentWave - 1;
+                float aliensLeftInCurrentWave = spawningAliens ? aliensInCurrentWave : aliens.Count;
+                float progressInCurrentWave = (aliensInCurrentWave - aliensLeftInCurrentWave) / aliensInCurrentWave;
+                float result = (wavesCompleted + progressInCurrentWave) / wavesPerNight;
+                Debug.Log($"CurrentWave: {currentWave}, aliensInCurrentWave: {aliensInCurrentWave}, spawningAliens: {spawningAliens}, aliens.Count: {aliens.Count}, aliensLeftInCurrentWave: {aliensLeftInCurrentWave} progressInCurrentWave: {progressInCurrentWave}");
+                return result;
             }
         }
     }
