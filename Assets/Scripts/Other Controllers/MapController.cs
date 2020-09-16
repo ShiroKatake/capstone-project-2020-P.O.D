@@ -289,39 +289,96 @@ public class MapController : SerializableSingleton<MapController>
         totalStopwatch.Restart();
         loopStopwatch.Restart();
 
+        Debug.Log($"MapController.CalculatePaths(), starting");
         NavMeshPath calculatedPath = null;
+        float alienSpawnHeight = AlienFactory.Instance.AlienSpawnHeight;
 
-        for (int i = 0; i <= xMax; i++)
+        if (!AlienFactory.Instance.Initialised)
         {
-            for (int j = 0; i <= zMax; j++)
+            AlienFactory.Instance.Initialise();
+        }
+
+        foreach (EAlien e in (EAlien[])Enum.GetValues(typeof(EAlien)))
+        {
+            if (e != EAlien.None)
             {
                 foreach (TypedPathfinder p in pathfinders)
                 {
-                    Vector3 pos = new Vector3(i, 5, j);
-                    RaycastHit hit;
-
-                    if (Physics.Raycast(pos, Vector3.down, out hit, 20, groundLayerMask))
+                    if (p.Type == e)
                     {
-                        pos.y = hit.point.y;
-                        p.Agent.transform.position = pos;
-                        p.Agent.enabled = true;
+                        Alien alienTemplate = AlienFactory.Instance.GetPrefab(e);
 
-                        if (p.Agent.CalculatePath(CryoEgg.Instance.ColliderTransform.position, calculatedPath))
+                        if (alienTemplate != null)
                         {
-                            positions[i, j].Paths[p.Type] = calculatedPath;
-                        }
+                            NavMeshAgent agentTemplate = alienTemplate.GetComponent<NavMeshAgent>();
 
-                        p.Agent.enabled = false;
+                            if (agentTemplate != null)
+                            {
+                                GameObjectUtility.CopyComponentValues<NavMeshAgent>(p.Agent, agentTemplate);
+                            }
+                            else
+                            {
+                                Debug.LogError($"MapController.CalculatePaths(), cannot retrieve alienTemplate's NavMeshAgent component.");
+                            }
+                        }
+                        else
+                        {
+                            Debug.LogError($"MapController.CalculatePaths(), AlienFactory doesn't have a prefab of type {e}");
+                        }
                     }
-                    
-                    if (pauseLoop && loopStopwatch.ElapsedMilliseconds >= pathfindingFrameTimeLimit)
-                    {
-                        yield return null;
-                        loopStopwatch.Restart();
-                    }
-                }                
+                }
             }
         }
+
+        //if (pauseLoop && loopStopwatch.ElapsedMilliseconds >= pathfindingFrameTimeLimit)
+        //{
+        //    Debug.Log($"MapController.CalculatePaths(), yielding after copying NavMeshAgent values, milliseconds elapsed: {loopStopwatch.ElapsedMilliseconds}/{pathfindingFrameTimeLimit}");
+        //    yield return null;
+        //    loopStopwatch.Restart();
+        //}
+
+        //for (int i = 0; i <= xMax; i++)
+        //{
+        //    for (int j = 0; i <= zMax; j++)
+        //    {
+        //        foreach (TypedPathfinder p in pathfinders)
+        //        {
+        //            Vector3 pos = new Vector3(i, alienSpawnHeight, j);
+        //            RaycastHit hit;
+
+        //            if (Physics.Raycast(pos, Vector3.down, out hit, 20, groundLayerMask))
+        //            {
+        //                p.Agent.transform.position = new Vector3(pos.x, hit.point.y, pos.z);
+        //                NavMeshHit navHit;                        
+
+        //                if (NavMesh.SamplePosition(p.Agent.transform.position, out navHit, 1, NavMesh.AllAreas))
+        //                {
+        //                    p.Agent.enabled = true;
+
+        //                    if (p.Agent.CalculatePath(CryoEgg.Instance.ColliderTransform.position, calculatedPath))
+        //                    {
+        //                        positions[i, j].Paths[p.Type] = calculatedPath;
+        //                    }
+
+        //                    p.Agent.enabled = false;
+        //                }
+        //                else
+        //                {
+        //                    RegisterOffMeshPosition(pos);
+        //                }                        
+        //            }
+                    
+        //            if (pauseLoop && loopStopwatch.ElapsedMilliseconds >= pathfindingFrameTimeLimit)
+        //            {
+        //                Debug.Log($"MapController.CalculatePaths(), yielding in loop, i: {i}/{xMax}, j: {j}/{zMax}, milliseconds elapsed: {loopStopwatch.ElapsedMilliseconds}/{pathfindingFrameTimeLimit}");
+        //                yield return null;
+        //                loopStopwatch.Restart();
+        //            }
+        //        }                
+        //    }
+        //}
+
+        Debug.Log($"MapController.CalculatePaths(), has finished, time elapsed is {totalStopwatch.ElapsedMilliseconds} ms, or {totalStopwatch.ElapsedMilliseconds / 1000} s.");
 
         yield return null;
     }

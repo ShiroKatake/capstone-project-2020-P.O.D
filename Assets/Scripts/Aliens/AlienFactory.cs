@@ -14,6 +14,10 @@ public class AlienFactory : Factory<AlienFactory, Alien, EAlien>
 
     [Header("Alien Stats")]
     [SerializeField] private float alienSpawnHeight;
+
+    //Non-Serialized Fields------------------------------------------------------------------------
+
+    private bool initialised;
    
     //PublicProperties-------------------------------------------------------------------------------------------------------------------------------
 
@@ -24,7 +28,23 @@ public class AlienFactory : Factory<AlienFactory, Alien, EAlien>
     /// </summary>
     public float AlienSpawnHeight { get => alienSpawnHeight; }
 
+    /// <summary>
+    /// Has AlienFactory called its Initialise() method from Start()?
+    /// </summary>
+    public bool Initialised { get => initialised; }
+
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
+    /// Awake() runs before Start().
+    /// </summary>
+    protected override void Awake()
+    {
+        Debug.Log("AlienFactory.Awake()");
+        base.Awake();
+        initialised = false;
+    }
 
     /// <summary>
     /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
@@ -32,6 +52,18 @@ public class AlienFactory : Factory<AlienFactory, Alien, EAlien>
     /// </summary>
     protected override void Start()
     {
+        if (!initialised)
+        {
+            Initialise();
+        }
+    }
+
+    /// <summary>
+    /// The initialisation code for AlienFactory that is called in Start().
+    /// </summary>
+    public void Initialise()
+    {
+        Debug.Log("AlienFactory.Initialise()");
         base.Start();
 
         foreach (List<Alien> l in pool.Values)
@@ -44,6 +76,8 @@ public class AlienFactory : Factory<AlienFactory, Alien, EAlien>
                 }
             }
         }
+
+        initialised = true;
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
@@ -86,5 +120,21 @@ public class AlienFactory : Factory<AlienFactory, Alien, EAlien>
         alien.Reset();
         AlienController.Instance.DeRegisterAlien(alien);
         base.Destroy(alien, type);
+    }
+
+    /// <summary>
+    /// Get a prefab from the factory.
+    /// Note: only use if you need to access the prefab directly; if you need an instance of an alien, use Get().
+    /// </summary>
+    /// <param name="type">The type of the alien prefab.</param>
+    /// <returns>The requested alien prefab.</returns>
+    public Alien GetPrefab(EAlien type)
+    {
+        if (prefabs.ContainsKey(type))
+        {
+            return prefabs[type];
+        }
+
+        return null;
     }
 }
