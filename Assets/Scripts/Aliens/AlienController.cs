@@ -247,65 +247,55 @@ public class AlienController : SerializableSingleton<AlienController>
 
             Vector3 spawnPos = GetRandomAvailablePosition(availableSpawnPoints);
             float angle = MapController.Instance.GetPositionData(spawnPos).Angle;
+            bool positionAvailable;
+            Alien alien = SpawnAlien(spawnPos, (cumulativeCrawlerFrequency >= 1 ? EAlien.Crawler : EAlien.Scuttler), out positionAvailable);
             Debug.Log($"spawnPos: {spawnPos}, angle from centre: {angle}, minAngle: {minAngle}, maxAngle: {maxAngle}");
 
-            if (MapController.Instance.PositionAvailableForSpawning(spawnPos, true))
+            if (alien != null)
             {
-                RaycastHit rayHit;
-                NavMeshHit navHit;
-                Physics.Raycast(spawnPos, Vector3.down, out rayHit, 25, groundLayerMask);
-                Alien alien = AlienFactory.Instance.Get(new Vector3(spawnPos.x, rayHit.point.y, spawnPos.z), (cumulativeCrawlerFrequency >= 1 ? EAlien.Crawler : EAlien.Scuttler));
-                alien.Setup(IdGenerator.Instance.GetNextId());
+                aliens.Add(alien);
 
-                if (NavMesh.SamplePosition(alien.transform.position, out navHit, 1, NavMesh.AllAreas))
+                if (cumulativeCrawlerFrequency >= 1)
                 {
-                    aliens.Add(alien);
-
-                    if (cumulativeCrawlerFrequency >= 1)
-                    {
-                        cumulativeCrawlerFrequency--;
-                    }
-
-                    cumulativeCrawlerFrequency += crawlerFrequency;
-
-                    if (currentStage != EStage.Combat)
-                    {
-                        if (majorityCount < majorityMaxCount)
-                        {
-                            majorityCount++;
-                        }
-                        else
-                        {
-                            minorityCount++;
-                        }
-                    }
-                }
-                else
-                {
-                    MapController.Instance.RegisterOffMeshPosition(spawnPos);
-                    AlienFactory.Instance.Destroy(alien, alien.Type);
-                    i--;
+                    cumulativeCrawlerFrequency--;
                 }
 
-                int margin = (alien.Type == EAlien.Scuttler ? 1 : 2);
+                cumulativeCrawlerFrequency += crawlerFrequency;
 
-                for (int m = -margin; m <= margin; m++)
+                if (currentStage != EStage.Combat)
                 {
-                    for (int n = -margin; n <= margin; n++)
+                    if (majorityCount < majorityMaxCount)
                     {
-                        availableSpawnPoints.Remove(new Vector3(spawnPos.x + m, spawnPos.y, spawnPos.z + n));
-
-                        if (loopStopwatch.ElapsedMilliseconds >= spawningFrameTimeLimit)
-                        {
-                            yield return null;
-                            loopStopwatch.Restart();
-                        }
+                        majorityCount++;
+                    }
+                    else
+                    {
+                        minorityCount++;
                     }
                 }
             }
             else
             {
                 i--;
+
+                if (positionAvailable)
+                {
+                    int margin = (alien.Type == EAlien.Scuttler ? 1 : 2);
+
+                    for (int m = -margin; m <= margin; m++)
+                    {
+                        for (int n = -margin; n <= margin; n++)
+                        {
+                            availableSpawnPoints.Remove(new Vector3(spawnPos.x + m, spawnPos.y, spawnPos.z + n));
+
+                            if (loopStopwatch.ElapsedMilliseconds >= spawningFrameTimeLimit)
+                            {
+                                yield return null;
+                                loopStopwatch.Restart();
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -344,6 +334,41 @@ public class AlienController : SerializableSingleton<AlienController>
             default:
                 return availablePositions[Random.Range(0, availablePositions.Count - 1)];
         }
+    }
+
+    /// <summary>
+    /// Spawn a single alien.
+    /// </summary>
+    /// <param name="spawnPos">The position to spawn the alien at.</param>
+    /// <param name="type">The type of alien to spawn.</param>
+    /// <param name="positionAvailable">Did MapController.PositionAvailableForSpawning() return true?</param>
+    /// <returns></returns>
+    public Alien SpawnAlien(Vector3 spawnPos, EAlien type, out bool positionAvailable)
+    {
+        Alien alien = null;
+
+        if (MapController.Instance.PositionAvailableForSpawning(spawnPos, true))
+        {
+            positionAvailable = true;
+            RaycastHit rayHit;
+            NavMeshHit navHit;
+            Physics.Raycast(spawnPos, Vector3.down, out rayHit, 25, groundLayerMask);
+            alien = AlienFactory.Instance.Get(new Vector3(spawnPos.x, rayHit.point.y, spawnPos.z), type);
+            alien.Setup(IdGenerator.Instance.GetNextId());
+
+            if (!NavMesh.SamplePosition(alien.transform.position, out navHit, 1, NavMesh.AllAreas))
+            {
+                MapController.Instance.RegisterOffMeshPosition(spawnPos);
+                AlienFactory.Instance.Destroy(alien, alien.Type);
+                alien = null;
+            }            
+        }
+        else
+        {
+            positionAvailable = false;
+        }
+
+        return alien;
     }
 
     /// <summary>

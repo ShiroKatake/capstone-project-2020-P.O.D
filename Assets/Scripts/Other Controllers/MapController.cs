@@ -29,9 +29,10 @@ public class TypedPathfinder
     /// <summary>
     /// The nav mesh agent calculating paths for the specified type of alien.
     /// </summary>
-    public NavMeshAgent Agent { get => agent; }
+    public NavMeshAgent Agent { get => agent; set => agent = value; }
 }
 
+[Serializable]
 /// <summary>
 /// A container class for all the data on a given map position.
 /// </summary>
@@ -194,6 +195,8 @@ public class MapController : SerializableSingleton<MapController>
     private List<Vector3> majorityAlienSpawnPoints;
     private List<Vector3> minorityAlienSpawnPoints;
 
+    private bool initialised;
+
     //Public Properties------------------------------------------------------------------------------------------------------------------------------  
 
     //Basic Public Properties----------------------------------------------------------------------    
@@ -202,6 +205,11 @@ public class MapController : SerializableSingleton<MapController>
     /// The list of positions that are spawnable in the current wave.
     /// </summary>
     public List<Vector3> CurrentAlienSpawnPoints { get => currentAlienSpawnPoints; }
+
+    /// <summary>
+    /// Has MapController's Start() method run yet?
+    /// </summary>
+    public bool Initialised { get => initialised; }
 
     /// <summary>
     /// The list of positions that are spawnable in the current wave between the angles denoting 70% of spawnings.
@@ -228,6 +236,7 @@ public class MapController : SerializableSingleton<MapController>
         majorityAlienSpawnPoints = new List<Vector3>();
         minorityAlienSpawnPoints = new List<Vector3>();
         groundLayerMask = LayerMask.GetMask("Ground");
+        initialised = false;
     }
 
     /// <summary>
@@ -236,6 +245,20 @@ public class MapController : SerializableSingleton<MapController>
     /// </summary>
     private void Start()
     {
+        Debug.Log($"MapController.Start()");
+        
+        if (!initialised)
+        {
+            Initialise();
+        }
+    }
+
+    /// <summary>
+    /// The functionality of MapController's Start() method.
+    /// </summary>
+    public void Initialise()
+    {
+        Debug.Log($"MapController.Initialise()");
         float alienSpawnHeight = AlienFactory.Instance.AlienSpawnHeight;
         int noAlienXMin = (int)Mathf.Round(noAliensBottomLeft.x);
         int noAlienXMax = (int)Mathf.Round(noAliensTopRight.x);
@@ -270,11 +293,12 @@ public class MapController : SerializableSingleton<MapController>
                         tutorialAlienSpawnPoints.Add(new Vector3(i, alienSpawnHeight, j));
                     }
                 }
-                
+
                 //Debug.Log($"Initialised position data for position ({i},{j}). Angle from centre is {positions[i, j].Angle}");
             }
         }
-
+        
+        initialised = true;
         StartCoroutine(CalculatePaths());
     }
 
@@ -292,6 +316,7 @@ public class MapController : SerializableSingleton<MapController>
         Debug.Log($"MapController.CalculatePaths(), starting");
         NavMeshPath calculatedPath = null;
         float alienSpawnHeight = AlienFactory.Instance.AlienSpawnHeight;
+        List<Alien> alienPathfinders = new List<Alien>();
 
         if (!AlienFactory.Instance.Initialised)
         {
@@ -302,81 +327,104 @@ public class MapController : SerializableSingleton<MapController>
         {
             if (e != EAlien.None)
             {
-                foreach (TypedPathfinder p in pathfinders)
+
+                Alien pathfinder = AlienFactory.Instance.Get(e);
+
+                if (pathfinder != null)
                 {
-                    if (p.Type == e)
-                    {
-                        Alien alienTemplate = AlienFactory.Instance.GetPrefab(e);
-
-                        if (alienTemplate != null)
-                        {
-                            NavMeshAgent agentTemplate = alienTemplate.GetComponent<NavMeshAgent>();
-
-                            if (agentTemplate != null)
-                            {
-                                GameObjectUtility.CopyComponentValues<NavMeshAgent>(p.Agent, agentTemplate);
-                            }
-                            else
-                            {
-                                Debug.LogError($"MapController.CalculatePaths(), cannot retrieve alienTemplate's NavMeshAgent component.");
-                            }
-                        }
-                        else
-                        {
-                            Debug.LogError($"MapController.CalculatePaths(), AlienFactory doesn't have a prefab of type {e}");
-                        }
-                    }
+                    alienPathfinders.Add(pathfinder);
                 }
+                else
+                {
+                    Debug.LogError($"MapController.CalculatePaths(), can't get alien of type {e}");
+                }
+
+                //foreach (TypedPathfinder p in pathfinders)
+                //{
+                //    if (p.Type == e)
+                //    {
+                //        //Alien alienTemplate = AlienFactory.Instance.GetPrefab(e);
+                //        Alien alienTemplate = AlienFactory.Instance.Get(e);
+
+                //        if (alienTemplate != null)
+                //        {
+                //            //NavMeshAgent agentTemplate = alienTemplate.GetComponent<NavMeshAgent>();
+
+                //            //if (agentTemplate != null)
+                //            //{
+                //            //    p.Agent.gameObject.SetActive(true);
+                //            //    p.Agent.enabled = true;
+                //            //    Debug.Log($"Agent for {e} at {p.Agent.transform.position}");
+                //            //    GameObjectUtility.CopyComponentValues<NavMeshAgent>(p.Agent, agentTemplate);
+                //            //    p.Agent.enabled = false;
+                //            //    p.Agent.gameObject.SetActive(false);
+                //            //}
+                //            //else
+                //            //{
+                //            //    Debug.LogError($"MapController.CalculatePaths(), cannot retrieve alienTemplate's NavMeshAgent component.");
+                //            //}
+                //            p.Agent = alienTemplate.NavMeshAgent;
+                //            p.Agent.enabled = false;
+                //        }
+                //        else
+                //        {
+                //            Debug.LogError($"MapController.CalculatePaths(), AlienFactory doesn't have a prefab of type {e}");
+                //        }
+                //    }
+                //}
             }
         }
 
-        //if (pauseLoop && loopStopwatch.ElapsedMilliseconds >= pathfindingFrameTimeLimit)
-        //{
-        //    Debug.Log($"MapController.CalculatePaths(), yielding after copying NavMeshAgent values, milliseconds elapsed: {loopStopwatch.ElapsedMilliseconds}/{pathfindingFrameTimeLimit}");
-        //    yield return null;
-        //    loopStopwatch.Restart();
-        //}
+        if (pauseLoop && loopStopwatch.ElapsedMilliseconds >= pathfindingFrameTimeLimit)
+        {
+            Debug.Log($"MapController.CalculatePaths(), yielding after copying NavMeshAgent values, milliseconds elapsed: {loopStopwatch.ElapsedMilliseconds}/{pathfindingFrameTimeLimit}");
+            yield return null;
+            loopStopwatch.Restart();
+        }
 
-        //for (int i = 0; i <= xMax; i++)
-        //{
-        //    for (int j = 0; i <= zMax; j++)
-        //    {
-        //        foreach (TypedPathfinder p in pathfinders)
-        //        {
-        //            Vector3 pos = new Vector3(i, alienSpawnHeight, j);
-        //            RaycastHit hit;
+        foreach (Alien a in alienPathfinders)
+        {
+            foreach (PositionData p in positions)
+            { 
+                Vector3 pos = new Vector3(p.X, alienSpawnHeight, p.Z);
+                RaycastHit hit;
 
-        //            if (Physics.Raycast(pos, Vector3.down, out hit, 20, groundLayerMask))
-        //            {
-        //                p.Agent.transform.position = new Vector3(pos.x, hit.point.y, pos.z);
-        //                NavMeshHit navHit;                        
+                if (Physics.Raycast(pos, Vector3.down, out hit, 20, groundLayerMask))
+                {
+                    a.transform.position = new Vector3(pos.x, hit.point.y, pos.z);
+                    NavMeshHit navHit;
 
-        //                if (NavMesh.SamplePosition(p.Agent.transform.position, out navHit, 1, NavMesh.AllAreas))
-        //                {
-        //                    p.Agent.enabled = true;
+                    if (NavMesh.SamplePosition(a.NavMeshAgent.transform.position, out navHit, 1, NavMesh.AllAreas))
+                    {
+                        a.NavMeshAgent.enabled = true;
+                        calculatedPath = new NavMeshPath();
 
-        //                    if (p.Agent.CalculatePath(CryoEgg.Instance.ColliderTransform.position, calculatedPath))
-        //                    {
-        //                        positions[i, j].Paths[p.Type] = calculatedPath;
-        //                    }
+                        Debug.Log($"a: {a}, NavMeshAgent: {a.NavMeshAgent}, CryoEgg.ColliderTransform: {CryoEgg.Instance.ColliderTransform}, calculatedPath: {calculatedPath}, x: {p.X}/{xMax}, z: {p.Z}/{zMax}, type: {a.Type}");
 
-        //                    p.Agent.enabled = false;
-        //                }
-        //                else
-        //                {
-        //                    RegisterOffMeshPosition(pos);
-        //                }                        
-        //            }
-                    
-        //            if (pauseLoop && loopStopwatch.ElapsedMilliseconds >= pathfindingFrameTimeLimit)
-        //            {
-        //                Debug.Log($"MapController.CalculatePaths(), yielding in loop, i: {i}/{xMax}, j: {j}/{zMax}, milliseconds elapsed: {loopStopwatch.ElapsedMilliseconds}/{pathfindingFrameTimeLimit}");
-        //                yield return null;
-        //                loopStopwatch.Restart();
-        //            }
-        //        }                
-        //    }
-        //}
+                        if (a.NavMeshAgent.CalculatePath(CryoEgg.Instance.ColliderTransform.position, calculatedPath))
+                        {
+                            p.Paths[a.Type] = calculatedPath;
+                            Debug.Log($"CalculatePath() returned true.");
+                        }
+
+                        a.NavMeshAgent.enabled = false;
+                    }
+                    else
+                    {
+                        RegisterOffMeshPosition(pos);
+                    }
+                }
+
+                if (pauseLoop && loopStopwatch.ElapsedMilliseconds >= pathfindingFrameTimeLimit)
+                {
+                    Debug.Log($"MapController.CalculatePaths(), yielding in loop, x: {p.X}/{xMax}, z: {p.Z}/{zMax}, milliseconds elapsed: {loopStopwatch.ElapsedMilliseconds}/{pathfindingFrameTimeLimit}");
+                    yield return null;
+                    loopStopwatch.Restart();
+                }
+            }
+
+            AlienFactory.Instance.Destroy(a, a.Type);
+        }
 
         Debug.Log($"MapController.CalculatePaths(), has finished, time elapsed is {totalStopwatch.ElapsedMilliseconds} ms, or {totalStopwatch.ElapsedMilliseconds / 1000} s.");
 
@@ -593,7 +641,7 @@ public class MapController : SerializableSingleton<MapController>
             int z = (int)Mathf.Round(position.z);
             Vector3 pos = new Vector3(x, AlienFactory.Instance.AlienSpawnHeight, z);
 
-            //Debug.Log($"MapController.UpdateAvailablePositions() offset loop for {gameObject} at position {position}, x is {x}, z is {z}, xMax is {xMax}, zMax is {zMax}");
+            //Debug.Log($"MapController.UpdateAvailablePositions() offset loop for {gameObject} at position {position}, x: {x}/{xMax}, z: {z}/{zMax}, hasBuilding: {hasBuilding}, hasMineral: {hasMineral}");
             if (hasBuilding != null)
             {
                 positions[x, z].HasBuilding = hasBuilding.Value;
