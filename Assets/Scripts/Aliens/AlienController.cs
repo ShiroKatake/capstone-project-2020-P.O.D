@@ -24,9 +24,11 @@ public class AlienController : SerializableSingleton<AlienController>
     [Tooltip("How much the max. number of aliens per wave increase each night? (Increments maxAliensPerBuilding each night.)")]
     [SerializeField] private float aliensPerBuildingIncrementPerNight;
     [Tooltip("What range of angles clockwise from a calculated angle and relative to the centre of the map should the majority of aliens spawn within during each wave?")]
-    [SerializeField][Range(0, 360)] private float angleRange;
+    [SerializeField][Range(0f, 360f)] private float angleRange;
+    [Tooltip("What majority percentage (as a float out of 1) of aliens should spawn within the majority angle range noted above?")]
+    [SerializeField] [Range(0.5f, 1f)] private float percentageInRange;
     [Tooltip("What proportion of the aliens spawned should be crawlers?")]
-    [SerializeField][Range(0, 1)] private float crawlerFrequency;
+    [SerializeField][Range(0f, 1f)] private float crawlerFrequency;
 
     [Header("Spawning Time Limit Per Frame (Milliseconds)")]
     [SerializeField] private float spawningFrameTimeLimit;
@@ -151,6 +153,7 @@ public class AlienController : SerializableSingleton<AlienController>
             if (ClockController.Instance.Daytime && currentWave != 0)
             {
                 currentWave = 0;
+                maxAliensPerBuilding += aliensPerBuildingIncrementPerNight;
             }
 
             if (MapController.Instance.MajorityAlienSpawnPoints.Count == 0 && MapController.Instance.MinorityAlienSpawnPoints.Count == 0)
@@ -225,7 +228,7 @@ public class AlienController : SerializableSingleton<AlienController>
         aliensInCurrentWave = CalculateAliensInWave(currentStage);
         majorityCount = 0;
         minorityCount = 0;
-        majorityMaxCount = Mathf.RoundToInt(aliensInCurrentWave * 0.7f);
+        majorityMaxCount = Mathf.RoundToInt(aliensInCurrentWave * percentageInRange);
         minorityMaxCount = aliensInCurrentWave - majorityMaxCount;
         float cumulativeCrawlerFrequency = 0;
         List<Vector3> availableSpawnPoints = (currentStage == EStage.Combat ? MapController.Instance.CurrentAlienSpawnPoints : MapController.Instance.MajorityAlienSpawnPoints);
