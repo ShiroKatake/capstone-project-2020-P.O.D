@@ -148,9 +148,10 @@ public class MapController : SerializableSingleton<MapController>
     [SerializeField] private Vector3 tutorialBottomLeft;
     [SerializeField] private Vector3 tutorialTopRight;
 
-    [Header("Testing")]
+    [Header("Pathfinding")]
+    [SerializeField] private Alien[] pathfinders;
     [SerializeField] private bool pauseLoop;
-    [SerializeField] private float pathfindingFrameTimeLimit;
+    [SerializeField] private float timeLimitPerFrame;
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
@@ -284,40 +285,66 @@ public class MapController : SerializableSingleton<MapController>
         Debug.Log($"MapController.CalculatePaths(), starting");
         NavMeshPath calculatedPath = null;
         float alienSpawnHeight = AlienFactory.Instance.AlienSpawnHeight;
-        List<Alien> alienPathfinders = new List<Alien>();
+        List<Alien> pathfinderInstances = new List<Alien>();
+        Transform cryoEggColliderTransform = CryoEgg.Instance.ColliderTransform;
 
         if (!AlienFactory.Instance.Initialised)
         {
             AlienFactory.Instance.Initialise();
         }
 
-        foreach (EAlien e in (EAlien[])Enum.GetValues(typeof(EAlien)))
+        foreach (Alien prefab in pathfinders)
         {
-            if (e != EAlien.None)
+            Alien pathfinder = Instantiate(prefab.gameObject).GetComponent<Alien>();
+
+            if (pathfinder != null)
             {
+                pathfinderInstances.Add(pathfinder);
+                Destroy(pathfinder.GetComponent<Actor>());
+                Destroy(pathfinder.GetComponent<AlienFX>());
+                Destroy(pathfinder.GetComponent<Animator>());
+                Destroy(pathfinder.GetComponent<Collider>());
+                Destroy(pathfinder.GetComponent<Health>());
+                Destroy(pathfinder.GetComponent<Rigidbody>());
+                //Destroy(pathfinder.GetComponentInChildren<AlienClaw>().gameObject);
+                //Destroy(pathfinder.GetComponentInChildren<CapsuleCollider>().gameObject);
+                //Destroy(pathfinder.GetComponentInChildren<SkinnedMeshRenderer>().gameObject);
+                //Destroy(pathfinder.GetComponentInChildren<SpriteRenderer>().gameObject);
 
-                Alien pathfinder = AlienFactory.Instance.Get(e);
+                Transform[] transforms = pathfinder.GetComponentsInChildren<Transform>();
 
-                if (pathfinder != null)
+                for (int i = 0; i < transforms.Length; i++)
                 {
-                    alienPathfinders.Add(pathfinder);
+                    try
+                    {
+                        if (transforms[i] != null && transforms[i] != pathfinder.transform)
+                        {
+                            Destroy(transforms[i].gameObject);
+                        }
+                    }
+                    catch
+                    {
+
+                    }
                 }
-                else
-                {
-                    Debug.LogError($"MapController.CalculatePaths(), can't get alien of type {e}");
-                }
+            }
+            else
+            {
+                Debug.LogError($"MapController.CalculatePaths(), can't instantiate alien from prefab {pathfinder}");
             }
         }
 
-        if (pauseLoop && loopStopwatch.ElapsedMilliseconds >= pathfindingFrameTimeLimit)
+        if (pauseLoop && loopStopwatch.ElapsedMilliseconds >= timeLimitPerFrame)
         {
-            Debug.Log($"MapController.CalculatePaths(), yielding after copying NavMeshAgent values, milliseconds elapsed: {loopStopwatch.ElapsedMilliseconds}/{pathfindingFrameTimeLimit}");
+            Debug.Log($"MapController.CalculatePaths(), yielding after instantiating NavMeshAgents for pathfinding, milliseconds elapsed: {loopStopwatch.ElapsedMilliseconds}/{timeLimitPerFrame}");
             yield return null;
             loopStopwatch.Restart();
         }
 
-        foreach (Alien a in alienPathfinders)
+        for (int i = 0; i < pathfinderInstances.Count; i++)
         {
+            Alien a = pathfinderInstances[i];
+
             foreach (PositionData p in positions)
             { 
                 Vector3 pos = new Vector3(p.X, alienSpawnHeight, p.Z);
@@ -333,13 +360,12 @@ public class MapController : SerializableSingleton<MapController>
                         a.NavMeshAgent.enabled = true;
                         calculatedPath = new NavMeshPath();
 
-                        Debug.Log($"a: {a}, NavMeshAgent: {a.NavMeshAgent}, CryoEgg.ColliderTransform: {CryoEgg.Instance.ColliderTransform}, calculatedPath: {calculatedPath}, x: {p.X}/{xMax}, z: {p.Z}/{zMax}, type: {a.Type}");
-
-                        if (a.NavMeshAgent.CalculatePath(CryoEgg.Instance.ColliderTransform.position, calculatedPath))
+                        if (a.NavMeshAgent.CalculatePath(cryoEggColliderTransform.position, calculatedPath))
                         {
                             p.Paths[a.Type] = calculatedPath;
-                            Debug.Log($"CalculatePath() returned true.");
                         }
+
+                        //Debug.Log($"a: {a}, NavMeshAgent: {a.NavMeshAgent}, cryoEggColliderTransform: {cryoEggColliderTransform}, calculatedPath: {calculatedPath}, x: {p.X}/{xMax}, z: {p.Z}/{zMax}");
 
                         a.NavMeshAgent.enabled = false;
                     }
@@ -349,15 +375,15 @@ public class MapController : SerializableSingleton<MapController>
                     }
                 }
 
-                if (pauseLoop && loopStopwatch.ElapsedMilliseconds >= pathfindingFrameTimeLimit)
+                if (pauseLoop && loopStopwatch.ElapsedMilliseconds >= timeLimitPerFrame)
                 {
-                    Debug.Log($"MapController.CalculatePaths(), yielding in loop, x: {p.X}/{xMax}, z: {p.Z}/{zMax}, milliseconds elapsed: {loopStopwatch.ElapsedMilliseconds}/{pathfindingFrameTimeLimit}");
+                    Debug.Log($"MapController.CalculatePaths(), yielding in loop for {a.Type}, x: {p.X}/{xMax}, z: {p.Z}/{zMax}, milliseconds elapsed: {loopStopwatch.ElapsedMilliseconds}/{timeLimitPerFrame}");
                     yield return null;
                     loopStopwatch.Restart();
                 }
             }
 
-            AlienFactory.Instance.Destroy(a, a.Type);
+            Destroy(a);
         }
 
         Debug.Log($"MapController.CalculatePaths(), has finished, time elapsed is {totalStopwatch.ElapsedMilliseconds} ms, or {totalStopwatch.ElapsedMilliseconds / 1000} s.");
