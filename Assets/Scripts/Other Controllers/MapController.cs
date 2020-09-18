@@ -5,35 +5,6 @@ using UnityEngine;
 using UnityEngine.AI;
 
 /// <summary>
-/// A serializable class for NavMeshAgents by alien type for MapController to use to pre-calculate paths from each point to the cryo egg.
-/// </summary>
-[Serializable]
-public class TypedPathfinder
-{
-    //Private Fields---------------------------------------------------------------------------------------------------------------------------------
-
-    //Serialized Fields----------------------------------------------------------------------------
-
-    [SerializeField] private EAlien type;
-    [SerializeField] private NavMeshAgent agent;
-
-    //Public Properties------------------------------------------------------------------------------------------------------------------------------
-
-    //Simple Public Properties---------------------------------------------------------------------
-
-    /// <summary>
-    /// The type of alien the agent is calculating paths for.
-    /// </summary>
-    public EAlien Type { get => type; }
-
-    /// <summary>
-    /// The nav mesh agent calculating paths for the specified type of alien.
-    /// </summary>
-    public NavMeshAgent Agent { get => agent; set => agent = value; }
-}
-
-[Serializable]
-/// <summary>
 /// A container class for all the data on a given map position.
 /// </summary>
 public class PositionData
@@ -176,9 +147,6 @@ public class MapController : SerializableSingleton<MapController>
     [Header("Tutorial Alien Spawning Area")]
     [SerializeField] private Vector3 tutorialBottomLeft;
     [SerializeField] private Vector3 tutorialTopRight;
-
-    [Header("Path Calculation")]
-    [SerializeField] private List<TypedPathfinder> pathfinders;
 
     [Header("Testing")]
     [SerializeField] private bool pauseLoop;
@@ -338,40 +306,6 @@ public class MapController : SerializableSingleton<MapController>
                 {
                     Debug.LogError($"MapController.CalculatePaths(), can't get alien of type {e}");
                 }
-
-                //foreach (TypedPathfinder p in pathfinders)
-                //{
-                //    if (p.Type == e)
-                //    {
-                //        //Alien alienTemplate = AlienFactory.Instance.GetPrefab(e);
-                //        Alien alienTemplate = AlienFactory.Instance.Get(e);
-
-                //        if (alienTemplate != null)
-                //        {
-                //            //NavMeshAgent agentTemplate = alienTemplate.GetComponent<NavMeshAgent>();
-
-                //            //if (agentTemplate != null)
-                //            //{
-                //            //    p.Agent.gameObject.SetActive(true);
-                //            //    p.Agent.enabled = true;
-                //            //    Debug.Log($"Agent for {e} at {p.Agent.transform.position}");
-                //            //    GameObjectUtility.CopyComponentValues<NavMeshAgent>(p.Agent, agentTemplate);
-                //            //    p.Agent.enabled = false;
-                //            //    p.Agent.gameObject.SetActive(false);
-                //            //}
-                //            //else
-                //            //{
-                //            //    Debug.LogError($"MapController.CalculatePaths(), cannot retrieve alienTemplate's NavMeshAgent component.");
-                //            //}
-                //            p.Agent = alienTemplate.NavMeshAgent;
-                //            p.Agent.enabled = false;
-                //        }
-                //        else
-                //        {
-                //            Debug.LogError($"MapController.CalculatePaths(), AlienFactory doesn't have a prefab of type {e}");
-                //        }
-                //    }
-                //}
             }
         }
 
