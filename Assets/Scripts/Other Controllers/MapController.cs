@@ -5,128 +5,6 @@ using UnityEngine;
 using UnityEngine.AI;
 
 /// <summary>
-/// A container class for all the data on a given map position.
-/// </summary>
-public class PositionData
-{
-    //Private Fields---------------------------------------------------------------------------------------------------------------------------------
-
-    //Non-Serialized Fields------------------------------------------------------------------------
-
-    private float angle;
-    private bool hasBuilding;
-    private bool hasMineral;
-    private bool aliensBanned;
-    private bool isInTutorialAlienSpawnArea;
-    private int x;
-    private int z;
-    private Dictionary<EAlien, NavMeshPath> paths;
-
-    //Public Properties------------------------------------------------------------------------------------------------------------------------------
-
-    //Simple Public Properties---------------------------------------------------------------------
-
-    /// <summary>
-    /// Is this position too close to the cryo egg or a cliff for alien spawning to be allowed, or outside the bounds of the nav mesh?
-    /// </summary>
-    public bool AliensBanned { get => aliensBanned; set => aliensBanned = value; }
-
-    /// <summary>
-    /// The angle from the centre of the map to this position.
-    /// </summary>
-    public float Angle { get => angle; }
-
-    /// <summary>
-    /// Is this position occupied by a building?
-    /// </summary>
-    public bool HasBuilding { set => hasBuilding = value; }
-
-    /// <summary>
-    /// Is this position occupied by a mineral?
-    /// </summary>
-    public bool HasMineral { set => hasMineral = value; }
-
-    /// <summary>
-    /// Is this position close enough to the cryo egg for alien spawning to be allowed during the tutorial?
-    /// </summary>
-    public bool IsInTutorialAlienSpawnArea { get => isInTutorialAlienSpawnArea; }
-
-    /// <summary>
-    /// The nav mesh paths from this position to the cryo egg for each type of alien.
-    /// </summary>
-    public Dictionary<EAlien, NavMeshPath> Paths { get => paths; }
-
-    /// <summary>
-    /// This position's x coordinate.
-    /// </summary>
-    public int X { get => x; }
-
-    /// <summary>
-    /// This position's z coordinate.
-    /// </summary>
-    public int Z { get => z; }
-
-    //Complex Public Properties--------------------------------------------------------------------
-
-    /// <summary>
-    /// Can a building be built at this position?
-    /// </summary>
-    public bool IsBuildable
-    {
-        get
-        {
-            return !hasBuilding && !hasMineral;
-        }
-    }
-
-    /// <summary>
-    /// Can an alien be spawned at this position during non-tutorial gameplay?
-    /// </summary>
-    public bool IsAlienSpawnableDuringCombatTutorial
-    {
-        get
-        {
-            return IsBuildable && isInTutorialAlienSpawnArea;
-        }
-    }
-
-    /// <summary>
-    /// Can an alien be spawned at this position during the combat tutorial?
-    /// </summary>
-    public bool IsAlienSpawnableDuringGameplay
-    {
-        get
-        {            
-            return IsBuildable && !aliensBanned;
-        }
-    }
-
-    //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
-
-    /// <summary>
-    /// PositionData's constructor.
-    /// </summary>
-    /// <param name="x">This position's x coordinate.</param>
-    /// <param name="z">This position's z coordinate.</param>
-    /// <param name="angle">The angle of this position from the centre of the map.</param>
-    /// <param name="hasBuilding">Does this position have a building occupying it?</param>
-    /// <param name="hasMineral">Does this position have a mineral occupying it?</param>
-    /// <param name="isInTutorialAlienSpawnArea">Is this position inside the tutorial combat stage-only alien spawnable area around the cryo egg?</param>
-    /// <param name="isInAlienExclusionArea">Is this position inside the non-tutorial alien exclusion area around the cryo egg?</param>
-    public PositionData(int x, int z, float angle, bool isInTutorialAlienSpawnArea, bool isInAlienExclusionArea)
-    {
-        this.x = x;
-        this.z = z;
-        this.angle = angle;
-        this.hasBuilding = false;
-        this.hasMineral = false;
-        this.isInTutorialAlienSpawnArea = isInTutorialAlienSpawnArea;
-        this.aliensBanned = isInAlienExclusionArea;
-        paths = new Dictionary<EAlien, NavMeshPath>();
-    }
-}
-
-/// <summary>
 /// A controller class for tracking which parts of the map have buildings, can be spawned to by aliens, etc.
 /// </summary>
 public class MapController : SerializableSingleton<MapController>
@@ -165,6 +43,7 @@ public class MapController : SerializableSingleton<MapController>
     private List<Vector3> minorityAlienSpawnPoints;
 
     private bool initialised;
+    private bool finishedCalculatingPaths;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------  
 
@@ -174,6 +53,11 @@ public class MapController : SerializableSingleton<MapController>
     /// The list of positions that are spawnable in the current wave.
     /// </summary>
     public List<Vector3> CurrentAlienSpawnPoints { get => currentAlienSpawnPoints; }
+
+    /// <summary>
+    /// Has MapController finished calculating paths for all types of aliens for each position on the map?
+    /// </summary>
+    public bool FinishedCalculatingPaths { get => finishedCalculatingPaths; }
 
     /// <summary>
     /// Has MapController's Start() method run yet?
@@ -206,6 +90,7 @@ public class MapController : SerializableSingleton<MapController>
         minorityAlienSpawnPoints = new List<Vector3>();
         groundLayerMask = LayerMask.GetMask("Ground");
         initialised = false;
+        finishedCalculatingPaths = false;
     }
 
     /// <summary>
@@ -262,8 +147,6 @@ public class MapController : SerializableSingleton<MapController>
                         tutorialAlienSpawnPoints.Add(new Vector3(i, alienSpawnHeight, j));
                     }
                 }
-
-                //Debug.Log($"Initialised position data for position ({i},{j}). Angle from centre is {positions[i, j].Angle}");
             }
         }
         
@@ -282,16 +165,11 @@ public class MapController : SerializableSingleton<MapController>
         totalStopwatch.Restart();
         loopStopwatch.Restart();
 
-        Debug.Log($"MapController.CalculatePaths(), starting");
+        //Debug.Log($"MapController.CalculatePaths(), starting");
         NavMeshPath calculatedPath = null;
         float alienSpawnHeight = AlienFactory.Instance.AlienSpawnHeight;
         List<Alien> pathfinderInstances = new List<Alien>();
         Transform cryoEggColliderTransform = CryoEgg.Instance.ColliderTransform;
-
-        if (!AlienFactory.Instance.Initialised)
-        {
-            AlienFactory.Instance.Initialise();
-        }
 
         foreach (Alien prefab in pathfinders)
         {
@@ -306,10 +184,6 @@ public class MapController : SerializableSingleton<MapController>
                 Destroy(pathfinder.GetComponent<Collider>());
                 Destroy(pathfinder.GetComponent<Health>());
                 Destroy(pathfinder.GetComponent<Rigidbody>());
-                //Destroy(pathfinder.GetComponentInChildren<AlienClaw>().gameObject);
-                //Destroy(pathfinder.GetComponentInChildren<CapsuleCollider>().gameObject);
-                //Destroy(pathfinder.GetComponentInChildren<SkinnedMeshRenderer>().gameObject);
-                //Destroy(pathfinder.GetComponentInChildren<SpriteRenderer>().gameObject);
 
                 Transform[] transforms = pathfinder.GetComponentsInChildren<Transform>();
 
@@ -327,6 +201,8 @@ public class MapController : SerializableSingleton<MapController>
 
                     }
                 }
+
+                pathfinder.gameObject.SetActive(false);
             }
             else
             {
@@ -336,14 +212,15 @@ public class MapController : SerializableSingleton<MapController>
 
         if (pauseLoop && loopStopwatch.ElapsedMilliseconds >= timeLimitPerFrame)
         {
-            Debug.Log($"MapController.CalculatePaths(), yielding after instantiating NavMeshAgents for pathfinding, milliseconds elapsed: {loopStopwatch.ElapsedMilliseconds}/{timeLimitPerFrame}");
             yield return null;
             loopStopwatch.Restart();
         }
 
         for (int i = 0; i < pathfinderInstances.Count; i++)
         {
-            Alien a = pathfinderInstances[i];
+            Alien alien = pathfinderInstances[i];
+            NavMeshAgent agent = alien.NavMeshAgent;
+            alien.gameObject.SetActive(true);
 
             foreach (PositionData p in positions)
             { 
@@ -352,22 +229,20 @@ public class MapController : SerializableSingleton<MapController>
 
                 if (Physics.Raycast(pos, Vector3.down, out hit, 20, groundLayerMask))
                 {
-                    a.transform.position = new Vector3(pos.x, hit.point.y, pos.z);
+                    alien.transform.position = new Vector3(pos.x, hit.point.y, pos.z);
                     NavMeshHit navHit;
 
-                    if (NavMesh.SamplePosition(a.NavMeshAgent.transform.position, out navHit, 1, NavMesh.AllAreas))
+                    if (NavMesh.SamplePosition(agent.transform.position, out navHit, 1, NavMesh.AllAreas))
                     {
-                        a.NavMeshAgent.enabled = true;
+                        agent.enabled = true;
                         calculatedPath = new NavMeshPath();
 
-                        if (a.NavMeshAgent.CalculatePath(cryoEggColliderTransform.position, calculatedPath))
+                        if (agent.CalculatePath(cryoEggColliderTransform.position, calculatedPath))
                         {
-                            p.Paths[a.Type] = calculatedPath;
+                            p.Paths[alien.Type] = calculatedPath;
                         }
 
-                        //Debug.Log($"a: {a}, NavMeshAgent: {a.NavMeshAgent}, cryoEggColliderTransform: {cryoEggColliderTransform}, calculatedPath: {calculatedPath}, x: {p.X}/{xMax}, z: {p.Z}/{zMax}");
-
-                        a.NavMeshAgent.enabled = false;
+                        agent.enabled = false;
                     }
                     else
                     {
@@ -377,17 +252,17 @@ public class MapController : SerializableSingleton<MapController>
 
                 if (pauseLoop && loopStopwatch.ElapsedMilliseconds >= timeLimitPerFrame)
                 {
-                    Debug.Log($"MapController.CalculatePaths(), yielding in loop for {a.Type}, x: {p.X}/{xMax}, z: {p.Z}/{zMax}, milliseconds elapsed: {loopStopwatch.ElapsedMilliseconds}/{timeLimitPerFrame}");
+                    Debug.Log($"MapController.CalculatePaths(), pause loop, alien: {alien.Type}, x: {p.X}/{xMax}, z: {p.Z}/{zMax}, milliseconds elapsed: {loopStopwatch.ElapsedMilliseconds}/{timeLimitPerFrame}");
                     yield return null;
                     loopStopwatch.Restart();
                 }
             }
 
-            Destroy(a);
+            Destroy(alien.gameObject);
         }
 
-        Debug.Log($"MapController.CalculatePaths(), has finished, time elapsed is {totalStopwatch.ElapsedMilliseconds} ms, or {totalStopwatch.ElapsedMilliseconds / 1000} s.");
-
+        //Debug.Log($"MapController.CalculatePaths(), has finished, time elapsed is {totalStopwatch.ElapsedMilliseconds} ms, or {totalStopwatch.ElapsedMilliseconds / 1000} s.");
+        finishedCalculatingPaths = true;
         yield return null;
     }
 

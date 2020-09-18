@@ -14,10 +14,6 @@ public class AlienFactory : Factory<AlienFactory, Alien, EAlien>
 
     [Header("Alien Stats")]
     [SerializeField] private float alienSpawnHeight;
-
-    //Non-Serialized Fields------------------------------------------------------------------------
-
-    private bool initialised;
    
     //PublicProperties-------------------------------------------------------------------------------------------------------------------------------
 
@@ -27,11 +23,6 @@ public class AlienFactory : Factory<AlienFactory, Alien, EAlien>
     /// The height at which aliens spawn.
     /// </summary>
     public float AlienSpawnHeight { get => alienSpawnHeight; }
-
-    /// <summary>
-    /// Has AlienFactory called its Initialise() method from Start()?
-    /// </summary>
-    public bool Initialised { get => initialised; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -43,7 +34,6 @@ public class AlienFactory : Factory<AlienFactory, Alien, EAlien>
     {
         Debug.Log("AlienFactory.Awake()");
         base.Awake();
-        initialised = false;
     }
 
     /// <summary>
@@ -52,18 +42,6 @@ public class AlienFactory : Factory<AlienFactory, Alien, EAlien>
     /// </summary>
     protected override void Start()
     {
-        if (!initialised)
-        {
-            Initialise();
-        }
-    }
-
-    /// <summary>
-    /// The initialisation code for AlienFactory that is called in Start().
-    /// </summary>
-    public void Initialise()
-    {
-        Debug.Log("AlienFactory.Initialise()");
         base.Start();
 
         foreach (List<Alien> l in pool.Values)
@@ -76,8 +54,6 @@ public class AlienFactory : Factory<AlienFactory, Alien, EAlien>
                 }
             }
         }
-
-        initialised = true;
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
