@@ -14,7 +14,7 @@ public class TilemapTerrainGenerator : MonoBehaviour
     MeshCollider collider;
     MeshRenderer renderer;
 
-    [SerializeField] float yScale = 2;
+    [SerializeField] float yScale = 2;  
 
     [SerializeField] public TilemapPrefabData prefabData;
 
