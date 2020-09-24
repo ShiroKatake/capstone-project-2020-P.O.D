@@ -96,6 +96,7 @@ GameObject:
   - component: {fileID: -6151874320592601714}
   - component: {fileID: -3725313067051829311}
   - component: {fileID: 6149428130736486811}
+  - component: {fileID: 7254923807988379660}
   m_Layer: 10
   m_Name: Fusion Reactor
   m_TagString: Building
@@ -167,6 +168,7 @@ MonoBehaviour:
   constructionFinishedFX: {fileID: 5264390033885133910, guid: 9a30dc8a4a1a76241acc06f41a0df0e0,
     type: 3}
   fxSize: 1
+  materialPrime: {fileID: 2100000, guid: c3b1016b873b8294589543b2ac716e0c, type: 2}
   awake: 0
   active: 0
   placed: 0
@@ -258,6 +260,20 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &7254923807988379660
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1531695208761868921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b858e926949f4447b39df82cda64829, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  building: {fileID: 7989155517478719925}
+  material: {fileID: 2100000, guid: c3b1016b873b8294589543b2ac716e0c, type: 2}
 --- !u!1 &1590617144091470372
 GameObject:
   m_ObjectHideFlags: 0
