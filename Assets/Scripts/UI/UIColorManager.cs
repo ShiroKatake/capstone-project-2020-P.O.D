@@ -16,65 +16,83 @@ public class UIColorManager : SerializableSingleton<UIColorManager>
     [SerializeField] private Color borderNight;
     
     [SerializeField] private float duration = 0;
-    private float eDuration = 0.5f;
+    [SerializeField] private float eDuration = 0.5f;
 
-    private Color backgroundCurColor;
-    private Color eBackgroundCurColor;
+    private Color backgroundCurSetColor;
+    private Color ebackgroundCurSetColor;
     private Color backgroundNewColor;
     private Color eBackgroundNewColor;
-    private Color borderCurColor;
-    private Color eBorderCurColor;
+    private Color borderCurSetColor;
+    private Color eborderCurSetColor;
     private Color borderNewColor;
     private Color eBorderNewColor;
+
+    private Color backgroundCurColor;
+    private Color borderCurColor;
 
     private bool alienPhaseOne = false;
     private bool alienPhaseTwo = false;
     private float t = 0;
+    private float transistionTimeStart = 0;
+
     private float et = 0;
+    private float etransistionTimeStart = 0;
 
     protected override void Awake() {
         base.Awake();
-        backgroundCurColor = backgroundDay;
-        borderCurColor = borderDay;
+        backgroundCurSetColor = backgroundDay;
+        borderCurSetColor = borderDay;
         backgroundNewColor = backgroundDay;
         borderNewColor = borderDay;
 
-        SetBackgroundColor(backgroundCurColor);
-		SetBorderColor(borderCurColor);
+        SetBackgroundColor(backgroundCurSetColor);
+		SetBorderColor(borderCurSetColor);
 
     }
 
     public void ColorUpdate() {
-        if (PlayerController.Instance.PlayerInputManager.GetButton("EnemyAttack") && !alienPhaseOne && !alienPhaseTwo){
-            eBackgroundCurColor = backgroundCurColor;
-            eBorderCurColor = borderCurColor;
+        if (t < 1){
+            t = (Time.time - transistionTimeStart)/duration;
+            
+            if (t >= 1){
+                t = 1;
+            }
+        }
+        
+        backgroundCurColor = Color.Lerp(backgroundCurSetColor, backgroundNewColor, t);
+        borderCurColor = Color.Lerp(borderCurSetColor, borderNewColor, t);
 
+        ebackgroundCurSetColor = backgroundCurColor;
+        eborderCurSetColor = borderCurColor;
+
+        if (PlayerController.Instance.PlayerInputManager.GetButton("EnemyAttack") && !alienPhaseOne && !alienPhaseTwo){
             eBackgroundNewColor = alienAttackBackground;
-            eBorderCurColor = alienAttackBorder;
+            eBorderNewColor = alienAttackBorder;
 
             alienPhaseOne = true;
+
+            etransistionTimeStart = Time.time;
 
             print("ATTTTAACKKKKK!!!!");
         }
 
-        if (t<1){
-            t += Time.deltaTime/duration;
-        }
-
-        //for smooth transition replace first cur color field with starting color field
-        backgroundCurColor = Color.Lerp(backgroundCurColor, backgroundNewColor, t);
-        borderCurColor = Color.Lerp(borderCurColor, borderNewColor, t);
-
         if (alienPhaseOne || alienPhaseTwo){
-            if (et<1){
-                et += Time.deltaTime/eDuration;
+            if (et < 1){
+                //et += Time.deltaTime/eDuration;
+                et = (Time.time - etransistionTimeStart) / eDuration;
+                Debug.Log("Percent complete: " + et);
+                
+                if (et >= 1){
+                    et = 1;
+                }
             }
-
-            eBackgroundCurColor = Color.Lerp(eBackgroundCurColor, eBackgroundNewColor, et);
-            eBorderCurColor = Color.Lerp(eBorderCurColor, eBorderNewColor, et);
             
-            SetBackgroundColor(eBackgroundCurColor);
-            SetBorderColor(eBorderCurColor);
+
+            //ebackgroundCurSetColor = Color.Lerp(ebackgroundCurSetColor, eBackgroundNewColor, et);
+            //eborderCurSetColor = Color.Lerp(eborderCurSetColor, eBorderNewColor, et);
+            
+            SetBackgroundColor(Color.Lerp(ebackgroundCurSetColor, eBackgroundNewColor, et));
+            SetBorderColor(Color.Lerp(eborderCurSetColor, eBorderNewColor, et));
 
         } else {
 			SetBackgroundColor(backgroundCurColor);
@@ -84,9 +102,13 @@ public class UIColorManager : SerializableSingleton<UIColorManager>
         if (et >= 1 && alienPhaseOne){
             alienPhaseOne = false;
             alienPhaseTwo = true;
+            etransistionTimeStart = Time.time;
             et = 0;
 
-            eBackgroundNewColor = backgroundCurColor;
+            //ebackgroundCurSetColor = eBackgroundNewColor;
+            //eborderCurSetColor = eBorderNewColor;
+
+            eBackgroundNewColor = backgroundCurSetColor;
             eBorderNewColor = borderNewColor;
         } else if (et >= 1 && alienPhaseTwo) {
             alienPhaseTwo = false;
@@ -113,23 +135,30 @@ public class UIColorManager : SerializableSingleton<UIColorManager>
 	{
 		foreach (Image border in UIBorders)
 		{
-			//border.GetComponent<Image>().color = color;
+            if (border.color.a < 0)
+            {
+                color.a = border.color.a;
+            }
+
+			border.color = color;
 		}
 	}
 
 	public void SetNight(){
-        backgroundCurColor = backgroundDay;
-        borderCurColor = borderDay;
+        backgroundCurSetColor = backgroundDay;
+        borderCurSetColor = borderDay;
         backgroundNewColor = backgroundNight;
         borderNewColor = borderNight;
         t = 0;
+        transistionTimeStart = Time.time;
     }
 
     public void SetDay(){
-        backgroundCurColor = backgroundNight;
-        borderCurColor = borderNight;
+        backgroundCurSetColor = backgroundNight;
+        borderCurSetColor = borderNight;
         backgroundNewColor = backgroundDay;
         borderNewColor = borderDay;
         t = 0;
+        transistionTimeStart = Time.time;
     }
 }
