@@ -40,6 +40,7 @@ public class Building : CollisionListener
 
     [Header("Building")]
     [SerializeField] private float buildTime;
+    [SerializeField] private List<GameObject> VFX;
     //[SerializeField] private BuildingAnimatorController animatorController;
 
     [Header("Offsets of Cliff Detection Raycasts from Position")]
@@ -655,6 +656,7 @@ public class Building : CollisionListener
                 finishedConstruction = true;
                 SpawnFinishedFX();
                 FinishBuilding();
+                EnableVFX();
             }
             
             //Debug.Log("health is: " + health.CurrentHealth + " ; Dissolve Amount value: " + rendererMaterialSets[0].renderer.materials[0].GetFloat("_DissolveAmount")); // Body Collider/Base Model
@@ -704,6 +706,17 @@ public class Building : CollisionListener
 
         AudioManager.Instance.PlaySound(idleSound, gameObject);
         AudioManager.Instance.PlaySound(AudioManager.ESound.Building_Completes, gameObject);
+    }
+
+    /// <summary>
+    /// Enables VFX.
+    /// </summary>
+    public void EnableVFX(){
+        if (VFX.Count != 0){
+            foreach (GameObject vfx in VFX){
+                vfx.SetActive(true);
+            }
+        }
     }
 
     /// <summary>

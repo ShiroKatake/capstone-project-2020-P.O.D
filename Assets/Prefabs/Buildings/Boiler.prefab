@@ -60,6 +60,8 @@ MonoBehaviour:
   waterConsumption: 5
   wasteConsumption: 0
   buildTime: 10
+  VFX:
+  - {fileID: 2202830091584974985}
   cliffRaycastOffsets:
   - {x: -0.875, y: 0, z: -0.875}
   - {x: -1.3, y: 0, z: 0}
@@ -91,6 +93,7 @@ MonoBehaviour:
   constructionFinishedFX: {fileID: 5264390033885133910, guid: 9a30dc8a4a1a76241acc06f41a0df0e0,
     type: 3}
   fxSize: 1.5
+  materialPrime: {fileID: 0}
   awake: 0
   active: 0
   placed: 0
@@ -184,7 +187,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6409866380421652941
 Transform:
   m_ObjectHideFlags: 0
