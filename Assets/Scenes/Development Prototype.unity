@@ -630,7 +630,7 @@ PrefabInstance:
     - target: {fileID: 8884660583245848888, guid: a5d44fe86f6865b4bb6c5707b8ec0dea,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a5d44fe86f6865b4bb6c5707b8ec0dea, type: 3}
@@ -750,6 +750,75 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2733e884cca63714ea5c180d4530e237, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1001 &763634724
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 625693452038142459, guid: 334fcb9fddc25d74c8eb063a18be6fd7,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 94.73
+      objectReference: {fileID: 0}
+    - target: {fileID: 625693452038142459, guid: 334fcb9fddc25d74c8eb063a18be6fd7,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 4.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 625693452038142459, guid: 334fcb9fddc25d74c8eb063a18be6fd7,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 92.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 625693452038142459, guid: 334fcb9fddc25d74c8eb063a18be6fd7,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 625693452038142459, guid: 334fcb9fddc25d74c8eb063a18be6fd7,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 625693452038142459, guid: 334fcb9fddc25d74c8eb063a18be6fd7,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 625693452038142459, guid: 334fcb9fddc25d74c8eb063a18be6fd7,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 625693452038142459, guid: 334fcb9fddc25d74c8eb063a18be6fd7,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 26
+      objectReference: {fileID: 0}
+    - target: {fileID: 625693452038142459, guid: 334fcb9fddc25d74c8eb063a18be6fd7,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 625693452038142459, guid: 334fcb9fddc25d74c8eb063a18be6fd7,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 625693452038142459, guid: 334fcb9fddc25d74c8eb063a18be6fd7,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 625693452038142460, guid: 334fcb9fddc25d74c8eb063a18be6fd7,
+        type: 3}
+      propertyPath: m_Name
+      value: TerraformingOrb
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 334fcb9fddc25d74c8eb063a18be6fd7, type: 3}
 --- !u!1 &782803738
 GameObject:
   m_ObjectHideFlags: 0
@@ -766,7 +835,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!212 &782803739
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1439,6 +1508,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2488220658781858207, guid: 9e7595dc8e91f594fb56c845983b5fac,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4279058000544634106, guid: 9e7595dc8e91f594fb56c845983b5fac,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -1558,6 +1632,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: UI
+      objectReference: {fileID: 0}
+    - target: {fileID: 4528282981372622706, guid: 9e7595dc8e91f594fb56c845983b5fac,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4528282981372622710, guid: 9e7595dc8e91f594fb56c845983b5fac,
         type: 3}
@@ -1763,6 +1842,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6484878813580724720, guid: 9e7595dc8e91f594fb56c845983b5fac,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6558231887186347426, guid: 9e7595dc8e91f594fb56c845983b5fac,
         type: 3}
@@ -2730,6 +2814,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cryo Egg
       objectReference: {fileID: 0}
+    - target: {fileID: 880952307760529665, guid: 953fe9ae95f39bd4d8a9f952c654fc00,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 880952307760529668, guid: 953fe9ae95f39bd4d8a9f952c654fc00,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3431,6 +3520,11 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4963635460329023209, guid: 172bd19aa70452548bcdbc2cfdc6614a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4994846096407577607, guid: 172bd19aa70452548bcdbc2cfdc6614a,
         type: 3}
       propertyPath: m_Enabled
@@ -3760,6 +3854,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pause Menu
       objectReference: {fileID: 0}
+    - target: {fileID: 4851310578798011766, guid: ae54249c220135548b1cbae584bd5e09,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4882170268268878814, guid: ae54249c220135548b1cbae584bd5e09,
         type: 3}
       propertyPath: m_IsActive
@@ -3814,6 +3913,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Game Over
+      objectReference: {fileID: 0}
+    - target: {fileID: 3577891269518240771, guid: 5ea6f115532aa5f4882548e95ddb6098,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3577891269518240783, guid: 5ea6f115532aa5f4882548e95ddb6098,
         type: 3}
@@ -4118,6 +4222,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Mum_Bots_Mum
+      objectReference: {fileID: 0}
+    - target: {fileID: 4635870159163347479, guid: 435f7674b2b881b4896020642be86b13,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5029904101723603984, guid: 435f7674b2b881b4896020642be86b13,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5486714557031060470, guid: 435f7674b2b881b4896020642be86b13,
         type: 3}
