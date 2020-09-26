@@ -262,7 +262,7 @@ public class PlayerController : SerializableSingleton<PlayerController>
         {
             AudioManager.Instance.PlaySound(AudioManager.ESound.Explosion, this.gameObject);
             Debug.Log("The player's health has reached 0. Respawn!!!");
-            MessageDispatcher.Instance.SendMessage("Alien", new Message(gameObject.name, "Player", this.gameObject, "Dead"));
+            MessageDispatcher.Instance.SendMessage("Alien", new Message(gameObject.name, "Player", gameObject, "Dead"));
             repsawn = true;
         }
     }

@@ -54,9 +54,9 @@ public class MessageDispatcher : SerializableSingleton<MessageDispatcher>
     {
         if (subscribers.ContainsKey(recipientTag))
         {
-            foreach (IMessenger messenger in subscribers[recipientTag])
+            foreach (IMessenger subscriber in subscribers[recipientTag])
             {
-                messenger.Receive(message);
+                subscriber.Receive(message);
             }
         }
     }
