@@ -105,7 +105,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.9, y: 2, z: 0.9}
+  m_Size: {x: 2.9, y: 2, z: 2.9}
   m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!114 &1841232322570329981
 MonoBehaviour:
@@ -175,6 +175,7 @@ GameObject:
   - component: {fileID: 7957306087969153787}
   - component: {fileID: 5814535936489597786}
   - component: {fileID: 7595449155248944193}
+  - component: {fileID: -4813463451777356242}
   m_Layer: 10
   m_Name: Shotgun Turret
   m_TagString: Building
@@ -251,15 +252,12 @@ MonoBehaviour:
   - renderer: {fileID: 3025660970298743260}
     opaque: {fileID: 2100000, guid: 53c2ddfccaa112a4d97de760903cd330, type: 2}
     transparent: {fileID: 2100000, guid: 6bd364ab4bff9f145a01f786f5a068a7, type: 2}
-    count: 1
   - renderer: {fileID: 2320487590585829980}
     opaque: {fileID: 2100000, guid: 2785de8e0da646c4db09adaa027b56ec, type: 2}
     transparent: {fileID: 2100000, guid: f2d1a5f99775530498b8bcb14843f094, type: 2}
-    count: 1
   - renderer: {fileID: 7739934893343984963}
     opaque: {fileID: 2100000, guid: d46f8670794254442987f8c3127bed2a, type: 2}
     transparent: {fileID: 2100000, guid: 0384d8f2c070e5945a58d1b3c395d8bf, type: 2}
-    count: 1
   buildingErrorMaterial: {fileID: 2100000, guid: 101275a717e4a1c4fb89e563e095dfd7,
     type: 2}
   idleSound: 19
@@ -271,19 +269,6 @@ MonoBehaviour:
   placed: 0
   operational: 0
   built: 0
---- !u!114 &-4813463451777356242
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2740937295730065718}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5bfa9bda77c9c3488923b65c75f29e0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  affiliation: 0
 --- !u!114 &1219818938998714957
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -384,6 +369,19 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &-4813463451777356242
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2740937295730065718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5bfa9bda77c9c3488923b65c75f29e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  affiliation: 0
 --- !u!1 &2946983348710066453
 GameObject:
   m_ObjectHideFlags: 0
