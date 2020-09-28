@@ -17,9 +17,10 @@ public class UIColorManager : SerializableSingleton<UIColorManager>
     
     [SerializeField] private float duration = 0;
     [SerializeField] private float eDuration = 0.5f;
+    [SerializeField] private float timeBetweenAttacks = 5;
 
     private Color backgroundCurSetColor;
-    private Color ebackgroundCurSetColor;
+    private Color eBackgroundCurSetColor;
     private Color backgroundNewColor;
     private Color eBackgroundNewColor;
     private Color borderCurSetColor;
@@ -32,11 +33,14 @@ public class UIColorManager : SerializableSingleton<UIColorManager>
 
     private bool alienPhaseOne = false;
     private bool alienPhaseTwo = false;
+    private bool beingAttacked = false;
+    private bool canFlash = false;
+    private float timeSinceLastAttack;
     private float t = 0;
     private float transistionTimeStart = 0;
 
     private float et = 0;
-    private float etransistionTimeStart = 0;
+    private float eTransistionTimeStart = 0;
 
     protected override void Awake() {
         base.Awake();
@@ -44,6 +48,7 @@ public class UIColorManager : SerializableSingleton<UIColorManager>
         borderCurSetColor = borderDay;
         backgroundNewColor = backgroundDay;
         borderNewColor = borderDay;
+        timeSinceLastAttack = Time.time;
 
         SetBackgroundColor(backgroundCurSetColor);
 		SetBorderColor(borderCurSetColor);
@@ -58,40 +63,55 @@ public class UIColorManager : SerializableSingleton<UIColorManager>
                 t = 1;
             }
         }
+
+        if ((Time.time - timeSinceLastAttack) >= timeBetweenAttacks) {
+            canFlash = true;
+        }
         
         backgroundCurColor = Color.Lerp(backgroundCurSetColor, backgroundNewColor, t);
         borderCurColor = Color.Lerp(borderCurSetColor, borderNewColor, t);
 
-        ebackgroundCurSetColor = backgroundCurColor;
-        eborderCurSetColor = borderCurColor;
+        
 
-        if (PlayerController.Instance.PlayerInputManager.GetButton("EnemyAttack") && !alienPhaseOne && !alienPhaseTwo){
+        if (beingAttacked && canFlash && !alienPhaseOne && !alienPhaseTwo){
             eBackgroundNewColor = alienAttackBackground;
             eBorderNewColor = alienAttackBorder;
 
             alienPhaseOne = true;
 
-            etransistionTimeStart = Time.time;
+            eTransistionTimeStart = Time.time;
 
-            print("ATTTTAACKKKKK!!!!");
+            beingAttacked = false;
+            canFlash = false;
+            timeSinceLastAttack = Time.time;
+
+            //print("ATTTTAACKKKKK!!!!");
         }
 
         if (alienPhaseOne || alienPhaseTwo){
             if (et < 1){
                 //et += Time.deltaTime/eDuration;
-                et = (Time.time - etransistionTimeStart) / eDuration;
-                Debug.Log("Percent complete: " + et);
+                et = (Time.time - eTransistionTimeStart) / eDuration;
+                //Debug.Log("Percent complete: " + et);
                 
                 if (et >= 1){
                     et = 1;
                 }
             }
+
+            if (alienPhaseOne) {
+                eBackgroundCurSetColor = backgroundCurColor;
+                eborderCurSetColor = borderCurColor;
+            } else if (alienPhaseTwo) {
+                eBackgroundCurSetColor = alienAttackBackground;
+                eborderCurSetColor = alienAttackBorder;
+            }
             
 
-            //ebackgroundCurSetColor = Color.Lerp(ebackgroundCurSetColor, eBackgroundNewColor, et);
+            //eBackgroundCurSetColor = Color.Lerp(eBackgroundCurSetColor, eBackgroundNewColor, et);
             //eborderCurSetColor = Color.Lerp(eborderCurSetColor, eBorderNewColor, et);
             
-            SetBackgroundColor(Color.Lerp(ebackgroundCurSetColor, eBackgroundNewColor, et));
+            SetBackgroundColor(Color.Lerp(eBackgroundCurSetColor, eBackgroundNewColor, et));
             SetBorderColor(Color.Lerp(eborderCurSetColor, eBorderNewColor, et));
 
         } else {
@@ -102,20 +122,24 @@ public class UIColorManager : SerializableSingleton<UIColorManager>
         if (et >= 1 && alienPhaseOne){
             alienPhaseOne = false;
             alienPhaseTwo = true;
-            etransistionTimeStart = Time.time;
+            eTransistionTimeStart = Time.time;
             et = 0;
 
-            //ebackgroundCurSetColor = eBackgroundNewColor;
+            //eBackgroundCurSetColor = eBackgroundNewColor;
             //eborderCurSetColor = eBorderNewColor;
 
-            eBackgroundNewColor = backgroundCurSetColor;
-            eBorderNewColor = borderNewColor;
+            eBackgroundNewColor = backgroundCurColor;
+            eBorderNewColor = borderCurColor;
         } else if (et >= 1 && alienPhaseTwo) {
             alienPhaseTwo = false;
             et = 0;
         }
 
         
+    }
+
+    public void UITriggerAttackFlash(){
+        beingAttacked = true;
     }
 
 	public void SetBackgroundColor(Color color)
