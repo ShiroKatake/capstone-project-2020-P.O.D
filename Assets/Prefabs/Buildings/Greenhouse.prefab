@@ -480,6 +480,8 @@ MonoBehaviour:
   waterConsumption: 4
   wasteConsumption: 0
   buildTime: 10
+  buildInPits: 1
+  minBuildHeight: 1.5
   cliffRaycastOffsets:
   - {x: -1.45, y: 0, z: -1.45}
   - {x: -1.45, y: 0, z: 0}
@@ -505,28 +507,26 @@ MonoBehaviour:
   - renderer: {fileID: 5230335370356914471}
     opaque: {fileID: 2100000, guid: 53489400f2eb21e469d024929cce82d1, type: 2}
     transparent: {fileID: 2100000, guid: b2d7c08f8d1d66f4cba675dbc814ef7b, type: 2}
-    count: 1
   - renderer: {fileID: 5629735923833565242}
     opaque: {fileID: 2100000, guid: fad8d3e269fd2de4d99aa14def7a4104, type: 2}
     transparent: {fileID: 2100000, guid: 1a888314dfaef1f4e9302834007f8a0c, type: 2}
-    count: 1
   - renderer: {fileID: 1977789522298188858}
     opaque: {fileID: 2100000, guid: b12a04f93a3bd0e4fab33c87bcef82ef, type: 2}
     transparent: {fileID: 2100000, guid: 17a52d9faa885c04fa79b14b9704d8f1, type: 2}
-    count: 1
   - renderer: {fileID: 1011762397702721820}
     opaque: {fileID: 2100000, guid: 6de2bf4948d332c4f950c7fb92c1a8a0, type: 2}
     transparent: {fileID: 2100000, guid: 0bbc0d2fe0db58141809766fd9ecdf35, type: 2}
-    count: 1
   buildingErrorMaterial: {fileID: 2100000, guid: 101275a717e4a1c4fb89e563e095dfd7,
     type: 2}
   idleSound: 16
   constructionFinishedFX: {fileID: 5264390033885133910, guid: 9a30dc8a4a1a76241acc06f41a0df0e0,
     type: 3}
   fxSize: 2
-  collider: {fileID: 1187100249336798489}
+  awake: 0
   active: 0
+  placed: 0
   operational: 0
+  built: 0
 --- !u!114 &3752192069620436707
 MonoBehaviour:
   m_ObjectHideFlags: 0

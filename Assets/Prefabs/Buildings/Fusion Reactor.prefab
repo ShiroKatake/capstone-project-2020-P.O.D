@@ -140,6 +140,8 @@ MonoBehaviour:
   waterConsumption: 0
   wasteConsumption: 0
   buildTime: 5
+  buildInPits: 1
+  minBuildHeight: 1.5
   cliffRaycastOffsets:
   - {x: -0.45, y: 0, z: -0.45}
   - {x: -0.45, y: 0, z: 0}
@@ -157,20 +159,15 @@ MonoBehaviour:
   - renderer: {fileID: 3018881853560271061}
     opaque: {fileID: 2100000, guid: c3b1016b873b8294589543b2ac716e0c, type: 2}
     transparent: {fileID: 2100000, guid: e67356b465f5bb246aa3e12c1fdab0b2, type: 2}
-    count: 1
   - renderer: {fileID: 490722819877295073}
     opaque: {fileID: 2100000, guid: ec205cb853590e54cb4306473cd2200e, type: 2}
     transparent: {fileID: 2100000, guid: efd7cbd714946ee42a9dec8a51af2375, type: 2}
-    count: 1
   buildingErrorMaterial: {fileID: 2100000, guid: 101275a717e4a1c4fb89e563e095dfd7,
     type: 2}
   idleSound: 15
   constructionFinishedFX: {fileID: 5264390033885133910, guid: 9a30dc8a4a1a76241acc06f41a0df0e0,
     type: 3}
   fxSize: 1
-  animConstruction: {fileID: 0}
-  animActive: {fileID: 0}
-  animInactive: {fileID: 0}
   awake: 0
   active: 0
   placed: 0
