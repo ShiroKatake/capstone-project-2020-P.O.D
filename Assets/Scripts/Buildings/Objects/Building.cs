@@ -40,6 +40,8 @@ public class Building : CollisionListener
 
     [Header("Building")]
     [SerializeField] private float buildTime;
+    [SerializeField] private List<GameObject> VFX;
+    //[SerializeField] private BuildingAnimatorController animatorController;
 
     [Header("Offsets of Cliff Detection Raycasts from Position")]
     [SerializeField] private List<Vector3> cliffRaycastOffsets;
@@ -58,6 +60,9 @@ public class Building : CollisionListener
     [Header("Effects")]
 	[SerializeField] private FinishedFX constructionFinishedFX;
 	[SerializeField] private float fxSize = 1f;
+
+    [Header("Primary Material")]
+    [SerializeField] private Material materialPrime;
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
@@ -94,6 +99,14 @@ public class Building : CollisionListener
     [SerializeField] private bool operational = false;
     [SerializeField] private bool built;
     private float normalBuildTime;
+
+    //Building Animation Variables
+    private float timeStarted;
+    private float timeSinceStarted;
+    private float percentageComplete;
+
+    private bool constructing;
+    private bool finishedConstruction;
 
 	//Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -562,9 +575,109 @@ public class Building : CollisionListener
         foreach (RendererMaterialSet r in rendererMaterialSets)
         {
             UpdateRendererMaterials(r.renderer, r.opaque, r.renderer.materials.Length);
+            //r.renderer.materials[0].GetFloat("_DissolveAmount");
         }
 
-        animator.enabled = true;
+        //health.CurrentHealth = 0.01f;
+        //StartCoroutine(ProgressUpdate());
+        //animator.enabled = false;
+        StartConstruction();
+    }
+
+    /*
+    
+
+    public void StartConstruction(){
+        Debug.Log("Starting the Construction.");
+        timeStarted = Time.time;
+        constructing = true;
+        StartCoroutine(Construct());
+    }
+
+    private IEnumerator Construct(){
+        while (constructing){
+            timeSinceStarted = Time.time - timeStarted;
+            percentageComplete = timeSinceStarted/duration;
+
+            //Debug.Log("Percentage: " + percentageComplete);
+            material.SetFloat("_DissolveAmount", percentageComplete);
+
+            if (percentageComplete >= 1){
+                material.SetFloat("_DissolveAmount", 1);
+                constructing = false;
+            }
+            yield return new WaitForEndOfFrame();
+            //constructing = false;
+        }
+    }
+    */
+
+
+    //*******
+    //  create a script that can replace the animator
+    //      It will need to fetch the variable for the duration hardwired into the building.cs file
+    //      determin the disolve amount by makeing a percentage from start time and elapsed time
+    //          > refer to ui color changing code for sample code on how to do this
+    //      make it run in a coroutiune and directly alter the dissolve amount 
+    //*******
+
+    public void StartConstruction(){
+        //Debug.Log("Starting the Construction.");
+        foreach (RendererMaterialSet m in rendererMaterialSets){
+            Debug.Log("Material: " + m.renderer);
+        }
+        timeStarted = Time.time;
+        constructing = true;
+        finishedConstruction = false;
+        health.CurrentHealth = 0.01f;
+        StartCoroutine(ProgressUpdate());
+    }
+
+    private IEnumerator ProgressUpdate(){
+        Debug.Log("Progress starting; starting health is: " + health.CurrentHealth);
+        while (constructing){
+            timeSinceStarted = Time.time - timeStarted;
+            percentageComplete = timeSinceStarted/buildTime;
+
+            //Debug.Log("Percentage: " + percentageComplete);
+            foreach (RendererMaterialSet m in rendererMaterialSets){
+                m.renderer.materials[0].SetFloat("_DissolveAmount", percentageComplete);
+            }   
+            if (percentageComplete == 0){
+                health.CurrentHealth = 0.01f;
+            } else {
+                health.CurrentHealth = health.MaxHealth * percentageComplete;
+            }
+
+            if (percentageComplete >= 1){
+                rendererMaterialSets[0].renderer.materials[0].SetFloat("_DissolveAmount", 1);
+                health.CurrentHealth = health.MaxHealth;
+                constructing = false;
+                finishedConstruction = true;
+                SpawnFinishedFX();
+                FinishBuilding();
+                EnableVFX();
+            }
+            
+            //Debug.Log("health is: " + health.CurrentHealth + " ; Dissolve Amount value: " + rendererMaterialSets[0].renderer.materials[0].GetFloat("_DissolveAmount")); // Body Collider/Base Model
+            
+            yield return new WaitForEndOfFrame();
+            //constructing = false;
+        }
+        /*while (health.CurrentHealth < health.MaxHealth){
+            if (!PauseMenuManager.Paused){
+                
+                if (rendererMaterialSets[0].renderer.materials[0].GetFloat("_DissolveAmount") == 0){
+                    health.CurrentHealth = 0.01f;
+                } else {
+                    health.CurrentHealth = health.MaxHealth * rendererMaterialSets[0].renderer.materials[0].GetFloat("_DissolveAmount");
+                    //health.CurrentHealth = health.MaxHealth * shd.GetPropertyDefaultFloatValue();
+                }
+                Debug.Log("health is: " + health.CurrentHealth);
+
+                yield return new WaitForEndOfFrame();
+            }
+        }*/
     }
 
     /// <summary>
@@ -596,16 +709,28 @@ public class Building : CollisionListener
     }
 
     /// <summary>
+    /// Enables VFX.
+    /// </summary>
+    public void EnableVFX(){
+        if (VFX.Count != 0){
+            foreach (GameObject vfx in VFX){
+                vfx.SetActive(true);
+            }
+        }
+    }
+
+    /// <summary>
     /// Resets Building to its initial values when it is returned to the building pool.
     /// </summary>
     public void Reset()
     {
+        //StopCoroutine(ProgressUpdate());
         placed = false; //Needs to occur first so that BuildingFoundations know to ignore this building
         active = false;
         colliding = false;
         built = false;
 
-        animator.enabled = false;
+        //animator.enabled = false;
         health.Reset();
         Operational = false;
 
