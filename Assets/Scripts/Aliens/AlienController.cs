@@ -14,33 +14,23 @@ public class AlienController : SerializableSingleton<AlienController>
 
     [Header("Spawning Stats")]
     [Tooltip("How long the game should wait between the death of all of each wave of aliens before spawning more.")]
-    [SerializeField] private float waveDelay;
+    [SerializeField] private float waveDelay; //Not currently updated.
     [Tooltip("How long the game should wait between spawning each swarm of aliens in a wave.")]
-    [SerializeField] private float swarmDelay;
+    [SerializeField] private float swarmDelay; //Not currently used.
+    [Tooltip("How many waves of aliens should the player have to defeat in a night?")]
+    [SerializeField] private float wavesPerNight;
+	[Tooltip("What is the maximum number of aliens that will spawn per building in a wave? (Number in inspector is the initial value for the first night.)")]
+	[SerializeField] private float maxAliensPerBuilding;
+    [Tooltip("How much the max. number of aliens per wave increase each night? (Increments maxAliensPerBuilding each night.)")]
+    [SerializeField] private float aliensPerBuildingIncrementPerNight;
+    [Tooltip("What range of angles clockwise from a calculated angle and relative to the centre of the map should the majority of aliens spawn within during each wave?")]
+    [SerializeField][Range(0f, 360f)] private float angleRange;
+    [Tooltip("What majority percentage (as a float out of 1) of aliens should spawn within the majority angle range noted above?")]
+    [SerializeField] [Range(0.5f, 1f)] private float percentageInRange;
+    [Tooltip("What proportion of the aliens spawned should be crawlers?")]
+    [SerializeField][Range(0f, 1f)] private float crawlerFrequency;
 
-    [Header("Swarm Stats")]
-	[Tooltip("How much space a swarm takes.")]
-	[SerializeField] private int maxSwarmRadius;
-	[Tooltip("How many swarms should be in a night.")]
-	[SerializeField] private int maxSwarmCount;
-	[Tooltip("How many aliens can be in a swarm.")]
-	[SerializeField] private int maxSwarmSize;
-	[Tooltip("How many extra aliens will spawn per existing building.")]
-	[SerializeField] private int alienMultiplier;
-
-	[Header("Penalty Stats")]
-	[Tooltip("If the player takes this long to build a defence building, they'll get penalised.")]
-	[SerializeField] private float defencePenaltyThreshold;
-	[Tooltip("If the player takes this long to build a non defence building, they'll get penalised.")]
-	[SerializeField] private float nonDefencePenaltyThreshold;
-	[Tooltip("How long a penalty interval is before the game punishes the player again.")]
-	[SerializeField] private float penaltyCooldown;
-	[Tooltip("Number of aliens to punish the player every penalty interval.")]
-	[SerializeField] private int penaltyIncrement;
-	[Tooltip("How long the player needs to be AFK before the game starts punishing.")]
-	[SerializeField] private float timeOfLastPenalty;
-
-	[Header("Spawning Time Limit Per Frame (Milliseconds)")]
+    [Header("Spawning Time Limit Per Frame (Milliseconds)")]
     [SerializeField] private float spawningFrameTimeLimit;
 
     [Header("For Testing")]
@@ -55,15 +45,23 @@ public class AlienController : SerializableSingleton<AlienController>
     private float timeOfLastDeath;
     private Dictionary<int, List<Vector3>> swarmOffsets;
     private LayerMask groundLayerMask;
+    private int currentWave;
+    private int aliensInCurrentWave;
 
     private List<EStage> spawnableStages;
     private List<EStage> gameOverStages;
 
     //Alien Spawning Per-Frame Optimisation
-    System.Diagnostics.Stopwatch loopStopwatch;
+    private System.Diagnostics.Stopwatch loopStopwatch;
 
-    //Penalty Incrementation
-    private int spawnCountPenalty;
+    private int majorityCount;
+    private int minorityCount;
+    private int majorityMaxCount;
+    private int minorityMaxCount;
+    private float minAngle;
+    private float maxAngle;
+
+    private bool spawningAliens;
 
     //PublicProperties-------------------------------------------------------------------------------------------------------------------------------
 
@@ -74,7 +72,32 @@ public class AlienController : SerializableSingleton<AlienController>
     /// </summary>
     public List<Alien> Aliens { get => aliens; }
 
-    //Complex Public Properties--------------------------------------------------------------------
+    //Complex Public Properties
+
+    /// <summary>
+    /// Percentage of waves completed in the current night, plus a portion of the current wave equal to the percentage of aliens killed in the current wave.
+    /// E.g. if there's three waves, one wave has been completed and the second wave is halfway done, should return 0.5f.
+    /// E.g. if there's three waves, two are completed and the third is halfway through, should return 0.83f.
+    /// </summary>
+    public float AlienKillProgress
+    {
+        get
+        {
+            if (currentWave == 0)
+            {
+                return 0;
+            }
+            else
+            {
+                float wavesCompleted = currentWave - 1;
+                float aliensLeftInCurrentWave = spawningAliens ? aliensInCurrentWave : aliens.Count;
+                float progressInCurrentWave = (aliensInCurrentWave - aliensLeftInCurrentWave) / aliensInCurrentWave;
+                float result = (wavesCompleted + progressInCurrentWave) / wavesPerNight;
+                //Debug.Log($"CurrentWave: {currentWave}, aliensInCurrentWave: {aliensInCurrentWave}, spawningAliens: {spawningAliens}, aliens.Count: {aliens.Count}, aliensLeftInCurrentWave: {aliensLeftInCurrentWave} progressInCurrentWave: {progressInCurrentWave}");
+                return result;
+            }
+        }
+    }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -87,9 +110,9 @@ public class AlienController : SerializableSingleton<AlienController>
         base.Awake();
         aliens = new List<Alien>();
         timeOfLastDeath = waveDelay * -1;
-        timeOfLastPenalty = penaltyCooldown * -1;
-        spawnCountPenalty = 0;
         groundLayerMask = LayerMask.GetMask("Ground");
+        currentWave = 0;
+        spawningAliens = false;
 
         spawnableStages = new List<EStage>() { EStage.Combat, EStage.MainGame };
         gameOverStages = new List<EStage>() { EStage.Win, EStage.Lose };
@@ -99,175 +122,256 @@ public class AlienController : SerializableSingleton<AlienController>
 
         //Setting up position offsets that can be randomly selected from for cluster spawning 
         swarmOffsets = new Dictionary<int, List<Vector3>>();
-
-        for (int i = 0; i <= maxSwarmRadius; i++)
-        {
-            swarmOffsets[i] = new List<Vector3>();
-        }
-
-        for (int i = maxSwarmRadius * -1; i <= maxSwarmRadius; i++)
-        {
-            for (int j = maxSwarmRadius * -1; j <= maxSwarmRadius; j++)
-            {
-                int iMag = MathUtility.Instance.IntMagnitude(i);
-                int jMag = MathUtility.Instance.IntMagnitude(j);
-                Vector3 pos = new Vector3(i, 0, j);
-
-                foreach (KeyValuePair<int, List<Vector3>> p in swarmOffsets)
-                {
-                    if ((iMag == p.Key || jMag == p.Key) && iMag <= p.Key && jMag <= p.Key)
-                    {
-                        p.Value.Add(pos);
-                    }
-                }
-            }
-        }
     }
-
 
     /// <summary>
     /// Update() is run every frame.
     /// </summary>
     private void Start()
     {
-        StartCoroutine(SpawnAliens());
+        StartCoroutine(ControllerUpdate());
     }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
     
     /// <summary>
-    /// Spawns more aliens on a regular basis.
+    /// Manages AlienController's recurring behaviours.
     /// </summary>
-    private IEnumerator SpawnAliens()
+    private IEnumerator ControllerUpdate()
     {
         while (StageManager.Instance == null || StageManager.Instance.CurrentStage == null)
         {
             yield return null;
         }
 
-        while (spawnAliens && !gameOverStages.Contains(StageManager.Instance.CurrentStage.GetID()))
+        EStage currentStage = StageManager.Instance.CurrentStage.GetID();
+
+        while (spawnAliens && !gameOverStages.Contains(currentStage))
         {
-            if (spawnableStages.Contains(StageManager.Instance.CurrentStage.GetID()) 
-                && !ClockController.Instance.Daytime 
-                && aliens.Count == 0 
-                && Time.time - timeOfLastDeath > waveDelay)
+            currentStage = StageManager.Instance.CurrentStage.GetID();
+
+            if (ClockController.Instance.Daytime && currentWave != 0)
             {
-                //Reset start time
+                currentWave = 0;
+                maxAliensPerBuilding += aliensPerBuildingIncrementPerNight;
+            }
+
+            if (MapController.Instance.MajorityAlienSpawnPoints.Count == 0 && MapController.Instance.MinorityAlienSpawnPoints.Count == 0)
+            {
+                loopStopwatch.Restart();
+                MapController.Instance.ResetCurrentAlienSpawnPoints();
+                yield return StartCoroutine(SortSpawnPointsByAngle());
+            }
+            else if (
+                spawnableStages.Contains(currentStage)
+                && aliens.Count == 0
+                && !ClockController.Instance.Daytime
+                && Time.time - timeOfLastDeath > waveDelay
+                && currentWave < wavesPerNight
+            )
+            {
                 loopStopwatch.Restart();
 
-                //Check and increment penalty
-                if (Time.time - timeOfLastPenalty > penaltyCooldown && (Time.time - BuildingController.Instance.TimeLastDefenceWasBuilt > defencePenaltyThreshold || Time.time - BuildingController.Instance.TimeLastNonDefenceWasBuilt > nonDefencePenaltyThreshold))
+                if (currentStage != EStage.Combat)
                 {
-                    spawnCountPenalty += penaltyIncrement;
-                    timeOfLastPenalty = Time.time;
+                    currentWave++;
                 }
 
-                //Spawn aliens
-                EStage currentStage = StageManager.Instance.CurrentStage.GetID();
-                int spawnCount = (currentStage == EStage.Combat ? 3 : BuildingController.Instance.BuildingCount * alienMultiplier + spawnCountPenalty);
-                Vector3 swarmCentre = Vector3.zero;
-                int swarmSize = 0;
-                int swarmRadius = 0;
-                int swarmCount = 0;
-                float offsetMultiplier = 2;
-                List<Vector3> availableOffsets = new List<Vector3>();
-                List<Vector3> availablePositions = MapController.Instance.GetAlienSpawnablePositions();
-
-                for (int i = 0; i < spawnCount; i++)
-                //for (int i = 0; i < 100; i++)
-                {
-                    if (loopStopwatch.ElapsedMilliseconds >= spawningFrameTimeLimit)
-                    {
-                        yield return null;
-                        loopStopwatch.Restart();
-                    }
-
-                    if (availableOffsets.Count == 0)
-                    {
-                        if (swarmSize >= maxSwarmSize || swarmRadius >= swarmOffsets.Count)
-                        {
-                            swarmCount++;
-
-                            if (swarmCount >= maxSwarmCount || availablePositions.Count == 0)
-                            {
-                                break;
-                            }
-
-                            swarmCentre = GetRandomPosition(availablePositions);
-                            swarmRadius = 0;
-                            swarmSize = 0;
-                            yield return new WaitForSeconds(swarmDelay);
-                        }
-
-                        availableOffsets.AddRange(swarmOffsets[swarmRadius]);
-                        swarmRadius++;
-                    }
-
-                    int j = Random.Range(0, availableOffsets.Count);
-                    Vector3 spawnPos = swarmCentre + availableOffsets[j] * offsetMultiplier;
-                    availableOffsets.RemoveAt(j);
-
-                    if (MapController.Instance.PositionAvailableForSpawning(spawnPos, true) || currentStage == EStage.Combat)
-                    {
-                        RaycastHit rayHit;
-                        NavMeshHit navHit;
-                        Physics.Raycast(spawnPos, Vector3.down, out rayHit, 25, groundLayerMask);
-                        Alien alien = AlienFactory.Instance.Get(new Vector3(spawnPos.x, rayHit.point.y, spawnPos.z));
-                        alien.Setup(IdGenerator.Instance.GetNextId());
-
-                        if (NavMesh.SamplePosition(alien.transform.position, out navHit, 1, NavMesh.AllAreas))
-                        {
-                            aliens.Add(alien);
-                            swarmSize++;
-                        }
-                        else
-                        {
-                            MapController.Instance.RegisterOffMeshPosition(spawnPos);
-                            AlienFactory.Instance.Destroy(alien);
-                            i--;
-                        }
-                        
-                        for (int m = -2; m <= 2; m++)
-                        {
-                            for (int n = -2; n <= 2; n++)
-                            {
-                                availablePositions.Remove(new Vector3(spawnPos.x + m, spawnPos.y, spawnPos.z + n));
-
-                                if (loopStopwatch.ElapsedMilliseconds >= spawningFrameTimeLimit)
-                                {
-                                    yield return null;
-                                    loopStopwatch.Restart();
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        i--;
-                    }
-                }
-            }
+                yield return StartCoroutine(SpawnAliens(currentStage));
+                MapController.Instance.MajorityAlienSpawnPoints.Clear();
+                MapController.Instance.MinorityAlienSpawnPoints.Clear();
+            }            
 
             yield return null;
         }
     }
 
     /// <summary>
-    /// Returns a random position from a list of Vector3 positions.
+    /// Sorts spawn points by whether they are within the 120 degrees allocated to spawning 70% of aliens, or the 240 degrees for the remaining 30%. Called after spawning all aliens in a wave while waiting for the next wave.
     /// </summary>
-    /// <param name="positions">The list of Vector3 positions to choose from.</param>
-    /// <returns>The chosen Vector3 position.</returns>
-    private Vector3 GetRandomPosition(List<Vector3> positions)
+    private IEnumerator SortSpawnPointsByAngle()
     {
-        switch (positions.Count)
+        minAngle = Random.Range(0, 360);
+        maxAngle = MathUtility.Instance.NormaliseAngle(minAngle + angleRange);
+
+        for (int i = 0; i < MapController.Instance.CurrentAlienSpawnPoints.Count; i++)
+        {
+            Vector3 pos = MapController.Instance.CurrentAlienSpawnPoints[i];
+            PositionData posData = MapController.Instance.GetPositionData(pos);
+
+            if (posData != null)
+            {
+                if (MathUtility.Instance.AngleIsBetween(posData.Angle, minAngle, maxAngle))
+                {
+                    MapController.Instance.MajorityAlienSpawnPoints.Add(pos);
+                }
+                else
+                {
+                    MapController.Instance.MinorityAlienSpawnPoints.Add(pos);
+                }
+            }
+
+            if (loopStopwatch.ElapsedMilliseconds >= spawningFrameTimeLimit)
+            {
+                yield return null;
+                loopStopwatch.Restart();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Spawns new aliens at the start of each wave in a night.
+    /// </summary>
+    private IEnumerator SpawnAliens(EStage currentStage)
+    {
+        spawningAliens = true;
+        aliensInCurrentWave = CalculateAliensInWave(currentStage);
+        majorityCount = 0;
+        minorityCount = 0;
+        majorityMaxCount = Mathf.RoundToInt(aliensInCurrentWave * percentageInRange);
+        minorityMaxCount = aliensInCurrentWave - majorityMaxCount;
+        float cumulativeCrawlerFrequency = 0;
+        List<Vector3> availableSpawnPoints = (currentStage == EStage.Combat ? MapController.Instance.CurrentAlienSpawnPoints : MapController.Instance.MajorityAlienSpawnPoints);
+        List<Vector3> minoritySpawnPoints = MapController.Instance.MinorityAlienSpawnPoints;
+
+        for (int i = 0; i < aliensInCurrentWave; i++)
+        //for (int i = 0; i < 100; i++)
+        {
+            if (loopStopwatch.ElapsedMilliseconds >= spawningFrameTimeLimit)
+            {
+                yield return null;
+                loopStopwatch.Restart();
+            }
+
+            if (currentStage != EStage.Combat && majorityCount == majorityMaxCount && availableSpawnPoints != minoritySpawnPoints)
+            {
+                availableSpawnPoints = minoritySpawnPoints;
+            }
+
+            Vector3 spawnPos = GetRandomAvailablePosition(availableSpawnPoints);
+            float angle = MapController.Instance.GetPositionData(spawnPos).Angle;
+            bool positionAvailable;
+            Alien alien = SpawnAlien(spawnPos, (cumulativeCrawlerFrequency >= 1 && MapController.Instance.FinishedCalculatingPaths ? EAlien.Crawler : EAlien.Scuttler), out positionAvailable);
+            Debug.Log($"spawnPos: {spawnPos}, angle from centre: {angle}, minAngle: {minAngle}, maxAngle: {maxAngle}");
+
+            if (alien != null)
+            {
+                aliens.Add(alien);
+
+                if (cumulativeCrawlerFrequency >= 1)
+                {
+                    cumulativeCrawlerFrequency--;
+                }
+
+                cumulativeCrawlerFrequency += crawlerFrequency;
+
+                if (currentStage != EStage.Combat)
+                {
+                    if (majorityCount < majorityMaxCount)
+                    {
+                        majorityCount++;
+                    }
+                    else
+                    {
+                        minorityCount++;
+                    }
+                }
+            }
+            else
+            {
+                i--;
+
+                if (positionAvailable)
+                {
+                    int margin = (alien.Type == EAlien.Scuttler ? 1 : 2);
+
+                    for (int m = -margin; m <= margin; m++)
+                    {
+                        for (int n = -margin; n <= margin; n++)
+                        {
+                            availableSpawnPoints.Remove(new Vector3(spawnPos.x + m, spawnPos.y, spawnPos.z + n));
+
+                            if (loopStopwatch.ElapsedMilliseconds >= spawningFrameTimeLimit)
+                            {
+                                yield return null;
+                                loopStopwatch.Restart();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        spawningAliens = false;
+    }
+
+    /// <summary>
+    /// Calculates the number of aliens to be spawned in the current wave.
+    /// </summary>
+    /// <param name="currentStage">The current stage of the game.</param>
+    /// <returns>The number of aliens to be spawned in the current wave.</returns>
+    private int CalculateAliensInWave(EStage currentStage)
+    {
+        if (currentStage == EStage.Combat)
+        {
+            return 3;
+        }
+
+        float waveMultiplier = 0.5f * (1 + ((currentWave - 1) / (wavesPerNight - 1))); //First wave of the night has a multiplier of 0.5 + 0.5 * 0/(N-1), Last wave of the night has a multiplier of 0.5 + 0.5 * (N-1)/(N-1), i.e. 1.
+        return Mathf.RoundToInt(BuildingController.Instance.BuildingCount * maxAliensPerBuilding * waveMultiplier);
+    }
+
+    /// <summary>
+    /// Picks an available position to spawn the alien at.
+    /// </summary>
+    /// <param name="availablePositions">A list of positions available for alien spawning.</param>
+    /// <returns>The position to spawn the alien at.</returns>
+    private Vector3 GetRandomAvailablePosition(List<Vector3> availablePositions)
+    {
+        switch (availablePositions.Count)
         {
             case 0:
-                return new Vector3(-1, AlienFactory.Instance.AlienSpawnHeight, -1);
+                return new Vector3(-1, -1, -1);
             case 1:
-                return positions[0];
+                return availablePositions[0];
             default:
-                return positions[Random.Range(0, positions.Count)];
+                return availablePositions[Random.Range(0, availablePositions.Count - 1)];
         }
+    }
+
+    /// <summary>
+    /// Spawn a single alien.
+    /// </summary>
+    /// <param name="spawnPos">The position to spawn the alien at.</param>
+    /// <param name="type">The type of alien to spawn.</param>
+    /// <param name="positionAvailable">Did MapController.PositionAvailableForSpawning() return true?</param>
+    /// <returns></returns>
+    public Alien SpawnAlien(Vector3 spawnPos, EAlien type, out bool positionAvailable)
+    {
+        Alien alien = null;
+
+        if (MapController.Instance.PositionAvailableForSpawning(spawnPos, true))
+        {
+            positionAvailable = true;
+            RaycastHit rayHit;
+            NavMeshHit navHit;
+            Physics.Raycast(spawnPos, Vector3.down, out rayHit, 25, groundLayerMask);
+            alien = AlienFactory.Instance.Get(new Vector3(spawnPos.x, rayHit.point.y, spawnPos.z), type);
+            alien.Setup(IdGenerator.Instance.GetNextId());
+
+            if (!NavMesh.SamplePosition(alien.transform.position, out navHit, 1, NavMesh.AllAreas))
+            {
+                MapController.Instance.RegisterOffMeshPosition(spawnPos);
+                AlienFactory.Instance.Destroy(alien, alien.Type);
+                alien = null;
+            }            
+        }
+        else
+        {
+            positionAvailable = false;
+        }
+
+        return alien;
     }
 
     /// <summary>

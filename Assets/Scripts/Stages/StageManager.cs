@@ -18,22 +18,46 @@ public class StageManager : SerializableSingleton<StageManager>
 
     private Dictionary<EStage, IStage> stages;
     private IStage currentStage;
+    private bool initialised;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
     //Basic Public Properties----------------------------------------------------------------------
 
     /// <summary>
-    /// The current stage of the game.
-    /// </summary>
-    public IStage CurrentStage { get => currentStage; }
-
-    /// <summary>
     /// Whether the player has elected to skip the tutorial or not.
     /// </summary>
     public bool SkipTutorial { get => skipTutorial; }
 
+    //Complex Public Properties--------------------------------------------------------------------
+
+    /// <summary>
+    /// The current stage of the game. If called before StageManager.Start(), forces InitaliseStageManager() to run so that currentStage != null.
+    /// </summary>
+    public IStage CurrentStage
+    {
+        get
+        {
+            if (!initialised)
+            {
+                InitialiseStageManager();
+            }
+
+            return currentStage;
+        }
+    }
+
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
+    /// Awake() runs before Start().
+    /// </summary>
+    protected override void Awake()
+    {
+        base.Awake();
+        initialised = false;
+    }
 
     /// <summary>
     /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
@@ -41,13 +65,25 @@ public class StageManager : SerializableSingleton<StageManager>
     /// </summary>
     private void Start()
     {
-        if (SceneLoaderListener.Instance.SceneLoaderInstantiatedOnAwake)
-        {
-            skipTutorial = SceneLoader.Instance.SkipTutorial;
-        }
+        InitialiseStageManager();
+    }
 
-        GetStages();
-        BeginGame();
+    /// <summary>
+    /// Holds all the initialisation code for StageManager so it can be called outside of Start.
+    /// </summary>
+    private void InitialiseStageManager()
+    {
+        if (!initialised)
+        {
+            if (SceneLoaderListener.Instance.SceneLoaderInstantiatedOnAwake)
+            {
+                skipTutorial = SceneLoader.Instance.SkipTutorial;
+            }
+
+            GetStages();
+            BeginGame();
+            initialised = true;
+        }
     }
 
     /// <summary>
