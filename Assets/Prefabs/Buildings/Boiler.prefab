@@ -60,6 +60,8 @@ MonoBehaviour:
   waterConsumption: 5
   wasteConsumption: 0
   buildTime: 10
+  VFX:
+  - {fileID: 2202830091584974985}
   cliffRaycastOffsets:
   - {x: -0.875, y: 0, z: -0.875}
   - {x: -1.3, y: 0, z: 0}
@@ -85,13 +87,13 @@ MonoBehaviour:
   - renderer: {fileID: 1270843474368464628}
     opaque: {fileID: 2100000, guid: ec8b33f044a73e84e9c0d12133d4419d, type: 2}
     transparent: {fileID: 2100000, guid: 48daf2deecd43a54e995056522b3c6f9, type: 2}
-    count: 1
   buildingErrorMaterial: {fileID: 2100000, guid: 101275a717e4a1c4fb89e563e095dfd7,
     type: 2}
   idleSound: 18
   constructionFinishedFX: {fileID: 5264390033885133910, guid: 9a30dc8a4a1a76241acc06f41a0df0e0,
     type: 3}
   fxSize: 1.5
+  materialPrime: {fileID: 0}
   awake: 0
   active: 0
   placed: 0
@@ -185,7 +187,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6409866380421652941
 Transform:
   m_ObjectHideFlags: 0
@@ -1714,7 +1716,7 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: 223ea9b122ced86448b5ea13868c4556,
         type: 3}
       propertyPath: m_Name
-      value: Model
+      value: Base Model
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 223ea9b122ced86448b5ea13868c4556, type: 3}
