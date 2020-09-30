@@ -47,6 +47,14 @@ public class TerraformingOrbDemo : MonoBehaviour
 			}
 		}
 
+		else
+		{
+			if (terraformingOrbController.CurrentPhase != (int)setPhase)
+			{
+				terraformingOrbController.CurrentPhase = (int)setPhase;
+			}
+		}
+
 		if (explode)
 		{
 			if (!alreadyCalledExplode)
@@ -59,14 +67,6 @@ public class TerraformingOrbDemo : MonoBehaviour
 				alreadyCalledExplode = false;
 				explode = false;
 				setPhase = 0;
-			}
-		}
-
-		else
-		{
-			if (terraformingOrbController.CurrentPhase != (int)setPhase)
-			{
-				terraformingOrbController.CurrentPhase = (int)setPhase;
 			}
 		}
 	}
