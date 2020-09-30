@@ -158,7 +158,7 @@ public class TerraformingOrbController : MonoBehaviour
 				{ false, false, false, false, false,  true,  true, false },	//WindBlades
 				{ false, false, false, false, false, false,  true, false },	//Pulses
 				{ false, false, false, false, false, false, false,  true },	//ExpandingWindBlades
-				{ false, false, false, false, false, false, false,  true }	//Shockwave
+				{ false, false, false, false, false, false, false, false }	//Shockwave
 		};
 
 		//Set current phase to 0
@@ -172,38 +172,35 @@ public class TerraformingOrbController : MonoBehaviour
 	/// </summary>
 	private void Update()
 	{
+		#region OuterSphere Alpha Lerping
 		if (isAlphaLerping)
 		{
 			isAlphaLerpingFinished = LerpOuterSphereAlpha(outerSphereStartColor, outerSphereEndColor, alphaChangeDuration);
 		}
+		#endregion
 
-		if (isScaleLerping)
+		#region Pulsating Orb Scale Lerping
+		//If the FX is exploding, shrink the orb
+		if (explode)
 		{
-			//If the FX is exploding, shrink the orb
-			if (explode)
+			//Delay the shrinkage
+			if (shrinkDelayElapsed < shrinkDelay)
 			{
-				//Delay the shrinkage
-				if (shrinkDelayElapsed < shrinkDelay)
-				{
-					shrinkDelayElapsed += Time.deltaTime;
-				}
-				else
-				{
-					isScaleLerpingFinished = LerpPulsatingOrbSize(orbGrowFactor * (currentPhase - 1), 0, shrinkDuration);
-					if (isScaleLerpingFinished)
-					{
-						shrinkDelayElapsed = 0;
-					}
-				}
+				shrinkDelayElapsed += Time.deltaTime;
 			}
-
-			//If not, grow the orb
 			else
 			{
-				isScaleLerpingFinished = LerpPulsatingOrbSize(orbGrowFactor * (currentPhase - 1), orbGrowFactor * currentPhase, scaleChangeDuration);
+				isScaleLerpingFinished = LerpPulsatingOrbSize(orbGrowFactor * (currentPhase - 1), 0, shrinkDuration);
 			}
 		}
 
+		else if (isScaleLerping && currentPhase != 0)
+		{
+			isScaleLerpingFinished = LerpPulsatingOrbSize(orbGrowFactor * (currentPhase - 1), orbGrowFactor * currentPhase, scaleChangeDuration);
+		}
+		#endregion
+
+		#region Shockwave Texture Size Lerping
 		if (isShockwaveLerping)
 		{
 			//Delay the shockwave
@@ -214,6 +211,13 @@ public class TerraformingOrbController : MonoBehaviour
 			}
 			else
 			{
+				//Manually enable the shockwave (this should be enabled later since there's a delay)
+				if (!shockwave.activeSelf)
+				{
+					shockwaveMaterial.SetFloat("_FXScale", -45f);
+					shockwave.SetActive(true);
+				}
+
 				isShockwaveFinished = LerpShockWave(-45f, 0f, showaveDuration);
 				if (isShockwaveFinished)
 				{
@@ -223,6 +227,7 @@ public class TerraformingOrbController : MonoBehaviour
 				}
 			}
 		}
+		#endregion
 	}
 
 	//Recurring Methods (Other)----------------------------------------------------------------------------------------------------------------------
@@ -245,6 +250,7 @@ public class TerraformingOrbController : MonoBehaviour
 
 		else
 		{
+			shrinkDelayElapsed = 0f;
 			scaleTimeElapsed = 0f;
 			isScaleLerping = false;
 			return true;
@@ -366,7 +372,6 @@ public class TerraformingOrbController : MonoBehaviour
 	{
 		explode = true;
 		isShockwaveLerping = true;
-		isScaleLerping = true;
 		ChangeFXtoPhase(7);
 	}
 }
