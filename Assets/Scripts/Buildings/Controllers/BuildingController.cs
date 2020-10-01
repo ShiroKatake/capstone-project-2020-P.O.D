@@ -53,6 +53,11 @@ public class BuildingController : SerializableSingleton<BuildingController>
     /// </summary>
     private void Start()
     {
+        if (!MapController.Instance.Initialised)
+        {
+            MapController.Instance.Initialise();
+        }
+
         RegisterBuilding(cryoEgg);
     }
 

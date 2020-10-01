@@ -14,7 +14,6 @@ public class HealthBars : MonoBehaviour
     [SerializeField] private Image border;
 
     private UITransparencyFader fader;
-    private float opacityValue;
 
     public UITransparencyFader Fader {get => fader;}
 
