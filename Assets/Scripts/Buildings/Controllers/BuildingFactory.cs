@@ -66,7 +66,7 @@ public class BuildingFactory : Factory<BuildingFactory, Building, EBuilding>
             building.Model.localPosition = prefabs[buildingType].Model.localPosition;
         }
 
-		if (buildingType == EBuilding.LongRangeTurret || buildingType == EBuilding.ShortRangeTurret)
+		if (buildingType == EBuilding.MachineGunTurret || buildingType == EBuilding.ShotgunTurret)
 		{
 			//Debug.Log("Displaying Range.");
 			onBuildingHasRange?.Invoke(building);

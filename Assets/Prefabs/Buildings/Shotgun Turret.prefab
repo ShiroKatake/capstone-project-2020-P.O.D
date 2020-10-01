@@ -228,13 +228,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collisionReporters: []
   id: 0
-  buildingType: 7
+  buildingType: 9
   consoleName: <Shotgun Turret>
   oreCost: 4
   powerConsumption: 6
   waterConsumption: 0
   wasteConsumption: 0
   buildTime: 7
+  VFX: []
   cliffRaycastOffsets:
   - {x: -0.3, y: 0, z: -0.3}
   - {x: -0.45, y: 0, z: 0}
@@ -264,6 +265,7 @@ MonoBehaviour:
   constructionFinishedFX: {fileID: 5264390033885133910, guid: 9a30dc8a4a1a76241acc06f41a0df0e0,
     type: 3}
   fxSize: 1
+  materialPrime: {fileID: 0}
   awake: 0
   active: 0
   placed: 0

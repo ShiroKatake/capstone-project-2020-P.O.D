@@ -474,13 +474,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collisionReporters: []
   id: 0
-  buildingType: 5
+  buildingType: 7
   consoleName: '{Greenhouse}'
   oreCost: 6
   powerConsumption: 2
   waterConsumption: 4
   wasteConsumption: 0
   buildTime: 10
+  VFX: []
   cliffRaycastOffsets:
   - {x: -1.45, y: 0, z: -1.45}
   - {x: -1.45, y: 0, z: 0}
@@ -521,6 +522,7 @@ MonoBehaviour:
   constructionFinishedFX: {fileID: 5264390033885133910, guid: 9a30dc8a4a1a76241acc06f41a0df0e0,
     type: 3}
   fxSize: 2
+  materialPrime: {fileID: 0}
   awake: 0
   active: 0
   placed: 0

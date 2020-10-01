@@ -744,8 +744,8 @@ public class Building : CollisionListener
             case EBuilding.FusionReactor:
                 fusionReactorBeam.SetBeamActive(false);
                 break;
-            case EBuilding.ShortRangeTurret:
-            case EBuilding.LongRangeTurret:
+            case EBuilding.ShotgunTurret:
+            case EBuilding.MachineGunTurret:
                 turretAimer.Reset();
                 turretShooter.Reset();
 				BuildingFactory.Instance.onPlacementFinished?.Invoke();

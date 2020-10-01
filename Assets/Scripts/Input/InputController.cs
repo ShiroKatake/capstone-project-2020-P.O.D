@@ -338,12 +338,12 @@ public class InputController : SerializableSingleton<InputController>
 
         if (player.GetButton("Turret1"))
         {
-            return EBuilding.ShortRangeTurret;
+            return EBuilding.ShotgunTurret;
         }
 
         if (player.GetButton("Turret2"))
         {
-            return EBuilding.LongRangeTurret;
+            return EBuilding.MachineGunTurret;
         }
 
         return currentSelection;

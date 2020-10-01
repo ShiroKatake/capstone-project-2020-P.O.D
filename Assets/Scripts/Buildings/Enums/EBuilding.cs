@@ -11,9 +11,11 @@ public enum EBuilding
     CryoEgg,
     FusionReactor,
     IceDrill,
+    Harvester,
+    GasPump,
     Boiler,
     Greenhouse,
     Incinerator,
-    ShortRangeTurret,
-    LongRangeTurret
+    ShotgunTurret,
+    MachineGunTurret
 }

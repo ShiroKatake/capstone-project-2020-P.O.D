@@ -369,10 +369,10 @@ public class BuildingSpawningController : SerializableSingleton<BuildingSpawning
             case EBuilding.Incinerator:
                 tooltip = ToolTips.Etooltips.Incinerator;
                 break;
-            case EBuilding.ShortRangeTurret:
+            case EBuilding.ShotgunTurret:
                 tooltip = ToolTips.Etooltips.Shotgun;
                 break;
-            case EBuilding.LongRangeTurret:
+            case EBuilding.MachineGunTurret:
                 tooltip = ToolTips.Etooltips.MachineGun;
                 break;
             default:

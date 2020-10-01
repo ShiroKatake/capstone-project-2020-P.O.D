@@ -159,7 +159,7 @@ public class BuildingController : SerializableSingleton<BuildingController>
             buildings.Add(building);
             MapController.Instance.RegisterBuilding(building);
 
-            if (building.BuildingType == EBuilding.ShortRangeTurret || building.BuildingType == EBuilding.LongRangeTurret)
+            if (building.BuildingType == EBuilding.ShotgunTurret || building.BuildingType == EBuilding.MachineGunTurret)
             {
                 timeLastDefenceWasBuilt = Time.time;
             }
