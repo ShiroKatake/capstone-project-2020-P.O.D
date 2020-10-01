@@ -218,9 +218,14 @@ public class BuildingSpawningController : SerializableSingleton<BuildingSpawning
                         errorMessage += "~<- Insufficient /water\\.>";
                     }
 
-                    if (ResourceController.Instance.WasteSupply < ResourceController.Instance.WasteConsumption + heldBuilding.WasteConsumption)
+                    if (ResourceController.Instance.PlantsSupply < ResourceController.Instance.PlantsConsumption + heldBuilding.PlantsConsumption)
                     {
-                        errorMessage += "~<- Insufficient {waste}.>";
+                        errorMessage += "~<- Insufficient {plants}.>";
+                    }
+
+                    if (ResourceController.Instance.PlantsSupply < ResourceController.Instance.PlantsConsumption + heldBuilding.GasConsumption)
+                    {
+                        errorMessage += "~<- Insufficient {gas}.>";
                     }
 
                     console.SubmitCustomMessage(errorMessage, true, 0);
@@ -342,8 +347,9 @@ public class BuildingSpawningController : SerializableSingleton<BuildingSpawning
     {
         return ResourceController.Instance.Ore >= heldBuilding.OreCost
             && (ResourceController.Instance.PowerSupply >= ResourceController.Instance.PowerConsumption + heldBuilding.PowerConsumption || heldBuilding.PowerConsumption == 0)
-            && (ResourceController.Instance.WasteSupply >= ResourceController.Instance.WasteConsumption + heldBuilding.WasteConsumption || heldBuilding.WasteConsumption == 0)
-            && (ResourceController.Instance.WaterSupply >= ResourceController.Instance.WaterConsumption + heldBuilding.WaterConsumption || heldBuilding.WaterConsumption == 0);
+            && (ResourceController.Instance.PlantsSupply >= ResourceController.Instance.PlantsConsumption + heldBuilding.PlantsConsumption || heldBuilding.PlantsConsumption == 0)
+            && (ResourceController.Instance.WaterSupply >= ResourceController.Instance.WaterConsumption + heldBuilding.WaterConsumption || heldBuilding.WaterConsumption == 0)
+            && (ResourceController.Instance.GasSupply >= ResourceController.Instance.GasConsumption + heldBuilding.GasConsumption || heldBuilding.GasConsumption == 0);
     }
 
     /// <summary>

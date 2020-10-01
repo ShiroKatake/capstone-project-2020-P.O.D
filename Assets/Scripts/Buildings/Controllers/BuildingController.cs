@@ -192,14 +192,15 @@ public class BuildingController : SerializableSingleton<BuildingController>
     /// </summary>
     /// <param name="power">Is there sufficient power to supply all buildings?</param>
     /// <param name="water">Is there sufficient water to supply all buildings?</param>
-    /// <param name="water">Is there sufficient waste to supply all buildings?</param>
-    public void ShutdownBuildings(bool power, bool water, bool waste)
+    /// <param name="water">Is there sufficient plants to supply all buildings?</param>
+    /// <param name="gas">Is there sufficient gas to supply all buildings?</param>
+    public void ShutdownBuildings(bool power, bool water, bool plants, bool gas)
     {
 		Debug.Log("Disabling Buildings");
 
         foreach (Building b in buildings)
         {			
-			if (b.Operational && ((!power && b.PowerConsumption > 0) || (!water && b.WaterConsumption > 0) || (!waste && b.WasteConsumption > 0)))
+			if (b.Operational && ((!power && b.PowerConsumption > 0) || (!water && b.WaterConsumption > 0) || (!plants && b.PlantsConsumption > 0) || (!gas && b.GasConsumption > 0)))
             {
                 Debug.Log($"Disabling {b.name}");
                 b.Operational = false;
@@ -213,13 +214,14 @@ public class BuildingController : SerializableSingleton<BuildingController>
     /// <param name="power">Is there sufficient power to supply all buildings?</param>
     /// <param name="water">Is there sufficient water to supply all buildings?</param>
     /// <param name="water">Is there sufficient waste to supply all buildings?</param>
-    public void RestoreBuildings(bool power, bool water, bool waste)
+    /// <param name="gas">Is there sufficient gas to supply all buildings?</param>
+    public void RestoreBuildings(bool power, bool water, bool waste, bool gas)
     {
         Debug.Log("Enabling Buildings");
 
         foreach (Building b in buildings)
         {
-            if (!b.Operational && (power || b.PowerConsumption == 0) && (water || b.WaterConsumption == 0) && (waste || b.WasteConsumption == 0))
+            if (!b.Operational && (power || b.PowerConsumption == 0) && (water || b.WaterConsumption == 0) && (waste || b.PlantsConsumption == 0) || (gas || b.GasConsumption == 0))
             {
                 Debug.Log($"Enabling {b.name}");
                 b.Operational = true;
