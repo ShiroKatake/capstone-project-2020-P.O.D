@@ -40,14 +40,12 @@ public class Building : CollisionListener
 
     [Header("Building")]
     [SerializeField] private float buildTime;
-<<<<<<< HEAD
-    [SerializeField] private List<GameObject> VFX;
     //[SerializeField] private BuildingAnimatorController animatorController;
-=======
     [SerializeField] private bool buildInPits;
     [Tooltip("What is the minimum worldspace height (i.e. Y-axis position) buildings can be built at before being considered in a pit?")]
     [SerializeField] private float minBuildHeight;
->>>>>>> 4379b98e70503e344688c091dd39e3424869cf29
+    [SerializeField] private List<GameObject> VFX;
+
 
     [Header("Offsets of Cliff Detection Raycasts from Position")]
     [SerializeField] private List<Vector3> cliffRaycastOffsets;
