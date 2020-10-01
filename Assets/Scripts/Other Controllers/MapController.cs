@@ -31,6 +31,9 @@ public class MapController : SerializableSingleton<MapController>
     [SerializeField] private bool pauseLoop;
     [SerializeField] private float timeLimitPerFrame;
 
+    [Header("Testing")]
+    [SerializeField] private bool debugPathfinding;
+
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
     private PositionData[,] positions;
@@ -252,7 +255,7 @@ public class MapController : SerializableSingleton<MapController>
 
                 if (pauseLoop && loopStopwatch.ElapsedMilliseconds >= timeLimitPerFrame)
                 {
-                    Debug.Log($"MapController.CalculatePaths(), pause loop, alien: {alien.Type}, x: {p.X}/{xMax}, z: {p.Z}/{zMax}, milliseconds elapsed: {loopStopwatch.ElapsedMilliseconds}/{timeLimitPerFrame}");
+                    if (debugPathfinding) Debug.Log($"MapController.CalculatePaths(), pause loop, alien: {alien.Type}, x: {p.X}/{xMax}, z: {p.Z}/{zMax}, milliseconds elapsed: {loopStopwatch.ElapsedMilliseconds}/{timeLimitPerFrame}");
                     yield return null;
                     loopStopwatch.Restart();
                 }
