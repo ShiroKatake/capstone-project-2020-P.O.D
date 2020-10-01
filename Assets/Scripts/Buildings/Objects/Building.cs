@@ -323,7 +323,7 @@ public class Building : CollisionListener
     {
         if (!PauseMenuManager.Paused)
         {
-            if (buildingType != EBuilding.CryoEgg && animator.enabled)
+            if (buildingType != EBuilding.Tower && animator.enabled)
             {
                 animator.SetFloat("Health", health.CurrentHealth);
                 animator.SetBool("Operational", operational);

@@ -87,7 +87,7 @@ public class BuildingController : SerializableSingleton<BuildingController>
     /// <param name="building">The building whose health is being checked.</param>
     private void CheckBuildingHealth(Building building)
     {
-        if (building.Health.IsDead() && building.BuildingType != EBuilding.CryoEgg)
+        if (building.Health.IsDead() && building.BuildingType != EBuilding.Tower)
         {
             destroyedBuildings.Add(building);
         }
@@ -163,7 +163,7 @@ public class BuildingController : SerializableSingleton<BuildingController>
             {
                 timeLastDefenceWasBuilt = Time.time;
             }
-            else if (building.BuildingType != EBuilding.CryoEgg)
+            else if (building.BuildingType != EBuilding.Tower)
             {
                 timeLastNonDefenceWasBuilt = Time.time;
             }

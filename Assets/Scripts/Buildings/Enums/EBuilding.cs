@@ -8,7 +8,7 @@ using UnityEngine;
 public enum EBuilding
 {
     None,
-    CryoEgg,
+    Tower,
     FusionReactor,
     IceDrill,
     Harvester,
