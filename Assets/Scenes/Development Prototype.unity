@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -2176,6 +2176,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97335b3d8af8d9141a331358af6c3300, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1491737618 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6577456260396280556, guid: 9d619d0761b687e479a1231dab8ebf39,
+    type: 3}
+  m_PrefabInstance: {fileID: 5216131016438606743}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1491737619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1491737618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f26f8db3fff25b24c83a8a9de2322d7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentRatio: 0a0000000d0000000e000000
+  targetRatio: 010000000200000004000000
+  pointsPerRatio: 5
+  multiplierIncreasePerWave: 0
+  maxRatioValue: 0
 --- !u!1 &1513661296
 GameObject:
   m_ObjectHideFlags: 0
@@ -4336,7 +4359,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 5216131016438606743}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1491737618}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e9a43e258ee9b024a850d368e563b208, type: 3}
