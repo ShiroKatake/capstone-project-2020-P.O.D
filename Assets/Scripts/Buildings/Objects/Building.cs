@@ -40,8 +40,14 @@ public class Building : CollisionListener
 
     [Header("Building")]
     [SerializeField] private float buildTime;
+<<<<<<< HEAD
     [SerializeField] private List<GameObject> VFX;
     //[SerializeField] private BuildingAnimatorController animatorController;
+=======
+    [SerializeField] private bool buildInPits;
+    [Tooltip("What is the minimum worldspace height (i.e. Y-axis position) buildings can be built at before being considered in a pit?")]
+    [SerializeField] private float minBuildHeight;
+>>>>>>> 4379b98e70503e344688c091dd39e3424869cf29
 
     [Header("Offsets of Cliff Detection Raycasts from Position")]
     [SerializeField] private List<Vector3> cliffRaycastOffsets;
@@ -382,7 +388,7 @@ public class Building : CollisionListener
         {
             if (!placed)
             {
-                validPlacement = !(CheckInPit() || CheckColliding() || CheckOnCliff() || CheckMouseOverUI()) && MapController.Instance.PositionAvailableForBuilding(this);
+                validPlacement = !((!buildInPits && CheckInPit()) || CheckColliding() || CheckOnCliff() || CheckMouseOverUI()) && MapController.Instance.PositionAvailableForBuilding(this);
 
 				if (!validPlacement && placementCurrentValid)
 				{
@@ -458,7 +464,7 @@ public class Building : CollisionListener
     /// </summary>
     private bool CheckInPit()
     {
-        return transform.position.y < -0.1f;
+        return transform.position.y < minBuildHeight;
         //bool result = transform.position.y < -0.1f;
         //Debug.Log($"{this} in pit: {result}");
         //return result;
