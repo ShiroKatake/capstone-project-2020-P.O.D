@@ -81,7 +81,7 @@ public class TurretShooting : CollisionListener, IMessenger
     public void Reset()
     {
         //Debug.Log("TurretShooting.Reset()");
-        MessageDispatcher.Instance.SendMessage("Alien", new Message(gameObject.name, "Turret", this.gameObject, "Dead"));
+        MessageDispatcher.Instance.SendMessage("Alien", new Message(gameObject.name, "Turret", gameObject, "Dead"));
         MessageDispatcher.Instance.Unsubscribe("Turret", this);
         visibleTargets = new List<Alien>();
         timeOfLastShot = shotCooldown * -1;
@@ -244,18 +244,21 @@ public class TurretShooting : CollisionListener, IMessenger
     /// <param name="message">The message to send to this messenger.</param>
     public void Receive(Message message)
     {
-        if (message.SenderTag == "Alien" && message.MessageContents == "Dead")
+        if (message.SenderTag == "Alien")
         {
-            Alien messenger = message.SenderObject.GetComponent<Alien>();
-
-            if (target == messenger)
+            if (message.Contents == "Dead")
             {
-                target = null;
-            }
+                Alien messenger = message.SenderObject.GetComponent<Alien>();
 
-            if (visibleTargets.Contains(messenger))
-            {
-                visibleTargets.Remove(messenger);
+                if (target == messenger)
+                {
+                    target = null;
+                }
+
+                if (visibleTargets.Contains(messenger))
+                {
+                    visibleTargets.Remove(messenger);
+                }
             }
         }
     }

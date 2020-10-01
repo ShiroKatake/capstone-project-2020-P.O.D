@@ -14,7 +14,7 @@ public class Message
     private string senderName;
     private string senderTag;
     private GameObject senderObject;
-    private string messageContents;
+    private string contents;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -23,7 +23,7 @@ public class Message
     /// <summary>
     /// The contents of the message.
     /// </summary>
-    public string MessageContents { get => messageContents; }
+    public string Contents { get => contents; }
 
     /// <summary>
     /// The name of the game object that sent this message.
@@ -53,6 +53,6 @@ public class Message
         senderName = name;
         senderTag = tag;
         senderObject = gameObject;
-        messageContents = contents;
+        this.contents = contents;
     }
 }
