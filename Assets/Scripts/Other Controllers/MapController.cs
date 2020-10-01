@@ -116,7 +116,7 @@ public class MapController : SerializableSingleton<MapController>
     public void Initialise()
     {
         Debug.Log($"MapController.Initialise()");
-        float alienSpawnHeight = AlienFactory.Instance.AlienSpawnHeight;
+        float alienSpawnHeight = AlienFactory.Instance.AlienInstantiationHeight;
         int noAlienXMin = (int)Mathf.Round(noAliensBottomLeft.x);
         int noAlienXMax = (int)Mathf.Round(noAliensTopRight.x);
         int noAlienZMin = (int)Mathf.Round(noAliensBottomLeft.z);
@@ -170,7 +170,7 @@ public class MapController : SerializableSingleton<MapController>
 
         //Debug.Log($"MapController.CalculatePaths(), starting");
         NavMeshPath calculatedPath = null;
-        float alienSpawnHeight = AlienFactory.Instance.AlienSpawnHeight;
+        float alienSpawnHeight = AlienFactory.Instance.AlienInstantiationHeight;
         List<Alien> pathfinderInstances = new List<Alien>();
         Transform cryoEggColliderTransform = CryoEgg.Instance.ColliderTransform;
 
@@ -349,29 +349,35 @@ public class MapController : SerializableSingleton<MapController>
             }
 
             RaycastHit hit;
+            float instantiationHeight = AlienFactory.Instance.AlienInstantiationHeight;
+            float minSpawnHeight = AlienFactory.Instance.MinAlienSpawnHeight;
 
             //Check if a cliff or pit or too close to either
             for (int i = -1; i <= 1; i++)
             {
                 for (int j = -1; j <= 1; j++)
                 {
-                    Vector3 testPos = new Vector3(position.x + i, position.y, position.z + j);
+                    Vector3 testPos = new Vector3(position.x + i, instantiationHeight, position.z + j);
                     //Debug.Log($"TestPos {testPos}");  
 
-                    if (testPos.x < 0 || testPos.x > xMax || testPos.z < 0 || testPos.z > zMax || !Physics.Raycast(testPos, Vector3.down, out hit, 25, groundLayerMask))
+                    if (testPos.x < 0 || testPos.x > xMax || testPos.z < 0 || testPos.z > zMax)
                     {
-                        //Debug.Log($"Out of bounds or failed to hit on raycast");
+                        //Debug.Log($"Out of bounds");
+                        return false;
+                    }
+                    else if (!Physics.Raycast(testPos, Vector3.down, out hit, 25, groundLayerMask))
+                    {
+                        //Debug.Log($"Failed to hit on raycast");
                         return false;
                     }
                     else
                     {
                         float hitHeight = hit.point.y;
-                        float errorMargin = 0.01f;
                         //Debug.Log($"Test modifier ({i}, {j}), adjusted position {position}, raycast down hit at height {hitHeight}, error margin {errorMargin}");
 
-                        if ((hitHeight < 0f - errorMargin || hitHeight > 0f + errorMargin) && (hitHeight < 2.5f - errorMargin || hitHeight > 2.5f + errorMargin))
+                        if (hitHeight < minSpawnHeight)
                         {
-                            //Debug.Log($"Point.y != 0 or 2.5, therefore pit or cliff, therefore not alien spawnable. Adding to alienExclusionArea.");
+                            //Debug.Log($"Point.y < {minSpawnHeight}, therefore unacceptable pit or off map, therefore not alien spawnable. Marking position as Banned for aliens.");
 
                             for (int k = -1; k <= 1; k++)
                             {
@@ -453,7 +459,7 @@ public class MapController : SerializableSingleton<MapController>
             int z = Mathf.RoundToInt(position.z);
             positions[x, z].AliensBanned = true;
 
-            Vector3 pos = new Vector3(x, AlienFactory.Instance.AlienSpawnHeight, z);
+            Vector3 pos = new Vector3(x, AlienFactory.Instance.AlienInstantiationHeight, z);
             tutorialAlienSpawnPoints.Remove(pos);
             gameplayAlienSpawnPoints.Remove(pos);
             currentAlienSpawnPoints.Remove(pos);
@@ -477,7 +483,7 @@ public class MapController : SerializableSingleton<MapController>
         {
             int x = (int)Mathf.Round(position.x);
             int z = (int)Mathf.Round(position.z);
-            Vector3 pos = new Vector3(x, AlienFactory.Instance.AlienSpawnHeight, z);
+            Vector3 pos = new Vector3(x, AlienFactory.Instance.AlienInstantiationHeight, z);
 
             //Debug.Log($"MapController.UpdateAvailablePositions() offset loop for {gameObject} at position {position}, x: {x}/{xMax}, z: {z}/{zMax}, hasBuilding: {hasBuilding}, hasMineral: {hasMineral}");
             if (hasBuilding != null)
