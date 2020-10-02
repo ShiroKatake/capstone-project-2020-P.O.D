@@ -58,6 +58,7 @@ GameObject:
   - component: {fileID: 6142445074608009270}
   - component: {fileID: 7712896613637118947}
   - component: {fileID: 4151841228902256699}
+  - component: {fileID: 1491737619}
   - component: {fileID: 4078778705944399297}
   - component: {fileID: 3607602877255847704}
   - component: {fileID: 6293543869217059979}
@@ -431,6 +432,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98c236ad8eb67d74c8adc45db5c39c0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1491737619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6577456260396280556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f26f8db3fff25b24c83a8a9de2322d7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentRatio: 0a0000000d0000000e000000
+  targetRatio: 010000000200000004000000
+  pointsPerRatio: 5
+  multiplierIncreasePerWave: 0
+  maxRatioValue: 0
 --- !u!114 &4078778705944399297
 MonoBehaviour:
   m_ObjectHideFlags: 0
