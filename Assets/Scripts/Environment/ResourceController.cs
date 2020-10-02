@@ -24,7 +24,7 @@ public class ResourceController : SerializableSingleton<ResourceController>
     [SerializeField] private int waterConsumption;
 
     [Header("Testing")]
-    //[SerializeField] private bool getDeveloperResources;
+    [SerializeField] private bool developerResourcesEnabled;
     [SerializeField] private int developerResources;
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
@@ -213,7 +213,7 @@ public class ResourceController : SerializableSingleton<ResourceController>
     /// </summary>
     private void CheckDeveloperResources()
     {
-        if (Application.isEditor)
+        if (Application.isEditor && developerResourcesEnabled)
         {
             if (playerInputManager.GetButtonDown("Get Developer Resources"))
             {
