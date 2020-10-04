@@ -120,15 +120,14 @@ MonoBehaviour:
   collisionReporters: []
   id: 0
   buildingType: 4
-  consoleName: /Harvester\
+  consoleName: '{Harvester}'
   oreCost: 4
   powerConsumption: 2
   waterConsumption: 5
   plantsConsumption: 0
   gasConsumption: 0
   buildTime: 10
-  VFX:
-  - {fileID: 0}
+  VFX: []
   cliffRaycastOffsets:
   - {x: -1.5, y: 0, z: -0.75}
   - {x: -1.5, y: 0, z: 0}
@@ -328,7 +327,7 @@ BoxCollider:
   m_GameObject: {fileID: 9128948515140239318}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 4.0757914, y: 1.2600956, z: 1.545826}
   m_Center: {x: 3.2962685, y: 1.5739423, z: -3.9688013}
@@ -341,7 +340,7 @@ BoxCollider:
   m_GameObject: {fileID: 9128948515140239318}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 3.5009334, y: 4.916646, z: 1.8200003}
   m_Center: {x: -3.5549846, y: -0.24651138, z: -3.8317144}
@@ -354,7 +353,7 @@ BoxCollider:
   m_GameObject: {fileID: 9128948515140239318}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 2.9068937, y: 4.993552, z: 2.3844354}
   m_Center: {x: 0.17145807, y: -0.2518847, z: -3.5527825}
@@ -367,7 +366,7 @@ CapsuleCollider:
   m_GameObject: {fileID: 9128948515140239318}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   m_Radius: 0.26999998
   m_Height: 2.2849915
   m_Direction: 2
@@ -381,7 +380,7 @@ CapsuleCollider:
   m_GameObject: {fileID: 9128948515140239318}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   m_Radius: 0.87732357
   m_Height: 4.1352115
   m_Direction: 2
@@ -395,7 +394,7 @@ BoxCollider:
   m_GameObject: {fileID: 9128948515140239318}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 2.0031235, y: 4.139514, z: 1.2315223}
   m_Center: {x: -1.5684878, y: -0.23276481, z: -3.8986588}
@@ -408,7 +407,7 @@ BoxCollider:
   m_GameObject: {fileID: 9128948515140239318}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 4.1447134, y: 4.4608026, z: 0.84704334}
   m_Center: {x: 3.2497656, y: -0.6584766, z: -4.32148}
@@ -652,7 +651,7 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: b2c7b1820aff0c5459339f1d2dfb18a6,
         type: 3}
       propertyPath: m_Name
-      value: Harvester Base
+      value: Base Model
       objectReference: {fileID: 0}
     - target: {fileID: -927199367670048503, guid: b2c7b1820aff0c5459339f1d2dfb18a6,
         type: 3}
@@ -758,7 +757,7 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: 6aafed8ba2ff299478680d3eff533bfa,
         type: 3}
       propertyPath: m_Name
-      value: Harvester Rotor
+      value: Rotor Model
       objectReference: {fileID: 0}
     - target: {fileID: -927199367670048503, guid: 6aafed8ba2ff299478680d3eff533bfa,
         type: 3}

@@ -20,6 +20,8 @@ public class InputController : SerializableSingleton<InputController>
     [Header("Building Buttons")]
     [SerializeField] private Button fusionReactor;
     [SerializeField] private Button iceDrill;
+    [SerializeField] private Button harvester;
+    [SerializeField] private Button gasPump;
     [SerializeField] private Button boiler;
     [SerializeField] private Button greenhouse;
     [SerializeField] private Button incinerator;
@@ -58,11 +60,6 @@ public class InputController : SerializableSingleton<InputController>
     /// <returns>Was a button pressed?</returns>
     public bool ButtonPressed(string requestedInput)
     {
-        /*if (gamepadPrefix == "")
-        {
-            return false;
-        }*/
-
         switch (requestedInput)
         {
             //Always a button for MK, XB and DS
@@ -70,88 +67,33 @@ public class InputController : SerializableSingleton<InputController>
                 return player.GetButton("SwapWeapon");
             case "Pause":
                 return player.GetButton("Pause");
-                //return Input.GetButtonDown(gamepadPrefix + requestedInput);
 
-            //Button for MK, axis for XB and DS
             case "Shoot":
                 return player.GetButton("Shoot");
             case "MoveLeftRight":
                 return player.GetButton("Horizontal");
             case "MoveForwardsBackwards":
                 return player.GetButton("Vertical");
-                /*if (gamepad == EGamepad.MouseAndKeyboard)
-                {
-                    return Input.GetButtonDown($"MK{requestedInput}");
-                }
-                else
-                {
-                    return GetAxis(requestedInput) != 0;
-                }*/
-
-            //Always an axis for MK, XB and DS
-            //case "LookUpDown":
-            //case "LookLeftRight":
-            //    return GetAxis(requestedInput) != 0;
 
             //Aliased
             case "PlaceBuilding":
                 return player.GetButton("Submit");
-                //return Input.GetButtonDown(gamepadPrefix + "Submit");
             case "CancelBuilding":
                 return player.GetButton("Cancel");
-                //return Input.GetButtonDown(gamepadPrefix + "Cancel");
 
             //Custom
             case "CycleBuilding":
-                return (player.GetButton("Reactor") && fusionReactor.interactable)
-                    || (player.GetButton("IceDrill") && iceDrill.interactable)
-                    || (player.GetButton("Boiler") && boiler.interactable)
-                    || (player.GetButton("GreenHouse") && greenhouse.interactable)
-                    || (player.GetButton("Incinerator") && incinerator.interactable)
-                    || (player.GetButton("Turret1") && shotgunTurret.interactable)
-                    || (player.GetButton("Turret2") && machineGunTurret.interactable)
-                    || CheckUIButtonClicked();
-                /*if (gamepad == EGamepad.MouseAndKeyboard)
-                {
-                    return Input.GetButtonDown("MKSpawnFusionReactor")
-                        || Input.GetButtonDown("MKSpawnIceDrill")
-                        || Input.GetButtonDown("MKSpawnBoiler")
-                        || Input.GetButtonDown("MKSpawnGreenhouse")
-                        || Input.GetButtonDown("MKSpawnIncinerator")
-                        || Input.GetButtonDown("MKSpawnShortRangeTurret")
-                        || Input.GetButtonDown("MKSpawnLongRangeTurret")
-                        || CheckUIButtonClicked();
-                }
-                else
-                {
-                    return Input.GetButtonDown(gamepadPrefix + "CycleBuildingLeft")
-                        || Input.GetButtonDown(gamepadPrefix + "CycleBuildingRight");
-                }*/
-
             case "SpawnBuilding":
                 return (player.GetButton("Reactor") && fusionReactor.interactable)
                     || (player.GetButton("IceDrill") && iceDrill.interactable)
+                    || (player.GetButton("Harvester") && harvester.interactable)
+                    || (player.GetButton("GasPump") && gasPump.interactable)
                     || (player.GetButton("Boiler") && boiler.interactable)
                     || (player.GetButton("GreenHouse") && greenhouse.interactable)
                     || (player.GetButton("Incinerator") && incinerator.interactable)
-                    || (player.GetButton("Turret1") && shotgunTurret.interactable)
-                    || (player.GetButton("Turret2") && machineGunTurret.interactable)
-                    || CheckUIButtonClicked();
-                /*if (gamepad == EGamepad.MouseAndKeyboard)
-                {
-                    return Input.GetButtonDown("MKSpawnFusionReactor")
-                        || Input.GetButtonDown("MKSpawnIceDrill")
-                        || Input.GetButtonDown("MKSpawnBoiler")
-                        || Input.GetButtonDown("MKSpawnGreenhouse")
-                        || Input.GetButtonDown("MKSpawnIncinerator")
-                        || Input.GetButtonDown("MKSpawnShortRangeTurret")
-                        || Input.GetButtonDown("MKSpawnLongRangeTurret")
-                        || CheckUIButtonClicked();
-                }
-                else
-                {
-                    return Input.GetButtonDown(gamepadPrefix + "SpawnBuilding");
-                }    */        
+                    || (player.GetButton("ShotgunTurret") && shotgunTurret.interactable)
+                    || (player.GetButton("MachineGunTurret") && machineGunTurret.interactable)
+                    || CheckUIButtonClicked();      
 
             //Unknown input
             default:
@@ -166,11 +108,6 @@ public class InputController : SerializableSingleton<InputController>
     /// <returns>Was a button held?</returns>
     public bool ButtonHeld(string requestedInput)
     {
-        /*if (gamepadPrefix == "")
-        {
-            return false;
-        }*/
-
         switch (requestedInput)
         {
             //Always a button for MK, XB and DS
@@ -178,7 +115,6 @@ public class InputController : SerializableSingleton<InputController>
                 return player.GetButton("SwapWeapon");
             case "Pause":
                 return player.GetButton("Pause");
-            //case "MoveUpDown":
 
             //Button for MK, axis for XB and DS
             case "Shoot":
@@ -187,77 +123,26 @@ public class InputController : SerializableSingleton<InputController>
                 return player.GetButton("Horizontal");
             case "MoveForwardsBackwards":
                 return player.GetButton("Vertical");
-                /*if (gamepad == EGamepad.MouseAndKeyboard)
-                {
-                    return Input.GetButton($"MK{requestedInput}");
-                }
-                else
-                {
-                    return GetAxis(requestedInput) != 0;
-                }*/
-
-            //Always an axis for MK, XB and DS
-            //case "LookUpDown":
-            //case "LookLeftRight":
-            //    return GetAxis(requestedInput) != 0;
 
             //Aliased
             case "PlaceBuilding":
                 return player.GetButton("Submit");
-                //return Input.GetButton(gamepadPrefix + "Submit");
             case "CancelBuilding":
                 return player.GetButton("Cancel");
-                //return Input.GetButton(gamepadPrefix + "Cancel");
 
             //Custom
             case "CycleBuilding":
-                return player.GetButton("IceDrill")
-                    || player.GetButton("Reactor")
-                    || player.GetButton("Incinerator")
-                    || player.GetButton("Boiler")
-                    || player.GetButton("GreenHouse")
-                    || player.GetButton("Turret1")
-                    || player.GetButton("Turret2")
-                    || CheckUIButtonClicked();
-                /*if (gamepad == EGamepad.MouseAndKeyboard)
-                {
-                    return Input.GetButton("MKSpawnFusionReactor")
-                        || Input.GetButton("MKSpawnIceDrill")
-                        || Input.GetButton("MKSpawnBoiler")
-                        || Input.GetButton("MKSpawnGreenhouse")
-                        || Input.GetButton("MKSpawnIncinerator")
-                        || Input.GetButton("MKSpawnShortRangeTurret")
-                        || Input.GetButton("MKSpawnLongRangeTurret");
-                }
-                else
-                {
-                    return Input.GetButton(gamepadPrefix + "CycleBuildingLeft")
-                        || Input.GetButton(gamepadPrefix + "CycleBuildingRight");
-                }*/
-
             case "SpawnBuilding":
-                return player.GetButton("IceDrill")
-                    || player.GetButton("Reactor")
-                    || player.GetButton("Incinerator")
+                return player.GetButton("Reactor")
+                    || player.GetButton("IceDrill")
+                    || player.GetButton("Harvester")
+                    || player.GetButton("GasPump")
                     || player.GetButton("Boiler")
                     || player.GetButton("GreenHouse")
-                    || player.GetButton("Turret1")
-                    || player.GetButton("Turret2")
+                    || player.GetButton("Incinerator")
+                    || player.GetButton("ShotgunTurret")
+                    || player.GetButton("MachineGunTurret")
                     || CheckUIButtonClicked();
-                /*if (gamepad == EGamepad.MouseAndKeyboard)
-                {
-                    return Input.GetButton("MKSpawnFusionReactor")
-                        || Input.GetButton("MKSpawnIceDrill")
-                        || Input.GetButton("MKSpawnBoiler")
-                        || Input.GetButton("MKSpawnGreenhouse")
-                        || Input.GetButton("MKSpawnIncinerator")
-                        || Input.GetButton("MKSpawnShortRangeTurret")
-                        || Input.GetButton("MKSpawnLongRangeTurret");
-                }
-                else
-                {
-                    return Input.GetButton(gamepadPrefix + "SpawnBuilding");
-                }*/
 
             //Unknown input
             default:
@@ -274,11 +159,6 @@ public class InputController : SerializableSingleton<InputController>
     /// <returns>The magnitude of any input on the requested axis.</returns>
     public float GetAxis(string requestedInput)
     {
-        /*if (gamepadPrefix == "")
-        {
-            Debug.Log("No Gamepad Prefix Yet");
-            return 0f;
-        }*/
 
         switch (requestedInput)
         {
@@ -321,6 +201,16 @@ public class InputController : SerializableSingleton<InputController>
             return EBuilding.IceDrill;
         }
 
+        if (player.GetButton("Harvester"))
+        {
+            return EBuilding.Harvester;
+        }
+
+        if (player.GetButton("GasPump"))
+        {
+            return EBuilding.GasPump;
+        }
+
         if (player.GetButton("Boiler"))
         {
             return EBuilding.Boiler;
@@ -336,116 +226,18 @@ public class InputController : SerializableSingleton<InputController>
             return EBuilding.Incinerator;
         }
 
-        if (player.GetButton("Turret1"))
+        if (player.GetButton("ShotgunTurret"))
         {
             return EBuilding.ShotgunTurret;
         }
 
-        if (player.GetButton("Turret2"))
+        if (player.GetButton("MachineGunTurret"))
         {
             return EBuilding.MachineGunTurret;
         }
 
         return currentSelection;
-        /*switch (gamepad)
-        {
-            case EGamepad.XboxController:
-            case EGamepad.DualShockController:
-                return ControllerSelectBuilding(currentSelection);
-            case EGamepad.MouseAndKeyboard:
-                return MKSelectBuilding(currentSelection);
-            default:
-                return EBuilding.None;
-        }*/
     }
-
-    /*/// <summary>
-    /// Check the inputs for selecting a building type when the player is using a mouse and keyboard.
-    /// </summary>
-    /// <param name="currentSelection"> The currently-selected building type in case no other building type has been selected.</param>
-    /// <returns>The selected building type, or the current selection if none.</returns>
-    private EBuilding MKSelectBuilding(EBuilding currentSelection)
-    {
-        if (clickedButton != null)
-        {
-            return clickedButton.GetBuildingType;
-        }
-
-        if (Input.GetButton("MKSpawnFusionReactor"))
-        {
-            return EBuilding.FusionReactor;
-        }
-
-        if (Input.GetButton("MKSpawnIceDrill"))
-        {
-            return EBuilding.IceDrill;
-        }
-
-        if (Input.GetButton("MKSpawnBoiler"))
-        {
-            return EBuilding.Boiler;
-        }
-
-        if (Input.GetButton("MKSpawnGreenhouse"))
-        {
-            return EBuilding.Greenhouse;
-        }
-
-        if (Input.GetButton("MKSpawnIncinerator"))
-        {
-            return EBuilding.Incinerator;
-        }
-
-        if (Input.GetButton("MKSpawnShortRangeTurret"))
-        {
-            return EBuilding.ShortRangeTurret;
-        }
-
-        if (Input.GetButton("MKSpawnLongRangeTurret"))
-        {
-            return EBuilding.LongRangeTurret;
-        }
-
-        return currentSelection;
-    }
-
-    /// <summary>
-    /// Checks the inputs for selecting a building type when the player is using an Xbox or DualShock controller.
-    /// </summary>
-    /// <param name="currentSelection">The current-currently-selected building type in case no other building type has been selected.</param>
-    /// <returns>The selected building type, or the current selection if none.</returns>
-    private EBuilding ControllerSelectBuilding(EBuilding currentSelection)
-    {
-        int cycle = 0;
-
-        if (Input.GetButtonDown(gamepadPrefix + "CycleBuildingRight"))
-        {
-            cycle++;
-        }
-
-        if (Input.GetButtonDown(gamepadPrefix + "CycleBuildingLeft"))
-        {
-            cycle--;
-        }
-
-        if (cycle != 0)
-        {
-            int result = (int)currentSelection + cycle;
-
-            if (result > (int)EBuilding.LongRangeTurret)
-            {
-                result = 2;
-            }
-            else if (result < (int)EBuilding.FusionReactor)
-            {
-                result = 8;
-            }
-
-            return (EBuilding)result;
-        }
-
-        return currentSelection;
-    }*/
 
     //Utility Methods--------------------------------------------------------------------------------------------------------------------------------
 

@@ -257,12 +257,16 @@ MonoBehaviour:
   playerID: 0
   fusionReactor: {fileID: 0}
   iceDrill: {fileID: 0}
+  harvester: {fileID: 0}
+  gasPump: {fileID: 0}
   boiler: {fileID: 0}
   greenhouse: {fileID: 0}
   incinerator: {fileID: 0}
   shotgunTurret: {fileID: 0}
   machineGunTurret: {fileID: 0}
   buttonClickEventManagers:
+  - {fileID: 0}
+  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -465,11 +469,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ore: 0
   powerSupply: 0
-  wasteSupply: 0
+  plantsSupply: 0
   waterSupply: 0
+  gasSupply: 0
   powerConsumption: 0
-  wasteConsumption: 0
+  plantsConsumption: 0
   waterConsumption: 0
+  gasConsumption: 0
   getDeveloperResources: 0
   developerResources: 1000
 --- !u!114 &3607602877255847704

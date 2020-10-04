@@ -46,7 +46,7 @@ public class ResourceTextManager : SerializableSingleton<ResourceTextManager>
 
         if (!visibleOnAwake)
         {
-            List<Graphic> initialisationGraphics = new List<Graphic>() { ore, water, power, plants, oreIcon, waterIcon, powerIcon, plantsIcon, gasIcon };
+            List<Graphic> initialisationGraphics = new List<Graphic>() { ore, water, power, plants, gas, oreIcon, waterIcon, powerIcon, plantsIcon, gasIcon };
             graphics = new List<Graphic>();
             foreach (Graphic g in initialisationGraphics)
             {

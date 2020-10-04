@@ -22,6 +22,8 @@ public class StageSkippedTutorial : SerializableSingleton<StageSkippedTutorial>,
     [Header("Building Buttons")]
     [SerializeField] private UIElementStatusController fusionReactor;
     [SerializeField] private UIElementStatusController iceDrill;
+    [SerializeField] private UIElementStatusController harvester;
+    [SerializeField] private UIElementStatusController gasPump;
     [SerializeField] private UIElementStatusController boiler;
     [SerializeField] private UIElementStatusController greenhouse;
     [SerializeField] private UIElementStatusController incinerator;
@@ -128,6 +130,12 @@ public class StageSkippedTutorial : SerializableSingleton<StageSkippedTutorial>,
         yield return new WaitForSeconds(0.15f);
         iceDrill.Visible = true;
         iceDrill.Interactable = true;
+        yield return new WaitForSeconds(0.15f);
+        harvester.Visible = true;
+        harvester.Interactable = true;
+        yield return new WaitForSeconds(0.15f);
+        gasPump.Visible = true;
+        gasPump.Interactable = true;
         yield return new WaitForSeconds(0.15f);
         boiler.Visible = true;
         boiler.Interactable = true;

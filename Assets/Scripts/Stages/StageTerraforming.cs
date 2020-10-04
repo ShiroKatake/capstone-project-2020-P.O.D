@@ -17,6 +17,8 @@ public class StageTerraforming : SerializableSingleton<StageTerraforming>, IStag
     [Header("Building Buttons")]
     [SerializeField] private UIElementStatusController fusionReactor;
     [SerializeField] private UIElementStatusController iceDrill;
+    [SerializeField] private UIElementStatusController harvester;
+    [SerializeField] private UIElementStatusController gasPump;
     [SerializeField] private UIElementStatusController boiler;
     [SerializeField] private UIElementStatusController greenhouse;
     [SerializeField] private UIElementStatusController incinerator;
@@ -259,8 +261,12 @@ public class StageTerraforming : SerializableSingleton<StageTerraforming>, IStag
         }
 
         console.SubmitDialogue("cat closed", 1, false, false);
+        harvester.Visible = true;
+        gasPump.Visible = true;
         fusionReactor.Interactable = true;
         iceDrill.Interactable = true;
+        harvester.Interactable = true;
+        gasPump.Interactable = true;
         boiler.Interactable = true;
         greenhouse.Interactable = true;
         incinerator.Interactable = true;

@@ -102,7 +102,7 @@ public class MapController : SerializableSingleton<MapController>
     /// </summary>
     private void Start()
     {
-        Debug.Log($"MapController.Start()");
+        //Debug.Log($"MapController.Start()");
         
         if (!initialised)
         {
@@ -115,7 +115,7 @@ public class MapController : SerializableSingleton<MapController>
     /// </summary>
     public void Initialise()
     {
-        Debug.Log($"MapController.Initialise()");
+        //Debug.Log($"MapController.Initialise()");
         float alienSpawnHeight = AlienFactory.Instance.AlienSpawnHeight;
         int noAlienXMin = (int)Mathf.Round(noAliensBottomLeft.x);
         int noAlienXMax = (int)Mathf.Round(noAliensTopRight.x);
