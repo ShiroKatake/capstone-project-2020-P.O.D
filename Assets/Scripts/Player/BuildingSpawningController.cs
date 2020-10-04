@@ -225,7 +225,7 @@ public class BuildingSpawningController : SerializableSingleton<BuildingSpawning
 
                     if (ResourceController.Instance.PlantsSupply < ResourceController.Instance.PlantsConsumption + heldBuilding.GasConsumption)
                     {
-                        errorMessage += "~<- Insufficient {gas}.>";
+                        errorMessage += "~<- Insufficient @gas$.>";
                     }
 
                     console.SubmitCustomMessage(errorMessage, true, 0);
