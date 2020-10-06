@@ -57,7 +57,7 @@ public class BuildingFactory : Factory<BuildingFactory, Building, EBuilding>
 
         if (building.Terraformer != null)
         {
-            EnvironmentalController.Instance.RegisterBuilding(building.Terraformer);
+            EnvironmentManager.Instance.RegisterBuilding(building.Terraformer);
         }
 
         if (building.Model.localPosition != prefabs[buildingType].Model.localPosition)
@@ -101,19 +101,19 @@ public class BuildingFactory : Factory<BuildingFactory, Building, EBuilding>
     /// <param name="consumingResources">Was the building destroyed while placed, and therefore needs to leave behind foundations?</param>
     public void Destroy(Building building, bool consumingResources, bool killed)
     {
-        BuildingController.Instance.DeRegisterBuilding(building);
+        BuildingManager.Instance.DeRegisterBuilding(building);
 
         if (building.Terraformer != null)
         {
-            EnvironmentalController.Instance.RemoveBuilding(building.Id);
+            EnvironmentManager.Instance.RemoveBuilding(building.Id);
         }
 
         if (consumingResources)
         {
-            ResourceController.Instance.PowerConsumption -= building.PowerConsumption;
-            ResourceController.Instance.WaterConsumption -= building.WaterConsumption;
-            ResourceController.Instance.PlantsConsumption -= building.PlantsConsumption;
-            ResourceController.Instance.PlantsConsumption -= building.GasConsumption;
+            ResourceManager.Instance.PowerConsumption -= building.PowerConsumption;
+            ResourceManager.Instance.WaterConsumption -= building.WaterConsumption;
+            ResourceManager.Instance.PlantsConsumption -= building.PlantsConsumption;
+            ResourceManager.Instance.PlantsConsumption -= building.GasConsumption;
         }
 
         if (killed)

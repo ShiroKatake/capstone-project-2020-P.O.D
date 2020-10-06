@@ -29,7 +29,7 @@ public class CommentsTemplate : MonoBehaviour
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
-    /// <summary>
+     /// <summary>
     /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
     /// Awake() runs before Start().
     /// </summary>

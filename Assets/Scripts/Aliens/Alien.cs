@@ -131,7 +131,7 @@ public class Alien : MonoBehaviour, IMessenger
         target = Tower.Instance.ColliderTransform;
         targetHealth = Tower.Instance.GetComponent<Health>();
         timeOfLastAttack = attackCooldown * -1;
-        MessageDispatcher.Instance.Subscribe("Alien", this);
+        MessageManager.Instance.Subscribe("Alien", this);
         renderer.enabled = true;
 
         //Rotate to face the Cryo egg
@@ -234,7 +234,7 @@ public class Alien : MonoBehaviour, IMessenger
         targetHealth = target.GetComponentInParent<Health>();   //Gets Health from target or any of its parents that has it.
         targetSize = target.GetComponentInParent<Size>();   //Gets Radius from target or any of its parents that has it.
 
-        PositionData data = MapController.Instance.GetPositionData(transform.position);
+        PositionData data = MapManager.Instance.GetPositionData(transform.position);
 
         if (selectedTarget == Tower.Instance.transform && !health.IsDead() && data != null && data.Paths.ContainsKey(type) && data.Paths[type] != null)
         {
@@ -426,8 +426,8 @@ public class Alien : MonoBehaviour, IMessenger
     {
         //navMeshAgent.enabled = false;
         renderer.enabled = false;
-        MessageDispatcher.Instance.SendMessage("Turret", new Message(gameObject.name, "Alien", gameObject, "Dead"));
-        MessageDispatcher.Instance.Unsubscribe("Alien", this);
+        MessageManager.Instance.SendMessage("Turret", new Message(gameObject.name, "Alien", gameObject, "Dead"));
+        MessageManager.Instance.Unsubscribe("Alien", this);
         moving = false;
         shotByName = "";
         shotByTransform = null;

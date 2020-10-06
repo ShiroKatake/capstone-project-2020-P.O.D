@@ -7,7 +7,7 @@ using UnityEngine.AI;
 /// <summary>
 /// A controller class for tracking which parts of the map have buildings, can be spawned to by aliens, etc.
 /// </summary>
-public class MapController : SerializableSingleton<MapController>
+public class MapManager : SerializableSingleton<MapManager>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 

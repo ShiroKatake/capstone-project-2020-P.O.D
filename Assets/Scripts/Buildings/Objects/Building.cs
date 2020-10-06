@@ -388,7 +388,7 @@ public class Building : CollisionListener
         {
             if (!placed)
             {
-                validPlacement = !(CheckInPit() || CheckColliding() || CheckOnCliff() || CheckMouseOverUI()) && MapController.Instance.PositionAvailableForBuilding(this);
+                validPlacement = !(CheckInPit() || CheckColliding() || CheckOnCliff() || CheckMouseOverUI()) && MapManager.Instance.PositionAvailableForBuilding(this);
 
 				if (!validPlacement && placementCurrentValid)
 				{
@@ -568,15 +568,15 @@ public class Building : CollisionListener
     public void Place(Vector3 position)
     {
         placed = true; //Needs to occur before its position gets set to be on the ground so that it triggers the building Foundation at the proper time.
-        ResourceController.Instance.Ore -= oreCost;
-		ResourceController.Instance.PowerConsumption += powerConsumption;
-		ResourceController.Instance.WaterConsumption += waterConsumption;
-		ResourceController.Instance.PlantsConsumption += plantsConsumption;
-		ResourceController.Instance.GasConsumption += gasConsumption;
+        ResourceManager.Instance.Ore -= oreCost;
+		ResourceManager.Instance.PowerConsumption += powerConsumption;
+		ResourceManager.Instance.WaterConsumption += waterConsumption;
+		ResourceManager.Instance.PlantsConsumption += plantsConsumption;
+		ResourceManager.Instance.GasConsumption += gasConsumption;
 		SetCollidersEnabled("Placement", false);
         SetCollidersEnabled("Body", true);
         transform.position = position;
-        BuildingController.Instance.RegisterBuilding(this);
+        BuildingManager.Instance.RegisterBuilding(this);
 		BuildingFactory.Instance.onPlacementFinished?.Invoke();
 
         foreach (RendererMaterialSet r in rendererMaterialSets)

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 /// <summary>
 /// A class to control the clock in the UI and the day-night cycle.
 /// </summary>
-public class ClockController : SerializableSingleton<ClockController>
+public class ClockManager : SerializableSingleton<ClockManager>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
@@ -130,14 +130,14 @@ public class ClockController : SerializableSingleton<ClockController>
             time24hr += UnityEngine.Time.deltaTime;
             //Debug.Log($"ClockController.UpdateTime(), is daytime, time12hr is now {time12hr}");
         }
-        else if (time12hr < halfCycleDuration * AlienController.Instance.AlienKillProgress)
+        else if (time12hr < halfCycleDuration * AlienManager.Instance.AlienKillProgress)
         {
             time12hr += UnityEngine.Time.deltaTime;
             time24hr += UnityEngine.Time.deltaTime;
 
             if (debugClockProgressAtNight)
             {
-                Debug.Log($"ClockController.UpdateTime(), is nighttime and clock is catching up to alien kill progress, time12hr is now {time12hr}, progress is {AlienController.Instance.AlienKillProgress}, target time is {halfCycleDuration * AlienController.Instance.AlienKillProgress}");
+                Debug.Log($"ClockController.UpdateTime(), is nighttime and clock is catching up to alien kill progress, time12hr is now {time12hr}, progress is {AlienManager.Instance.AlienKillProgress}, target time is {halfCycleDuration * AlienManager.Instance.AlienKillProgress}");
             }
         }
     }

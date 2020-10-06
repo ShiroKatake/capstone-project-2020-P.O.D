@@ -8,7 +8,7 @@ using UnityEngine.UI;
 /// <summary>
 /// Controls the status (visibile, interactable, fading in/out, tweening) of a UI element and its component pieces.
 /// </summary>
-public class UIElementStatusController : MonoBehaviour
+public class UIElementStatusManager : MonoBehaviour
 {
     //Fields-----------------------------------------------------------------------------------------------------------------------------------------
 

@@ -67,11 +67,11 @@ public class ResourceTextManager : SerializableSingleton<ResourceTextManager>
     /// </summary>
 	private void Update()
 	{
-		ore.text = ResourceController.Instance.Ore.ToString();
-		power.text = ResourceController.Instance.PowerConsumption.ToString() + " / " + ResourceController.Instance.PowerSupply.ToString();
-		plants.text = ResourceController.Instance.PlantsConsumption.ToString() + " / " + ResourceController.Instance.PlantsSupply.ToString();
-		water.text = ResourceController.Instance.WaterConsumption.ToString() + " / " + ResourceController.Instance.WaterSupply.ToString();
-		gas.text = ResourceController.Instance.GasConsumption.ToString() + " / " + ResourceController.Instance.GasSupply.ToString();
+		ore.text = ResourceManager.Instance.Ore.ToString();
+		power.text = ResourceManager.Instance.PowerConsumption.ToString() + " / " + ResourceManager.Instance.PowerSupply.ToString();
+		plants.text = ResourceManager.Instance.PlantsConsumption.ToString() + " / " + ResourceManager.Instance.PlantsSupply.ToString();
+		water.text = ResourceManager.Instance.WaterConsumption.ToString() + " / " + ResourceManager.Instance.WaterSupply.ToString();
+		gas.text = ResourceManager.Instance.GasConsumption.ToString() + " / " + ResourceManager.Instance.GasSupply.ToString();
 	}
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
     /// <summary>

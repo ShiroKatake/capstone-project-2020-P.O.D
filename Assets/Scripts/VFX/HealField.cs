@@ -15,7 +15,7 @@ public class HealField : MonoBehaviour
 
 	//Non-Serialized Fields------------------------------------------------------------------------                                                    
 
-	private PlayerController player;
+	private PODController player;
 
 	//Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -68,10 +68,10 @@ public class HealField : MonoBehaviour
 	/// <summary>
 	/// Finds the player and subscribe to the healing events to trigger healing FX.
 	/// </summary>
-	private PlayerController FindPlayer()
+	private PODController FindPlayer()
 	{
-		//Find the Player
-		PlayerController player = FindObjectOfType<PlayerController>();
+        //Find the Player
+        PODController player = FindObjectOfType<PODController>();
 		if (player == null)
 			Debug.Log("CryoEgg can't find the player . . .");
 		return player;
@@ -137,7 +137,7 @@ public class HealField : MonoBehaviour
 	void OnDrawGizmosSelected()
 	{
 		// Draw a green sphere at the transform's position
-		player = FindObjectOfType<PlayerController>();
+		player = FindObjectOfType<PODController>();
 		Gizmos.color = Color.green;
 		Gizmos.DrawWireSphere(transform.position, player.HealingRange);
 	}

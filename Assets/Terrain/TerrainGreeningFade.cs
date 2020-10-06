@@ -5,13 +5,13 @@ using UnityEngine;
 public class TerrainGreeningFade : MonoBehaviour
 {
 
-    EnvironmentalController envControl;
+    EnvironmentManager envControl;
     Material terrainMat;
 
     // Start is called before the first frame update
     void Start()
     {
-        envControl = EnvironmentalController.Instance;
+        envControl = EnvironmentManager.Instance;
         terrainMat = GetComponent<Renderer>().material;
     }
 

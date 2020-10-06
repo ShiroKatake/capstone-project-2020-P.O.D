@@ -3,7 +3,7 @@
 /// <summary>
 /// A controller class for the placement grid.
 /// </summary>
-public class PlacementGridFXController : MonoBehaviour
+public class PlacementGridFXManager : MonoBehaviour
 {
 	//Private Fields---------------------------------------------------------------------------------------------------------------------------------
 

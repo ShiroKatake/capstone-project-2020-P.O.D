@@ -12,33 +12,33 @@ public class StageTerraforming : SerializableSingleton<StageTerraforming>, IStag
     //Serialized Fields----------------------------------------------------------------------------                                                    
 
     [Header("General UI")]
-    [SerializeField] private UIElementStatusController clock;
+    [SerializeField] private UIElementStatusManager clock;
 
     [Header("Building Buttons")]
-    [SerializeField] private UIElementStatusController fusionReactor;
-    [SerializeField] private UIElementStatusController iceDrill;
-    [SerializeField] private UIElementStatusController harvester;
-    [SerializeField] private UIElementStatusController gasPump;
-    [SerializeField] private UIElementStatusController boiler;
-    [SerializeField] private UIElementStatusController greenhouse;
-    [SerializeField] private UIElementStatusController incinerator;
+    [SerializeField] private UIElementStatusManager fusionReactor;
+    [SerializeField] private UIElementStatusManager iceDrill;
+    [SerializeField] private UIElementStatusManager harvester;
+    [SerializeField] private UIElementStatusManager gasPump;
+    [SerializeField] private UIElementStatusManager boiler;
+    [SerializeField] private UIElementStatusManager greenhouse;
+    [SerializeField] private UIElementStatusManager incinerator;
 
     [Header("Progress/Ratio Bars")]
-    [SerializeField] private UIElementStatusController progressBar;
-    [SerializeField] private UIElementStatusController humidityBar;
-    [SerializeField] private UIElementStatusController biodiversityBar;
-    [SerializeField] private UIElementStatusController atmosphereBar;
+    [SerializeField] private UIElementStatusManager progressBar;
+    [SerializeField] private UIElementStatusManager humidityBar;
+    [SerializeField] private UIElementStatusManager biodiversityBar;
+    [SerializeField] private UIElementStatusManager atmosphereBar;
 
     [Header("Highlights")]
-    [SerializeField] private UIElementStatusController fusionReactorHighlight;
-    [SerializeField] private UIElementStatusController iceDrillHighlight;
-    [SerializeField] private UIElementStatusController boilerHighlight;
-    [SerializeField] private UIElementStatusController greenhouseHighlight;
-    [SerializeField] private UIElementStatusController incineratorHighlight;
-    [SerializeField] private UIElementStatusController humidityBarHighlight;
-    [SerializeField] private UIElementStatusController biodiversityBarHighlight;
-    [SerializeField] private UIElementStatusController atmosphereBarHighlight;
-    [SerializeField] private UIElementStatusController ratioBarsHighlight;
+    [SerializeField] private UIElementStatusManager fusionReactorHighlight;
+    [SerializeField] private UIElementStatusManager iceDrillHighlight;
+    [SerializeField] private UIElementStatusManager boilerHighlight;
+    [SerializeField] private UIElementStatusManager greenhouseHighlight;
+    [SerializeField] private UIElementStatusManager incineratorHighlight;
+    [SerializeField] private UIElementStatusManager humidityBarHighlight;
+    [SerializeField] private UIElementStatusManager biodiversityBarHighlight;
+    [SerializeField] private UIElementStatusManager atmosphereBarHighlight;
+    [SerializeField] private UIElementStatusManager ratioBarsHighlight;
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
@@ -113,9 +113,9 @@ public class StageTerraforming : SerializableSingleton<StageTerraforming>, IStag
         fusionReactor.Interactable = true;
         fusionReactorHighlight.Visible = true;
 
-        while (BuildingController.Instance.BuiltBuildingsCount(EBuilding.FusionReactor) == 0)
+        while (BuildingManager.Instance.BuiltBuildingsCount(EBuilding.FusionReactor) == 0)
         {
-            bool placedFusionReactor = BuildingController.Instance.PlacedBuildingsCount(EBuilding.FusionReactor) > 0;
+            bool placedFusionReactor = BuildingManager.Instance.PlacedBuildingsCount(EBuilding.FusionReactor) > 0;
 
             //Keep fusion reactor button interactable only while it needs to be placed
             if (placedFusionReactor)
@@ -151,9 +151,9 @@ public class StageTerraforming : SerializableSingleton<StageTerraforming>, IStag
         iceDrill.Interactable = true;
         iceDrillHighlight.Visible = true;
 
-        while (BuildingController.Instance.BuiltBuildingsCount(EBuilding.IceDrill) == 0)
+        while (BuildingManager.Instance.BuiltBuildingsCount(EBuilding.IceDrill) == 0)
         {
-            bool placedIceDrill = BuildingController.Instance.PlacedBuildingsCount(EBuilding.IceDrill) > 0;
+            bool placedIceDrill = BuildingManager.Instance.PlacedBuildingsCount(EBuilding.IceDrill) > 0;
 
             //Keep ice drill button interactable only while it needs to be placed
             if (placedIceDrill)
@@ -253,7 +253,7 @@ public class StageTerraforming : SerializableSingleton<StageTerraforming>, IStag
     {
         cat.SubmitDialogue("good luck", 0, true, false);
         clock.Visible = true;
-        ClockController.Instance.Paused = false;
+        ClockManager.Instance.Paused = false;
 
         while (!cat.DialogueRead || !cat.AcceptingSubmissions)
         {

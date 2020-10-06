@@ -7,7 +7,7 @@ using UnityEngine.Events;
 /// <summary>
 /// The player. Player controls the player's movement, shooting and healing. For building spawning, see BuildingSpawningController.
 /// </summary>
-public class PlayerController : SerializableSingleton<PlayerController>
+public class PODController : SerializableSingleton<PODController>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
@@ -166,7 +166,7 @@ public class PlayerController : SerializableSingleton<PlayerController>
         movement = new Vector3(moveHorizontal, 0, -moveVertical);
 
         healing = playerInputManager.GetButton("Heal") && Vector3.Distance(transform.position, Tower.Instance.transform.position) < healingRange && health.CurrentHealth < health.MaxHealth;
-        shooting = InputController.Instance.ButtonHeld("Shoot") && !healing && Time.time - timeOfLastShot > shootCooldown;
+        shooting = InputManager.Instance.ButtonHeld("Shoot") && !healing && Time.time - timeOfLastShot > shootCooldown;
 
         if (printInputs)
         {
@@ -262,7 +262,7 @@ public class PlayerController : SerializableSingleton<PlayerController>
         {
             AudioManager.Instance.PlaySound(AudioManager.ESound.Explosion, this.gameObject);
             Debug.Log("The player's health has reached 0. Respawn!!!");
-            MessageDispatcher.Instance.SendMessage("Alien", new Message(gameObject.name, "Player", gameObject, "Dead"));
+            MessageManager.Instance.SendMessage("Alien", new Message(gameObject.name, "Player", gameObject, "Dead"));
             repsawn = true;
         }
     }

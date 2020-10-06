@@ -23,10 +23,10 @@ public class LightingManager : MonoBehaviour {
     {
         if (!PauseMenuManager.Paused)
         {
-            float cycleDuration = ClockController.Instance.CycleDuration;
+            float cycleDuration = ClockManager.Instance.CycleDuration;
             if (preset == null)
                 return;
-            UpdateLighting(ClockController.Instance.Time24hr / cycleDuration);
+            UpdateLighting(ClockManager.Instance.Time24hr / cycleDuration);
         }
     }
 

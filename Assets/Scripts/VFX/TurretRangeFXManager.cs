@@ -3,7 +3,7 @@
 /// <summary>
 /// A controller class for TurretRangeFXs.
 /// </summary>
-public class TurretRangeFXController : MonoBehaviour
+public class TurretRangeFXManager : MonoBehaviour
 {
 	//Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 

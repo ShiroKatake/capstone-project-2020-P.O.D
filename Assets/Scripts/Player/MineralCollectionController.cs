@@ -70,7 +70,7 @@ public class MineralCollectionController : SerializableSingleton<MineralCollecti
     /// </summary>
     private void CollectMinerals()
     {
-        if (!BuildingSpawningController.Instance.SpawningBuilding)
+        if (!BuildingSpawnController.Instance.SpawningBuilding)
         {
             //Debug.Log("Mining");
             RaycastHit hit;

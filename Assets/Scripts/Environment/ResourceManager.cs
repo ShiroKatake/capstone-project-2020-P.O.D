@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// A manager class for resource gathering and usage.
 /// </summary>
-public class ResourceController : SerializableSingleton<ResourceController>
+public class ResourceManager : SerializableSingleton<ResourceManager>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
@@ -301,14 +301,14 @@ public class ResourceController : SerializableSingleton<ResourceController>
             if (!powerAvailable || !plantsAvailable || !waterAvailable || !gasAvailable)
             {
                 Debug.Log("Shutdown Buildings.");
-                BuildingController.Instance.ShutdownBuildings(powerAvailable, waterAvailable, plantsAvailable, gasAvailable);
+                BuildingManager.Instance.ShutdownBuildings(powerAvailable, waterAvailable, plantsAvailable, gasAvailable);
             }
 
             //Check if buildings can be restored
             if (powerAvailable || waterAvailable || plantsAvailable || gasAvailable)
             {
                 Debug.Log("Restore Buildings");
-                BuildingController.Instance.RestoreBuildings(powerAvailable, waterAvailable, plantsAvailable, gasAvailable);
+                BuildingManager.Instance.RestoreBuildings(powerAvailable, waterAvailable, plantsAvailable, gasAvailable);
             }
         }
     }

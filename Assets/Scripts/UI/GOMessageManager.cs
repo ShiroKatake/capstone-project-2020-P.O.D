@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using TMPro;
 
-public class GOMessageController : MonoBehaviour
+public class GOMessageManager : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI message;
 	[TextArea]

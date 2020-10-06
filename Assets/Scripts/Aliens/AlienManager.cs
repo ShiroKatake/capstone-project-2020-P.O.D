@@ -4,9 +4,9 @@ using UnityEngine;
 using UnityEngine.AI;
 
 /// <summary>
-/// Controller class for aliens.
+/// Manager class for aliens.
 /// </summary>
-public class AlienController : SerializableSingleton<AlienController>
+public class AlienManager : SerializableSingleton<AlienManager>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
@@ -150,22 +150,22 @@ public class AlienController : SerializableSingleton<AlienController>
         {
             currentStage = StageManager.Instance.CurrentStage.GetID();
 
-            if (ClockController.Instance.Daytime && currentWave != 0)
+            if (ClockManager.Instance.Daytime && currentWave != 0)
             {
                 currentWave = 0;
                 maxAliensPerBuilding += aliensPerBuildingIncrementPerNight;
             }
 
-            if (MapController.Instance.MajorityAlienSpawnPoints.Count == 0 && MapController.Instance.MinorityAlienSpawnPoints.Count == 0)
+            if (MapManager.Instance.MajorityAlienSpawnPoints.Count == 0 && MapManager.Instance.MinorityAlienSpawnPoints.Count == 0)
             {
                 loopStopwatch.Restart();
-                MapController.Instance.ResetCurrentAlienSpawnPoints();
+                MapManager.Instance.ResetCurrentAlienSpawnPoints();
                 yield return StartCoroutine(SortSpawnPointsByAngle());
             }
             else if (
                 spawnableStages.Contains(currentStage)
                 && aliens.Count == 0
-                && !ClockController.Instance.Daytime
+                && !ClockManager.Instance.Daytime
                 && Time.time - timeOfLastDeath > waveDelay
                 && currentWave < wavesPerNight
             )
@@ -178,8 +178,8 @@ public class AlienController : SerializableSingleton<AlienController>
                 }
 
                 yield return StartCoroutine(SpawnAliens(currentStage));
-                MapController.Instance.MajorityAlienSpawnPoints.Clear();
-                MapController.Instance.MinorityAlienSpawnPoints.Clear();
+                MapManager.Instance.MajorityAlienSpawnPoints.Clear();
+                MapManager.Instance.MinorityAlienSpawnPoints.Clear();
             }            
 
             yield return null;
@@ -194,20 +194,20 @@ public class AlienController : SerializableSingleton<AlienController>
         minAngle = Random.Range(0, 360);
         maxAngle = MathUtility.Instance.NormaliseAngle(minAngle + angleRange);
 
-        for (int i = 0; i < MapController.Instance.CurrentAlienSpawnPoints.Count; i++)
+        for (int i = 0; i < MapManager.Instance.CurrentAlienSpawnPoints.Count; i++)
         {
-            Vector3 pos = MapController.Instance.CurrentAlienSpawnPoints[i];
-            PositionData posData = MapController.Instance.GetPositionData(pos);
+            Vector3 pos = MapManager.Instance.CurrentAlienSpawnPoints[i];
+            PositionData posData = MapManager.Instance.GetPositionData(pos);
 
             if (posData != null)
             {
                 if (MathUtility.Instance.AngleIsBetween(posData.Angle, minAngle, maxAngle))
                 {
-                    MapController.Instance.MajorityAlienSpawnPoints.Add(pos);
+                    MapManager.Instance.MajorityAlienSpawnPoints.Add(pos);
                 }
                 else
                 {
-                    MapController.Instance.MinorityAlienSpawnPoints.Add(pos);
+                    MapManager.Instance.MinorityAlienSpawnPoints.Add(pos);
                 }
             }
 
@@ -231,8 +231,8 @@ public class AlienController : SerializableSingleton<AlienController>
         majorityMaxCount = Mathf.RoundToInt(aliensInCurrentWave * percentageInRange);
         minorityMaxCount = aliensInCurrentWave - majorityMaxCount;
         float cumulativeCrawlerFrequency = 0;
-        List<Vector3> availableSpawnPoints = (currentStage == EStage.Combat ? MapController.Instance.CurrentAlienSpawnPoints : MapController.Instance.MajorityAlienSpawnPoints);
-        List<Vector3> minoritySpawnPoints = MapController.Instance.MinorityAlienSpawnPoints;
+        List<Vector3> availableSpawnPoints = (currentStage == EStage.Combat ? MapManager.Instance.CurrentAlienSpawnPoints : MapManager.Instance.MajorityAlienSpawnPoints);
+        List<Vector3> minoritySpawnPoints = MapManager.Instance.MinorityAlienSpawnPoints;
 
         for (int i = 0; i < aliensInCurrentWave; i++)
         //for (int i = 0; i < 100; i++)
@@ -249,9 +249,9 @@ public class AlienController : SerializableSingleton<AlienController>
             }
 
             Vector3 spawnPos = GetRandomAvailablePosition(availableSpawnPoints);
-            float angle = MapController.Instance.GetPositionData(spawnPos).Angle;
+            float angle = MapManager.Instance.GetPositionData(spawnPos).Angle;
             bool positionAvailable;
-            Alien alien = SpawnAlien(spawnPos, (cumulativeCrawlerFrequency >= 1 && MapController.Instance.FinishedCalculatingPaths ? EAlien.Crawler : EAlien.Scuttler), out positionAvailable);
+            Alien alien = SpawnAlien(spawnPos, (cumulativeCrawlerFrequency >= 1 && MapManager.Instance.FinishedCalculatingPaths ? EAlien.Crawler : EAlien.Scuttler), out positionAvailable);
             Debug.Log($"spawnPos: {spawnPos}, angle from centre: {angle}, minAngle: {minAngle}, maxAngle: {maxAngle}");
 
             if (alien != null)
@@ -318,7 +318,7 @@ public class AlienController : SerializableSingleton<AlienController>
         }
 
         float waveMultiplier = 0.5f * (1 + ((currentWave - 1) / (wavesPerNight - 1))); //First wave of the night has a multiplier of 0.5 + 0.5 * 0/(N-1), Last wave of the night has a multiplier of 0.5 + 0.5 * (N-1)/(N-1), i.e. 1.
-        return Mathf.RoundToInt(BuildingController.Instance.BuildingCount * maxAliensPerBuilding * waveMultiplier);
+        return Mathf.RoundToInt(BuildingManager.Instance.BuildingCount * maxAliensPerBuilding * waveMultiplier);
     }
 
     /// <summary>
@@ -350,7 +350,7 @@ public class AlienController : SerializableSingleton<AlienController>
     {
         Alien alien = null;
 
-        if (MapController.Instance.PositionAvailableForSpawning(spawnPos, true))
+        if (MapManager.Instance.PositionAvailableForSpawning(spawnPos, true))
         {
             positionAvailable = true;
             RaycastHit rayHit;
@@ -361,7 +361,7 @@ public class AlienController : SerializableSingleton<AlienController>
 
             if (!NavMesh.SamplePosition(alien.transform.position, out navHit, 1, NavMesh.AllAreas))
             {
-                MapController.Instance.RegisterOffMeshPosition(spawnPos);
+                MapManager.Instance.RegisterOffMeshPosition(spawnPos);
                 AlienFactory.Instance.Destroy(alien, alien.Type);
                 alien = null;
             }            
