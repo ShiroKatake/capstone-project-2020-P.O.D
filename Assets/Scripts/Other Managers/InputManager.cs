@@ -77,6 +77,7 @@ public class InputManager : SerializableSingleton<InputManager>
 
             //Aliased
             case "PlaceBuilding":
+            case "DemolishBuilding":
                 return player.GetButton("Submit");
             case "CancelBuilding":
                 return player.GetButton("Cancel");
@@ -126,6 +127,7 @@ public class InputManager : SerializableSingleton<InputManager>
 
             //Aliased
             case "PlaceBuilding":
+            case "DemolishBuilding":
                 return player.GetButton("Submit");
             case "CancelBuilding":
                 return player.GetButton("Cancel");

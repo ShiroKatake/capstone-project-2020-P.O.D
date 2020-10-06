@@ -103,6 +103,11 @@ public class BuildingFactory : Factory<BuildingFactory, Building, EBuilding>
     {
         BuildingManager.Instance.DeRegisterBuilding(building);
 
+        if (BuildingDemolitionController.Instance.SelectedBuilding == building)
+        {
+            BuildingDemolitionController.Instance.Cancel();
+        }
+
         if (building.Terraformer != null)
         {
             EnvironmentManager.Instance.RemoveBuilding(building.Id);
