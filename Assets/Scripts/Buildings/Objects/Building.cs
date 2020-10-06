@@ -766,7 +766,7 @@ public class Building : CollisionListener
         active = false;
         colliding = false;
         built = false;
-        DisabledByPlayer = false;
+        disabledByPlayer = false;
 
         //animator.enabled = false;
         health.Reset();

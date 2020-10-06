@@ -22,6 +22,16 @@ public class MineralCollectionController : SerializableSingleton<MineralCollecti
     private bool collectMinerals;
 	private bool isOnMineral;
     private LayerMask mineralsLayerMask;
+    private bool mining;
+
+    //Public Properties------------------------------------------------------------------------------------------------------------------------------
+
+    //Basic Public Properties----------------------------------------------------------------------
+
+    /// <summary>
+    /// Is the player currently mining a mineral?
+    /// </summary>
+    public bool Mining { get => mining; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -33,6 +43,7 @@ public class MineralCollectionController : SerializableSingleton<MineralCollecti
     {
         base.Awake();
         mineralsLayerMask = LayerMask.GetMask("Minerals");
+        mining = false;
     }
 
     /// <summary>
@@ -84,7 +95,8 @@ public class MineralCollectionController : SerializableSingleton<MineralCollecti
 
 				if (collectMinerals && mineral != null && mineral.OreCount > 0)
                 {
-					miningBeam.OnMineEnable(mineral.MiningPoint);
+                    mining = true;
+                    miningBeam.OnMineEnable(mineral.MiningPoint);
                     mineral.Mine();
                     //Debug.Log($"Raycast hit mineral node. Mined {mined} minerals");
 
@@ -93,6 +105,7 @@ public class MineralCollectionController : SerializableSingleton<MineralCollecti
                 }
 				else
 				{
+                    mining = false;
 					miningBeam.OnMineDisable();
 				}
 			}

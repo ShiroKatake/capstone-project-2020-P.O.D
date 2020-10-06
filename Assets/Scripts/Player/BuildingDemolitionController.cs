@@ -19,10 +19,12 @@ public class BuildingDemolitionController : SerializableSingleton<BuildingDemoli
     [SerializeField] private Button enableDisableButton;
     [SerializeField] private TextMeshProUGUI enableDisableText;
     [SerializeField] private EventSystem eventSystem;
+    [SerializeField] private Vector3 offsetFromHealthBar;
     [SerializeField] private Vector3 inactivePosition;
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
+    private bool demolishBuildingInput;
     private bool demolishBuilding;
     private bool showingDemolitionMenu;
     private LayerMask buildingsLayerMask;
@@ -48,8 +50,9 @@ public class BuildingDemolitionController : SerializableSingleton<BuildingDemoli
     protected override void Awake()
     {
         base.Awake();
-        buildingsLayerMask = LayerMask.GetMask("Friendly", "UI");
+        buildingsLayerMask = LayerMask.GetMask("Demolishable Building");
         graphicRaycaster = menu.GetComponent<GraphicRaycaster>();
+        demolishBuildingInput = false;
     }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
@@ -61,7 +64,6 @@ public class BuildingDemolitionController : SerializableSingleton<BuildingDemoli
     {
         GetInput();
         DemolishBuildings();
-        UpdateTimeout();
     }
 
     //Recurring Methods (Update())------------------------------------------------------------------------------------------------------------------  
@@ -70,8 +72,16 @@ public class BuildingDemolitionController : SerializableSingleton<BuildingDemoli
     /// Gets the player's input from the keyboard and mouse / gamepad they're using.
     /// </summary>
     private void GetInput()
-    {
-        demolishBuilding = InputManager.Instance.ButtonPressed("DemolishBuilding");
+    {        
+        if (InputManager.Instance.ButtonPressed("DemolishBuilding") == demolishBuildingInput)
+        {
+            demolishBuilding = false;
+        }
+        else
+        {
+            demolishBuildingInput = !demolishBuildingInput;
+            demolishBuilding = demolishBuildingInput;
+        }
     }
 
     /// <summary>
@@ -81,24 +91,25 @@ public class BuildingDemolitionController : SerializableSingleton<BuildingDemoli
     {
         bool hitMenu = false;
 
-        if (BuildingSpawnController.Instance.SpawningBuilding)
+        if (BuildingSpawnController.Instance.SpawningBuilding || MineralCollectionController.Instance.Mining)
         {
             if (showingDemolitionMenu)
             {
                 HideDemolitionMenu();
             }
         }
-        else if (demolishBuilding && clickTimeout <= 0 && !MouseOverUI(out hitMenu))
+        else if (demolishBuilding /*&& clickTimeout <= 0*/ && !MouseOverUI(out hitMenu))
         {           
-            Debug.Log($"BuildingDemolitionController.DemolishBuildings(), physics raycasting");
+            //Debug.Log($"BuildingDemolitionController.DemolishBuildings(), physics raycasting");
             RaycastHit hit;
             Ray ray = camera.ScreenPointToRay(Input.mousePosition);
 
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, buildingsLayerMask))
-            {
+            {                
                 Building building = hit.collider.GetComponentInParent<Building>();
+                //Debug.Log($"BuildingDemolitionController.DemolishBuildings(), physics raycast hit, building is {building}, selectedBuilding is {selectedBuilding}");
 
-                if (building == null || (selectedBuilding != null && building.BuildingType == selectedBuilding.BuildingType))
+                if (building == null || building == selectedBuilding)
                 {
                     if (hitMenu)
                     {
@@ -126,7 +137,7 @@ public class BuildingDemolitionController : SerializableSingleton<BuildingDemoli
     /// <returns>Whether the mouse was over the general UI when the player clicked.</returns>
     private bool MouseOverUI(out bool hitMenu)
     {
-        Debug.Log($"BuildingDemolitionController.MouseOverUI()");
+        //Debug.Log($"BuildingDemolitionController.MouseOverUI()");
         List<RaycastResult> results = new List<RaycastResult>();
         PointerEventData pointerEventData = new PointerEventData(eventSystem);
 
@@ -136,7 +147,7 @@ public class BuildingDemolitionController : SerializableSingleton<BuildingDemoli
 
         foreach (RaycastResult result in results)
         {
-            Debug.Log($"BuildingDemolitionController.MouseOverUI(), hit {result.gameObject}");
+            //Debug.Log($"BuildingDemolitionController.MouseOverUI(), hit {result.gameObject}");
             switch (result.gameObject.tag)
             {
                 case "Building Demolition Menu":
@@ -155,11 +166,11 @@ public class BuildingDemolitionController : SerializableSingleton<BuildingDemoli
     /// </summary>
     private void ShowDemolitionMenu(Building building)
     {
-        Debug.Log($"BuildingDemolitionController.ShowDemolitionMenu()");
-        clickTimeout += 2;
+        //Debug.Log($"BuildingDemolitionController.ShowDemolitionMenu()");
         selectedBuilding = building;
         showingDemolitionMenu = true;
-        menu.transform.position = new Vector3(building.transform.position.x, 5, building.transform.position.z);
+        Vector3 pos = building.transform.position;
+        menu.transform.position = new Vector3(pos.x, 1.5f, pos.z - 2f);
         enableDisableText.text = (building.DisabledByPlayer ? "Enable" : "Disable");
         menu.SetActive(true);
     }
@@ -167,26 +178,14 @@ public class BuildingDemolitionController : SerializableSingleton<BuildingDemoli
     /// <summary>
     /// Hide building demolition options if the player has clicked away from a building or clicked a demolition option.
     /// </summary>
-    private void HideDemolitionMenu()
+    public void HideDemolitionMenu()
     {
-        Debug.Log($"BuildingDemolitionController.HideDemolitionMenu()");
+        //Debug.Log($"BuildingDemolitionController.HideDemolitionMenu()");
         selectedBuilding = null;
         showingDemolitionMenu = false;
         menu.SetActive(false);
         enableDisableButton.enabled = true;
         menu.transform.position = inactivePosition;
-        clickTimeout += 2;
-    }
-
-    /// <summary>
-    /// If still waiting for clickTimeout to reach 0, decrements clickTimeout.
-    /// </summary>
-    private void UpdateTimeout()
-    {
-        if (clickTimeout > 0)
-        {
-            clickTimeout--;
-        }
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
@@ -196,7 +195,7 @@ public class BuildingDemolitionController : SerializableSingleton<BuildingDemoli
     /// </summary>
     public void ToggleBuildingEnabled()
     {
-        Debug.Log($"BuildingDemolitionController.ToggleEnabled()");
+        //Debug.Log($"BuildingDemolitionController.ToggleEnabled()");
 
         if (selectedBuilding.DisabledByPlayer)
         {
@@ -219,17 +218,8 @@ public class BuildingDemolitionController : SerializableSingleton<BuildingDemoli
     /// </summary>
     public void DemolishBuilding()
     {
-        Debug.Log($"BuildingDemolitionController.Demolish()");
-        BuildingFactory.Instance.Destroy(selectedBuilding, selectedBuilding.BuildingType);
-        //HideDemolitionMenu(); //Called by BuildingFactory.Destroy() via Cancel().
-    }
-
-    /// <summary>
-    /// Cancels the demolition of the building and hides the demolition options.
-    /// </summary>
-    public void Cancel()
-    {
-        Debug.Log($"BuildingDemolitionController.Cancel()");
-        HideDemolitionMenu();
+        //Debug.Log($"BuildingDemolitionController.DemolishBuilding()");
+        BuildingFactory.Instance.Destroy(selectedBuilding, true, false);
+        //HideDemolitionMenu(); //Called by BuildingFactory.Destroy()
     }
 }

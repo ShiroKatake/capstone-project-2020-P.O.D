@@ -97,15 +97,15 @@ public class BuildingFactory : Factory<BuildingFactory, Building, EBuilding>
     /// Note: it's probably better to call this method or another overload of Destroy() defined in BuildingFactory than Factory's base version of destroy.
     /// </summary>
     /// <param name="building">The building to be destroyed.</param>
-    /// <param name="consumingResources">Is the building consuming resources and does that consumption need to be cancelled now that it's being destroyed?</param>
-    /// <param name="consumingResources">Was the building destroyed while placed, and therefore needs to leave behind foundations?</param>
+    /// <param name="consumingResources">Is the building in a state where it can consume resources and does that consumption need to be verified and cancelled now that it's being destroyed?</param>
+    /// <param name="killed">Has the building been placed successfully and therefore needs to leave behind foundations now that it's being destroyed?</param>
     public void Destroy(Building building, bool consumingResources, bool killed)
     {
         BuildingManager.Instance.DeRegisterBuilding(building);
 
         if (BuildingDemolitionController.Instance.SelectedBuilding == building)
         {
-            BuildingDemolitionController.Instance.Cancel();
+            BuildingDemolitionController.Instance.HideDemolitionMenu();
         }
 
         if (building.Terraformer != null)
@@ -113,7 +113,7 @@ public class BuildingFactory : Factory<BuildingFactory, Building, EBuilding>
             EnvironmentManager.Instance.RemoveBuilding(building.Id);
         }
 
-        if (consumingResources)
+        if (consumingResources && !building.DisabledByPlayer)
         {
             ResourceManager.Instance.PowerConsumption -= building.PowerConsumption;
             ResourceManager.Instance.WaterConsumption -= building.WaterConsumption;
