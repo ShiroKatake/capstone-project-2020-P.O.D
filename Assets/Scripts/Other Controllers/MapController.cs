@@ -172,7 +172,7 @@ public class MapController : SerializableSingleton<MapController>
         NavMeshPath calculatedPath = null;
         float alienSpawnHeight = AlienFactory.Instance.AlienSpawnHeight;
         List<Alien> pathfinderInstances = new List<Alien>();
-        Transform cryoEggColliderTransform = CryoEgg.Instance.ColliderTransform;
+        Transform cryoEggColliderTransform = Tower.Instance.ColliderTransform;
 
         foreach (Alien prefab in pathfinders)
         {

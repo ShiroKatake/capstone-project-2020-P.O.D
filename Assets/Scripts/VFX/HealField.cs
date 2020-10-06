@@ -102,9 +102,9 @@ public class HealField : MonoBehaviour
 	{
 		//Make sure the scale is relative to the Cryo Egg
 		transform.localScale = new Vector3(
-			1 / CryoEgg.Instance.transform.localScale.x,
-			1 / CryoEgg.Instance.transform.localScale.y,
-			1 / CryoEgg.Instance.transform.localScale.z
+			1 / Tower.Instance.transform.localScale.x,
+			1 / Tower.Instance.transform.localScale.y,
+			1 / Tower.Instance.transform.localScale.z
 		);
 
 		//Then set the start size according to the player's healing interaction range from the Cryo Egg

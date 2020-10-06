@@ -236,14 +236,14 @@ public class StageCombat : SerializableSingleton<StageCombat>, IStage
     /// </summary>
     private IEnumerator Healing()
     {
-        if (!playerInputManager.GetButtonDown("Heal") || Vector3.Distance(PlayerController.Instance.transform.position, CryoEgg.Instance.transform.position) >= PlayerController.Instance.HealingRange)
+        if (!playerInputManager.GetButtonDown("Heal") || Vector3.Distance(PlayerController.Instance.transform.position, Tower.Instance.transform.position) >= PlayerController.Instance.HealingRange)
         {
             console.ClearDialogue();
             console.SubmitDialogue("task heal", 0, false, false);
             dog.SubmitDialogue("heal at cryo egg", 0, true, false);
             game.SubmitDialogue("heal", 0, true, false);
 
-            while (!playerInputManager.GetButtonDown("Heal") || Vector3.Distance(PlayerController.Instance.transform.position, CryoEgg.Instance.transform.position) >= PlayerController.Instance.HealingRange || !dog.AcceptingSubmissions)
+            while (!playerInputManager.GetButtonDown("Heal") || Vector3.Distance(PlayerController.Instance.transform.position, Tower.Instance.transform.position) >= PlayerController.Instance.HealingRange || !dog.AcceptingSubmissions)
             {
                 yield return null;
             }

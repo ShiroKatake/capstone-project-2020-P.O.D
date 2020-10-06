@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// A component class gathering all the bits of cryo egg needed by aliens because there's always that one stupid alien that can't find them.
+/// A component class gathering all the bits of the tower needed by aliens because there's always that one stupid alien that can't find them.
 /// </summary>
-public class CryoEgg : SerializableSingleton<CryoEgg>
+public class Tower : SerializableSingleton<Tower>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 

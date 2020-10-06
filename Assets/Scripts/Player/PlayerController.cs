@@ -165,7 +165,7 @@ public class PlayerController : SerializableSingleton<PlayerController>
 
         movement = new Vector3(moveHorizontal, 0, -moveVertical);
 
-        healing = playerInputManager.GetButton("Heal") && Vector3.Distance(transform.position, CryoEgg.Instance.transform.position) < healingRange && health.CurrentHealth < health.MaxHealth;
+        healing = playerInputManager.GetButton("Heal") && Vector3.Distance(transform.position, Tower.Instance.transform.position) < healingRange && health.CurrentHealth < health.MaxHealth;
         shooting = InputController.Instance.ButtonHeld("Shoot") && !healing && Time.time - timeOfLastShot > shootCooldown;
 
         if (printInputs)

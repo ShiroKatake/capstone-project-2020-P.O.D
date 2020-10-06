@@ -39,7 +39,7 @@ public class StageMainGame: SerializableSingleton<StageMainGame>, IStage
                 AudioManager.Instance.StopBackGroundMusic();
                 break;
             }
-            else if (CryoEgg.Instance.Health.IsDead())
+            else if (Tower.Instance.Health.IsDead())
             {
                 StageManager.Instance.SetStage(EStage.Lose);
                 AudioManager.Instance.PlaySound(AudioManager.ESound.Lose);

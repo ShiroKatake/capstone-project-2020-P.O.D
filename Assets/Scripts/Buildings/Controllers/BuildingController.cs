@@ -11,7 +11,7 @@ public class BuildingController : SerializableSingleton<BuildingController>
 
     //Serialized Fields----------------------------------------------------------------------------                                                    
 
-    [SerializeField] private Building cryoEgg;
+    [SerializeField] private Building tower;
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
@@ -31,11 +31,6 @@ public class BuildingController : SerializableSingleton<BuildingController>
     public int BuildingCount { get => buildings.Count; }
 
     /// <summary>
-    /// The cryo egg.
-    /// </summary>
-    public Building CryoEgg { get => cryoEgg; }
-
-    /// <summary>
     /// The time in seconds that the last defensive building was built.
     /// </summary>
     public float TimeLastDefenceWasBuilt { get => timeLastDefenceWasBuilt; }
@@ -44,6 +39,11 @@ public class BuildingController : SerializableSingleton<BuildingController>
     /// The time in seconds that the last non-defensive building was built.
     /// </summary>
     public float TimeLastNonDefenceWasBuilt { get => timeLastNonDefenceWasBuilt; }
+
+    /// <summary>
+    /// The tower.
+    /// </summary>
+    public Building Tower { get => tower; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -58,7 +58,7 @@ public class BuildingController : SerializableSingleton<BuildingController>
             MapController.Instance.Initialise();
         }
 
-        RegisterBuilding(cryoEgg);
+        RegisterBuilding(tower);
     }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
