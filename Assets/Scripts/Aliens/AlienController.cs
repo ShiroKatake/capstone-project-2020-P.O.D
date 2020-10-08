@@ -283,7 +283,8 @@ public class AlienController : SerializableSingleton<AlienController>
 
                 if (positionAvailable)
                 {
-                    int margin = (alien.Type == EAlien.Scuttler ? 1 : 2);
+                    //Debug.Log($"AlienController.SpawnAliens(), position is available, alien is {alien}, type is {alien.Type}");
+                    int margin = (alien?.Type == EAlien.Scuttler ? 1 : 2);
 
                     for (int m = -margin; m <= margin; m++)
                     {

@@ -25,12 +25,17 @@ public class Alien : MonoBehaviour, IMessenger
     [SerializeField] private float damage;
     [SerializeField] private float attackCooldown;
 
-    //Non-Serialized Fields------------------------------------------------------------------------
 
     [Header("Testing")]
-    
+    [SerializeField] private MeshRenderer rangeMesh;
+    [SerializeField] private Material noneVisible;
+    [SerializeField] private Material visibleButNotAttacking;
+    [SerializeField] private Material visibleAndAttacking;
+
+    //Non-Serialized Fields------------------------------------------------------------------------
+
     //Componenets
-	private Actor actor;
+    private Actor actor;
     private List<Collider> colliders;
     private Health health;
     private NavMeshAgent navMeshAgent;
@@ -42,13 +47,13 @@ public class Alien : MonoBehaviour, IMessenger
     private float speed;
     
     //Targeting
-    private List<Transform> visibleAliens;
+    private List<Alien> visibleAliens;
     private List<Transform> visibleTargets;
-    [SerializeField] private Transform target;
-    [SerializeField] private Health targetHealth;
-    [SerializeField] private Size targetSize;
-    [SerializeField] private string shotByName;
-    [SerializeField] private Transform shotByTransform;
+    private Transform target;
+    private Health targetHealth;
+    private Size targetSize;
+    private string shotByName;
+    private Transform shotByTransform;
     private float timeOfLastAttack;
 
     //Public Fields----------------------------------------------------------------------------------------------------------------------------------
@@ -87,6 +92,11 @@ public class Alien : MonoBehaviour, IMessenger
     public SkinnedMeshRenderer Renderer { get => renderer; }
 
     /// <summary>
+    /// The target that the alien is moving towards.
+    /// </summary>
+    public Transform Target { get => target; }
+
+    /// <summary>
     /// Alien's EAlien type.
     /// </summary>
     public EAlien Type { get => type; }
@@ -106,7 +116,7 @@ public class Alien : MonoBehaviour, IMessenger
         renderer = GetComponentInChildren<SkinnedMeshRenderer>();
         rigidbody = GetComponent<Rigidbody>();
 
-        visibleAliens = new List<Transform>();
+        visibleAliens = new List<Alien>();
         visibleTargets = new List<Transform>();
         moving = false;
         navMeshAgent.enabled = false;
@@ -164,6 +174,34 @@ public class Alien : MonoBehaviour, IMessenger
             Move();            
         }
     }
+
+    //private void Update()
+    //{
+    //    if (rangeMesh != null)
+    //    {
+    //        if (visibleTargets.Count == 0)
+    //        {
+    //            if (rangeMesh.material != noneVisible)
+    //            {
+    //                rangeMesh.material = noneVisible;
+    //            }
+    //        }
+    //        else if (target == CryoEgg.Instance.transform)
+    //        {
+    //            if (rangeMesh.material != visibleButNotAttacking)
+    //            {
+    //                rangeMesh.material = visibleButNotAttacking;
+    //            }
+    //        }
+    //        else if (target != CryoEgg.Instance.transform)
+    //        {
+    //            if (rangeMesh.material != visibleAndAttacking)
+    //            {
+    //                rangeMesh.material = visibleAndAttacking;
+    //            }
+    //        }
+    //    }
+    //}
 
     //Recurring Methods (FixedUpdate())-------------------------------------------------------------------------------------------------------------  
 	
@@ -236,9 +274,36 @@ public class Alien : MonoBehaviour, IMessenger
 
         PositionData data = MapController.Instance.GetPositionData(transform.position);
 
-        if (selectedTarget == CryoEgg.Instance.transform && !health.IsDead() && data != null && data.Paths.ContainsKey(type) && data.Paths[type] != null)
+        if (!health.IsDead())
         {
-            navMeshAgent.SetPath(data.Paths[type]);
+            if (selectedTarget == CryoEgg.Instance.transform && data != null && data.Paths.ContainsKey(type) && data.Paths[type] != null)
+            {
+                //Debug.Log($"{this}.SetTarget(), getting nav mesh path to cryo egg");
+                navMeshAgent.SetPath(data.Paths[type]);
+            }
+            else
+            {
+                //Debug.Log($"{this}.SetTarget(), setting {target}'s position as nav mesh agent destination");
+                NavMeshPath newPath = null;
+                
+                foreach (Alien a in visibleAliens)
+                {
+                    if (a.Target == target && a.NavMeshAgent.hasPath && Vector3.Distance(a.NavMeshAgent.destination, a.Target.position) < 0.1f)
+                    {
+                        newPath = a.NavMeshAgent.path;
+                        break;
+                    }
+                }
+
+                if (newPath == null)
+                {
+                    newPath = new NavMeshPath();
+                    navMeshAgent.CalculatePath(target.position, newPath);
+                }
+
+                navMeshAgent.SetPath(newPath);
+                Debug.Log($"Alien path is {newPath.corners}");
+            }
         }
     }
 
@@ -451,7 +516,7 @@ public class Alien : MonoBehaviour, IMessenger
         {
             if (other.CompareTag("Alien"))
             {
-                visibleAliens.Add(other.transform);
+                visibleAliens.Add(other.GetComponent<Alien>());
             }
             else if (other.CompareTag("Building") && !visibleTargets.Contains(other.transform.parent))
             {
@@ -477,13 +542,18 @@ public class Alien : MonoBehaviour, IMessenger
     {
         if (!other.isTrigger)
         {
-            if (visibleAliens.Contains(other.transform))
-            {
-                visibleAliens.Remove(other.transform);
-            }
-            else if (visibleTargets.Contains(other.transform))
+            if (visibleTargets.Contains(other.transform))
             {
                 visibleTargets.Remove(other.transform);
+            }
+            else
+            {
+                Alien otherAlien = other.GetComponent<Alien>();
+
+                if (visibleAliens.Contains(other.GetComponent<Alien>()))
+                {
+                    visibleAliens.Remove(otherAlien);
+                }
             }
         }
     }
