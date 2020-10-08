@@ -29,9 +29,9 @@ public class MapController : SerializableSingleton<MapController>
     [SerializeField] private Vector3 tutorialTopRight;
 
     [Header("Pathfinding")]
-    [SerializeField] private TextAsset savedPaths;
-    [SerializeField] private string filePathInAssets;
-    [SerializeField] private bool recalculatePathfinding;
+    //[SerializeField] private TextAsset savedPaths;
+    //[SerializeField] private string filePathInAssets;
+    //[SerializeField] private bool recalculatePathfinding;
     [SerializeField] private Alien[] pathfinders;
     [SerializeField] private bool pauseLoop;
     [SerializeField] private float timeLimitPerFrame;
@@ -99,7 +99,7 @@ public class MapController : SerializableSingleton<MapController>
         groundLayerMask = LayerMask.GetMask("Ground");
         initialised = false;
         finishedCalculatingPaths = false;
-        Debug.Log($"{Application.dataPath}/{filePathInAssets}");
+        //Debug.Log($"{Application.dataPath}/{filePathInAssets}");
     }
 
     /// <summary>
@@ -108,7 +108,7 @@ public class MapController : SerializableSingleton<MapController>
     /// </summary>
     private void Start()
     {
-        Debug.Log($"MapController.Start()");
+        //Debug.Log($"MapController.Start()");
         
         if (!initialised)
         {
@@ -121,7 +121,7 @@ public class MapController : SerializableSingleton<MapController>
     /// </summary>
     public void Initialise()
     {
-        Debug.Log($"MapController.Initialise()");
+        //Debug.Log($"MapController.Initialise()");
         float alienSpawnHeight = AlienFactory.Instance.AlienSpawnHeight;
         int noAlienXMin = (int)Mathf.Round(noAliensBottomLeft.x);
         int noAlienXMax = (int)Mathf.Round(noAliensTopRight.x);
@@ -140,8 +140,8 @@ public class MapController : SerializableSingleton<MapController>
                     i, //X coordinate
                     j, //Z coordinate
                     MathUtility.Instance.Angle(centre, new Vector2(i, j)), //Angle from centre to position
-                    !(i < tuteAlienXMin || i > tuteAlienXMax || j < tuteAlienZMin || j > tuteAlienZMax), //Is inside the tutorial spawn area, i.e. is not outside it?
-                    !(i < noAlienXMin || i > noAlienXMax || j < noAlienZMin || j > noAlienZMax) //Is inside the alien exclusion area, i.e. is not outside it?
+                    (i >= tuteAlienXMin && i <= tuteAlienXMax && j >= tuteAlienZMin && j <= tuteAlienZMax), //Is inside the tutorial spawn area?
+                    (i >= noAlienXMin && i <= noAlienXMax && j >= noAlienZMin && j <= noAlienZMax) //Is inside the alien exclusion area?
                 );
 
                 if (positions[i, j].IsBuildable)
@@ -161,14 +161,14 @@ public class MapController : SerializableSingleton<MapController>
 
         initialised = true;
 
-        if (recalculatePathfinding)
-        {
-            StartCoroutine(CalculatePaths(GetPathfinders()));
-        }
-        else
-        {
-            StartCoroutine(LoadPaths(GetPathfinders()));
-        }
+        //if (recalculatePathfinding)
+        //{
+        StartCoroutine(CalculatePaths(GetPathfinders()));
+        //}
+        //else
+        //{
+        //    StartCoroutine(LoadPaths(GetPathfinders()));
+        //}
     }
 
     /// <summary>
@@ -290,93 +290,93 @@ public class MapController : SerializableSingleton<MapController>
 
         //Debug.Log($"MapController.CalculatePaths(), has finished, time elapsed is {totalStopwatch.ElapsedMilliseconds} ms, or {totalStopwatch.ElapsedMilliseconds / 1000} s.");
         finishedCalculatingPaths = true;
-        StartCoroutine(SavePaths());
+        //StartCoroutine(SavePaths());
         yield return null;
     }
 
-    /// <summary>
-    /// Saves pre-calculated NavMeshPaths to a text file.
-    /// </summary>
-    private IEnumerator SavePaths()
-    {
-        Debug.Log("Starting saving paths to file");
-        System.Diagnostics.Stopwatch loopStopwatch = new System.Diagnostics.Stopwatch();
-        loopStopwatch.Restart();
-        string pathsToSave = "# Start of file comment";
+    ///// <summary>
+    ///// Saves pre-calculated NavMeshPaths to a text file.
+    ///// </summary>
+    //private IEnumerator SavePaths()
+    //{
+    //    Debug.Log("Starting saving paths to file");
+    //    System.Diagnostics.Stopwatch loopStopwatch = new System.Diagnostics.Stopwatch();
+    //    loopStopwatch.Restart();
+    //    string pathsToSave = "# Start of file comment";
 
-        foreach (PositionData p in positions)
-        {
-            Debug.Log($"Writing data for position ({p.X},{p.Z})");
-            foreach (EAlien a in p.Paths.Keys)
-            {
-                Debug.Log($"Writing line for position alien {a} for position ({p.X},{p.Z})");
-                string line = $"{p.X},{p.Z}:{a}:{p.Paths[a].corners.Length}";
+    //    foreach (PositionData p in positions)
+    //    {
+    //        Debug.Log($"Writing data for position ({p.X},{p.Z})");
+    //        foreach (EAlien a in p.Paths.Keys)
+    //        {
+    //            Debug.Log($"Writing line for position alien {a} for position ({p.X},{p.Z})");
+    //            string line = $"{p.X},{p.Z}:{a}:{p.Paths[a].corners.Length}";
 
-                for (int i = 0; i < p.Paths[a].corners.Length; i++)
-                {
-                    line += $":{p.Paths[a].corners[i].x},{p.Paths[a].corners[i].y},{p.Paths[a].corners[i].z}";
-                }
+    //            for (int i = 0; i < p.Paths[a].corners.Length; i++)
+    //            {
+    //                line += $":{p.Paths[a].corners[i].x},{p.Paths[a].corners[i].y},{p.Paths[a].corners[i].z}";
+    //            }
 
-                pathsToSave += $"\n{line}";
+    //            pathsToSave += $"\n{line}";
 
-                if (pauseLoop && loopStopwatch.ElapsedMilliseconds >= timeLimitPerFrame * 5)
-                {
-                    if (debugPathfinding) Debug.Log($"MapController.SavePaths(), pause loop, x: {p.X}/{xMax}, z: {p.Z}/{zMax}, milliseconds elapsed: {loopStopwatch.ElapsedMilliseconds}/{timeLimitPerFrame}");
-                    yield return null;
-                    loopStopwatch.Restart();
-                }
-            }
-        }
+    //            if (pauseLoop && loopStopwatch.ElapsedMilliseconds >= timeLimitPerFrame * 5)
+    //            {
+    //                if (debugPathfinding) Debug.Log($"MapController.SavePaths(), pause loop, x: {p.X}/{xMax}, z: {p.Z}/{zMax}, milliseconds elapsed: {loopStopwatch.ElapsedMilliseconds}/{timeLimitPerFrame}");
+    //                yield return null;
+    //                loopStopwatch.Restart();
+    //            }
+    //        }
+    //    }
 
-        StreamWriter writer = new StreamWriter($"{Application.dataPath}/{filePathInAssets}", true);
-        writer.Write(pathsToSave);
-        writer.Close();
-        Debug.Log($"Finished saving calculated paths to file");
-        yield return null;
-    }
+    //    StreamWriter writer = new StreamWriter($"{Application.dataPath}/{filePathInAssets}", true);
+    //    writer.Write(pathsToSave);
+    //    writer.Close();
+    //    Debug.Log($"Finished saving calculated paths to file");
+    //    yield return null;
+    //}
 
-    /// <summary>
-    /// Loads previously-calculated NavMeshPaths from a text file.
-    /// </summary>
-    /// <param name="pathfinderInstances">Alien instances to use for pathfinding.</param>
-    private IEnumerator LoadPaths(List<Alien> pathfinderInstances)
-    {
-        string text = savedPaths.text;
-        string[] lines = text.Split('\n');
-        Dictionary<int, NavMeshPath> pathTemplates = new Dictionary<int, NavMeshPath>();
+    ///// <summary>
+    ///// Loads previously-calculated NavMeshPaths from a text file.
+    ///// </summary>
+    ///// <param name="pathfinderInstances">Alien instances to use for pathfinding.</param>
+    //private IEnumerator LoadPaths(List<Alien> pathfinderInstances)
+    //{
+    //    string text = savedPaths.text;
+    //    string[] lines = text.Split('\n');
+    //    Dictionary<int, NavMeshPath> pathTemplates = new Dictionary<int, NavMeshPath>();
 
-        for(int i = 0; i < lines.Length; i++)
-        {
-            string line = lines[i];
+    //    for(int i = 0; i < lines.Length; i++)
+    //    {
+    //        string line = lines[i];
 
-            if (line[0] == '#')
-            {
-                continue;
-            }
+    //        if (line[0] == '#')
+    //        {
+    //            continue;
+    //        }
 
-            string[] segments = line.Split(':');
+    //        string[] segments = line.Split(':');
 
-            if (segments.Length < 3)
-            {
-                Debug.LogError($"MapController.LoadPaths(), line {i + 1} of saved paths file does not have the minimum number of segments to be valid. Line is \"{line}\".");
-            }
+    //        if (segments.Length < 3)
+    //        {
+    //            Debug.LogError($"MapController.LoadPaths(), line {i + 1} of saved paths file does not have the minimum number of segments to be valid. Line is \"{line}\".");
+    //        }
 
-            //parse segments[2] (i.e. path length) as int, if 0 ignore.
+    //        //parse segments[2] (i.e. path length) as int, if 0 ignore.
 
-            //parse segments[0] as x and z coordinates, and segments[1] as EAlien value.
+    //        //parse segments[0] as x and z coordinates, and segments[1] as EAlien value.
 
-            //If pathTemplate does not exist for path length, take appropriate alien pathfinder and position and calculate path to cryo egg. If path length doesn't match, error. If matches, save in dictionary.
+    //        //If pathTemplate does not exist for path length, take appropriate alien pathfinder and position and calculate path to cryo egg. If path length doesn't match, error. If matches, save in dictionary.
 
-            //Create new NavMeshPath copying template.
+    //        //Create new NavMeshPath copying template.
 
-            //Parse Vector3s and copy into new NavMeshPath.
+    //        //Parse Vector3s and copy into new NavMeshPath.
 
-            //Get position data, assign path according to EAlien value.
+    //        //Get position data, assign path according to EAlien value.
 
-        }
+    //    }
 
-        yield return null;
-    }
+    //    yield return null;
+    //}
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
