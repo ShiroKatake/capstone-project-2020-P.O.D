@@ -106,8 +106,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2477553660522432063}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0.0025004, y: 0.77897006, z: -0.074064}
-  m_LocalScale: {x: 0.275, y: 0.275, z: 0.275}
+  m_LocalPosition: {x: 0.015124, y: 0.464, z: 0.0097754}
+  m_LocalScale: {x: 0.20640992, y: 0.20640992, z: 0.20640992}
   m_Children:
   - {fileID: 5474086824787675355}
   m_Father: {fileID: 2525359142059149831}
@@ -228,25 +228,20 @@ MonoBehaviour:
   buildTime: 10
   VFX: []
   cliffRaycastOffsets:
-  - {x: -0.9, y: 0, z: -0.9}
-  - {x: -1.3, y: 0, z: 0}
-  - {x: -0.9, y: 0, z: 0.9}
-  - {x: 0, y: 0, z: -1.3}
+  - {x: -0.7, y: 0, z: -0.7}
+  - {x: -0.95, y: 0, z: 0}
+  - {x: -0.7, y: 0, z: 0.7}
+  - {x: 0, y: 0, z: -0.95}
   - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 1.3}
-  - {x: 0.9, y: 0, z: -0.9}
-  - {x: 1.3, y: 0, z: 0}
-  - {x: 0.9, y: 0, z: 0.9}
+  - {x: 0, y: 0, z: 0.95}
+  - {x: 0.7, y: 0, z: -0.7}
+  - {x: 0.95, y: 0, z: 0}
+  - {x: 0.7, y: 0, z: 0.7}
   buildingFoundationOffsets:
-  - {x: -1, y: -0.45, z: -1}
-  - {x: -1, y: -0.45, z: 0}
-  - {x: -1, y: -0.45, z: 1}
-  - {x: 0, y: -0.45, z: -1}
-  - {x: 0, y: -0.45, z: 0}
-  - {x: 0, y: -0.45, z: 1}
-  - {x: 1, y: -0.45, z: -1}
-  - {x: 1, y: -0.45, z: 0}
-  - {x: 1, y: -0.45, z: 1}
+  - {x: -0.5, y: -0.45, z: -0.5}
+  - {x: -0.5, y: -0.45, z: 0.5}
+  - {x: 0.5, y: -0.45, z: -0.5}
+  - {x: 0.5, y: -0.45, z: 0.5}
   model: {fileID: 5474086824787675355}
   rendererMaterialSets:
   - renderer: {fileID: 4982330930987599697}
@@ -321,7 +316,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e087b4d1f91fcb941a830564ec25c878, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radius: 1.5
+  radius: 1
 --- !u!95 &241347474389765784
 Animator:
   serializedVersion: 3
@@ -716,7 +711,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 4.9, y: 3, z: 4.9}
+  m_Size: {x: 3.9, y: 3, z: 3.9}
   m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!114 &9052450014439707985
 MonoBehaviour:
