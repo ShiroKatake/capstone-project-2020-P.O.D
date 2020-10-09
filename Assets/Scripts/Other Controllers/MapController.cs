@@ -34,7 +34,8 @@ public class MapController : SerializableSingleton<MapController>
     //[SerializeField] private bool recalculatePathfinding;
     [SerializeField] private Alien[] pathfinders;
     [SerializeField] private bool pauseLoop;
-    [SerializeField] private float timeLimitPerFrame;
+    [SerializeField] private float dayTimeLimitPerFrame;
+    [SerializeField] private float nightTimeLimitPerFrame;
 
     [Header("Testing")]
     [SerializeField] private bool debugPathfinding;
@@ -237,7 +238,7 @@ public class MapController : SerializableSingleton<MapController>
         float alienSpawnHeight = AlienFactory.Instance.AlienSpawnHeight;
         Transform cryoEggColliderTransform = CryoEgg.Instance.ColliderTransform;
 
-        if (pauseLoop && loopStopwatch.ElapsedMilliseconds >= timeLimitPerFrame)
+        if (pauseLoop && loopStopwatch.ElapsedMilliseconds >= (ClockController.Instance.Daytime ? dayTimeLimitPerFrame : nightTimeLimitPerFrame))
         {
             yield return null;
             loopStopwatch.Restart();
@@ -277,9 +278,9 @@ public class MapController : SerializableSingleton<MapController>
                     }
                 }
 
-                if (pauseLoop && loopStopwatch.ElapsedMilliseconds >= timeLimitPerFrame)
+                if (pauseLoop && loopStopwatch.ElapsedMilliseconds >= (ClockController.Instance.Daytime ? dayTimeLimitPerFrame : nightTimeLimitPerFrame))
                 {
-                    if (debugPathfinding) Debug.Log($"MapController.CalculatePaths(), pause loop, alien: {alien.Type}, x: {p.X}/{xMax}, z: {p.Z}/{zMax}, milliseconds elapsed: {loopStopwatch.ElapsedMilliseconds}/{timeLimitPerFrame}");
+                    if (debugPathfinding) Debug.Log($"MapController.CalculatePaths(), pause loop, alien: {alien.Type}, x: {p.X}/{xMax}, z: {p.Z}/{zMax}, milliseconds elapsed: {loopStopwatch.ElapsedMilliseconds}/{(ClockController.Instance.Daytime ? dayTimeLimitPerFrame : nightTimeLimitPerFrame)}");
                     yield return null;
                     loopStopwatch.Restart();
                 }

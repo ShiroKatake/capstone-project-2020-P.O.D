@@ -252,7 +252,7 @@ public class AlienController : SerializableSingleton<AlienController>
             float angle = MapController.Instance.GetPositionData(spawnPos).Angle;
             bool positionAvailable;
             Alien alien = SpawnAlien(spawnPos, (cumulativeCrawlerFrequency >= 1 && MapController.Instance.FinishedCalculatingPaths ? EAlien.Crawler : EAlien.Scuttler), out positionAvailable);
-            Debug.Log($"spawnPos: {spawnPos}, angle from centre: {angle}, minAngle: {minAngle}, maxAngle: {maxAngle}");
+            //Debug.Log($"spawnPos: {spawnPos}, angle from centre: {angle}, minAngle: {minAngle}, maxAngle: {maxAngle}");
 
             if (alien != null)
             {

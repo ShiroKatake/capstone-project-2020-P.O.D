@@ -55,6 +55,7 @@ public class Alien : MonoBehaviour, IMessenger
     private string shotByName;
     private Transform shotByTransform;
     private float timeOfLastAttack;
+    private bool reselectTarget;
 
     //Public Fields----------------------------------------------------------------------------------------------------------------------------------
 
@@ -143,6 +144,7 @@ public class Alien : MonoBehaviour, IMessenger
         timeOfLastAttack = attackCooldown * -1;
         MessageDispatcher.Instance.Subscribe("Alien", this);
         renderer.enabled = true;
+        reselectTarget = true;
 
         //Rotate to face the Cryo egg
         Vector3 targetRotation = CryoEgg.Instance.transform.position - transform.position;
@@ -210,55 +212,60 @@ public class Alien : MonoBehaviour, IMessenger
     /// </summary>
     private void SelectTarget()
     {
-        switch (visibleTargets.Count)
+        if (reselectTarget)
         {
-            case 0:
-                //Target Cryo egg
-                if (target != CryoEgg.Instance.transform)
-                {
-                    SetTarget(CryoEgg.Instance.transform);
-                }
-
-                break;
-            case 1:
-                //Get only visible target
-                if (target != visibleTargets[0])
-                {
-                    SetTarget(visibleTargets[0]);
-                }
-
-                break;
-            default:
-                //Prioritise shooter
-                if (shotByTransform != null && visibleTargets.Contains(shotByTransform))
-                {
-                    SetTarget(shotByTransform);
-                }
-                else
-                {
-                    //Get closest visible target
-                    float distance = 99999999999;
-                    float closestDistance = 9999999999999999;
-                    Transform closestTarget = null;
-
-                    foreach (Transform t in visibleTargets)
+            switch (visibleTargets.Count)
+            {
+                case 0:
+                    //Target Cryo egg
+                    if (target != CryoEgg.Instance.transform)
                     {
-                        distance = Vector3.Distance(transform.position, t.position);
+                        SetTarget(CryoEgg.Instance.transform);
+                    }
 
-                        if (closestTarget == null || distance < closestDistance)
+                    break;
+                case 1:
+                    //Get only visible target
+                    if (target != visibleTargets[0])
+                    {
+                        SetTarget(visibleTargets[0]);
+                    }
+
+                    break;
+                default:
+                    //Prioritise shooter
+                    if (shotByTransform != null && visibleTargets.Contains(shotByTransform))
+                    {
+                        SetTarget(shotByTransform);
+                    }
+                    else
+                    {
+                        //Get closest visible target
+                        float distance = 9999999999999999999;
+                        float closestDistance = 9999999999999999999;
+                        Transform closestTarget = null;
+
+                        foreach (Transform t in visibleTargets)
                         {
-                            closestTarget = t;
-                            closestDistance = distance;
+                            distance = Vector3.SqrMagnitude(t.position - transform.position);
+
+                            if (distance < closestDistance)
+                            {
+                                closestTarget = t;
+                                closestDistance = distance;
+                            }
+                        }
+
+                        if (target != closestTarget)
+                        {
+                            SetTarget(closestTarget);
                         }
                     }
 
-                    if (target != closestTarget)
-                    {
-                        SetTarget(closestTarget);
-                    }
-                }
+                    break;
+            }
 
-                break;
+            reselectTarget = false;
         }
     }
 
@@ -302,7 +309,6 @@ public class Alien : MonoBehaviour, IMessenger
                 }
 
                 navMeshAgent.SetPath(newPath);
-                Debug.Log($"Alien path is {newPath.corners}");
             }
         }
     }
@@ -499,6 +505,7 @@ public class Alien : MonoBehaviour, IMessenger
         visibleTargets.Clear();
         visibleAliens.Clear();
         target = null;
+        reselectTarget = false;
 
 		foreach (Collider c in colliders)
 		{
@@ -521,10 +528,12 @@ public class Alien : MonoBehaviour, IMessenger
             else if (other.CompareTag("Building") && !visibleTargets.Contains(other.transform.parent))
             {
                 visibleTargets.Add(other.transform.parent);
+                reselectTarget = true;
             }
             else if (other.CompareTag("Player") && !visibleTargets.Contains(other.transform))
             {
                 visibleTargets.Add(other.transform);
+                reselectTarget = true;
             }
             else if (other.CompareTag("Projectile"))
             {
@@ -545,6 +554,7 @@ public class Alien : MonoBehaviour, IMessenger
             if (visibleTargets.Contains(other.transform))
             {
                 visibleTargets.Remove(other.transform);
+                reselectTarget = true;
             }
             else
             {
