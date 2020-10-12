@@ -13,12 +13,14 @@ public class ResourceTextManager : SerializableSingleton<ResourceTextManager>
     [SerializeField] private TextMeshProUGUI ore;
     [SerializeField] private TextMeshProUGUI water;
     [SerializeField] private TextMeshProUGUI power;
-    [SerializeField] private TextMeshProUGUI waste;
+    [SerializeField] private TextMeshProUGUI plants;
+    [SerializeField] private TextMeshProUGUI gas;
     [Header("Icons")]
     [SerializeField] private Image oreIcon;
     [SerializeField] private Image waterIcon;
     [SerializeField] private Image powerIcon;
-    [SerializeField] private Image wasteIcon;
+    [SerializeField] private Image plantsIcon;
+    [SerializeField] private Image gasIcon;
     //Non-Serialized Fields------------------------------------------------------------------------
     private List<Graphic> graphics;
     private float opacity;
@@ -44,7 +46,7 @@ public class ResourceTextManager : SerializableSingleton<ResourceTextManager>
 
         if (!visibleOnAwake)
         {
-            List<Graphic> initialisationGraphics = new List<Graphic>() { ore, water, power, waste, oreIcon, waterIcon, powerIcon, wasteIcon };
+            List<Graphic> initialisationGraphics = new List<Graphic>() { ore, water, power, plants, gas, oreIcon, waterIcon, powerIcon, plantsIcon, gasIcon };
             graphics = new List<Graphic>();
             foreach (Graphic g in initialisationGraphics)
             {
@@ -67,8 +69,9 @@ public class ResourceTextManager : SerializableSingleton<ResourceTextManager>
 	{
 		ore.text = ResourceController.Instance.Ore.ToString();
 		power.text = ResourceController.Instance.PowerConsumption.ToString() + " / " + ResourceController.Instance.PowerSupply.ToString();
-		waste.text = ResourceController.Instance.WasteConsumption.ToString() + " / " + ResourceController.Instance.WasteSupply.ToString();
+		plants.text = ResourceController.Instance.PlantsConsumption.ToString() + " / " + ResourceController.Instance.PlantsSupply.ToString();
 		water.text = ResourceController.Instance.WaterConsumption.ToString() + " / " + ResourceController.Instance.WaterSupply.ToString();
+		gas.text = ResourceController.Instance.GasConsumption.ToString() + " / " + ResourceController.Instance.GasSupply.ToString();
 	}
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
     /// <summary>

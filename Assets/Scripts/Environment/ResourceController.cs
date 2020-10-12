@@ -14,13 +14,15 @@ public class ResourceController : SerializableSingleton<ResourceController>
     [Header("Resource Supplies")]
     [SerializeField] private int ore;
     [SerializeField] private int powerSupply;
-    [SerializeField] private int wasteSupply;
+    [SerializeField] private int plantsSupply;
     [SerializeField] private int waterSupply;
+    [SerializeField] private int gasSupply;
 
     [Header("Resource Consumption")]
     [SerializeField] private int powerConsumption;
-    [SerializeField] private int wasteConsumption;
+    [SerializeField] private int plantsConsumption;
     [SerializeField] private int waterConsumption;
+    [SerializeField] private int gasConsumption;
 
     [Header("Testing")]
     [SerializeField] private bool getDeveloperResources;
@@ -32,8 +34,9 @@ public class ResourceController : SerializableSingleton<ResourceController>
 
     //Resource Availability
     private bool powerAvailable = false;
-    private bool wasteAvailable = false;
+    private bool plantsAvailable = false;
     private bool waterAvailable = false;
+    private bool gasAvailable = false;
 
     //Basic Public Properties----------------------------------------------------------------------                                                                                                                          
 
@@ -43,6 +46,74 @@ public class ResourceController : SerializableSingleton<ResourceController>
     public int Ore { get => ore; set => ore = value; }
 
     //Complex Public Properties--------------------------------------------------------------------                                                    
+
+    /// <summary>
+    /// How much gas the player is consuming per second.
+    /// </summary>
+    public int GasConsumption
+    {
+        get
+        {
+            return gasConsumption;
+        }
+
+        set
+        {
+            gasConsumption = value;
+            CheckResourceSupply();
+        }
+    }
+
+    /// <summary>
+    /// How much gas the player is generating per second.
+    /// </summary>
+    public int GasSupply
+    {
+        get
+        {
+            return gasSupply;
+        }
+
+        set
+        {
+            gasSupply = value;
+            CheckResourceSupply();
+        }
+    }
+
+    /// <summary>
+    /// How much power the player is consuming per second.
+    /// </summary>
+    public int PlantsConsumption
+    {
+        get
+        {
+            return plantsConsumption;
+        }
+
+        set
+        {
+            plantsConsumption = value;
+            CheckResourceSupply();
+        }
+    }
+
+    /// <summary>
+    /// How much plants the player is collecting per second.
+    /// </summary>
+    public int PlantsSupply
+    {
+        get
+        {
+            return plantsSupply;
+        }
+
+        set
+        {
+            plantsSupply = value;
+            CheckResourceSupply();
+        }
+    }
 
     /// <summary>
     /// How much power the player is consuming per second.
@@ -79,24 +150,35 @@ public class ResourceController : SerializableSingleton<ResourceController>
     }
 
     /// <summary>
+    /// How much gas the player has to spare.
+    /// </summary>
+    public int SurplusGas
+    {
+        get
+        {
+            return gasSupply - gasConsumption;
+        }
+    }
+
+    /// <summary>
     /// How much power the player has to spare.
     /// </summary>
     public int SurplusPower
     {
         get
         {
-            return powerSupply - PowerConsumption;
+            return powerSupply - powerConsumption;
         }
     }
 
     /// <summary>
-    /// How much waste the player has to spare.
+    /// How much plants the player has to spare.
     /// </summary>
-    public int SurplusWaste
+    public int SurplusPlants
     {
         get
         {
-            return wasteSupply - wasteConsumption;
+            return plantsSupply - plantsConsumption;
         }
     }
 
@@ -108,40 +190,6 @@ public class ResourceController : SerializableSingleton<ResourceController>
         get
         {
             return waterSupply - waterConsumption;
-        }
-    }
-
-    /// <summary>
-    /// How much waste the player is consuming per second.
-    /// </summary>
-    public int WasteConsumption
-    {
-        get
-        {
-            return wasteConsumption;
-        }
-
-        set
-        {
-            wasteConsumption = value;
-            CheckResourceSupply();
-        }
-    }
-
-    /// <summary>
-    /// How much waste the player is collecting per second.
-    /// </summary>
-    public int WasteSupply
-    {
-        get
-        {
-            return wasteSupply;
-        }
-
-        set
-        {
-            wasteSupply = value;
-            CheckResourceSupply();
         }
     }
 
@@ -204,8 +252,9 @@ public class ResourceController : SerializableSingleton<ResourceController>
         {
             ore += developerResources;
             powerSupply += developerResources;
-            wasteSupply += developerResources;
+            plantsSupply += developerResources;
             waterSupply += developerResources;
+            gasSupply += developerResources;
             getDeveloperResources = false;
         }
     }
@@ -218,7 +267,8 @@ public class ResourceController : SerializableSingleton<ResourceController>
         //Get initial values
         bool initialPowerStatus = powerAvailable;
         bool initialWaterStatus = waterAvailable;
-        bool initialWasteStatus = wasteAvailable;
+        bool initialWasteStatus = plantsAvailable;
+        bool initialGasStatus = gasAvailable;
 
         //Check if power needs to be updated
         if ((powerAvailable && powerSupply < powerConsumption) || (!powerAvailable && powerSupply >= powerConsumption && powerSupply != 0))
@@ -233,26 +283,32 @@ public class ResourceController : SerializableSingleton<ResourceController>
         }
 
         //Check if waste needs to be updated
-        if ((wasteAvailable && wasteSupply < wasteConsumption) || (!wasteAvailable && wasteSupply >= wasteConsumption && wasteSupply != 0))
+        if ((plantsAvailable && plantsSupply < plantsConsumption) || (!plantsAvailable && plantsSupply >= plantsConsumption && plantsSupply != 0))
         {
-            wasteAvailable = !wasteAvailable;
+            plantsAvailable = !plantsAvailable;
+        }
+
+        //Check if gas needs to be updated
+        if ((gasAvailable && gasSupply < gasConsumption) || (!gasAvailable && gasSupply >= gasConsumption && gasSupply != 0))
+        {
+            gasAvailable = !gasAvailable;
         }
 
         //Check if there's been a change
-        if (initialPowerStatus != powerAvailable || initialWaterStatus != waterAvailable || initialWasteStatus != wasteAvailable)
+        if (initialPowerStatus != powerAvailable || initialWaterStatus != waterAvailable || initialWasteStatus != plantsAvailable || initialGasStatus != gasAvailable)
         {
             //Check if buildings need to be shutdown
-            if (!powerAvailable || !wasteAvailable || !waterAvailable)
+            if (!powerAvailable || !plantsAvailable || !waterAvailable || !gasAvailable)
             {
                 Debug.Log("Shutdown Buildings.");
-                BuildingController.Instance.ShutdownBuildings(powerAvailable, waterAvailable, wasteAvailable);
+                BuildingController.Instance.ShutdownBuildings(powerAvailable, waterAvailable, plantsAvailable, gasAvailable);
             }
 
             //Check if buildings can be restored
-            if (powerAvailable || waterAvailable || wasteAvailable)
+            if (powerAvailable || waterAvailable || plantsAvailable || gasAvailable)
             {
                 Debug.Log("Restore Buildings");
-                BuildingController.Instance.RestoreBuildings(powerAvailable, waterAvailable, wasteAvailable);
+                BuildingController.Instance.RestoreBuildings(powerAvailable, waterAvailable, plantsAvailable, gasAvailable);
             }
         }
     }

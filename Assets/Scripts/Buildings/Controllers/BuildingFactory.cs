@@ -66,7 +66,7 @@ public class BuildingFactory : Factory<BuildingFactory, Building, EBuilding>
             building.Model.localPosition = prefabs[buildingType].Model.localPosition;
         }
 
-		if (buildingType == EBuilding.LongRangeTurret || buildingType == EBuilding.ShortRangeTurret)
+		if (buildingType == EBuilding.MachineGunTurret || buildingType == EBuilding.ShotgunTurret)
 		{
 			//Debug.Log("Displaying Range.");
 			onBuildingHasRange?.Invoke(building);
@@ -112,7 +112,8 @@ public class BuildingFactory : Factory<BuildingFactory, Building, EBuilding>
         {
             ResourceController.Instance.PowerConsumption -= building.PowerConsumption;
             ResourceController.Instance.WaterConsumption -= building.WaterConsumption;
-            ResourceController.Instance.WasteConsumption -= building.WasteConsumption;
+            ResourceController.Instance.PlantsConsumption -= building.PlantsConsumption;
+            ResourceController.Instance.PlantsConsumption -= building.GasConsumption;
         }
 
         if (killed)

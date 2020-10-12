@@ -32,7 +32,7 @@ public class AlienFactory : Factory<AlienFactory, Alien, EAlien>
     /// </summary>
     protected override void Awake()
     {
-        Debug.Log("AlienFactory.Awake()");
+        //Debug.Log("AlienFactory.Awake()");
         base.Awake();
     }
 

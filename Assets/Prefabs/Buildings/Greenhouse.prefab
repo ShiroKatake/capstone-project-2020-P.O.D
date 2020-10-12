@@ -420,7 +420,6 @@ GameObject:
   - component: {fileID: 9054559055595012424}
   - component: {fileID: 3752192069620436707}
   - component: {fileID: -211467451985298925}
-  - component: {fileID: 1120844386694136956}
   - component: {fileID: -2579203448979226937}
   - component: {fileID: 2391272698768910777}
   m_Layer: 10
@@ -474,13 +473,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collisionReporters: []
   id: 0
-  buildingType: 5
+  buildingType: 7
   consoleName: '{Greenhouse}'
   oreCost: 6
   powerConsumption: 2
   waterConsumption: 4
   wasteConsumption: 0
+  gasConsumption: 0
   buildTime: 10
+  VFX: []
   cliffRaycastOffsets:
   - {x: -1.45, y: 0, z: -1.45}
   - {x: -1.45, y: 0, z: 0}
@@ -521,6 +522,7 @@ MonoBehaviour:
   constructionFinishedFX: {fileID: 5264390033885133910, guid: 9a30dc8a4a1a76241acc06f41a0df0e0,
     type: 3}
   fxSize: 2
+  materialPrime: {fileID: 0}
   awake: 0
   active: 0
   placed: 0
@@ -553,20 +555,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   radius: 1.125
---- !u!114 &1120844386694136956
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4273049605349681512}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4843e1d8770be5e458983c570cbb6784, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  resource: 3
-  collectionRate: 2
 --- !u!114 &-2579203448979226937
 MonoBehaviour:
   m_ObjectHideFlags: 0

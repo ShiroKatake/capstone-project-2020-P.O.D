@@ -148,10 +148,10 @@ public class StageCombat : SerializableSingleton<StageCombat>, IStage
         shotgunTurretHighlight.Visible = true;
         machineGunTurretHighlight.Visible = true;
 
-        while (BuildingController.Instance.BuiltBuildingsCount(EBuilding.ShortRangeTurret) == 0 || BuildingController.Instance.BuiltBuildingsCount(EBuilding.LongRangeTurret) == 0)
+        while (BuildingController.Instance.BuiltBuildingsCount(EBuilding.ShotgunTurret) == 0 || BuildingController.Instance.BuiltBuildingsCount(EBuilding.MachineGunTurret) == 0)
         {
-            bool placedShotgunTurret = BuildingController.Instance.PlacedBuildingsCount(EBuilding.ShortRangeTurret) > 0;
-            bool placedMachineGunTurret = BuildingController.Instance.PlacedBuildingsCount(EBuilding.LongRangeTurret) > 0;
+            bool placedShotgunTurret = BuildingController.Instance.PlacedBuildingsCount(EBuilding.ShotgunTurret) > 0;
+            bool placedMachineGunTurret = BuildingController.Instance.PlacedBuildingsCount(EBuilding.MachineGunTurret) > 0;
             int pendingPowerSupply = fusionReactorPrefab.CollectionRate * (BuildingController.Instance.PlacedBuildingsCount(EBuilding.FusionReactor) - BuildingController.Instance.BuiltBuildingsCount(EBuilding.FusionReactor));
 
             //Keep shotgun turret button interactable only while it needs to be placed

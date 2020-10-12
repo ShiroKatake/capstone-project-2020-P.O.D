@@ -32,7 +32,8 @@ public class Building : CollisionListener
     [SerializeField] private int oreCost;
     [SerializeField] private int powerConsumption;
     [SerializeField] private int waterConsumption;
-    [SerializeField] private int wasteConsumption;
+    [SerializeField] private int plantsConsumption;
+    [SerializeField] private int gasConsumption;
 
     //Note: if you need buildings to supply resources, the ResourceCollector component already has you covered 
     //there, and it should be interacted with on shutdown / restoration through Building.Operational. If it's 
@@ -143,6 +144,11 @@ public class Building : CollisionListener
     public string ConsoleName { get => consoleName; }
 
     /// <summary>
+    /// How much gas this building requires per second to function.
+    /// </summary>
+    public int GasConsumption { get => gasConsumption; }
+
+    /// <summary>
     /// The Building's Health component.
     /// </summary>
     public Health Health { get => health; }
@@ -190,7 +196,7 @@ public class Building : CollisionListener
     /// <summary>
     /// How much waste this building requires per second to function.
     /// </summary>
-    public int WasteConsumption { get => wasteConsumption; }
+    public int PlantsConsumption { get => plantsConsumption; }
 
     /// <summary>
     /// How much water this building requires per second to function.
@@ -323,7 +329,7 @@ public class Building : CollisionListener
     {
         if (!PauseMenuManager.Paused)
         {
-            if (buildingType != EBuilding.CryoEgg && animator.enabled)
+            if (buildingType != EBuilding.Tower && animator.enabled)
             {
                 animator.SetFloat("Health", health.CurrentHealth);
                 animator.SetBool("Operational", operational);
@@ -565,7 +571,8 @@ public class Building : CollisionListener
         ResourceController.Instance.Ore -= oreCost;
 		ResourceController.Instance.PowerConsumption += powerConsumption;
 		ResourceController.Instance.WaterConsumption += waterConsumption;
-		ResourceController.Instance.WasteConsumption += wasteConsumption;
+		ResourceController.Instance.PlantsConsumption += plantsConsumption;
+		ResourceController.Instance.GasConsumption += gasConsumption;
 		SetCollidersEnabled("Placement", false);
         SetCollidersEnabled("Body", true);
         transform.position = position;
@@ -744,8 +751,8 @@ public class Building : CollisionListener
             case EBuilding.FusionReactor:
                 fusionReactorBeam.SetBeamActive(false);
                 break;
-            case EBuilding.ShortRangeTurret:
-            case EBuilding.LongRangeTurret:
+            case EBuilding.ShotgunTurret:
+            case EBuilding.MachineGunTurret:
                 turretAimer.Reset();
                 turretShooter.Reset();
 				BuildingFactory.Instance.onPlacementFinished?.Invoke();

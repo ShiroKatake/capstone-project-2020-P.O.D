@@ -423,13 +423,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collisionReporters: []
   id: 0
-  buildingType: 8
+  buildingType: 10
   consoleName: <Machine Gun Turret>
   oreCost: 4
   powerConsumption: 4
   waterConsumption: 0
   wasteConsumption: 0
   buildTime: 5
+  VFX: []
   cliffRaycastOffsets:
   - {x: -0.45, y: 0, z: -0.75}
   - {x: -0.45, y: 0, z: 0}
@@ -462,6 +463,7 @@ MonoBehaviour:
   constructionFinishedFX: {fileID: 5264390033885133910, guid: 9a30dc8a4a1a76241acc06f41a0df0e0,
     type: 3}
   fxSize: 1.5
+  materialPrime: {fileID: 0}
   awake: 0
   active: 0
   placed: 0
