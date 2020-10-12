@@ -276,8 +276,9 @@ public class Building : CollisionListener
             if (operational != value)
             {
                 operational = (value && active && !disabledByPlayer);
+				SetVFX(value);
 
-                if (resourceCollector != null)
+				if (resourceCollector != null)
                 {
                     if (operational)
                     {
@@ -752,6 +753,17 @@ public class Building : CollisionListener
         if (VFX.Count != 0){
             foreach (GameObject vfx in VFX){
                 vfx.SetActive(true);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Set VFX according to operational status.
+    /// </summary>
+    public void SetVFX(bool operational){
+        if (VFX.Count != 0){
+            foreach (GameObject vfx in VFX){
+                vfx.SetActive(operational);
             }
         }
     }
