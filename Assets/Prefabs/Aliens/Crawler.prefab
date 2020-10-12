@@ -207,10 +207,12 @@ MonoBehaviour:
   damage: 0.5
   attackCooldown: 1
   rangeMesh: {fileID: 5244094095727274748}
-  noneVisible: {fileID: 2100000, guid: 73bb10285cc989f468f000cf4679ebbd, type: 2}
-  visibleButNotAttacking: {fileID: 2100000, guid: 701c467bf4dbe3140a9f7d81d186a9b6,
+  greenRangeMeshMaterial: {fileID: 2100000, guid: 73bb10285cc989f468f000cf4679ebbd,
     type: 2}
-  visibleAndAttacking: {fileID: 2100000, guid: 3ea0d3794b5be264bb80b93f0f774601, type: 2}
+  yellowRangeMeshMaterial: {fileID: 2100000, guid: 701c467bf4dbe3140a9f7d81d186a9b6,
+    type: 2}
+  redRangeMeshMaterial: {fileID: 2100000, guid: 3ea0d3794b5be264bb80b93f0f774601,
+    type: 2}
 --- !u!114 &3289847426876049767
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -303,7 +305,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1552111634823101053
 Transform:
   m_ObjectHideFlags: 0

@@ -28,9 +28,9 @@ public class Alien : MonoBehaviour, IMessenger
 
     [Header("Testing")]
     [SerializeField] private MeshRenderer rangeMesh;
-    [SerializeField] private Material noneVisible;
-    [SerializeField] private Material visibleButNotAttacking;
-    [SerializeField] private Material visibleAndAttacking;
+    [SerializeField] private Material greenRangeMeshMaterial;
+    [SerializeField] private Material yellowRangeMeshMaterial;
+    [SerializeField] private Material redRangeMeshMaterial;
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
@@ -56,6 +56,17 @@ public class Alien : MonoBehaviour, IMessenger
     private Transform shotByTransform;
     private float timeOfLastAttack;
     private bool reselectTarget;
+    //private bool isOnNavMesh;
+    //private bool isPathStale;
+    //private bool isAgentActiveAndEnabled;
+    //private NavMeshPathStatus pathStatus;
+    ////private bool isStopped;
+    //private Vector3 nextPosition;
+    //private Vector3 destination;
+    //private bool positionIsNextPosition;
+    //private int cornersLeft;
+    //private bool forcedUpdateOfNextPosition;
+    //private bool inAttackRange;
 
     //Public Fields----------------------------------------------------------------------------------------------------------------------------------
 
@@ -177,36 +188,86 @@ public class Alien : MonoBehaviour, IMessenger
         }
     }
 
-    //private void Update()
+    private void Update()
+    {
+        if (rangeMesh != null)
+        {
+            //CheckVisibleTargets();
+            //CheckPathProgression();
+        }
+    }
+
+    private void UpdateRangeMeshMaterial(Material material)
+    {
+        if (rangeMesh.material != material)
+        {
+            rangeMesh.material = material;
+        }
+    }
+
+    private void CheckVisibleTargets()
+    {
+        if (visibleTargets.Count == 0)
+        {
+            UpdateRangeMeshMaterial(greenRangeMeshMaterial);
+        }
+        else if (target == CryoEgg.Instance.transform)
+        {
+            UpdateRangeMeshMaterial(yellowRangeMeshMaterial);
+        }
+        else if (target != CryoEgg.Instance.transform)
+        {
+            UpdateRangeMeshMaterial(redRangeMeshMaterial);
+        }
+    }
+
+    //private void CheckPathProgression()
     //{
-    //    if (rangeMesh != null)
+    //    //float distance = Vector3.Distance(transform.position, target.position);
+    //    isOnNavMesh = navMeshAgent.isOnNavMesh;
+    //    isPathStale = navMeshAgent.isPathStale;
+    //    destination = navMeshAgent.destination;
+    //    isAgentActiveAndEnabled = navMeshAgent.isActiveAndEnabled;
+    //    //isStopped = navMeshAgent.isStopped;
+    //    nextPosition = navMeshAgent.nextPosition;
+    //    pathStatus = navMeshAgent.pathStatus;
+    //    positionIsNextPosition = transform.position == nextPosition;
+    //    cornersLeft = navMeshAgent.path.corners.Length;
+    //    forcedUpdateOfNextPosition = false;
+
+    //    if (Vector3.Distance(transform.position, target.position) <= attackRange)
     //    {
-    //        if (visibleTargets.Count == 0)
+    //        UpdateRangeMeshMaterial(greenRangeMeshMaterial);
+    //    }
+    //    else if (target != null && !reselectTarget)
+    //    {
+    //        if (!navMeshAgent.hasPath)
     //        {
-    //            if (rangeMesh.material != noneVisible)
+    //            UpdateRangeMeshMaterial(redRangeMeshMaterial);
+    //            reselectTarget = true;
+    //        }
+    //        else if (positionIsNextPosition)
+    //        {
+    //            forcedUpdateOfNextPosition = true;
+
+    //            if (cornersLeft == 1)
     //            {
-    //                rangeMesh.material = noneVisible;
+    //                navMeshAgent.path.corners[0] = target.position;
+    //            }
+    //            else
+    //            {
+    //                navMeshAgent.path.corners[0] = navMeshAgent.path.corners[1];
     //            }
     //        }
-    //        else if (target == CryoEgg.Instance.transform)
-    //        {
-    //            if (rangeMesh.material != visibleButNotAttacking)
-    //            {
-    //                rangeMesh.material = visibleButNotAttacking;
-    //            }
-    //        }
-    //        else if (target != CryoEgg.Instance.transform)
-    //        {
-    //            if (rangeMesh.material != visibleAndAttacking)
-    //            {
-    //                rangeMesh.material = visibleAndAttacking;
-    //            }
-    //        }
+    //    }
+    //    else
+    //    {
+    //        UpdateRangeMeshMaterial(yellowRangeMeshMaterial);
     //    }
     //}
 
     //Recurring Methods (FixedUpdate())-------------------------------------------------------------------------------------------------------------  
-	
+
     /// <summary>
     /// Selects the most appropriate target for the alien.
     /// </summary>
@@ -292,7 +353,7 @@ public class Alien : MonoBehaviour, IMessenger
             {
                 //Debug.Log($"{this}.SetTarget(), setting {target}'s position as nav mesh agent destination");
                 NavMeshPath newPath = null;
-                
+
                 foreach (Alien a in visibleAliens)
                 {
                     if (a.Target == target && a.NavMeshAgent.hasPath && Vector3.Distance(a.NavMeshAgent.destination, a.Target.position) < 0.1f)
@@ -339,9 +400,10 @@ public class Alien : MonoBehaviour, IMessenger
     /// </summary>
     private void Move()
     {
-        if (Vector3.Distance(transform.position, PositionAtSameHeight(target.position)) > attackRange + targetSize.Radius)
+        if (Vector3.SqrMagnitude(PositionAtSameHeight(target.position) - transform.position) > (attackRange + targetSize.Radius) * (attackRange + targetSize.Radius))
         {
             AudioManager.Instance.PlaySound(AudioManager.ESound.Alien_Moves, this.gameObject);
+            //inAttackRange = false;
 
             if (navMeshAgent.speed != speed)
             {
@@ -350,6 +412,8 @@ public class Alien : MonoBehaviour, IMessenger
         }
         else
         {
+            //inAttackRange = true;
+
             if (navMeshAgent.speed != 0)
             {
                 navMeshAgent.speed = 0;

@@ -623,9 +623,9 @@ public class Building : CollisionListener
 
     public void StartConstruction(){
         //Debug.Log("Starting the Construction.");
-        foreach (RendererMaterialSet m in rendererMaterialSets){
-            Debug.Log("Material: " + m.renderer);
-        }
+        //foreach (RendererMaterialSet m in rendererMaterialSets){
+        //    Debug.Log("Material: " + m.renderer);
+        //}
         timeStarted = Time.time;
         constructing = true;
         finishedConstruction = false;
@@ -634,7 +634,7 @@ public class Building : CollisionListener
     }
 
     private IEnumerator ProgressUpdate(){
-        Debug.Log("Progress starting; starting health is: " + health.CurrentHealth);
+        //Debug.Log("Progress starting; starting health is: " + health.CurrentHealth);
         while (constructing){
             timeSinceStarted = Time.time - timeStarted;
             percentageComplete = timeSinceStarted/buildTime;
@@ -772,7 +772,7 @@ public class Building : CollisionListener
     {
         //Debug.Log($"{this}.OnTriggerEnter, other is {other}");
 
-        if (active && !operational && !other.isTrigger)
+        if (active && !operational && !other.isTrigger && other.gameObject.name != "Barrel Collider")
         {
             //Debug.Log($"Active, not operational, and !other.isTrigger.");
             colliding = true;
