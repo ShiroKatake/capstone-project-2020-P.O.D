@@ -1,5 +1,89 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &397655704069512819
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6996347107117709762}
+  - component: {fileID: 1025834903233913818}
+  - component: {fileID: 7811568116054863030}
+  - component: {fileID: 404578392010752061}
+  m_Layer: 16
+  m_Name: Barrel Housing Demolition Menu Collider
+  m_TagString: Building
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6996347107117709762
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 397655704069512819}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4847364633576071608}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: -90.00001, y: 0, z: 0}
+--- !u!136 &1025834903233913818
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 397655704069512819}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 0
+  m_Radius: 5.3
+  m_Height: 20.02245
+  m_Direction: 2
+  m_Center: {x: 0, y: 1.02754414e-16, z: -0.91760343}
+--- !u!54 &7811568116054863030
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 397655704069512819}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &404578392010752061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 397655704069512819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 122c182bf36096746af88abc3d48308c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  purpose: Body
+  collisionListeners:
+  - {fileID: 276844957512759736}
+  reportOnCollisionEnter: 0
+  reportOnCollisionExit: 0
+  reportOnCollisionStay: 0
+  reportOnTriggerEnter: 0
+  reportOnTriggerExit: 0
+  reportOnTriggerStay: 0
 --- !u!1 &680432107992427780
 GameObject:
   m_ObjectHideFlags: 0
@@ -60,8 +144,92 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4847364633576071608}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1922375969929486354
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1705964382644458983}
+  - component: {fileID: 3824102319696306700}
+  - component: {fileID: 1085200518175901428}
+  - component: {fileID: 1863581869014743651}
+  m_Layer: 16
+  m_Name: Barrel Demolition Menu Collider
+  m_TagString: Building
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1705964382644458983
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1922375969929486354}
+  m_LocalRotation: {x: 0.0000000036219958, y: 0.000000003621994, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 6434623972415049373}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: -90, y: -90.00001, z: 180.00002}
+--- !u!136 &3824102319696306700
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1922375969929486354}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 0
+  m_Radius: 0.5
+  m_Height: 1.8
+  m_Direction: 1
+  m_Center: {x: 0, y: -0.26931387, z: 0.00000021790484}
+--- !u!54 &1085200518175901428
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1922375969929486354}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &1863581869014743651
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1922375969929486354}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 122c182bf36096746af88abc3d48308c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  purpose: Body
+  collisionListeners:
+  - {fileID: 276844957512759736}
+  reportOnCollisionEnter: 0
+  reportOnCollisionExit: 0
+  reportOnCollisionStay: 0
+  reportOnTriggerEnter: 0
+  reportOnTriggerExit: 0
+  reportOnTriggerStay: 0
 --- !u!1 &2081522427655777737
 GameObject:
   m_ObjectHideFlags: 0
@@ -157,7 +325,7 @@ Transform:
   m_Children:
   - {fileID: 6434623972415049373}
   m_Father: {fileID: 4847364633576071608}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2740937295730065718
 GameObject:
@@ -228,13 +396,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collisionReporters: []
   id: 0
-  buildingType: 7
+  buildingType: 9
   consoleName: <Shotgun Turret>
   oreCost: 4
   powerConsumption: 6
   waterConsumption: 0
-  wasteConsumption: 0
+  plantsConsumption: 0
+  gasConsumption: 0
   buildTime: 7
+  VFX: []
   cliffRaycastOffsets:
   - {x: -0.3, y: 0, z: -0.3}
   - {x: -0.45, y: 0, z: 0}
@@ -264,11 +434,7 @@ MonoBehaviour:
   constructionFinishedFX: {fileID: 5264390033885133910, guid: 9a30dc8a4a1a76241acc06f41a0df0e0,
     type: 3}
   fxSize: 1
-  awake: 0
-  active: 0
-  placed: 0
-  operational: 0
-  built: 0
+  materialPrime: {fileID: 0}
 --- !u!114 &1219818938998714957
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -442,7 +608,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6434623972415049373}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: -179.99998}
 --- !u!1 &3441892865846015065
 GameObject:
@@ -571,6 +737,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 6996347107117709762}
   - {fileID: 6578390048626754263}
   - {fileID: 4760966743071291633}
   m_Father: {fileID: 7345750986247059595}
@@ -847,6 +1014,7 @@ Transform:
   m_LocalPosition: {x: -10, y: 0, z: 0}
   m_LocalScale: {x: 2, y: 7, z: 2}
   m_Children:
+  - {fileID: 1705964382644458983}
   - {fileID: 1873128266348440701}
   m_Father: {fileID: 6578390048626754263}
   m_RootOrder: 0

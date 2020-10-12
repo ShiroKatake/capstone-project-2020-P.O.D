@@ -279,18 +279,18 @@ MonoBehaviour:
       _userAssignable: 1
       _categoryId: 2
     - _id: 7
-      _name: Turret1
+      _name: ShotgunTurret
       _type: 1
-      _descriptiveName: Turret1
+      _descriptiveName: ShotgunTurret
       _positiveDescriptiveName: 
       _negativeDescriptiveName: 
       _behaviorId: 0
       _userAssignable: 1
       _categoryId: 2
     - _id: 8
-      _name: Turret2
+      _name: MachineGunTurret
       _type: 1
-      _descriptiveName: Turret2
+      _descriptiveName: MachineGunTurret
       _positiveDescriptiveName: 
       _negativeDescriptiveName: 
       _behaviorId: 0
@@ -404,6 +404,24 @@ MonoBehaviour:
       _behaviorId: 0
       _userAssignable: 1
       _categoryId: 9
+    - _id: 21
+      _name: Harvester
+      _type: 1
+      _descriptiveName: Harvester
+      _positiveDescriptiveName: 
+      _negativeDescriptiveName: 
+      _behaviorId: 0
+      _userAssignable: 1
+      _categoryId: 2
+    - _id: 22
+      _name: GasPump
+      _type: 1
+      _descriptiveName: GasPump
+      _positiveDescriptiveName: 
+      _negativeDescriptiveName: 
+      _behaviorId: 0
+      _userAssignable: 1
+      _categoryId: 2
     actionCategories:
     - _name: Default
       _descriptiveName: Default
@@ -457,7 +475,7 @@ MonoBehaviour:
       - categoryId: 1
         actionIds: 0000000001000000
       - categoryId: 2
-        actionIds: 02000000030000000400000005000000060000000700000008000000
+        actionIds: 020000000300000004000000050000000600000007000000080000001500000016000000
       - categoryId: 3
         actionIds: 090000000a0000000c000000
       - categoryId: 4
@@ -623,7 +641,7 @@ MonoBehaviour:
         _modifierKey2: 0
         _modifierKey3: 0
       - _actionCategoryId: 0
-        _actionId: 5
+        _actionId: 21
         _elementType: 1
         _elementIdentifierId: -1
         _axisRange: 0
@@ -634,7 +652,7 @@ MonoBehaviour:
         _modifierKey2: 0
         _modifierKey3: 0
       - _actionCategoryId: 0
-        _actionId: 6
+        _actionId: 22
         _elementType: 1
         _elementIdentifierId: -1
         _axisRange: 0
@@ -645,7 +663,7 @@ MonoBehaviour:
         _modifierKey2: 0
         _modifierKey3: 0
       - _actionCategoryId: 0
-        _actionId: 4
+        _actionId: 5
         _elementType: 1
         _elementIdentifierId: -1
         _axisRange: 0
@@ -656,7 +674,7 @@ MonoBehaviour:
         _modifierKey2: 0
         _modifierKey3: 0
       - _actionCategoryId: 0
-        _actionId: 7
+        _actionId: 6
         _elementType: 1
         _elementIdentifierId: -1
         _axisRange: 0
@@ -667,7 +685,7 @@ MonoBehaviour:
         _modifierKey2: 0
         _modifierKey3: 0
       - _actionCategoryId: 0
-        _actionId: 8
+        _actionId: 4
         _elementType: 1
         _elementIdentifierId: -1
         _axisRange: 0
@@ -776,6 +794,28 @@ MonoBehaviour:
         _modifierKey1: 0
         _modifierKey2: 0
         _modifierKey3: 0
+      - _actionCategoryId: 0
+        _actionId: 7
+        _elementType: 1
+        _elementIdentifierId: -1
+        _axisRange: 0
+        _invert: 0
+        _axisContribution: 0
+        _keyboardKeyCode: 56
+        _modifierKey1: 0
+        _modifierKey2: 0
+        _modifierKey3: 0
+      - _actionCategoryId: 0
+        _actionId: 8
+        _elementType: 1
+        _elementIdentifierId: -1
+        _axisRange: 0
+        _invert: 0
+        _axisContribution: 0
+        _keyboardKeyCode: 57
+        _modifierKey1: 0
+        _modifierKey2: 0
+        _modifierKey3: 0
     mouseMaps:
     - id: 0
       categoryId: 0
@@ -822,7 +862,7 @@ MonoBehaviour:
     controllerMapLayoutManagerRuleSets: []
     controllerMapEnablerRuleSets: []
     playerIdCounter: 2
-    actionIdCounter: 21
+    actionIdCounter: 23
     actionCategoryIdCounter: 10
     inputBehaviorIdCounter: 1
     mapCategoryIdCounter: 1

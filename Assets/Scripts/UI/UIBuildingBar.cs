@@ -18,17 +18,12 @@ public class UIBuildingBar : MonoBehaviour
     void Update()
     {
         foreach(Button b in buttonList){
-            if (b.AssociatedBuilding.OreCost > ResourceController.Instance.Ore){
-                b.Btn.OnInteractableChanged(false);
-            } else if (b.AssociatedBuilding.PowerConsumption > ResourceController.Instance.SurplusPower){
-                b.Btn.OnInteractableChanged(false);
-            } else if (b.AssociatedBuilding.WasteConsumption > ResourceController.Instance.SurplusWaste){
-                b.Btn.OnInteractableChanged(false);
-            } else if (b.AssociatedBuilding.WaterConsumption > ResourceController.Instance.SurplusWater){
-                b.Btn.OnInteractableChanged(false);
-            } else {
-                b.Btn.OnInteractableChanged(true);
-            }
+            b.Btn.OnInteractableChanged(
+                b.AssociatedBuilding.OreCost <= ResourceManager.Instance.Ore
+                && b.AssociatedBuilding.PowerConsumption <= ResourceManager.Instance.SurplusPower
+                && b.AssociatedBuilding.PlantsConsumption <= ResourceManager.Instance.SurplusPlants
+                && b.AssociatedBuilding.WaterConsumption <= ResourceManager.Instance.SurplusWater
+            );
         }
     }
 }

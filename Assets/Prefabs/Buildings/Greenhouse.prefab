@@ -113,7 +113,7 @@ Transform:
   m_Children:
   - {fileID: 8560516518766444709}
   m_Father: {fileID: 701136541000889738}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: -90.00001, y: 0, z: -25.919}
 --- !u!136 &1042165235641049379
 CapsuleCollider:
@@ -420,7 +420,6 @@ GameObject:
   - component: {fileID: 9054559055595012424}
   - component: {fileID: 3752192069620436707}
   - component: {fileID: -211467451985298925}
-  - component: {fileID: 1120844386694136956}
   - component: {fileID: -2579203448979226937}
   - component: {fileID: 2391272698768910777}
   m_Layer: 10
@@ -442,6 +441,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5020365198722141690}
+  - {fileID: 5568277174093517172}
   - {fileID: 1187100249336798489}
   - {fileID: 8820429436445300388}
   m_Father: {fileID: 0}
@@ -474,13 +474,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collisionReporters: []
   id: 0
-  buildingType: 5
+  buildingType: 7
   consoleName: '{Greenhouse}'
   oreCost: 6
   powerConsumption: 2
   waterConsumption: 4
-  wasteConsumption: 0
+  plantsConsumption: 0
+  gasConsumption: 0
   buildTime: 10
+  VFX: []
   cliffRaycastOffsets:
   - {x: -1.45, y: 0, z: -1.45}
   - {x: -1.45, y: 0, z: 0}
@@ -521,11 +523,7 @@ MonoBehaviour:
   constructionFinishedFX: {fileID: 5264390033885133910, guid: 9a30dc8a4a1a76241acc06f41a0df0e0,
     type: 3}
   fxSize: 2
-  awake: 0
-  active: 0
-  placed: 0
-  operational: 0
-  built: 0
+  materialPrime: {fileID: 0}
 --- !u!114 &3752192069620436707
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -553,20 +551,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   radius: 1.125
---- !u!114 &1120844386694136956
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4273049605349681512}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4843e1d8770be5e458983c570cbb6784, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  resource: 3
-  collectionRate: 2
 --- !u!114 &-2579203448979226937
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -710,6 +694,105 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!1 &7777608458170434957
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5568277174093517172}
+  - component: {fileID: 7734784639320651692}
+  - component: {fileID: 7356217601673395304}
+  - component: {fileID: 6844677867819095461}
+  - component: {fileID: 4888207218290394686}
+  m_Layer: 16
+  m_Name: Demolition Menu Collider
+  m_TagString: Building
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5568277174093517172
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7777608458170434957}
+  m_LocalRotation: {x: -0.6890961, y: -0.15857665, z: -0.15857664, w: 0.6890962}
+  m_LocalPosition: {x: -0.051, y: 0.542, z: -0.009}
+  m_LocalScale: {x: 0.95, y: 0.95, z: 0.95}
+  m_Children: []
+  m_Father: {fileID: 701136541000889738}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: -90.00001, y: 0, z: -25.919}
+--- !u!136 &7734784639320651692
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7777608458170434957}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 0
+  m_Radius: 1.4224013
+  m_Height: 3.878447
+  m_Direction: 2
+  m_Center: {x: 0.09262637, y: -0.030225206, z: -0.6046983}
+--- !u!136 &7356217601673395304
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7777608458170434957}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 0
+  m_Radius: 0.1704651
+  m_Height: 2.002022
+  m_Direction: 2
+  m_Center: {x: 0.6894008, y: 1.5491552, z: -0.12042247}
+--- !u!54 &6844677867819095461
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7777608458170434957}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &4888207218290394686
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7777608458170434957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 122c182bf36096746af88abc3d48308c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  purpose: Body
+  collisionListeners:
+  - {fileID: 9054559055595012424}
+  reportOnCollisionEnter: 0
+  reportOnCollisionExit: 0
+  reportOnCollisionStay: 0
+  reportOnTriggerEnter: 0
+  reportOnTriggerExit: 0
+  reportOnTriggerStay: 0
 --- !u!1001 &3056081776493498027
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -770,7 +853,7 @@ PrefabInstance:
     - target: {fileID: 5764915360147445775, guid: 3e6c95349fedd1646a8ab5120b7cfb10,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5764915360147445775, guid: 3e6c95349fedd1646a8ab5120b7cfb10,
         type: 3}

@@ -84,7 +84,7 @@ public class AlienFactory : Factory<AlienFactory, Alien, EAlien>
     public override void Destroy(Alien alien, EAlien type)
     {
         alien.Reset();
-        AlienController.Instance.DeRegisterAlien(alien);
+        AlienManager.Instance.DeRegisterAlien(alien);
         base.Destroy(alien, type);
     }
 

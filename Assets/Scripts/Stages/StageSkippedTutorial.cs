@@ -12,27 +12,29 @@ public class StageSkippedTutorial : SerializableSingleton<StageSkippedTutorial>,
     //Serialized Fields----------------------------------------------------------------------------
 
     [Header("General UI")]
-    [SerializeField] private UIElementStatusController uiBorder;
-    [SerializeField] private UIElementStatusController console;
-    [SerializeField] private UIElementStatusController buildingAndResourcesBar;
-    [SerializeField] private UIElementStatusController miniMapBorder;
-    [SerializeField] private UIElementStatusController miniMap;
-    [SerializeField] private UIElementStatusController clock;
+    [SerializeField] private UIElementStatusManager uiBorder;
+    [SerializeField] private UIElementStatusManager console;
+    [SerializeField] private UIElementStatusManager buildingAndResourcesBar;
+    [SerializeField] private UIElementStatusManager miniMapBorder;
+    [SerializeField] private UIElementStatusManager miniMap;
+    [SerializeField] private UIElementStatusManager clock;
 
     [Header("Building Buttons")]
-    [SerializeField] private UIElementStatusController fusionReactor;
-    [SerializeField] private UIElementStatusController iceDrill;
-    [SerializeField] private UIElementStatusController boiler;
-    [SerializeField] private UIElementStatusController greenhouse;
-    [SerializeField] private UIElementStatusController incinerator;
-    [SerializeField] private UIElementStatusController shotgunTurret;
-    [SerializeField] private UIElementStatusController machineGunTurret;
+    [SerializeField] private UIElementStatusManager fusionReactor;
+    [SerializeField] private UIElementStatusManager iceDrill;
+    [SerializeField] private UIElementStatusManager harvester;
+    [SerializeField] private UIElementStatusManager gasPump;
+    [SerializeField] private UIElementStatusManager boiler;
+    [SerializeField] private UIElementStatusManager greenhouse;
+    [SerializeField] private UIElementStatusManager incinerator;
+    [SerializeField] private UIElementStatusManager shotgunTurret;
+    [SerializeField] private UIElementStatusManager machineGunTurret;
 
     [Header("Progress/Ratio Bars")]
-    [SerializeField] private UIElementStatusController progressBar;
-    [SerializeField] private UIElementStatusController humidityBar;
-    [SerializeField] private UIElementStatusController biodiversityBar;
-    [SerializeField] private UIElementStatusController atmosphereBar;
+    [SerializeField] private UIElementStatusManager progressBar;
+    [SerializeField] private UIElementStatusManager humidityBar;
+    [SerializeField] private UIElementStatusManager biodiversityBar;
+    [SerializeField] private UIElementStatusManager atmosphereBar;
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
@@ -85,8 +87,8 @@ public class StageSkippedTutorial : SerializableSingleton<StageSkippedTutorial>,
     /// </summary>
     private IEnumerator Setup()
     {
-        ClockController.Instance.Paused = true;
-        ClockController.Instance.SetTime(0);
+        ClockManager.Instance.Paused = true;
+        ClockManager.Instance.SetTime(0);
         yield return new WaitForSeconds(3);
     }
 
@@ -108,7 +110,7 @@ public class StageSkippedTutorial : SerializableSingleton<StageSkippedTutorial>,
             yield return null;
         }
 
-        ClockController.Instance.Paused = false;
+        ClockManager.Instance.Paused = false;
         consoleDB.SubmitDialogue("blank", 0, false, false);
         consoleDB.SubmitDialogue("system check", 0, false, false);
         ResourceTextManager.Instance.FadeIn();
@@ -128,6 +130,12 @@ public class StageSkippedTutorial : SerializableSingleton<StageSkippedTutorial>,
         yield return new WaitForSeconds(0.15f);
         iceDrill.Visible = true;
         iceDrill.Interactable = true;
+        yield return new WaitForSeconds(0.15f);
+        harvester.Visible = true;
+        harvester.Interactable = true;
+        yield return new WaitForSeconds(0.15f);
+        gasPump.Visible = true;
+        gasPump.Interactable = true;
         yield return new WaitForSeconds(0.15f);
         boiler.Visible = true;
         boiler.Interactable = true;

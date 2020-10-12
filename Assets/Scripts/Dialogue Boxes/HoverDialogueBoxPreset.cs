@@ -23,7 +23,8 @@ public class HoverDialogueBoxPreset : MonoBehaviour, IPointerEnterHandler, IPoin
 	[SerializeField] private string oreCost;
 	[SerializeField] private string powerCost;
 	[SerializeField] private string waterCost;
-	[SerializeField] private string wasteCost;
+	[SerializeField] private string plantsCost;
+	[SerializeField] private string gasCost;
 
 	[Space(10)]
 	[SerializeField] private string buildTime;
@@ -31,7 +32,8 @@ public class HoverDialogueBoxPreset : MonoBehaviour, IPointerEnterHandler, IPoin
 	[Space(10)]
 	[SerializeField] private string powerProductionAmount;
 	[SerializeField] private string waterProductionAmount;
-	[SerializeField] private string wasteProductionAmount;
+	[SerializeField] private string plantsProductionAmount;
+	[SerializeField] private string gasProductionAmount;
 
 	[Space(10)]	[TextArea]
 	[SerializeField] private string description;
@@ -55,7 +57,8 @@ public class HoverDialogueBoxPreset : MonoBehaviour, IPointerEnterHandler, IPoin
 	public string OreCost { get => oreCost; }
 	public string PowerCost { get => powerCost; }
 	public string WaterCost { get => waterCost; }
-	public string WasteCost { get => wasteCost; }
+	public string PlantsCost { get => plantsCost; }
+	public string GasCost { get => gasCost; }
 
 	public string BuildTime { get => buildTime; }
 
@@ -63,7 +66,8 @@ public class HoverDialogueBoxPreset : MonoBehaviour, IPointerEnterHandler, IPoin
 
 	public string PowerProductionAmount { get => powerProductionAmount; }
 	public string WaterProductionAmount { get => waterProductionAmount; }
-	public string WasteProductionAmount { get => wasteProductionAmount; }
+	public string PlantsProductionAmount { get => plantsProductionAmount; }
+	public string GasProductionAmount { get => gasProductionAmount; }
 
 	//Complex Public Properties--------------------------------------------------------------------
 
