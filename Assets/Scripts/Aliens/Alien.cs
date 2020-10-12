@@ -244,6 +244,10 @@ public class Alien : MonoBehaviour, IMessenger
                     {
                         SetTarget(shotByTransform);
                     }
+                    else if (visibleTargets.Contains(PODController.Instance.transform))
+                    {
+                        SetTarget(PODController.Instance.transform);
+                    }
                     else
                     {
                         //Get closest visible target
@@ -347,11 +351,16 @@ public class Alien : MonoBehaviour, IMessenger
     {
         if (Vector3.SqrMagnitude(PositionAtSameHeight(target.position) - transform.position) > (attackRange + targetSize.Radius) * (attackRange + targetSize.Radius))
         {
-            AudioManager.Instance.PlaySound(AudioManager.ESound.Alien_Moves, this.gameObject);
+            AudioManager.Instance.PlaySound(AudioManager.ESound.Alien_Moves, gameObject);
 
             if (navMeshAgent.speed != speed)
             {
                 navMeshAgent.speed = speed;
+            }
+
+            if (navMeshAgent.stoppingDistance != attackRange * 0.67f + targetSize.Radius)
+            {
+                navMeshAgent.stoppingDistance = attackRange * 0.67f + targetSize.Radius;
             }
 
             CheckStalling();

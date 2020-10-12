@@ -39,6 +39,8 @@ public class MapManager : SerializableSingleton<MapManager>
 
     [Header("Testing")]
     [SerializeField] private bool debugPathfinding;
+    private EAlien currentPathfinder;
+    private Vector2 currentPathfindingPos;
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
@@ -251,11 +253,13 @@ public class MapManager : SerializableSingleton<MapManager>
         for (int i = 0; i < pathfinderInstances.Count; i++)
         {
             Alien alien = pathfinderInstances[i];
+            currentPathfinder = alien.Type;
             NavMeshAgent agent = alien.NavMeshAgent;
             alien.gameObject.SetActive(true);
 
             foreach (PositionData p in positions)
-            { 
+            {
+                currentPathfindingPos = new Vector2(p.X, p.Z);
                 Vector3 pos = new Vector3(p.X, alienSpawnHeight, p.Z);
                 RaycastHit hit;
 
@@ -293,6 +297,8 @@ public class MapManager : SerializableSingleton<MapManager>
             Destroy(alien.gameObject);
         }
 
+        currentPathfinder = EAlien.None;
+        currentPathfindingPos = Vector2.zero;
         //Debug.Log($"MapController.CalculatePaths(), has finished, time elapsed is {totalStopwatch.ElapsedMilliseconds} ms, or {totalStopwatch.ElapsedMilliseconds / 1000} s.");
         finishedCalculatingPaths = true;
         //StartCoroutine(SavePaths());
