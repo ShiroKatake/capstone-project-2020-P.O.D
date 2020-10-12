@@ -349,7 +349,9 @@ public class Alien : MonoBehaviour, IMessenger
     /// </summary>
     private void Move()
     {
-        if (Vector3.SqrMagnitude(PositionAtSameHeight(target.position) - transform.position) > (attackRange + targetSize.Radius) * (attackRange + targetSize.Radius))
+        float targetRadius = targetSize.Radius(transform.position);
+
+        if (Vector3.SqrMagnitude(PositionAtSameHeight(target.position) - transform.position) > ((attackRange + targetRadius) * (attackRange + targetRadius)))
         {
             AudioManager.Instance.PlaySound(AudioManager.ESound.Alien_Moves, gameObject);
 
@@ -358,9 +360,9 @@ public class Alien : MonoBehaviour, IMessenger
                 navMeshAgent.speed = speed;
             }
 
-            if (navMeshAgent.stoppingDistance != attackRange * 0.67f + targetSize.Radius)
+            if (navMeshAgent.stoppingDistance != attackRange * 0.67f + targetRadius)
             {
-                navMeshAgent.stoppingDistance = attackRange * 0.67f + targetSize.Radius;
+                navMeshAgent.stoppingDistance = attackRange * 0.67f + targetRadius;
             }
 
             CheckStalling();

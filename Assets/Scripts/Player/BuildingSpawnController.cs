@@ -142,7 +142,7 @@ public class BuildingSpawnController : SerializableSingleton<BuildingSpawnContro
             if (heldBuilding == null)
             {
                 heldBuilding = BuildingFactory.Instance.Get(selectedBuildingType);
-                heldBuilding.transform.position = MousePositionToPotentialBuildingPosition(transform.position, heldBuilding.Size.DiameterRoundedUp);
+                heldBuilding.transform.position = MousePositionToPotentialBuildingPosition(transform.position, heldBuilding.Size.DiameterRoundedUp(null));
                 ChangeTooltip(selectedBuildingType);
                 //Debug.Log($"BuildingSpawningController(), new heldBuilding ({heldBuilding}) (from null), building collider position is {heldBuilding.Collider.position} (world) / {heldBuilding.Collider.localPosition} (local), building model position is {heldBuilding.Model.position} (world) / {heldBuilding.Model.localPosition} (local)");
 
@@ -151,7 +151,7 @@ public class BuildingSpawnController : SerializableSingleton<BuildingSpawnContro
             //Instantiate the appropriate building and postion it properly, replacing the old one.
             else if (heldBuilding.BuildingType != selectedBuildingType)
             {
-                Vector3 pos = MousePositionToPotentialBuildingPosition(heldBuilding.transform.position, heldBuilding.Size.DiameterRoundedUp);
+                Vector3 pos = MousePositionToPotentialBuildingPosition(heldBuilding.transform.position, heldBuilding.Size.DiameterRoundedUp(null));
                 BuildingFactory.Instance.Destroy(heldBuilding, false, false);
                 heldBuilding = BuildingFactory.Instance.Get(selectedBuildingType);
                 heldBuilding.transform.position = pos;
@@ -163,7 +163,7 @@ public class BuildingSpawnController : SerializableSingleton<BuildingSpawnContro
             }
             else //Move the building where you want it
             {
-                heldBuilding.transform.position = MousePositionToPotentialBuildingPosition(heldBuilding.transform.position, heldBuilding.Size.DiameterRoundedUp);
+                heldBuilding.transform.position = MousePositionToPotentialBuildingPosition(heldBuilding.transform.position, heldBuilding.Size.DiameterRoundedUp(null));
                 //Debug.Log($"BuildingSpawningController(), update heldBuilding ({heldBuilding}) position, building collider position is {heldBuilding.Collider.position} (world) / {heldBuilding.Collider.localPosition} (local), building model position is {heldBuilding.Model.position} (world) / {heldBuilding.Model.localPosition} (local)");
             }
 

@@ -77,9 +77,9 @@ GameObject:
   - component: {fileID: 8466719414558019790}
   - component: {fileID: 1110411587212194942}
   - component: {fileID: 5638085217674961001}
+  - component: {fileID: 2422703392900335725}
   - component: {fileID: 4319834008079662784}
   - component: {fileID: 5914999319166684012}
-  - component: {fileID: 6226367702657676835}
   - component: {fileID: 3799573981806491314}
   m_Layer: 10
   m_Name: Harvester
@@ -177,6 +177,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   affiliation: 0
+--- !u!114 &2422703392900335725
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4129577030481703282}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc3ec1884dd225f4eaaf87a2d85ab711, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 0
+  length: 1.44
+  width: 2.96
 --- !u!114 &4319834008079662784
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -205,19 +220,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resource: 3
   collectionRate: 4
---- !u!114 &6226367702657676835
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4129577030481703282}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e087b4d1f91fcb941a830564ec25c878, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  radius: 1.5
 --- !u!95 &3799573981806491314
 Animator:
   serializedVersion: 3

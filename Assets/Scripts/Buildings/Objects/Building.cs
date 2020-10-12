@@ -346,7 +346,7 @@ public class Building : CollisionListener
                 groupedReporters[c.Purpose].Add(c);
             }
 
-            if (size.DiameterRoundedUp < 1 || size.DiameterRoundedUp > 5)
+            if (size.DiameterRoundedUp(null) < 1 || size.DiameterRoundedUp(null) > 5)
             {
                 Debug.LogError("Building.Size.RadiusRoundedUp is invalid. It needs to be between 1 and 5.");
             }
