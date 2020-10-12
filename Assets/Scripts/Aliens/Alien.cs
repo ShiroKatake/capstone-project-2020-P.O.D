@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -24,13 +23,17 @@ public class Alien : MonoBehaviour, IMessenger
     [SerializeField] private float attackRange;
     [SerializeField] private float damage;
     [SerializeField] private float attackCooldown;
+    [Tooltip("How long can it stall moving forward before it will be made to burrow into the ground and be destroyed by AlienFactory?")]
+    [SerializeField] private float maxStall;
+    [Tooltip("How likely, between 0 (impossible) and 1 (certainty) is it that this alien will burrow into the ground any time it is dealt damage?")]
+    [SerializeField][Range(0, 1)] private float burrowingProbability;
+    [SerializeField] private float burrowSpeed;
 
-
-    [Header("Testing")]
-    [SerializeField] private MeshRenderer rangeMesh;
-    [SerializeField] private Material greenRangeMeshMaterial;
-    [SerializeField] private Material yellowRangeMeshMaterial;
-    [SerializeField] private Material redRangeMeshMaterial;
+    //[Header("Testing")]
+    //[SerializeField] private MeshRenderer rangeMesh;
+    //[SerializeField] private Material greenRangeMeshMaterial;
+    //[SerializeField] private Material yellowRangeMeshMaterial;
+    //[SerializeField] private Material redRangeMeshMaterial;
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
@@ -56,17 +59,9 @@ public class Alien : MonoBehaviour, IMessenger
     private Transform shotByTransform;
     private float timeOfLastAttack;
     private bool reselectTarget;
-    //private bool isOnNavMesh;
-    //private bool isPathStale;
-    //private bool isAgentActiveAndEnabled;
-    //private NavMeshPathStatus pathStatus;
-    ////private bool isStopped;
-    //private Vector3 nextPosition;
-    //private Vector3 destination;
-    //private bool positionIsNextPosition;
-    //private int cornersLeft;
-    //private bool forcedUpdateOfNextPosition;
-    //private bool inAttackRange;
+
+    private Vector3 lastPosition;
+    private float timeOfLastMove;
 
     //Public Fields----------------------------------------------------------------------------------------------------------------------------------
 
@@ -160,11 +155,7 @@ public class Alien : MonoBehaviour, IMessenger
         //Rotate to face the Cryo egg
         Vector3 targetRotation = Tower.Instance.transform.position - transform.position;
         transform.rotation = Quaternion.LookRotation(targetRotation);
-
-        foreach (Collider c in colliders)
-        {
-            c.enabled = true;
-        }
+        SetCollidersEnabled(true);       
 
         if (StageManager.Instance.CurrentStage.GetID() == EStage.MainGame)
         {
@@ -184,85 +175,39 @@ public class Alien : MonoBehaviour, IMessenger
         {
             SelectTarget();
             Look();
-            Move();            
+            Move();
         }
     }
 
-    private void Update()
-    {
-        if (rangeMesh != null)
-        {
-            //CheckVisibleTargets();
-            //CheckPathProgression();
-        }
-    }
-
-    private void UpdateRangeMeshMaterial(Material material)
-    {
-        if (rangeMesh.material != material)
-        {
-            rangeMesh.material = material;
-        }
-    }
-
-    private void CheckVisibleTargets()
-    {
-        if (visibleTargets.Count == 0)
-        {
-            UpdateRangeMeshMaterial(greenRangeMeshMaterial);
-        }
-        else if (target == Tower.Instance.transform)
-        {
-            UpdateRangeMeshMaterial(yellowRangeMeshMaterial);
-        }
-        else if (target != Tower.Instance.transform)
-        {
-            UpdateRangeMeshMaterial(redRangeMeshMaterial);
-        }
-    }
-
-    //private void CheckPathProgression()
+    //private void Update()
     //{
-    //    //float distance = Vector3.Distance(transform.position, target.position);
-    //    isOnNavMesh = navMeshAgent.isOnNavMesh;
-    //    isPathStale = navMeshAgent.isPathStale;
-    //    destination = navMeshAgent.destination;
-    //    isAgentActiveAndEnabled = navMeshAgent.isActiveAndEnabled;
-    //    //isStopped = navMeshAgent.isStopped;
-    //    nextPosition = navMeshAgent.nextPosition;
-    //    pathStatus = navMeshAgent.pathStatus;
-    //    positionIsNextPosition = transform.position == nextPosition;
-    //    cornersLeft = navMeshAgent.path.corners.Length;
-    //    forcedUpdateOfNextPosition = false;
+    //    if (rangeMesh != null)
+    //    {
+    //        CheckVisibleTargets();
+    //    }
+    //}
 
-    //    if (Vector3.Distance(transform.position, target.position) <= attackRange)
+    //private void UpdateRangeMeshMaterial(Material material)
+    //{
+    //    if (rangeMesh.material != material)
+    //    {
+    //        rangeMesh.material = material;
+    //    }
+    //}
+
+    //private void CheckVisibleTargets()
+    //{
+    //    if (visibleTargets.Count == 0)
     //    {
     //        UpdateRangeMeshMaterial(greenRangeMeshMaterial);
     //    }
-    //    else if (target != null && !reselectTarget)
-    //    {
-    //        if (!navMeshAgent.hasPath)
-    //        {
-    //            UpdateRangeMeshMaterial(redRangeMeshMaterial);
-    //            reselectTarget = true;
-    //        }
-    //        else if (positionIsNextPosition)
-    //        {
-    //            forcedUpdateOfNextPosition = true;
-
-    //            if (cornersLeft == 1)
-    //            {
-    //                navMeshAgent.path.corners[0] = target.position;
-    //            }
-    //            else
-    //            {
-    //                navMeshAgent.path.corners[0] = navMeshAgent.path.corners[1];
-    //            }
-    //        }
-    //    }
-    //    else
+    //    else if (target == Tower.Instance.transform)
     //    {
     //        UpdateRangeMeshMaterial(yellowRangeMeshMaterial);
+    //    }
+    //    else if (target != Tower.Instance.transform)
+    //    {
+    //        UpdateRangeMeshMaterial(redRangeMeshMaterial);
     //    }
     //}
 
@@ -403,17 +348,16 @@ public class Alien : MonoBehaviour, IMessenger
         if (Vector3.SqrMagnitude(PositionAtSameHeight(target.position) - transform.position) > (attackRange + targetSize.Radius) * (attackRange + targetSize.Radius))
         {
             AudioManager.Instance.PlaySound(AudioManager.ESound.Alien_Moves, this.gameObject);
-            //inAttackRange = false;
 
             if (navMeshAgent.speed != speed)
             {
                 navMeshAgent.speed = speed;
             }
+
+            CheckStalling();
         }
         else
         {
-            //inAttackRange = true;
-
             if (navMeshAgent.speed != 0)
             {
                 navMeshAgent.speed = 0;
@@ -427,13 +371,30 @@ public class Alien : MonoBehaviour, IMessenger
         }
     }
 
-	//Triggered Methods------------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Checks if the alien has stalled and should be removed to allow the next wave to begin.
+    /// </summary>
+    private void CheckStalling()
+    {
+        if (transform.position != lastPosition)
+        {
+            timeOfLastMove = Time.time;
+            lastPosition = transform.position;
+        }
 
-	/// <summary>
-	/// Send an event message for AlienFX.cs to do attack FX's and deal damage.
-	/// If there's no FX script listening to this to call DealDamage(), call it anyway.
-	/// </summary>
-	private void Attack()
+        if (Time.time - timeOfLastMove > maxStall)
+        {
+            StartCoroutine(Burrow());
+        }
+    }
+
+    //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Send an event message for AlienFX.cs to do attack FX's and deal damage.
+    /// If there's no FX script listening to this to call DealDamage(), call it anyway.
+    /// </summary>
+    private void Attack()
 	{
 		if (onAttack != null)
 		{
@@ -447,6 +408,27 @@ public class Alien : MonoBehaviour, IMessenger
             DamagePointer.Jump_Static(transform);
         }
 	}
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator Burrow()
+    {
+        moving = false;
+        navMeshAgent.enabled = false;
+        SetCollidersEnabled(false);
+
+        while (transform.position.y > -5)
+        {
+            Vector3 position = transform.position;
+            position.y -= burrowSpeed * Time.deltaTime;
+            transform.position = position;
+            yield return null;
+        }
+
+        DestroyAlien();
+    }
 
 	/// <summary>
 	/// Send an event message for AlienFX.cs to do damage taken FX's and assign attacker target.
@@ -464,6 +446,11 @@ public class Alien : MonoBehaviour, IMessenger
 		}
 
 		ShotBy(attackerTransform);
+
+        if (Random.Range(0f, 1f) > burrowingProbability)
+        {
+            StartCoroutine(Burrow());
+        }
 	}
 
 	/// <summary>
@@ -559,7 +546,7 @@ public class Alien : MonoBehaviour, IMessenger
     /// </summary>
     public void Reset()
     {
-        //navMeshAgent.enabled = false;
+        navMeshAgent.enabled = false;
         renderer.enabled = false;
         MessageManager.Instance.SendMessage("Turret", new Message(gameObject.name, "Alien", gameObject, "Dead"));
         MessageManager.Instance.Unsubscribe("Alien", this);
@@ -576,6 +563,18 @@ public class Alien : MonoBehaviour, IMessenger
 			c.enabled = false;
 		}
 	}
+
+    /// <summary>
+    /// Sets the enabled property of all colliders in the list colliders.
+    /// </summary>
+    /// <param name="enabled">Should the colliders be enabled or not?</param>
+    private void SetCollidersEnabled(bool enabled)
+    {
+        foreach (Collider c in colliders)
+        {
+            c.enabled = enabled;
+        }
+    }
 
     /// <summary>
     /// When a GameObject collides with another GameObject, Unity calls OnTriggerEnter.
