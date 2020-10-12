@@ -7,7 +7,7 @@ using UnityEngine.AI;
 /// <summary>
 /// A controller class for tracking which parts of the map have buildings, can be spawned to by aliens, etc.
 /// </summary>
-public class MapController : SerializableSingleton<MapController>
+public class MapManager : SerializableSingleton<MapManager>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
@@ -172,7 +172,7 @@ public class MapController : SerializableSingleton<MapController>
         NavMeshPath calculatedPath = null;
         float alienSpawnHeight = AlienFactory.Instance.AlienSpawnHeight;
         List<Alien> pathfinderInstances = new List<Alien>();
-        Transform cryoEggColliderTransform = CryoEgg.Instance.ColliderTransform;
+        Transform cryoEggColliderTransform = Tower.Instance.ColliderTransform;
 
         foreach (Alien prefab in pathfinders)
         {

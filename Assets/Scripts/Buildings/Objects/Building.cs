@@ -94,20 +94,20 @@ public class Building : CollisionListener
     LayerMask groundLayerMask;
 
     //Other
-    [SerializeField] private bool awake;
-    [SerializeField] private bool active = false;
-    [SerializeField] private bool placed = false;
-    [SerializeField] private bool operational = false;
-    [SerializeField] private bool built;
+    private bool awake;                 //Has Building.Awake() run for this building yet?
+    private bool active = false;        //Is this building active and in the scene, or has it been pooled and is inactive? Should only be set in BuildingFactory via the public property.
+    private bool placed = false;        //Has this building been placed?
+    private bool operational = false;   //Is the building operational and doing its job?
+    private bool built;                 //Has the building, after being placed, finished building?
+    private bool disabledByPlayer;      //Has the player manually disabled this building? 
+
+
     private float normalBuildTime;
 
     //Building Animation Variables
     private float timeStarted;
     private float timeSinceStarted;
     private float percentageComplete;
-
-    private bool constructing;
-    private bool finishedConstruction;
 
 	//Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -211,6 +211,40 @@ public class Building : CollisionListener
     //Complex Public Properties--------------------------------------------------------------------                                                    
 
     /// <summary>
+    /// Has the player manually disabled this building?
+    /// </summary>
+    public bool DisabledByPlayer
+    {
+        get
+        {
+            return disabledByPlayer;
+        }
+
+        set
+        {          
+            if (disabledByPlayer != value)
+            {
+                disabledByPlayer = value;
+
+                if (disabledByPlayer)
+                {
+                    ResourceManager.Instance.PowerConsumption -= powerConsumption;
+                    ResourceManager.Instance.WaterConsumption -= waterConsumption;
+                    ResourceManager.Instance.PlantsConsumption -= plantsConsumption;
+                    ResourceManager.Instance.GasConsumption -= gasConsumption;
+                }
+                else
+                {
+                    ResourceManager.Instance.PowerConsumption += powerConsumption;
+                    ResourceManager.Instance.WaterConsumption += waterConsumption;
+                    ResourceManager.Instance.PlantsConsumption += plantsConsumption;
+                    ResourceManager.Instance.GasConsumption += gasConsumption;
+                }
+            }
+        }
+    }
+
+    /// <summary>
     /// The Building's unique ID number. Id should only be set by BuildingFactory.GetBuilding().
     /// </summary>
     public int Id
@@ -241,9 +275,10 @@ public class Building : CollisionListener
         {
             if (operational != value)
             {
-                operational = (value && active);
+                operational = (value && active && !disabledByPlayer);
+				SetVFX(value);
 
-                if (resourceCollector != null)
+				if (resourceCollector != null)
                 {
                     if (operational)
                     {
@@ -388,7 +423,7 @@ public class Building : CollisionListener
         {
             if (!placed)
             {
-                validPlacement = !(CheckInPit() || CheckColliding() || CheckOnCliff() || CheckMouseOverUI()) && MapController.Instance.PositionAvailableForBuilding(this);
+                validPlacement = !(CheckInPit() || CheckColliding() || CheckOnCliff() || CheckMouseOverUI()) && MapManager.Instance.PositionAvailableForBuilding(this);
 
 				if (!validPlacement && placementCurrentValid)
 				{
@@ -568,15 +603,15 @@ public class Building : CollisionListener
     public void Place(Vector3 position)
     {
         placed = true; //Needs to occur before its position gets set to be on the ground so that it triggers the building Foundation at the proper time.
-        ResourceController.Instance.Ore -= oreCost;
-		ResourceController.Instance.PowerConsumption += powerConsumption;
-		ResourceController.Instance.WaterConsumption += waterConsumption;
-		ResourceController.Instance.PlantsConsumption += plantsConsumption;
-		ResourceController.Instance.GasConsumption += gasConsumption;
+        ResourceManager.Instance.Ore -= oreCost;
+		ResourceManager.Instance.PowerConsumption += powerConsumption;
+		ResourceManager.Instance.WaterConsumption += waterConsumption;
+		ResourceManager.Instance.PlantsConsumption += plantsConsumption;
+		ResourceManager.Instance.GasConsumption += gasConsumption;
 		SetCollidersEnabled("Placement", false);
         SetCollidersEnabled("Body", true);
         transform.position = position;
-        BuildingController.Instance.RegisterBuilding(this);
+        BuildingManager.Instance.RegisterBuilding(this);
 		BuildingFactory.Instance.onPlacementFinished?.Invoke();
 
         foreach (RendererMaterialSet r in rendererMaterialSets)
@@ -634,15 +669,13 @@ public class Building : CollisionListener
             Debug.Log("Material: " + m.renderer);
         }
         timeStarted = Time.time;
-        constructing = true;
-        finishedConstruction = false;
         health.CurrentHealth = 0.01f;
         StartCoroutine(ProgressUpdate());
     }
 
     private IEnumerator ProgressUpdate(){
         Debug.Log("Progress starting; starting health is: " + health.CurrentHealth);
-        while (constructing){
+        while (!built){
             timeSinceStarted = Time.time - timeStarted;
             percentageComplete = timeSinceStarted/buildTime;
 
@@ -658,9 +691,6 @@ public class Building : CollisionListener
 
             if (percentageComplete >= 1){
                 rendererMaterialSets[0].renderer.materials[0].SetFloat("_DissolveAmount", 1);
-                health.CurrentHealth = health.MaxHealth;
-                constructing = false;
-                finishedConstruction = true;
                 SpawnFinishedFX();
                 FinishBuilding();
                 EnableVFX();
@@ -703,6 +733,7 @@ public class Building : CollisionListener
     /// </summary>
     public void FinishBuilding()
     {
+        health.CurrentHealth = health.MaxHealth;
         built = true;
         Operational = true; //Using property to trigger activation of any resource collector component attached.
 
@@ -727,6 +758,17 @@ public class Building : CollisionListener
     }
 
     /// <summary>
+    /// Set VFX according to operational status.
+    /// </summary>
+    public void SetVFX(bool operational){
+        if (VFX.Count != 0){
+            foreach (GameObject vfx in VFX){
+                vfx.SetActive(operational);
+            }
+        }
+    }
+
+    /// <summary>
     /// Resets Building to its initial values when it is returned to the building pool.
     /// </summary>
     public void Reset()
@@ -736,6 +778,7 @@ public class Building : CollisionListener
         active = false;
         colliding = false;
         built = false;
+        disabledByPlayer = false;
 
         //animator.enabled = false;
         health.Reset();

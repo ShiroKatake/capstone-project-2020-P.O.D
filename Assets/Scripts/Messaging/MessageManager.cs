@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// A dispatcher for messages.
 /// </summary>
-public class MessageDispatcher : SerializableSingleton<MessageDispatcher>
+public class MessageManager : SerializableSingleton<MessageManager>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 

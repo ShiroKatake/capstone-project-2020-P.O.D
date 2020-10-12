@@ -57,7 +57,7 @@ public class BuildingFactory : Factory<BuildingFactory, Building, EBuilding>
 
         if (building.Terraformer != null)
         {
-            EnvironmentalController.Instance.RegisterBuilding(building.Terraformer);
+            EnvironmentManager.Instance.RegisterBuilding(building.Terraformer);
         }
 
         if (building.Model.localPosition != prefabs[buildingType].Model.localPosition)
@@ -97,23 +97,28 @@ public class BuildingFactory : Factory<BuildingFactory, Building, EBuilding>
     /// Note: it's probably better to call this method or another overload of Destroy() defined in BuildingFactory than Factory's base version of destroy.
     /// </summary>
     /// <param name="building">The building to be destroyed.</param>
-    /// <param name="consumingResources">Is the building consuming resources and does that consumption need to be cancelled now that it's being destroyed?</param>
-    /// <param name="consumingResources">Was the building destroyed while placed, and therefore needs to leave behind foundations?</param>
+    /// <param name="consumingResources">Is the building in a state where it can consume resources and does that consumption need to be verified and cancelled now that it's being destroyed?</param>
+    /// <param name="killed">Has the building been placed successfully and therefore needs to leave behind foundations now that it's being destroyed?</param>
     public void Destroy(Building building, bool consumingResources, bool killed)
     {
-        BuildingController.Instance.DeRegisterBuilding(building);
+        BuildingManager.Instance.DeRegisterBuilding(building);
+
+        if (BuildingDemolitionController.Instance.SelectedBuilding == building)
+        {
+            BuildingDemolitionController.Instance.HideDemolitionMenu();
+        }
 
         if (building.Terraformer != null)
         {
-            EnvironmentalController.Instance.RemoveBuilding(building.Id);
+            EnvironmentManager.Instance.RemoveBuilding(building.Id);
         }
 
-        if (consumingResources)
+        if (consumingResources && !building.DisabledByPlayer)
         {
-            ResourceController.Instance.PowerConsumption -= building.PowerConsumption;
-            ResourceController.Instance.WaterConsumption -= building.WaterConsumption;
-            ResourceController.Instance.PlantsConsumption -= building.PlantsConsumption;
-            ResourceController.Instance.PlantsConsumption -= building.GasConsumption;
+            ResourceManager.Instance.PowerConsumption -= building.PowerConsumption;
+            ResourceManager.Instance.WaterConsumption -= building.WaterConsumption;
+            ResourceManager.Instance.PlantsConsumption -= building.PlantsConsumption;
+            ResourceManager.Instance.PlantsConsumption -= building.GasConsumption;
         }
 
         if (killed)

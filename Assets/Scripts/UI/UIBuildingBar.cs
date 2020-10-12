@@ -19,10 +19,10 @@ public class UIBuildingBar : MonoBehaviour
     {
         foreach(Button b in buttonList){
             b.Btn.OnInteractableChanged(
-                b.AssociatedBuilding.OreCost <= ResourceController.Instance.Ore
-                && b.AssociatedBuilding.PowerConsumption <= ResourceController.Instance.SurplusPower
-                && b.AssociatedBuilding.PlantsConsumption <= ResourceController.Instance.SurplusPlants
-                && b.AssociatedBuilding.WaterConsumption <= ResourceController.Instance.SurplusWater
+                b.AssociatedBuilding.OreCost <= ResourceManager.Instance.Ore
+                && b.AssociatedBuilding.PowerConsumption <= ResourceManager.Instance.SurplusPower
+                && b.AssociatedBuilding.PlantsConsumption <= ResourceManager.Instance.SurplusPlants
+                && b.AssociatedBuilding.WaterConsumption <= ResourceManager.Instance.SurplusWater
             );
         }
     }

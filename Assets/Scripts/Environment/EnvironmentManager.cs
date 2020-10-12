@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class EnvironmentalController : SerializableSingleton<EnvironmentalController> {
+public class EnvironmentManager : SerializableSingleton<EnvironmentManager> {
     //testing variable
     //[SerializeField] private Text var;
     [SerializeField] private ProgressBar progress;

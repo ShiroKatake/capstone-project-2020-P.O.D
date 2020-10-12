@@ -128,14 +128,14 @@ public class Alien : MonoBehaviour, IMessenger
         gameObject.name = $"{type} {id}";
         health.Reset();
 
-        target = CryoEgg.Instance.ColliderTransform;
-        targetHealth = CryoEgg.Instance.GetComponent<Health>();
+        target = Tower.Instance.ColliderTransform;
+        targetHealth = Tower.Instance.GetComponent<Health>();
         timeOfLastAttack = attackCooldown * -1;
-        MessageDispatcher.Instance.Subscribe("Alien", this);
+        MessageManager.Instance.Subscribe("Alien", this);
         renderer.enabled = true;
 
         //Rotate to face the Cryo egg
-        Vector3 targetRotation = CryoEgg.Instance.transform.position - transform.position;
+        Vector3 targetRotation = Tower.Instance.transform.position - transform.position;
         transform.rotation = Quaternion.LookRotation(targetRotation);
 
         foreach (Collider c in colliders)
@@ -176,9 +176,9 @@ public class Alien : MonoBehaviour, IMessenger
         {
             case 0:
                 //Target Cryo egg
-                if (target != CryoEgg.Instance.transform)
+                if (target != Tower.Instance.transform)
                 {
-                    SetTarget(CryoEgg.Instance.transform);
+                    SetTarget(Tower.Instance.transform);
                 }
 
                 break;
@@ -234,9 +234,9 @@ public class Alien : MonoBehaviour, IMessenger
         targetHealth = target.GetComponentInParent<Health>();   //Gets Health from target or any of its parents that has it.
         targetSize = target.GetComponentInParent<Size>();   //Gets Radius from target or any of its parents that has it.
 
-        PositionData data = MapController.Instance.GetPositionData(transform.position);
+        PositionData data = MapManager.Instance.GetPositionData(transform.position);
 
-        if (selectedTarget == CryoEgg.Instance.transform && !health.IsDead() && data != null && data.Paths.ContainsKey(type) && data.Paths[type] != null)
+        if (selectedTarget == Tower.Instance.transform && !health.IsDead() && data != null && data.Paths.ContainsKey(type) && data.Paths[type] != null)
         {
             navMeshAgent.SetPath(data.Paths[type]);
         }
@@ -426,8 +426,8 @@ public class Alien : MonoBehaviour, IMessenger
     {
         //navMeshAgent.enabled = false;
         renderer.enabled = false;
-        MessageDispatcher.Instance.SendMessage("Turret", new Message(gameObject.name, "Alien", gameObject, "Dead"));
-        MessageDispatcher.Instance.Unsubscribe("Alien", this);
+        MessageManager.Instance.SendMessage("Turret", new Message(gameObject.name, "Alien", gameObject, "Dead"));
+        MessageManager.Instance.Unsubscribe("Alien", this);
         moving = false;
         shotByName = "";
         shotByTransform = null;

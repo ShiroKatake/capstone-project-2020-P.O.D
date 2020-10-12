@@ -5,13 +5,13 @@ using UnityEngine;
 /// <summary>
 /// A manager class for buildings.
 /// </summary>
-public class BuildingController : SerializableSingleton<BuildingController>
+public class BuildingManager : SerializableSingleton<BuildingManager>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
     //Serialized Fields----------------------------------------------------------------------------                                                    
 
-    [SerializeField] private Building cryoEgg;
+    [SerializeField] private Building tower;
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
@@ -31,11 +31,6 @@ public class BuildingController : SerializableSingleton<BuildingController>
     public int BuildingCount { get => buildings.Count; }
 
     /// <summary>
-    /// The cryo egg.
-    /// </summary>
-    public Building CryoEgg { get => cryoEgg; }
-
-    /// <summary>
     /// The time in seconds that the last defensive building was built.
     /// </summary>
     public float TimeLastDefenceWasBuilt { get => timeLastDefenceWasBuilt; }
@@ -45,6 +40,11 @@ public class BuildingController : SerializableSingleton<BuildingController>
     /// </summary>
     public float TimeLastNonDefenceWasBuilt { get => timeLastNonDefenceWasBuilt; }
 
+    /// <summary>
+    /// The tower.
+    /// </summary>
+    public Building Tower { get => tower; }
+
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
@@ -53,12 +53,12 @@ public class BuildingController : SerializableSingleton<BuildingController>
     /// </summary>
     private void Start()
     {
-        if (!MapController.Instance.Initialised)
+        if (!MapManager.Instance.Initialised)
         {
-            MapController.Instance.Initialise();
+            MapManager.Instance.Initialise();
         }
 
-        RegisterBuilding(cryoEgg);
+        RegisterBuilding(tower);
     }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
@@ -157,7 +157,7 @@ public class BuildingController : SerializableSingleton<BuildingController>
         if (!buildings.Contains(building))
         {
             buildings.Add(building);
-            MapController.Instance.RegisterBuilding(building);
+            MapManager.Instance.RegisterBuilding(building);
 
             if (building.BuildingType == EBuilding.ShotgunTurret || building.BuildingType == EBuilding.MachineGunTurret)
             {
@@ -182,7 +182,7 @@ public class BuildingController : SerializableSingleton<BuildingController>
 
             if (building.Placed)
             {
-                MapController.Instance.DeRegisterBuilding(building);
+                MapManager.Instance.DeRegisterBuilding(building);
             }
         }
     }

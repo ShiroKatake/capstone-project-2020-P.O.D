@@ -6,7 +6,7 @@ using Rewired;
 /// <summary>
 /// A controller class for building spawning.
 /// </summary>
-public class BuildingSpawningController : SerializableSingleton<BuildingSpawningController>
+public class BuildingSpawnController : SerializableSingleton<BuildingSpawnController>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
@@ -100,15 +100,15 @@ public class BuildingSpawningController : SerializableSingleton<BuildingSpawning
     private void GetInput()
     {
         //Building Movement Input
-        rawBuildingMovement = new Vector3(InputController.Instance.GetAxis("LookLeftRight"), 0, InputController.Instance.GetAxis("LookUpDown"));
+        rawBuildingMovement = new Vector3(InputManager.Instance.GetAxis("LookLeftRight"), 0, InputManager.Instance.GetAxis("LookUpDown"));
 
         //Building Selection Input
-        if (!cyclingBuildingSelection && InputController.Instance.ButtonPressed("CycleBuilding"))
+        if (!cyclingBuildingSelection && InputManager.Instance.ButtonPressed("CycleBuilding"))
         {
             cyclingBuildingSelection = true;
-            selectedBuildingType = InputController.Instance.SelectBuilding(selectedBuildingType);
+            selectedBuildingType = InputManager.Instance.SelectBuilding(selectedBuildingType);
         }
-        else if (cyclingBuildingSelection && !InputController.Instance.ButtonPressed("CycleBuilding"))
+        else if (cyclingBuildingSelection && !InputManager.Instance.ButtonPressed("CycleBuilding"))
         {
             cyclingBuildingSelection = false;
         }
@@ -116,12 +116,12 @@ public class BuildingSpawningController : SerializableSingleton<BuildingSpawning
         //Building Placement Input
         if (!spawnBuilding)
         {
-            spawnBuilding = InputController.Instance.ButtonPressed("SpawnBuilding");
+            spawnBuilding = InputManager.Instance.ButtonPressed("SpawnBuilding");
         }
         else
         {
-            placeBuilding = InputController.Instance.ButtonPressed("PlaceBuilding");
-            cancelBuilding = InputController.Instance.ButtonPressed("CancelBuilding");
+            placeBuilding = InputManager.Instance.ButtonPressed("PlaceBuilding");
+            cancelBuilding = InputManager.Instance.ButtonPressed("CancelBuilding");
 
             if (printInputs)
             {
@@ -203,27 +203,27 @@ public class BuildingSpawningController : SerializableSingleton<BuildingSpawning
                         errorMessage += "~<- Invalid location.>";
                     }
 
-                    if (ResourceController.Instance.Ore < heldBuilding.OreCost)
+                    if (ResourceManager.Instance.Ore < heldBuilding.OreCost)
                     {
                         errorMessage += "~<- Insufficient +minerals&.>";
                     }
 
-                    if (ResourceController.Instance.PowerSupply < ResourceController.Instance.PowerConsumption + heldBuilding.PowerConsumption)
+                    if (ResourceManager.Instance.PowerSupply < ResourceManager.Instance.PowerConsumption + heldBuilding.PowerConsumption)
                     {
                         errorMessage += "~<- Insufficient [power].>";
                     }
 
-                    if (ResourceController.Instance.WaterSupply < ResourceController.Instance.WaterConsumption + heldBuilding.WaterConsumption)
+                    if (ResourceManager.Instance.WaterSupply < ResourceManager.Instance.WaterConsumption + heldBuilding.WaterConsumption)
                     {
                         errorMessage += "~<- Insufficient /water\\.>";
                     }
 
-                    if (ResourceController.Instance.PlantsSupply < ResourceController.Instance.PlantsConsumption + heldBuilding.PlantsConsumption)
+                    if (ResourceManager.Instance.PlantsSupply < ResourceManager.Instance.PlantsConsumption + heldBuilding.PlantsConsumption)
                     {
                         errorMessage += "~<- Insufficient {plants}.>";
                     }
 
-                    if (ResourceController.Instance.PlantsSupply < ResourceController.Instance.PlantsConsumption + heldBuilding.GasConsumption)
+                    if (ResourceManager.Instance.PlantsSupply < ResourceManager.Instance.PlantsConsumption + heldBuilding.GasConsumption)
                     {
                         errorMessage += "~<- Insufficient @gas$.>";
                     }
@@ -267,7 +267,7 @@ public class BuildingSpawningController : SerializableSingleton<BuildingSpawning
     private Vector3 RawBuildingPositionToBuildingPosition(int radius)
     {
         Vector3 worldPos = transform.position;
-        Vector3 newOffset = rawBuildingMovement * PlayerController.Instance.MovementSpeed * Time.deltaTime;
+        Vector3 newOffset = rawBuildingMovement * PODController.Instance.MovementSpeed * Time.deltaTime;
         Vector3 newWorldPos = transform.position + newOffset;
         Vector3 newScreenPos = Camera.main.WorldToViewportPoint(newWorldPos);
 
@@ -345,11 +345,11 @@ public class BuildingSpawningController : SerializableSingleton<BuildingSpawning
     /// <returns>Whether there are enough resources available to build and maintain this building.</returns>
     private bool CheckResourcesAvailable()
     {
-        return ResourceController.Instance.Ore >= heldBuilding.OreCost
-            && (ResourceController.Instance.PowerSupply >= ResourceController.Instance.PowerConsumption + heldBuilding.PowerConsumption || heldBuilding.PowerConsumption == 0)
-            && (ResourceController.Instance.PlantsSupply >= ResourceController.Instance.PlantsConsumption + heldBuilding.PlantsConsumption || heldBuilding.PlantsConsumption == 0)
-            && (ResourceController.Instance.WaterSupply >= ResourceController.Instance.WaterConsumption + heldBuilding.WaterConsumption || heldBuilding.WaterConsumption == 0)
-            && (ResourceController.Instance.GasSupply >= ResourceController.Instance.GasConsumption + heldBuilding.GasConsumption || heldBuilding.GasConsumption == 0);
+        return ResourceManager.Instance.Ore >= heldBuilding.OreCost
+            && (ResourceManager.Instance.PowerSupply >= ResourceManager.Instance.PowerConsumption + heldBuilding.PowerConsumption || heldBuilding.PowerConsumption == 0)
+            && (ResourceManager.Instance.PlantsSupply >= ResourceManager.Instance.PlantsConsumption + heldBuilding.PlantsConsumption || heldBuilding.PlantsConsumption == 0)
+            && (ResourceManager.Instance.WaterSupply >= ResourceManager.Instance.WaterConsumption + heldBuilding.WaterConsumption || heldBuilding.WaterConsumption == 0)
+            && (ResourceManager.Instance.GasSupply >= ResourceManager.Instance.GasConsumption + heldBuilding.GasConsumption || heldBuilding.GasConsumption == 0);
     }
 
     /// <summary>

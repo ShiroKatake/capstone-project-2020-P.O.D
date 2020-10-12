@@ -81,8 +81,8 @@ public class TurretShooting : CollisionListener, IMessenger
     public void Reset()
     {
         //Debug.Log("TurretShooting.Reset()");
-        MessageDispatcher.Instance.SendMessage("Alien", new Message(gameObject.name, "Turret", gameObject, "Dead"));
-        MessageDispatcher.Instance.Unsubscribe("Turret", this);
+        MessageManager.Instance.SendMessage("Alien", new Message(gameObject.name, "Turret", gameObject, "Dead"));
+        MessageManager.Instance.Unsubscribe("Turret", this);
         visibleTargets = new List<Alien>();
         timeOfLastShot = shotCooldown * -1;
         ToggleDetectionCollider(false);
@@ -221,7 +221,7 @@ public class TurretShooting : CollisionListener, IMessenger
     public void Place()
     {
         ToggleDetectionCollider(true);
-        MessageDispatcher.Instance.Subscribe("Turret", this);
+        MessageManager.Instance.Subscribe("Turret", this);
     }
 
     /// <summary>

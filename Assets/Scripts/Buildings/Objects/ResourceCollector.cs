@@ -58,16 +58,16 @@ public class ResourceCollector : MonoBehaviour
         switch(resource)
         {
             case EResource.Power:
-                ResourceController.Instance.PowerSupply += collectionRate;
+                ResourceManager.Instance.PowerSupply += collectionRate;
                 break;
             case EResource.Water:
-                ResourceController.Instance.WaterSupply += collectionRate;
+                ResourceManager.Instance.WaterSupply += collectionRate;
                 break;
             case EResource.Plants:
-                ResourceController.Instance.PlantsSupply += collectionRate;
+                ResourceManager.Instance.PlantsSupply += collectionRate;
                 break;
             case EResource.Gas:
-                ResourceController.Instance.GasSupply += collectionRate;
+                ResourceManager.Instance.GasSupply += collectionRate;
                 break;
         }
     }
@@ -80,16 +80,16 @@ public class ResourceCollector : MonoBehaviour
         switch (resource)
         {
             case EResource.Power:
-                ResourceController.Instance.PowerSupply -= collectionRate;
+                ResourceManager.Instance.PowerSupply -= collectionRate;
                 break;
             case EResource.Water:
-                ResourceController.Instance.WaterSupply -= collectionRate;
+                ResourceManager.Instance.WaterSupply -= collectionRate;
                 break;
             case EResource.Plants:
-                ResourceController.Instance.PlantsSupply -= collectionRate;
+                ResourceManager.Instance.PlantsSupply -= collectionRate;
                 break;
             case EResource.Gas:
-                ResourceController.Instance.GasSupply -= collectionRate;
+                ResourceManager.Instance.GasSupply -= collectionRate;
                 break;
         }
     }
