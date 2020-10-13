@@ -8,6 +8,9 @@ public class AlienClaw : MonoBehaviour
 	[SerializeField] private Actor alienActor;
 	[SerializeField] private float damage;
 
+    [Header("Testing")]
+    [SerializeField] private bool debugging;
+
 	/// <summary>
 	/// When a GameObject collides with another GameObject, Unity calls OnTriggerEnter.
 	/// Deal damage to any thing that is in the hit box at moment of enabling.
@@ -35,6 +38,10 @@ public class AlienClaw : MonoBehaviour
 
                 UIColorManager.Instance.UITriggerAttackFlash();
             }
+        }
+        else if (debugging)
+        {
+            Debug.Log($"{this}.AlienClaw.OnTriggerEnter() ignoring trigger collider of {collidedWith.gameObject}");
         }
     }
 }
