@@ -201,7 +201,6 @@ Transform:
   - {fileID: 1112191767738305490}
   - {fileID: 7417490307114097082}
   - {fileID: 3167873814941227850}
-  - {fileID: 2326278354953993231}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -227,8 +226,8 @@ MonoBehaviour:
   plantsConsumption: 0
   gasConsumption: 0
   buildTime: 5
-  VFX:
-  - {fileID: 5075361585617950831}
+  buildInPits: 1
+  minBuildHeight: 1.5
   cliffRaycastOffsets:
   - {x: -0.45, y: 0, z: -0.45}
   - {x: -0.45, y: 0, z: 0}
@@ -256,6 +255,11 @@ MonoBehaviour:
     type: 3}
   fxSize: 1
   materialPrime: {fileID: 2100000, guid: c3b1016b873b8294589543b2ac716e0c, type: 2}
+  awake: 0
+  active: 0
+  placed: 0
+  operational: 0
+  built: 0
 --- !u!114 &-8028724317887167732
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -550,7 +554,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2.9, y: 2, z: 2.9}
+  m_Size: {x: 0.9, y: 2, z: 0.9}
   m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!114 &6817804607377848236
 MonoBehaviour:
