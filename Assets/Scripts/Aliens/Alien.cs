@@ -17,8 +17,10 @@ public class Alien : MonoBehaviour, IMessenger
     [Header("Components")]
     [SerializeField] private List<Collider> bodyColliders;
 	[SerializeField] private AlienClaw alienWeapon;
+
 	[Header("Stats")] 
     [SerializeField] private int id;
+    [SerializeField] private EAlien type;
     [SerializeField] private float attackRange;
     [SerializeField] private float damage;
     [SerializeField] private float attackCooldown;
@@ -84,6 +86,11 @@ public class Alien : MonoBehaviour, IMessenger
     /// </summary>
     public SkinnedMeshRenderer Renderer { get => renderer; }
 
+    /// <summary>
+    /// Alien's EAlien type.
+    /// </summary>
+    public EAlien Type { get => type; }
+
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
@@ -105,7 +112,6 @@ public class Alien : MonoBehaviour, IMessenger
         navMeshAgent.enabled = false;
         speed = navMeshAgent.speed;
 
-
 		alienWeapon = GetComponentInChildren<AlienClaw>();
 		alienWeapon.gameObject.SetActive(false);
 
@@ -119,17 +125,17 @@ public class Alien : MonoBehaviour, IMessenger
     public void Setup(int id)
     {
         this.id = id;
-        gameObject.name = $"Alien {id}";
+        gameObject.name = $"{type} {id}";
         health.Reset();
 
-        target = CryoEgg.Instance.ColliderTransform;
-        targetHealth = CryoEgg.Instance.GetComponent<Health>();
+        target = Tower.Instance.ColliderTransform;
+        targetHealth = Tower.Instance.GetComponent<Health>();
         timeOfLastAttack = attackCooldown * -1;
-        MessageDispatcher.Instance.Subscribe("Alien", this);
+        MessageManager.Instance.Subscribe("Alien", this);
         renderer.enabled = true;
 
         //Rotate to face the Cryo egg
-        Vector3 targetRotation = CryoEgg.Instance.transform.position - transform.position;
+        Vector3 targetRotation = Tower.Instance.transform.position - transform.position;
         transform.rotation = Quaternion.LookRotation(targetRotation);
 
         foreach (Collider c in colliders)
@@ -170,9 +176,9 @@ public class Alien : MonoBehaviour, IMessenger
         {
             case 0:
                 //Target Cryo egg
-                if (target != CryoEgg.Instance.transform)
+                if (target != Tower.Instance.transform)
                 {
-                    SetTarget(CryoEgg.Instance.transform);
+                    SetTarget(Tower.Instance.transform);
                 }
 
                 break;
@@ -227,6 +233,13 @@ public class Alien : MonoBehaviour, IMessenger
         target = selectedTarget;
         targetHealth = target.GetComponentInParent<Health>();   //Gets Health from target or any of its parents that has it.
         targetSize = target.GetComponentInParent<Size>();   //Gets Radius from target or any of its parents that has it.
+
+        PositionData data = MapManager.Instance.GetPositionData(transform.position);
+
+        if (selectedTarget == Tower.Instance.transform && !health.IsDead() && data != null && data.Paths.ContainsKey(type) && data.Paths[type] != null)
+        {
+            navMeshAgent.SetPath(data.Paths[type]);
+        }
     }
 
     /// <summary>
@@ -377,7 +390,7 @@ public class Alien : MonoBehaviour, IMessenger
 	/// </summary>
 	public void DestroyAlien()
 	{
-		AlienFactory.Instance.Destroy(this);
+		AlienFactory.Instance.Destroy(this, type);
 	}
 
 	/// <summary>
@@ -386,19 +399,22 @@ public class Alien : MonoBehaviour, IMessenger
 	/// <param name="message">The message to send to this messenger.</param>
 	public void Receive(Message message)
     {
-        if (message.SenderTag == "Turret" && message.MessageContents == "Dead")
+        if (message.SenderTag == "Turret")
         {
-            Transform messenger = message.SenderObject.transform;
-
-            if (shotByTransform == messenger)
+            if (message.Contents == "Dead")
             {
-                shotByName = "";
-                shotByTransform = null;
-            }
+                Transform messenger = message.SenderObject.transform;
 
-            if (visibleTargets.Contains(messenger))
-            {
-                visibleTargets.Remove(messenger);
+                if (shotByTransform == messenger)
+                {
+                    shotByName = "";
+                    shotByTransform = null;
+                }
+
+                if (visibleTargets.Contains(messenger))
+                {
+                    visibleTargets.Remove(messenger);
+                }
             }
         }
     }
@@ -410,8 +426,8 @@ public class Alien : MonoBehaviour, IMessenger
     {
         //navMeshAgent.enabled = false;
         renderer.enabled = false;
-        MessageDispatcher.Instance.SendMessage("Turret", new Message(gameObject.name, "Alien", this.gameObject, "Dead"));
-        MessageDispatcher.Instance.Unsubscribe("Alien", this);
+        MessageManager.Instance.SendMessage("Turret", new Message(gameObject.name, "Alien", gameObject, "Dead"));
+        MessageManager.Instance.Unsubscribe("Alien", this);
         moving = false;
         shotByName = "";
         shotByTransform = null;

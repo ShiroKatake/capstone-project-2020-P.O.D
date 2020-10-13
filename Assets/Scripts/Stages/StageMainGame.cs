@@ -32,14 +32,14 @@ public class StageMainGame: SerializableSingleton<StageMainGame>, IStage
     {
         while (true)
         {
-            if (EnvironmentalController.Instance.Win)
+            if (EnvironmentManager.Instance.Win)
             {
                 StageManager.Instance.SetStage(EStage.Win);
                 AudioManager.Instance.PlaySound(AudioManager.ESound.Win);
                 AudioManager.Instance.StopBackGroundMusic();
                 break;
             }
-            else if (CryoEgg.Instance.Health.IsDead())
+            else if (Tower.Instance.Health.IsDead())
             {
                 StageManager.Instance.SetStage(EStage.Lose);
                 AudioManager.Instance.PlaySound(AudioManager.ESound.Lose);

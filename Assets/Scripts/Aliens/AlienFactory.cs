@@ -6,7 +6,7 @@ using UnityEngine;
 /// <summary>
 /// Factory class for aliens.
 /// </summary>
-public class AlienFactory : Factory<AlienFactory, Alien, ENone>
+public class AlienFactory : Factory<AlienFactory, Alien, EAlien>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
@@ -27,6 +27,16 @@ public class AlienFactory : Factory<AlienFactory, Alien, ENone>
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
+    /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
+    /// Awake() runs before Start().
+    /// </summary>
+    protected override void Awake()
+    {
+        //Debug.Log("AlienFactory.Awake()");
+        base.Awake();
+    }
+
+    /// <summary>
     /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
     /// Start() runs after Awake().
     /// </summary>
@@ -34,11 +44,14 @@ public class AlienFactory : Factory<AlienFactory, Alien, ENone>
     {
         base.Start();
 
-        foreach (Alien a in pool[ENone.None])
+        foreach (List<Alien> l in pool.Values)
         {
-            foreach (Collider c in a.GetComponents<Collider>())
+            foreach (Alien a in l)
             {
-                c.enabled = false;
+                foreach (Collider c in a.GetComponents<Collider>())
+                {
+                    c.enabled = false;
+                }
             }
         }
     }
@@ -51,7 +64,7 @@ public class AlienFactory : Factory<AlienFactory, Alien, ENone>
     /// <param name="position">The position the alien should be instantiated at.</param>
     /// <param name="type">The type of alien to instantiate.</param>
     /// <returns>A new alien.</returns>
-    public override Alien Get(Vector3 position, ENone type = ENone.None)
+    public override Alien Get(Vector3 position, EAlien type)
     {
         return base.Get(position, type);
     }
@@ -78,10 +91,26 @@ public class AlienFactory : Factory<AlienFactory, Alien, ENone>
     /// </summary>
     /// <param name="alien">The alien to be destroyed.</param>
     /// <param name="type">The type of the alien to be destroyed.</param>
-    public override void Destroy(Alien alien, ENone type = ENone.None)
+    public override void Destroy(Alien alien, EAlien type)
     {
         alien.Reset();
-        AlienController.Instance.DeRegisterAlien(alien);
+        AlienManager.Instance.DeRegisterAlien(alien);
         base.Destroy(alien, type);
+    }
+
+    /// <summary>
+    /// Get a prefab from the factory.
+    /// Note: only use if you need to access the prefab directly; if you need an instance of an alien, use Get().
+    /// </summary>
+    /// <param name="type">The type of the alien prefab.</param>
+    /// <returns>The requested alien prefab.</returns>
+    public Alien GetPrefab(EAlien type)
+    {
+        if (prefabs.ContainsKey(type))
+        {
+            return prefabs[type];
+        }
+
+        return null;
     }
 }

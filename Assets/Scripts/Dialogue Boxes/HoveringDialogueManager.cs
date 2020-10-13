@@ -25,7 +25,8 @@ public class HoveringDialogueManager : SerializableSingleton<HoveringDialogueMan
 	[SerializeField] private TextMeshProUGUI oreCost;
 	[SerializeField] private TextMeshProUGUI powerCost;
 	[SerializeField] private TextMeshProUGUI waterCost;
-	[SerializeField] private TextMeshProUGUI wasteCost;
+	[SerializeField] private TextMeshProUGUI plantsCost;
+	[SerializeField] private TextMeshProUGUI gasCost;
 
 	[Space(10)]
 	[SerializeField] private TextMeshProUGUI buildTime;
@@ -34,7 +35,8 @@ public class HoveringDialogueManager : SerializableSingleton<HoveringDialogueMan
 	[SerializeField] private TextMeshProUGUI description;
 	[SerializeField] private TextMeshProUGUI powerProductionAmount;
 	[SerializeField] private TextMeshProUGUI waterProductionAmount;
-	[SerializeField] private TextMeshProUGUI wasteProductionAmount;
+	[SerializeField] private TextMeshProUGUI plantsProductionAmount;
+	[SerializeField] private TextMeshProUGUI gasProductionAmount;
 
 	[Space(10)]
 	[SerializeField] private Image mineralFill;
@@ -166,12 +168,14 @@ public class HoveringDialogueManager : SerializableSingleton<HoveringDialogueMan
 		oreCost.text = preset.OreCost;
 		powerCost.text = preset.PowerCost;
 		waterCost.text = preset.WaterCost;
-		wasteCost.text = preset.WasteCost;
+		plantsCost.text = preset.PlantsCost;
+		gasCost.text = preset.GasCost;
 		buildTime.text = preset.BuildTime;
 		description.text = preset.Description;
 		powerProductionAmount.text = preset.PowerProductionAmount;
 		waterProductionAmount.text = preset.WaterProductionAmount;
-		wasteProductionAmount.text = preset.WasteProductionAmount;
+		plantsProductionAmount.text = preset.PlantsProductionAmount;
+		gasProductionAmount.text = preset.GasProductionAmount;
 		mineralValue.text = preset.MineralValue;
 	}
 

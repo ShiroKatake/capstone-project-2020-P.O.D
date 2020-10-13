@@ -71,8 +71,8 @@ public class MachineGunTurretAiming : TurretAiming
     protected override void CalculateRotationAndElevation()
     {
         //Setup
-        rotationTargeter.LookAt(shooter.Target.transform.position + crawlerPositionOffset);
-        elevationTargeter.LookAt(shooter.Target.transform.position + crawlerPositionOffset);
+        rotationTargeter.LookAt(shooter.Target.transform.position + alienPositionOffsets[shooter.Target.Type]);
+        elevationTargeter.LookAt(shooter.Target.transform.position + alienPositionOffsets[shooter.Target.Type]);
         float rawRotation = rotationTargeter.rotation.eulerAngles.y;
         float rawElevation = elevationTargeter.rotation.eulerAngles.x + elevationColliderOffset.z;
 

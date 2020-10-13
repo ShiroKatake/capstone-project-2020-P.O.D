@@ -12,7 +12,7 @@ public class StageWin : SerializableSingleton<StageWin>, IStage
     //Serialized Fields----------------------------------------------------------------------------
 
     [SerializeField] private GameObject uiManager;
-    [SerializeField] private GOMessageController goMessage;
+    [SerializeField] private GOMessageManager goMessage;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 

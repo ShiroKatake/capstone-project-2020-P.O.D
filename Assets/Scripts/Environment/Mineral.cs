@@ -77,11 +77,11 @@ public class Mineral : MonoBehaviour
 
             if (placed)
             {
-                MapController.Instance.RegisterMineral(this);
+                MapManager.Instance.RegisterMineral(this);
             }
             else
             {
-                MapController.Instance.DeRegisterMineral(this);
+                MapManager.Instance.DeRegisterMineral(this);
             }
         }
     }
@@ -110,7 +110,7 @@ public class Mineral : MonoBehaviour
 
 		if (placed)
         {
-            MapController.Instance.RegisterMineral(this);
+            MapManager.Instance.RegisterMineral(this);
         }
     }
 
