@@ -17,7 +17,7 @@ GameObject:
   m_Layer: 10
   m_Name: The Tower
   m_TagString: Building
-  m_Icon: {fileID: 2800000, guid: d4387ea1b573d36438de37e55dc63970, type: 3}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -29,7 +29,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 880952307760529665}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.17, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.9, y: 1.9, z: 1.9}
   m_Children:
   - {fileID: 8586582078626057228}
@@ -58,7 +58,8 @@ MonoBehaviour:
   oreCost: 0
   powerConsumption: 0
   waterConsumption: 0
-  wasteConsumption: 0
+  plantsConsumption: 0
+  gasConsumption: 0
   buildTime: 0
   VFX: []
   cliffRaycastOffsets: []
@@ -84,17 +85,14 @@ MonoBehaviour:
   - renderer: {fileID: 0}
     opaque: {fileID: 2100000, guid: 355600a759edc5d46913d08651964d6b, type: 2}
     transparent: {fileID: 2100000, guid: a91d5ef9a3b97a540814dd5c5f487132, type: 2}
+    dissolveStart: 0
+    dissolveEnd: 0
   buildingErrorMaterial: {fileID: 2100000, guid: 101275a717e4a1c4fb89e563e095dfd7,
     type: 2}
   idleSound: 0
   constructionFinishedFX: {fileID: 0}
   fxSize: 1
   materialPrime: {fileID: 0}
-  awake: 0
-  active: 0
-  placed: 0
-  operational: 1
-  built: 0
 --- !u!114 &4025372026840351080
 MonoBehaviour:
   m_ObjectHideFlags: 0

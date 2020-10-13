@@ -162,7 +162,7 @@ GameObject:
   m_Layer: 10
   m_Name: Ice Drill
   m_TagString: Building
-  m_Icon: {fileID: 2800000, guid: 6d0728683cf3b524289758a929d2f707, type: 3}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -174,7 +174,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 841309495929802148}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4996701791975900726}
@@ -225,6 +225,8 @@ MonoBehaviour:
   - renderer: {fileID: 2992539316069331478}
     opaque: {fileID: 2100000, guid: e82f93703d0e2ee459856ac052814e80, type: 2}
     transparent: {fileID: 2100000, guid: f331e0a7e814a2d4ea6b0381b023b664, type: 2}
+    dissolveStart: -0.8
+    dissolveEnd: 2.85
   buildingErrorMaterial: {fileID: 2100000, guid: 101275a717e4a1c4fb89e563e095dfd7,
     type: 2}
   idleSound: 14

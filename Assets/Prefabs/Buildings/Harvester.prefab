@@ -96,7 +96,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4129577030481703282}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 9075749584938792643}
@@ -152,18 +152,22 @@ MonoBehaviour:
   model: {fileID: 6634092763135449967}
   rendererMaterialSets:
   - renderer: {fileID: 8247929216392846752}
-    opaque: {fileID: 2100000, guid: e175c781dc5b31e4cb26b19b7052ba9c, type: 2}
+    opaque: {fileID: 2100000, guid: 09cd9b08dd10000002dd9b08dd100000, type: 2}
     transparent: {fileID: 2100000, guid: 0b7a89511e6fd2942bf5fae69d810c79, type: 2}
+    dissolveStart: -0.98
+    dissolveEnd: 2.39
   - renderer: {fileID: 3550131426490164650}
     opaque: {fileID: 2100000, guid: 1b1b788370a9ab543a4465da9abeb7e5, type: 2}
     transparent: {fileID: 2100000, guid: 5d412f890474ec940855f41c9a21d602, type: 2}
+    dissolveStart: -0.98
+    dissolveEnd: 2.39
   buildingErrorMaterial: {fileID: 2100000, guid: 101275a717e4a1c4fb89e563e095dfd7,
     type: 2}
   idleSound: 18
   constructionFinishedFX: {fileID: 5264390033885133910, guid: 9a30dc8a4a1a76241acc06f41a0df0e0,
     type: 3}
   fxSize: 1.5
-  materialPrime: {fileID: 2100000, guid: e175c781dc5b31e4cb26b19b7052ba9c, type: 2}
+  materialPrime: {fileID: 0}
 --- !u!114 &5638085217674961001
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -726,7 +730,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: e175c781dc5b31e4cb26b19b7052ba9c, type: 2}
+      objectReference: {fileID: 2100000, guid: 09cd9b08dd10000002dd9b08dd100000, type: 2}
     - target: {fileID: -927199367670048503, guid: b2c7b1820aff0c5459339f1d2dfb18a6,
         type: 3}
       propertyPath: m_Name
