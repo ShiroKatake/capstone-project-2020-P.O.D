@@ -12,6 +12,8 @@ public struct RendererMaterialSet
     public MeshRenderer renderer;
     public Material opaque;
     public Material transparent;
+    public float dissolveStart;
+    public float dissolveEnd;
 }
 
 /// <summary>
@@ -633,6 +635,8 @@ public class Building : CollisionListener
         foreach (RendererMaterialSet r in rendererMaterialSets)
         {
             UpdateRendererMaterials(r.renderer, r.opaque, r.renderer.materials.Length);
+            r.renderer.materials[0].SetFloat("_Start", r.dissolveStart + transform.position.y);
+            r.renderer.materials[0].SetFloat("_End", r.dissolveEnd + transform.position.y);
             //r.renderer.materials[0].GetFloat("_DissolveAmount");
         }
 

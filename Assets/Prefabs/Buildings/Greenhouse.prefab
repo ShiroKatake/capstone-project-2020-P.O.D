@@ -425,7 +425,7 @@ GameObject:
   m_Layer: 10
   m_Name: Greenhouse
   m_TagString: Building
-  m_Icon: {fileID: 2800000, guid: 4c3d580ce64e16c4c90e81e0ceae9cb5, type: 3}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -437,7 +437,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4273049605349681512}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5020365198722141690}
@@ -510,15 +510,23 @@ MonoBehaviour:
   - renderer: {fileID: 5230335370356914471}
     opaque: {fileID: 2100000, guid: 53489400f2eb21e469d024929cce82d1, type: 2}
     transparent: {fileID: 2100000, guid: b2d7c08f8d1d66f4cba675dbc814ef7b, type: 2}
+    dissolveStart: -1.07
+    dissolveEnd: 3.58
   - renderer: {fileID: 5629735923833565242}
     opaque: {fileID: 2100000, guid: fad8d3e269fd2de4d99aa14def7a4104, type: 2}
     transparent: {fileID: 2100000, guid: 1a888314dfaef1f4e9302834007f8a0c, type: 2}
+    dissolveStart: -1.07
+    dissolveEnd: 3.58
   - renderer: {fileID: 1977789522298188858}
     opaque: {fileID: 2100000, guid: b12a04f93a3bd0e4fab33c87bcef82ef, type: 2}
     transparent: {fileID: 2100000, guid: 17a52d9faa885c04fa79b14b9704d8f1, type: 2}
+    dissolveStart: -1.07
+    dissolveEnd: 3.58
   - renderer: {fileID: 1011762397702721820}
     opaque: {fileID: 2100000, guid: 6de2bf4948d332c4f950c7fb92c1a8a0, type: 2}
     transparent: {fileID: 2100000, guid: 0bbc0d2fe0db58141809766fd9ecdf35, type: 2}
+    dissolveStart: -1.07
+    dissolveEnd: 3.58
   buildingErrorMaterial: {fileID: 2100000, guid: 101275a717e4a1c4fb89e563e095dfd7,
     type: 2}
   idleSound: 16

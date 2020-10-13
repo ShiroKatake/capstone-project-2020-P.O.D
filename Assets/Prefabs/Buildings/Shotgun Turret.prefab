@@ -346,7 +346,7 @@ GameObject:
   m_Layer: 10
   m_Name: Shotgun Turret
   m_TagString: Building
-  m_Icon: {fileID: 2800000, guid: 34ccb0108e4557a479cb8fd2664aa90b, type: 3}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -358,7 +358,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2740937295730065718}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7903677308643886609}
@@ -442,12 +442,18 @@ MonoBehaviour:
   - renderer: {fileID: 3025660970298743260}
     opaque: {fileID: 2100000, guid: 53c2ddfccaa112a4d97de760903cd330, type: 2}
     transparent: {fileID: 2100000, guid: 6bd364ab4bff9f145a01f786f5a068a7, type: 2}
+    dissolveStart: -0.84
+    dissolveEnd: 2.44
   - renderer: {fileID: 2320487590585829980}
     opaque: {fileID: 2100000, guid: 2785de8e0da646c4db09adaa027b56ec, type: 2}
     transparent: {fileID: 2100000, guid: f2d1a5f99775530498b8bcb14843f094, type: 2}
+    dissolveStart: -0.84
+    dissolveEnd: 2.44
   - renderer: {fileID: 7739934893343984963}
     opaque: {fileID: 2100000, guid: d46f8670794254442987f8c3127bed2a, type: 2}
     transparent: {fileID: 2100000, guid: 0384d8f2c070e5945a58d1b3c395d8bf, type: 2}
+    dissolveStart: -0.84
+    dissolveEnd: 2.44
   buildingErrorMaterial: {fileID: 2100000, guid: 101275a717e4a1c4fb89e563e095dfd7,
     type: 2}
   idleSound: 19
