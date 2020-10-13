@@ -146,13 +146,14 @@ public class Alien : MonoBehaviour, IMessenger
         health.Reset();
 
         target = Tower.Instance.ColliderTransform;
-        targetHealth = Tower.Instance.GetComponent<Health>();
+        targetHealth = Tower.Instance.Health;
+        targetSize = Tower.Instance.Size;
         timeOfLastAttack = attackCooldown * -1;
         MessageManager.Instance.Subscribe("Alien", this);
         renderer.enabled = true;
         reselectTarget = true;
 
-        //Rotate to face the Cryo egg
+        //Rotate to face the Tower
         Vector3 targetRotation = Tower.Instance.transform.position - transform.position;
         transform.rotation = Quaternion.LookRotation(targetRotation);
         SetCollidersEnabled(true);       
@@ -287,7 +288,7 @@ public class Alien : MonoBehaviour, IMessenger
     {
         target = selectedTarget;
         targetHealth = target.GetComponentInParent<Health>();   //Gets Health from target or any of its parents that has it.
-        targetSize = target.GetComponentInParent<Size>();   //Gets Radius from target or any of its parents that has it.
+        targetSize = target.GetComponentInParent<Size>();   //Gets Size from target or any of its parents that has it.
 
         PositionData data = MapManager.Instance.GetPositionData(transform.position);
 
