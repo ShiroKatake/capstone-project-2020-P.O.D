@@ -22,13 +22,27 @@ public class BoxSize : Size
     private float halfWidth;
     private float hypot;
     private float hypotSquared;
+    private float halfLengthSquared;
+    private float halfWidthSquared;
 
-    private float cornerAngleTopRight;
-    private float cornerAngleBottomRight;
-    private float cornerAngleBottomLeft;
-    private float cornerAngleTopLeft;
+    //private float cornerAngleTopRight;
+    //private float cornerAngleBottomRight;
+    //private float cornerAngleBottomLeft;
+    //private float cornerAngleTopLeft;
 
-    private float degreesToRadiansMultiplier;
+    //Public Properties------------------------------------------------------------------------------------------------------------------------------
+
+    //Basic Public Properties----------------------------------------------------------------------
+
+    /// <summary>
+    /// This object's full length along the z-axis.
+    /// </summary>
+    public float Length { get => length; }
+
+    /// <summary>
+    /// This object's full width along the x-axis.
+    /// </summary>
+    public float Width { get => width; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -38,17 +52,17 @@ public class BoxSize : Size
     /// </summary>
     private void Awake()
     {
-        degreesToRadiansMultiplier = Mathf.PI / 180;
-
         halfLength = length * 0.5f;
         halfWidth = width * 0.5f;
-        hypotSquared = halfLength * halfWidth;
+        halfLengthSquared = halfLength * halfLength;
+        halfWidthSquared = halfWidth * halfWidth;
+        hypotSquared = halfLength * halfLength + halfWidth * halfWidth;
         hypot = Mathf.Sqrt(hypotSquared);
 
-        cornerAngleTopRight = MathUtility.Instance.Angle(Vector2.zero, new Vector2(halfWidth, halfLength));
-        cornerAngleBottomRight = MathUtility.Instance.Angle(Vector2.zero, new Vector2(halfWidth, -halfLength));
-        cornerAngleBottomLeft = MathUtility.Instance.Angle(Vector2.zero, new Vector2(-halfWidth, -halfLength));
-        cornerAngleTopLeft = MathUtility.Instance.Angle(Vector2.zero, new Vector2(-halfWidth, halfLength));
+        //cornerAngleTopRight = MathUtility.Instance.Angle(Vector2.zero, new Vector2(halfWidth, halfLength));
+        //cornerAngleBottomRight = MathUtility.Instance.Angle(Vector2.zero, new Vector2(halfWidth, -halfLength));
+        //cornerAngleBottomLeft = MathUtility.Instance.Angle(Vector2.zero, new Vector2(-halfWidth, -halfLength));
+        //cornerAngleTopLeft = MathUtility.Instance.Angle(Vector2.zero, new Vector2(-halfWidth, halfLength));
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
@@ -60,53 +74,47 @@ public class BoxSize : Size
     /// <returns>The "radius" of the box object.</returns>
     public override float Radius(Vector3? position)
     {
-        if (!position.HasValue || Vector3.SqrMagnitude(position.Value - transform.position) > hypotSquared)
+        //Debug.Log("BoxSize.Radius");
+
+        if (!position.HasValue || MathUtility.Instance.Square(position.Value.x - transform.position.x) + MathUtility.Instance.Square(position.Value.z - transform.position.z) > hypotSquared)
         {
+            //Debug.Log($"Returning hypot because too far away or position is null, position is null: {position == null}");
             return hypot;
         }
 
-        float angle = MathUtility.Instance.Angle(new Vector2(transform.position.x, transform.position.z), new Vector2(position.Value.x, position.Value.z));
+        float deltaX = MathUtility.Instance.FloatMagnitude(position.Value.x - transform.position.x);
+        float deltaZ = MathUtility.Instance.FloatMagnitude(position.Value.z - transform.position.z);
 
-        if (angle == 0 || angle == 360 || angle == 180)
+        if (deltaX >= halfWidth && deltaZ >= halfLength)
         {
-            return halfLength;
-        }
-        else if (angle == 90 || angle == 270)
-        {
-            return halfWidth;
-        }
-        else if (angle == cornerAngleTopLeft 
-                || angle == cornerAngleTopRight 
-                || angle == cornerAngleBottomLeft 
-                || angle == cornerAngleBottomRight
-        )
-        {
+            //Debug.Log($"deltaX {deltaX} and deltaX {deltaZ} both meet or exceed halfWidth {halfWidth} and halfLength {halfLength} respectively, in hypot quadrants, returning hypot {hypot}");
             return hypot;
         }
-        else if (MathUtility.Instance.AngleIsBetween(angle, cornerAngleTopLeft, cornerAngleTopRight)
-                || MathUtility.Instance.AngleIsBetween(angle, cornerAngleBottomRight, cornerAngleBottomLeft) 
-        )
+        else if (deltaX < halfWidth)
         {
-            CalculateHypotenuse(halfLength, angle);
+            return CalculateHypotenuse(deltaX, halfLengthSquared);
+            //Debug.Log($"DeltaX {deltaX} < halfWidth {halfWidth}, calculated hypotenuse from deltaX and halfLengthSquared, returning result {result}");
+            //return result;
         }
-        else if (MathUtility.Instance.AngleIsBetween(angle, cornerAngleTopRight, cornerAngleBottomRight) 
-                || MathUtility.Instance.AngleIsBetween(angle, cornerAngleBottomLeft, cornerAngleTopLeft)
-        )
+        else if (deltaZ < halfLength)
         {
-            CalculateHypotenuse(halfWidth, angle);
+            return CalculateHypotenuse(deltaZ, halfWidthSquared);
+            //Debug.Log($"DeltaZ {deltaZ} < halfLength {halfLength}, calculated hypotenuse from deltaZ and halfWidthSquared, returning result {result}");
+            //return result;
         }
 
+        //Debug.Log($"Exhausted all other checks for deltaX and deltaZ, returning hypot {hypot}");
         return hypot;
     }
 
     /// <summary>
-    /// Calculates the hypotenuse of a triangle where one side forming the right angle is either this object's half-length or half-width, and you have the angle from this object's position to the other's position.
+    /// Calculates the hypotenuse of a triangle given the delta x or delta z between their positions, and the square of the other non-hypotenuse side (delta x should get half z squared, and vice versa).
     /// </summary>
-    /// <param name="adjacent">The adjacent side of the triangle, i.e. the side that is this object's half-length or half-width.</param>
-    /// <param name="angle">The angle from this object's position to the other's position.</param>
-    /// <returns>The hypotenuse of the aforementioned triangle.</returns>
-    private float CalculateHypotenuse(float adjacent, float angle)
+    /// <param name="deltaDynamicSide">The delta x or delta z between the positions of this object and the other object.</param>
+    /// <param name="squaredFixedSide">The square of the opposite side to deltaDynamicSide.</param>
+    /// <returns>The hypotenuse.</returns>
+    private float CalculateHypotenuse(float deltaDynamicSide, float squaredFixedSide)
     {
-        return adjacent / Mathf.Cos(angle * degreesToRadiansMultiplier);
+        return Mathf.Sqrt(deltaDynamicSide * deltaDynamicSide + squaredFixedSide);
     }
 }

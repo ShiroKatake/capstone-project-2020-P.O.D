@@ -22,6 +22,18 @@ public class MathUtility : SerializableSingleton<MathUtility>
 
     //Utility Methods--------------------------------------------------------------------------------------------------------------------------------  
 
+    //Number Square--------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Returns the square of a number.
+    /// </summary>
+    /// <param name="num">The number to square</param>
+    /// <returns>Num squared.</returns>
+    public float Square(float num)
+    {
+        return num * num;
+    }
+
     //Number Magnitude-----------------------------------------------------------------------------
 
     /// <summary>

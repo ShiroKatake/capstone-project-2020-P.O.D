@@ -346,10 +346,22 @@ public class Building : CollisionListener
                 groupedReporters[c.Purpose].Add(c);
             }
 
-            if (size.DiameterRoundedUp(null) < 1 || size.DiameterRoundedUp(null) > 5)
+            if (buildingType == EBuilding.Harvester)
             {
-                Debug.LogError("Building.Size.RadiusRoundedUp is invalid. It needs to be between 1 and 5.");
+                BoxSize boxSize = size as BoxSize;
+
+                if (boxSize.Length < 1 || boxSize.Length > 5 || boxSize.Width < 1 || boxSize.Width > 5)
+                {
+                    Debug.LogError($"Building.Size.Length or Width is invalid for {this}. They need to be between 1 and 5.");
+                }
             }
+            else
+            {
+                if (size.DiameterRoundedUp(null) < 1 || size.DiameterRoundedUp(null) > 5)
+                {
+                    Debug.LogError($"Building.Size.DiameterRoundedUp is invalid for {this}. It needs to be between 1 and 5.");
+                }
+            }                                       
 
             awake = true;
         }
