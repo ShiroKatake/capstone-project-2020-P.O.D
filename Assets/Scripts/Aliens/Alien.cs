@@ -29,6 +29,10 @@ public class Alien : MonoBehaviour, IMessenger
     [SerializeField][Range(0, 1)] private float burrowingProbability;
     [SerializeField] private float burrowSpeed;
 
+    [Header("Shader Dissolving")]
+    [SerializeField] private float dissolveStart;
+    [SerializeField] private float dissolveEnd;
+
     //[Header("Testing")]
     //[SerializeField] private MeshRenderer rangeMesh;
     //[SerializeField] private Material greenRangeMeshMaterial;
@@ -62,6 +66,8 @@ public class Alien : MonoBehaviour, IMessenger
 
     private Vector3 lastPosition;
     private float timeOfLastMove;
+
+    private float currentYPos;
 
     //Public Fields----------------------------------------------------------------------------------------------------------------------------------
 
@@ -156,7 +162,8 @@ public class Alien : MonoBehaviour, IMessenger
         //Rotate to face the Tower
         Vector3 targetRotation = Tower.Instance.transform.position - transform.position;
         transform.rotation = Quaternion.LookRotation(targetRotation);
-        SetCollidersEnabled(true);       
+        SetCollidersEnabled(true);
+        UpdateDissolving();
 
         if (StageManager.Instance.CurrentStage.GetID() == EStage.MainGame)
         {
@@ -166,6 +173,14 @@ public class Alien : MonoBehaviour, IMessenger
     }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Update() is run every frame.
+    /// </summary>
+    private void Update()
+    {        
+        UpdateDissolving();   
+    }
 
     /// <summary>
     /// FixedUpdate() is run at a fixed interval independant of framerate.
@@ -211,6 +226,21 @@ public class Alien : MonoBehaviour, IMessenger
     //        UpdateRangeMeshMaterial(redRangeMeshMaterial);
     //    }
     //}
+
+    //Recurring Methods (Update())-------------------------------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Makes sure the start and end points of the alien's shader's dissolving remain constant relative to the alien's height, so it doesn't start dissolving if it goes too high up.
+    /// </summary>
+    private void UpdateDissolving()
+    {
+        if (moving && currentYPos <= transform.position.y - 0.1f && currentYPos >= transform.position.y + 0.1f)
+        {
+            currentYPos = transform.position.y;
+            renderer.materials[0].SetFloat("_Start", dissolveStart + currentYPos);
+            renderer.materials[0].SetFloat("_End", dissolveStart + currentYPos);
+        }
+    }
 
     //Recurring Methods (FixedUpdate())-------------------------------------------------------------------------------------------------------------  
 
@@ -569,6 +599,7 @@ public class Alien : MonoBehaviour, IMessenger
         visibleAliens.Clear();
         target = null;
         reselectTarget = false;
+        currentYPos = 0;
 
 		foreach (Collider c in colliders)
 		{
