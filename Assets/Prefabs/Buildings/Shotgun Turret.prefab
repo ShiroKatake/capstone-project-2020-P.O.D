@@ -338,9 +338,9 @@ GameObject:
   - component: {fileID: 2387721251791164881}
   - component: {fileID: 7270633213526724645}
   - component: {fileID: 276844957512759736}
+  - component: {fileID: -3513195718502666501}
   - component: {fileID: 1219818938998714957}
   - component: {fileID: 6505921446254889876}
-  - component: {fileID: 7957306087969153787}
   - component: {fileID: 5814535936489597786}
   - component: {fileID: 7595449155248944193}
   - component: {fileID: -4813463451777356242}
@@ -435,6 +435,19 @@ MonoBehaviour:
     type: 3}
   fxSize: 1
   materialPrime: {fileID: 0}
+--- !u!114 &-3513195718502666501
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2740937295730065718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70177e84b18c53a479adf6c5a8ecadde, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 0.35
 --- !u!114 &1219818938998714957
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -479,19 +492,6 @@ MonoBehaviour:
   baseModel: {fileID: 8958835884956689479}
   barrelColliderPivot: {fileID: 6578390048626754263}
   barrelModelPivot: {fileID: 6761759660808947098}
---- !u!114 &7957306087969153787
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2740937295730065718}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e087b4d1f91fcb941a830564ec25c878, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  radius: 0.425
 --- !u!114 &5814535936489597786
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -27,12 +29,18 @@ public class MapManager : SerializableSingleton<MapManager>
     [SerializeField] private Vector3 tutorialTopRight;
 
     [Header("Pathfinding")]
+    //[SerializeField] private TextAsset savedPaths;
+    //[SerializeField] private string filePathInAssets;
+    //[SerializeField] private bool recalculatePathfinding;
     [SerializeField] private Alien[] pathfinders;
     [SerializeField] private bool pauseLoop;
-    [SerializeField] private float timeLimitPerFrame;
+    [SerializeField] private float dayTimeLimitPerFrame;
+    [SerializeField] private float nightTimeLimitPerFrame;
 
     [Header("Testing")]
     [SerializeField] private bool debugPathfinding;
+    private EAlien currentPathfinder;
+    private Vector2 currentPathfindingPos;
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
@@ -94,6 +102,7 @@ public class MapManager : SerializableSingleton<MapManager>
         groundLayerMask = LayerMask.GetMask("Ground");
         initialised = false;
         finishedCalculatingPaths = false;
+        //Debug.Log($"{Application.dataPath}/{filePathInAssets}");
     }
 
     /// <summary>
@@ -134,8 +143,8 @@ public class MapManager : SerializableSingleton<MapManager>
                     i, //X coordinate
                     j, //Z coordinate
                     MathUtility.Instance.Angle(centre, new Vector2(i, j)), //Angle from centre to position
-                    !(i < tuteAlienXMin || i > tuteAlienXMax || j < tuteAlienZMin || j > tuteAlienZMax), //Is inside the tutorial spawn area, i.e. is not outside it?
-                    !(i < noAlienXMin || i > noAlienXMax || j < noAlienZMin || j > noAlienZMax) //Is inside the alien exclusion area, i.e. is not outside it?
+                    (i >= tuteAlienXMin && i <= tuteAlienXMax && j >= tuteAlienZMin && j <= tuteAlienZMax), //Is inside the tutorial spawn area?
+                    (i >= noAlienXMin && i <= noAlienXMax && j >= noAlienZMin && j <= noAlienZMax) //Is inside the alien exclusion area?
                 );
 
                 if (positions[i, j].IsBuildable)
@@ -152,27 +161,30 @@ public class MapManager : SerializableSingleton<MapManager>
                 }
             }
         }
-        
+
         initialised = true;
-        StartCoroutine(CalculatePaths());
+
+        //if (recalculatePathfinding)
+        //{
+        StartCoroutine(CalculatePaths(GetPathfinders()));
+        //}
+        //else
+        //{
+        //    StartCoroutine(LoadPaths(GetPathfinders()));
+        //}
     }
 
     /// <summary>
-    /// Calculates paths from every map position to the cryo egg.
+    /// Gets stripped down instances of each alien to use for pathfinding.
     /// </summary>
-    /// <returns></returns>
-    private IEnumerator CalculatePaths()
+    /// <returns>A list of stripped down instances of each alien to use for pathfinding.</returns>
+    private List<Alien> GetPathfinders()
     {
+        List<Alien> result = new List<Alien>();
         System.Diagnostics.Stopwatch totalStopwatch = new System.Diagnostics.Stopwatch();
         System.Diagnostics.Stopwatch loopStopwatch = new System.Diagnostics.Stopwatch();
         totalStopwatch.Restart();
         loopStopwatch.Restart();
-
-        //Debug.Log($"MapController.CalculatePaths(), starting");
-        NavMeshPath calculatedPath = null;
-        float alienSpawnHeight = AlienFactory.Instance.AlienSpawnHeight;
-        List<Alien> pathfinderInstances = new List<Alien>();
-        Transform cryoEggColliderTransform = Tower.Instance.ColliderTransform;
 
         foreach (Alien prefab in pathfinders)
         {
@@ -180,7 +192,7 @@ public class MapManager : SerializableSingleton<MapManager>
 
             if (pathfinder != null)
             {
-                pathfinderInstances.Add(pathfinder);
+                result.Add(pathfinder);
                 Destroy(pathfinder.GetComponent<Actor>());
                 Destroy(pathfinder.GetComponent<AlienFX>());
                 Destroy(pathfinder.GetComponent<Animator>());
@@ -213,7 +225,26 @@ public class MapManager : SerializableSingleton<MapManager>
             }
         }
 
-        if (pauseLoop && loopStopwatch.ElapsedMilliseconds >= timeLimitPerFrame)
+        return result;
+    }
+
+    /// <summary>
+    /// Calculates paths from every map position to the cryo egg.
+    /// </summary>
+    /// <param name="pathfinderInstances">Alien instances to use for pathfinding.</param>
+    private IEnumerator CalculatePaths(List<Alien> pathfinderInstances)
+    {
+        System.Diagnostics.Stopwatch totalStopwatch = new System.Diagnostics.Stopwatch();
+        System.Diagnostics.Stopwatch loopStopwatch = new System.Diagnostics.Stopwatch();
+        totalStopwatch.Restart();
+        loopStopwatch.Restart();
+
+        //Debug.Log($"MapController.CalculatePaths(), starting");
+        NavMeshPath calculatedPath = null;
+        float alienSpawnHeight = AlienFactory.Instance.AlienSpawnHeight;
+        Transform cryoEggColliderTransform = Tower.Instance.ColliderTransform;
+
+        if (pauseLoop && loopStopwatch.ElapsedMilliseconds >= (ClockManager.Instance.Daytime ? dayTimeLimitPerFrame : nightTimeLimitPerFrame))
         {
             yield return null;
             loopStopwatch.Restart();
@@ -222,11 +253,13 @@ public class MapManager : SerializableSingleton<MapManager>
         for (int i = 0; i < pathfinderInstances.Count; i++)
         {
             Alien alien = pathfinderInstances[i];
+            currentPathfinder = alien.Type;
             NavMeshAgent agent = alien.NavMeshAgent;
             alien.gameObject.SetActive(true);
 
             foreach (PositionData p in positions)
-            { 
+            {
+                currentPathfindingPos = new Vector2(p.X, p.Z);
                 Vector3 pos = new Vector3(p.X, alienSpawnHeight, p.Z);
                 RaycastHit hit;
 
@@ -253,9 +286,9 @@ public class MapManager : SerializableSingleton<MapManager>
                     }
                 }
 
-                if (pauseLoop && loopStopwatch.ElapsedMilliseconds >= timeLimitPerFrame)
+                if (pauseLoop && loopStopwatch.ElapsedMilliseconds >= (ClockManager.Instance.Daytime ? dayTimeLimitPerFrame : nightTimeLimitPerFrame))
                 {
-                    if (debugPathfinding) Debug.Log($"MapController.CalculatePaths(), pause loop, alien: {alien.Type}, x: {p.X}/{xMax}, z: {p.Z}/{zMax}, milliseconds elapsed: {loopStopwatch.ElapsedMilliseconds}/{timeLimitPerFrame}");
+                    if (debugPathfinding) Debug.Log($"MapController.CalculatePaths(), pause loop, alien: {alien.Type}, x: {p.X}/{xMax}, z: {p.Z}/{zMax}, milliseconds elapsed: {loopStopwatch.ElapsedMilliseconds}/{(ClockManager.Instance.Daytime ? dayTimeLimitPerFrame : nightTimeLimitPerFrame)}");
                     yield return null;
                     loopStopwatch.Restart();
                 }
@@ -264,10 +297,97 @@ public class MapManager : SerializableSingleton<MapManager>
             Destroy(alien.gameObject);
         }
 
+        currentPathfinder = EAlien.None;
+        currentPathfindingPos = Vector2.zero;
         //Debug.Log($"MapController.CalculatePaths(), has finished, time elapsed is {totalStopwatch.ElapsedMilliseconds} ms, or {totalStopwatch.ElapsedMilliseconds / 1000} s.");
         finishedCalculatingPaths = true;
+        //StartCoroutine(SavePaths());
         yield return null;
     }
+
+    ///// <summary>
+    ///// Saves pre-calculated NavMeshPaths to a text file.
+    ///// </summary>
+    //private IEnumerator SavePaths()
+    //{
+    //    Debug.Log("Starting saving paths to file");
+    //    System.Diagnostics.Stopwatch loopStopwatch = new System.Diagnostics.Stopwatch();
+    //    loopStopwatch.Restart();
+    //    string pathsToSave = "# Start of file comment";
+
+    //    foreach (PositionData p in positions)
+    //    {
+    //        Debug.Log($"Writing data for position ({p.X},{p.Z})");
+    //        foreach (EAlien a in p.Paths.Keys)
+    //        {
+    //            Debug.Log($"Writing line for position alien {a} for position ({p.X},{p.Z})");
+    //            string line = $"{p.X},{p.Z}:{a}:{p.Paths[a].corners.Length}";
+
+    //            for (int i = 0; i < p.Paths[a].corners.Length; i++)
+    //            {
+    //                line += $":{p.Paths[a].corners[i].x},{p.Paths[a].corners[i].y},{p.Paths[a].corners[i].z}";
+    //            }
+
+    //            pathsToSave += $"\n{line}";
+
+    //            if (pauseLoop && loopStopwatch.ElapsedMilliseconds >= timeLimitPerFrame * 5)
+    //            {
+    //                if (debugPathfinding) Debug.Log($"MapController.SavePaths(), pause loop, x: {p.X}/{xMax}, z: {p.Z}/{zMax}, milliseconds elapsed: {loopStopwatch.ElapsedMilliseconds}/{timeLimitPerFrame}");
+    //                yield return null;
+    //                loopStopwatch.Restart();
+    //            }
+    //        }
+    //    }
+
+    //    StreamWriter writer = new StreamWriter($"{Application.dataPath}/{filePathInAssets}", true);
+    //    writer.Write(pathsToSave);
+    //    writer.Close();
+    //    Debug.Log($"Finished saving calculated paths to file");
+    //    yield return null;
+    //}
+
+    ///// <summary>
+    ///// Loads previously-calculated NavMeshPaths from a text file.
+    ///// </summary>
+    ///// <param name="pathfinderInstances">Alien instances to use for pathfinding.</param>
+    //private IEnumerator LoadPaths(List<Alien> pathfinderInstances)
+    //{
+    //    string text = savedPaths.text;
+    //    string[] lines = text.Split('\n');
+    //    Dictionary<int, NavMeshPath> pathTemplates = new Dictionary<int, NavMeshPath>();
+
+    //    for(int i = 0; i < lines.Length; i++)
+    //    {
+    //        string line = lines[i];
+
+    //        if (line[0] == '#')
+    //        {
+    //            continue;
+    //        }
+
+    //        string[] segments = line.Split(':');
+
+    //        if (segments.Length < 3)
+    //        {
+    //            Debug.LogError($"MapController.LoadPaths(), line {i + 1} of saved paths file does not have the minimum number of segments to be valid. Line is \"{line}\".");
+    //        }
+
+    //        //parse segments[2] (i.e. path length) as int, if 0 ignore.
+
+    //        //parse segments[0] as x and z coordinates, and segments[1] as EAlien value.
+
+    //        //If pathTemplate does not exist for path length, take appropriate alien pathfinder and position and calculate path to cryo egg. If path length doesn't match, error. If matches, save in dictionary.
+
+    //        //Create new NavMeshPath copying template.
+
+    //        //Parse Vector3s and copy into new NavMeshPath.
+
+    //        //Get position data, assign path according to EAlien value.
+
+    //    }
+
+    //    yield return null;
+    //}
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
