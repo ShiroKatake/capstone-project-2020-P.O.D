@@ -196,6 +196,7 @@ public class MapManager : SerializableSingleton<MapManager>
             if (pathfinder != null)
             {
                 result.Add(pathfinder);
+                pathfinder.IsPathfinder = true;
                 Destroy(pathfinder.GetComponent<Actor>());
                 Destroy(pathfinder.GetComponent<AlienFX>());
                 Destroy(pathfinder.GetComponent<Animator>());
@@ -261,7 +262,7 @@ public class MapManager : SerializableSingleton<MapManager>
             currentPathfinder = alien.Type;
             NavMeshAgent agent = alien.NavMeshAgent;
             alien.gameObject.SetActive(true);
-            Debug.Log($"Starting pathfinding for {currentPathfinder}.");
+            if (debugPathfinding) Debug.Log($"Starting pathfinding for {currentPathfinder}.");
 
             foreach (PositionData p in positions)
             {

@@ -68,6 +68,7 @@ public class Alien : MonoBehaviour, IMessenger
     private float timeOfLastMove;
 
     private float currentYPos;
+    private bool isPathfinder;
 
     //Public Fields----------------------------------------------------------------------------------------------------------------------------------
 
@@ -93,6 +94,11 @@ public class Alien : MonoBehaviour, IMessenger
     /// Alien's Health component.
     /// </summary>
     public Health Health { get => health; }
+
+    /// <summary>
+    /// Is this alien a pathfinder for others of its type?
+    /// </summary>
+    public bool IsPathfinder { get => isPathfinder; set => isPathfinder = value; }
 
     /// <summary>
     /// Alien's NavMeshAgent component.
@@ -163,6 +169,7 @@ public class Alien : MonoBehaviour, IMessenger
         Vector3 targetRotation = Tower.Instance.transform.position - transform.position;
         transform.rotation = Quaternion.LookRotation(targetRotation);
         SetCollidersEnabled(true);
+        currentYPos = -1;
         UpdateDissolving();
 
         if (StageManager.Instance.CurrentStage.GetID() == EStage.MainGame)
@@ -179,7 +186,7 @@ public class Alien : MonoBehaviour, IMessenger
     /// </summary>
     private void Update()
     {
-        if (moving)
+        if (!isPathfinder)
         {
             UpdateDissolving();
         }
@@ -237,10 +244,11 @@ public class Alien : MonoBehaviour, IMessenger
     /// </summary>
     private void UpdateDissolving()
     {
-        if (currentYPos <= transform.position.y - 0.1f && currentYPos >= transform.position.y + 0.1f)
+        //Debug.Log($"Alien.UpdateDissolving(), currentYPos: {currentYPos}, transform.position.y: {transform.position.y}");
+        if (currentYPos <= transform.position.y - 0.1f || currentYPos >= transform.position.y + 0.1f)
         {
             currentYPos = transform.position.y;
-            Debug.Log($"Alien.UpdateDissolving, renderer.materials.Length is {renderer.materials.Length}");
+            //Debug.Log($"Alien.UpdateDissolving, renderer.materials.Length is {renderer.materials.Length}");
             renderer.materials[0].SetFloat("_Start", dissolveStart + currentYPos);
             renderer.materials[0].SetFloat("_End", dissolveStart + currentYPos);
         }
