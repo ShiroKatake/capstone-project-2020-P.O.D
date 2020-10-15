@@ -199,6 +199,7 @@ GameObject:
   - component: {fileID: 2033458020145386998}
   - component: {fileID: 7797008365469057430}
   - component: {fileID: 6920960518473543034}
+  - component: {fileID: 5163704821705419896}
   m_Layer: 9
   m_Name: Mineral
   m_TagString: Planet
@@ -269,11 +270,13 @@ MonoBehaviour:
   oreCost: 
   powerCost: 
   waterCost: 
-  wasteCost: 
+  plantsCost: 
+  gasCost: 
   buildTime: 
   powerProductionAmount: 
   waterProductionAmount: 
-  wasteProductionAmount: 
+  plantsProductionAmount: 
+  gasProductionAmount: 
   description: 'Provides material for constructing buildings.
 
 
@@ -295,6 +298,22 @@ MonoBehaviour:
   oreSpawnRate: 0.75
   oreCurveRadius: 2
   miningPoint: {fileID: 1105329115834965487}
+--- !u!208 &5163704821705419896
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7795659470375798990}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 0
+  m_Extents: {x: 0.32, y: 0.5, z: 0.32}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: -0.165, y: 0, z: 0.13}
+  m_TimeToStationary: 0.5
 --- !u!1 &8861221456584097997
 GameObject:
   m_ObjectHideFlags: 0
@@ -415,6 +434,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TagString
       value: Planet
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 1d80d71c22a6e0840973c31ef38edb3b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1d80d71c22a6e0840973c31ef38edb3b, type: 3}
