@@ -843,7 +843,7 @@ public class Building : CollisionListener
         //bool isBarrelCollider = other.gameObject.name == "Barrel Collider";
         //bool isBarrelDemolitionMenuCollider = other.gameObject.name == "Barrel Demolition Menu Collider";
         //bool shouldAddToOtherColliders = active && !operational && !other.isTrigger && !isBarrelCollider && !isBarrelDemolitionMenuCollider;
-        //Debug.Log($"{this}.OnTriggerEnter, other is {other.gameObject.name}. Active: {active}, operational: {operational}, other.isTrigger: {other.isTrigger}, other.gameObject.name: {other.gameObject.name}, other name is Test: {isBarrelCollider}, other name is \"Barrel Demolition Menu Collider\": {isBarrelDemolitionMenuCollider}. Should add to other colliders: {shouldAddToOtherColliders}");
+        Debug.Log($"{this}.OnTriggerEnter, other is {other.gameObject.name}.");
 
         if (active 
             && !operational 
@@ -857,7 +857,7 @@ public class Building : CollisionListener
 
             if (!otherColliders.Contains(other))
             {
-                //Debug.Log("Adding to list of other colliders.");
+                Debug.Log("Adding to list of other colliders.");
                 otherColliders.Add(other);
             }
         }

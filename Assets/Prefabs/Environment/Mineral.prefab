@@ -200,6 +200,7 @@ GameObject:
   - component: {fileID: 7797008365469057430}
   - component: {fileID: 6920960518473543034}
   - component: {fileID: 5163704821705419896}
+  - component: {fileID: -2776176097304162772}
   m_Layer: 9
   m_Name: Mineral
   m_TagString: Planet
@@ -314,6 +315,22 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: -0.165, y: 0, z: 0.13}
   m_TimeToStationary: 0.5
+--- !u!54 &-2776176097304162772
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7795659470375798990}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &8861221456584097997
 GameObject:
   m_ObjectHideFlags: 0
