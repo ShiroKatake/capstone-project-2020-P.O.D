@@ -252,7 +252,7 @@ public class AlienManager : SerializableSingleton<AlienManager>
             float angle = MapManager.Instance.GetPositionData(spawnPos).Angle;
             bool positionAvailable;
             Alien alien = SpawnAlien(spawnPos, (cumulativeCrawlerFrequency >= 1 && MapManager.Instance.FinishedCalculatingPaths ? EAlien.Crawler : EAlien.Scuttler), out positionAvailable);
-            Debug.Log($"spawnPos: {spawnPos}, angle from centre: {angle}, minAngle: {minAngle}, maxAngle: {maxAngle}");
+            //Debug.Log($"spawnPos: {spawnPos}, angle from centre: {angle}, minAngle: {minAngle}, maxAngle: {maxAngle}");
 
             if (alien != null)
             {
@@ -283,7 +283,8 @@ public class AlienManager : SerializableSingleton<AlienManager>
 
                 if (positionAvailable)
                 {
-                    int margin = (alien.Type == EAlien.Scuttler ? 1 : 2);
+                    //Debug.Log($"AlienController.SpawnAliens(), position is available, alien is {alien}, type is {alien.Type}");
+                    int margin = (alien?.Type == EAlien.Scuttler ? 1 : 2);
 
                     for (int m = -margin; m <= margin; m++)
                     {

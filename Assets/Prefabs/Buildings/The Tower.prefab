@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 880952308425214859}
   - component: {fileID: 4025372026840351080}
   - component: {fileID: 3520859837222714372}
+  - component: {fileID: -6141797590830607125}
   - component: {fileID: 880952307760529664}
-  - component: {fileID: -2340967334442575925}
   m_Layer: 10
   m_Name: The Tower
   m_TagString: Building
@@ -107,7 +107,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   colliderTransform: {fileID: 8586582078626057228}
   health: {fileID: 880952307760529664}
-  size: {fileID: -2340967334442575925}
+  size: {fileID: 0}
 --- !u!114 &3520859837222714372
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -121,6 +121,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   affiliation: 0
+--- !u!114 &-6141797590830607125
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 880952307760529665}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70177e84b18c53a479adf6c5a8ecadde, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 1.05
 --- !u!114 &880952307760529664
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -135,19 +148,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 20
   currentHealth: 20
---- !u!114 &-2340967334442575925
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 880952307760529665}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e087b4d1f91fcb941a830564ec25c878, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  radius: 2.25
 --- !u!1 &6702033319860156753
 GameObject:
   m_ObjectHideFlags: 0

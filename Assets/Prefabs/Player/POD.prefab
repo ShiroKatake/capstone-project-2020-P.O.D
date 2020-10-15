@@ -93,11 +93,11 @@ GameObject:
   - component: {fileID: 7060469489430186544}
   - component: {fileID: 5404796149539190811}
   - component: {fileID: 1254351314858929259}
+  - component: {fileID: 3311223997514930268}
   - component: {fileID: 896588547581440063}
   - component: {fileID: 1599954602420491413}
-  - component: {fileID: 403112268726757339}
   - component: {fileID: 7041390208095427918}
-  - component: {fileID: 1903319585361199757}
+  - component: {fileID: 403112268726757339}
   m_Layer: 10
   m_Name: POD
   m_TagString: Player
@@ -170,6 +170,9 @@ MonoBehaviour:
   camera: {fileID: 0}
   menu: {fileID: 0}
   enableDisableButton: {fileID: 0}
+  enableDisableText: {fileID: 0}
+  eventSystem: {fileID: 0}
+  offsetFromHealthBar: {x: 0, y: 0, z: 0}
   inactivePosition: {x: -100, y: 100, z: -100}
 --- !u!114 &1254351314858929259
 MonoBehaviour:
@@ -185,6 +188,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   printInputs: 0
   camera: {fileID: 0}
+--- !u!114 &3311223997514930268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 403112268726757337}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70177e84b18c53a479adf6c5a8ecadde, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 0.5
 --- !u!114 &896588547581440063
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -213,6 +229,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   camera: {fileID: 0}
   miningBeam: {fileID: 0}
+--- !u!114 &7041390208095427918
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 403112268726757337}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b01049475cf5d544787fe6c12abfc7d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerID: 0
 --- !u!114 &403112268726757339
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -255,32 +284,6 @@ MonoBehaviour:
   healingSpeed: 2
   healingRange: 7
   printInputs: 0
---- !u!114 &7041390208095427918
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 403112268726757337}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b01049475cf5d544787fe6c12abfc7d8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerID: 0
---- !u!114 &1903319585361199757
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 403112268726757337}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e087b4d1f91fcb941a830564ec25c878, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  radius: 0.475
 --- !u!1 &2251904045699419656
 GameObject:
   m_ObjectHideFlags: 0
