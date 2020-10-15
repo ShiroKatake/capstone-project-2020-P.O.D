@@ -12,6 +12,8 @@ public struct RendererMaterialSet
     public MeshRenderer renderer;
     public Material opaque;
     public Material transparent;
+    public float dissolveStart;
+    public float dissolveEnd;
 }
 
 /// <summary>
@@ -629,6 +631,8 @@ public class Building : CollisionListener
         foreach (RendererMaterialSet r in rendererMaterialSets)
         {
             UpdateRendererMaterials(r.renderer, r.opaque, r.renderer.materials.Length);
+            r.renderer.materials[0].SetFloat("_Start", r.dissolveStart + transform.position.y);
+            r.renderer.materials[0].SetFloat("_End", r.dissolveEnd + transform.position.y);
             //r.renderer.materials[0].GetFloat("_DissolveAmount");
         }
 
@@ -832,15 +836,19 @@ public class Building : CollisionListener
     /// <param name="other">The other Collider involved in this collision.</param>
     public override void OnTriggerEnter(Collider other)
     {
-        //Debug.Log($"{this}.OnTriggerEnter, other is {other}");
-
-        if (active && !operational && !other.isTrigger && other.gameObject.name != "Barrel Collider")
+        if (active 
+            && !operational 
+            && !other.isTrigger 
+            && other.gameObject.name != "Barrel Collider"
+            && other.gameObject.name != "Barrel Demolition Menu Collider"
+        )
         {
-            //Debug.Log($"Active, not operational, and !other.isTrigger.");
+            //Debug.Log($"Active, not operational, !other.isTrigger, name != Barrel Collider or Barrel Demolition Menu Collider.");
             colliding = true;
 
             if (!otherColliders.Contains(other))
             {
+                //Debug.Log("Adding to list of other colliders.");
                 otherColliders.Add(other);
             }
         }

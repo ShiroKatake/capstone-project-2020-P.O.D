@@ -194,7 +194,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2924824314682187853}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 8436985926421865867}
@@ -247,15 +247,23 @@ MonoBehaviour:
   - renderer: {fileID: 4982330930987599697}
     opaque: {fileID: 2100000, guid: 5da8d29f103ce7340bf3d67094bdecb0, type: 2}
     transparent: {fileID: 2100000, guid: f7bf12b06bf3f834ca8b6fe99b74fde7, type: 2}
+    dissolveStart: -0.96
+    dissolveEnd: 2.49
   - renderer: {fileID: 3382867643357299601}
     opaque: {fileID: 2100000, guid: 94b921ba807bb34409209d23fa286053, type: 2}
     transparent: {fileID: 2100000, guid: 2809766d9ee29a446a098ee2e2e2ce7e, type: 2}
+    dissolveStart: -0.96
+    dissolveEnd: 2.49
   - renderer: {fileID: 7320803662218467000}
     opaque: {fileID: 2100000, guid: 4cbf653cac0906046b3ef54996245b5f, type: 2}
     transparent: {fileID: 2100000, guid: 4b73f16027ca2534aba6d2625cc02da0, type: 2}
+    dissolveStart: -0.96
+    dissolveEnd: 2.49
   - renderer: {fileID: 4829391167032000977}
     opaque: {fileID: 2100000, guid: 6db7c7cc1715df64f91731dbfa1e7e89, type: 2}
     transparent: {fileID: 2100000, guid: 3d91ee279519358458ec2499db84e476, type: 2}
+    dissolveStart: -0.96
+    dissolveEnd: 2.49
   buildingErrorMaterial: {fileID: 2100000, guid: 101275a717e4a1c4fb89e563e095dfd7,
     type: 2}
   idleSound: 18
