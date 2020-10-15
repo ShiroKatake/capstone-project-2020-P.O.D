@@ -824,15 +824,24 @@ public class Building : CollisionListener
     /// <param name="other">The other Collider involved in this collision.</param>
     public override void OnTriggerEnter(Collider other)
     {
-        Debug.Log($"{this}.OnTriggerEnter, other is {other.gameObject.name}");
+        //bool isBarrelCollider = other.gameObject.name == "Barrel Collider";
+        //bool isBarrelDemolitionMenuCollider = other.gameObject.name == "Barrel Demolition Menu Collider";
+        //bool shouldAddToOtherColliders = active && !operational && !other.isTrigger && !isBarrelCollider && !isBarrelDemolitionMenuCollider;
+        //Debug.Log($"{this}.OnTriggerEnter, other is {other.gameObject.name}. Active: {active}, operational: {operational}, other.isTrigger: {other.isTrigger}, other.gameObject.name: {other.gameObject.name}, other name is Test: {isBarrelCollider}, other name is \"Barrel Demolition Menu Collider\": {isBarrelDemolitionMenuCollider}. Should add to other colliders: {shouldAddToOtherColliders}");
 
-        if (active && !operational && !other.isTrigger && other.gameObject.name != "Barrel Collider")
+        if (active 
+            && !operational 
+            && !other.isTrigger 
+            && other.gameObject.name != "Barrel Collider"
+            && other.gameObject.name != "Barrel Demolition Menu Collider"
+        )
         {
-            Debug.Log($"Active, not operational, not Barrel Collider, and !other.isTrigger.");
+            //Debug.Log($"Active, not operational, !other.isTrigger, name != Barrel Collider or Barrel Demolition Menu Collider.");
             colliding = true;
 
             if (!otherColliders.Contains(other))
             {
+                //Debug.Log("Adding to list of other colliders.");
                 otherColliders.Add(other);
             }
         }
