@@ -824,11 +824,11 @@ public class Building : CollisionListener
     /// <param name="other">The other Collider involved in this collision.</param>
     public override void OnTriggerEnter(Collider other)
     {
-        //Debug.Log($"{this}.OnTriggerEnter, other is {other}");
+        Debug.Log($"{this}.OnTriggerEnter, other is {other.gameObject.name}");
 
-        if (active && !operational && !other.isTrigger)
+        if (active && !operational && !other.isTrigger && other.gameObject.name != "Barrel Collider")
         {
-            //Debug.Log($"Active, not operational, and !other.isTrigger.");
+            Debug.Log($"Active, not operational, not Barrel Collider, and !other.isTrigger.");
             colliding = true;
 
             if (!otherColliders.Contains(other))
