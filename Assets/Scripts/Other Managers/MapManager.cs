@@ -111,7 +111,7 @@ public class MapManager : SerializableSingleton<MapManager>
     /// </summary>
     private void Start()
     {
-        //Debug.Log($"MapController.Start()");
+        if (debugPathfinding) Debug.Log($"MapController.Start()");
         
         if (!initialised)
         {
@@ -124,7 +124,7 @@ public class MapManager : SerializableSingleton<MapManager>
     /// </summary>
     public void Initialise()
     {
-        //Debug.Log($"MapManager.Initialise()");
+        if (debugPathfinding) Debug.Log($"MapManager.Initialise()");
         float alienSpawnHeight = AlienFactory.Instance.AlienInstantiationHeight;
         int noAlienXMin = (int)Mathf.Round(noAliensBottomLeft.x);
         int noAlienXMax = (int)Mathf.Round(noAliensTopRight.x);
@@ -166,6 +166,7 @@ public class MapManager : SerializableSingleton<MapManager>
 
         //if (recalculatePathfinding)
         //{
+        if (debugPathfinding) Debug.Log("MapManager.Initialise(), finished. Starting coroutine CalculatePaths().");
         StartCoroutine(CalculatePaths(GetPathfinders()));
         //}
         //else
@@ -180,6 +181,8 @@ public class MapManager : SerializableSingleton<MapManager>
     /// <returns>A list of stripped down instances of each alien to use for pathfinding.</returns>
     private List<Alien> GetPathfinders()
     {
+        if (debugPathfinding) Debug.Log("MapManager.GetPathFinders(), starting.");
+
         List<Alien> result = new List<Alien>();
         System.Diagnostics.Stopwatch totalStopwatch = new System.Diagnostics.Stopwatch();
         System.Diagnostics.Stopwatch loopStopwatch = new System.Diagnostics.Stopwatch();
@@ -225,6 +228,8 @@ public class MapManager : SerializableSingleton<MapManager>
             }
         }
 
+        if (debugPathfinding) Debug.Log($"MapManager.GetPathFinders(), finished. Pathfinders.Count is {pathfinders.Length}.");
+
         return result;
     }
 
@@ -239,7 +244,7 @@ public class MapManager : SerializableSingleton<MapManager>
         totalStopwatch.Restart();
         loopStopwatch.Restart();
 
-        //Debug.Log($"MapController.CalculatePaths(), starting");
+        if (debugPathfinding) Debug.Log($"MapController.CalculatePaths(), starting");
         NavMeshPath calculatedPath = null;
         float alienSpawnHeight = AlienFactory.Instance.AlienInstantiationHeight;
         Transform towerColliderTransform = Tower.Instance.ColliderTransform;
@@ -256,6 +261,7 @@ public class MapManager : SerializableSingleton<MapManager>
             currentPathfinder = alien.Type;
             NavMeshAgent agent = alien.NavMeshAgent;
             alien.gameObject.SetActive(true);
+            Debug.Log($"Starting pathfinding for {currentPathfinder}.");
 
             foreach (PositionData p in positions)
             {
@@ -275,15 +281,25 @@ public class MapManager : SerializableSingleton<MapManager>
 
                         if (agent.CalculatePath(towerColliderTransform.position, calculatedPath))
                         {
+                            if (debugPathfinding) Debug.Log($"Calculated path from position {currentPathfindingPos} for alien type {currentPathfinder}.");
                             p.Paths[alien.Type] = calculatedPath;
+                        }
+                        else if (debugPathfinding)
+                        {
+                            Debug.Log($"Could not calculate path from position {currentPathfindingPos} for alien type {currentPathfinder}.");
                         }
 
                         agent.enabled = false;
                     }
                     else
                     {
+                        if (debugPathfinding) Debug.Log($"Position {currentPathfindingPos} is not on nav mesh for alien type {currentPathfinder}, registering off mesh position.");
                         RegisterOffMeshPosition(pos);
                     }
+                }
+                else if (debugPathfinding)
+                {
+                    Debug.Log($"Could not raycast to ground at position {currentPathfindingPos} for alien type {currentPathfinder}.");
                 }
 
                 if (pauseLoop && loopStopwatch.ElapsedMilliseconds >= (ClockManager.Instance.Daytime ? dayTimeLimitPerFrame : nightTimeLimitPerFrame))
@@ -299,7 +315,7 @@ public class MapManager : SerializableSingleton<MapManager>
 
         currentPathfinder = EAlien.None;
         currentPathfindingPos = Vector2.zero;
-        //Debug.Log($"MapController.CalculatePaths(), has finished, time elapsed is {totalStopwatch.ElapsedMilliseconds} ms, or {totalStopwatch.ElapsedMilliseconds / 1000} s.");
+        if (debugPathfinding) Debug.Log($"MapController.CalculatePaths(), has finished, time elapsed is {totalStopwatch.ElapsedMilliseconds} ms, or {totalStopwatch.ElapsedMilliseconds / 1000} s.");
         finishedCalculatingPaths = true;
         //StartCoroutine(SavePaths());
         yield return null;
@@ -582,7 +598,7 @@ public class MapManager : SerializableSingleton<MapManager>
             Vector3 pos = new Vector3(x, AlienFactory.Instance.AlienInstantiationHeight, z);
             tutorialAlienSpawnPoints.Remove(pos);
             gameplayAlienSpawnPoints.Remove(pos);
-            currentAlienSpawnPoints.Remove(pos);
+            currentAlienSpawnPoints?.Remove(pos);
             majorityAlienSpawnPoints?.Remove(pos);
             minorityAlienSpawnPoints?.Remove(pos);
         }

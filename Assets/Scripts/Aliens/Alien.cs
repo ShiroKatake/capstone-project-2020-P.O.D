@@ -178,8 +178,11 @@ public class Alien : MonoBehaviour, IMessenger
     /// Update() is run every frame.
     /// </summary>
     private void Update()
-    {        
-        UpdateDissolving();   
+    {
+        if (moving)
+        {
+            UpdateDissolving();
+        }
     }
 
     /// <summary>
@@ -234,9 +237,10 @@ public class Alien : MonoBehaviour, IMessenger
     /// </summary>
     private void UpdateDissolving()
     {
-        if (moving && currentYPos <= transform.position.y - 0.1f && currentYPos >= transform.position.y + 0.1f)
+        if (currentYPos <= transform.position.y - 0.1f && currentYPos >= transform.position.y + 0.1f)
         {
             currentYPos = transform.position.y;
+            Debug.Log($"Alien.UpdateDissolving, renderer.materials.Length is {renderer.materials.Length}");
             renderer.materials[0].SetFloat("_Start", dissolveStart + currentYPos);
             renderer.materials[0].SetFloat("_End", dissolveStart + currentYPos);
         }
