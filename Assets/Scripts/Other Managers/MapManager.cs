@@ -630,6 +630,11 @@ public class MapManager : SerializableSingleton<MapManager>
 
             if (hasMineral != null)
             {
+                if (!initialised)
+                {
+                    Initialise();
+                }
+
                 positions[x, z].HasMineral = hasMineral.Value;
             }
 

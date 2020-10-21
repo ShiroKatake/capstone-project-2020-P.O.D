@@ -253,12 +253,12 @@ public class TilemapTerrainGenerator : MonoBehaviour
                 }
 
                 if (pixel == new Color(0, 0.8f, 0.8f)) {
+                    Debug.Log($"TilemapTerrainGenerator.CreateMapItemsFromImage() instantiating mineral at {xx}, {yy}.");
                     //if (pixel.isEqual(new Color(0, 0.8f, 0.8f), 0.1f)) {
-                    GameObject mineral = Instantiate(prefabData.mineral_Prefab, transform);
-
-                    mineral.transform.localPosition = new Vector3(xx+0.5f, heightmap[xx, yy] * yScale, yy+0.5f);
+                    Mineral mineral = Instantiate(prefabData.mineral_Prefab, transform);
+                    mineral.transform.localPosition = new Vector3(xx, heightmap[xx, yy] * yScale, yy);
+                    mineral.Placed = true;
                 }
-
             }
         }
 

@@ -18,7 +18,7 @@ public class TilemapPrefabData : MonoBehaviour{
     [SerializeField] public GameObject rightRamp_Prefab;
     [SerializeField] public GameObject straightRamp_Prefab;
 
-    [SerializeField] public GameObject mineral_Prefab;
+    [SerializeField] public Mineral mineral_Prefab;
 
 }
 
