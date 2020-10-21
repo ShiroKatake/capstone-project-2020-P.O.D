@@ -441,7 +441,7 @@ public class Building : CollisionListener
         {
             if (!placed)
             {
-                validPlacement = /*!((!buildInPits && CheckInPit()) || CheckColliding() || CheckOnCliff() || CheckMouseOverUI()) &&*/ MapManager.Instance.PositionAvailableForBuilding(this);
+                validPlacement = !((!buildInPits && CheckInPit()) || CheckColliding() || CheckOnCliff() || CheckMouseOverUI()) && MapManager.Instance.PositionAvailableForBuilding(this);
 
                 if (!validPlacement && placementCurrentValid)
 				{
