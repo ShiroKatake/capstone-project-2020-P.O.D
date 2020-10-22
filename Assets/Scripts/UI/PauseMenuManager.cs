@@ -67,7 +67,7 @@ public class PauseMenuManager : SerializableSingleton<PauseMenuManager>
     /// </summary>
     private void Start()
     {
-        playerInputManager = PlayerController.Instance.PlayerInputManager;
+        playerInputManager = PODController.Instance.PlayerInputManager;
     }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------

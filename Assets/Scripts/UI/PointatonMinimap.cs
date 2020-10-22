@@ -19,7 +19,7 @@ public class PointatonMinimap : MonoBehaviour
 
     private void Start()
     {
-        CreatePointer(CryoEgg.Instance.transform, "CryoEgg Pointer");
+        CreatePointer(Tower.Instance.transform, "CryoEgg Pointer");
         //Debug.Log("I have been created from the PointatonMinimap");
     }
 

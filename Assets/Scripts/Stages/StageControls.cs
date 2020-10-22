@@ -12,12 +12,12 @@ public class StageControls : SerializableSingleton<StageControls>, IStage
 
     //Serialized Fields----------------------------------------------------------------------------
 
-    [SerializeField] private UIElementStatusController uiBorderUIEC;
-    [SerializeField] private UIElementStatusController consoleUIEC;
-    [SerializeField] private UIElementStatusController buildingAndResourcesBarUIEC;
-    [SerializeField] private UIElementStatusController miniMapBorderUIEC;
-    [SerializeField] private UIElementStatusController miniMapUIEC;
-    [SerializeField] private UIElementStatusController mineralsHighlightUIEC;
+    [SerializeField] private UIElementStatusManager uiBorderUIEC;
+    [SerializeField] private UIElementStatusManager consoleUIEC;
+    [SerializeField] private UIElementStatusManager buildingAndResourcesBarUIEC;
+    [SerializeField] private UIElementStatusManager miniMapBorderUIEC;
+    [SerializeField] private UIElementStatusManager miniMapUIEC;
+    [SerializeField] private UIElementStatusManager mineralsHighlightUIEC;
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
@@ -58,7 +58,7 @@ public class StageControls : SerializableSingleton<StageControls>, IStage
         s = DialogueBoxManager.Instance.GetDialogueBox("S");
         d = DialogueBoxManager.Instance.GetDialogueBox("D");
         cat = DialogueBoxManager.Instance.GetDialogueBox("CAT");
-        playerInputManager = ReInput.players.GetPlayer(PlayerController.Instance.GetComponent<PlayerID>().Value);
+        playerInputManager = ReInput.players.GetPlayer(PODController.Instance.GetComponent<PlayerID>().Value);
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
@@ -84,10 +84,10 @@ public class StageControls : SerializableSingleton<StageControls>, IStage
     /// </summary>
     private IEnumerator Setup()
     {
-        PlayerController.Instance.GetComponent<Health>().CurrentHealth = PlayerController.Instance.GetComponent<Health>().MaxHealth * 0.25f;  //Set the player's health ready for the healing section of the tutorial
+        PODController.Instance.GetComponent<Health>().CurrentHealth = PODController.Instance.GetComponent<Health>().MaxHealth * 0.25f;  //Set the player's health ready for the healing section of the tutorial
 
-        ClockController.Instance.Paused = true;
-        ClockController.Instance.SetTime(ClockController.Instance.HalfCycleDuration * 0.2f);
+        ClockManager.Instance.Paused = true;
+        ClockManager.Instance.SetTime(ClockManager.Instance.HalfCycleDuration * 0.2f);
         yield return new WaitForSeconds(3);
     }
 
@@ -215,9 +215,9 @@ public class StageControls : SerializableSingleton<StageControls>, IStage
         game.SubmitDialogue("lmb", 1, true, false);
         ResourceTextManager.Instance.FadeIn();
         miniMapUIEC.Visible = true;
-        float startingMinerals = ResourceController.Instance.Ore;
+        float startingMinerals = ResourceManager.Instance.Ore;
 
-        while (ResourceController.Instance.Ore < startingMinerals + 4)
+        while (ResourceManager.Instance.Ore < startingMinerals + 4)
         {
             yield return null;
         }

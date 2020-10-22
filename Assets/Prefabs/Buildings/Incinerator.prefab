@@ -33,7 +33,7 @@ Transform:
   m_Children:
   - {fileID: 4215405745183885993}
   m_Father: {fileID: 6754134058031210328}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: -90.00001, y: 0, z: -115.53}
 --- !u!136 &8083132371951957101
 CapsuleCollider:
@@ -111,14 +111,14 @@ GameObject:
   - component: {fileID: 6754134058031210328}
   - component: {fileID: 6057790016772902916}
   - component: {fileID: 1097937831683221508}
+  - component: {fileID: 3932256849416471055}
   - component: {fileID: 6966758408912711267}
-  - component: {fileID: -703308631334502526}
   - component: {fileID: -6203622737719408024}
   - component: {fileID: 5198899769767388593}
   m_Layer: 10
   m_Name: Incinerator
   m_TagString: Building
-  m_Icon: {fileID: 2800000, guid: 5eb455722d58d684f8c08c16161556fc, type: 3}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -130,10 +130,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6754134058031210308}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 892119003820523716}
+  - {fileID: 6823300008569898102}
   - {fileID: 787108383731677139}
   - {fileID: 6221744052706106356}
   m_Father: {fileID: 0}
@@ -153,12 +154,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collisionReporters: []
   id: 0
-  buildingType: 6
+  buildingType: 8
   consoleName: '@Incinerator$'
   oreCost: 8
   powerConsumption: 6
   waterConsumption: 0
-  wasteConsumption: 1
+  plantsConsumption: 0
+  gasConsumption: 0
   buildTime: 10
   VFX:
   - {fileID: 7988743901654366743}
@@ -187,6 +189,8 @@ MonoBehaviour:
   - renderer: {fileID: 1506364897671728230}
     opaque: {fileID: 2100000, guid: 32e5f86707429ae4e8b436122f0f6636, type: 2}
     transparent: {fileID: 2100000, guid: 42f1c535a87428f44899ecdce7685f77, type: 2}
+    dissolveStart: -0.83
+    dissolveEnd: 3.71
   buildingErrorMaterial: {fileID: 2100000, guid: 101275a717e4a1c4fb89e563e095dfd7,
     type: 2}
   idleSound: 17
@@ -194,11 +198,6 @@ MonoBehaviour:
     type: 3}
   fxSize: 2.5
   materialPrime: {fileID: 0}
-  awake: 0
-  active: 0
-  placed: 0
-  operational: 0
-  built: 0
 --- !u!114 &1097937831683221508
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -212,6 +211,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   affiliation: 0
+--- !u!114 &3932256849416471055
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6754134058031210308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70177e84b18c53a479adf6c5a8ecadde, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 1.35
 --- !u!114 &6966758408912711267
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -226,19 +238,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 50
   currentHealth: 0
---- !u!114 &-703308631334502526
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6754134058031210308}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e087b4d1f91fcb941a830564ec25c878, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  radius: 1.5
 --- !u!114 &-6203622737719408024
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -315,7 +314,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2.9, y: 3, z: 2.9}
+  m_Size: {x: 4.9, y: 3, z: 4.9}
   m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &5888161813551655346
 MonoBehaviour:
@@ -338,6 +337,120 @@ MonoBehaviour:
   reportOnTriggerEnter: 1
   reportOnTriggerExit: 1
   reportOnTriggerStay: 0
+--- !u!1 &9120627644911530124
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6823300008569898102}
+  - component: {fileID: 4581580251119765208}
+  - component: {fileID: 490803614694249170}
+  - component: {fileID: 1405538788256786490}
+  - component: {fileID: 4276839193058747821}
+  - component: {fileID: 2771747102869957074}
+  m_Layer: 16
+  m_Name: Demolition Menu Collider
+  m_TagString: Building
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6823300008569898102
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9120627644911530124}
+  m_LocalRotation: {x: -0.37716585, y: -0.59811866, z: -0.59811866, w: 0.37716585}
+  m_LocalPosition: {x: 0.08, y: 0.082, z: 0.08}
+  m_LocalScale: {x: 0.36493203, y: 0.36493203, z: 0.36493203}
+  m_Children: []
+  m_Father: {fileID: 6754134058031210328}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: -90.00001, y: 0, z: -115.53}
+--- !u!136 &4581580251119765208
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9120627644911530124}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 0
+  m_Radius: 3.7145352
+  m_Height: 7.4290714
+  m_Direction: 2
+  m_Center: {x: 0.019520972, y: 0.00000032719186, z: 0.72736305}
+--- !u!136 &490803614694249170
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9120627644911530124}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 0
+  m_Radius: 1.0146416
+  m_Height: 2.8857477
+  m_Direction: 2
+  m_Center: {x: -1.4189327, y: -4.1730537, z: -0.19303672}
+--- !u!54 &1405538788256786490
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9120627644911530124}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &4276839193058747821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9120627644911530124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 122c182bf36096746af88abc3d48308c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  purpose: Body
+  collisionListeners:
+  - {fileID: 6057790016772902916}
+  reportOnCollisionEnter: 0
+  reportOnCollisionExit: 0
+  reportOnCollisionStay: 0
+  reportOnTriggerEnter: 0
+  reportOnTriggerExit: 0
+  reportOnTriggerStay: 0
+--- !u!136 &2771747102869957074
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9120627644911530124}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 0
+  m_Radius: 0.40213645
+  m_Height: 4.5547566
+  m_Direction: 2
+  m_Center: {x: -0.19004838, y: 2.4939754, z: 4.211878}
 --- !u!1001 &457402032341009403
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -398,7 +511,7 @@ PrefabInstance:
     - target: {fileID: 5764915360147445775, guid: 3e6c95349fedd1646a8ab5120b7cfb10,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5764915360147445775, guid: 3e6c95349fedd1646a8ab5120b7cfb10,
         type: 3}

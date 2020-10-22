@@ -9,17 +9,17 @@ public class GeneralUI : MonoBehaviour
     private Vector2 hotSpot = Vector2.zero;
 
     private void Awake() {
-        hotSpot = new Vector2(cursorTexture.width/2, cursorTexture.height/2);
+        //hotSpot = new Vector2(cursorTexture.width/2, cursorTexture.height/2);
     }
 
     public void OnMouseEnter()
     {
-        Cursor.SetCursor(cursorTexture, hotSpot, cursorMode);
+        //Cursor.SetCursor(cursorTexture, hotSpot, cursorMode);
     }
 
     public void OnMouseExit()
     {
-        Cursor.SetCursor(null, Vector2.zero, cursorMode);
+        //Cursor.SetCursor(null, Vector2.zero, cursorMode);
     }
 
     /*// Start is called before the first frame update
