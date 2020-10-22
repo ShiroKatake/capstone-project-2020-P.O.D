@@ -44,16 +44,13 @@ public class MouseOverGraphic : MonoBehaviour
 
         if (results.Count != 0) {
             foreach(RaycastResult r in results){
-                Debug.Log(r.gameObject.name);
+                //Debug.Log(r.gameObject.name);
                 if (r.gameObject.GetComponent<MouseClickThrough>() != null)
                 {
                     //Debug.Log("Over UI");
                     return true;
                 }
             }
-        } else {
-            Debug.Log("No Results casted");
-
         }
 
         //Debug.Log("Not Over UI");
