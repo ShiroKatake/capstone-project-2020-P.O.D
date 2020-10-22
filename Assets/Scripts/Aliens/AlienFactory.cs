@@ -13,16 +13,22 @@ public class AlienFactory : Factory<AlienFactory, Alien, EAlien>
     //Serialized Fields----------------------------------------------------------------------------
 
     [Header("Alien Stats")]
-    [SerializeField] private float alienSpawnHeight;
+    [SerializeField] private float alienInstantiationHeight;
+    [SerializeField] private float minAlienSpawnHeight;
    
     //PublicProperties-------------------------------------------------------------------------------------------------------------------------------
 
     //Basic Public Properties----------------------------------------------------------------------
 
     /// <summary>
-    /// The height at which aliens spawn.
+    /// The height at which aliens are instantiated before checking if they can be placed on the map.
     /// </summary>
-    public float AlienSpawnHeight { get => alienSpawnHeight; }
+    public float AlienInstantiationHeight { get => alienInstantiationHeight; }
+
+    /// <summary>
+    /// The minimum height at which aliens can be spawned on the map.
+    /// </summary>
+    public float MinAlienSpawnHeight { get => minAlienSpawnHeight; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 

@@ -128,6 +128,8 @@ MonoBehaviour:
   plantsConsumption: 0
   gasConsumption: 0
   buildTime: 10
+  buildInPits: 0
+  minBuildHeight: 0
   VFX: []
   cliffRaycastOffsets:
   - {x: -1.5, y: 0, z: -0.75}
@@ -193,7 +195,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc3ec1884dd225f4eaaf87a2d85ab711, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radius: 0
   length: 1.44
   width: 2.96
 --- !u!114 &4319834008079662784

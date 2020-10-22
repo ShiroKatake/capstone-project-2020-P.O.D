@@ -252,7 +252,7 @@ public class AlienManager : SerializableSingleton<AlienManager>
             float angle = MapManager.Instance.GetPositionData(spawnPos).Angle;
             bool positionAvailable;
             Alien alien = SpawnAlien(spawnPos, (cumulativeCrawlerFrequency >= 1 && MapManager.Instance.FinishedCalculatingPaths ? EAlien.Crawler : EAlien.Scuttler), out positionAvailable);
-            //Debug.Log($"spawnPos: {spawnPos}, angle from centre: {angle}, minAngle: {minAngle}, maxAngle: {maxAngle}");
+            //Debug.Log($"spawnPos: {spawnPos}, angle from centre: {angle}, minAngle: {minAngle}, maxAngle: {maxAngle}, alien is {alien}");
 
             if (alien != null)
             {
@@ -365,11 +365,13 @@ public class AlienManager : SerializableSingleton<AlienManager>
                 MapManager.Instance.RegisterOffMeshPosition(spawnPos);
                 AlienFactory.Instance.Destroy(alien, alien.Type);
                 alien = null;
+                //Debug.Log($"Alien position not on nav mesh, can't spawn");
             }            
         }
         else
         {
             positionAvailable = false;
+            //Debug.Log($"Alien position not available for spawning according to MapController.PositionAvailableForSpawning()");
         }
 
         return alien;

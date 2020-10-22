@@ -42,6 +42,12 @@ public class Mineral : MonoBehaviour
     public int OreCount { get => oreCount; }
 
 	public Vector3 MiningPoint { get => miningPoint.position; }
+
+    /// <summary>
+    /// Whether or not the mineral has been placed in the scene, or is pooled in the object pool.
+    /// </summary>
+    public bool Placed { get => placed; set => placed = value; }
+
     //Complex Public Properties----------------------------------------------------------------------
 
     /// <summary>
@@ -58,31 +64,6 @@ public class Mineral : MonoBehaviour
         {
             id = value;
             gameObject.name = $"Mineral {id}";
-        }
-    }
-
-    /// <summary>
-    /// Whether or not the mineral has been placed in the scene, or is pooled in the object pool.
-    /// </summary>
-    public bool Placed
-    {
-        get
-        {
-            return placed;
-        }
-
-        set
-        {
-            placed = value;
-
-            if (placed)
-            {
-                MapManager.Instance.RegisterMineral(this);
-            }
-            else
-            {
-                MapManager.Instance.DeRegisterMineral(this);
-            }
         }
     }
 

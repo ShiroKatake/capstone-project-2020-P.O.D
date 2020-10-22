@@ -59,6 +59,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   alienActor: {fileID: 5065040778077614937}
   damage: 0.5
+  debugging: 0
 --- !u!1 &6062238761412881410
 GameObject:
   m_ObjectHideFlags: 0
@@ -170,7 +171,7 @@ NavMeshAgent:
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 2
-  m_BaseOffset: 0.1
+  m_BaseOffset: -0.1
   m_WalkableMask: 1
   m_ObstacleAvoidanceType: 4
 --- !u!114 &5065040778077614937
@@ -209,6 +210,8 @@ MonoBehaviour:
   maxStall: 5
   burrowingProbability: 0.01
   burrowSpeed: 4
+  dissolveStart: 1.9
+  dissolveEnd: -2.2
 --- !u!114 &3289847426876049767
 MonoBehaviour:
   m_ObjectHideFlags: 0
