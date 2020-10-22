@@ -254,6 +254,38 @@ public class Alien : MonoBehaviour, IMessenger
         }
     }
 
+    //private void Update()
+    //{
+    //    if (rangeMesh != null)
+    //    {
+    //        CheckVisibleTargets();
+    //    }
+    //}
+
+    //private void UpdateRangeMeshMaterial(Material material)
+    //{
+    //    if (rangeMesh.material != material)
+    //    {
+    //        rangeMesh.material = material;
+    //    }
+    //}
+
+    //private void CheckVisibleTargets()
+    //{
+    //    if (visibleTargets.Count == 0)
+    //    {
+    //        UpdateRangeMeshMaterial(greenRangeMeshMaterial);
+    //    }
+    //    else if (target == Tower.Instance.transform)
+    //    {
+    //        UpdateRangeMeshMaterial(yellowRangeMeshMaterial);
+    //    }
+    //    else if (target != Tower.Instance.transform)
+    //    {
+    //        UpdateRangeMeshMaterial(redRangeMeshMaterial);
+    //    }
+    //}
+
     //Recurring Methods (FixedUpdate())-------------------------------------------------------------------------------------------------------------  
 
     /// <summary>
@@ -613,11 +645,11 @@ public class Alien : MonoBehaviour, IMessenger
         reselectTarget = false;
         currentYPos = 0;
 
-		foreach (Collider c in colliders)
-		{
-			c.enabled = false;
-		}
-	}
+        foreach (Collider c in colliders)
+        {
+          c.enabled = false;
+        }
+    }
 
     /// <summary>
     /// Sets the enabled property of all colliders in the list colliders.

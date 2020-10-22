@@ -182,7 +182,6 @@ public class MapManager : SerializableSingleton<MapManager>
     private List<Alien> GetPathfinders()
     {
         if (debugPathfinding) Debug.Log("MapManager.GetPathFinders(), starting.");
-
         List<Alien> result = new List<Alien>();
         System.Diagnostics.Stopwatch totalStopwatch = new System.Diagnostics.Stopwatch();
         System.Diagnostics.Stopwatch loopStopwatch = new System.Diagnostics.Stopwatch();
@@ -230,7 +229,6 @@ public class MapManager : SerializableSingleton<MapManager>
         }
 
         if (debugPathfinding) Debug.Log($"MapManager.GetPathFinders(), finished. Pathfinders.Count is {pathfinders.Length}.");
-
         return result;
     }
 
