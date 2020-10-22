@@ -488,8 +488,13 @@ public class Building : CollisionListener
     /// Checks if the mouse is over the UI before placement.
     /// </summary>
     private bool CheckMouseOverUI()
-    {        
-        PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
+    {
+        if (MouseOverGraphic.Instance != null){
+            return MouseOverGraphic.Instance.IsOverGraphic();
+        } else {
+            return false;
+        }
+        /*PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
         pointerEventData.position = ReInput.controllers.Mouse.screenPosition;
 
         List<RaycastResult> raycastResultList = new List<RaycastResult>();
@@ -505,7 +510,7 @@ public class Building : CollisionListener
         }
 
         //Debug.Log("Not Over UI");
-        return false;
+        return false;*/
     }
 
     /// <summary>
