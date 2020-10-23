@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Rewired;
 
 /// <summary>
 /// A manager class for resource gathering and usage.
@@ -25,7 +26,7 @@ public class ResourceManager : SerializableSingleton<ResourceManager>
     [SerializeField] private int gasConsumption;
 
     [Header("Testing")]
-    [SerializeField] private bool getDeveloperResources;
+    [SerializeField] private bool developerResourcesEnabled;
     [SerializeField] private int developerResources;
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
@@ -37,6 +38,7 @@ public class ResourceManager : SerializableSingleton<ResourceManager>
     private bool plantsAvailable = false;
     private bool waterAvailable = false;
     private bool gasAvailable = false;
+    private Player playerInputManager;
 
     //Basic Public Properties----------------------------------------------------------------------                                                                                                                          
 
@@ -226,6 +228,17 @@ public class ResourceManager : SerializableSingleton<ResourceManager>
             CheckResourceSupply();
         }
     }
+    
+    //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
+    /// Start() runs after Awake().
+    /// </summary>
+    private void Start()
+    {
+        playerInputManager = PODController.Instance.PlayerInputManager;
+    }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -248,15 +261,26 @@ public class ResourceManager : SerializableSingleton<ResourceManager>
     /// </summary>
     private void CheckDeveloperResources()
     {
-        if (getDeveloperResources)
+        if (Application.isEditor && developerResourcesEnabled)
         {
-            ore += developerResources;
-            powerSupply += developerResources;
-            plantsSupply += developerResources;
-            waterSupply += developerResources;
-            gasSupply += developerResources;
-            getDeveloperResources = false;
+            if (playerInputManager.GetButtonDown("Get Developer Resources"))
+            {
+                ore += developerResources;
+                powerSupply += developerResources;
+                plantsSupply += developerResources;
+                waterSupply += developerResources;
+                gasSupply += developerResources;
+            }
+            else if (playerInputManager.GetButtonDown("Remove Developer Resources"))
+            {
+                ore = Mathf.Max(0, ore - developerResources);
+                powerSupply = Mathf.Max(0, powerSupply - developerResources);
+                plantsSupply = Mathf.Max(0, plantsSupply - developerResources);
+                waterSupply = Mathf.Max(0, waterSupply - developerResources);
+                gasSupply = Mathf.Max(0, gasSupply - developerResources);
+            }
         }
+
     }
 
     /// <summary>

@@ -12,6 +12,8 @@ public struct RendererMaterialSet
     public MeshRenderer renderer;
     public Material opaque;
     public Material transparent;
+    public float dissolveStart;
+    public float dissolveEnd;
 }
 
 /// <summary>
@@ -41,8 +43,12 @@ public class Building : CollisionListener
 
     [Header("Building")]
     [SerializeField] private float buildTime;
-    [SerializeField] private List<GameObject> VFX;
     //[SerializeField] private BuildingAnimatorController animatorController;
+    [SerializeField] private bool buildInPits;
+    [Tooltip("What is the minimum worldspace height (i.e. Y-axis position) buildings can be built at before being considered in a pit?")]
+    [SerializeField] private float minBuildHeight;
+    [SerializeField] private List<GameObject> VFX;
+
 
     [Header("Offsets of Cliff Detection Raycasts from Position")]
     [SerializeField] private List<Vector3> cliffRaycastOffsets;
@@ -346,10 +352,22 @@ public class Building : CollisionListener
                 groupedReporters[c.Purpose].Add(c);
             }
 
-            if (size.DiameterRoundedUp < 1 || size.DiameterRoundedUp > 5)
+            if (buildingType == EBuilding.Harvester)
             {
-                Debug.LogError("Building.Size.RadiusRoundedUp is invalid. It needs to be between 1 and 5.");
+                BoxSize boxSize = size as BoxSize;
+
+                if (boxSize.Length < 1 || boxSize.Length > 5 || boxSize.Width < 1 || boxSize.Width > 5)
+                {
+                    Debug.LogError($"Building.Size.Length or Width is invalid for {this}. They need to be between 1 and 5.");
+                }
             }
+            else
+            {
+                if (size.DiameterRoundedUp(null) < 1 || size.DiameterRoundedUp(null) > 5)
+                {
+                    Debug.LogError($"Building.Size.DiameterRoundedUp is invalid for {this}. It needs to be between 1 and 5.");
+                }
+            }                                       
 
             awake = true;
         }
@@ -423,9 +441,9 @@ public class Building : CollisionListener
         {
             if (!placed)
             {
-                validPlacement = !(CheckInPit() || CheckColliding() || CheckOnCliff() || CheckMouseOverUI()) && MapManager.Instance.PositionAvailableForBuilding(this);
+                validPlacement = !((!buildInPits && CheckInPit()) || CheckColliding() || CheckOnCliff() || CheckMouseOverUI()) && MapManager.Instance.PositionAvailableForBuilding(this);
 
-				if (!validPlacement && placementCurrentValid)
+                if (!validPlacement && placementCurrentValid)
 				{
 					BuildingFactory.Instance.onPlacementInvalid?.Invoke();
 					placementCurrentValid = false;
@@ -499,7 +517,7 @@ public class Building : CollisionListener
     /// </summary>
     private bool CheckInPit()
     {
-        return transform.position.y < -0.1f;
+        return transform.position.y < minBuildHeight;
         //bool result = transform.position.y < -0.1f;
         //Debug.Log($"{this} in pit: {result}");
         //return result;
@@ -617,6 +635,8 @@ public class Building : CollisionListener
         foreach (RendererMaterialSet r in rendererMaterialSets)
         {
             UpdateRendererMaterials(r.renderer, r.opaque, r.renderer.materials.Length);
+            r.renderer.materials[0].SetFloat("_Start", r.dissolveStart + transform.position.y);
+            r.renderer.materials[0].SetFloat("_End", r.dissolveEnd + transform.position.y);
             //r.renderer.materials[0].GetFloat("_DissolveAmount");
         }
 
@@ -665,16 +685,16 @@ public class Building : CollisionListener
 
     public void StartConstruction(){
         //Debug.Log("Starting the Construction.");
-        foreach (RendererMaterialSet m in rendererMaterialSets){
-            Debug.Log("Material: " + m.renderer);
-        }
+        //foreach (RendererMaterialSet m in rendererMaterialSets){
+        //    Debug.Log("Material: " + m.renderer);
+        //}
         timeStarted = Time.time;
         health.CurrentHealth = 0.01f;
         StartCoroutine(ProgressUpdate());
     }
 
     private IEnumerator ProgressUpdate(){
-        Debug.Log("Progress starting; starting health is: " + health.CurrentHealth);
+        //Debug.Log("Progress starting; starting health is: " + health.CurrentHealth);
         while (!built){
             timeSinceStarted = Time.time - timeStarted;
             percentageComplete = timeSinceStarted/buildTime;
@@ -820,15 +840,24 @@ public class Building : CollisionListener
     /// <param name="other">The other Collider involved in this collision.</param>
     public override void OnTriggerEnter(Collider other)
     {
-        //Debug.Log($"{this}.OnTriggerEnter, other is {other}");
+        //bool isBarrelCollider = other.gameObject.name == "Barrel Collider";
+        //bool isBarrelDemolitionMenuCollider = other.gameObject.name == "Barrel Demolition Menu Collider";
+        //bool shouldAddToOtherColliders = active && !operational && !other.isTrigger && !isBarrelCollider && !isBarrelDemolitionMenuCollider;
+        //Debug.Log($"{this}.OnTriggerEnter, other is {other.gameObject.name}.");
 
-        if (active && !operational && !other.isTrigger)
+        if (active 
+            && !operational 
+            && !other.isTrigger 
+            && other.gameObject.name != "Barrel Collider"
+            && other.gameObject.name != "Barrel Demolition Menu Collider"
+        )
         {
-            //Debug.Log($"Active, not operational, and !other.isTrigger.");
+            //Debug.Log($"Active, not operational, !other.isTrigger, name != Barrel Collider or Barrel Demolition Menu Collider.");
             colliding = true;
 
             if (!otherColliders.Contains(other))
             {
+                //Debug.Log("Adding to list of other colliders.");
                 otherColliders.Add(other);
             }
         }

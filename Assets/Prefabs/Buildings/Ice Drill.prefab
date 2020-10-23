@@ -155,14 +155,14 @@ GameObject:
   - component: {fileID: 5709118874323206403}
   - component: {fileID: 6356630498027900237}
   - component: {fileID: -7395416510154044524}
+  - component: {fileID: -1609834275301478327}
   - component: {fileID: 5375039924950147421}
-  - component: {fileID: -7611196641205100392}
   - component: {fileID: -3601512462432550777}
   - component: {fileID: 8528353643659305805}
   m_Layer: 10
   m_Name: Ice Drill
   m_TagString: Building
-  m_Icon: {fileID: 2800000, guid: 6d0728683cf3b524289758a929d2f707, type: 3}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -174,7 +174,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 841309495929802148}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4996701791975900726}
@@ -208,6 +208,8 @@ MonoBehaviour:
   buildTime: 7
   VFX:
   - {fileID: 4889181189626258572}
+  buildInPits: 1
+  minBuildHeight: 1.5
   cliffRaycastOffsets:
   - {x: -0.45, y: 0, z: -0.45}
   - {x: -0.45, y: 0, z: 0}
@@ -225,6 +227,8 @@ MonoBehaviour:
   - renderer: {fileID: 2992539316069331478}
     opaque: {fileID: 2100000, guid: e82f93703d0e2ee459856ac052814e80, type: 2}
     transparent: {fileID: 2100000, guid: f331e0a7e814a2d4ea6b0381b023b664, type: 2}
+    dissolveStart: -0.8
+    dissolveEnd: 2.85
   buildingErrorMaterial: {fileID: 2100000, guid: 101275a717e4a1c4fb89e563e095dfd7,
     type: 2}
   idleSound: 14
@@ -245,6 +249,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   affiliation: 0
+--- !u!114 &-1609834275301478327
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 841309495929802148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70177e84b18c53a479adf6c5a8ecadde, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 0.4
 --- !u!114 &5375039924950147421
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -259,19 +276,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 40
   currentHealth: 0
---- !u!114 &-7611196641205100392
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 841309495929802148}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e087b4d1f91fcb941a830564ec25c878, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  radius: 0.45
 --- !u!114 &-3601512462432550777
 MonoBehaviour:
   m_ObjectHideFlags: 0

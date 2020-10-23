@@ -3,57 +3,42 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// A component class for tracking something's size so that multiple unrelated things can have a radius/diameter where necessary.
+/// An abstract component class for tracking something's size so that multiple unrelated things can have a radius/diameter or equivalent where necessary.
 /// </summary>
-public class Size : MonoBehaviour
+public abstract class Size : MonoBehaviour
 {
-    //Private Fields---------------------------------------------------------------------------------------------------------------------------------
-
-    //Serialized Fields----------------------------------------------------------------------------
-
-    [SerializeField] private float radius;
-
-    //Public Properties------------------------------------------------------------------------------------------------------------------------------
-
-    //Basic Public Properties----------------------------------------------------------------------
-
-    /// <summary>
-    /// The exact/approximate radius of the object this component is attached to.
-    /// </summary>
-    public float Radius
-    {
-        get
-        {
-            return radius;
-        }
-    }
-
-    //Complex Public Properties--------------------------------------------------------------------
+    //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
     /// The exact/approximate diameter of the object this component is attached to.
     /// </summary>
-    public float Diameter { get => radius * 2; }
-    
+    /// <param name="position">The position of the object requesting this object's diameter.</param>
+    public virtual float Diameter(Vector3? position)
+    {
+        return Radius(position) * 2;
+    }
+
     /// <summary>
     /// The rounded-up diameter of the object this component is attached to.
     /// </summary>
-    public int DiameterRoundedUp
+    /// <param name="position">The position of the object requesting this object's diameter.</param>
+    public int DiameterRoundedUp(Vector3? position)
     {
-        get
-        {
-            return Mathf.CeilToInt(radius * 2);
-        }
+        return Mathf.CeilToInt(Radius(position) * 2);
     }
+
+    /// <summary>
+    /// The exact/approximate radius of the object this component is attached to, or equivalent.
+    /// </summary>
+    /// <param name="position">The position of the object requesting this object's radius.</param>
+    public abstract float Radius(Vector3? position);
 
     /// <summary>
     /// The rounded-up radius of the object this component is attached to.
     /// </summary>
-    public int RadiusRoundedUp
+    /// <param name="position">The position of the object requesting this object's radius.</param>
+    public int RadiusRoundedUp(Vector3? position)
     {
-        get
-        {
-            return Mathf.CeilToInt(radius);
-        }
+        return Mathf.CeilToInt(Radius(position));
     }
 }

@@ -175,15 +175,15 @@ GameObject:
   - component: {fileID: 2103360942000820280}
   - component: {fileID: 7989155517478719925}
   - component: {fileID: -8028724317887167732}
+  - component: {fileID: -1831466185866896478}
   - component: {fileID: 6384879192915982547}
   - component: {fileID: 8835600581987182225}
-  - component: {fileID: -6151874320592601714}
   - component: {fileID: -3725313067051829311}
   - component: {fileID: 6149428130736486811}
   m_Layer: 10
   m_Name: Fusion Reactor
   m_TagString: Building
-  m_Icon: {fileID: 2800000, guid: 6162f834aa5f039429ef184e0e935851, type: 3}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -195,7 +195,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1531695208761868921}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1112191767738305490}
@@ -227,8 +227,9 @@ MonoBehaviour:
   plantsConsumption: 0
   gasConsumption: 0
   buildTime: 5
-  VFX:
-  - {fileID: 5075361585617950831}
+  buildInPits: 1
+  minBuildHeight: 1.5
+  VFX: []
   cliffRaycastOffsets:
   - {x: -0.45, y: 0, z: -0.45}
   - {x: -0.45, y: 0, z: 0}
@@ -246,9 +247,13 @@ MonoBehaviour:
   - renderer: {fileID: 3018881853560271061}
     opaque: {fileID: 2100000, guid: c3b1016b873b8294589543b2ac716e0c, type: 2}
     transparent: {fileID: 2100000, guid: e67356b465f5bb246aa3e12c1fdab0b2, type: 2}
+    dissolveStart: -0.64
+    dissolveEnd: 2.05
   - renderer: {fileID: 490722819877295073}
     opaque: {fileID: 2100000, guid: ec205cb853590e54cb4306473cd2200e, type: 2}
     transparent: {fileID: 2100000, guid: efd7cbd714946ee42a9dec8a51af2375, type: 2}
+    dissolveStart: -0.64
+    dissolveEnd: 2.05
   buildingErrorMaterial: {fileID: 2100000, guid: 101275a717e4a1c4fb89e563e095dfd7,
     type: 2}
   idleSound: 15
@@ -269,6 +274,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   affiliation: 0
+--- !u!114 &-1831466185866896478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1531695208761868921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70177e84b18c53a479adf6c5a8ecadde, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: 0.33
 --- !u!114 &6384879192915982547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -296,19 +314,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 40
   currentHealth: 0
---- !u!114 &-6151874320592601714
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1531695208761868921}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e087b4d1f91fcb941a830564ec25c878, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  radius: 0.325
 --- !u!114 &-3725313067051829311
 MonoBehaviour:
   m_ObjectHideFlags: 0

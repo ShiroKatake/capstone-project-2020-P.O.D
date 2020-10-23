@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -24,13 +23,26 @@ public class Alien : MonoBehaviour, IMessenger
     [SerializeField] private float attackRange;
     [SerializeField] private float damage;
     [SerializeField] private float attackCooldown;
+    [Tooltip("How long can it stall moving forward before it will be made to burrow into the ground and be destroyed by AlienFactory?")]
+    [SerializeField] private float maxStall;
+    [Tooltip("How likely, between 0 (impossible) and 1 (certainty) is it that this alien will burrow into the ground any time it is dealt damage?")]
+    [SerializeField][Range(0, 1)] private float burrowingProbability;
+    [SerializeField] private float burrowSpeed;
+
+    [Header("Shader Dissolving")]
+    [SerializeField] private float dissolveStart;
+    [SerializeField] private float dissolveEnd;
+
+    //[Header("Testing")]
+    //[SerializeField] private MeshRenderer rangeMesh;
+    //[SerializeField] private Material greenRangeMeshMaterial;
+    //[SerializeField] private Material yellowRangeMeshMaterial;
+    //[SerializeField] private Material redRangeMeshMaterial;
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
-    [Header("Testing")]
-    
     //Componenets
-	private Actor actor;
+    private Actor actor;
     private List<Collider> colliders;
     private Health health;
     private NavMeshAgent navMeshAgent;
@@ -42,14 +54,21 @@ public class Alien : MonoBehaviour, IMessenger
     private float speed;
     
     //Targeting
-    private List<Transform> visibleAliens;
+    private List<Alien> visibleAliens;
     private List<Transform> visibleTargets;
-    [SerializeField] private Transform target;
-    [SerializeField] private Health targetHealth;
-    [SerializeField] private Size targetSize;
-    [SerializeField] private string shotByName;
-    [SerializeField] private Transform shotByTransform;
+    private Transform target;
+    private Health targetHealth;
+    private Size targetSize;
+    private string shotByName;
+    private Transform shotByTransform;
     private float timeOfLastAttack;
+    private bool reselectTarget;
+
+    private Vector3 lastPosition;
+    private float timeOfLastMove;
+
+    private float currentYPos;
+    private bool isPathfinder;
 
     //Public Fields----------------------------------------------------------------------------------------------------------------------------------
 
@@ -77,6 +96,11 @@ public class Alien : MonoBehaviour, IMessenger
     public Health Health { get => health; }
 
     /// <summary>
+    /// Is this alien a pathfinder for others of its type?
+    /// </summary>
+    public bool IsPathfinder { get => isPathfinder; set => isPathfinder = value; }
+
+    /// <summary>
     /// Alien's NavMeshAgent component.
     /// </summary>
     public NavMeshAgent NavMeshAgent { get => navMeshAgent; }
@@ -85,6 +109,11 @@ public class Alien : MonoBehaviour, IMessenger
     /// Alien's MeshRenderer component.
     /// </summary>
     public SkinnedMeshRenderer Renderer { get => renderer; }
+
+    /// <summary>
+    /// The target that the alien is moving towards.
+    /// </summary>
+    public Transform Target { get => target; }
 
     /// <summary>
     /// Alien's EAlien type.
@@ -106,7 +135,7 @@ public class Alien : MonoBehaviour, IMessenger
         renderer = GetComponentInChildren<SkinnedMeshRenderer>();
         rigidbody = GetComponent<Rigidbody>();
 
-        visibleAliens = new List<Transform>();
+        visibleAliens = new List<Alien>();
         visibleTargets = new List<Transform>();
         moving = false;
         navMeshAgent.enabled = false;
@@ -129,19 +158,19 @@ public class Alien : MonoBehaviour, IMessenger
         health.Reset();
 
         target = Tower.Instance.ColliderTransform;
-        targetHealth = Tower.Instance.GetComponent<Health>();
+        targetHealth = Tower.Instance.Health;
+        targetSize = Tower.Instance.Size;
         timeOfLastAttack = attackCooldown * -1;
         MessageManager.Instance.Subscribe("Alien", this);
         renderer.enabled = true;
+        reselectTarget = true;
 
-        //Rotate to face the Cryo egg
+        //Rotate to face the Tower
         Vector3 targetRotation = Tower.Instance.transform.position - transform.position;
         transform.rotation = Quaternion.LookRotation(targetRotation);
-
-        foreach (Collider c in colliders)
-        {
-            c.enabled = true;
-        }
+        SetCollidersEnabled(true);
+        currentYPos = -1;
+        UpdateDissolving();
 
         if (StageManager.Instance.CurrentStage.GetID() == EStage.MainGame)
         {
@@ -153,6 +182,17 @@ public class Alien : MonoBehaviour, IMessenger
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
+    /// Update() is run every frame.
+    /// </summary>
+    private void Update()
+    {
+        if (!isPathfinder)
+        {
+            UpdateDissolving();
+        }
+    }
+
+    /// <summary>
     /// FixedUpdate() is run at a fixed interval independant of framerate.
     /// </summary>
     private void FixedUpdate()
@@ -161,66 +201,156 @@ public class Alien : MonoBehaviour, IMessenger
         {
             SelectTarget();
             Look();
-            Move();            
+            Move();
         }
     }
 
+    //private void Update()
+    //{
+    //    if (rangeMesh != null)
+    //    {
+    //        CheckVisibleTargets();
+    //    }
+    //}
+
+    //private void UpdateRangeMeshMaterial(Material material)
+    //{
+    //    if (rangeMesh.material != material)
+    //    {
+    //        rangeMesh.material = material;
+    //    }
+    //}
+
+    //private void CheckVisibleTargets()
+    //{
+    //    if (visibleTargets.Count == 0)
+    //    {
+    //        UpdateRangeMeshMaterial(greenRangeMeshMaterial);
+    //    }
+    //    else if (target == Tower.Instance.transform)
+    //    {
+    //        UpdateRangeMeshMaterial(yellowRangeMeshMaterial);
+    //    }
+    //    else if (target != Tower.Instance.transform)
+    //    {
+    //        UpdateRangeMeshMaterial(redRangeMeshMaterial);
+    //    }
+    //}
+
+    //Recurring Methods (Update())-------------------------------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Makes sure the start and end points of the alien's shader's dissolving remain constant relative to the alien's height, so it doesn't start dissolving if it goes too high up.
+    /// </summary>
+    private void UpdateDissolving()
+    {
+        //Debug.Log($"Alien.UpdateDissolving(), currentYPos: {currentYPos}, transform.position.y: {transform.position.y}");
+        if (currentYPos <= transform.position.y - 0.1f || currentYPos >= transform.position.y + 0.1f)
+        {
+            currentYPos = transform.position.y;
+            //Debug.Log($"Alien.UpdateDissolving, renderer.materials.Length is {renderer.materials.Length}");
+            renderer.materials[0].SetFloat("_Start", dissolveStart + currentYPos);
+            renderer.materials[0].SetFloat("_End", dissolveStart + currentYPos);
+        }
+    }
+
+    //private void Update()
+    //{
+    //    if (rangeMesh != null)
+    //    {
+    //        CheckVisibleTargets();
+    //    }
+    //}
+
+    //private void UpdateRangeMeshMaterial(Material material)
+    //{
+    //    if (rangeMesh.material != material)
+    //    {
+    //        rangeMesh.material = material;
+    //    }
+    //}
+
+    //private void CheckVisibleTargets()
+    //{
+    //    if (visibleTargets.Count == 0)
+    //    {
+    //        UpdateRangeMeshMaterial(greenRangeMeshMaterial);
+    //    }
+    //    else if (target == Tower.Instance.transform)
+    //    {
+    //        UpdateRangeMeshMaterial(yellowRangeMeshMaterial);
+    //    }
+    //    else if (target != Tower.Instance.transform)
+    //    {
+    //        UpdateRangeMeshMaterial(redRangeMeshMaterial);
+    //    }
+    //}
+
     //Recurring Methods (FixedUpdate())-------------------------------------------------------------------------------------------------------------  
-	
+
     /// <summary>
     /// Selects the most appropriate target for the alien.
     /// </summary>
     private void SelectTarget()
     {
-        switch (visibleTargets.Count)
+        if (reselectTarget)
         {
-            case 0:
-                //Target Cryo egg
-                if (target != Tower.Instance.transform)
-                {
-                    SetTarget(Tower.Instance.transform);
-                }
-
-                break;
-            case 1:
-                //Get only visible target
-                if (target != visibleTargets[0])
-                {
-                    SetTarget(visibleTargets[0]);
-                }
-
-                break;
-            default:
-                //Prioritise shooter
-                if (shotByTransform != null && visibleTargets.Contains(shotByTransform))
-                {
-                    SetTarget(shotByTransform);
-                }
-                else
-                {
-                    //Get closest visible target
-                    float distance = 99999999999;
-                    float closestDistance = 9999999999999999;
-                    Transform closestTarget = null;
-
-                    foreach (Transform t in visibleTargets)
+            switch (visibleTargets.Count)
+            {
+                case 0:
+                    //Target Cryo egg
+                    if (target != Tower.Instance.transform)
                     {
-                        distance = Vector3.Distance(transform.position, t.position);
+                        SetTarget(Tower.Instance.transform);
+                    }
 
-                        if (closestTarget == null || distance < closestDistance)
+                    break;
+                case 1:
+                    //Get only visible target
+                    if (target != visibleTargets[0])
+                    {
+                        SetTarget(visibleTargets[0]);
+                    }
+
+                    break;
+                default:
+                    //Prioritise shooter
+                    if (shotByTransform != null && visibleTargets.Contains(shotByTransform))
+                    {
+                        SetTarget(shotByTransform);
+                    }
+                    else if (visibleTargets.Contains(PODController.Instance.transform))
+                    {
+                        SetTarget(PODController.Instance.transform);
+                    }
+                    else
+                    {
+                        //Get closest visible target
+                        float distance = 9999999999999999999;
+                        float closestDistance = 9999999999999999999;
+                        Transform closestTarget = null;
+
+                        foreach (Transform t in visibleTargets)
                         {
-                            closestTarget = t;
-                            closestDistance = distance;
+                            distance = Vector3.SqrMagnitude(t.position - transform.position);
+
+                            if (distance < closestDistance)
+                            {
+                                closestTarget = t;
+                                closestDistance = distance;
+                            }
+                        }
+
+                        if (target != closestTarget)
+                        {
+                            SetTarget(closestTarget);
                         }
                     }
 
-                    if (target != closestTarget)
-                    {
-                        SetTarget(closestTarget);
-                    }
-                }
+                    break;
+            }
 
-                break;
+            reselectTarget = false;
         }
     }
 
@@ -232,13 +362,39 @@ public class Alien : MonoBehaviour, IMessenger
     {
         target = selectedTarget;
         targetHealth = target.GetComponentInParent<Health>();   //Gets Health from target or any of its parents that has it.
-        targetSize = target.GetComponentInParent<Size>();   //Gets Radius from target or any of its parents that has it.
+        targetSize = target.GetComponentInParent<Size>();   //Gets Size from target or any of its parents that has it.
 
         PositionData data = MapManager.Instance.GetPositionData(transform.position);
 
-        if (selectedTarget == Tower.Instance.transform && !health.IsDead() && data != null && data.Paths.ContainsKey(type) && data.Paths[type] != null)
+        if (!health.IsDead())
         {
-            navMeshAgent.SetPath(data.Paths[type]);
+            if (selectedTarget == Tower.Instance.transform && data != null && data.Paths.ContainsKey(type) && data.Paths[type] != null)
+            {
+                //Debug.Log($"{this}.SetTarget(), getting nav mesh path to cryo egg");
+                navMeshAgent.SetPath(data.Paths[type]);
+            }
+            else
+            {
+                //Debug.Log($"{this}.SetTarget(), setting {target}'s position as nav mesh agent destination");
+                NavMeshPath newPath = null;
+
+                foreach (Alien a in visibleAliens)
+                {
+                    if (a.Target == target && a.NavMeshAgent.hasPath && Vector3.Distance(a.NavMeshAgent.destination, a.Target.position) < 0.1f)
+                    {
+                        newPath = a.NavMeshAgent.path;
+                        break;
+                    }
+                }
+
+                if (newPath == null)
+                {
+                    newPath = new NavMeshPath();
+                    navMeshAgent.CalculatePath(target.position, newPath);
+                }
+
+                navMeshAgent.SetPath(newPath);
+            }
         }
     }
 
@@ -268,14 +424,23 @@ public class Alien : MonoBehaviour, IMessenger
     /// </summary>
     private void Move()
     {
-        if (Vector3.Distance(transform.position, PositionAtSameHeight(target.position)) > attackRange + targetSize.Radius)
+        float targetRadius = targetSize.Radius(transform.position);
+
+        if (Vector3.SqrMagnitude(PositionAtSameHeight(target.position) - transform.position) > ((attackRange + targetRadius) * (attackRange + targetRadius)))
         {
-            AudioManager.Instance.PlaySound(AudioManager.ESound.Alien_Moves, this.gameObject);
+            AudioManager.Instance.PlaySound(AudioManager.ESound.Alien_Moves, gameObject);
 
             if (navMeshAgent.speed != speed)
             {
                 navMeshAgent.speed = speed;
             }
+
+            if (navMeshAgent.stoppingDistance != attackRange * 0.67f + targetRadius)
+            {
+                navMeshAgent.stoppingDistance = attackRange * 0.67f + targetRadius;
+            }
+
+            CheckStalling();
         }
         else
         {
@@ -292,13 +457,30 @@ public class Alien : MonoBehaviour, IMessenger
         }
     }
 
-	//Triggered Methods------------------------------------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// Checks if the alien has stalled and should be removed to allow the next wave to begin.
+    /// </summary>
+    private void CheckStalling()
+    {
+        if (transform.position != lastPosition)
+        {
+            timeOfLastMove = Time.time;
+            lastPosition = transform.position;
+        }
 
-	/// <summary>
-	/// Send an event message for AlienFX.cs to do attack FX's and deal damage.
-	/// If there's no FX script listening to this to call DealDamage(), call it anyway.
-	/// </summary>
-	private void Attack()
+        if (Time.time - timeOfLastMove > maxStall)
+        {
+            StartCoroutine(Burrow());
+        }
+    }
+
+    //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Send an event message for AlienFX.cs to do attack FX's and deal damage.
+    /// If there's no FX script listening to this to call DealDamage(), call it anyway.
+    /// </summary>
+    private void Attack()
 	{
 		if (onAttack != null)
 		{
@@ -312,6 +494,27 @@ public class Alien : MonoBehaviour, IMessenger
             DamagePointer.Jump_Static(transform);
         }
 	}
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator Burrow()
+    {
+        moving = false;
+        navMeshAgent.enabled = false;
+        SetCollidersEnabled(false);
+
+        while (transform.position.y > -5)
+        {
+            Vector3 position = transform.position;
+            position.y -= burrowSpeed * Time.deltaTime;
+            transform.position = position;
+            yield return null;
+        }
+
+        DestroyAlien();
+    }
 
 	/// <summary>
 	/// Send an event message for AlienFX.cs to do damage taken FX's and assign attacker target.
@@ -329,6 +532,11 @@ public class Alien : MonoBehaviour, IMessenger
 		}
 
 		ShotBy(attackerTransform);
+
+        if (Random.Range(0f, 1f) > burrowingProbability)
+        {
+            StartCoroutine(Burrow());
+        }
 	}
 
 	/// <summary>
@@ -424,7 +632,7 @@ public class Alien : MonoBehaviour, IMessenger
     /// </summary>
     public void Reset()
     {
-        //navMeshAgent.enabled = false;
+        navMeshAgent.enabled = false;
         renderer.enabled = false;
         MessageManager.Instance.SendMessage("Turret", new Message(gameObject.name, "Alien", gameObject, "Dead"));
         MessageManager.Instance.Unsubscribe("Alien", this);
@@ -434,12 +642,26 @@ public class Alien : MonoBehaviour, IMessenger
         visibleTargets.Clear();
         visibleAliens.Clear();
         target = null;
+        reselectTarget = false;
+        currentYPos = 0;
 
-		foreach (Collider c in colliders)
-		{
-			c.enabled = false;
-		}
-	}
+        foreach (Collider c in colliders)
+        {
+          c.enabled = false;
+        }
+    }
+
+    /// <summary>
+    /// Sets the enabled property of all colliders in the list colliders.
+    /// </summary>
+    /// <param name="enabled">Should the colliders be enabled or not?</param>
+    private void SetCollidersEnabled(bool enabled)
+    {
+        foreach (Collider c in colliders)
+        {
+            c.enabled = enabled;
+        }
+    }
 
     /// <summary>
     /// When a GameObject collides with another GameObject, Unity calls OnTriggerEnter.
@@ -451,15 +673,17 @@ public class Alien : MonoBehaviour, IMessenger
         {
             if (other.CompareTag("Alien"))
             {
-                visibleAliens.Add(other.transform);
+                visibleAliens.Add(other.GetComponent<Alien>());
             }
             else if (other.CompareTag("Building") && !visibleTargets.Contains(other.transform.parent))
             {
                 visibleTargets.Add(other.transform.parent);
+                reselectTarget = true;
             }
             else if (other.CompareTag("Player") && !visibleTargets.Contains(other.transform))
             {
                 visibleTargets.Add(other.transform);
+                reselectTarget = true;
             }
             else if (other.CompareTag("Projectile"))
             {
@@ -477,13 +701,19 @@ public class Alien : MonoBehaviour, IMessenger
     {
         if (!other.isTrigger)
         {
-            if (visibleAliens.Contains(other.transform))
-            {
-                visibleAliens.Remove(other.transform);
-            }
-            else if (visibleTargets.Contains(other.transform))
+            if (visibleTargets.Contains(other.transform))
             {
                 visibleTargets.Remove(other.transform);
+                reselectTarget = true;
+            }
+            else
+            {
+                Alien otherAlien = other.GetComponent<Alien>();
+
+                if (visibleAliens.Contains(other.GetComponent<Alien>()))
+                {
+                    visibleAliens.Remove(otherAlien);
+                }
             }
         }
     }

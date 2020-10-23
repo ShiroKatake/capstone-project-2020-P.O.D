@@ -13,28 +13,24 @@ public class AlienFactory : Factory<AlienFactory, Alien, EAlien>
     //Serialized Fields----------------------------------------------------------------------------
 
     [Header("Alien Stats")]
-    [SerializeField] private float alienSpawnHeight;
+    [SerializeField] private float alienInstantiationHeight;
+    [SerializeField] private float minAlienSpawnHeight;
    
     //PublicProperties-------------------------------------------------------------------------------------------------------------------------------
 
     //Basic Public Properties----------------------------------------------------------------------
 
     /// <summary>
-    /// The height at which aliens spawn.
+    /// The height at which aliens are instantiated before checking if they can be placed on the map.
     /// </summary>
-    public float AlienSpawnHeight { get => alienSpawnHeight; }
-
-    //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
+    public float AlienInstantiationHeight { get => alienInstantiationHeight; }
 
     /// <summary>
-    /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
-    /// Awake() runs before Start().
+    /// The minimum height at which aliens can be spawned on the map.
     /// </summary>
-    protected override void Awake()
-    {
-        //Debug.Log("AlienFactory.Awake()");
-        base.Awake();
-    }
+    public float MinAlienSpawnHeight { get => minAlienSpawnHeight; }
+
+    //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
     /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 

@@ -32,10 +32,13 @@ public class MiningBeam : MonoBehaviour
 	/// <param name="endPoint">The position where the beam will stop and where the spark fx will be.</param>
 	public void OnMineEnable(Vector3 endPoint)
 	{
+        Vector3 startPoint = transform.InverseTransformPoint(beamOrigin.position);
+        endPoint = transform.InverseTransformPoint(endPoint);
+
 		lineRenderer.enabled = true;
 		impactGlowFX.gameObject.SetActive(true);
 
-		lineRenderer.SetPosition(0, beamOrigin.position);
+		lineRenderer.SetPosition(0, startPoint);
 		lineRenderer.SetPosition(1, endPoint);
 
 		impactGlowFX.transform.position = endPoint;
