@@ -8,7 +8,7 @@ using UnityMeshSimplifier;
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
 [RequireComponent(typeof(MeshCollider))]
-public class TilemapTerrainGenerator : MonoBehaviour
+public class TilemapTerrainGenerator : SerializableSingleton<TilemapTerrainGenerator>
 {
     MeshFilter filter;
     MeshCollider collider;
@@ -30,14 +30,17 @@ public class TilemapTerrainGenerator : MonoBehaviour
     //[SerializeField] private GameObject RampStraight_Object;
     //[SerializeField] private GameObject RampLeft_Object;
     //[SerializeField] private GameObject RampRight_Object;
-    
 
-
+    [SerializeField] private List<Vector2> organicsTiles;
+    [SerializeField] private List<Vector2> waterTiles;
+    [SerializeField] private List<Vector2> naturalGasTiles;
     private float [,] heightmap;
-
-    
-
     private List<(Vector3, float, Color)> spheres;
+
+
+    public List<Vector2> TilesWithGas { get => naturalGasTiles; }
+    public List<Vector2> TilesWithPlants { get => organicsTiles; }
+    public List<Vector2> TilesWithWater { get => waterTiles; }
 
     // Start is called before the first frame update
     void Start()
@@ -337,9 +340,9 @@ public class TilemapTerrainGenerator : MonoBehaviour
     public void GenerateResourceMasks(int resolution) {
         FindMeshRenderer();
 
-        List<Vector2> organicsTiles = new List<Vector2>();
-        List<Vector2> waterTiles = new List<Vector2>();
-        List<Vector2> naturalGasTiles = new List<Vector2>();
+        organicsTiles = new List<Vector2>();
+        waterTiles = new List<Vector2>();
+        naturalGasTiles = new List<Vector2>();
 
         float scaleFactor =  (float)resolution / resourceTexture.width;
 

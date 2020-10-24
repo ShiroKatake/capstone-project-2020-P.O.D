@@ -38,6 +38,7 @@ public class MapManager : SerializableSingleton<MapManager>
     [SerializeField] private float nightTimeLimitPerFrame;
 
     [Header("Testing")]
+    [SerializeField] private bool debugResourcePositions;
     [SerializeField] private bool debugPathfinding;
     private EAlien currentPathfinder;
     private Vector2 currentPathfindingPos;
@@ -143,6 +144,7 @@ public class MapManager : SerializableSingleton<MapManager>
                     i, //X coordinate
                     j, //Z coordinate
                     MathUtility.Instance.Angle(centre, new Vector2(i, j)), //Angle from centre to position
+                    CheckPositionResource(i, j),
                     (i >= tuteAlienXMin && i <= tuteAlienXMax && j >= tuteAlienZMin && j <= tuteAlienZMax), //Is inside the tutorial spawn area?
                     (i >= noAlienXMin && i <= noAlienXMax && j >= noAlienZMin && j <= noAlienZMax) //Is inside the alien exclusion area?
                 );
@@ -173,6 +175,45 @@ public class MapManager : SerializableSingleton<MapManager>
         //{
         //    StartCoroutine(LoadPaths(GetPathfinders()));
         //}
+    }
+
+    /// <summary>
+    /// Checks what resource the space at position (x, z) should have.
+    /// </summary>
+    /// <param name="x">The X coordinate of the position (x, z).</param>
+    /// <param name="z">The Z coordinate of the position (x, z).</param>
+    /// <returns>The resource the position (x, z) should have, if any.</returns>
+    private EResource CheckPositionResource(int x, int z)
+    {
+        Vector2 pos = new Vector2(x, z);
+        if (debugResourcePositions) Debug.Log($"MapManager.CheckPositionResource(), checking for position {pos}; {TilemapTerrainGenerator.Instance.TilesWithGas} tiles with gas, {TilemapTerrainGenerator.Instance.TilesWithPlants} tiles with plants, {TilemapTerrainGenerator.Instance.TilesWithWater} tiles with water.");
+
+        List<Vector2> tilesWithResource = TilemapTerrainGenerator.Instance.TilesWithGas;
+
+        if (tilesWithResource != null && tilesWithResource.Contains(pos))
+        {
+            if (debugResourcePositions) Debug.Log($"MapManager.CheckPositionResource(), position {pos} has gas");
+            return EResource.Gas;
+        }
+
+        tilesWithResource = TilemapTerrainGenerator.Instance.TilesWithPlants;
+
+        if (tilesWithResource != null && tilesWithResource.Contains(pos))
+        {
+            if (debugResourcePositions) Debug.Log($"MapManager.CheckPositionResource(), position {pos} has plants");
+            return EResource.Plants;
+        }
+
+        tilesWithResource = TilemapTerrainGenerator.Instance.TilesWithWater;
+
+        if (tilesWithResource != null && tilesWithResource.Contains(pos))
+        {
+            if (debugResourcePositions) Debug.Log($"MapManager.CheckPositionResource(), position {pos} has water");
+            return EResource.Water;
+        }
+
+        if (debugResourcePositions) Debug.Log($"MapManager.CheckPositionResource(), position {pos} has no resource");
+        return EResource.None;
     }
 
     /// <summary>

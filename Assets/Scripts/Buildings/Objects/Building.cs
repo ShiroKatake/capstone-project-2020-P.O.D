@@ -441,7 +441,16 @@ public class Building : CollisionListener
         {
             if (!placed)
             {
-                validPlacement = !((!buildInPits && CheckInPit()) || CheckColliding() || CheckOnCliff() || CheckMouseOverUI()) && MapManager.Instance.PositionAvailableForBuilding(this);
+                //bool isInPit = !buildInPits && CheckInPit();
+                //bool isColliding = CheckColliding();
+                //bool isOnCliff = CheckOnCliff();
+                //bool isMouseOverUI = CheckMouseOverUI();
+                //bool isResourcesUnavailable = resourceCollector != null && !resourceCollector.CanCollectResourcesAtPosition();
+                //bool isErrorCondition = isInPit || isColliding || isOnCliff || isMouseOverUI || isResourcesUnavailable;
+
+                //Debug.Log($"{this}.IsPlacementValid(), isInPit: {isInPit}, isColliding: {isColliding}, isOnCliff: {isOnCliff}, isMouseOverUI: {isMouseOverUI}, isResourcesUnavailable: {isResourcesUnavailable}, isErrorCondition: {isErrorCondition}");
+                //validPlacement = !isErrorCondition && MapManager.Instance.PositionAvailableForBuilding(this);
+                validPlacement = !((!buildInPits && CheckInPit()) || CheckColliding() || CheckOnCliff() || CheckMouseOverUI() || (resourceCollector != null && !resourceCollector.CanCollectResourcesAtPosition())) && MapManager.Instance.PositionAvailableForBuilding(this);
 
                 if (!validPlacement && placementCurrentValid)
 				{
