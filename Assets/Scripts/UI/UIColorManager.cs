@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIColorManager : SerializableSingleton<UIColorManager>
+public class UIColorManager : PublicInstanceSerializableSingleton<UIColorManager>
 {
     [SerializeField] private List<Image> UIBackgrounds = new List<Image>();
     [SerializeField] private List<Image> UIBorders = new List<Image>();

@@ -6,7 +6,7 @@ using UnityEngine.AI;
 /// <summary>
 /// Manager class for aliens.
 /// </summary>
-public class AlienManager : SerializableSingleton<AlienManager>
+public class AlienManager : PublicInstanceSerializableSingleton<AlienManager>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 

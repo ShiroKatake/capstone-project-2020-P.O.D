@@ -8,7 +8,7 @@ using UnityEngine.UI;
 /// <summary>
 /// Handles the changing of scenes.
 /// </summary>
-public class SceneLoader : SerializableSingleton<SceneLoader>
+public class SceneLoader : PublicInstanceSerializableSingleton<SceneLoader>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 

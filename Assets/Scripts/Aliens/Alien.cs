@@ -319,9 +319,9 @@ public class Alien : MonoBehaviour, IMessenger
                     {
                         SetTarget(shotByTransform);
                     }
-                    else if (visibleTargets.Contains(PODController.Instance.transform))
+                    else if (visibleTargets.Contains(POD.Instance.transform))
                     {
-                        SetTarget(PODController.Instance.transform);
+                        SetTarget(POD.Instance.transform);
                     }
                     else
                     {

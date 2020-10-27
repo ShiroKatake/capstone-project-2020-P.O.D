@@ -8,7 +8,7 @@ using UnityEngine.UI;
 /// <summary>
 /// Manages the pause menu.
 /// </summary>
-public class PauseMenuManager : SerializableSingleton<PauseMenuManager>
+public class PauseMenuManager : PublicInstanceSerializableSingleton<PauseMenuManager>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
@@ -67,7 +67,7 @@ public class PauseMenuManager : SerializableSingleton<PauseMenuManager>
     /// </summary>
     private void Start()
     {
-        playerInputManager = PODController.Instance.PlayerInputManager;
+        playerInputManager = POD.Instance.PlayerInputManager;
     }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------

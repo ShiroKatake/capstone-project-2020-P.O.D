@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-public class ResourceTextManager : SerializableSingleton<ResourceTextManager>
+public class ResourceTextManager : PublicInstanceSerializableSingleton<ResourceTextManager>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
     //Serialized Fields----------------------------------------------------------------------------                                                    

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Rewired;
 
-public class MousePositionOnTerrain : SerializableSingleton<MousePositionOnTerrain>
+public class MousePositionOnTerrain : PublicInstanceSerializableSingleton<MousePositionOnTerrain>
 {
     private Plane plane;
     [SerializeField] private Camera camera;
