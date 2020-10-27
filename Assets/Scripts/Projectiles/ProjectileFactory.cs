@@ -38,11 +38,11 @@ public class ProjectileFactory : Factory<ProjectileFactory, Projectile, EProject
     /// <param name="barrelTip">The transform of the barrel tip it's being fired from.</param>
     /// <param name="type">The type of projectile to get.</param>
     /// <returns>A new projectile.</returns>
-    public Projectile Get(Transform owner, Transform barrelTip, EProjectileType type)
+    public Projectile Get(Transform owner, Vector3 position, Quaternion rotation, EProjectileType type)
     {
-        Projectile projectile = Get(barrelTip.position, type);
+        Projectile projectile = Get(position, type);
         projectile.Owner = owner;
-		projectile.transform.rotation = barrelTip.rotation;
+		projectile.transform.rotation = rotation;
         Debug.Log($"{this}.Get(), projectile is {projectile}");
 		return projectile;
     }

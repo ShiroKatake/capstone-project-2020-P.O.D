@@ -13,11 +13,11 @@ public class PODShootingController : PrivateInstanceSerializableSingleton<PODSho
 
     [Header("Player Objects")]
     [SerializeField] private Transform barrelTip;
-    [SerializeField] private Transform barrelMagazine;
 
     [Header("Shooting Stats")]
-    [SerializeField] private float verticalVariance;
-    [SerializeField] private float horizontalVariance;
+    [SerializeField] private float spreadAngle;
+    [SerializeField] private float maxElevation;
+    [SerializeField] private float shotForce;
     [SerializeField] private float shotCooldown;
 
     [Header("Overheating Stats")]
@@ -28,10 +28,6 @@ public class PODShootingController : PrivateInstanceSerializableSingleton<PODSho
 
     [Header("Testing")]
     [SerializeField] private bool printInputs;
-    [SerializeField] private bool shootNow;
-    [SerializeField] private bool applyVarianceToXAxis;
-    [SerializeField] private bool applyVarianceToYAxis;
-    [SerializeField] private bool applyVarianceToZAxis;
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
@@ -87,7 +83,7 @@ public class PODShootingController : PrivateInstanceSerializableSingleton<PODSho
     /// </summary>
     private void GetInput()
     {
-        wantToShoot = shootNow || InputManager.Instance.ButtonHeld("Shoot");
+        wantToShoot = InputManager.Instance.ButtonHeld("Shoot");
         if (printInputs) Debug.Log($"Rewired via InputController, PlayerMovementController.GetInput() (called by Update()), wantToShoot: {wantToShoot}");
     }
 
@@ -98,7 +94,7 @@ public class PODShootingController : PrivateInstanceSerializableSingleton<PODSho
         if (overheated)
         {
             float timeSinceOverheat = Time.time - timeOfLastOverheat;
-            Debug.Log($"{this}.CheckShooting(), can't shoot, waiting for barrel to cool down. Progress is {timeSinceOverheat}s / {overheatingCooldown}s");
+            //Debug.Log($"{this}.CheckShooting(), can't shoot, waiting for barrel to cool down. Progress is {timeSinceOverheat}s / {overheatingCooldown}s");
 
             if (timeSinceOverheat > overheatingCooldown)
             {
@@ -119,13 +115,13 @@ public class PODShootingController : PrivateInstanceSerializableSingleton<PODSho
     {
         if (wantToShoot && CanShoot()) //No-shooting conditions checked for in GetInput() when determining the value of shooting.
         {
-            Debug.Log($"{this}.CheckShooting(), can and wants to shoot, calling Shoot()");
+            //Debug.Log($"{this}.CheckShooting(), can and wants to shoot, calling Shoot()");
             Shoot();
         }
-        else
-        {
-            Debug.Log($"{this}.CheckShooting(), can't and/or don't want to shoot");
-        }
+        //else
+        //{
+        //    Debug.Log($"{this}.CheckShooting(), can't and/or don't want to shoot");
+        //}
     }
 
     /// <summary>
@@ -142,24 +138,23 @@ public class PODShootingController : PrivateInstanceSerializableSingleton<PODSho
     /// </summary>
     private void Shoot()
     {
-        Projectile projectile = ProjectileFactory.Instance.Get(transform, barrelTip, EProjectileType.PODLaserBolt);
-        Vector3 vector = barrelTip.position - barrelMagazine.position;
+        Quaternion randomRotation = Random.rotation;
+        Quaternion projectileRotation = Quaternion.RotateTowards(barrelTip.transform.rotation, randomRotation, spreadAngle);
+        Vector3 eulerRotation = projectileRotation.eulerAngles;
 
-        if (verticalVariance > 0 || horizontalVariance > 0)
+        if (eulerRotation.x >= 360 - spreadAngle && eulerRotation.x < 360 - maxElevation)
         {
-            Vector3 rotationVariance = Vector3.zero;
-            //rotationVariance.y = (verticalVariance > 0 ? Random.Range(-verticalVariance, verticalVariance) : 0);
-            //rotationVariance.x = (horizontalVariance > 0 ? Random.Range(-horizontalVariance, horizontalVariance) : 0);
-
-            if (applyVarianceToXAxis) rotationVariance.x = (verticalVariance > 0 ? Random.Range(-verticalVariance, verticalVariance) : 0);
-            if (applyVarianceToYAxis) rotationVariance.y = (verticalVariance > 0 ? Random.Range(-verticalVariance, verticalVariance) : 0);
-            if (applyVarianceToZAxis) rotationVariance.z = (verticalVariance > 0 ? Random.Range(-verticalVariance, verticalVariance) : 0);
-            vector += rotationVariance;
-            //Debug.Log($"Introducing variance of {rotationVariance}");               
+            float elevation = Random.Range(-maxElevation, spreadAngle);
+            if (elevation < 0) elevation += 360;
+            eulerRotation.x = elevation;
+            projectileRotation = Quaternion.Euler(eulerRotation);
         }
 
-        projectile.Shoot(vector.normalized, 0);
-        Debug.Log($"{this}.PODShootingController.Shoot(), projectile is {projectile}");
+        Debug.Log($"randomRotation is {randomRotation} (Quaternion) / {randomRotation.eulerAngles} (EulerAngles)");
+        Debug.Log($"projectileRotation is {projectileRotation} (Quaternion) / {projectileRotation.eulerAngles} (EulerAngles)");
+        Projectile projectile = ProjectileFactory.Instance.Get(transform, barrelTip.position, projectileRotation, EProjectileType.PODLaserBolt);
+        projectile.Shoot(shotForce);
+        //Debug.Log($"{this}.PODShootingController.Shoot(), projectile is {projectile}");
         AudioManager.Instance.PlaySound(AudioManager.ESound.Laser_POD, this.gameObject);
         timeOfLastShot = Time.time;
         barrelHeat += heatPerShot;

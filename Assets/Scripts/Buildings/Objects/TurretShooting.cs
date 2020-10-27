@@ -20,8 +20,10 @@ public class TurretShooting : CollisionListener, IMessenger
     [SerializeField] private EProjectileType projectileType;
     [SerializeField] private bool targetClosest;
     [SerializeField] private float numProjectiles;
-    [SerializeField] private float yAxisVariance;
-    [SerializeField] private float zAxisVariance;
+    //[SerializeField] private float yAxisVariance;
+    //[SerializeField] private float zAxisVariance;
+    [SerializeField] private float spreadAngle;
+    [SerializeField] private float shotForce;
     [SerializeField] private float shotCooldown;
 
     //Non-Serialized Fields------------------------------------------------------------------------      
@@ -187,30 +189,62 @@ public class TurretShooting : CollisionListener, IMessenger
     /// </summary>
     private void Shoot()
     {
-        if (/*shoot || (*/target != null && Time.time - timeOfLastShot > shotCooldown && !target.Health.IsDead())//)
+        if (target != null && Time.time - timeOfLastShot > shotCooldown && !target.Health.IsDead())
         {
             //shoot = false;
             timeOfLastShot = Time.time;
-            
-            for(int i = 0; i < numProjectiles; i++)
+
+            for (int i = 0; i < numProjectiles; i++)
             {
-                Projectile projectile = ProjectileFactory.Instance.Get(transform, barrelTip, projectileType);
-                Vector3 vector = barrelTip.position - barrelMagazine.position;
+                //Projectile projectile = ProjectileFactory.Instance.Get(transform, barrelTip, projectileType);
+                //Vector3 vector = barrelTip.position - barrelMagazine.position;
 
-                if (yAxisVariance > 0 || zAxisVariance > 0)
-                {
-                    Vector3 rotationVariance = Vector3.zero;
-                    rotationVariance.y = (yAxisVariance > 0 ? Random.Range(-yAxisVariance, yAxisVariance) : 0);
-                    rotationVariance.z = (zAxisVariance > 0 ? Random.Range(-zAxisVariance, zAxisVariance) : 0);
-                    vector += rotationVariance;
-                    //Debug.Log($"Introducing variance of {rotationVariance}");               
-                }
+                //if (yAxisVariance > 0 || zAxisVariance > 0)
+                //{
+                //    Vector3 rotationVariance = Vector3.zero;
+                //    rotationVariance.y = (yAxisVariance > 0 ? Random.Range(-yAxisVariance, yAxisVariance) : 0);
+                //    rotationVariance.z = (zAxisVariance > 0 ? Random.Range(-zAxisVariance, zAxisVariance) : 0);
+                //    vector += rotationVariance;
+                //    //Debug.Log($"Introducing variance of {rotationVariance}");               
+                //}
 
-                projectile.Shoot((vector).normalized, 0);
+                //projectile.Shoot((vector).normalized, 0);
+
+                Quaternion rot = Quaternion.RotateTowards(barrelTip.transform.rotation, Random.rotation, spreadAngle);
+                Debug.Log($"{this}.TurretShooting.Shoot(), i is {i}, projectileRotation is {rot} (Quaternion) / {rot.eulerAngles} (EulerAngles)");
+                Projectile projectile = ProjectileFactory.Instance.Get(transform, barrelTip.position, rot, projectileType);
+                projectile.Shoot(shotForce);
             }
 
             AudioManager.Instance.PlaySound(AudioManager.ESound.MachineGun_Shoot, this.gameObject);
         }
+
+        //Quaternion randomRotation = Random.rotation;
+        //Quaternion projectileRotation = Quaternion.RotateTowards(barrelTip.transform.rotation, randomRotation, spreadAngle);
+        //Vector3 eulerRotation = projectileRotation.eulerAngles;
+
+        //if (eulerRotation.x >= 360 - spreadAngle && eulerRotation.x < 360 - maxElevation)
+        //{
+        //    float elevation = Random.Range(-maxElevation, spreadAngle);
+        //    if (elevation < 0) elevation += 360;
+        //    eulerRotation.x = elevation;
+        //    projectileRotation = Quaternion.Euler(eulerRotation);
+        //}
+
+        //Debug.Log($"randomRotation is {randomRotation} (Quaternion) / {randomRotation.eulerAngles} (EulerAngles)");
+        //Debug.Log($"projectileRotation is {projectileRotation} (Quaternion) / {projectileRotation.eulerAngles} (EulerAngles)");
+        //Projectile projectile = ProjectileFactory.Instance.Get(transform, barrelTip.position, projectileRotation, EProjectileType.PODLaserBolt);
+        //projectile.Shoot(shotForce);
+        ////Debug.Log($"{this}.PODShootingController.Shoot(), projectile is {projectile}");
+        //AudioManager.Instance.PlaySound(AudioManager.ESound.Laser_POD, this.gameObject);
+        //timeOfLastShot = Time.time;
+        //barrelHeat += heatPerShot;
+
+        //if (barrelHeat > overheatingThreshold)
+        //{
+        //    overheated = true;
+        //    timeOfLastOverheat = Time.time;
+        //}
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------

@@ -302,14 +302,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   barrelTip: {fileID: 6474693490154135395}
-  barrelMagazine: {fileID: 1935910673708830645}
-  yAxisVariance: 0.1
-  zAxisVariance: 0.1
+  spreadAngle: 5
+  maxElevation: 2
+  shotForce: 10
   shotCooldown: 0.05
-  heatPerShot: 1
-  coolingPerSecond: 0.5
-  overheatingThreshold: 12
-  overheatingCooldown: 1
+  heatPerShot: 2
+  coolingPerSecond: 10
+  overheatingThreshold: 10
+  overheatingCooldown: 0.5
   printInputs: 0
 --- !u!1 &2251904045699419656
 GameObject:
@@ -475,8 +475,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7714345189961572185}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.9935092, y: 0.051645488, z: -0.039237604}
+  m_LocalRotation: {x: -0, y: -0.000000027008348, z: 0.000000014668327, w: 1}
+  m_LocalPosition: {x: 0.9935101, y: 0.051645238, z: -0.039238207}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 376831605299551572}
@@ -506,7 +506,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9061400599024481049}
   m_LocalRotation: {x: 0.507796, y: -0.494529, z: -0.46189237, w: 0.5331415}
-  m_LocalPosition: {x: -1.078, y: -0.124, z: -0.049}
+  m_LocalPosition: {x: -1.0780623, y: -0.12403254, z: -0.04899998}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 376831605299551572}

@@ -13,7 +13,6 @@ public class Projectile : MonoBehaviour
 
     [Header("Projectile Stats")]
     [SerializeField] private EProjectileType type;
-    [SerializeField] private float speed;
     [SerializeField] private float damage;
     [SerializeField] private float lifespan;
 
@@ -106,17 +105,17 @@ public class Projectile : MonoBehaviour
     /// </summary>
     /// <param name="vector">The normalised direction of the projectile's velocity.</param>
     /// <param name="movementSpeed">The speed of the shooter in the direction the projectile will travel.</param>
-    public void Shoot(Vector3 vector, float movementSpeed)
+    public void Shoot(/*(Vector3 vector, float movementSpeed*/ float force)
     {
         Debug.Log($"{this}.Shoot()");
-        StartCoroutine(Shooting(vector, movementSpeed));
+        StartCoroutine(Shooting(/*vector, movementSpeed*/force));
     }
 
     /// <summary>
     /// Activates a projectile, applying a velocity to it.
     /// </summary>
     /// <param name="vector">The normalised direction of the projectile's velocity.</param>
-    IEnumerator Shooting(Vector3 vector, float movementSpeed)
+    IEnumerator Shooting(/*Vector3 vector, float movementSpeed*/float force)
     {
         yield return null;
 
@@ -124,7 +123,7 @@ public class Projectile : MonoBehaviour
         active = true;
         rigidbody.isKinematic = false;
         collider.enabled = true;
-        rigidbody.velocity = vector * (speed + movementSpeed);
+        rigidbody.AddForce(transform.forward * force);
         leftOwnerCollider = false;
         ProjectileManager.Instance.RegisterProjectile(this);
     }
