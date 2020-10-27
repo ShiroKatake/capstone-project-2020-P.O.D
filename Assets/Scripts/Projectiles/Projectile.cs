@@ -108,6 +108,7 @@ public class Projectile : MonoBehaviour
     /// <param name="movementSpeed">The speed of the shooter in the direction the projectile will travel.</param>
     public void Shoot(Vector3 vector, float movementSpeed)
     {
+        Debug.Log($"{this}.Shoot()");
         StartCoroutine(Shooting(vector, movementSpeed));
     }
 

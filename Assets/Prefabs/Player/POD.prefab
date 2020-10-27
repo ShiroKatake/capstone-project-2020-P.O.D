@@ -303,7 +303,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   barrelTip: {fileID: 6474693490154135395}
   barrelMagazine: {fileID: 1935910673708830645}
-  shootCooldown: 0.4
+  yAxisVariance: 0.1
+  zAxisVariance: 0.1
+  shotCooldown: 0.05
+  heatPerShot: 1
+  coolingPerSecond: 0.5
+  overheatingThreshold: 12
+  overheatingCooldown: 1
   printInputs: 0
 --- !u!1 &2251904045699419656
 GameObject:

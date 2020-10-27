@@ -16,15 +16,30 @@ public class PODShootingController : PrivateInstanceSerializableSingleton<PODSho
     [SerializeField] private Transform barrelMagazine;
 
     [Header("Shooting Stats")]
-    [SerializeField] private float shootCooldown;
+    [SerializeField] private float verticalVariance;
+    [SerializeField] private float horizontalVariance;
+    [SerializeField] private float shotCooldown;
+
+    [Header("Overheating Stats")]
+    [SerializeField] private float heatPerShot;
+    [SerializeField] private float coolingPerSecond;
+    [SerializeField] private float overheatingThreshold;
+    [SerializeField] private float overheatingCooldown;
 
     [Header("Testing")]
     [SerializeField] private bool printInputs;
+    [SerializeField] private bool shootNow;
+    [SerializeField] private bool applyVarianceToXAxis;
+    [SerializeField] private bool applyVarianceToYAxis;
+    [SerializeField] private bool applyVarianceToZAxis;
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
-    private bool shooting;
     private float timeOfLastShot;
+    private float timeOfLastOverheat;
+    private bool wantToShoot;
+    private float barrelHeat;
+    private bool overheated;
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -35,7 +50,10 @@ public class PODShootingController : PrivateInstanceSerializableSingleton<PODSho
     protected override void Awake()
     {
         base.Awake();
-        timeOfLastShot = shootCooldown * -1;
+        timeOfLastShot = -1;
+        timeOfLastOverheat = -1;
+        barrelHeat = 0;
+        overheated = false;
     }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
@@ -58,6 +76,7 @@ public class PODShootingController : PrivateInstanceSerializableSingleton<PODSho
     /// </summary>
     private void FixedUpdate()
     {
+        CheckOverheating();
         CheckShooting();
     }
 
@@ -68,24 +87,87 @@ public class PODShootingController : PrivateInstanceSerializableSingleton<PODSho
     /// </summary>
     private void GetInput()
     {
-        shooting = InputManager.Instance.ButtonHeld("Shoot") && !POD.Instance.HealthController.IsHealing && Time.time - timeOfLastShot > shootCooldown;
-        if (printInputs) Debug.Log($"Rewired via InputController, PlayerMovementController.GetInput() (called by Update()), shooting: {shooting}");
+        wantToShoot = shootNow || InputManager.Instance.ButtonHeld("Shoot");
+        if (printInputs) Debug.Log($"Rewired via InputController, PlayerMovementController.GetInput() (called by Update()), wantToShoot: {wantToShoot}");
     }
 
     //Recurring Methods (FixedUpdate())--------------------------------------------------------------------------------------------------------------
 
+    private void CheckOverheating()
+    {
+        if (overheated)
+        {
+            float timeSinceOverheat = Time.time - timeOfLastOverheat;
+            Debug.Log($"{this}.CheckShooting(), can't shoot, waiting for barrel to cool down. Progress is {timeSinceOverheat}s / {overheatingCooldown}s");
+
+            if (timeSinceOverheat > overheatingCooldown)
+            {
+                overheated = false;
+                barrelHeat = 0;
+            }
+        }
+        else
+        {
+            barrelHeat -= Mathf.Min(barrelHeat, coolingPerSecond * Time.fixedDeltaTime);
+        }
+    }
+
     /// <summary>
-    /// Checks if the player wants to shoot based on their input, and fires projectiles if they do.
+    /// Checks if the player wants to and can shoot based on their input, and fires projectiles if they do.
     /// </summary>
     private void CheckShooting()
     {
-        if (shooting) //No-shooting conditions checked for in GetInput() when determining the value of shooting.
+        if (wantToShoot && CanShoot()) //No-shooting conditions checked for in GetInput() when determining the value of shooting.
         {
-            timeOfLastShot = Time.time;
-            Projectile projectile = ProjectileFactory.Instance.Get(transform, barrelTip, EProjectileType.PODLaserBolt);
-            AudioManager.Instance.PlaySound(AudioManager.ESound.Laser_POD, this.gameObject);
-            Vector3 vector = barrelTip.position - barrelMagazine.position;
-            projectile.Shoot(vector.normalized, 0);
+            Debug.Log($"{this}.CheckShooting(), can and wants to shoot, calling Shoot()");
+            Shoot();
+        }
+        else
+        {
+            Debug.Log($"{this}.CheckShooting(), can't and/or don't want to shoot");
+        }
+    }
+
+    /// <summary>
+    /// Checks if the player can shoot.
+    /// </summary>
+    /// <returns>Whether or not the player can shoot.</returns>
+    private bool CanShoot()
+    {
+        return !overheated && !POD.Instance.HealthController.IsHealing && Time.time - timeOfLastShot > shotCooldown;
+    }
+
+    /// <summary>
+    /// Fires a projectile from POD's laser cannon.
+    /// </summary>
+    private void Shoot()
+    {
+        Projectile projectile = ProjectileFactory.Instance.Get(transform, barrelTip, EProjectileType.PODLaserBolt);
+        Vector3 vector = barrelTip.position - barrelMagazine.position;
+
+        if (verticalVariance > 0 || horizontalVariance > 0)
+        {
+            Vector3 rotationVariance = Vector3.zero;
+            //rotationVariance.y = (verticalVariance > 0 ? Random.Range(-verticalVariance, verticalVariance) : 0);
+            //rotationVariance.x = (horizontalVariance > 0 ? Random.Range(-horizontalVariance, horizontalVariance) : 0);
+
+            if (applyVarianceToXAxis) rotationVariance.x = (verticalVariance > 0 ? Random.Range(-verticalVariance, verticalVariance) : 0);
+            if (applyVarianceToYAxis) rotationVariance.y = (verticalVariance > 0 ? Random.Range(-verticalVariance, verticalVariance) : 0);
+            if (applyVarianceToZAxis) rotationVariance.z = (verticalVariance > 0 ? Random.Range(-verticalVariance, verticalVariance) : 0);
+            vector += rotationVariance;
+            //Debug.Log($"Introducing variance of {rotationVariance}");               
+        }
+
+        projectile.Shoot(vector.normalized, 0);
+        Debug.Log($"{this}.PODShootingController.Shoot(), projectile is {projectile}");
+        AudioManager.Instance.PlaySound(AudioManager.ESound.Laser_POD, this.gameObject);
+        timeOfLastShot = Time.time;
+        barrelHeat += heatPerShot;
+
+        if (barrelHeat > overheatingThreshold)
+        {
+            overheated = true;
+            timeOfLastOverheat = Time.time;
         }
     }
 }

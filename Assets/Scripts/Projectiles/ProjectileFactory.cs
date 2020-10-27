@@ -43,6 +43,7 @@ public class ProjectileFactory : Factory<ProjectileFactory, Projectile, EProject
         Projectile projectile = Get(barrelTip.position, type);
         projectile.Owner = owner;
 		projectile.transform.rotation = barrelTip.rotation;
+        Debug.Log($"{this}.Get(), projectile is {projectile}");
 		return projectile;
     }
 
