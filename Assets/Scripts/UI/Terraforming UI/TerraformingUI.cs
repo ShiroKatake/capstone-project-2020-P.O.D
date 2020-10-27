@@ -1,29 +1,29 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 
-public class TerraformingUI : MonoBehaviour
+public class TerraformingUI : SerializableSingleton<TerraformingUI>
 {
-	public int[] targetRatioFill = new int[3];
-	public int[] currentRatioFill = new int[3];
+	private int[] targetRatioFill = new int[3];
+	private string todaysRatio = "";
 
-	public UnityAction updateCurrentRatio;
-	public UnityAction updateTargetRatio;
+	public UnityAction<int[]> updateCurrentRatio;
+	public UnityAction<int[]> updateTargetRatio;
 
-	[SerializeField] TerraformingUIBar bar1;
-	[SerializeField] TerraformingUIBar bar2;
-	[SerializeField] TerraformingUIBar bar3;
-
+	public string TodaysRatio
+	{
+		get { return todaysRatio; }
+	}
 
 	public void UpdateCurrent(int[] currentRatio)
 	{
-		currentRatioFill = currentRatio;
-		updateCurrentRatio.Invoke();
+		updateCurrentRatio.Invoke(currentRatio);
 	}
 
 	public void UpdateTarget(int[] targetRatio, int[] currentRatio)
 	{
 		int multiplier = 1;
 		int currentMultiplier;
+
 		//Find the largest multiplier
 		for (int i = 0; i < targetRatio.Length; i++)
 		{
@@ -44,6 +44,7 @@ public class TerraformingUI : MonoBehaviour
 			targetRatioFill[i] = targetRatioFill[i] * multiplier;
 		}
 
-		updateTargetRatio.Invoke();
+		todaysRatio = $"{targetRatio[0]} : {targetRatio[1]} : {targetRatio[2]}";
+		updateTargetRatio.Invoke(targetRatioFill);
 	}
 }
