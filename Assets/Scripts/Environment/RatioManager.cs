@@ -87,6 +87,18 @@ public class RatioManager : MonoBehaviour
 	}
 
 	/// <summary>
+	/// FOR TESTING: Updates the current ratio for the player
+	/// </summary>
+	public void UpdateCurrentRatio()
+	{
+		currentRatio[0] = Random.Range(1, 20);
+		currentRatio[1] = Random.Range(1, 20);
+		currentRatio[2] = Random.Range(1, 20);
+
+		terraformingUI.UpdateTarget(targetRatio, currentRatio);
+	}
+
+	/// <summary>
 	/// Stores the ratio at the start of the wave for comparison at the end
 	/// </summary>
 	/// <param name="ratios"></param>
