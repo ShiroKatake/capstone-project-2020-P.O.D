@@ -27,7 +27,7 @@ public class TerraformingUI : MonoBehaviour
 		//Find the largest multiplier
 		for (int i = 0; i < targetRatio.Length; i++)
 		{
-			currentMultiplier = Mathf.CeilToInt(currentRatio[i] / targetRatio[i]);
+			currentMultiplier = Mathf.CeilToInt((float)currentRatio[i] / targetRatio[i]);
 			if (currentMultiplier > multiplier)
 				multiplier = currentMultiplier;
 		}
