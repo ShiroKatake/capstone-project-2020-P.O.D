@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// The player. Player controls the player's movement, shooting and healing. For building spawning, see BuildingSpawningController.
+/// POD collects all the scripts that directly control POD (i.e. its ID and its health, movement and shooting controllers).
 /// </summary>
 public class POD : PublicInstanceSerializableSingleton<POD>
 {
@@ -13,8 +13,8 @@ public class POD : PublicInstanceSerializableSingleton<POD>
     //Non-Serialized Fields------------------------------------------------------------------------
 
     //Components
-    private PODHealthController healthController;
     private PlayerID id;
+    private PODHealthController healthController;
     private PODMovementController movementController;
     private PODShootingController shootingController;
 

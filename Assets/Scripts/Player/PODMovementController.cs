@@ -1,9 +1,6 @@
-﻿//using Rewired;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-//using UnityEngine.AI;
-//using UnityEngine.Events;
 
 /// <summary>
 /// A player controller class for the player's movement.
@@ -15,58 +12,24 @@ public class PODMovementController : PrivateInstanceSerializableSingleton<PODMov
     //Serialized Fields----------------------------------------------------------------------------
 
     [Header("Player Objects")]
-    //[SerializeField] private Camera camera;
     [SerializeField] private Transform cameraTarget;
     [SerializeField] private Transform mouseTargeter;
-    //[SerializeField] private Transform barrelTip;
-    //[SerializeField] private Transform barrelMagazine;
-    //[SerializeField] private List<Transform> cliffDetectionMarkers;
-    //[SerializeField] private List<Vector3> cliffTestOffsets;
     [SerializeField] private Transform audioListener;
 
     [Header("Movement Stats")]
     [SerializeField] private float movementSpeed;
     [SerializeField] private float rotationSpeed;
 
-    //[Header("Shooting Stats")]
-    //[SerializeField] private float shootCooldown;
-
-    //[Header("Healing Stats")]
-    //[SerializeField] private float healingSpeed;
-    //[SerializeField] private float healingRange;
-
     [Header("Testing")]
     [SerializeField] private bool printInputs;
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
-    ////Components
-    //private Health health;
-    //private Rigidbody rigidbody;
+    //Components
     private CharacterController characterController;
 
-    //Variables for moving & determining if rotation is necessary
+    //Movement variables
     private Vector3 movement;
-    //private Vector3 previousMovement = Vector3.zero;
-    //private float defaultHoverHeight;
-    //private LayerMask groundLayerMask;
-
-    ////Variables for rotating smoothly
-    //private Quaternion newRotation;
-    //private Quaternion oldRotation;
-    //private float slerpProgress = 1;
-
-    ////Projectile Variables
-    //private bool shooting;
-    //private float timeOfLastShot;
-
-    ////Healing variables
-    //private bool healing;
-    //private bool isHealing;
-
-    ////Other
-    //private Player playerInputManager;
-    //private bool repsawn;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -86,14 +49,7 @@ public class PODMovementController : PrivateInstanceSerializableSingleton<PODMov
     protected override void Awake()
     {
         base.Awake();
-        //health = GetComponent<Health>();
-        //rigidbody = GetComponent<Rigidbody>();
         characterController = GetComponent<CharacterController>();
-        //groundLayerMask = LayerMask.GetMask("Ground");
-        //health.onDie += OnDie;
-        //timeOfLastShot = shootCooldown * -1;
-        //defaultHoverHeight = transform.position.y;
-        //repsawn = false;
     }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------

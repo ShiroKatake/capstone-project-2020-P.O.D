@@ -129,7 +129,7 @@ public class Mineral : MonoBehaviour
 		ore.transform.rotation = transform.rotation;
 		ore.Start = transform;
 		ore.Mid = GetPointOnUnitSphereCap(Quaternion.LookRotation(Vector3.up), 90f) * oreCurveRadius + transform.position; //Choose a random point in a hemisphere, facing up, with a radius of 1, as a "curving point".
-		ore.End = FindObjectOfType<PlayerID>().transform;
+		ore.End = POD.Instance.transform;
 		ore.gameObject.SetActive(true);
 	}
 
