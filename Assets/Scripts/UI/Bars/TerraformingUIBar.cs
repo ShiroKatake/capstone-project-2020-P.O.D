@@ -8,30 +8,28 @@ public enum BarType
 	Incinerator
 }
 
-public class TerraformingUIBar : TerraformingUI
+public class TerraformingUIBar : MonoBehaviour
 {
 	[SerializeField] private BarType bar;
 	[SerializeField] private Image targetFill;
 	[SerializeField] private Image currentFill;
+	[SerializeField] private TerraformingUI terraformingUI;
 
-	private int maxBarValue;
+	private float maxBarValue = 30f;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
-		updateCurrentRatio += UpdateCurrent;
-		updateTargetRatio += UpdateCurrent;
+		terraformingUI.updateCurrentRatio += UpdateCurrentRatio;
+		terraformingUI.updateTargetRatio += UpdateTargetRatio;
 	}
 
-	private void UpdateTarget(int target, int current)
+	public void UpdateTargetRatio()
 	{
-		targetFill.fillAmount = targetRatioFill[(int)bar];
-		Debug.Log("updatingT");
+		targetFill.fillAmount = terraformingUI.targetRatioFill[(int)bar] / maxBarValue;
 	}
 
-	private void UpdateCurrent()
+	public void UpdateCurrentRatio()
 	{
-		currentFill.fillAmount = currentRatioFill[(int)bar] / maxBarValue;
-		Debug.Log("updatingC");
+		currentFill.fillAmount = terraformingUI.currentRatioFill[(int)bar] / maxBarValue;
 	}
 }
