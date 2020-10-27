@@ -1,8 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Linq;
 
 public enum BarType
 {
@@ -14,8 +11,8 @@ public enum BarType
 public class TerraformingUIBar : TerraformingUI
 {
 	[SerializeField] private BarType bar;
-	[SerializeField] private Image currentFill;
 	[SerializeField] private Image targetFill;
+	[SerializeField] private Image currentFill;
 
 	private int maxBarValue;
 
@@ -29,10 +26,12 @@ public class TerraformingUIBar : TerraformingUI
 	private void UpdateTarget(int target, int current)
 	{
 		targetFill.fillAmount = targetRatioFill[(int)bar];
+		Debug.Log("updatingT");
 	}
 
 	private void UpdateCurrent()
 	{
 		currentFill.fillAmount = currentRatioFill[(int)bar] / maxBarValue;
+		Debug.Log("updatingC");
 	}
 }
