@@ -72,9 +72,9 @@ public class RatioManager : MonoBehaviour
 	/// </summary>
 	public void UpdateTargetRatio()
 	{
-		targetRatio[0] = Random.Range(1, maxRatioValue);
-		targetRatio[1] = Random.Range(1, maxRatioValue);
-		targetRatio[2] = Random.Range(1, maxRatioValue);
+		targetRatio[0] = Random.Range(1, maxRatioValue + 1);
+		targetRatio[1] = Random.Range(1, maxRatioValue + 1);
+		targetRatio[2] = Random.Range(1, maxRatioValue + 1);
 
 		if (targetRatio[0] == targetRatio[1] && targetRatio[1] == targetRatio[2])
 		{
@@ -95,6 +95,7 @@ public class RatioManager : MonoBehaviour
 		currentRatio[1] = Random.Range(1, 20);
 		currentRatio[2] = Random.Range(1, 20);
 
+		terraformingUI.UpdateCurrent(currentRatio);
 		terraformingUI.UpdateTarget(targetRatio, currentRatio);
 	}
 
