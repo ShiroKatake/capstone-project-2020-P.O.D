@@ -95,8 +95,8 @@ public class RatioManager : MonoBehaviour
 		currentRatio[1] = Random.Range(1, 20);
 		currentRatio[2] = Random.Range(1, 20);
 
-		terraformingUI.UpdateCurrent(currentRatio);
 		terraformingUI.UpdateTarget(targetRatio, currentRatio);
+		terraformingUI.UpdateCurrent(currentRatio);
 	}
 
 	/// <summary>
