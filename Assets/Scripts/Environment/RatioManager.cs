@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RatioManager : SerializableSingleton<RatioManager>
+public class RatioManager : MonoBehaviour
 {
+	[SerializeField] TerraformingUI terraformingUI;
 
 	[SerializeField] private int[] currentRatio = { 0, 0, 0 };
 	[SerializeField] private int[] targetRatio = { 0, 0, 0 };
@@ -16,28 +17,6 @@ public class RatioManager : SerializableSingleton<RatioManager>
 
 	float currentMultiplier = 1;
 	float storedPoints = 0;
-
-	public int[] TargetRatio
-	{
-		get { return targetRatio; }
-	}
-
-	public int[] CurrentRatio
-	{
-		get { return currentRatio; }
-	}
-
-	// Start is called before the first frame update
-	void Start()
-	{
-
-	}
-
-	// Update is called once per frame
-	void Update()
-	{
-
-	}
 
 	private float ScoreRatioAlignment()
 	{
@@ -103,6 +82,8 @@ public class RatioManager : SerializableSingleton<RatioManager>
 			targetRatio[1] = 1;
 			targetRatio[2] = 1;
 		}
+
+		terraformingUI.UpdateTarget(targetRatio, currentRatio);
 	}
 
 	/// <summary>
