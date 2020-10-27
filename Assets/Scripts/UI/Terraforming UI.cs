@@ -9,11 +9,6 @@ public class TerraformingUI : MonoBehaviour
 	protected UnityAction updateCurrentRatio;
 	protected UnityAction updateTargetRatio;
 
-	private void Start()
-	{
-		targetRatioFill = new int[3];
-	}
-
 	public void UpdateCurrent(int[] currentRatio)
 	{
 		currentRatioFill = currentRatio;
@@ -32,7 +27,10 @@ public class TerraformingUI : MonoBehaviour
 			if (currentMultiplier > multiplier)
 				multiplier = currentMultiplier;
 		}
-		
+
+		//Update the target array
+		targetRatioFill = targetRatio;
+
 		//Multiply each element in the target with that multiplier
 		for (int i = 0; i < targetRatioFill.Length; i++)
 		{
