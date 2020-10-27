@@ -129,7 +129,7 @@ public class BuildingManager : SerializableSingleton<BuildingManager>
     }
 
     /// <summary>
-    /// Checks if a building of the specified type has been placed.
+    /// Checks the number of buildings of a specified type that have been placed.
     /// </summary>
     /// <param name="buildingType">The type of building you want to check for.</param>
     /// <returns>Whether a building of the specified type has been placed.</returns>
@@ -140,6 +140,46 @@ public class BuildingManager : SerializableSingleton<BuildingManager>
         foreach (Building b in buildings)
         {
             if (b.BuildingType == buildingType && b.Placed)
+            {
+                result++;
+            }
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// Checks the number of buildings of a specified type that are built and operational.
+    /// </summary>
+    /// <param name="buildingType">The type of building you want to check for.</param>
+    /// <returns>Whether a building of the specified type has been placed.</returns>
+    public int BuiltAndOperationalBuildingsCount(EBuilding buildingType)
+    {
+        int result = 0;
+
+        foreach (Building b in buildings)
+        {
+            if (b.BuildingType == buildingType && b.Built && b.Operational)
+            {
+                result++;
+            }
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// Checks the number of buildings of a specified type that are built but not operational.
+    /// </summary>
+    /// <param name="buildingType">The type of building you want to check for.</param>
+    /// <returns>Whether a building of the specified type has been placed.</returns>
+    public int BuiltAndNonOperationalBuildingsCount(EBuilding buildingType)
+    {
+        int result = 0;
+
+        foreach (Building b in buildings)
+        {
+            if (b.BuildingType == buildingType && b.Built && !b.Operational)
             {
                 result++;
             }
