@@ -30,7 +30,7 @@ public class TerraformingUIBar : MonoBehaviour
 
 	public void UpdateCurrentRatio(int[] ratioArray)
 	{
-		//currentFill.fillAmount = ratioArray[(int)bar] / (float)TerraformingUI.Instance.MaxBarValue;
+		currentFill.fillAmount = ratioArray[(int)bar] / (float)TerraformingUI.Instance.MaxBarValue;
 		//Debug.Log($"Value: {ratioArray[(int)bar]}");
 		//Debug.Log($"Max Value: {TerraformingUI.Instance.MaxMultiplier}");
 		//Debug.Log($"Max Value: {TerraformingUI.Instance.MaxBarValue}");
