@@ -39,6 +39,7 @@ public class StageLose : SerializableSingleton<StageLose>, IStage
     {
         goMessage.SetText(false);
         uiManager.GetComponent<UIManager>().SetGameOverCanvasActive(true);
+		Time.timeScale = 0;
         yield return null;
     }
 }
