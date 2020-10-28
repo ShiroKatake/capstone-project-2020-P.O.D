@@ -23,6 +23,7 @@ public class MineralCollectionController : SerializableSingleton<MineralCollecti
 	private bool isOnMineral;
     private LayerMask mineralsLayerMask;
     private bool mining;
+	private Mineral cacheMineral = null;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -89,9 +90,14 @@ public class MineralCollectionController : SerializableSingleton<MineralCollecti
 
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, mineralsLayerMask))
             {
-				//Debug.Log("Raycast hit minerals");
 				Mineral mineral = hit.collider.GetComponentInParent<Mineral>();
-				DisplayMineralInfo(mineral);
+
+				//Debug.Log($"Mineral at {mineral.transform.position} is {cacheMineral != mineral} to cache mineral at {cacheMineral?.transform.position}");
+				if (cacheMineral != mineral)
+				{
+					HideMineralInfo();
+					DisplayMineralInfo(mineral);
+				}
 
 				if (collectMinerals && mineral != null && mineral.OreCount > 0)
                 {
@@ -130,6 +136,7 @@ public class MineralCollectionController : SerializableSingleton<MineralCollecti
 		if (!isOnMineral)
 		{
 			HoveringDialogueManager.Instance.ShowDialogue(mineral.GetComponent<HoverDialogueBoxPreset>());
+			cacheMineral = mineral;
 			isOnMineral = true;
 		}
 	}
@@ -142,6 +149,7 @@ public class MineralCollectionController : SerializableSingleton<MineralCollecti
 		if (isOnMineral)
 		{
 			HoveringDialogueManager.Instance.HideDialogue();
+			cacheMineral = null;
 			isOnMineral = false;
 		}
 	}
