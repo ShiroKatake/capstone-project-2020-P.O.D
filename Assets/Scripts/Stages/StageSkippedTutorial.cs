@@ -14,7 +14,8 @@ public class StageSkippedTutorial : SerializableSingleton<StageSkippedTutorial>,
     [Header("General UI")]
     [SerializeField] private UIElementStatusManager uiBorder;
     [SerializeField] private UIElementStatusManager console;
-    [SerializeField] private UIElementStatusManager buildingAndResourcesBar;
+    [SerializeField] private UIElementStatusManager buildingBar;
+    [SerializeField] private UIElementStatusManager resourcesBar;
     [SerializeField] private UIElementStatusManager miniMapBorder;
     [SerializeField] private UIElementStatusManager miniMap;
     [SerializeField] private UIElementStatusManager clock;
@@ -99,13 +100,15 @@ public class StageSkippedTutorial : SerializableSingleton<StageSkippedTutorial>,
     {
         uiBorder.Visible = true;
         console.Visible = true;
-        buildingAndResourcesBar.Visible = true;
-        miniMapBorder.Visible = true;
+        buildingBar.Visible = true;
+		resourcesBar.Visible = true;
+		miniMapBorder.Visible = true;
 
         while (!uiBorder.FinishedFlickeringIn
             || !console.FinishedFlickeringIn
-            || !buildingAndResourcesBar.FinishedFlickeringIn
-            || !miniMapBorder.FinishedFlickeringIn)
+            || !buildingBar.FinishedFlickeringIn
+			|| !resourcesBar.FinishedFlickeringIn
+			|| !miniMapBorder.FinishedFlickeringIn)
         {
             yield return null;
         }

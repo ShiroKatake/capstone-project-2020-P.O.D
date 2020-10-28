@@ -4,135 +4,149 @@ using UnityEngine;
 
 public class RatioManager : MonoBehaviour
 {
+	[SerializeField] TerraformingUI terraformingUI;
 
-    [SerializeField] private int[] currentRatio = { 0, 0, 0 };
-    [SerializeField] private int[] targetRatio = { 0, 0, 0 };
+	[SerializeField] private int[] currentRatio = { 0, 0, 0 };
+	[SerializeField] private int[] targetRatio = { 0, 0, 0 };
 
-    [SerializeField] private float pointsPerRatio;
-    [SerializeField] private float multiplierIncreasePerWave;
-    [SerializeField] private int maxRatioValue;
+	[SerializeField] private float pointsPerRatio;
+	[SerializeField] private float multiplierIncreasePerWave;
+	[SerializeField] private int maxRatioValue;
 
-    private int[] waveStartRatio;
+	private int[] waveStartRatio;
 
-    float currentMultiplier = 1;
-    float storedPoints = 0;
+	float currentMultiplier = 1;
+	float storedPoints = 0;
 
-    // Start is called before the first frame update
-    void Start()
-    {
+	private float ScoreRatioAlignment()
+	{
+		int gatingIndex = 0;
+		int maxIndex = 0;
+		float[] factors = new float[3];
+		factors[0] = (float)currentRatio[0] / (float)targetRatio[0];
+		factors[1] = (float)currentRatio[1] / (float)targetRatio[1];
+		factors[2] = (float)currentRatio[2] / (float)targetRatio[2];
 
-    }
+		for (int i = 0; i < factors.Length; i++)
+		{
+			if (factors[i] < factors[gatingIndex])
+				gatingIndex = i;
+			if (factors[i] > factors[maxIndex])
+				maxIndex = i;
+		}
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+		int multiplier = (int)Mathf.Floor(factors[gatingIndex]);
+		int maxTier = (int)Mathf.Ceil(factors[maxIndex]);
+		int leftoverTier = maxTier - multiplier;
 
-    private float ScoreRatioAlignment() {
-        int gatingIndex = 0;
-        int maxIndex = 0;
-        float[] factors = new float[3];
-        factors[0] = (float)currentRatio[0] / (float)targetRatio[0];
-        factors[1] = (float)currentRatio[1] / (float)targetRatio[1];
-        factors[2] = (float)currentRatio[2] / (float)targetRatio[2];
+		int[] leftoverRatio = new int[3];
+		leftoverRatio[0] = currentRatio[0] - multiplier * targetRatio[0];
+		leftoverRatio[1] = currentRatio[1] - multiplier * targetRatio[1];
+		leftoverRatio[2] = currentRatio[2] - multiplier * targetRatio[2];
 
-        for (int i = 0; i < factors.Length; i ++) {
-            if (factors[i] < factors[gatingIndex])
-                gatingIndex = i;
-            if (factors[i] > factors[maxIndex])
-                maxIndex = i;
-        }
+		float[] ratioAccuracy = new float[3];
+		ratioAccuracy[0] = (float)leftoverRatio[0] / (float)(targetRatio[0] * leftoverTier);
+		ratioAccuracy[1] = (float)leftoverRatio[1] / (float)(targetRatio[1] * leftoverTier);
+		ratioAccuracy[2] = (float)leftoverRatio[2] / (float)(targetRatio[2] * leftoverTier);
 
-        int multiplier = (int)Mathf.Floor(factors[gatingIndex]);
-        int maxTier = (int)Mathf.Ceil(factors[maxIndex]);
-        int leftoverTier = maxTier - multiplier;
+		float averageAccuracy = (ratioAccuracy[0] + ratioAccuracy[1] + ratioAccuracy[2]) / 3;
+		float maxPoints = pointsPerRatio * maxTier;
 
-        int[] leftoverRatio = new int[3];
-        leftoverRatio[0] = currentRatio[0] - multiplier * targetRatio[0];
-        leftoverRatio[1] = currentRatio[1] - multiplier * targetRatio[1];
-        leftoverRatio[2] = currentRatio[2] - multiplier * targetRatio[2];
+		float scoredPoints = multiplier * pointsPerRatio + averageAccuracy * pointsPerRatio;
 
-        float[] ratioAccuracy = new float[3];
-        ratioAccuracy[0] = (float)leftoverRatio[0] / (float)(targetRatio[0] * leftoverTier);
-        ratioAccuracy[1] = (float)leftoverRatio[1] / (float)(targetRatio[1] * leftoverTier);
-        ratioAccuracy[2] = (float)leftoverRatio[2] / (float)(targetRatio[2] * leftoverTier);
+		return scoredPoints;
+	}
 
-        float averageAccuracy = (ratioAccuracy[0] + ratioAccuracy[1] + ratioAccuracy[2])/3;
-        float maxPoints = pointsPerRatio * maxTier;
+	private void IncreaseMultiplier()
+	{
+		currentMultiplier += multiplierIncreasePerWave;
+	}
 
-        float scoredPoints = multiplier * pointsPerRatio + averageAccuracy * pointsPerRatio;
+	private void ClearMultiplier()
+	{
+		currentMultiplier = 1;
+	}
 
-        return scoredPoints;
-    }
+	/// <summary>
+	/// Updates the target ratio for the player
+	/// </summary>
+	public void UpdateTargetRatio()
+	{
+		targetRatio[0] = Random.Range(1, maxRatioValue + 1);
+		targetRatio[1] = Random.Range(1, maxRatioValue + 1);
+		targetRatio[2] = Random.Range(1, maxRatioValue + 1);
 
-    private void IncreaseMultiplier() {
-        currentMultiplier += multiplierIncreasePerWave;
-    }
+		if (targetRatio[0] == targetRatio[1] && targetRatio[1] == targetRatio[2])
+		{
+			targetRatio[0] = 1;
+			targetRatio[1] = 1;
+			targetRatio[2] = 1;
+		}
 
-    private void ClearMultiplier() {
-        currentMultiplier = 1;
-    }
+		terraformingUI.UpdateTarget(targetRatio, currentRatio);
+	}
 
-    /// <summary>
-    /// Updates the target ratio for the player
-    /// </summary>
-    public void UpdateTargetRatio() {
-        targetRatio[0] = Random.Range(1, maxRatioValue);
-        targetRatio[1] = Random.Range(1, maxRatioValue);
-        targetRatio[2] = Random.Range(1, maxRatioValue);
+	/// <summary>
+	/// FOR TESTING: Updates the current ratio for the player
+	/// </summary>
+	public void UpdateCurrentRatio()
+	{
+		currentRatio[0] = Random.Range(1, 20);
+		currentRatio[1] = Random.Range(1, 20);
+		currentRatio[2] = Random.Range(1, 20);
 
-        if (targetRatio[0] == targetRatio[1] && targetRatio[1] == targetRatio[2]) {
-            targetRatio[0] = 1;
-            targetRatio[1] = 1;
-            targetRatio[2] = 1;
-        }
-    }
+		terraformingUI.UpdateTarget(targetRatio, currentRatio);
+		terraformingUI.UpdateCurrent(currentRatio);
+	}
 
-    /// <summary>
-    /// Stores the ratio at the start of the wave for comparison at the end
-    /// </summary>
-    /// <param name="ratios"></param>
-    public void StartWave(int[] ratios) {
-        waveStartRatio = ratios;
-    }
+	/// <summary>
+	/// Stores the ratio at the start of the wave for comparison at the end
+	/// </summary>
+	/// <param name="ratios"></param>
+	public void StartWave(int[] ratios)
+	{
+		waveStartRatio = ratios;
+	}
 
-    /// <summary>
-    /// Calculates changes in the multiplier based on wave performance
-    /// </summary>
-    /// <param name="ratios"></param>
-    public void EndWave(int[] ratios) {
+	/// <summary>
+	/// Calculates changes in the multiplier based on wave performance
+	/// </summary>
+	/// <param name="ratios"></param>
+	public void EndWave(int[] ratios)
+	{
 
-        // Are any building counts lower than at the start of the wave
-        bool isCountLower = (waveStartRatio[0] > ratios[0] ||
-                             waveStartRatio[1] > ratios[1] ||
-                             waveStartRatio[2] > ratios[2]);
-        if (isCountLower)
-            ClearMultiplier();
-        else
-            IncreaseMultiplier();
-    }
+		// Are any building counts lower than at the start of the wave
+		bool isCountLower = (waveStartRatio[0] > ratios[0] ||
+							 waveStartRatio[1] > ratios[1] ||
+							 waveStartRatio[2] > ratios[2]);
+		if (isCountLower)
+			ClearMultiplier();
+		else
+			IncreaseMultiplier();
+	}
 
-    /// <summary>
-    /// Returns the total number of points the player receives for dispersing on this wave.
-    /// Must be called after EndWave
-    /// </summary>
-    /// <returns></returns>
-    public float DispersePoints() {
-        float pointsThisWave = ScoreRatioAlignment();
+	/// <summary>
+	/// Returns the total number of points the player receives for dispersing on this wave.
+	/// Must be called after EndWave
+	/// </summary>
+	/// <returns></returns>
+	public float DispersePoints()
+	{
+		float pointsThisWave = ScoreRatioAlignment();
 
-        float returnVal = (pointsThisWave + storedPoints) * currentMultiplier;
-        storedPoints = 0;
-        ClearMultiplier();
+		float returnVal = (pointsThisWave + storedPoints) * currentMultiplier;
+		storedPoints = 0;
+		ClearMultiplier();
 
-        return returnVal;
-    }
+		return returnVal;
+	}
 
-    /// <summary>
-    /// Stores the points earned this wave in the ratio manager
-    /// </summary>
-    public void StorePoints() {
-        storedPoints += ScoreRatioAlignment();
-    }
+	/// <summary>
+	/// Stores the points earned this wave in the ratio manager
+	/// </summary>
+	public void StorePoints()
+	{
+		storedPoints += ScoreRatioAlignment();
+	}
 
 }
