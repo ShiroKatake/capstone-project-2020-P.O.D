@@ -74,6 +74,8 @@ public class PODController : SerializableSingleton<PODController>
 	public UnityAction onPlayerHeal;
 	public UnityAction onPlayerHealCancelled;
 
+	public Health Health { get => health; }
+
 	/// <summary>
 	/// How close the player needs to be to the cryo egg to heal themselves.
 	/// </summary>
