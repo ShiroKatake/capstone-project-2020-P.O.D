@@ -13,15 +13,17 @@ public class Mineral : MonoBehaviour
 	//Serialized Fields----------------------------------------------------------------------------
 
     [SerializeField] private bool placed;
-	[SerializeField] private int oreCount = 50;
 	[SerializeField] private float oreSpawnRate = 1f;
 	[SerializeField] private float oreCurveRadius = 2;
+	[SerializeField] private Transform miningPoint;
 
 	//Non-Serialized Fields------------------------------------------------------------------------
 
+	private int oreCount;
 	private int initialCount;
     private int id;
     private List<Collider> colliders;
+    private List<MeshRenderer> renderers;
     private bool despawning;
 	private float timer = 0f;
 
@@ -38,6 +40,13 @@ public class Mineral : MonoBehaviour
     /// How much ore remains in this mineral node.
     /// </summary>
     public int OreCount { get => oreCount; }
+
+	public Vector3 MiningPoint { get => miningPoint.position; }
+
+    /// <summary>
+    /// Whether or not the mineral has been placed in the scene, or is pooled in the object pool.
+    /// </summary>
+    public bool Placed { get => placed; set => placed = value; }
 
     //Complex Public Properties----------------------------------------------------------------------
 
@@ -58,31 +67,6 @@ public class Mineral : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Whether or not the mineral has been placed in the scene, or is pooled in the object pool.
-    /// </summary>
-    public bool Placed
-    {
-        get
-        {
-            return placed;
-        }
-
-        set
-        {
-            placed = value;
-
-            if (placed)
-            {
-                MapController.Instance.RegisterMineral(this);
-            }
-            else
-            {
-                MapController.Instance.DeRegisterMineral(this);
-            }
-        }
-    }
-
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
@@ -92,7 +76,8 @@ public class Mineral : MonoBehaviour
     private void Awake()
     {
         colliders = new List<Collider>(GetComponentsInChildren<Collider>());
-        initialCount = oreCount;
+        renderers = new List<MeshRenderer>(GetComponentsInChildren<MeshRenderer>());
+		initialCount = oreCount;
         timer = oreSpawnRate;
     }
 
@@ -101,10 +86,12 @@ public class Mineral : MonoBehaviour
     /// Start() runs after Awake().
     /// </summary>
     private void Start()
-    {
-        if (placed)
+	{
+		oreCount = MineralFactory.Instance.OreCount;
+
+		if (placed)
         {
-            MapController.Instance.RegisterMineral(this);
+            MapManager.Instance.RegisterMineral(this);
         }
     }
 
@@ -125,7 +112,7 @@ public class Mineral : MonoBehaviour
 
 			if (oreCount <= 0)
 			{
-				MineralFactory.Instance.DestroyMineral(this);
+				MineralFactory.Instance.Destroy(this);
 			}
 
 			timer = oreSpawnRate;
@@ -147,13 +134,26 @@ public class Mineral : MonoBehaviour
 	}
 
     /// <summary>
-    /// Enables the mineral node's colliders.
+    /// Enables/disables the mineral node's colliders.
     /// </summary>
-    public void EnableColliders()
+    /// <param name="enabled">Whether the colliders will be enabled or disabled.</param>
+    public void SetCollidersEnabled(bool enabled)
     {
         foreach (Collider c in colliders)
         {
-            c.enabled = true;
+            c.enabled = enabled;
+        }
+    }
+
+    /// <summary>
+    /// Enables/disables the mineral node's mesh renderers.
+    /// </summary>
+    /// <param name="enabled">Whether the mesh renderers will be enabled or disabled.</param>
+    public void SetMeshRenderersEnabled(bool enabled)
+    {
+        foreach (MeshRenderer r in renderers)
+        {
+            r.enabled = enabled;
         }
     }
 
@@ -162,21 +162,8 @@ public class Mineral : MonoBehaviour
     /// </summary>
     public void Reset()
     {
-        DisableColliders();
-        oreCount = initialCount;
         StartCoroutine(DespawnMineral());
-    }
-
-    /// <summary>
-    /// Disables the mineral node's colliders
-    /// </summary>
-    public void DisableColliders()
-    {
-        foreach (Collider c in colliders)
-        {
-            c.enabled = false;
-        }
-    }
+	}
 
     /// <summary>
     /// Handles the visual dissapation of the mineral
@@ -190,9 +177,12 @@ public class Mineral : MonoBehaviour
         {
             transform.position += new Vector3(0, -1 * Time.deltaTime, 0);//TODO: swap for de-spawn shader/animation
             yield return null;
-        }
+		}
 
-        transform.position = ObjectPool.Instance.transform.position;
+		SetCollidersEnabled(false);
+		SetMeshRenderersEnabled(false);
+		oreCount = initialCount;
+		transform.position = ObjectPool.Instance.transform.position;
         transform.parent = ObjectPool.Instance.transform;
         despawning = false;
     }

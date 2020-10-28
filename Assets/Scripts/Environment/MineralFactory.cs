@@ -5,19 +5,18 @@ using UnityEngine;
 /// <summary>
 /// A factory class for minerals.
 /// </summary>
-public class MineralFactory : MonoBehaviour
+public class MineralFactory : Factory<MineralFactory, Mineral, ENone>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
     //Serialized Fields----------------------------------------------------------------------------                                                    
 
-    [SerializeField] private Mineral mineralPrefab;
-    [SerializeField] private int pooledMinerals;
+    [Header("Mineral Stats")]
+	[SerializeField] private int oreCount;
+    [SerializeField] private bool destroySpentMinerals;
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
-    private Transform objectPool;
-    private List<Mineral> minerals;
     private List<Mineral> despawningMinerals;
     private List<Mineral> despawnedMinerals;
 
@@ -26,26 +25,19 @@ public class MineralFactory : MonoBehaviour
     //Singleton Public Property--------------------------------------------------------------------                                                    
 
     /// <summary>
-    /// MineralFactory's singleton public property.
+    /// How much ore should a single mineral node yield in total.
     /// </summary>
-    public static MineralFactory Instance { get; protected set; }
+	public int OreCount { get => oreCount;}
 
-    //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
+	//Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
-    /// <summary>
-    /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
-    /// Awake() runs before Start().
-    /// </summary>
-    private void Awake()
+	/// <summary>
+	/// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
+	/// Awake() runs before Start().
+	/// </summary>
+	protected override void Awake()
     {
-        if (Instance != null)
-        {
-            Debug.LogError("There should never be more than one BuildingFactory.");
-        }
-
-        Instance = this;
-        IdGenerator idGenerator = IdGenerator.Instance;
-        minerals = new List<Mineral>();
+        base.Awake();
         despawningMinerals = new List<Mineral>();
         despawnedMinerals = new List<Mineral>();        
     }
@@ -54,68 +46,53 @@ public class MineralFactory : MonoBehaviour
     /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
     /// Start() runs after Awake().
     /// </summary>
-    private void Start()
+    protected override void Start()
     {
-        objectPool = ObjectPool.Instance.transform;
+        base.Start();
 
-        for (int i = 0; i < pooledMinerals; i++)
+        foreach (Mineral m in pool[ENone.None])
         {
-            minerals.Add(CreateMineral(true));
+            m.SetCollidersEnabled(false);
+            m.SetMeshRenderersEnabled(false);
         }
     }
 
     //Triggered Methods -----------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
-    /// Get mineral nodes from BuildingFactory.
+    /// Get a new mineral node.
     /// </summary>
+    /// <param name="position">The position the mineral should be instantiated at.</param>
+    /// <param name="type">The type of mineral to retrieve. Should be left as default value of ENone.None.</param>
     /// <returns>A mineral node.</returns>
-    public Mineral GetMineral(Vector3 position)
+    public override Mineral Get(Vector3 position, ENone type = ENone.None)
     {
-        Mineral mineral;
-
-        if (minerals.Count > 0)
-        {
-            mineral = minerals[0];
-            minerals.RemoveAt(0);
-            mineral.transform.parent = null;
-            mineral.EnableColliders();
-        }
-        else
-        {
-            mineral = CreateMineral(false);
-        }
-
+        Mineral mineral = base.Get(position, type);
         mineral.Id = IdGenerator.Instance.GetNextId();
-        mineral.transform.position = position;
-        MapController.Instance.RegisterMineral(mineral);
+        MapManager.Instance.RegisterMineral(mineral);
         return mineral;
     }
 
     /// <summary>
-    /// Creates mineral nodes.
+    /// Custom modifications to a mineral after Get() retrieves it from the pool.
     /// </summary>
-    /// <returns>A mineral node.</returns>
-    private Mineral CreateMineral(bool pooling)
+    /// <param name="mineral">The mineral being modified.</param>
+    /// <returns>The modified mineral.</returns>
+    protected override Mineral GetRetrievalSetup(Mineral mineral)
     {
-        Mineral mineral = Instantiate(mineralPrefab);
-
-        if (pooling)
-        {
-            mineral.transform.position = objectPool.transform.position;
-            mineral.transform.parent = objectPool;
-            mineral.DisableColliders();
-        }
-
+        mineral.SetMeshRenderersEnabled(true);
+        mineral.SetCollidersEnabled(true);
         return mineral;
     }
 
     /// <summary>
     /// Destroy a mineral node.
     /// </summary>
-    public void DestroyMineral(Mineral mineral)
+    /// <param name="mineral">The mineral to destroy.</param>
+    /// <param name="type">The type of mineral to destroy. Should be left as default value of ENone.None.</param>
+    public override void Destroy(Mineral mineral, ENone type = ENone.None)
     {
-        MapController.Instance.DeRegisterMineral(mineral);
+        MapManager.Instance.DeRegisterMineral(mineral);
         mineral.Reset();
         despawningMinerals.Add(mineral);
 
@@ -132,22 +109,33 @@ public class MineralFactory : MonoBehaviour
     {
         while (despawningMinerals.Count > 0)
         {
-            foreach (Mineral m in despawningMinerals)
+            for (int i = 0; i < despawningMinerals.Count; i++)
             {
-                if (!m.Despawning)
+                if (!despawningMinerals[i].Despawning)
                 {
-                    despawnedMinerals.Add(m);
+                    despawnedMinerals.Add(despawningMinerals[i]);
+                    despawningMinerals.RemoveAt(i);
+                    i--;
                 }
             }
 
             if (despawnedMinerals.Count > 0)
             {
-                foreach (Mineral m in despawnedMinerals)
+                do
                 {
-                    despawningMinerals.Remove(m);
-                }
+                    Mineral toDestroy = despawnedMinerals[0];
+                    despawnedMinerals.RemoveAt(0);
 
-                despawnedMinerals.Clear();
+                    if (destroySpentMinerals)
+                    {
+                        GameObject.Destroy(toDestroy.gameObject);
+                    }
+                    else
+                    {
+                        base.Destroy(toDestroy, ENone.None);
+                    }
+                }
+                while (!destroySpentMinerals && despawnedMinerals.Count > 0);
             }
 
             yield return null;

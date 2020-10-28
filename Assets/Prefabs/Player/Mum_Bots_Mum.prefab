@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4635870159163347478}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Mum_Bots_Mum
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43,7 +43,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4635870159443615667}
   - component: {fileID: 4635870159443615666}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Players_ears
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -154,6 +154,21 @@ PrefabInstance:
       propertyPath: audioListener
       value: 
       objectReference: {fileID: 4635870159443615667}
+    - target: {fileID: 874625422788102011, guid: c59556a7ef07f27488ad22ca85e6db1c,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 874625422788102011, guid: c59556a7ef07f27488ad22ca85e6db1c,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 874625424179424808, guid: c59556a7ef07f27488ad22ca85e6db1c,
+        type: 3}
+      propertyPath: cam
+      value: 
+      objectReference: {fileID: 4635870161075411411}
     - target: {fileID: 1254351314858929259, guid: c59556a7ef07f27488ad22ca85e6db1c,
         type: 3}
       propertyPath: camera
@@ -164,6 +179,26 @@ PrefabInstance:
       propertyPath: camera
       value: 
       objectReference: {fileID: 4635870161075411412}
+    - target: {fileID: 5404796149539190811, guid: c59556a7ef07f27488ad22ca85e6db1c,
+        type: 3}
+      propertyPath: camera
+      value: 
+      objectReference: {fileID: 4635870161075411412}
+    - target: {fileID: 5764915359376376306, guid: c59556a7ef07f27488ad22ca85e6db1c,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5764915359376376306, guid: c59556a7ef07f27488ad22ca85e6db1c,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5764915360128067745, guid: c59556a7ef07f27488ad22ca85e6db1c,
+        type: 3}
+      propertyPath: cam
+      value: 
+      objectReference: {fileID: 4635870161075411411}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c59556a7ef07f27488ad22ca85e6db1c, type: 3}
 --- !u!4 &5029904101723603987 stripped
@@ -234,26 +269,32 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4529335741515185008, guid: 5778567ec991d6b43be9e63c26d48713,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4529335741515185023, guid: 5778567ec991d6b43be9e63c26d48713,
         type: 3}
       propertyPath: m_Name
       value: CameraTarget
       objectReference: {fileID: 0}
-    - target: {fileID: 4529335742813191530, guid: 5778567ec991d6b43be9e63c26d48713,
+    - target: {fileID: 5689117897133087972, guid: 5778567ec991d6b43be9e63c26d48713,
         type: 3}
-      propertyPath: m_Enabled
-      value: 0
+      propertyPath: m_RenderPostProcessing
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5689117897133087972, guid: 5778567ec991d6b43be9e63c26d48713,
+        type: 3}
+      propertyPath: m_Antialiasing
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5778567ec991d6b43be9e63c26d48713, type: 3}
 --- !u!4 &4635870159605178319 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4529335741515185008, guid: 5778567ec991d6b43be9e63c26d48713,
+    type: 3}
+  m_PrefabInstance: {fileID: 9119373102510744767}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &4635870161075411411 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4529335742813191532, guid: 5778567ec991d6b43be9e63c26d48713,
     type: 3}
   m_PrefabInstance: {fileID: 9119373102510744767}
   m_PrefabAsset: {fileID: 0}

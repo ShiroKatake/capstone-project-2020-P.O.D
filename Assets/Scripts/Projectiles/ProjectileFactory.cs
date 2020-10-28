@@ -6,70 +6,27 @@ using UnityEngine;
 /// <summary>
 /// A factory class for ammunition.
 /// </summary>
-public class ProjectileFactory : MonoBehaviour
+public class ProjectileFactory : Factory<ProjectileFactory, Projectile, EProjectileType>
 {
-    //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
-
-    //Serialized Fields----------------------------------------------------------------------------                                                    
-
-    [SerializeField] private List<Projectile> projectilePrefabs;
-    [SerializeField] private int pooledProjectiles;
-
-    //Non-Serialized Fields------------------------------------------------------------------------                                                    
-
-    private Transform objectPool;
-    private Dictionary<EProjectileType, Projectile> prefabs;
-    private Dictionary<EProjectileType, List<Projectile>> projectiles;
-
-    //Public Properties------------------------------------------------------------------------------------------------------------------------------
-
-    //Singleton Public Property--------------------------------------------------------------------                                                    
-
-    /// <summary>
-    /// AmmoFactory's singleton public property.
-    /// </summary>
-    public static ProjectileFactory Instance { get; protected set; }
-
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
-
-    /// <summary>
-    /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
-    /// Awake() runs before Start().
-    /// </summary>
-    private void Awake()
-    {
-        if (Instance != null)
-        {
-            Debug.LogError("There should never be more than one ProjectileFactory.");
-        }
-
-        Instance = this;
-        prefabs = new Dictionary<EProjectileType, Projectile>();
-        projectiles = new Dictionary<EProjectileType, List<Projectile>>();               
-    }
-
+    
     /// <summary>
     /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
     /// Start() runs after Awake().
     /// </summary>
-    private void Start()
+    protected override void Start()
     {
-        objectPool = ObjectPool.Instance.transform;
+        base.Start();
 
-        foreach (Projectile p in projectilePrefabs)
+        foreach (List<Projectile> l in pool.Values)
         {
-            prefabs[p.Type] = p;
-            projectiles[p.Type] = new List<Projectile>();
-
-            for (int i = 0; i < pooledProjectiles; i++)
+            foreach (Projectile p in l)
             {
-                Projectile q = CreateProjectile(p.Type);
-                q.transform.SetPositionAndRotation(objectPool.position, q.transform.rotation);
-                q.transform.parent = objectPool;
-                projectiles[q.Type].Add(q);
+                p.Light.enabled = false;
+                p.Renderer.enabled = false;
+                p.Collider.enabled = false;
             }
-        } 
-
+        }
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
@@ -78,36 +35,26 @@ public class ProjectileFactory : MonoBehaviour
     /// Retrieves Projectiles from a pool if there's any available, and instantiates a new Projectile if there isn't one.
     /// </summary>
     /// <param name="owner">The player or turret firing the projectile from their weapon.</param>
-    /// <param name="position">The position the Projectile should be instantiated at.</param>
+    /// <param name="barrelTip">The transform of the barrel tip it's being fired from.</param>
+    /// <param name="type">The type of projectile to get.</param>
     /// <returns>A new projectile.</returns>
-    public Projectile GetProjectile(EProjectileType type, Transform owner, Vector3 position)
+    public Projectile Get(Transform owner, Transform barrelTip, EProjectileType type)
     {
-        Projectile projectile;
-
-        if (projectiles[type].Count > 0)
-        {
-            projectile = projectiles[type][0];
-            projectiles[type].RemoveAt(0);
-        }
-        else
-        {
-            projectile = CreateProjectile(type);
-        }
-
+        Projectile projectile = Get(barrelTip.position, type);
         projectile.Owner = owner;
-        projectile.transform.parent = null;
-        projectile.transform.position = position;
-        return projectile;
+		projectile.transform.rotation = barrelTip.rotation;
+		return projectile;
     }
 
     /// <summary>
-    /// Instantiates a new Projectile.
+    /// Custom modifications to a projectile after Get() retrieves it from the pool.
     /// </summary>
-    /// <returns>A new Projectile.</returns>
-    private Projectile CreateProjectile(EProjectileType type)
+    /// <param name="projectile">The projectile being modified.</param>
+    /// <returns>The modified projectile.</returns>
+    protected override Projectile GetRetrievalSetup(Projectile projectile)
     {
-        Projectile projectile = Instantiate(prefabs[type]);
-        projectile.Collider.enabled = false;
+        projectile.Light.enabled = true;
+        projectile.Renderer.enabled = true;
         return projectile;
     }
 
@@ -115,14 +62,25 @@ public class ProjectileFactory : MonoBehaviour
     /// Handles the destruction of projectiles.
     /// </summary>
     /// <param name="projectile">The projectile to destroy.</param>
-    public void DestroyProjectile(Projectile projectile)
+    public void Destroy(Projectile projectile)
     {
+        Destroy(projectile, projectile.Type);
+    }
+
+    /// <summary>
+    /// Handles the destruction of projectiles.
+    /// </summary>
+    /// <param name="projectile">The projectile to destroy.</param>
+    /// <param name="type">The type of projectile to destroy.</param>
+    public override void Destroy(Projectile projectile, EProjectileType type)
+    {
+        ProjectileManager.Instance.DeRegisterProjectile(projectile);
         projectile.Active = false;
         projectile.Collider.enabled = false;
+        projectile.Light.enabled = false;
+        projectile.Renderer.enabled = false;
         projectile.Rigidbody.velocity = Vector3.zero;
         projectile.Rigidbody.isKinematic = true;
-        projectile.transform.position = objectPool.position;
-        projectile.transform.parent = objectPool;
-        projectiles[projectile.Type].Add(projectile);
+        base.Destroy(projectile, type);
     }
 }

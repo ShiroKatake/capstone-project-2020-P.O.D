@@ -8,12 +8,14 @@ using UnityEngine;
 public enum EBuilding
 {
     None,
-    CryoEgg,
+    Tower,
     FusionReactor,
     IceDrill,
+    Harvester,
+    GasPump,
     Boiler,
     Greenhouse,
     Incinerator,
-    ShortRangeTurret,
-    LongRangeTurret
+    ShotgunTurret,
+    MachineGunTurret
 }

@@ -2,32 +2,36 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 /// <summary>
 /// A player script for collecting minerals.
 /// </summary>
-public class MineralCollectionController : MonoBehaviour
+public class MineralCollectionController : SerializableSingleton<MineralCollectionController>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
     //Serialized Fields----------------------------------------------------------------------------                                                    
 
     [SerializeField] private Camera camera;
+	[SerializeField] private MiningBeam miningBeam;
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
     private Player playerInputManager;
     private bool collectMinerals;
+	private bool isOnMineral;
     private LayerMask mineralsLayerMask;
+    private bool mining;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    //Singleton Public Property--------------------------------------------------------------------                                                    
+    //Basic Public Properties----------------------------------------------------------------------
 
     /// <summary>
-    /// MineralCollectionController's singleton public property.
+    /// Is the player currently mining a mineral?
     /// </summary>
-    public static MineralCollectionController Instance { get; protected set; }
+    public bool Mining { get => mining; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -35,15 +39,11 @@ public class MineralCollectionController : MonoBehaviour
     /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
     /// Awake() runs before Start().
     /// </summary>
-    private void Awake()
+    protected override void Awake()
     {
-        if (Instance != null)
-        {
-            Debug.LogError("There should never be more than one MineralCollectionController.");
-        }
-
-        Instance = this;
+        base.Awake();
         mineralsLayerMask = LayerMask.GetMask("Minerals");
+        mining = false;
     }
 
     /// <summary>
@@ -81,7 +81,7 @@ public class MineralCollectionController : MonoBehaviour
     /// </summary>
     private void CollectMinerals()
     {
-        if (collectMinerals && !BuildingSpawningController.Instance.SpawningBuilding)
+        if (!BuildingSpawnController.Instance.SpawningBuilding)
         {
             //Debug.Log("Mining");
             RaycastHit hit;
@@ -89,22 +89,60 @@ public class MineralCollectionController : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, mineralsLayerMask))
             {
-                //Debug.Log("Raycast hit minerals");
-                Mineral mineral = hit.collider.GetComponentInParent<Mineral>();
+				//Debug.Log("Raycast hit minerals");
+				Mineral mineral = hit.collider.GetComponentInParent<Mineral>();
+				DisplayMineralInfo(mineral);
 
-                if (mineral != null)
+				if (collectMinerals && mineral != null && mineral.OreCount > 0)
                 {
-                    /*int mined = */mineral.Mine();
+                    mining = true;
+                    miningBeam.OnMineEnable(mineral.MiningPoint);
+                    mineral.Mine();
                     //Debug.Log($"Raycast hit mineral node. Mined {mined} minerals");
 
                     AudioManager.Instance.PlaySound(AudioManager.ESound.Mining, this.gameObject);
                     //ResourceController.Instance.Ore += mined; (Moved this function to Ore.cs)
                 }
+				else
+				{
+                    mining = false;
+					miningBeam.OnMineDisable();
+				}
+			}
+			else
+			{
+				miningBeam.OnMineDisable();
+				HideMineralInfo();
+                AudioManager.Instance.StopSound(AudioManager.ESound.Mining, this.gameObject);
             }
         }
         else
         {
             AudioManager.Instance.StopSound(AudioManager.ESound.Mining, this.gameObject);
         }
-    }
+	}
+
+	/// <summary>
+	/// Trigger hovering dialogue box if mouse hovers over the mineral deposit.
+	/// </summary>
+	private void DisplayMineralInfo(Mineral mineral)
+	{
+		if (!isOnMineral)
+		{
+			HoveringDialogueManager.Instance.ShowDialogue(mineral.GetComponent<HoverDialogueBoxPreset>());
+			isOnMineral = true;
+		}
+	}
+	
+	/// <summary>
+	/// Hide hovering dialogue box if mouse leaves the mineral deposit.
+	/// </summary>
+	private void HideMineralInfo()
+	{
+		if (isOnMineral)
+		{
+			HoveringDialogueManager.Instance.HideDialogue();
+			isOnMineral = false;
+		}
+	}
 }

@@ -5,90 +5,60 @@ using UnityEngine;
 /// <summary>
 /// A factory class for ores.
 /// </summary>
-public class OreFactory : MonoBehaviour
+public class OreFactory : Factory<OreFactory, Ore, ENone>
 {
 	//Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
 	//Serialized Fields----------------------------------------------------------------------------                                                    
 
-	[SerializeField] private Ore orePrefab;
-	[SerializeField] private int pooledOres;
-
-	//Non-Serialized Fields------------------------------------------------------------------------
-
-	private Transform objectPool;
-	private Queue<Ore> ores = new Queue<Ore>();
+    [Header("Ore Stats")]
+	[SerializeField] private int oreValue;
 
 	//Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-	//Singleton Public Property--------------------------------------------------------------------                                                    
+	//Basic Public Properties----------------------------------------------------------------------                                                    
 
-	/// <summary>
-	/// MineralFactory's singleton public property.
-	/// </summary>
-	public static OreFactory Instance { get; protected set; }
+    /// <summary>
+    /// How much ore should ore nodes yield.
+    /// </summary>
+	public int OreValue { get => oreValue; }
 
-	//Initialization Methods-------------------------------------------------------------------------------------------------------------------------
-
-	/// <summary>
-	/// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
-	/// Awake() runs before Start().
-	/// </summary>
-	void Awake()
-    {
-		if (Instance != null)
-		{
-			Debug.LogError("There should never be more than one OreFactory.");
-		}
-
-		Instance = this;
-		IdGenerator idGenerator = IdGenerator.Instance;
-
-		AddOres(pooledOres);
-	}
+    //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
     /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
     /// Start() runs after Awake().
     /// </summary>
-    private void Start()
+    protected override void Start()
     {
-        objectPool = ObjectPool.Instance.transform;
+        base.Start();
+
+        foreach (Ore o in pool[ENone.None])
+        {
+            o.gameObject.SetActive(false);
+        }
     }
 
-	//Triggered Methods -----------------------------------------------------------------------------------------------------------------------------
-	
-	/// <summary>
-	/// Generate a mineral ore from the pool. If there's no ores in the pool add one.
-	/// </summary>
-	public Ore Get()
-	{
-		if (ores.Count == 0)
-		{
-			AddOres(1);
-		}
-		return ores.Dequeue();
-	}
+    //Triggered Methods -----------------------------------------------------------------------------------------------------------------------------
 
-	/// <summary>
-	/// Add ores into the pool.
-	/// </summary>
-	private void AddOres(int count)
-	{
-		for (int i = 0; i < count; i++)
-		{
-			Ore ore = Instantiate(orePrefab);
-			ore.gameObject.SetActive(false);
-			ores.Enqueue(ore);
-		}
-	}
+    /// <summary>
+    /// Get a new ore.
+    /// </summary>
+    /// <param name="type">The type of ore to instantiate. Should be left as default value of ENone.None.</param>
+    /// <returns>An ore.</returns>
+    public override Ore Get(ENone type = ENone.None)
+    {
+        return base.Get(type);
+    }
 
-	/// <summary>
-	/// Return an ore back into the pool.
-	/// </summary>
-	public void ReturnToPool(Ore ore)
+    /// <summary>
+    /// Destroy an ore.
+    /// </summary>
+    /// <param name="ore">The ore to destroy.</param>
+    /// <param name="type">The type of ore to destroy. Should be left as default value of ENone.None.</param>
+	public override void Destroy(Ore ore, ENone type = ENone.None)
 	{
 		ore.gameObject.SetActive(false);
-		ores.Enqueue(ore);
+        base.Destroy(ore, type);
 	}
 }

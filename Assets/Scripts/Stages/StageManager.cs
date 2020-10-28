@@ -1,56 +1,51 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
-
-using DG.Tweening;
-using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
-using Random = UnityEngine.Random;
-
-
 
 /// <summary>
 /// A manager class for the current stage of the game
 /// </summary>
-public class StageManager : MonoBehaviour
+public class StageManager : SerializableSingleton<StageManager>
 {
     //Fields-----------------------------------------------------------------------------------------------------------------------------------------
 
     //Serialized Fields----------------------------------------------------------------------------
 
     [SerializeField] private bool skipTutorial;
-    [SerializeField] private EStage firstStage;
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
-    private Dictionary<EStage, Stage> stages;
-    private Stage currentStage;
-    private Stage savedStage;
-    private int savedStep;
+    private Dictionary<EStage, IStage> stages;
+    private IStage currentStage;
+    private bool initialised;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    //Singleton Public Property--------------------------------------------------------------------
-
-    /// <summary>
-    /// StageManager's singleton public property.
-    /// </summary>
-    public static StageManager Instance { get; protected set; }
-
     //Basic Public Properties----------------------------------------------------------------------
-
-    /// <summary>
-    /// The current stage of the game.
-    /// </summary>
-    public Stage CurrentStage { get => currentStage; }
 
     /// <summary>
     /// Whether the player has elected to skip the tutorial or not.
     /// </summary>
     public bool SkipTutorial { get => skipTutorial; }
+
+    //Complex Public Properties--------------------------------------------------------------------
+
+    /// <summary>
+    /// The current stage of the game. If called before StageManager.Start(), forces InitaliseStageManager() to run so that currentStage != null.
+    /// </summary>
+    public IStage CurrentStage
+    {
+        get
+        {
+            if (!initialised)
+            {
+                InitialiseStageManager();
+            }
+
+            return currentStage;
+        }
+    }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -58,19 +53,10 @@ public class StageManager : MonoBehaviour
     /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
     /// Awake() runs before Start().
     /// </summary>
-    private void Awake()
+    protected override void Awake()
     {
-        if (Instance != null)
-        {
-            Debug.LogError("There should never be 2 or more StageManagers.");
-        }
-
-        Instance = this;
-
-        //if (GlobalVars.LoadedFromMenu)
-        //{
-        //    skipTutorial = GlobalVars.SkipTut;
-        //}
+        base.Awake();
+        initialised = false;
     }
 
     /// <summary>
@@ -79,8 +65,25 @@ public class StageManager : MonoBehaviour
     /// </summary>
     private void Start()
     {
-        GetStages();
-        BeginGame();
+        InitialiseStageManager();
+    }
+
+    /// <summary>
+    /// Holds all the initialisation code for StageManager so it can be called outside of Start.
+    /// </summary>
+    private void InitialiseStageManager()
+    {
+        if (!initialised)
+        {
+            if (SceneLoaderListener.Instance.SceneLoaderInstantiatedOnAwake)
+            {
+                skipTutorial = SceneLoader.Instance.SkipTutorial;
+            }
+
+            GetStages();
+            BeginGame();
+            initialised = true;
+        }
     }
 
     /// <summary>
@@ -88,18 +91,18 @@ public class StageManager : MonoBehaviour
     /// </summary>
     private void GetStages()
     {
-        stages = new Dictionary<EStage, Stage>();
-        Stage[] stageList = GetComponents<Stage>();
+        stages = new Dictionary<EStage, IStage>();
+        IStage[] stageList = GetComponents<IStage>();
 
-        foreach (Stage s in stageList)
+        foreach (IStage s in stageList)
         {
-            if (!stages.ContainsKey(s.ID))
+            if (!stages.ContainsKey(s.GetID()))
             {
-                stages[s.ID] = s;
+                stages[s.GetID()] = s;
             }
             else
             {
-                Debug.Log($"There there is more than one stage being processed by StageManager with the ID {s.ID}. Each stage should have a unique ID. Go back and check their Awake() methods.");
+                Debug.Log($"There there is more than one stage being processed by StageManager with the ID {s.GetID()}. Each stage should have a unique ID. Go back and check their Awake() methods.");
             }
         }
     }
@@ -109,24 +112,8 @@ public class StageManager : MonoBehaviour
     /// </summary>
     public void BeginGame()
     {
-        if (skipTutorial)
-        {
-            currentStage = stages[EStage.FinishedTutorial];
-        }
-        else
-        {
-            currentStage = stages[firstStage];
-        }
-    }
-
-    //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
-
-    /// <summary>
-    /// Update() is run every frame.
-    /// </summary>
-    private void Update()
-    {
-        currentStage.Execute();
+        currentStage = stages[(skipTutorial ? EStage.SkippedTutorial : EStage.Controls)];
+        StartCoroutine(currentStage.Execution());
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
@@ -136,7 +123,7 @@ public class StageManager : MonoBehaviour
     /// </summary>
     /// <param name="stage">The particular stage you want to retrieve.</param>
     /// <returns>The stage you wanted to retrieve.</returns>
-    public Stage GetStage(EStage stage)
+    public IStage GetStage(EStage stage)
     {
         if (stages.ContainsKey(stage))
         {
@@ -155,6 +142,7 @@ public class StageManager : MonoBehaviour
         if (stages.ContainsKey(stage))
         {
             currentStage = stages[stage];
+            StartCoroutine(currentStage.Execution());
         }
         else
         {

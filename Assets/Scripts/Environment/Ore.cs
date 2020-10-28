@@ -11,7 +11,7 @@ public class Ore : MonoBehaviour
 
 	//Serialized Fields----------------------------------------------------------------------------
 
-	[SerializeField] private int value = 5;
+	private int value;
 	[SerializeField] private float speed;
 
 	//Non-Serialized Fields------------------------------------------------------------------------
@@ -42,6 +42,11 @@ public class Ore : MonoBehaviour
 
 	//Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
+	private void Awake()
+	{
+		value = OreFactory.Instance.OreValue;
+	}
+
 	/// <summary>
 	/// This function is called when the object becomes enabled and active.
 	/// </summary>
@@ -50,16 +55,19 @@ public class Ore : MonoBehaviour
 		interpolationPercent = 0;
 	}
 
-	//Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
+    //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
 
-	/// <summary>
-	/// Update() is run every frame.
-	/// </summary>
-	void Update()
+    /// <summary>
+    /// Update() is run every frame.
+    /// </summary>
+    void Update()
     {
-		interpolationPercent += Time.deltaTime;
-		transform.position = CurveTowards(p0, p1, p2, interpolationPercent, speed);
-	}
+        if (!PauseMenuManager.Paused)
+        {
+            interpolationPercent += Time.deltaTime;
+            transform.position = CurveTowards(p0, p1, p2, interpolationPercent, speed);
+        }
+    }
 
 	//Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 	
@@ -84,8 +92,8 @@ public class Ore : MonoBehaviour
 		if (other.gameObject.tag == "Player")
 		{
 			//Debug.Log("Collected " + value + " ores.");
-			ResourceController.Instance.Ore += value;
-			OreFactory.Instance.ReturnToPool(this);
+			ResourceManager.Instance.Ore += value;
+			OreFactory.Instance.Destroy(this);
 		}
 	}
 }

@@ -19,13 +19,6 @@ public class CommentsTemplate : MonoBehaviour
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    //Singleton Public Property--------------------------------------------------------------------                                                    
-
-    /// <summary>
-    /// [CLASSNAME]'s singleton public property.
-    /// </summary>
-    public static CommentsTemplate Instance { get; protected set; }
-
     //Basic Public Properties----------------------------------------------------------------------                                                                                                                          
 
 
@@ -42,12 +35,12 @@ public class CommentsTemplate : MonoBehaviour
     /// </summary>
     private void Awake()
     {
-        if (Instance != null)
-        {
-            Debug.LogError("There should never be more than one [CLASSNAME].");
-        }
+        //if (Instance != null)
+        //{
+        //    Debug.LogError("There should never be more than one [CLASSNAME].");
+        //}
 
-        Instance = this;
+        //Instance = this;
     }
 
     /// <summary>

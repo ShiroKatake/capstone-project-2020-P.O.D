@@ -15,7 +15,8 @@ public class TurretShooting : CollisionListener, IMessenger
     [SerializeField] private Transform barrelMagazine;
     [SerializeField] private Transform barrelTip;
 
-    [Header("Shooting Stats")]
+	[Header("Shooting Stats")]
+	[SerializeField] private float detectionRadius;
     [SerializeField] private EProjectileType projectileType;
     [SerializeField] private bool targetClosest;
     [SerializeField] private float numProjectiles;
@@ -37,6 +38,7 @@ public class TurretShooting : CollisionListener, IMessenger
     //Shooting Variables
     //[SerializeField] private bool shoot;
     private float timeOfLastShot;
+	private SphereCollider detectionCollider;
 
     //Public Properties----------------------------------------------------------------------------
 
@@ -45,17 +47,23 @@ public class TurretShooting : CollisionListener, IMessenger
     /// </summary>
     public Alien Target { get => target; }
 
-    //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// How wide the turret shooting range is.
+	/// </summary>
+	public float DetectionRadius { get => detectionRadius; }
 
-    /// <summary>
-    /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
-    /// Awake() runs before Start().
-    /// </summary>
-    private void Awake()
+	//Initialization Methods-------------------------------------------------------------------------------------------------------------------------
+
+	/// <summary>
+	/// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
+	/// Awake() runs before Start().
+	/// </summary>
+	private void Awake()
     {
         building = gameObject.GetComponent<Building>();
         collisionReporters = GetCollisionReporters();
-    }
+		detectionCollider = GetComponentInChildren<SphereCollider>();
+	}
 
     /// <summary>
     /// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
@@ -63,7 +71,8 @@ public class TurretShooting : CollisionListener, IMessenger
     /// </summary>
     private void Start()
     {
-        Reset();
+		detectionCollider.radius = detectionRadius;
+		Reset();
     }
 
     /// <summary>
@@ -72,8 +81,8 @@ public class TurretShooting : CollisionListener, IMessenger
     public void Reset()
     {
         //Debug.Log("TurretShooting.Reset()");
-        MessageDispatcher.Instance.SendMessage("Alien", new Message(gameObject.name, "Turret", this.gameObject, "Dead"));
-        MessageDispatcher.Instance.Unsubscribe("Turret", this);
+        MessageManager.Instance.SendMessage("Alien", new Message(gameObject.name, "Turret", gameObject, "Dead"));
+        MessageManager.Instance.Unsubscribe("Turret", this);
         visibleTargets = new List<Alien>();
         timeOfLastShot = shotCooldown * -1;
         ToggleDetectionCollider(false);
@@ -117,7 +126,7 @@ public class TurretShooting : CollisionListener, IMessenger
                 break;
             case 1:
                 //Get only visible target
-                if (target != visibleTargets[0])
+                if (target != visibleTargets[0] && !visibleTargets[0].Health.IsDead())
                 {
                     target = visibleTargets[0];
                 }
@@ -139,7 +148,7 @@ public class TurretShooting : CollisionListener, IMessenger
                     {
                         distance = Vector3.Distance(transform.position, a.transform.position);
 
-                        if (bestTarget == null || distance < bestDistance)
+                        if ((bestTarget == null || distance < bestDistance) && !a.Health.IsDead())
                         {
                             bestTarget = a;
                             bestDistance = distance;
@@ -156,7 +165,7 @@ public class TurretShooting : CollisionListener, IMessenger
                     {
                         distance = Vector3.Distance(transform.position, a.transform.position);
 
-                        if (bestTarget == null || distance > bestDistance)
+                        if ((bestTarget == null || distance > bestDistance) && !a.Health.IsDead())
                         {
                             bestTarget = a;
                             bestDistance = distance;
@@ -178,14 +187,14 @@ public class TurretShooting : CollisionListener, IMessenger
     /// </summary>
     private void Shoot()
     {
-        if (/*shoot || (*/target != null && Time.time - timeOfLastShot > shotCooldown)//)
+        if (/*shoot || (*/target != null && Time.time - timeOfLastShot > shotCooldown && !target.Health.IsDead())//)
         {
             //shoot = false;
             timeOfLastShot = Time.time;
             
             for(int i = 0; i < numProjectiles; i++)
             {
-                Projectile projectile = ProjectileFactory.Instance.GetProjectile(projectileType, transform, barrelTip.position);
+                Projectile projectile = ProjectileFactory.Instance.Get(transform, barrelTip, projectileType);
                 Vector3 vector = barrelTip.position - barrelMagazine.position;
 
                 if (yAxisVariance > 0 || zAxisVariance > 0)
@@ -198,8 +207,8 @@ public class TurretShooting : CollisionListener, IMessenger
                 }
 
                 projectile.Shoot((vector).normalized, 0);
-               
             }
+
             AudioManager.Instance.PlaySound(AudioManager.ESound.MachineGun_Shoot, this.gameObject);
         }
     }
@@ -212,7 +221,7 @@ public class TurretShooting : CollisionListener, IMessenger
     public void Place()
     {
         ToggleDetectionCollider(true);
-        MessageDispatcher.Instance.Subscribe("Turret", this);
+        MessageManager.Instance.Subscribe("Turret", this);
     }
 
     /// <summary>
@@ -235,18 +244,21 @@ public class TurretShooting : CollisionListener, IMessenger
     /// <param name="message">The message to send to this messenger.</param>
     public void Receive(Message message)
     {
-        if (message.SenderTag == "Alien" && message.MessageContents == "Dead")
+        if (message.SenderTag == "Alien")
         {
-            Alien messenger = message.SenderObject.GetComponent<Alien>();
-
-            if (target == messenger)
+            if (message.Contents == "Dead")
             {
-                target = null;
-            }
+                Alien messenger = message.SenderObject.GetComponent<Alien>();
 
-            if (visibleTargets.Contains(messenger))
-            {
-                visibleTargets.Remove(messenger);
+                if (target == messenger)
+                {
+                    target = null;
+                }
+
+                if (visibleTargets.Contains(messenger))
+                {
+                    visibleTargets.Remove(messenger);
+                }
             }
         }
     }
@@ -292,4 +304,14 @@ public class TurretShooting : CollisionListener, IMessenger
             }
         }
     }
+
+	/// <summary>
+	/// Draws a sphere to help visuallising the radius of the turret detection range (as the detection hitbox will only/should only be updated in play mode now).
+	/// </summary>
+	void OnDrawGizmosSelected()
+	{
+		// Draw a yellow sphere at the transform's position
+		Gizmos.color = new Color(0.45f, 0.77f, 0.49f);
+		Gizmos.DrawWireSphere(new Vector3(transform.position.x, transform.position.y -0.5f, transform.position.z), detectionRadius);
+	}
 }

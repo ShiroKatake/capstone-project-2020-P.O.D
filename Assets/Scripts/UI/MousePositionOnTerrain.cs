@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Rewired;
 
-public class MousePositionOnTerrain : MonoBehaviour
+public class MousePositionOnTerrain : SerializableSingleton<MousePositionOnTerrain>
 {
     private Plane plane;
     [SerializeField] private Camera camera;
@@ -11,19 +11,11 @@ public class MousePositionOnTerrain : MonoBehaviour
     private Vector3 worldPosition;
     private Ray ray;
 
-    public static MousePositionOnTerrain Instance {get; protected set;}
-
     public Vector3 GetWorldPosition {get => worldPosition;}
 
-    private void Awake() {
-        if (Instance != null)
-        {
-            Debug.LogError("There should never be 2 or more Mouse Position On Terrain's.");
-        }
-
-        Instance = this;
-        
-        plane = new Plane(/*Vector3.up*/ new Vector3(0,1,0), -0.5f);
+    protected override void Awake() {
+        base.Awake();
+        plane = new Plane(Vector3.up, 0);
     }
 
     // Start is called before the first frame update
@@ -51,8 +43,11 @@ public class MousePositionOnTerrain : MonoBehaviour
 
         float dist;
         ray = camera.ScreenPointToRay(ReInput.controllers.Mouse.screenPosition);
-        if (plane.Raycast(ray, out dist)){
+
+        if (plane.Raycast(ray, out dist))
+        {
             worldPosition = ray.GetPoint(dist);
+            //Debug.DrawLine(worldPosition, worldPosition + Vector3.up * 10);
         }
 
         //print("World Position from GameManager: " + worldPosition);

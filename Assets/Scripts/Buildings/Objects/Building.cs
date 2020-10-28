@@ -2,6 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using Rewired;
+using UnityEngine.Events;
 
 [Serializable]
 public struct RendererMaterialSet
@@ -9,6 +12,8 @@ public struct RendererMaterialSet
     public MeshRenderer renderer;
     public Material opaque;
     public Material transparent;
+    public float dissolveStart;
+    public float dissolveEnd;
 }
 
 /// <summary>
@@ -20,17 +25,17 @@ public class Building : CollisionListener
 
     //Serialized Fields----------------------------------------------------------------------------                                                    
 
-    [Header("ID")]
+    [Header("Identification")]
     [SerializeField] private int id;
-
-    [Header("Building Type")]
     [SerializeField] private EBuilding buildingType;
+    [SerializeField] private string consoleName;
 
     [Header("Resource Requirements")]
     [SerializeField] private int oreCost;
     [SerializeField] private int powerConsumption;
     [SerializeField] private int waterConsumption;
-    [SerializeField] private int wasteConsumption;
+    [SerializeField] private int plantsConsumption;
+    [SerializeField] private int gasConsumption;
 
     //Note: if you need buildings to supply resources, the ResourceCollector component already has you covered 
     //there, and it should be interacted with on shutdown / restoration through Building.Operational. If it's 
@@ -38,10 +43,12 @@ public class Building : CollisionListener
 
     [Header("Building")]
     [SerializeField] private float buildTime;
-    [SerializeField] private float buildStartHeight;
-    [SerializeField] private float boingInterval;
-    [SerializeField] private float smallBoingMultiplier;
-    [SerializeField] private float largeBoingMultiplier;
+    //[SerializeField] private BuildingAnimatorController animatorController;
+    [SerializeField] private bool buildInPits;
+    [Tooltip("What is the minimum worldspace height (i.e. Y-axis position) buildings can be built at before being considered in a pit?")]
+    [SerializeField] private float minBuildHeight;
+    [SerializeField] private List<GameObject> VFX;
+
 
     [Header("Offsets of Cliff Detection Raycasts from Position")]
     [SerializeField] private List<Vector3> cliffRaycastOffsets;
@@ -49,20 +56,30 @@ public class Building : CollisionListener
     [Header("Offsets of Foundations from Position")]
     [SerializeField] private List<Vector3> buildingFoundationOffsets;
 
-    [Header("Renderers and Materials")]
+    [Header("Model, Materials, etc.")]
+    [SerializeField] private Transform model;
     [SerializeField] private List<RendererMaterialSet> rendererMaterialSets;
     [SerializeField] private Material buildingErrorMaterial;
 
     [Header("Sound Library")]
     [SerializeField] private AudioManager.ESound idleSound;
 
+    [Header("Effects")]
+	[SerializeField] private FinishedFX constructionFinishedFX;
+	[SerializeField] private float fxSize = 1f;
 
+    [Header("Primary Material")]
+    [SerializeField] private Material materialPrime;
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
-    //Components
-    private Animator animator;
+    [Header("Testing")]
+	//Components
+	private Animator animator;
+    private TurretRangeFX turretRangeFX;
+    private FusionReactorBeam fusionReactorBeam;
     private Health health;
+    private List<GameObject> particleSystems;
     private MeshRenderer parentRenderer;
     private List<MeshRenderer> allRenderers;
     private ResourceCollector resourceCollector;
@@ -71,36 +88,41 @@ public class Building : CollisionListener
     private Terraformer terraformer;
     private TurretAiming turretAimer;
     private TurretShooting turretShooter;
-
     private Dictionary<string, List<CollisionReporter>> groupedReporters;
 
     //Positioning
     private bool colliding = false;
     private bool validPlacement = true;
-    private List<Collider> otherColliders;
+	private bool placementCurrentValid = true;
+	private bool materialChanged = false;
+	private List<Collider> otherColliders;
     Vector3 normalScale;
     LayerMask groundLayerMask;
 
     //Other
-    [SerializeField] private bool active = false;
-    private bool placed = false;
-    [SerializeField] private bool operational = false;
+    private bool awake;                 //Has Building.Awake() run for this building yet?
+    private bool active = false;        //Is this building active and in the scene, or has it been pooled and is inactive? Should only be set in BuildingFactory via the public property.
+    private bool placed = false;        //Has this building been placed?
+    private bool operational = false;   //Is the building operational and doing its job?
+    private bool built;                 //Has the building, after being placed, finished building?
+    private bool disabledByPlayer;      //Has the player manually disabled this building? 
+
+
     private float normalBuildTime;
-    private bool boinging = false;
 
-    //Public Properties------------------------------------------------------------------------------------------------------------------------------
+    //Building Animation Variables
+    private float timeStarted;
+    private float timeSinceStarted;
+    private float percentageComplete;
 
-    //Basic Public Properties----------------------------------------------------------------------
+	//Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    /// <summary>
-    /// Whether the building is active and in the scene, or has been pooled and is inactive. Active should only be set in BuildingFactory.
-    /// </summary>
-    public bool Active { get => active; set => active = value; }
-
-    /// <summary>
-    /// Is the building going "boing" to indicate that it has finished building?
-    /// </summary>
-    public bool Boinging { get => boinging; }
+	//Basic Public Properties----------------------------------------------------------------------
+    
+	/// <summary>
+	/// Whether the building is active and in the scene, or has been pooled and is inactive. Active should only be set in BuildingFactory.
+	/// </summary>
+	public bool Active { get => active; set => active = value; }
 
     /// <summary>
     /// The position of building foundations relative to the building's transform.position value.
@@ -116,11 +138,31 @@ public class Building : CollisionListener
     /// How long this building takes to builds itself when the player places it in the scene. Should only be set by BuildingFactory.
     /// </summary>
     public float BuildTime { get => buildTime; set => buildTime = value; }
+	
+    /// <summary>
+    /// Has the building been placed and been fully built?
+    /// </summary>
+    public bool Built { get => built; }
+
+    /// <summary>
+    /// What should this building's name be and how should it be formatted when printed in the console?
+    /// </summary>
+    public string ConsoleName { get => consoleName; }
+
+    /// <summary>
+    /// How much gas this building requires per second to function.
+    /// </summary>
+    public int GasConsumption { get => gasConsumption; }
 
     /// <summary>
     /// The Building's Health component.
     /// </summary>
     public Health Health { get => health; }
+
+    /// <summary>
+    /// The transform of the building's model.
+    /// </summary>
+    public Transform Model { get => model; }
 
     /// <summary>
     /// How much ore it costs to build this building.
@@ -160,14 +202,53 @@ public class Building : CollisionListener
     /// <summary>
     /// How much waste this building requires per second to function.
     /// </summary>
-    public int WasteConsumption { get => wasteConsumption; }
+    public int PlantsConsumption { get => plantsConsumption; }
 
     /// <summary>
     /// How much water this building requires per second to function.
     /// </summary>
     public int WaterConsumption { get => waterConsumption; }
 
+    /// <summary>
+    /// This building's TurretRangeFX decal if it's a turret.
+    /// </summary>
+    public TurretRangeFX TurretRangeFX { get => turretRangeFX; set => turretRangeFX = value; }
+
     //Complex Public Properties--------------------------------------------------------------------                                                    
+
+    /// <summary>
+    /// Has the player manually disabled this building?
+    /// </summary>
+    public bool DisabledByPlayer
+    {
+        get
+        {
+            return disabledByPlayer;
+        }
+
+        set
+        {          
+            if (disabledByPlayer != value)
+            {
+                disabledByPlayer = value;
+
+                if (disabledByPlayer)
+                {
+                    ResourceManager.Instance.PowerConsumption -= powerConsumption;
+                    ResourceManager.Instance.WaterConsumption -= waterConsumption;
+                    ResourceManager.Instance.PlantsConsumption -= plantsConsumption;
+                    ResourceManager.Instance.GasConsumption -= gasConsumption;
+                }
+                else
+                {
+                    ResourceManager.Instance.PowerConsumption += powerConsumption;
+                    ResourceManager.Instance.WaterConsumption += waterConsumption;
+                    ResourceManager.Instance.PlantsConsumption += plantsConsumption;
+                    ResourceManager.Instance.GasConsumption += gasConsumption;
+                }
+            }
+        }
+    }
 
     /// <summary>
     /// The Building's unique ID number. Id should only be set by BuildingFactory.GetBuilding().
@@ -200,9 +281,10 @@ public class Building : CollisionListener
         {
             if (operational != value)
             {
-                operational = (value && active);
+                operational = (value && active && !disabledByPlayer);
+				SetVFX(value);
 
-                if (resourceCollector != null)
+				if (resourceCollector != null)
                 {
                     if (operational)
                     {
@@ -225,40 +307,69 @@ public class Building : CollisionListener
     /// </summary>
     private void Awake()
     {
-        animator = GetComponent<Animator>();
-		if (animator == null)
-		{
-			Debug.Log($"{this} building is missing an animator component.");
-		}
-        health = GetComponent<Health>();
-        size = GetComponent<Size>();
-        parentRenderer = GetComponentInChildren<MeshRenderer>();
-        allRenderers = new List<MeshRenderer>(parentRenderer.GetComponentsInChildren<MeshRenderer>());
-        rigidbody = GetComponentInChildren<Rigidbody>();
-        resourceCollector = GetComponent<ResourceCollector>();
-        terraformer = GetComponent<Terraformer>();
-        turretAimer = GetComponent<TurretAiming>();
-        turretShooter = GetComponent<TurretShooting>();
-        collisionReporters = GetCollisionReporters();
-        groupedReporters = new Dictionary<string, List<CollisionReporter>>();
-        otherColliders = new List<Collider>();
-        normalScale = transform.localScale;
-        normalBuildTime = buildTime;
-        groundLayerMask = LayerMask.GetMask("Ground");
-
-        foreach (CollisionReporter c in collisionReporters)
+        if (!awake)
         {
-            if (!groupedReporters.ContainsKey(c.Purpose))
+            //Debug.Log("Building Awake()");
+            animator = GetComponent<Animator>();
+
+            if (animator == null)
             {
-                groupedReporters[c.Purpose] = new List<CollisionReporter>();
+                Debug.Log($"{this} building is missing an animator component.");
             }
 
-            groupedReporters[c.Purpose].Add(c);
-        }
+            fusionReactorBeam = GetComponent<FusionReactorBeam>();
+            health = GetComponent<Health>();
+            size = GetComponent<Size>();
+            parentRenderer = GetComponentInChildren<MeshRenderer>();
+            allRenderers = new List<MeshRenderer>(parentRenderer.GetComponentsInChildren<MeshRenderer>());
+            rigidbody = GetComponentInChildren<Rigidbody>();
+            resourceCollector = GetComponent<ResourceCollector>();
+            terraformer = GetComponent<Terraformer>();
+            turretAimer = GetComponent<TurretAiming>();
+            turretShooter = GetComponent<TurretShooting>();
+            collisionReporters = GetCollisionReporters();
+            groupedReporters = new Dictionary<string, List<CollisionReporter>>();
+            otherColliders = new List<Collider>();
+            normalScale = transform.localScale;
+            normalBuildTime = buildTime;
+            groundLayerMask = LayerMask.GetMask("Ground");
 
-        if (size.DiameterRoundedUp < 1 || size.DiameterRoundedUp > 3)
-        {
-            Debug.LogError("Building.Size.RadiusRoundedUp is invalid. It needs to be between 1 and 3.");
+            particleSystems = new List<GameObject>();
+            ParticleSystem[] particleSystemsRaw = GetComponentsInChildren<ParticleSystem>();
+
+            foreach (ParticleSystem p in particleSystemsRaw)
+            {
+                particleSystems.Add(p.gameObject);
+            }
+
+            foreach (CollisionReporter c in collisionReporters)
+            {
+                if (!groupedReporters.ContainsKey(c.Purpose))
+                {
+                    groupedReporters[c.Purpose] = new List<CollisionReporter>();
+                }
+
+                groupedReporters[c.Purpose].Add(c);
+            }
+
+            if (buildingType == EBuilding.Harvester)
+            {
+                BoxSize boxSize = size as BoxSize;
+
+                if (boxSize.Length < 1 || boxSize.Length > 5 || boxSize.Width < 1 || boxSize.Width > 5)
+                {
+                    Debug.LogError($"Building.Size.Length or Width is invalid for {this}. They need to be between 1 and 5.");
+                }
+            }
+            else
+            {
+                if (size.DiameterRoundedUp(null) < 1 || size.DiameterRoundedUp(null) > 5)
+                {
+                    Debug.LogError($"Building.Size.DiameterRoundedUp is invalid for {this}. It needs to be between 1 and 5.");
+                }
+            }                                       
+
+            awake = true;
         }
     }
 
@@ -269,11 +380,14 @@ public class Building : CollisionListener
     /// </summary>
     private void Update()
     {
-		if (buildingType != EBuilding.CryoEgg && animator.enabled)
-		{
-			animator.SetFloat("Health", health.Value);
-			animator.SetBool("Operational", operational);
-		}
+        if (!PauseMenuManager.Paused)
+        {
+            if (buildingType != EBuilding.Tower && animator.enabled)
+            {
+                animator.SetFloat("Health", health.CurrentHealth);
+                animator.SetBool("Operational", operational);
+            }
+        }
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
@@ -294,6 +408,30 @@ public class Building : CollisionListener
     }
 
     /// <summary>
+    /// Enables or disables all mesh renderers attached to the building's models.
+    /// </summary>
+    /// <param name="enabled">Whether the mesh renderers will be enabled or disabled.</param>
+    public void SetMeshRenderersEnabled(bool enabled)
+    {
+        foreach (RendererMaterialSet s in rendererMaterialSets)
+        {
+            s.renderer.enabled = enabled;
+        }
+    }
+
+    /// <summary>
+    /// Enables or disables the game objects of all particle systems attached to the building's models.
+    /// </summary>
+    /// <param name="enabled">Whether the game objects of the particle systems will be enabled or disabled.</param>
+    public void SetParticleSystemsEnabled(bool enabled)
+    {
+        foreach (GameObject p in particleSystems)
+        {
+            p.SetActive(enabled);
+        }
+    }
+
+    /// <summary>
     /// Checks if the building is colliding while being placed, and updates colour appropriately.
     /// </summary>
     /// <returns>Is this building colliding with something?</returns>
@@ -303,30 +441,48 @@ public class Building : CollisionListener
         {
             if (!placed)
             {
-                validPlacement = !(CheckInPit() || CheckColliding() || CheckOnCliff()) && MapController.Instance.PositionAvailableForBuilding(this);
+                //bool isInPit = !buildInPits && CheckInPit();
+                //bool isColliding = CheckColliding();
+                //bool isOnCliff = CheckOnCliff();
+                //bool isMouseOverUI = CheckMouseOverUI();
+                //bool isResourcesUnavailable = resourceCollector != null && !resourceCollector.CanCollectResourcesAtPosition();
+                //bool isErrorCondition = isInPit || isColliding || isOnCliff || isMouseOverUI || isResourcesUnavailable;
 
-                if (validPlacement)
-                {
-                    foreach (RendererMaterialSet r in rendererMaterialSets)
-                    {
-                        if (r.renderer.material != r.transparent)
-                        {
-                            r.renderer.material = r.transparent;
-                        }
-                    }
-                }
-                else
-                {
-                    foreach (RendererMaterialSet r in rendererMaterialSets)
-                    {
-                        if (r.renderer.material != buildingErrorMaterial)
-                        {
-                            r.renderer.material = buildingErrorMaterial;
-                        }
-                    }
-                }
+                //Debug.Log($"{this}.IsPlacementValid(), isInPit: {isInPit}, isColliding: {isColliding}, isOnCliff: {isOnCliff}, isMouseOverUI: {isMouseOverUI}, isResourcesUnavailable: {isResourcesUnavailable}, isErrorCondition: {isErrorCondition}");
+                //validPlacement = !isErrorCondition && MapManager.Instance.PositionAvailableForBuilding(this);
+                validPlacement = !((!buildInPits && CheckInPit()) || CheckColliding() || CheckOnCliff() || CheckMouseOverUI() || (resourceCollector != null && !resourceCollector.CanCollectResourcesAtPosition())) && MapManager.Instance.PositionAvailableForBuilding(this);
 
-                return validPlacement;
+                if (!validPlacement && placementCurrentValid)
+				{
+					BuildingFactory.Instance.onPlacementInvalid?.Invoke();
+					placementCurrentValid = false;
+					materialChanged = false;
+				}
+
+				else if (validPlacement && !placementCurrentValid)
+				{
+					BuildingFactory.Instance.onPlacementValid?.Invoke();
+					placementCurrentValid = true;
+					materialChanged = false;
+				}
+
+				if (!materialChanged)
+				{
+					foreach (RendererMaterialSet r in rendererMaterialSets)
+					{
+						Material currentMaterial = (validPlacement ? r.transparent : buildingErrorMaterial);
+
+						for (int i = 0; i < r.renderer.materials.Length; i++)
+						{
+							UpdateRendererMaterials(r.renderer, currentMaterial, r.renderer.materials.Length);
+							break;
+						}
+					}
+
+					materialChanged = true;
+				}
+
+				return validPlacement;
             }
             else
             {
@@ -338,6 +494,31 @@ public class Building : CollisionListener
         {
             return true;
         }
+
+    }
+
+    /// <summary>
+    /// Checks if the mouse is over the UI before placement.
+    /// </summary>
+    private bool CheckMouseOverUI()
+    {        
+        PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
+        pointerEventData.position = ReInput.controllers.Mouse.screenPosition;
+
+        List<RaycastResult> raycastResultList = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointerEventData, raycastResultList);
+
+        foreach (RaycastResult r in raycastResultList)
+        {
+            if (r.gameObject.GetComponent<MouseClickThrough>() != null)
+            {
+                //Debug.Log("Over UI");
+                return true;
+            }
+        }
+
+        //Debug.Log("Not Over UI");
+        return false;
     }
 
     /// <summary>
@@ -345,7 +526,10 @@ public class Building : CollisionListener
     /// </summary>
     private bool CheckInPit()
     {
-        return transform.position.y < -0.1f;
+        return transform.position.y < minBuildHeight;
+        //bool result = transform.position.y < -0.1f;
+        //Debug.Log($"{this} in pit: {result}");
+        //return result;
     }
 
     /// <summary>
@@ -383,6 +567,17 @@ public class Building : CollisionListener
             }
         }
 
+        //Debug.Log($"{this} touching another collider: {colliding}");
+
+        //if (!colliding)
+        //{
+
+
+
+        //    Debug.Log($"{this} occupying an already occupied space: {colliding}");
+        //}
+
+        //Debug.Log($"{this} colliding: {colliding}");
         return colliding;
     }
 
@@ -401,11 +596,31 @@ public class Building : CollisionListener
 
             if (!Physics.Raycast(raycastPos, Vector3.down, out hit, 20, groundLayerMask) || hit.distance > maxDistance)
             {
+                //Debug.Log($"{this} on cliff");
                 return true;
             }
         }
 
+        //Debug.Log($"{this} not on cliff");
         return false;
+    }
+
+    /// <summary>
+    /// Gives a renderer a specified number of copies of the required material.
+    /// </summary>
+    /// <param name="renderer">The renderer getting its material(s) updated.</param>
+    /// <param name="material">The material to apply to the renderer.</param>
+    /// <param name="count">How many times the material needs to be applied to the renderer for every model the renderer is responsible for to be covered.</param>
+    private void UpdateRendererMaterials(Renderer renderer, Material material, int count)
+    {
+        List<Material> materials = new List<Material>();
+
+        for (int i = 0; i < count; i++)
+        {
+            materials.Add(material);
+        }
+
+        renderer.materials = materials.ToArray();
     }
 
     /// <summary>
@@ -415,28 +630,140 @@ public class Building : CollisionListener
     public void Place(Vector3 position)
     {
         placed = true; //Needs to occur before its position gets set to be on the ground so that it triggers the building Foundation at the proper time.
-        ResourceController.Instance.Ore -= oreCost;
-		ResourceController.Instance.PowerConsumption += powerConsumption;
-		ResourceController.Instance.WaterConsumption += waterConsumption;
-		ResourceController.Instance.WasteConsumption += wasteConsumption;
+        ResourceManager.Instance.Ore -= oreCost;
+		ResourceManager.Instance.PowerConsumption += powerConsumption;
+		ResourceManager.Instance.WaterConsumption += waterConsumption;
+		ResourceManager.Instance.PlantsConsumption += plantsConsumption;
+		ResourceManager.Instance.GasConsumption += gasConsumption;
 		SetCollidersEnabled("Placement", false);
         SetCollidersEnabled("Body", true);
+        transform.position = position;
+        BuildingManager.Instance.RegisterBuilding(this);
+		BuildingFactory.Instance.onPlacementFinished?.Invoke();
 
         foreach (RendererMaterialSet r in rendererMaterialSets)
         {
-            r.renderer.material = r.opaque;
+            UpdateRendererMaterials(r.renderer, r.opaque, r.renderer.materials.Length);
+            r.renderer.materials[0].SetFloat("_Start", r.dissolveStart + transform.position.y);
+            r.renderer.materials[0].SetFloat("_End", r.dissolveEnd + transform.position.y);
+            //r.renderer.materials[0].GetFloat("_DissolveAmount");
         }
 
-        transform.position = position;
-        BuildingController.Instance.RegisterBuilding(this);
-        animator.enabled = true;
+        //health.CurrentHealth = 0.01f;
+        //StartCoroutine(ProgressUpdate());
+        //animator.enabled = false;
+        StartConstruction();
+    }
+
+    /*
+    
+
+    public void StartConstruction(){
+        Debug.Log("Starting the Construction.");
+        timeStarted = Time.time;
+        constructing = true;
+        StartCoroutine(Construct());
+    }
+
+    private IEnumerator Construct(){
+        while (constructing){
+            timeSinceStarted = Time.time - timeStarted;
+            percentageComplete = timeSinceStarted/duration;
+
+            //Debug.Log("Percentage: " + percentageComplete);
+            material.SetFloat("_DissolveAmount", percentageComplete);
+
+            if (percentageComplete >= 1){
+                material.SetFloat("_DissolveAmount", 1);
+                constructing = false;
+            }
+            yield return new WaitForEndOfFrame();
+            //constructing = false;
+        }
+    }
+    */
+
+
+    //*******
+    //  create a script that can replace the animator
+    //      It will need to fetch the variable for the duration hardwired into the building.cs file
+    //      determin the disolve amount by makeing a percentage from start time and elapsed time
+    //          > refer to ui color changing code for sample code on how to do this
+    //      make it run in a coroutiune and directly alter the dissolve amount 
+    //*******
+
+    public void StartConstruction(){
+        //Debug.Log("Starting the Construction.");
+        //foreach (RendererMaterialSet m in rendererMaterialSets){
+        //    Debug.Log("Material: " + m.renderer);
+        //}
+        timeStarted = Time.time;
+        health.CurrentHealth = 0.01f;
+        StartCoroutine(ProgressUpdate());
+    }
+
+    private IEnumerator ProgressUpdate(){
+        //Debug.Log("Progress starting; starting health is: " + health.CurrentHealth);
+        while (!built){
+            timeSinceStarted = Time.time - timeStarted;
+            percentageComplete = timeSinceStarted/buildTime;
+
+            //Debug.Log("Percentage: " + percentageComplete);
+            foreach (RendererMaterialSet m in rendererMaterialSets){
+                m.renderer.materials[0].SetFloat("_DissolveAmount", percentageComplete);
+            }   
+            if (percentageComplete == 0){
+                health.CurrentHealth = 0.01f;
+            } else {
+                health.CurrentHealth = health.MaxHealth * percentageComplete;
+            }
+
+            if (percentageComplete >= 1){
+                rendererMaterialSets[0].renderer.materials[0].SetFloat("_DissolveAmount", 1);
+                SpawnFinishedFX();
+                FinishBuilding();
+                EnableVFX();
+            }
+            
+            //Debug.Log("health is: " + health.CurrentHealth + " ; Dissolve Amount value: " + rendererMaterialSets[0].renderer.materials[0].GetFloat("_DissolveAmount")); // Body Collider/Base Model
+            
+            yield return new WaitForEndOfFrame();
+            //constructing = false;
+        }
+        /*while (health.CurrentHealth < health.MaxHealth){
+            if (!PauseMenuManager.Paused){
+                
+                if (rendererMaterialSets[0].renderer.materials[0].GetFloat("_DissolveAmount") == 0){
+                    health.CurrentHealth = 0.01f;
+                } else {
+                    health.CurrentHealth = health.MaxHealth * rendererMaterialSets[0].renderer.materials[0].GetFloat("_DissolveAmount");
+                    //health.CurrentHealth = health.MaxHealth * shd.GetPropertyDefaultFloatValue();
+                }
+                Debug.Log("health is: " + health.CurrentHealth);
+
+                yield return new WaitForEndOfFrame();
+            }
+        }*/
+    }
+
+    /// <summary>
+    /// Spawns a "building finished" particle effect.
+    /// </summary>
+	public void SpawnFinishedFX()
+	{
+		FinishedFX fx = FinishedFXFactory.Instance.Get();
+		fx.transform.position = transform.position;
+		fx.transform.localScale = new Vector3(fxSize, fxSize, fxSize);
+		fx.gameObject.SetActive(true);
     }
 
     /// <summary>
     /// Handles what should happen once the building has been built.
     /// </summary>
-    public void Built()
+    public void FinishBuilding()
     {
+        health.CurrentHealth = health.MaxHealth;
+        built = true;
         Operational = true; //Using property to trigger activation of any resource collector component attached.
 
         if (turretShooter != null)
@@ -446,52 +773,28 @@ public class Building : CollisionListener
 
         AudioManager.Instance.PlaySound(idleSound, gameObject);
         AudioManager.Instance.PlaySound(AudioManager.ESound.Building_Completes, gameObject);
+    }
 
-        //Vector3 startPos = new Vector3(0, 0, buildStartHeight);
-        //Vector3 endPos = Vector3.zero;
-        //float buildTimeElapsed = 0;
+    /// <summary>
+    /// Enables VFX.
+    /// </summary>
+    public void EnableVFX(){
+        if (VFX.Count != 0){
+            foreach (GameObject vfx in VFX){
+                vfx.SetActive(true);
+            }
+        }
+    }
 
-        //Vector3 smallScale = normalScale * smallBoingMultiplier;
-        //Vector3 largeScale = normalScale * largeBoingMultiplier;
-        //float boingTimeElapsed = 0;
-
-        //AudioManager.Instance.PlaySound(AudioManager.ESound.Building_Materialises, this.gameObject); //needs to be stopped when finished building
-        //while (buildTimeElapsed < buildTime)
-        //{
-        //    buildTimeElapsed += Time.deltaTime;
-        //    parentRenderer.transform.localPosition = Vector3.Lerp(startPos, endPos, buildTimeElapsed / buildTime);
-        //    yield return null;
-        //}
-
-        //boinging = true;
-
-        //while (boingTimeElapsed < boingInterval)
-        //{
-        //    boingTimeElapsed += Time.deltaTime;
-        //    transform.localScale = Vector3.Lerp(normalScale, smallScale, boingTimeElapsed / boingInterval);
-        //    yield return null;
-        //}
-
-        //boingTimeElapsed -= boingInterval;
-
-        //while (boingTimeElapsed < boingInterval)
-        //{
-        //    boingTimeElapsed += Time.deltaTime;
-        //    transform.localScale = Vector3.Lerp(smallScale, largeScale, boingTimeElapsed / boingInterval);
-        //    yield return null;
-        //}
-
-        //boingTimeElapsed -= boingInterval;
-
-        //while (boingTimeElapsed < boingInterval)
-        //{
-        //    boingTimeElapsed += Time.deltaTime;
-        //    transform.localScale = Vector3.Lerp(largeScale, normalScale, boingTimeElapsed / boingInterval);
-        //    yield return null;
-        //}
-
-        //boinging = false;
-        //yield return null;
+    /// <summary>
+    /// Set VFX according to operational status.
+    /// </summary>
+    public void SetVFX(bool operational){
+        if (VFX.Count != 0){
+            foreach (GameObject vfx in VFX){
+                vfx.SetActive(operational);
+            }
+        }
     }
 
     /// <summary>
@@ -499,13 +802,14 @@ public class Building : CollisionListener
     /// </summary>
     public void Reset()
     {
+        //StopCoroutine(ProgressUpdate());
         placed = false; //Needs to occur first so that BuildingFoundations know to ignore this building
         active = false;
         colliding = false;
+        built = false;
+        disabledByPlayer = false;
 
-        //TODO: reset animator? i.e. disable and set animation progress back to 0?
-        animator.enabled = false;
-
+        //animator.enabled = false;
         health.Reset();
         Operational = false;
 
@@ -514,19 +818,28 @@ public class Building : CollisionListener
         transform.localScale = normalScale;
         buildTime = normalBuildTime;
 
-        if (buildingType == EBuilding.ShortRangeTurret || buildingType == EBuilding.LongRangeTurret)
+        switch (buildingType)
         {
-            turretAimer.Reset();
-            turretShooter.Reset();
+            case EBuilding.FusionReactor:
+                fusionReactorBeam.SetBeamActive(false);
+                break;
+            case EBuilding.ShotgunTurret:
+            case EBuilding.MachineGunTurret:
+                turretAimer.Reset();
+                turretShooter.Reset();
+				BuildingFactory.Instance.onPlacementFinished?.Invoke();
+				break;
         }
 
         foreach (RendererMaterialSet r in rendererMaterialSets)
         {
-            r.renderer.material = r.transparent;
+            UpdateRendererMaterials(r.renderer, r.opaque, r.renderer.materials.Length);
+            r.renderer.enabled = false;
         }
 
         SetCollidersEnabled("Body", false);
-    }
+        SetParticleSystemsEnabled(false);		
+	}
 
     //ICollisionListener Triggered Methods---------------------------------------------------------
 
@@ -536,15 +849,24 @@ public class Building : CollisionListener
     /// <param name="other">The other Collider involved in this collision.</param>
     public override void OnTriggerEnter(Collider other)
     {
-        //Debug.Log($"{this}.OnTriggerEnter, other is {other}");
+        //bool isBarrelCollider = other.gameObject.name == "Barrel Collider";
+        //bool isBarrelDemolitionMenuCollider = other.gameObject.name == "Barrel Demolition Menu Collider";
+        //bool shouldAddToOtherColliders = active && !operational && !other.isTrigger && !isBarrelCollider && !isBarrelDemolitionMenuCollider;
+        //Debug.Log($"{this}.OnTriggerEnter, other is {other.gameObject.name}.");
 
-        if (active && !operational && !other.isTrigger)
+        if (active 
+            && !operational 
+            && !other.isTrigger 
+            && other.gameObject.name != "Barrel Collider"
+            && other.gameObject.name != "Barrel Demolition Menu Collider"
+        )
         {
-            //Debug.Log($"Active, not operational, and !other.isTrigger.");
+            //Debug.Log($"Active, not operational, !other.isTrigger, name != Barrel Collider or Barrel Demolition Menu Collider.");
             colliding = true;
 
             if (!otherColliders.Contains(other))
             {
+                //Debug.Log("Adding to list of other colliders.");
                 otherColliders.Add(other);
             }
         }

@@ -4,10 +4,8 @@ using System;
 using UnityEngine.Audio;
 using UnityEngine;
 
-public class AudioManager : MonoBehaviour
+public class AudioManager : SerializableSingleton<AudioManager>
 {
-    public static AudioManager Instance { get; protected set; }
-
     //gonna break these up later
     public enum ESound
     {
@@ -34,6 +32,11 @@ public class AudioManager : MonoBehaviour
         Alien_Moves,
         Alien_Takes_Damage,
         Alien_Dies,
+        Win,
+        Lose,
+        Day_Shift,
+        Night_Shift,
+        Attacked
     }
 
     [System.Serializable]
@@ -78,13 +81,9 @@ public class AudioManager : MonoBehaviour
     private bool bgSwitching, bgDown, bgUp, bgSwitchControl;
     private ESound bgSoundSwitch;
 
-    private void Awake()
+    protected override void Awake()
     {
-        if (Instance != null)
-        {
-            Debug.LogError("There should never be 2 or more Audio Managers.");
-        }
-        Instance = this;
+        base.Awake();
         gameObjectAudioTimerDictionary = new Dictionary<GameObject, Dictionary<ESound, float>>();
         audioSourceReferenceDictionary = new Dictionary<ESound, AudioSource>();
 
@@ -119,9 +118,12 @@ public class AudioManager : MonoBehaviour
 
     private void Update()
     {
-        if (bgSwitching)
+        if (!PauseMenuManager.Paused)
         {
-            CheckBackgroundSound();
+            if (bgSwitching)
+            {
+                CheckBackgroundSound();
+            }
         }
     }
 
@@ -509,7 +511,7 @@ public class AudioManager : MonoBehaviour
 
             currentBackgroundTrack.Play();
         }
-        else if (Time.time >= timeStamp + 2f)
+        else if (Time.time >= timeStamp + 3f)
         {
             timeStamp = 0f;
             bgSwitchControl = false;
@@ -539,7 +541,14 @@ public class AudioManager : MonoBehaviour
         currentBackgroundTrack.volume = Mathf.Lerp(0f, volumeControlBackground, volumeControlTimer);
     }
 
-
+    public void StopBackGroundMusic()
+    {
+        currentBackgroundTrack.Stop();
+    }
+    public void StartBackGroundMusic()
+    {
+        currentBackgroundTrack.Play();
+    }
 }
 
 

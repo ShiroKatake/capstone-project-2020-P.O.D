@@ -8,7 +8,9 @@ using UnityEngine;
 /// See CommentsTemplate for copy-and-paste examples. If CommentsExample clashes with CommentsTemplate,
 /// assume CommentsTemplate is correct.
 /// </summary>
-public class CommentsExample : MonoBehaviour
+public class CommentsExample : MonoBehaviour                                                                                                           //If the class needs to be singleton, it should inherit from SerializableSingleton
+                                                                                                                                                       //if it needs to be a MonoBehaviour as well, or from Singleton if it should be
+                                                                                                                                                       //instantiated only when it's called in code.
 {
     //Note: the comments here are just the organisational ones separating methods and fields and whatnot.                                              //You don't need to put all your comments out here. I just put the
     //For descriptive / explanatory comments, put them above or to the right of code as you see fit and                                                //explanatory ones out here because it was clear and made sense.
@@ -36,10 +38,6 @@ public class CommentsExample : MonoBehaviour
     private string someOtherNonSerializedVariable;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
-
-    //Singleton Public Property--------------------------------------------------------------------                                                    //If the class needs to be a singleton
-
-    public static CommentsExample Instance { get; protected set; }
 
     //Basic Public Properties----------------------------------------------------------------------                                                                                                                          //Public properties that are just get and/or set properties; listed in alphabetical order
 
@@ -94,12 +92,7 @@ public class CommentsExample : MonoBehaviour
     //Method summary comment
     private void Awake()
     {
-        if (Instance != null)                                                                                                                          //Example of how to do singletons if the script is always attached to an in-scene object from 
-        {                                                                                                                                              //the start
-            Debug.LogError("There should never be 2 or more CommentsExamples.");
-        }
 
-        Instance = this;
     }
 
     //Method summary comment

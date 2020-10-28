@@ -6,9 +6,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-public class PipeManager : MonoBehaviour {
-
-    public static PipeManager Instance { get; protected set; }
+public class PipeManager : SerializableSingleton<PipeManager> {
 
     List<PipeBuilding> buildings = new List<PipeBuilding>();
     List<PipeNode> nodes = new List<PipeNode>();
@@ -17,14 +15,6 @@ public class PipeManager : MonoBehaviour {
     List<Label> labels = new List<Label>();
 
     MeshFilter meshFilter;
-
-    private void Awake() {
-        if (Instance != null) {
-            Debug.LogError("There should never be more than one Pipe manager");
-        }
-
-        Instance = this;
-    }
 
     // Start is called before the first frame update
     void Start() {
