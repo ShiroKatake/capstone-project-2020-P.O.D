@@ -165,7 +165,7 @@ public class Projectile : MonoBehaviour
     /// <param name="collidedWith">The collider of the other object the projectile collided with.</param>
     private void ProjectileCollision(Collider collidedWith)
     {
-        //Debug.Log($"{this}.ProjectileCollision(), collidedWith is {collidedWith}");
+        Debug.Log($"{this}.ProjectileCollision(), collidedWith is {collidedWith}");
 		Health damageable = collidedWith.GetComponent<Health>();
 
 		if (damageable != null)
@@ -177,7 +177,7 @@ public class Projectile : MonoBehaviour
 
         if (!collidedWith.CompareTag("Projectile") && !collidedWith.CompareTag("Pit Walls") && !collidedWith.isTrigger && (!collidedWith.CompareTag(owner.tag) || leftOwnerCollider))
         {
-            //Debug.Log($"ProjectileCollision, not {owner.tag} or Projectile or Pit Walls; tag is {collidedWith.tag}; position is {transform.position}");
+            Debug.Log($"ProjectileCollision, not {owner.tag} or Projectile or Pit Walls; tag is {collidedWith.tag}; position is {transform.position}");
             ProjectileFactory.Instance.Destroy(this);
         }
 

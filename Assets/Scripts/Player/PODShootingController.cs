@@ -138,20 +138,11 @@ public class PODShootingController : PrivateInstanceSerializableSingleton<PODSho
     /// </summary>
     private void Shoot()
     {
-        Quaternion randomRotation = Random.rotation;
-        Quaternion projectileRotation = Quaternion.RotateTowards(barrelTip.transform.rotation, randomRotation, spreadAngle);
-        Vector3 eulerRotation = projectileRotation.eulerAngles;
-
-        if (eulerRotation.x >= 360 - spreadAngle && eulerRotation.x < 360 - maxElevation)
-        {
-            float elevation = Random.Range(-maxElevation, spreadAngle);
-            if (elevation < 0) elevation += 360;
-            eulerRotation.x = elevation;
-            projectileRotation = Quaternion.Euler(eulerRotation);
-        }
-
-        Debug.Log($"randomRotation is {randomRotation} (Quaternion) / {randomRotation.eulerAngles} (EulerAngles)");
-        Debug.Log($"projectileRotation is {projectileRotation} (Quaternion) / {projectileRotation.eulerAngles} (EulerAngles)");
+        //Quaternion randomRotation = Random.rotation;
+        //Quaternion projectileRotation = Quaternion.RotateTowards(barrelTip.transform.rotation, randomRotation, spreadAngle);
+        Quaternion projectileRotation = Quaternion.RotateTowards(barrelTip.transform.rotation, Random.rotation, spreadAngle);
+        //Debug.Log($"randomRotation is {randomRotation} (Quaternion) / {randomRotation.eulerAngles} (EulerAngles)");
+        //Debug.Log($"projectileRotation is {projectileRotation} (Quaternion) / {projectileRotation.eulerAngles} (EulerAngles)");
         Projectile projectile = ProjectileFactory.Instance.Get(transform, barrelTip.position, projectileRotation, EProjectileType.PODLaserBolt);
         projectile.Shoot(shotForce);
         //Debug.Log($"{this}.PODShootingController.Shoot(), projectile is {projectile}");
