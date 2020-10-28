@@ -10,5 +10,7 @@ public enum EResource
     Ore,
     Power,
     Water,
-    Waste
+    Plants,
+    Gas,
+    None
 }

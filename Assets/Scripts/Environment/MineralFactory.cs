@@ -69,7 +69,7 @@ public class MineralFactory : Factory<MineralFactory, Mineral, ENone>
     {
         Mineral mineral = base.Get(position, type);
         mineral.Id = IdGenerator.Instance.GetNextId();
-        MapController.Instance.RegisterMineral(mineral);
+        MapManager.Instance.RegisterMineral(mineral);
         return mineral;
     }
 
@@ -92,7 +92,7 @@ public class MineralFactory : Factory<MineralFactory, Mineral, ENone>
     /// <param name="type">The type of mineral to destroy. Should be left as default value of ENone.None.</param>
     public override void Destroy(Mineral mineral, ENone type = ENone.None)
     {
-        MapController.Instance.DeRegisterMineral(mineral);
+        MapManager.Instance.DeRegisterMineral(mineral);
         mineral.Reset();
         despawningMinerals.Add(mineral);
 

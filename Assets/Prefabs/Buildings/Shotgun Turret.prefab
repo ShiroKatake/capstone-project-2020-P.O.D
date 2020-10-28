@@ -1,5 +1,89 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &397655704069512819
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6996347107117709762}
+  - component: {fileID: 1025834903233913818}
+  - component: {fileID: 7811568116054863030}
+  - component: {fileID: 404578392010752061}
+  m_Layer: 16
+  m_Name: Barrel Housing Demolition Menu Collider
+  m_TagString: Building
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6996347107117709762
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 397655704069512819}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4847364633576071608}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: -90.00001, y: 0, z: 0}
+--- !u!136 &1025834903233913818
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 397655704069512819}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 0
+  m_Radius: 5.3
+  m_Height: 20.02245
+  m_Direction: 2
+  m_Center: {x: 0, y: 1.02754414e-16, z: -0.91760343}
+--- !u!54 &7811568116054863030
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 397655704069512819}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &404578392010752061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 397655704069512819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 122c182bf36096746af88abc3d48308c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  purpose: Body
+  collisionListeners:
+  - {fileID: 276844957512759736}
+  reportOnCollisionEnter: 0
+  reportOnCollisionExit: 0
+  reportOnCollisionStay: 0
+  reportOnTriggerEnter: 0
+  reportOnTriggerExit: 0
+  reportOnTriggerStay: 0
 --- !u!1 &680432107992427780
 GameObject:
   m_ObjectHideFlags: 0
@@ -60,8 +144,92 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4847364633576071608}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1922375969929486354
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1705964382644458983}
+  - component: {fileID: 3824102319696306700}
+  - component: {fileID: 1085200518175901428}
+  - component: {fileID: 1863581869014743651}
+  m_Layer: 16
+  m_Name: Barrel Demolition Menu Collider
+  m_TagString: Building
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1705964382644458983
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1922375969929486354}
+  m_LocalRotation: {x: 0.0000000036219958, y: 0.000000003621994, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 6434623972415049373}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: -90, y: -90.00001, z: 180.00002}
+--- !u!136 &3824102319696306700
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1922375969929486354}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 0
+  m_Radius: 0.5
+  m_Height: 1.8
+  m_Direction: 1
+  m_Center: {x: 0, y: -0.26931387, z: 0.00000021790484}
+--- !u!54 &1085200518175901428
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1922375969929486354}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &1863581869014743651
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1922375969929486354}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 122c182bf36096746af88abc3d48308c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  purpose: Body
+  collisionListeners:
+  - {fileID: 276844957512759736}
+  reportOnCollisionEnter: 0
+  reportOnCollisionExit: 0
+  reportOnCollisionStay: 0
+  reportOnTriggerEnter: 0
+  reportOnTriggerExit: 0
+  reportOnTriggerStay: 0
 --- !u!1 &2081522427655777737
 GameObject:
   m_ObjectHideFlags: 0
@@ -105,7 +273,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.9, y: 2, z: 0.9}
+  m_Size: {x: 2.9, y: 2, z: 2.9}
   m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!114 &1841232322570329981
 MonoBehaviour:
@@ -157,7 +325,7 @@ Transform:
   m_Children:
   - {fileID: 6434623972415049373}
   m_Father: {fileID: 4847364633576071608}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2740937295730065718
 GameObject:
@@ -168,17 +336,17 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2387721251791164881}
+  - component: {fileID: 7595449155248944193}
   - component: {fileID: 7270633213526724645}
   - component: {fileID: 276844957512759736}
+  - component: {fileID: 5076518558525692737}
   - component: {fileID: 1219818938998714957}
   - component: {fileID: 6505921446254889876}
-  - component: {fileID: 7957306087969153787}
   - component: {fileID: 5814535936489597786}
-  - component: {fileID: 7595449155248944193}
   m_Layer: 10
   m_Name: Shotgun Turret
   m_TagString: Building
-  m_Icon: {fileID: 2800000, guid: 34ccb0108e4557a479cb8fd2664aa90b, type: 3}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -190,7 +358,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2740937295730065718}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7903677308643886609}
@@ -200,6 +368,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &7595449155248944193
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2740937295730065718}
+  m_Enabled: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 22100000, guid: c983f83433b2d864c9b44159895488ac, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &7270633213526724645
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -227,13 +414,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collisionReporters: []
   id: 0
-  buildingType: 7
+  buildingType: 9
   consoleName: <Shotgun Turret>
   oreCost: 4
   powerConsumption: 6
   waterConsumption: 0
-  wasteConsumption: 0
+  plantsConsumption: 0
+  gasConsumption: 0
   buildTime: 7
+  buildInPits: 1
+  minBuildHeight: 1.5
+  VFX: []
   cliffRaycastOffsets:
   - {x: -0.3, y: 0, z: -0.3}
   - {x: -0.45, y: 0, z: 0}
@@ -251,24 +442,26 @@ MonoBehaviour:
   - renderer: {fileID: 3025660970298743260}
     opaque: {fileID: 2100000, guid: 53c2ddfccaa112a4d97de760903cd330, type: 2}
     transparent: {fileID: 2100000, guid: 6bd364ab4bff9f145a01f786f5a068a7, type: 2}
+    dissolveStart: -0.84
+    dissolveEnd: 2.44
   - renderer: {fileID: 2320487590585829980}
     opaque: {fileID: 2100000, guid: 2785de8e0da646c4db09adaa027b56ec, type: 2}
     transparent: {fileID: 2100000, guid: f2d1a5f99775530498b8bcb14843f094, type: 2}
+    dissolveStart: -0.84
+    dissolveEnd: 2.44
   - renderer: {fileID: 7739934893343984963}
     opaque: {fileID: 2100000, guid: d46f8670794254442987f8c3127bed2a, type: 2}
     transparent: {fileID: 2100000, guid: 0384d8f2c070e5945a58d1b3c395d8bf, type: 2}
+    dissolveStart: -0.84
+    dissolveEnd: 2.44
   buildingErrorMaterial: {fileID: 2100000, guid: 101275a717e4a1c4fb89e563e095dfd7,
     type: 2}
   idleSound: 19
   constructionFinishedFX: {fileID: 5264390033885133910, guid: 9a30dc8a4a1a76241acc06f41a0df0e0,
     type: 3}
   fxSize: 1
-  awake: 0
-  active: 0
-  placed: 0
-  operational: 0
-  built: 0
---- !u!114 &-4813463451777356242
+  materialPrime: {fileID: 0}
+--- !u!114 &5076518558525692737
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -277,10 +470,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2740937295730065718}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5bfa9bda77c9c3488923b65c75f29e0, type: 3}
+  m_Script: {fileID: 11500000, guid: 70177e84b18c53a479adf6c5a8ecadde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  affiliation: 0
+  radius: 0.35
 --- !u!114 &1219818938998714957
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -325,19 +518,6 @@ MonoBehaviour:
   baseModel: {fileID: 8958835884956689479}
   barrelColliderPivot: {fileID: 6578390048626754263}
   barrelModelPivot: {fileID: 6761759660808947098}
---- !u!114 &7957306087969153787
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2740937295730065718}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e087b4d1f91fcb941a830564ec25c878, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  radius: 0.425
 --- !u!114 &5814535936489597786
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -362,25 +542,6 @@ MonoBehaviour:
   shotCooldown: 3
   visibleTargets: []
   target: {fileID: 0}
---- !u!95 &7595449155248944193
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2740937295730065718}
-  m_Enabled: 0
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 22100000, guid: c983f83433b2d864c9b44159895488ac, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &2946983348710066453
 GameObject:
   m_ObjectHideFlags: 0
@@ -441,7 +602,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6434623972415049373}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: -179.99998}
 --- !u!1 &3441892865846015065
 GameObject:
@@ -570,6 +731,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 6996347107117709762}
   - {fileID: 6578390048626754263}
   - {fileID: 4760966743071291633}
   m_Father: {fileID: 7345750986247059595}
@@ -846,6 +1008,7 @@ Transform:
   m_LocalPosition: {x: -10, y: 0, z: 0}
   m_LocalScale: {x: 2, y: 7, z: 2}
   m_Children:
+  - {fileID: 1705964382644458983}
   - {fileID: 1873128266348440701}
   m_Father: {fileID: 6578390048626754263}
   m_RootOrder: 0

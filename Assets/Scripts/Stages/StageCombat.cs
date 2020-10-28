@@ -13,19 +13,19 @@ public class StageCombat : SerializableSingleton<StageCombat>, IStage
     //Serialized Fields----------------------------------------------------------------------------
 
     [Header("Uninteractable Building Buttons")]
-    [SerializeField] private UIElementStatusController fusionReactor;
-    [SerializeField] private UIElementStatusController iceDrill;
-    [SerializeField] private UIElementStatusController boiler;
-    [SerializeField] private UIElementStatusController greenhouse;
-    [SerializeField] private UIElementStatusController incinerator;
+    [SerializeField] private UIElementStatusManager fusionReactor;
+    [SerializeField] private UIElementStatusManager iceDrill;
+    [SerializeField] private UIElementStatusManager boiler;
+    [SerializeField] private UIElementStatusManager greenhouse;
+    [SerializeField] private UIElementStatusManager incinerator;
 
     [Header("Interactable Building Buttons")]
-    [SerializeField] private UIElementStatusController shotgunTurret;
-    [SerializeField] private UIElementStatusController machineGunTurret;
+    [SerializeField] private UIElementStatusManager shotgunTurret;
+    [SerializeField] private UIElementStatusManager machineGunTurret;
 
     [Header("Highlights")]
-    [SerializeField] private UIElementStatusController shotgunTurretHighlight;
-    [SerializeField] private UIElementStatusController machineGunTurretHighlight;
+    [SerializeField] private UIElementStatusManager shotgunTurretHighlight;
+    [SerializeField] private UIElementStatusManager machineGunTurretHighlight;
 
     [Header("Building Prefabs")]
     [SerializeField] private ResourceCollector fusionReactorPrefab;
@@ -64,7 +64,7 @@ public class StageCombat : SerializableSingleton<StageCombat>, IStage
         console = DialogueBoxManager.Instance.GetDialogueBox("Console");
         game = DialogueBoxManager.Instance.GetDialogueBox("Game");
         dog = DialogueBoxManager.Instance.GetDialogueBox("DOG");
-        playerInputManager = ReInput.players.GetPlayer(PlayerController.Instance.GetComponent<PlayerID>().Value);
+        playerInputManager = ReInput.players.GetPlayer(PODController.Instance.GetComponent<PlayerID>().Value);
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
@@ -92,7 +92,7 @@ public class StageCombat : SerializableSingleton<StageCombat>, IStage
     /// </summary>
     private IEnumerator WaitForNightTime()
     {
-        while (ClockController.Instance.Daytime)
+        while (ClockManager.Instance.Daytime)
         {
             yield return null;
         }
@@ -109,7 +109,7 @@ public class StageCombat : SerializableSingleton<StageCombat>, IStage
     /// </summary>
     private IEnumerator AlienWalkthrough()
     {
-        ClockController.Instance.Paused = true;
+        ClockManager.Instance.Paused = true;
         console.SubmitDialogue("launch dog", 0, false, false);
 
         do
@@ -148,11 +148,11 @@ public class StageCombat : SerializableSingleton<StageCombat>, IStage
         shotgunTurretHighlight.Visible = true;
         machineGunTurretHighlight.Visible = true;
 
-        while (BuildingController.Instance.BuiltBuildingsCount(EBuilding.ShortRangeTurret) == 0 || BuildingController.Instance.BuiltBuildingsCount(EBuilding.LongRangeTurret) == 0)
+        while (BuildingManager.Instance.BuiltBuildingsCount(EBuilding.ShotgunTurret) == 0 || BuildingManager.Instance.BuiltBuildingsCount(EBuilding.MachineGunTurret) == 0)
         {
-            bool placedShotgunTurret = BuildingController.Instance.PlacedBuildingsCount(EBuilding.ShortRangeTurret) > 0;
-            bool placedMachineGunTurret = BuildingController.Instance.PlacedBuildingsCount(EBuilding.LongRangeTurret) > 0;
-            int pendingPowerSupply = fusionReactorPrefab.CollectionRate * (BuildingController.Instance.PlacedBuildingsCount(EBuilding.FusionReactor) - BuildingController.Instance.BuiltBuildingsCount(EBuilding.FusionReactor));
+            bool placedShotgunTurret = BuildingManager.Instance.PlacedBuildingsCount(EBuilding.ShotgunTurret) > 0;
+            bool placedMachineGunTurret = BuildingManager.Instance.PlacedBuildingsCount(EBuilding.MachineGunTurret) > 0;
+            int pendingPowerSupply = fusionReactorPrefab.CollectionRate * (BuildingManager.Instance.PlacedBuildingsCount(EBuilding.FusionReactor) - BuildingManager.Instance.BuiltBuildingsCount(EBuilding.FusionReactor));
 
             //Keep shotgun turret button interactable only while it needs to be placed
             if (placedShotgunTurret)
@@ -187,8 +187,8 @@ public class StageCombat : SerializableSingleton<StageCombat>, IStage
             }
 
             //Keep fusion reactor button interactable only while there's insufficient power
-            if ((!placedShotgunTurret && ResourceController.Instance.SurplusPower + pendingPowerSupply < shotgunTurretPrefab.PowerConsumption) 
-                || (!placedMachineGunTurret && ResourceController.Instance.SurplusPower + pendingPowerSupply < machineGunTurretPrefab.PowerConsumption))
+            if ((!placedShotgunTurret && ResourceManager.Instance.SurplusPower + pendingPowerSupply < shotgunTurretPrefab.PowerConsumption) 
+                || (!placedMachineGunTurret && ResourceManager.Instance.SurplusPower + pendingPowerSupply < machineGunTurretPrefab.PowerConsumption))
             {
                 if (!fusionReactor.Interactable)
                 {
@@ -212,14 +212,14 @@ public class StageCombat : SerializableSingleton<StageCombat>, IStage
     /// </summary>
     private IEnumerator Shooting()
     {
-        if (!ProjectileManager.Instance.HasProjectileWithOwner(PlayerController.Instance.transform))
+        if (!ProjectileManager.Instance.HasProjectileWithOwner(PODController.Instance.transform))
         {
             console.ClearDialogue();
             console.SubmitDialogue("task shoot", 0, false, false);
             dog.SubmitDialogue("shoot", 0, true, false);
             game.SubmitDialogue("shoot", 0, true, false);
 
-            while (!ProjectileManager.Instance.HasProjectileWithOwner(PlayerController.Instance.transform) || !dog.AcceptingSubmissions)
+            while (!ProjectileManager.Instance.HasProjectileWithOwner(PODController.Instance.transform) || !dog.AcceptingSubmissions)
             {
                 yield return null;
             }
@@ -236,14 +236,14 @@ public class StageCombat : SerializableSingleton<StageCombat>, IStage
     /// </summary>
     private IEnumerator Healing()
     {
-        if (!playerInputManager.GetButtonDown("Heal") || Vector3.Distance(PlayerController.Instance.transform.position, CryoEgg.Instance.transform.position) >= PlayerController.Instance.HealingRange)
+        if (!playerInputManager.GetButtonDown("Heal") || Vector3.Distance(PODController.Instance.transform.position, Tower.Instance.transform.position) >= PODController.Instance.HealingRange)
         {
             console.ClearDialogue();
             console.SubmitDialogue("task heal", 0, false, false);
             dog.SubmitDialogue("heal at cryo egg", 0, true, false);
             game.SubmitDialogue("heal", 0, true, false);
 
-            while (!playerInputManager.GetButtonDown("Heal") || Vector3.Distance(PlayerController.Instance.transform.position, CryoEgg.Instance.transform.position) >= PlayerController.Instance.HealingRange || !dog.AcceptingSubmissions)
+            while (!playerInputManager.GetButtonDown("Heal") || Vector3.Distance(PODController.Instance.transform.position, Tower.Instance.transform.position) >= PODController.Instance.HealingRange || !dog.AcceptingSubmissions)
             {
                 yield return null;
             }
@@ -275,7 +275,7 @@ public class StageCombat : SerializableSingleton<StageCombat>, IStage
 
         console.SubmitDialogue("dog closed", 0, false, false);
         game.SubmitDialogue("finished tutorial", 0, true, false);
-        ClockController.Instance.Paused = false;
+        ClockManager.Instance.Paused = false;
         fusionReactor.Interactable = true;
         iceDrill.Interactable = true;
         boiler.Interactable = true;
