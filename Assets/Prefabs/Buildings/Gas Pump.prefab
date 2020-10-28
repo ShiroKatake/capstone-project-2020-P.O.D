@@ -226,6 +226,8 @@ MonoBehaviour:
   plantsConsumption: 0
   gasConsumption: 0
   buildTime: 10
+  buildInPits: 0
+  minBuildHeight: 0
   VFX: []
   cliffRaycastOffsets:
   - {x: -0.7, y: 0, z: -0.7}
@@ -325,6 +327,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resource: 4
   collectionRate: 4
+  isResourceGenerator: 0
 --- !u!95 &241347474389765784
 Animator:
   serializedVersion: 3
@@ -520,7 +523,7 @@ GameObject:
   - component: {fileID: 3558077146902482651}
   - component: {fileID: 5235377368204164264}
   - component: {fileID: 4205056560061834500}
-  m_Layer: 16
+  m_Layer: 13
   m_Name: Demolition Menu Collider
   m_TagString: Building
   m_Icon: {fileID: 0}

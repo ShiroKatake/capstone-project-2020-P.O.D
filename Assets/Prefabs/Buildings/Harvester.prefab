@@ -154,7 +154,7 @@ MonoBehaviour:
   model: {fileID: 6634092763135449967}
   rendererMaterialSets:
   - renderer: {fileID: 8247929216392846752}
-    opaque: {fileID: 2100000, guid: 09cd9b08dd10000002dd9b08dd100000, type: 2}
+    opaque: {fileID: 2100000, guid: e175c781dc5b31e4cb26b19b7052ba9c, type: 2}
     transparent: {fileID: 2100000, guid: 0b7a89511e6fd2942bf5fae69d810c79, type: 2}
     dissolveStart: -0.98
     dissolveEnd: 2.39
@@ -225,6 +225,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resource: 3
   collectionRate: 4
+  isResourceGenerator: 0
 --- !u!95 &3799573981806491314
 Animator:
   serializedVersion: 3
@@ -262,7 +263,7 @@ GameObject:
   - component: {fileID: 6517538552908591757}
   - component: {fileID: 1627942342017203101}
   - component: {fileID: 2263595097177697541}
-  m_Layer: 16
+  m_Layer: 13
   m_Name: Demolition Menu Collider
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -733,7 +734,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 09cd9b08dd10000002dd9b08dd100000, type: 2}
+      objectReference: {fileID: 2100000, guid: e175c781dc5b31e4cb26b19b7052ba9c, type: 2}
     - target: {fileID: -927199367670048503, guid: b2c7b1820aff0c5459339f1d2dfb18a6,
         type: 3}
       propertyPath: m_Name
