@@ -55,6 +55,8 @@ public class Building : CollisionListener
 
     [Header("Offsets of Foundations from Position")]
     [SerializeField] private List<Vector3> buildingFoundationOffsets;
+    [SerializeField] private int buildingFoundationOffsetsOnXAxis;
+    [SerializeField] private int buildingFoundationOffsetsOnZAxis;
 
     [Header("Model, Materials, etc.")]
     [SerializeField] private Transform model;
@@ -128,6 +130,16 @@ public class Building : CollisionListener
     /// The position of building foundations relative to the building's transform.position value.
     /// </summary>
     public List<Vector3> BuildingFoundationOffsets { get => buildingFoundationOffsets; }
+
+    /// <summary>
+    /// The number of building foundation offsets this building would have in a row along the X axis.
+    /// </summary>
+    public int BuildingFoundationOffsetsOnXAxis { get => buildingFoundationOffsetsOnXAxis; }
+
+    /// <summary>
+    /// The number of building foundation offsets this building would have in a row along the Z axis.
+    /// </summary>
+    public int BuildingFoundationOffsetsOnZAxis { get => buildingFoundationOffsetsOnZAxis; }
 
     /// <summary>
     /// The type of building this building is.

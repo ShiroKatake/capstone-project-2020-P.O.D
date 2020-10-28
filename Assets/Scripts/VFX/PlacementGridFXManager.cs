@@ -109,10 +109,10 @@ public class PlacementGridFXManager : MonoBehaviour
 	/// <param name="building">The building currently being held.</param>
 	private void OnPlacementStarted(Building building)
 	{
-		if (lastSizeX != Mathf.Sqrt(building.BuildingFoundationOffsets.Count) + 2 || lastSizeY != Mathf.Sqrt(building.BuildingFoundationOffsets.Count) + 2)
+		if (lastSizeX != building.BuildingFoundationOffsetsOnXAxis + 2 || lastSizeY != building.BuildingFoundationOffsetsOnZAxis + 2)
 		{
-			lastSizeX = Mathf.Sqrt(building.BuildingFoundationOffsets.Count) + 2;
-			lastSizeY = Mathf.Sqrt(building.BuildingFoundationOffsets.Count) + 2;
+			lastSizeX = building.BuildingFoundationOffsetsOnXAxis + 2;
+			lastSizeY = building.BuildingFoundationOffsetsOnZAxis + 2;
 			InitializeGrid(lastSizeX, lastSizeY);
 		}
 
