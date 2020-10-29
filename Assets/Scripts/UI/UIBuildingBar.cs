@@ -15,15 +15,22 @@ public class UIBuildingBar : MonoBehaviour
 
     [SerializeField] private List<Button> buttonList;
 
-    void Update()
-    {
-        foreach(Button b in buttonList){
-            b.Btn.OnInteractableChanged(
-                b.AssociatedBuilding.OreCost <= ResourceManager.Instance.Ore
-                && b.AssociatedBuilding.PowerConsumption <= ResourceManager.Instance.SurplusPower
-                && b.AssociatedBuilding.PlantsConsumption <= ResourceManager.Instance.SurplusPlants
-                && b.AssociatedBuilding.WaterConsumption <= ResourceManager.Instance.SurplusWater
-            );
-        }
-    }
+	private void Awake()
+	{
+		ResourceManager.Instance.resourceStatesUpdated += UpdateButton;
+		UpdateButton();
+	}
+
+	private void UpdateButton()
+	{
+		foreach (Button b in buttonList)
+		{
+			b.Btn.OnInteractableChanged(
+				b.AssociatedBuilding.OreCost <= ResourceManager.Instance.Ore && ResourceManager.Instance.Ore > 0
+				&& b.AssociatedBuilding.PowerConsumption <= ResourceManager.Instance.SurplusPower && ResourceManager.Instance.SurplusPower > 0
+				&& b.AssociatedBuilding.PlantsConsumption <= ResourceManager.Instance.SurplusPlants && ResourceManager.Instance.SurplusPlants > 0
+				&& b.AssociatedBuilding.WaterConsumption <= ResourceManager.Instance.SurplusWater && ResourceManager.Instance.SurplusWater > 0
+			);
+		}
+	}
 }

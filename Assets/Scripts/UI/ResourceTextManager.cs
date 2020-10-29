@@ -24,10 +24,12 @@ public class ResourceTextManager : SerializableSingleton<ResourceTextManager>
     //Non-Serialized Fields------------------------------------------------------------------------
     private List<Graphic> graphics;
     private float opacity;
-    //Public Properties------------------------------------------------------------------------------------------------------------------------------
+	private List<RectTransform> rectsToRefresh = new List<RectTransform>();
+	private RectTransform rectTransform;
+	//Public Properties------------------------------------------------------------------------------------------------------------------------------
 
-    //think about using custom setters and getters here...
-    /*
+	//think about using custom setters and getters here...
+	/*
     int x {
         get {return x;}
         set {
@@ -35,12 +37,12 @@ public class ResourceTextManager : SerializableSingleton<ResourceTextManager>
         }
     }
     */
-    //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
-    /// <summary>
-    /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
-    /// Awake() runs before Start().
-    /// </summary>
-    protected override void Awake()
+	//Initialization Methods-------------------------------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
+	/// Awake() runs before Start().
+	/// </summary>
+	protected override void Awake()
     {
         base.Awake();
 
@@ -61,23 +63,47 @@ public class ResourceTextManager : SerializableSingleton<ResourceTextManager>
                 g.color = UpdateColorOpacity(g.color, opacity);
             }
         }
-    }
+
+		HoveringDialogueDemi_RefreshElement[] refreshElements = GetComponentsInChildren<HoveringDialogueDemi_RefreshElement>();
+		foreach (HoveringDialogueDemi_RefreshElement refreshElement in refreshElements)
+		{
+			rectsToRefresh.Add(refreshElement.GetComponent<RectTransform>());
+		}
+		rectsToRefresh.Reverse();
+		rectTransform = GetComponent<RectTransform>();
+
+		ResourceManager.Instance.resourcesUpdated += UpdateText;
+		UpdateText();
+	}
     /// <summary>
     /// Update() is run every frame.
     /// </summary>
-	private void Update()
+	private void UpdateText()
 	{
 		ore.text = ResourceManager.Instance.Ore.ToString();
 		power.text = ResourceManager.Instance.PowerConsumption.ToString() + " / " + ResourceManager.Instance.PowerSupply.ToString();
 		plants.text = ResourceManager.Instance.PlantsConsumption.ToString() + " / " + ResourceManager.Instance.PlantsSupply.ToString();
 		water.text = ResourceManager.Instance.WaterConsumption.ToString() + " / " + ResourceManager.Instance.WaterSupply.ToString();
 		gas.text = ResourceManager.Instance.GasConsumption.ToString() + " / " + ResourceManager.Instance.GasSupply.ToString();
+		
+		Rebuild();
 	}
-    //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
-    /// <summary>
-    /// Triggers the fading in of the resources text.
-    /// </summary>
-    public void FadeIn()
+
+	private void Rebuild()
+	{
+		foreach (var rect in rectsToRefresh)
+		{
+			LayoutRebuilder.ForceRebuildLayoutImmediate(rect);
+		}
+		//Refresh the biggest container last
+		LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
+	}
+
+	//Triggered Methods------------------------------------------------------------------------------------------------------------------------------
+	/// <summary>
+	/// Triggers the fading in of the resources text.
+	/// </summary>
+	public void FadeIn()
     {
         StartCoroutine(FadingIn());
     }
