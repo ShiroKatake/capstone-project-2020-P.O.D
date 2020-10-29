@@ -944,7 +944,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: 2}
+  m_AnchoredPosition: {x: 0, y: 1.9998779}
   m_SizeDelta: {x: 300, y: 302}
   m_Pivot: {x: -0.022, y: 1.022}
 --- !u!222 &598455598413647068
@@ -8148,7 +8148,7 @@ MonoBehaviour:
   waterCost: 
   plantsCost: 
   gasCost: 
-  buildTime: 7
+  buildTime: 5
   powerProductionAmount: 6
   waterProductionAmount: 
   plantsProductionAmount: 
@@ -10268,7 +10268,7 @@ MonoBehaviour:
   oreCost: 8
   powerCost: 6
   waterCost: 
-  plantsCost: 
+  plantsCost: 1
   gasCost: 
   buildTime: 10
   powerProductionAmount: 
@@ -10665,7 +10665,8 @@ MonoBehaviour:
   waterProductionAmount: 
   plantsProductionAmount: 
   gasProductionAmount: 
-  description: Short range defensive structure that shoots slow, high impact bullets.
+  description: Short range defensive structure that shoots a spray of high impact
+    pellets.
 --- !u!114 &5976878004857127873
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11119,8 +11120,8 @@ RectTransform:
   m_Father: {fileID: 4528282981135839341}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
@@ -11372,7 +11373,7 @@ MonoBehaviour:
   waterCost: 
   plantsCost: 
   gasCost: 
-  buildTime: 7
+  buildTime: 10
   powerProductionAmount: 
   waterProductionAmount: 
   plantsProductionAmount: 
@@ -11514,9 +11515,9 @@ RectTransform:
   m_Father: {fileID: 4528282981135839341}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 68.5, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 0, y: -9}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &71745612663637680
@@ -12464,9 +12465,9 @@ RectTransform:
   m_Father: {fileID: 4528282981135839341}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 68.5, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 0, y: -12}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &6415205078863081904
@@ -13188,9 +13189,9 @@ RectTransform:
   m_Father: {fileID: 4528282981135839341}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 0, y: -3}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &4577073443711473200
@@ -13754,9 +13755,9 @@ RectTransform:
   m_Father: {fileID: 2343029787574776569}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 82, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 82, y: -21.6}
   m_SizeDelta: {x: 110, y: 0}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &1741118174346722281
@@ -14434,10 +14435,10 @@ MonoBehaviour:
   objectClass: Resources
   oreCost: 4
   powerCost: 2
-  waterCost: 5
+  waterCost: 
   plantsCost: 
   gasCost: 
-  buildTime: 7
+  buildTime: 10
   powerProductionAmount: 
   waterProductionAmount: 
   plantsProductionAmount: 4
@@ -15998,9 +15999,9 @@ RectTransform:
   m_Father: {fileID: 4528282981135839341}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 0, y: -6}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1361790521557833837
