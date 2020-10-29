@@ -1,13 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public enum BarType
-{
-	Boiler,
-	Greenhouse,
-	Incinerator
-}
-
 public class TerraformingUIBar : MonoBehaviour
 {
 	[SerializeField] private BarType bar;

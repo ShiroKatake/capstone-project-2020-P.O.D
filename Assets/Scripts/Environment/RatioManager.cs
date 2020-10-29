@@ -2,7 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RatioManager : MonoBehaviour
+public enum BarType
+{
+	Boiler,
+	Greenhouse,
+	Incinerator
+}
+
+public class RatioManager : SerializableSingleton<RatioManager>
 {
 	[SerializeField] TerraformingUI terraformingUI;
 
@@ -89,11 +96,24 @@ public class RatioManager : MonoBehaviour
 	/// <summary>
 	/// FOR TESTING: Updates the current ratio for the player
 	/// </summary>
-	public void UpdateCurrentRatio()
+	public void TestCurrentRatio()
 	{
 		currentRatio[0] = Random.Range(1, 20);
 		currentRatio[1] = Random.Range(1, 20);
 		currentRatio[2] = Random.Range(1, 20);
+
+		terraformingUI.UpdateTarget(targetRatio, currentRatio);
+		terraformingUI.UpdateCurrent(currentRatio);
+	}
+
+	/// <summary>
+	/// Updates the current ratio for the player
+	/// </summary>
+	public void UpdateCurrentRatio()
+	{
+		currentRatio[0] = BuildingManager.Instance.BuiltAndOperationalBuildingsCount(EBuilding.Boiler);
+		currentRatio[1] = BuildingManager.Instance.BuiltAndOperationalBuildingsCount(EBuilding.Greenhouse);
+		currentRatio[2] = BuildingManager.Instance.BuiltAndOperationalBuildingsCount(EBuilding.Incinerator);
 
 		terraformingUI.UpdateTarget(targetRatio, currentRatio);
 		terraformingUI.UpdateCurrent(currentRatio);

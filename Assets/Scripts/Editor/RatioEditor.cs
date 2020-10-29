@@ -19,7 +19,7 @@ public class RatioEditor : Editor
 
 			if (GUILayout.Button("Get Current Ratio"))
 			{
-				ratioManager.UpdateCurrentRatio();
+				ratioManager.TestCurrentRatio();
 			}
 
 		GUILayout.EndHorizontal();
