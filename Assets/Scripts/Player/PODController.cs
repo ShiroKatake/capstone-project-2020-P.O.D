@@ -67,7 +67,9 @@ public class PODController : SerializableSingleton<PODController>
     private Player playerInputManager;
     private bool repsawn;
 
-    //Public Properties------------------------------------------------------------------------------------------------------------------------------
+	private bool productionUI;
+
+	//Public Properties------------------------------------------------------------------------------------------------------------------------------
 
 	//Basic Public Properties----------------------------------------------------------------------
 
@@ -143,7 +145,13 @@ public class PODController : SerializableSingleton<PODController>
         if (!PauseMenuManager.Paused)
         {
             GetInput();
-        }
+
+			if (productionUI)
+			{
+				//Debug.Log($"ProductionUI is {productionUI}, displaying UI");
+				TerraformingUI.Instance.IsEnabled = !TerraformingUI.Instance.IsEnabled;
+			}
+		}
     }
 
     /// <summary>
@@ -164,6 +172,7 @@ public class PODController : SerializableSingleton<PODController>
     {
         float moveHorizontal = playerInputManager.GetAxis("Horizontal");
         float moveVertical = playerInputManager.GetAxis("Vertical");
+		productionUI = playerInputManager.GetButtonDown("ProductionUI");
 
         movement = new Vector3(moveHorizontal, 0, -moveVertical);
 
@@ -172,7 +181,9 @@ public class PODController : SerializableSingleton<PODController>
 
         if (printInputs)
         {
-            Debug.Log($"Rewired, PlayerMovementController.GetInput() (called by Update()), movement: {movement}");
+
+			//Debug.Log($"ProductionUI state: {productionUI}");
+			Debug.Log($"Rewired, PlayerMovementController.GetInput() (called by Update()), movement: {movement}");
             Debug.Log($"Rewired via InputController, PlayerMovementController.GetInput() (called by Update()), shooting: {shooting}");
         }
     }

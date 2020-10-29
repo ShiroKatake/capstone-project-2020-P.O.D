@@ -5,6 +5,7 @@ using TMPro;
 
 public class BuildingStats : MonoBehaviour
 {
+	[SerializeField] private TextMeshProUGUI buildingName;
 	[SerializeField] private TextMeshProUGUI enabledText;
 	[SerializeField] private TextMeshProUGUI disabledText;
 	[SerializeField] private TextMeshProUGUI requiredText;
@@ -13,8 +14,9 @@ public class BuildingStats : MonoBehaviour
 
 	public void DisplayBuildingInfo()
 	{
+		buildingName.text = $"{ratioBuilding.ToString()}";
 		enabledText.text = $"Enabled: {BuildingManager.Instance.BuiltAndOperationalBuildingsCount(ratioBuilding)}";
 		disabledText.text = $"Disabled: {BuildingManager.Instance.BuiltAndNonOperationalBuildingsCount(ratioBuilding)}";
-		requiredText.text = $"Required: {TerraformingUI.Instance.TargetRatio((int)ratioBuilding - 6) - BuildingManager.Instance.BuiltAndOperationalBuildingsCount(ratioBuilding)}";
+		requiredText.text = $"Required: {TerraformingUI.Instance.BuildingsNeeded((int)ratioBuilding - 6) - BuildingManager.Instance.BuiltAndOperationalBuildingsCount(ratioBuilding)}";
 	}
 }

@@ -440,6 +440,15 @@ MonoBehaviour:
       _behaviorId: 0
       _userAssignable: 1
       _categoryId: 2
+    - _id: 28
+      _name: ProductionUI
+      _type: 1
+      _descriptiveName: ProductionUI
+      _positiveDescriptiveName: 
+      _negativeDescriptiveName: 
+      _behaviorId: 0
+      _userAssignable: 1
+      _categoryId: 10
     actionCategories:
     - _name: Default
       _descriptiveName: Default
@@ -486,6 +495,11 @@ MonoBehaviour:
       _tag: 
       _id: 9
       _userAssignable: 1
+    - _name: UI
+      _descriptiveName: UI
+      _tag: 
+      _id: 10
+      _userAssignable: 1
     actionCategoryMap:
       list:
       - categoryId: 0
@@ -506,6 +520,8 @@ MonoBehaviour:
         actionIds: 13000000
       - categoryId: 9
         actionIds: 14000000
+      - categoryId: 10
+        actionIds: 1c000000
     inputBehaviors:
     - _id: 0
       _name: Default
@@ -592,6 +608,17 @@ MonoBehaviour:
       hardwareGuidString: 
       customControllerUid: 0
       actionElementMaps:
+      - _actionCategoryId: 0
+        _actionId: 28
+        _elementType: 1
+        _elementIdentifierId: -1
+        _axisRange: 0
+        _invert: 0
+        _axisContribution: 0
+        _keyboardKeyCode: 112
+        _modifierKey1: 0
+        _modifierKey2: 0
+        _modifierKey3: 0
       - _actionCategoryId: 0
         _actionId: 1
         _elementType: 1
@@ -902,8 +929,8 @@ MonoBehaviour:
     controllerMapLayoutManagerRuleSets: []
     controllerMapEnablerRuleSets: []
     playerIdCounter: 2
-    actionIdCounter: 25
-    actionCategoryIdCounter: 10
+    actionIdCounter: 29
+    actionCategoryIdCounter: 11
     inputBehaviorIdCounter: 1
     mapCategoryIdCounter: 1
     joystickLayoutIdCounter: 1
