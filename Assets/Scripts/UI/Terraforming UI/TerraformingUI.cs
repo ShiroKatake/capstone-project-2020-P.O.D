@@ -18,6 +18,11 @@ public class TerraformingUI : SerializableSingleton<TerraformingUI>
 		get { return maxBarValue; }
 	}
 
+	public int TargetRatio(int index)
+	{
+		return targetRatioValues[index];
+	}
+
 	public UnityAction<int[]> updateCurrentRatio;
 	public UnityAction<int[]> updateTargetRatio;
 
