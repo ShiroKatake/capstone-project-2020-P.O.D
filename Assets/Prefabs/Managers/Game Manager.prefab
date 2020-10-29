@@ -314,6 +314,7 @@ MonoBehaviour:
   pauseLoop: 1
   dayTimeLimitPerFrame: 20
   nightTimeLimitPerFrame: 5
+  debugResourcePositions: 0
   debugPathfinding: 0
 --- !u!114 &1223465686
 MonoBehaviour:
@@ -450,11 +451,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f26f8db3fff25b24c83a8a9de2322d7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentRatio: 0a0000000d0000000e000000
-  targetRatio: 010000000200000004000000
+  terraformingUI: {fileID: 0}
+  currentRatio: 000000000000000000000000
+  targetRatio: 010000000100000001000000
   pointsPerRatio: 5
   multiplierIncreasePerWave: 0
-  maxRatioValue: 0
+  maxRatioValue: 3
 --- !u!114 &4078778705944399297
 MonoBehaviour:
   m_ObjectHideFlags: 0
