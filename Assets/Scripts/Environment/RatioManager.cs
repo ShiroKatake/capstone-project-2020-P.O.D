@@ -2,13 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum BarType
-{
-	Boiler,
-	Greenhouse,
-	Incinerator
-}
-
 public class RatioManager : SerializableSingleton<RatioManager>
 {
 	[SerializeField] TerraformingUI terraformingUI;
