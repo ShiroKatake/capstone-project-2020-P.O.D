@@ -20,9 +20,7 @@ public class RatioManager : SerializableSingleton<RatioManager>
 
 	private void Start()
 	{
-		targetRatio[0] = 1;
-		targetRatio[1] = 1;
-		targetRatio[2] = 1;
+		UpdateTargetRatio();
 		terraformingUI.UpdateTarget(targetRatio, currentRatio);
 	}
 
