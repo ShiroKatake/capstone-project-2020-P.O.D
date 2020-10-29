@@ -25,12 +25,13 @@ public class UIBuildingBar : MonoBehaviour
 	{
 		foreach (Button b in buttonList)
 		{
-			b.Btn.OnInteractableChanged(
+			bool interactable =
 				b.AssociatedBuilding.OreCost <= ResourceManager.Instance.Ore && ResourceManager.Instance.Ore > 0
 				&& b.AssociatedBuilding.PowerConsumption <= ResourceManager.Instance.SurplusPower && ResourceManager.Instance.SurplusPower > 0
 				&& b.AssociatedBuilding.PlantsConsumption <= ResourceManager.Instance.SurplusPlants && ResourceManager.Instance.SurplusPlants > 0
-				&& b.AssociatedBuilding.WaterConsumption <= ResourceManager.Instance.SurplusWater && ResourceManager.Instance.SurplusWater > 0
-			);
+				&& b.AssociatedBuilding.WaterConsumption <= ResourceManager.Instance.SurplusWater && ResourceManager.Instance.SurplusWater > 0;
+			b.Btn.GetComponent<UIElementStatusManager>().Interactable = interactable;
+			b.Btn.OnInteractableChanged(interactable);
 		}
 	}
 }
