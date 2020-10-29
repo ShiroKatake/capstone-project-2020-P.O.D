@@ -18,6 +18,14 @@ public class RatioManager : SerializableSingleton<RatioManager>
 	float currentMultiplier = 1;
 	float storedPoints = 0;
 
+	private void Start()
+	{
+		targetRatio[0] = 1;
+		targetRatio[1] = 1;
+		targetRatio[2] = 1;
+		terraformingUI.UpdateTarget(targetRatio, currentRatio);
+	}
+
 	private float ScoreRatioAlignment()
 	{
 		int gatingIndex = 0;

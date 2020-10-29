@@ -38,6 +38,11 @@ public class TerraformingUI : SerializableSingleton<TerraformingUI>
 	public UnityAction<int[]> updateCurrentRatio;
 	public UnityAction<int[]> updateTargetRatio;
 
+	private void Start()
+	{
+		DisplayUI(false);
+	}
+
 	public void UpdateCurrent(int[] currentRatioArray)
 	{
 		currentRatio = currentRatioArray;
