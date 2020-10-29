@@ -243,8 +243,10 @@ public class BuildingManager : SerializableSingleton<BuildingManager>
 			if (b.Operational && ((!power && b.PowerConsumption > 0) || (!water && b.WaterConsumption > 0) || (!plants && b.PlantsConsumption > 0) || (!gas && b.GasConsumption > 0)))
             {
                 Debug.Log($"Disabling {b.name}");
+
                 b.Operational = false;
-            }
+				RatioManager.Instance.UpdateCurrentRatio();
+			}
         }
     }
 
@@ -264,8 +266,10 @@ public class BuildingManager : SerializableSingleton<BuildingManager>
             if (!b.Operational && (power || b.PowerConsumption == 0) && (water || b.WaterConsumption == 0) && (waste || b.PlantsConsumption == 0) || (gas || b.GasConsumption == 0))
             {
                 Debug.Log($"Enabling {b.name}");
+
                 b.Operational = true;
-            }
+				RatioManager.Instance.UpdateCurrentRatio();
+			}
         }
     }
 }

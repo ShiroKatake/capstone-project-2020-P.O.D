@@ -130,6 +130,8 @@ public class BuildingFactory : Factory<BuildingFactory, Building, EBuilding>
         }
 
         building.Reset();
+
         Destroy(building, building.BuildingType);
-    }
+		RatioManager.Instance.UpdateCurrentRatio();
+	}
 }
