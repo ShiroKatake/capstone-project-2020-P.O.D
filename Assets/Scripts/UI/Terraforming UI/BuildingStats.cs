@@ -12,6 +12,11 @@ public class BuildingStats : MonoBehaviour
 
 	[SerializeField] private EBuilding ratioBuilding;
 
+	private void Start()
+	{
+		DisplayBuildingInfo();
+	}
+
 	public void DisplayBuildingInfo()
 	{
 		buildingName.text = $"{ratioBuilding.ToString()}";
