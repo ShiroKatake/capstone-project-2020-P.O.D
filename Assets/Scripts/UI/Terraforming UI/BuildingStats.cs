@@ -14,6 +14,13 @@ public class BuildingStats : MonoBehaviour
 
 	private void Start()
 	{
+		TerraformingUI.Instance.updateCurrentRatio += DisplayBuildingInfo;
+		TerraformingUI.Instance.updateTargetRatio += DisplayBuildingInfo;
+		DisplayBuildingInfo();
+	}
+
+	private void DisplayBuildingInfo(int[] ratioArray)
+	{
 		DisplayBuildingInfo();
 	}
 
