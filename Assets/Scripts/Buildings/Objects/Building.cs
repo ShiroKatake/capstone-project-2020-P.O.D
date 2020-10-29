@@ -95,6 +95,7 @@ public class Building : CollisionListener
     //Positioning
     private bool colliding = false;
     private bool validPlacement = true;
+    private bool initialisedValidPlacement = false;
 	private bool placementCurrentValid = true;
 	private bool materialChanged = false;
 	private List<Collider> otherColliders;
@@ -464,19 +465,30 @@ public class Building : CollisionListener
                 //validPlacement = !isErrorCondition && MapManager.Instance.PositionAvailableForBuilding(this);
                 validPlacement = !((!buildInPits && CheckInPit()) || CheckColliding() || CheckOnCliff() || CheckMouseOverUI() || (resourceCollector != null && !resourceCollector.CanCollectResourcesAtPosition())) && MapManager.Instance.PositionAvailableForBuilding(this);
 
-                if (!validPlacement && placementCurrentValid)
-				{
-					BuildingFactory.Instance.onPlacementInvalid?.Invoke();
-					placementCurrentValid = false;
-					materialChanged = false;
-				}
+                //Debug.Log($"{this}.IsPlacementValid(), validPlacement is {validPlacement}, placementCurrentValid is {placementCurrentValid}");
 
-				else if (validPlacement && !placementCurrentValid)
-				{
-					BuildingFactory.Instance.onPlacementValid?.Invoke();
-					placementCurrentValid = true;
-					materialChanged = false;
-				}
+                if (validPlacement)
+                {
+                    if (!placementCurrentValid || !initialisedValidPlacement)
+                    {
+                        //Debug.Log($"{this}.IsPlacementValid(), invoking onPlacementInvalid");
+                        BuildingFactory.Instance.onPlacementValid?.Invoke();
+                        placementCurrentValid = true;
+                        materialChanged = false;
+                        initialisedValidPlacement = true;
+                    }
+                }
+                else
+                {
+                    if (placementCurrentValid || !initialisedValidPlacement)
+                    {
+                        //Debug.Log($"{this}.IsPlacementValid(), invoking onPlacementInvalid");
+                        BuildingFactory.Instance.onPlacementInvalid?.Invoke();
+                        placementCurrentValid = false;
+                        materialChanged = false;
+                        initialisedValidPlacement = true;
+                    }
+                }
 
 				if (!materialChanged)
 				{
@@ -820,6 +832,7 @@ public class Building : CollisionListener
         colliding = false;
         built = false;
         disabledByPlayer = false;
+        initialisedValidPlacement = false;
 
         //animator.enabled = false;
         health.Reset();
