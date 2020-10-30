@@ -117,16 +117,24 @@ public class MineralCollectionController : SerializableSingleton<MineralCollecti
 			}
 			else
 			{
-				miningBeam.OnMineDisable();
-				HideMineralInfo();
-                AudioManager.Instance.StopSound(AudioManager.ESound.Mining, this.gameObject);
+                HideMineralInfo();
+
+                if (mining)
+                {
+                    mining = false;
+                    miningBeam.OnMineDisable();
+                    AudioManager.Instance.StopSound(AudioManager.ESound.Mining, this.gameObject);
+                }
             }
         }
-        else
+        else if (mining)
         {
+            mining = false;
+            HideMineralInfo();
+            miningBeam.OnMineDisable();
             AudioManager.Instance.StopSound(AudioManager.ESound.Mining, this.gameObject);
         }
-	}
+    }
 
 	/// <summary>
 	/// Trigger hovering dialogue box if mouse hovers over the mineral deposit.
