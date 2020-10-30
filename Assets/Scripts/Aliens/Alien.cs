@@ -25,8 +25,8 @@ public class Alien : MonoBehaviour, IMessenger
     [SerializeField] private float attackCooldown;
     [Tooltip("How long can it stall moving forward before it will be made to burrow into the ground and be destroyed by AlienFactory?")]
     [SerializeField] private float maxStall;
-    [Tooltip("How likely, between 0 (impossible) and 1 (certainty) is it that this alien will burrow into the ground any time it is dealt damage?")]
-    [SerializeField][Range(0, 1)] private float burrowingProbability;
+    [Tooltip("How likely, between 0 (impossible) and 100 (certainty) is it that this alien will burrow into the ground any time it is dealt damage?")]
+    [SerializeField][Range(0, 100)] private float burrowingProbability;
     [SerializeField] private float burrowSpeed;
 
     [Header("Shader Dissolving")]
@@ -533,7 +533,10 @@ public class Alien : MonoBehaviour, IMessenger
 
 		ShotBy(attackerTransform);
 
-        if (Random.Range(0f, 1f) > burrowingProbability)
+        float random = Random.Range(0f, 100f);
+        //Debug.Log($"{this}.OnDamaged(), random: {random}, burrowingProbability: {burrowingProbability}, random < burrowingProbability and therefore will burrow: {random < burrowingProbability}");
+
+        if (random < burrowingProbability)
         {
             StartCoroutine(Burrow());
         }
