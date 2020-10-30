@@ -95,45 +95,53 @@ public class MineralCollectionController : SerializableSingleton<MineralCollecti
 				//Debug.Log($"Mineral at {mineral.transform.position} is {cacheMineral != mineral} to cache mineral at {cacheMineral?.transform.position}");
 				if (cacheMineral != mineral)
 				{
-					HideMineralInfo();
+                    StopMining();
+                    HideMineralInfo();
 					DisplayMineralInfo(mineral);
 				}
 
 				if (collectMinerals && mineral != null && mineral.OreCount > 0)
                 {
-                    mining = true;
-                    miningBeam.OnMineEnable(mineral.MiningPoint);
+                    if (!mining) StartMining(mineral);                    
                     mineral.Mine();
-                    //Debug.Log($"Raycast hit mineral node. Mined {mined} minerals");
-
-                    AudioManager.Instance.PlaySound(AudioManager.ESound.Mining, this.gameObject);
-                    //ResourceController.Instance.Ore += mined; (Moved this function to Ore.cs)
                 }
-				else
+				else if (mining)
 				{
-                    mining = false;
-					miningBeam.OnMineDisable();
-				}
+                    StopMining();
+                }
 			}
 			else
 			{
                 HideMineralInfo();
-
-                if (mining)
-                {
-                    mining = false;
-                    miningBeam.OnMineDisable();
-                    AudioManager.Instance.StopSound(AudioManager.ESound.Mining, this.gameObject);
-                }
+                if (mining) StopMining();
             }
         }
-        else if (mining)
+        else
         {
-            mining = false;
             HideMineralInfo();
-            miningBeam.OnMineDisable();
-            AudioManager.Instance.StopSound(AudioManager.ESound.Mining, this.gameObject);
+            if (mining) StopMining();
         }
+    }
+
+    /// <summary>
+    /// Starts the mining beam and mining sound, and sets mining to true.
+    /// </summary>
+    /// <param name="mineral">The mineral the player is mining.</param>
+    private void StartMining(Mineral mineral)
+    {
+        mining = true;
+        miningBeam.OnMineEnable(mineral.MiningPoint);
+        AudioManager.Instance.PlaySound(AudioManager.ESound.Mining, this.gameObject);
+    }
+
+    /// <summary>
+    /// Stops the mining beam and mining sound, and sets mining to false.
+    /// </summary>
+    private void StopMining()
+    {
+        mining = false;
+        miningBeam.OnMineDisable();
+        AudioManager.Instance.StopSound(AudioManager.ESound.Mining, this.gameObject);
     }
 
 	/// <summary>
