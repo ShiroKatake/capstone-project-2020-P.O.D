@@ -33,11 +33,6 @@ public class AlienManager : PublicInstanceSerializableSingleton<AlienManager>
     [Header("Spawning Time Limit Per Frame (Milliseconds)")]
     [SerializeField] private float spawningFrameTimeLimit;
 
-    [Header("For Testing")]
-    [SerializeField] private bool spawnAliens;
-    [SerializeField] private bool spawnAlienNow;
-    [SerializeField] private bool ignoreDayNightCycle;
-
     //Non-Serialized Fields------------------------------------------------------------------------
 
     //Alien Spawning
@@ -62,6 +57,10 @@ public class AlienManager : PublicInstanceSerializableSingleton<AlienManager>
     private float maxAngle;
 
     private bool spawningAliens;
+
+    private bool coroutineControllerUpdateRunning;
+    private bool coroutineSortSpawnPointsByAngleRunning;
+    private bool coroutineSpawnAliensRunning;
 
     //PublicProperties-------------------------------------------------------------------------------------------------------------------------------
 
@@ -122,6 +121,10 @@ public class AlienManager : PublicInstanceSerializableSingleton<AlienManager>
 
         //Setting up position offsets that can be randomly selected from for cluster spawning 
         swarmOffsets = new Dictionary<int, List<Vector3>>();
+
+        coroutineControllerUpdateRunning = false;
+        coroutineSortSpawnPointsByAngleRunning = false;
+        coroutineSpawnAliensRunning = false;
     }
 
     /// <summary>
@@ -139,6 +142,8 @@ public class AlienManager : PublicInstanceSerializableSingleton<AlienManager>
     /// </summary>
     private IEnumerator ControllerUpdate()
     {
+        coroutineControllerUpdateRunning = true;
+
         while (StageManager.Instance == null || StageManager.Instance.CurrentStage == null)
         {
             yield return null;
@@ -146,7 +151,7 @@ public class AlienManager : PublicInstanceSerializableSingleton<AlienManager>
 
         EStage currentStage = StageManager.Instance.CurrentStage.GetID();
 
-        while (spawnAliens && !gameOverStages.Contains(currentStage))
+        while (!gameOverStages.Contains(currentStage))
         {
             currentStage = StageManager.Instance.CurrentStage.GetID();
 
@@ -184,6 +189,8 @@ public class AlienManager : PublicInstanceSerializableSingleton<AlienManager>
 
             yield return null;
         }
+
+        coroutineControllerUpdateRunning = false;
     }
 
     /// <summary>
@@ -191,6 +198,8 @@ public class AlienManager : PublicInstanceSerializableSingleton<AlienManager>
     /// </summary>
     private IEnumerator SortSpawnPointsByAngle()
     {
+        coroutineSortSpawnPointsByAngleRunning = true;
+
         minAngle = Random.Range(0, 360);
         maxAngle = MathUtility.Instance.NormaliseAngle(minAngle + angleRange);
 
@@ -217,6 +226,8 @@ public class AlienManager : PublicInstanceSerializableSingleton<AlienManager>
                 loopStopwatch.Restart();
             }
         }
+        
+        coroutineSortSpawnPointsByAngleRunning = false;
     }
 
     /// <summary>
@@ -224,6 +235,8 @@ public class AlienManager : PublicInstanceSerializableSingleton<AlienManager>
     /// </summary>
     private IEnumerator SpawnAliens(EStage currentStage)
     {
+        coroutineSpawnAliensRunning = true;
+
         spawningAliens = true;
         aliensInCurrentWave = CalculateAliensInWave(currentStage);
         majorityCount = 0;
@@ -304,6 +317,7 @@ public class AlienManager : PublicInstanceSerializableSingleton<AlienManager>
         }
 
         spawningAliens = false;
+        coroutineSpawnAliensRunning = false;
     }
 
     /// <summary>

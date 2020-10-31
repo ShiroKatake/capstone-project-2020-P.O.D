@@ -33,12 +33,6 @@ public class Alien : MonoBehaviour, IMessenger
     [SerializeField] private float dissolveStart;
     [SerializeField] private float dissolveEnd;
 
-    //[Header("Testing")]
-    //[SerializeField] private MeshRenderer rangeMesh;
-    //[SerializeField] private Material greenRangeMeshMaterial;
-    //[SerializeField] private Material yellowRangeMeshMaterial;
-    //[SerializeField] private Material redRangeMeshMaterial;
-
     //Non-Serialized Fields------------------------------------------------------------------------
 
     //Componenets
@@ -205,38 +199,6 @@ public class Alien : MonoBehaviour, IMessenger
         }
     }
 
-    //private void Update()
-    //{
-    //    if (rangeMesh != null)
-    //    {
-    //        CheckVisibleTargets();
-    //    }
-    //}
-
-    //private void UpdateRangeMeshMaterial(Material material)
-    //{
-    //    if (rangeMesh.material != material)
-    //    {
-    //        rangeMesh.material = material;
-    //    }
-    //}
-
-    //private void CheckVisibleTargets()
-    //{
-    //    if (visibleTargets.Count == 0)
-    //    {
-    //        UpdateRangeMeshMaterial(greenRangeMeshMaterial);
-    //    }
-    //    else if (target == Tower.Instance.transform)
-    //    {
-    //        UpdateRangeMeshMaterial(yellowRangeMeshMaterial);
-    //    }
-    //    else if (target != Tower.Instance.transform)
-    //    {
-    //        UpdateRangeMeshMaterial(redRangeMeshMaterial);
-    //    }
-    //}
-
     //Recurring Methods (Update())-------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
@@ -253,38 +215,6 @@ public class Alien : MonoBehaviour, IMessenger
             renderer.materials[0].SetFloat("_End", dissolveStart + currentYPos);
         }
     }
-
-    //private void Update()
-    //{
-    //    if (rangeMesh != null)
-    //    {
-    //        CheckVisibleTargets();
-    //    }
-    //}
-
-    //private void UpdateRangeMeshMaterial(Material material)
-    //{
-    //    if (rangeMesh.material != material)
-    //    {
-    //        rangeMesh.material = material;
-    //    }
-    //}
-
-    //private void CheckVisibleTargets()
-    //{
-    //    if (visibleTargets.Count == 0)
-    //    {
-    //        UpdateRangeMeshMaterial(greenRangeMeshMaterial);
-    //    }
-    //    else if (target == Tower.Instance.transform)
-    //    {
-    //        UpdateRangeMeshMaterial(yellowRangeMeshMaterial);
-    //    }
-    //    else if (target != Tower.Instance.transform)
-    //    {
-    //        UpdateRangeMeshMaterial(redRangeMeshMaterial);
-    //    }
-    //}
 
     //Recurring Methods (FixedUpdate())-------------------------------------------------------------------------------------------------------------  
 
@@ -462,7 +392,7 @@ public class Alien : MonoBehaviour, IMessenger
     /// </summary>
     private void CheckStalling()
     {
-        if (transform.position != lastPosition)
+        if (transform.position != lastPosition && Vector3.Distance(transform.position, lastPosition) > 1)
         {
             timeOfLastMove = Time.time;
             lastPosition = transform.position;
@@ -470,6 +400,7 @@ public class Alien : MonoBehaviour, IMessenger
 
         if (Time.time - timeOfLastMove > maxStall)
         {
+            Debug.Log($"{this} has stialled, burrowing into the ground");
             StartCoroutine(Burrow());
         }
     }

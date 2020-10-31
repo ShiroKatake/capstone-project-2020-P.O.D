@@ -600,6 +600,7 @@ public class MapManager : PublicInstanceSerializableSingleton<MapManager>
     public void RegisterMineral(Mineral mineral)
     {
         UpdatePositionAvailability(mineral.gameObject, mineral.transform.position, null, true);
+        mineral.NavMeshObstacle.carving = true;
     }
     
     /// <summary>
@@ -621,6 +622,7 @@ public class MapManager : PublicInstanceSerializableSingleton<MapManager>
     public void DeRegisterMineral(Mineral mineral)
     {
         UpdatePositionAvailability(mineral.gameObject, mineral.transform.position, null, false);
+        mineral.NavMeshObstacle.carving = false;
     }
 
     /// <summary>

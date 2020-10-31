@@ -19,20 +19,14 @@ public class HealField : MonoBehaviour
 
 	//Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
-	/// <summary>
-	/// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
-	/// Awake() runs before Start().
-	/// </summary>
-	private void Awake()
-	{
-		player = FindPlayer();
-
-		if (player != null)
-		{
-			player.HealthController.onPlayerHeal += ActivateHealingFX;
-			player.HealthController.onPlayerHealCancelled += DeactivateHealingFX;
-		}
-	}
+	///// <summary>
+	///// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
+	///// Awake() runs before Start().
+	///// </summary>
+	//private void Awake()
+	//{
+		
+	//}
 
 	/// <summary>
 	/// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
@@ -40,7 +34,15 @@ public class HealField : MonoBehaviour
 	/// </summary>
 	private void Start()
 	{
-		InitializeHealingFieldSize();
+        player = FindPlayer();
+
+        if (player != null)
+        {
+            player.HealthController.onPlayerHeal += ActivateHealingFX;
+            player.HealthController.onPlayerHealCancelled += DeactivateHealingFX;
+        }
+
+        InitializeHealingFieldSize();
 	}
 
 	//Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------

@@ -43,7 +43,7 @@ public class ProjectileFactory : Factory<ProjectileFactory, Projectile, EProject
         Projectile projectile = Get(position, type);
         projectile.Owner = owner;
 		projectile.transform.rotation = rotation;
-        Debug.Log($"{this}.Get(), projectile is {projectile}");
+        //Debug.Log($"{this}.Get(), projectile is {projectile}");
 		return projectile;
     }
 
