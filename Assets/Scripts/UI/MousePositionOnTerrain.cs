@@ -7,15 +7,17 @@ public class MousePositionOnTerrain : PublicInstanceSerializableSingleton<MouseP
 {
     private Plane plane;
     [SerializeField] private Camera camera;
-    private TerrainCollider terrainCollider;
+    //private TerrainCollider terrainCollider;
     private Vector3 worldPosition;
     private Ray ray;
+    private LayerMask groundLayerMask;
 
     public Vector3 GetWorldPosition {get => worldPosition;}
 
     protected override void Awake() {
         base.Awake();
         plane = new Plane(Vector3.up, 0);
+        groundLayerMask = LayerMask.GetMask("Ground");
     }
 
     // Start is called before the first frame update
@@ -42,14 +44,20 @@ public class MousePositionOnTerrain : PublicInstanceSerializableSingleton<MouseP
         */
 
         float dist;
-        ray = camera.ScreenPointToRay(ReInput.controllers.Mouse.screenPosition);
+        RaycastHit hit;
+        ray = camera.ScreenPointToRay(Input.mousePosition);
 
-        if (plane.Raycast(ray, out dist))
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, groundLayerMask))
+        {
+            worldPosition = hit.point;
+        }
+        else if (plane.Raycast(ray, out dist))
         {
             worldPosition = ray.GetPoint(dist);
-            //Debug.DrawLine(worldPosition, worldPosition + Vector3.up * 10);
+            
         }
 
+        //Debug.DrawLine(worldPosition, worldPosition + Vector3.up * 10);
         //print("World Position from GameManager: " + worldPosition);
     }
 }
