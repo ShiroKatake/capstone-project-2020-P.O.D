@@ -10,31 +10,15 @@ public class ProgressBar : MonoBehaviour
     private float barMax = 1;
     [SerializeField] private float curVal = 0;
 
-    private void Awake() {
-        image.fillAmount = curVal;
-    }
-
-    private void Update() {
-        image.fillAmount = curVal / barMax;
-    }
-
     public void SetMax(float val){
         barMax = val;
     }
 
-    public void ChangeValueAdd(float value){
-        if (IsBarWithinBounds(curVal + value)){
-            curVal += value;
-        } else if (value > barMax){
-            curVal = barMax;
-        }
-    }
-
     public void SetBarValue(float value){
         if (IsBarWithinBounds(value)){
-            curVal = value;
+			image.fillAmount = value / barMax;
         } else if (value > barMax){
-            curVal = barMax;
+			value = barMax;
         }
     }
 

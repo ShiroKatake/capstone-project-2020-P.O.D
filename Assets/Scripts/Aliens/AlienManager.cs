@@ -62,6 +62,7 @@ public class AlienManager : SerializableSingleton<AlienManager>
     private float maxAngle;
 
     private bool spawningAliens;
+	private bool waveEnded;
 
     //PublicProperties-------------------------------------------------------------------------------------------------------------------------------
 
@@ -72,14 +73,25 @@ public class AlienManager : SerializableSingleton<AlienManager>
     /// </summary>
     public List<Alien> Aliens { get => aliens; }
 
-    //Complex Public Properties
+	/// <summary>
+	/// The wave the player is currently in
+	/// </summary>
+	public int CurrentWave { get => currentWave; }
 
-    /// <summary>
-    /// Percentage of waves completed in the current night, plus a portion of the current wave equal to the percentage of aliens killed in the current wave.
-    /// E.g. if there's three waves, one wave has been completed and the second wave is halfway done, should return 0.5f.
-    /// E.g. if there's three waves, two are completed and the third is halfway through, should return 0.83f.
-    /// </summary>
-    public float AlienKillProgress
+	/// <summary>
+	/// The wave the player is currently in
+	/// </summary>
+	public int WavesRemaining { get => (int)wavesPerNight - currentWave; }
+
+	//Complex Public Properties
+
+
+	/// <summary>
+	/// Percentage of waves completed in the current night, plus a portion of the current wave equal to the percentage of aliens killed in the current wave.
+	/// E.g. if there's three waves, one wave has been completed and the second wave is halfway done, should return 0.5f.
+	/// E.g. if there's three waves, two are completed and the third is halfway through, should return 0.83f.
+	/// </summary>
+	public float AlienKillProgress
     {
         get
         {
@@ -162,25 +174,33 @@ public class AlienManager : SerializableSingleton<AlienManager>
                 MapManager.Instance.ResetCurrentAlienSpawnPoints();
                 yield return StartCoroutine(SortSpawnPointsByAngle());
             }
-            else if (
-                spawnableStages.Contains(currentStage)
-                && aliens.Count == 0
-                && !ClockManager.Instance.Daytime
-                && Time.time - timeOfLastDeath > waveDelay
-                && currentWave < wavesPerNight
-            )
-            {
-                loopStopwatch.Restart();
 
-                if (currentStage != EStage.Combat)
-                {
-                    currentWave++;
-                }
+			else if (spawnableStages.Contains(currentStage) && !ClockManager.Instance.Daytime && aliens.Count == 0)
+			{
+				if (!waveEnded && currentWave > 0)
+				{
+					//End the wave
+					RatioManager.Instance.EndWave();
+					waveEnded = true;
+				}
 
-                yield return StartCoroutine(SpawnAliens(currentStage));
-                MapManager.Instance.MajorityAlienSpawnPoints.Clear();
-                MapManager.Instance.MinorityAlienSpawnPoints.Clear();
-            }            
+				if (Time.time - timeOfLastDeath > waveDelay && currentWave < wavesPerNight)
+				{
+					//If conditions for starting the next wave is met, begin a new wave
+					loopStopwatch.Restart();
+
+					if (currentStage != EStage.Combat)
+					{
+						currentWave++;
+					}
+
+					RatioManager.Instance.StartWave();
+					waveEnded = false;
+					yield return StartCoroutine(SpawnAliens(currentStage));
+					MapManager.Instance.MajorityAlienSpawnPoints.Clear();
+					MapManager.Instance.MinorityAlienSpawnPoints.Clear();
+				}
+			}
 
             yield return null;
         }
