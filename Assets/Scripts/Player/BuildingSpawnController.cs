@@ -168,13 +168,12 @@ public class BuildingSpawnController : SerializableSingleton<BuildingSpawnContro
             }
 
             //Debug.Log($"BuildingSpawningController.CheckBuildingSpawning(), {heldBuilding}.transform.position is {heldBuilding.transform.position}");
-
-            bool placementValid = heldBuilding.IsPlacementValid();
-            bool resourcesAvailable = CheckResourcesAvailable();
-            //TODO: check if all the methods below should be asking for "radius" or "diameter"
+            bool? resourcesAvailable;
+            bool? validPosition;
+            bool canPlace = heldBuilding.CanPlace(out resourcesAvailable, out validPosition);
 
             //Place it or cancel building it
-            if (placeBuilding && resourcesAvailable && placementValid)
+            if (placeBuilding && canPlace)
             {
                 //Debug.Log($"BuildingSpawningController(), placeBuilding successful ({heldBuilding}) (start), building collider position is {heldBuilding.Collider.position} (world) / {heldBuilding.Collider.localPosition} (local), building model position is {heldBuilding.Model.position} (world) / {heldBuilding.Model.localPosition} (local)");
                 console.SubmitCustomMessage($"Placement successful. Constructing {heldBuilding.ConsoleName}.", false, 0);
@@ -191,41 +190,29 @@ public class BuildingSpawnController : SerializableSingleton<BuildingSpawnContro
                 placeBuilding = false;
                 cancelBuilding = false;                
             }
-            else if (cancelBuilding || (placeBuilding && (!resourcesAvailable || !placementValid)))
+            else if (cancelBuilding || (placeBuilding && !canPlace))
             {
                 if (placeBuilding)
                 {
                     AudioManager.Instance.PlaySound(AudioManager.ESound.Negative_UI);
                     string errorMessage = $"<Cannot build {heldBuilding.ConsoleName}.>";
 
-                    if (!placementValid)
+                    if (validPosition == null && resourcesAvailable == null)
                     {
-                        errorMessage += "~<- Invalid location.>";
+                        errorMessage = $"<- Cause: building is not active OR building is already placed OR unknown.>";
                     }
-
-                    if (ResourceManager.Instance.Ore < heldBuilding.OreCost)
+                    else
                     {
-                        errorMessage += "~<- Insufficient +minerals&.>";
-                    }
+                        if (validPosition != null && !validPosition.Value) errorMessage += "~<- Invalid location.>";
 
-                    if (ResourceManager.Instance.PowerSupply < ResourceManager.Instance.PowerConsumption + heldBuilding.PowerConsumption)
-                    {
-                        errorMessage += "~<- Insufficient [power].>";
-                    }
-
-                    if (ResourceManager.Instance.WaterSupply < ResourceManager.Instance.WaterConsumption + heldBuilding.WaterConsumption)
-                    {
-                        errorMessage += "~<- Insufficient /water\\.>";
-                    }
-
-                    if (ResourceManager.Instance.PlantsSupply < ResourceManager.Instance.PlantsConsumption + heldBuilding.PlantsConsumption)
-                    {
-                        errorMessage += "~<- Insufficient {plants}.>";
-                    }
-
-                    if (ResourceManager.Instance.PlantsSupply < ResourceManager.Instance.PlantsConsumption + heldBuilding.GasConsumption)
-                    {
-                        errorMessage += "~<- Insufficient @gas$.>";
+                        if (resourcesAvailable != null && !resourcesAvailable.Value)
+                        {
+                            if (ResourceManager.Instance.Ore < heldBuilding.OreCost) errorMessage += "~<- Insufficient +minerals&.>";
+                            if (ResourceManager.Instance.PowerSupply < ResourceManager.Instance.PowerConsumption + heldBuilding.PowerConsumption)    errorMessage += "~<- Insufficient [power].>";
+                            if (ResourceManager.Instance.WaterSupply < ResourceManager.Instance.WaterConsumption + heldBuilding.WaterConsumption)    errorMessage += "~<- Insufficient /water\\.>";
+                            if (ResourceManager.Instance.PlantsSupply < ResourceManager.Instance.PlantsConsumption + heldBuilding.PlantsConsumption) errorMessage += "~<- Insufficient {plants}.>";
+                            if (ResourceManager.Instance.PlantsSupply < ResourceManager.Instance.PlantsConsumption + heldBuilding.GasConsumption)    errorMessage += "~<- Insufficient @gas$.>";
+                        }
                     }
 
                     console.SubmitCustomMessage(errorMessage, true, 0);
@@ -339,19 +326,6 @@ public class BuildingSpawnController : SerializableSingleton<BuildingSpawnContro
 
         result += placed ? 0.5f : 0.67f;
         return result;
-    }
-
-    /// <summary>
-    /// Checks if there are enough resources available to build and maintain this building.
-    /// </summary>
-    /// <returns>Whether there are enough resources available to build and maintain this building.</returns>
-    private bool CheckResourcesAvailable()
-    {
-        return ResourceManager.Instance.Ore >= heldBuilding.OreCost
-            && (ResourceManager.Instance.PowerSupply >= ResourceManager.Instance.PowerConsumption + heldBuilding.PowerConsumption || heldBuilding.PowerConsumption == 0)
-            && (ResourceManager.Instance.PlantsSupply >= ResourceManager.Instance.PlantsConsumption + heldBuilding.PlantsConsumption || heldBuilding.PlantsConsumption == 0)
-            && (ResourceManager.Instance.WaterSupply >= ResourceManager.Instance.WaterConsumption + heldBuilding.WaterConsumption || heldBuilding.WaterConsumption == 0)
-            && (ResourceManager.Instance.GasSupply >= ResourceManager.Instance.GasConsumption + heldBuilding.GasConsumption || heldBuilding.GasConsumption == 0);
     }
 
     /// <summary>
