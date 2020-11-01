@@ -5,6 +5,7 @@ using UnityEngine.Events;
 public class TerraformingUI : SerializableSingleton<TerraformingUI>
 {
 	[SerializeField] private GameObject mainPanel;
+	[SerializeField] private GameObject greyPanel;
 	private int maxMultiplier;
 	private int maxBarValue;
 	private int[] currentRatio = new int[3] { 0, 0 ,0 };
@@ -82,11 +83,14 @@ public class TerraformingUI : SerializableSingleton<TerraformingUI>
 	public void DisplayUI(bool state)
 	{
 		mainPanel.SetActive(state);
+		greyPanel.SetActive(state);
 
 		if (state == true)
 		{
 			updateCurrentRatio?.Invoke(currentRatio);
 			updateTargetRatio?.Invoke(targetRatio);
 		}
+
+		Time.timeScale = state ? 0 : 1;
 	}
 }
