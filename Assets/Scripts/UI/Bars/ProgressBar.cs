@@ -12,7 +12,8 @@ public class ProgressBar : MonoBehaviour
 
     private void Awake() {
         image.fillAmount = curVal;
-    }
+		barMax = RatioManager.Instance.WinAmount;
+	}
 
     private void Update() {
         image.fillAmount = curVal / barMax;

@@ -1,10 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class RatioManager : SerializableSingleton<RatioManager>
 {
 	[SerializeField] TerraformingUI terraformingUI;
+	[SerializeField] ProgressBar progressBar;
+
+	[SerializeField] private float winAmount;
 
 	[SerializeField] private int[] currentRatio = { 0, 0, 0 };
 	[SerializeField] private int[] targetRatio = { 0, 0, 0 };
@@ -17,6 +21,18 @@ public class RatioManager : SerializableSingleton<RatioManager>
 
 	float currentMultiplier = 1;
 	float storedPoints = 0;
+
+	public UnityAction<bool> updateStoreDisperse;
+
+	public float WinAmount { get => winAmount; }
+	public float PointsStored { get => storedPoints; }
+	public float DisperseBonus { get => (currentMultiplier - 1) * 100f; }
+
+	protected override void Awake()
+	{
+		base.Awake();
+		progressBar.SetMax(winAmount);
+	}
 
 	private void Start()
 	{
@@ -122,26 +138,29 @@ public class RatioManager : SerializableSingleton<RatioManager>
 	/// Stores the ratio at the start of the wave for comparison at the end
 	/// </summary>
 	/// <param name="ratios"></param>
-	public void StartWave(int[] ratios)
+	public void StartWave(/*int[] ratios*/)
 	{
-		waveStartRatio = ratios;
+		waveStartRatio = currentRatio/*ratios*/;
 	}
 
 	/// <summary>
 	/// Calculates changes in the multiplier based on wave performance
 	/// </summary>
 	/// <param name="ratios"></param>
-	public void EndWave(int[] ratios)
+	public void EndWave(/*int[] ratios*/)
 	{
-
+		Debug.Log(waveStartRatio[0]);
+		Debug.Log(currentRatio[0]);
 		// Are any building counts lower than at the start of the wave
-		bool isCountLower = (waveStartRatio[0] > ratios[0] ||
-							 waveStartRatio[1] > ratios[1] ||
-							 waveStartRatio[2] > ratios[2]);
+		bool isCountLower = (waveStartRatio[0] > currentRatio[0] ||
+							 waveStartRatio[1] > currentRatio[1] ||
+							 waveStartRatio[2] > currentRatio[2]);
 		if (isCountLower)
 			ClearMultiplier();
 		else
 			IncreaseMultiplier();
+
+		updateStoreDisperse?.Invoke(true);
 	}
 
 	/// <summary>
@@ -149,7 +168,7 @@ public class RatioManager : SerializableSingleton<RatioManager>
 	/// Must be called after EndWave
 	/// </summary>
 	/// <returns></returns>
-	public float DispersePoints()
+	public void DispersePoints()
 	{
 		float pointsThisWave = ScoreRatioAlignment();
 
@@ -157,7 +176,7 @@ public class RatioManager : SerializableSingleton<RatioManager>
 		storedPoints = 0;
 		ClearMultiplier();
 
-		return returnVal;
+		progressBar.SetBarValue(returnVal);
 	}
 
 	/// <summary>
