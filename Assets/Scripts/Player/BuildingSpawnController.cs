@@ -29,6 +29,7 @@ public class BuildingSpawnController : SerializableSingleton<BuildingSpawnContro
     private bool spawnBuilding;
     private bool placeBuilding;
     private bool cancelBuilding;
+    private bool firstFrameForBuilding;
     private LayerMask groundLayerMask;
 
     //Other
@@ -141,6 +142,7 @@ public class BuildingSpawnController : SerializableSingleton<BuildingSpawnContro
             //Instantiate the appropriate building, positioning it properly.
             if (heldBuilding == null)
             {
+                firstFrameForBuilding = true;
                 heldBuilding = BuildingFactory.Instance.Get(selectedBuildingType);
                 heldBuilding.transform.position = MousePositionToPotentialBuildingPosition(transform.position, heldBuilding.Size.DiameterRoundedUp(null));
                 ChangeTooltip(selectedBuildingType);
@@ -151,6 +153,7 @@ public class BuildingSpawnController : SerializableSingleton<BuildingSpawnContro
             //Instantiate the appropriate building and postion it properly, replacing the old one.
             else if (heldBuilding.BuildingType != selectedBuildingType)
             {
+                firstFrameForBuilding = true;
                 Vector3 pos = MousePositionToPotentialBuildingPosition(heldBuilding.transform.position, heldBuilding.Size.DiameterRoundedUp(null));
                 BuildingFactory.Instance.Destroy(heldBuilding, false, false);
                 heldBuilding = BuildingFactory.Instance.Get(selectedBuildingType);
@@ -173,24 +176,7 @@ public class BuildingSpawnController : SerializableSingleton<BuildingSpawnContro
             bool canPlace = heldBuilding.CanPlace(out resourcesAvailable, out validPosition);
 
             //Place it or cancel building it
-            if (placeBuilding && canPlace)
-            {
-                //Debug.Log($"BuildingSpawningController(), placeBuilding successful ({heldBuilding}) (start), building collider position is {heldBuilding.Collider.position} (world) / {heldBuilding.Collider.localPosition} (local), building model position is {heldBuilding.Model.position} (world) / {heldBuilding.Model.localPosition} (local)");
-                console.SubmitCustomMessage($"Placement successful. Constructing {heldBuilding.ConsoleName}.", false, 0);
-
-                Vector3 spawnPos = heldBuilding.transform.position;
-                spawnPos.y = 0.02f;
-                PipeManager.Instance.RegisterPipeBuilding(spawnPos);
-                spawnPos.y = GetStandardisedPlacementHeight(spawnPos, true);
-                //Debug.Log($"BuildingSpawningController(), placeBuilding ({heldBuilding}) successful (ready to place), new spawnPos is {spawnPos}, building collider position is {heldBuilding.Collider.position} (world) / {heldBuilding.Collider.localPosition} (local), building model position is {heldBuilding.Model.position} (world) / {heldBuilding.Model.localPosition} (local)");
-                heldBuilding.Place(spawnPos);
-
-                heldBuilding = null;
-                spawnBuilding = false;
-                placeBuilding = false;
-                cancelBuilding = false;                
-            }
-            else if (cancelBuilding || (placeBuilding && !canPlace))
+            if (cancelBuilding || (placeBuilding && !canPlace))
             {
                 if (placeBuilding)
                 {
@@ -208,10 +194,10 @@ public class BuildingSpawnController : SerializableSingleton<BuildingSpawnContro
                         if (resourcesAvailable != null && !resourcesAvailable.Value)
                         {
                             if (ResourceManager.Instance.Ore < heldBuilding.OreCost) errorMessage += "~<- Insufficient +minerals&.>";
-                            if (ResourceManager.Instance.PowerSupply < ResourceManager.Instance.PowerConsumption + heldBuilding.PowerConsumption)    errorMessage += "~<- Insufficient [power].>";
-                            if (ResourceManager.Instance.WaterSupply < ResourceManager.Instance.WaterConsumption + heldBuilding.WaterConsumption)    errorMessage += "~<- Insufficient /water\\.>";
+                            if (ResourceManager.Instance.PowerSupply < ResourceManager.Instance.PowerConsumption + heldBuilding.PowerConsumption) errorMessage += "~<- Insufficient [power].>";
+                            if (ResourceManager.Instance.WaterSupply < ResourceManager.Instance.WaterConsumption + heldBuilding.WaterConsumption) errorMessage += "~<- Insufficient /water\\.>";
                             if (ResourceManager.Instance.PlantsSupply < ResourceManager.Instance.PlantsConsumption + heldBuilding.PlantsConsumption) errorMessage += "~<- Insufficient {plants}.>";
-                            if (ResourceManager.Instance.PlantsSupply < ResourceManager.Instance.PlantsConsumption + heldBuilding.GasConsumption)    errorMessage += "~<- Insufficient @gas$.>";
+                            if (ResourceManager.Instance.PlantsSupply < ResourceManager.Instance.PlantsConsumption + heldBuilding.GasConsumption) errorMessage += "~<- Insufficient @gas$.>";
                         }
                     }
 
@@ -219,6 +205,28 @@ public class BuildingSpawnController : SerializableSingleton<BuildingSpawnContro
                 }
 
                 BuildingFactory.Instance.Destroy(heldBuilding, false, false);
+                heldBuilding = null;
+                spawnBuilding = false;
+                placeBuilding = false;
+                cancelBuilding = false;
+            }
+            else if (firstFrameForBuilding)
+            {
+                firstFrameForBuilding = false;
+                //if (placeBuilding && canPlace) Debug.Log($"Blocking placement during first frame for building.");
+            }
+            else if (placeBuilding && canPlace)
+            {
+                //Debug.Log($"BuildingSpawningController(), placeBuilding successful ({heldBuilding}) (start), building collider position is {heldBuilding.Collider.position} (world) / {heldBuilding.Collider.localPosition} (local), building model position is {heldBuilding.Model.position} (world) / {heldBuilding.Model.localPosition} (local)");
+                console.SubmitCustomMessage($"Placement successful. Constructing {heldBuilding.ConsoleName}.", false, 0);
+
+                Vector3 spawnPos = heldBuilding.transform.position;
+                spawnPos.y = 0.02f;
+                PipeManager.Instance.RegisterPipeBuilding(spawnPos);
+                spawnPos.y = GetStandardisedPlacementHeight(spawnPos, true);
+                //Debug.Log($"BuildingSpawningController(), placeBuilding ({heldBuilding}) successful (ready to place), new spawnPos is {spawnPos}, building collider position is {heldBuilding.Collider.position} (world) / {heldBuilding.Collider.localPosition} (local), building model position is {heldBuilding.Model.position} (world) / {heldBuilding.Model.localPosition} (local)");
+                heldBuilding.Place(spawnPos);
+
                 heldBuilding = null;
                 spawnBuilding = false;
                 placeBuilding = false;
@@ -289,34 +297,11 @@ public class BuildingSpawnController : SerializableSingleton<BuildingSpawnContro
     private float GetStandardisedPlacementHeight(Vector3 pos, bool placed)
     {
         float result = 3;
-        //float errorMargin = 0.01f;
         Vector3 raycastPos = new Vector3(pos.x, 4, pos.z);
         RaycastHit hit;
 
         if (Physics.Raycast(raycastPos, Vector3.down, out hit, 20, groundLayerMask))
         {
-            ////Debug.Log($"BuildingSpawningController.GetStandardisedPlacementHeight() raycast from {raycastPos} hit {hit.collider} at {hit.point}");
-
-            //if (hit.point.y >= 2.5f - errorMargin)
-            //{
-            //    //Debug.Log($"BuildingSpawningController.GetStandardisedPlacementHeight(), hit at ~2.5f, setting height to 2.5f");
-            //    result = 2.5f;
-            //}
-            //else if (hit.point.y >= -errorMargin)
-            //{
-            //    //Debug.Log($"BuildingSpawningController.GetStandardisedPlacementHeight(), hit at ~0f, setting height to 0f");
-            //    result = 0;
-            //}
-            //else if (hit.point.y >= -2.5f - errorMargin)
-            //{
-            //    //Debug.Log($"BuildingSpawningController.GetStandardisedPlacementHeight(), hit at ~-2.5f, setting height to -2.5f");
-            //    result = -2.5f;
-            //}
-            //else
-            //{
-            //    Debug.LogError($"{this}.SnapBuildingToGrid() cannot account for a screen-to-ground raycast of height-snapped position {raycastPos}. RaycastHit.point is {hit.point}");
-            //}
-
             result = hit.point.y;
         }
         else
