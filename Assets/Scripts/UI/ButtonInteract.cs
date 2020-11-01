@@ -57,7 +57,7 @@ public class ButtonInteract : MonoBehaviour
 		float currentFade = 0f;
 		while (currentFade < fadeDuration)
 		{
-			currentFade += Time.deltaTime;
+			currentFade += Time.unscaledDeltaTime;
 			image.color = Color.Lerp(image.color, color, currentFade / fadeDuration);
 			yield return null;
 		}
