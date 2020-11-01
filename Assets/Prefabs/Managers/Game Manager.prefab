@@ -210,7 +210,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6577456260396280556}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 82548c590736cd2438ed6451685a0151, type: 3}
   m_Name: 
@@ -453,11 +453,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   terraformingUI: {fileID: 0}
   progressBar: {fileID: 0}
-  winAmount: 0
+  winAmount: 100
   currentRatio: 000000000000000000000000
   targetRatio: 010000000100000001000000
   pointsPerRatio: 5
-  multiplierIncreasePerWave: 0
+  multiplierIncreasePerWave: 0.2
   maxRatioValue: 3
 --- !u!114 &4078778705944399297
 MonoBehaviour:
