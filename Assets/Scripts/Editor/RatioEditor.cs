@@ -24,9 +24,9 @@ public class RatioEditor : Editor
 
 		GUILayout.EndHorizontal();
 
-		if (GUILayout.Button("Calculate Score"))
+		if (GUILayout.Button("Get Score"))
 		{
-			ratioManager.ScoreRatioAlignment();
+			Debug.Log($"Score calculated: {ratioManager.ScoreRatioAlignment()}");
 		}
 	}
 }

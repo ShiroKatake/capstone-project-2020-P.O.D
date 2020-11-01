@@ -8,7 +8,6 @@ public class ProgressBar : MonoBehaviour
 {
     [SerializeField] private Image image;
     private float barMax = 1;
-    [SerializeField] private float curVal = 0;
 
     public void SetMax(float val){
         barMax = val;
@@ -16,6 +15,7 @@ public class ProgressBar : MonoBehaviour
 
     public void SetBarValue(float value){
         if (IsBarWithinBounds(value)){
+			Debug.Log($"Value received: {value}, Max bar: {barMax}");
 			image.fillAmount = value / barMax;
         } else if (value > barMax){
 			value = barMax;
