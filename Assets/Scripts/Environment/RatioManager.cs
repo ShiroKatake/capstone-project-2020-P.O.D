@@ -20,8 +20,8 @@ public class RatioManager : SerializableSingleton<RatioManager>
 	private int[] waveStartRatio;
 
 	float currentMultiplier = 1;
-	public float storedPoints = 0;
-	public float pointsThisWave;
+	float storedPoints = 0;
+	float pointsThisWave;
 
 	public UnityAction<bool> updateStoreDisperse;
 
@@ -192,6 +192,7 @@ public class RatioManager : SerializableSingleton<RatioManager>
 		ClearMultiplier();
 
 		progressBar.SetBarValue(returnVal);
+		//Debug.Log("Disperse");
 	}
 
 	/// <summary>
@@ -200,6 +201,7 @@ public class RatioManager : SerializableSingleton<RatioManager>
 	public void StorePoints()
 	{
 		storedPoints += ScoreRatioAlignment();
+		//Debug.Log("Store");
 	}
 
 }

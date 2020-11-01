@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class StoreDisperseUI : MonoBehaviour
 {
 	[SerializeField] GameObject mainPanel;
-	[SerializeField] Button storeButton;
+	[SerializeField] ButtonInteract storeButton;
 
     // Start is called before the first frame update
     void Start()
@@ -30,6 +30,6 @@ public class StoreDisperseUI : MonoBehaviour
 	private void DisplayUI(bool state)
 	{
 		mainPanel.SetActive(state);
-		storeButton.interactable = AlienManager.Instance.WavesRemaining == 0;
+		storeButton.OnInteractableChanged(storeButton.GetComponent<Button>().interactable = AlienManager.Instance.WavesRemaining != 0);
 	}
 }
