@@ -26,8 +26,8 @@ public class RatioManager : SerializableSingleton<RatioManager>
 	public UnityAction<bool> updateStoreDisperse;
 
 	public float WinAmount { get => winAmount; }
-	public float PointsStored { get => Mathf.Round(storedPoints); }
-	public float PointsGained { get => Mathf.Round(pointsThisWave); }
+	public float PointsStored { get => storedPoints; }
+	public float PointsGained { get => pointsThisWave; }
 	public float DisperseBonus { get => Mathf.Round((currentMultiplier - 1f) * 100f); }
 
 	protected override void Awake()
@@ -94,7 +94,7 @@ public class RatioManager : SerializableSingleton<RatioManager>
 
 		//Debug.Log(scoredPoints);
 
-		return scoredPoints;
+		return Mathf.Round(scoredPoints);
 	}
 
 	private void IncreaseMultiplier()
