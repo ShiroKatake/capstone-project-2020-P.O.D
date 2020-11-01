@@ -77,6 +77,7 @@ public class SceneLoader : SerializableSingleton<SceneLoader>
         yield return StartCoroutine(Fade(false));
         canvas.SetActive(false);
         loadingScene = false;
+        if (Time.timeScale != 1) Time.timeScale = 1;        
     }
 
     /// <summary>
@@ -101,6 +102,7 @@ public class SceneLoader : SerializableSingleton<SceneLoader>
         yield return StartCoroutine(Fade(false));
         canvas.SetActive(false);
         loadingScene = false;
+        if (Time.timeScale != 1) Time.timeScale = 1;
     }
 
     /// <summary>
