@@ -49,7 +49,15 @@ public class ResourceManager : SerializableSingleton<ResourceManager>
     /// <summary>
     /// How much ore the player has collected
     /// </summary>
-    public int Ore { get => ore; set => ore = value; }
+    public int Ore {
+		get => ore;
+		set
+		{
+			ore = value;
+			resourcesUpdated?.Invoke();
+			CheckResourceSupply();
+		}
+	}
 
     //Complex Public Properties--------------------------------------------------------------------                                                    
 
