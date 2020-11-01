@@ -17,7 +17,7 @@ public class UIBuildingBar : MonoBehaviour
 
 	private void Awake()
 	{
-		ResourceManager.Instance.resourceStatesUpdated += UpdateButton;
+		ResourceManager.Instance.resourcesUpdated += UpdateButton;
 		UpdateButton();
 	}
 
@@ -28,6 +28,7 @@ public class UIBuildingBar : MonoBehaviour
 			bool interactable =
 				b.AssociatedBuilding.OreCost <= ResourceManager.Instance.Ore && ResourceManager.Instance.Ore > 0
 				&& b.AssociatedBuilding.PowerConsumption <= ResourceManager.Instance.SurplusPower && ResourceManager.Instance.SurplusPower > 0
+				&& b.AssociatedBuilding.GasConsumption <= ResourceManager.Instance.SurplusGas && ResourceManager.Instance.SurplusGas > 0
 				&& b.AssociatedBuilding.PlantsConsumption <= ResourceManager.Instance.SurplusPlants && ResourceManager.Instance.SurplusPlants > 0
 				&& b.AssociatedBuilding.WaterConsumption <= ResourceManager.Instance.SurplusWater && ResourceManager.Instance.SurplusWater > 0;
 			b.Btn.GetComponent<UIElementStatusManager>().Interactable = interactable;

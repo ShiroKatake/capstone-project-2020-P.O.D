@@ -41,7 +41,6 @@ public class ResourceManager : SerializableSingleton<ResourceManager>
     private bool gasAvailable = false;
     private Player playerInputManager;
 
-	public UnityAction resourceStatesUpdated;
 	public UnityAction resourcesUpdated;
 
     //Basic Public Properties----------------------------------------------------------------------                                                                                                                          
@@ -354,8 +353,6 @@ public class ResourceManager : SerializableSingleton<ResourceManager>
                 Debug.Log("Restore Buildings");
                 BuildingManager.Instance.RestoreBuildings(powerAvailable, waterAvailable, plantsAvailable, gasAvailable);
             }
-
-			resourceStatesUpdated?.Invoke();
 		}
     }
 }
