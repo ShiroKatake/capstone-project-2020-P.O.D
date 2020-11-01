@@ -30,7 +30,7 @@ public class ButtonInteract : MonoBehaviour
     private bool interactable;
     private bool highlighted;
 	private float lerpPerc;
-	IEnumerator currnetCoroutine;
+	IEnumerator currentCoroutine;
 
 	private void Awake()
     {
@@ -48,19 +48,8 @@ public class ButtonInteract : MonoBehaviour
 
 	public void FadeToColor(Image image, Color color)
 	{
-		//Graphic graphic = image.GetComponent<Graphic>();
-		//graphic.CrossFadeColor(color, fadeDuration, false, false);
-		if (image.color != color)
-		{
-			if (currnetCoroutine != null)
-			{
-				StopCoroutine(currnetCoroutine);
-				currnetCoroutine = null;
-			}
-			currnetCoroutine = FadeImageToColor(image, color);
-			StartCoroutine(currnetCoroutine);
-			//Debug.Log($"Fading to {color}");
-		}
+		currentCoroutine = FadeImageToColor(image, color);
+		StartCoroutine(currentCoroutine);
 	}
 
 	private IEnumerator FadeImageToColor(Image image, Color color)
