@@ -293,21 +293,22 @@ public class Alien : MonoBehaviour, IMessenger
         target = selectedTarget;
         targetHealth = target.GetComponentInParent<Health>();   //Gets Health from target or any of its parents that has it.
         targetSize = target.GetComponentInParent<Size>();   //Gets Size from target or any of its parents that has it.
-
-        PositionData data = MapManager.Instance.GetPositionData(transform.position);
+        timeOfLastMove = Time.time;
+        lastPosition = transform.position;
 
         if (!health.IsDead())
         {
+            PositionData data = MapManager.Instance.GetPositionData(transform.position);
+            NavMeshPath newPath = null;
+
             if (selectedTarget == Tower.Instance.transform && data != null && data.Paths.ContainsKey(type) && data.Paths[type] != null)
             {
                 //Debug.Log($"{this}.SetTarget(), getting nav mesh path to cryo egg");
-                navMeshAgent.SetPath(data.Paths[type]);
+                newPath = data.Paths[type];
             }
             else
             {
                 //Debug.Log($"{this}.SetTarget(), setting {target}'s position as nav mesh agent destination");
-                NavMeshPath newPath = null;
-
                 foreach (Alien a in visibleAliens)
                 {
                     if (a.Target == target && a.NavMeshAgent.hasPath && Vector3.Distance(a.NavMeshAgent.destination, a.Target.position) < 0.1f)
@@ -316,15 +317,15 @@ public class Alien : MonoBehaviour, IMessenger
                         break;
                     }
                 }
-
-                if (newPath == null)
-                {
-                    newPath = new NavMeshPath();
-                    navMeshAgent.CalculatePath(target.position, newPath);
-                }
-
-                navMeshAgent.SetPath(newPath);
             }
+
+            if (newPath == null)
+            {
+                newPath = new NavMeshPath();
+                navMeshAgent.CalculatePath(target.position, newPath);
+            }
+
+            navMeshAgent.SetPath(newPath);
         }
     }
 
@@ -359,25 +360,13 @@ public class Alien : MonoBehaviour, IMessenger
         if (Vector3.SqrMagnitude(PositionAtSameHeight(target.position) - transform.position) > ((attackRange + targetRadius) * (attackRange + targetRadius)))
         {
             AudioManager.Instance.PlaySound(AudioManager.ESound.Alien_Moves, gameObject);
-
-            if (navMeshAgent.speed != speed)
-            {
-                navMeshAgent.speed = speed;
-            }
-
-            if (navMeshAgent.stoppingDistance != attackRange * 0.67f + targetRadius)
-            {
-                navMeshAgent.stoppingDistance = attackRange * 0.67f + targetRadius;
-            }
-
+            if (navMeshAgent.speed != speed) navMeshAgent.speed = speed;
+            if (navMeshAgent.stoppingDistance != attackRange * 0.67f + targetRadius) navMeshAgent.stoppingDistance = attackRange * 0.67f + targetRadius;
             CheckStalling();
         }
         else
         {
-            if (navMeshAgent.speed != 0)
-            {
-                navMeshAgent.speed = 0;
-            }
+            if (navMeshAgent.speed != 0) navMeshAgent.speed = 0;
 
             if (Time.time - timeOfLastAttack > attackCooldown)
             {
@@ -392,7 +381,11 @@ public class Alien : MonoBehaviour, IMessenger
     /// </summary>
     private void CheckStalling()
     {
-        if (transform.position != lastPosition && Vector3.Distance(transform.position, lastPosition) > 1)
+        float targetRadius = targetSize.Radius(transform.position);
+        float minDistForOverride = attackRange * 2f + targetRadius;
+
+        if ((transform.position != lastPosition && Vector3.SqrMagnitude(lastPosition - transform.position) > 1)  //Because 1 * 1 is 1
+            || Vector3.SqrMagnitude(target.transform.position - transform.position) <= minDistForOverride * minDistForOverride)
         {
             timeOfLastMove = Time.time;
             lastPosition = transform.position;
@@ -400,7 +393,7 @@ public class Alien : MonoBehaviour, IMessenger
 
         if (Time.time - timeOfLastMove > maxStall)
         {
-            Debug.Log($"{this} has stialled, burrowing into the ground");
+            Debug.Log($"{this} has stalled, burrowing into the ground");
             StartCoroutine(Burrow());
         }
     }
