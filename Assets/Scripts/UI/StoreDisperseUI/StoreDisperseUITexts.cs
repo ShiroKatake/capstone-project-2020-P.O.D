@@ -56,6 +56,6 @@ public class StoreDisperseUITexts : MonoBehaviour
 	{
 		Rebuild();
 		yield return new WaitForEndOfFrame();
-		//Time.timeScale = 0;
+		Time.timeScale = 0;
 	}
 }
