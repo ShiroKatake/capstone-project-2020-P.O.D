@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// The stage of the game where the player is just left to do their own thing and play the game.
 /// </summary>
-public class StageSkippedTutorial : SerializableSingleton<StageSkippedTutorial>, IStage
+public class StageSkippedTutorial : PublicInstanceSerializableSingleton<StageSkippedTutorial>, IStage
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
@@ -14,7 +14,8 @@ public class StageSkippedTutorial : SerializableSingleton<StageSkippedTutorial>,
     [Header("General UI")]
     [SerializeField] private UIElementStatusManager uiBorder;
     [SerializeField] private UIElementStatusManager console;
-    [SerializeField] private UIElementStatusManager buildingAndResourcesBar;
+    [SerializeField] private UIElementStatusManager buildingBar;
+    [SerializeField] private UIElementStatusManager resourcesBar;
     [SerializeField] private UIElementStatusManager miniMapBorder;
     [SerializeField] private UIElementStatusManager miniMap;
     [SerializeField] private UIElementStatusManager clock;
@@ -99,13 +100,15 @@ public class StageSkippedTutorial : SerializableSingleton<StageSkippedTutorial>,
     {
         uiBorder.Visible = true;
         console.Visible = true;
-        buildingAndResourcesBar.Visible = true;
-        miniMapBorder.Visible = true;
+        buildingBar.Visible = true;
+		resourcesBar.Visible = true;
+		miniMapBorder.Visible = true;
 
         while (!uiBorder.FinishedFlickeringIn
             || !console.FinishedFlickeringIn
-            || !buildingAndResourcesBar.FinishedFlickeringIn
-            || !miniMapBorder.FinishedFlickeringIn)
+            || !buildingBar.FinishedFlickeringIn
+			|| !resourcesBar.FinishedFlickeringIn
+			|| !miniMapBorder.FinishedFlickeringIn)
         {
             yield return null;
         }
@@ -126,34 +129,34 @@ public class StageSkippedTutorial : SerializableSingleton<StageSkippedTutorial>,
         yield return new WaitForSeconds(0.15f);
         progressBar.Visible = true;
         fusionReactor.Visible = true;
-        fusionReactor.Interactable = true;
+        fusionReactor.Interactable = false;
         yield return new WaitForSeconds(0.15f);
         iceDrill.Visible = true;
-        iceDrill.Interactable = true;
+        iceDrill.Interactable = false;
         yield return new WaitForSeconds(0.15f);
         harvester.Visible = true;
-        harvester.Interactable = true;
+        harvester.Interactable = false;
         yield return new WaitForSeconds(0.15f);
         gasPump.Visible = true;
-        gasPump.Interactable = true;
+        gasPump.Interactable = false;
         yield return new WaitForSeconds(0.15f);
         boiler.Visible = true;
-        boiler.Interactable = true;
+        boiler.Interactable = false;
         humidityBar.Visible = true;
         yield return new WaitForSeconds(0.15f);
         greenhouse.Visible = true;
-        greenhouse.Interactable = true;
+        greenhouse.Interactable = false;
         biodiversityBar.Visible = true;
         yield return new WaitForSeconds(0.15f);
         incinerator.Visible = true;
-        incinerator.Interactable = true;
+        incinerator.Interactable = false;
         atmosphereBar.Visible = true;
         yield return new WaitForSeconds(0.15f);
         shotgunTurret.Visible = true;
-        shotgunTurret.Interactable = true;
+        shotgunTurret.Interactable = false;
         yield return new WaitForSeconds(0.15f);
         machineGunTurret.Visible = true;
-        machineGunTurret.Interactable = true;
+        machineGunTurret.Interactable = false;
         yield return new WaitForSeconds(0.15f);
     }
 

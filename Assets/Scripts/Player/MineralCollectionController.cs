@@ -7,7 +7,7 @@ using UnityEngine.Events;
 /// <summary>
 /// A player script for collecting minerals.
 /// </summary>
-public class MineralCollectionController : SerializableSingleton<MineralCollectionController>
+public class MineralCollectionController : PublicInstanceSerializableSingleton<MineralCollectionController>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
@@ -23,6 +23,7 @@ public class MineralCollectionController : SerializableSingleton<MineralCollecti
 	private bool isOnMineral;
     private LayerMask mineralsLayerMask;
     private bool mining;
+	private Mineral cacheMineral = null;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -52,7 +53,8 @@ public class MineralCollectionController : SerializableSingleton<MineralCollecti
     /// </summary>
     private void Start()
     {
-        playerInputManager = ReInput.players.GetPlayer(GetComponent<PlayerID>().Value);
+        playerInputManager = POD.Instance.PlayerInputManager;
+        //playerInputManager = ReInput.players.GetPlayer(GetComponent<PlayerID>().Value);
     }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
@@ -89,38 +91,59 @@ public class MineralCollectionController : SerializableSingleton<MineralCollecti
 
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, mineralsLayerMask))
             {
-				//Debug.Log("Raycast hit minerals");
 				Mineral mineral = hit.collider.GetComponentInParent<Mineral>();
-				DisplayMineralInfo(mineral);
+
+				//Debug.Log($"Mineral at {mineral.transform.position} is {cacheMineral != mineral} to cache mineral at {cacheMineral?.transform.position}");
+				if (cacheMineral != mineral)
+				{
+                    StopMining();
+                    HideMineralInfo();
+					DisplayMineralInfo(mineral);
+				}
 
 				if (collectMinerals && mineral != null && mineral.OreCount > 0)
                 {
-                    mining = true;
-                    miningBeam.OnMineEnable(mineral.MiningPoint);
+                    if (!mining) StartMining(mineral);                    
                     mineral.Mine();
-                    //Debug.Log($"Raycast hit mineral node. Mined {mined} minerals");
-
-                    AudioManager.Instance.PlaySound(AudioManager.ESound.Mining, this.gameObject);
-                    //ResourceController.Instance.Ore += mined; (Moved this function to Ore.cs)
                 }
-				else
+				else if (mining)
 				{
-                    mining = false;
-					miningBeam.OnMineDisable();
-				}
+                    StopMining();
+                }
 			}
 			else
 			{
-				miningBeam.OnMineDisable();
-				HideMineralInfo();
-                AudioManager.Instance.StopSound(AudioManager.ESound.Mining, this.gameObject);
+                HideMineralInfo();
+                if (mining) StopMining();
             }
         }
         else
         {
-            AudioManager.Instance.StopSound(AudioManager.ESound.Mining, this.gameObject);
+            HideMineralInfo();
+            if (mining) StopMining();
         }
-	}
+    }
+
+    /// <summary>
+    /// Starts the mining beam and mining sound, and sets mining to true.
+    /// </summary>
+    /// <param name="mineral">The mineral the player is mining.</param>
+    private void StartMining(Mineral mineral)
+    {
+        mining = true;
+        miningBeam.OnMineEnable(mineral.MiningPoint);
+        AudioManager.Instance.PlaySound(AudioManager.ESound.Mining, this.gameObject);
+    }
+
+    /// <summary>
+    /// Stops the mining beam and mining sound, and sets mining to false.
+    /// </summary>
+    private void StopMining()
+    {
+        mining = false;
+        miningBeam.OnMineDisable();
+        AudioManager.Instance.StopSound(AudioManager.ESound.Mining, this.gameObject);
+    }
 
 	/// <summary>
 	/// Trigger hovering dialogue box if mouse hovers over the mineral deposit.
@@ -130,6 +153,7 @@ public class MineralCollectionController : SerializableSingleton<MineralCollecti
 		if (!isOnMineral)
 		{
 			HoveringDialogueManager.Instance.ShowDialogue(mineral.GetComponent<HoverDialogueBoxPreset>());
+			cacheMineral = mineral;
 			isOnMineral = true;
 		}
 	}
@@ -142,6 +166,7 @@ public class MineralCollectionController : SerializableSingleton<MineralCollecti
 		if (isOnMineral)
 		{
 			HoveringDialogueManager.Instance.HideDialogue();
+			cacheMineral = null;
 			isOnMineral = false;
 		}
 	}

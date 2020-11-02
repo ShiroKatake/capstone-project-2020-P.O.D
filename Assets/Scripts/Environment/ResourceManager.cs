@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+using Rewired;
 
 /// <summary>
 /// A manager class for resource gathering and usage.
 /// </summary>
-public class ResourceManager : SerializableSingleton<ResourceManager>
+public class ResourceManager : PublicInstanceSerializableSingleton<ResourceManager>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
@@ -25,7 +27,7 @@ public class ResourceManager : SerializableSingleton<ResourceManager>
     [SerializeField] private int gasConsumption;
 
     [Header("Testing")]
-    [SerializeField] private bool getDeveloperResources;
+    [SerializeField] private bool developerResourcesEnabled;
     [SerializeField] private int developerResources;
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
@@ -37,13 +39,24 @@ public class ResourceManager : SerializableSingleton<ResourceManager>
     private bool plantsAvailable = false;
     private bool waterAvailable = false;
     private bool gasAvailable = false;
+    private Player playerInputManager;
+
+	public UnityAction resourcesUpdated;
 
     //Basic Public Properties----------------------------------------------------------------------                                                                                                                          
 
     /// <summary>
     /// How much ore the player has collected
     /// </summary>
-    public int Ore { get => ore; set => ore = value; }
+    public int Ore {
+		get => ore;
+		set
+		{
+			ore = value;
+			resourcesUpdated?.Invoke();
+			CheckResourceSupply();
+		}
+	}
 
     //Complex Public Properties--------------------------------------------------------------------                                                    
 
@@ -60,7 +73,8 @@ public class ResourceManager : SerializableSingleton<ResourceManager>
         set
         {
             gasConsumption = value;
-            CheckResourceSupply();
+			resourcesUpdated?.Invoke();
+			CheckResourceSupply();
         }
     }
 
@@ -77,41 +91,8 @@ public class ResourceManager : SerializableSingleton<ResourceManager>
         set
         {
             gasSupply = value;
-            CheckResourceSupply();
-        }
-    }
-
-    /// <summary>
-    /// How much power the player is consuming per second.
-    /// </summary>
-    public int PlantsConsumption
-    {
-        get
-        {
-            return plantsConsumption;
-        }
-
-        set
-        {
-            plantsConsumption = value;
-            CheckResourceSupply();
-        }
-    }
-
-    /// <summary>
-    /// How much plants the player is collecting per second.
-    /// </summary>
-    public int PlantsSupply
-    {
-        get
-        {
-            return plantsSupply;
-        }
-
-        set
-        {
-            plantsSupply = value;
-            CheckResourceSupply();
+			resourcesUpdated?.Invoke();
+			CheckResourceSupply();
         }
     }
 
@@ -128,7 +109,8 @@ public class ResourceManager : SerializableSingleton<ResourceManager>
         set
         {
             powerConsumption = value;
-            CheckResourceSupply();
+			resourcesUpdated?.Invoke();
+			CheckResourceSupply();
         }
     }
 
@@ -145,58 +127,51 @@ public class ResourceManager : SerializableSingleton<ResourceManager>
         set
         {
             powerSupply = value;
-            CheckResourceSupply();
+			resourcesUpdated?.Invoke();
+			CheckResourceSupply();
         }
-    }
+	}
 
-    /// <summary>
-    /// How much gas the player has to spare.
-    /// </summary>
-    public int SurplusGas
-    {
-        get
-        {
-            return gasSupply - gasConsumption;
-        }
-    }
+	/// <summary>
+	/// How much power the player is consuming per second.
+	/// </summary>
+	public int PlantsConsumption
+	{
+		get
+		{
+			return plantsConsumption;
+		}
 
-    /// <summary>
-    /// How much power the player has to spare.
-    /// </summary>
-    public int SurplusPower
-    {
-        get
-        {
-            return powerSupply - powerConsumption;
-        }
-    }
+		set
+		{
+			plantsConsumption = value;
+			resourcesUpdated?.Invoke();
+			CheckResourceSupply();
+		}
+	}
 
-    /// <summary>
-    /// How much plants the player has to spare.
-    /// </summary>
-    public int SurplusPlants
-    {
-        get
-        {
-            return plantsSupply - plantsConsumption;
-        }
-    }
+	/// <summary>
+	/// How much plants the player is collecting per second.
+	/// </summary>
+	public int PlantsSupply
+	{
+		get
+		{
+			return plantsSupply;
+		}
 
-    /// <summary>
-    /// How much water the player has to spare.
-    /// </summary>
-    public int SurplusWater
-    {
-        get
-        {
-            return waterSupply - waterConsumption;
-        }
-    }
+		set
+		{
+			plantsSupply = value;
+			resourcesUpdated?.Invoke();
+			CheckResourceSupply();
+		}
+	}
 
-    /// <summary>
-    /// How much water the player is consuming per second.
-    /// </summary>
-    public int WaterConsumption
+	/// <summary>
+	/// How much water the player is consuming per second.
+	/// </summary>
+	public int WaterConsumption
     {
         get
         {
@@ -206,7 +181,8 @@ public class ResourceManager : SerializableSingleton<ResourceManager>
         set
         {
             waterConsumption = value;
-            CheckResourceSupply();
+			resourcesUpdated?.Invoke();
+			CheckResourceSupply();
         }
     }
 
@@ -223,8 +199,64 @@ public class ResourceManager : SerializableSingleton<ResourceManager>
         set
         {
             waterSupply = value;
-            CheckResourceSupply();
+			resourcesUpdated?.Invoke();
+			CheckResourceSupply();
         }
+	}
+
+	/// <summary>
+	/// How much gas the player has to spare.
+	/// </summary>
+	public int SurplusGas
+	{
+		get
+		{
+			return gasSupply - gasConsumption;
+		}
+	}
+
+	/// <summary>
+	/// How much power the player has to spare.
+	/// </summary>
+	public int SurplusPower
+	{
+		get
+		{
+			return powerSupply - powerConsumption;
+		}
+	}
+
+	/// <summary>
+	/// How much plants the player has to spare.
+	/// </summary>
+	public int SurplusPlants
+	{
+		get
+		{
+			return plantsSupply - plantsConsumption;
+		}
+	}
+
+	/// <summary>
+	/// How much water the player has to spare.
+	/// </summary>
+	public int SurplusWater
+	{
+		get
+		{
+			return waterSupply - waterConsumption;
+		}
+	}
+
+	//Initialization Methods-------------------------------------------------------------------------------------------------------------------------
+
+	/// <summary>
+	/// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
+	/// Start() runs after Awake().
+	/// </summary>
+	private void Start()
+    {
+        playerInputManager = POD.Instance.PlayerInputManager;
     }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
@@ -248,15 +280,26 @@ public class ResourceManager : SerializableSingleton<ResourceManager>
     /// </summary>
     private void CheckDeveloperResources()
     {
-        if (getDeveloperResources)
+        if (Application.isEditor && developerResourcesEnabled)
         {
-            ore += developerResources;
-            powerSupply += developerResources;
-            plantsSupply += developerResources;
-            waterSupply += developerResources;
-            gasSupply += developerResources;
-            getDeveloperResources = false;
+            if (playerInputManager.GetButtonDown("Get Developer Resources"))
+            {
+                Ore += developerResources;
+                PowerSupply += developerResources;
+                PlantsSupply += developerResources;
+                WaterSupply += developerResources;
+                GasSupply += developerResources;
+            }
+            else if (playerInputManager.GetButtonDown("Remove Developer Resources"))
+            {
+                Ore = Mathf.Max(0, ore - developerResources);
+                PowerSupply = Mathf.Max(0, powerSupply - developerResources);
+                PlantsSupply = Mathf.Max(0, plantsSupply - developerResources);
+                WaterSupply = Mathf.Max(0, waterSupply - developerResources);
+                GasSupply = Mathf.Max(0, gasSupply - developerResources);
+            }
         }
+
     }
 
     /// <summary>
@@ -271,25 +314,25 @@ public class ResourceManager : SerializableSingleton<ResourceManager>
         bool initialGasStatus = gasAvailable;
 
         //Check if power needs to be updated
-        if ((powerAvailable && powerSupply < powerConsumption) || (!powerAvailable && powerSupply >= powerConsumption && powerSupply != 0))
+        if ((powerAvailable && powerSupply < powerConsumption) || (powerAvailable && powerSupply == 0) || (!powerAvailable && powerSupply >= powerConsumption && powerSupply != 0))
         {
             powerAvailable = !powerAvailable;
         }
 
         //Check if water needs to be updated
-        if ((waterAvailable && waterSupply < waterConsumption) || (!waterAvailable && waterSupply >= waterConsumption && waterSupply != 0))
+        if ((waterAvailable && waterSupply < waterConsumption) || (waterAvailable && waterSupply == 0) || (!waterAvailable && waterSupply >= waterConsumption && waterSupply != 0))
         {
             waterAvailable = !waterAvailable;
         }
 
         //Check if waste needs to be updated
-        if ((plantsAvailable && plantsSupply < plantsConsumption) || (!plantsAvailable && plantsSupply >= plantsConsumption && plantsSupply != 0))
+        if ((plantsAvailable && plantsSupply < plantsConsumption) || (plantsAvailable && plantsSupply == 0) || (!plantsAvailable && plantsSupply >= plantsConsumption && plantsSupply != 0))
         {
             plantsAvailable = !plantsAvailable;
         }
 
         //Check if gas needs to be updated
-        if ((gasAvailable && gasSupply < gasConsumption) || (!gasAvailable && gasSupply >= gasConsumption && gasSupply != 0))
+        if ((gasAvailable && gasSupply < gasConsumption) ||( gasAvailable && gasSupply == 0) || (!gasAvailable && gasSupply >= gasConsumption && gasSupply != 0))
         {
             gasAvailable = !gasAvailable;
         }
@@ -310,6 +353,6 @@ public class ResourceManager : SerializableSingleton<ResourceManager>
                 Debug.Log("Restore Buildings");
                 BuildingManager.Instance.RestoreBuildings(powerAvailable, waterAvailable, plantsAvailable, gasAvailable);
             }
-        }
+		}
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// A base class for non-serializable singletons.
+/// A base class for non-serializable singletons with a public Instance property.
 /// </summary>
 /// <typeparam name="Type">The type of the singleton.</typeparam>
 public abstract class Singleton<Type> where Type : Singleton<Type>, new()

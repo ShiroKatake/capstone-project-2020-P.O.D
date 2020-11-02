@@ -6,7 +6,7 @@ using UnityEngine.UI;
 /// <summary>
 /// Instantiates SceneLoader if it's not instantiated and triggers its scene changing methods.
 /// </summary>
-public class SceneLoaderListener : SerializableSingleton<SceneLoaderListener>
+public class SceneLoaderListener : PublicInstanceSerializableSingleton<SceneLoaderListener>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 

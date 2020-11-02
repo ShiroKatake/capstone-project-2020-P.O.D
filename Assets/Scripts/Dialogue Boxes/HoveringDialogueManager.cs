@@ -7,7 +7,7 @@ using UnityEngine.UI;
 /// <summary>
 /// Controls what to put in the hovering dialogue box and handling showing/hiding.
 /// </summary>
-public class HoveringDialogueManager : SerializableSingleton<HoveringDialogueManager>
+public class HoveringDialogueManager : PublicInstanceSerializableSingleton<HoveringDialogueManager>
 {
 	//Private Fields---------------------------------------------------------------------------------------------------------------------------------
 

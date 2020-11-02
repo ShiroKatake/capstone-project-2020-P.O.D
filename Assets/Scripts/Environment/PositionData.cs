@@ -11,13 +11,15 @@ public class PositionData
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
+    private int x;
+    private int z;
     private float angle;
+    private EResource resource;
     private bool hasBuilding;
     private bool hasMineral;
     private bool aliensBanned;
     private bool isInTutorialAlienSpawnArea;
-    private int x;
-    private int z;
+
     private Dictionary<EAlien, NavMeshPath> paths;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
@@ -48,6 +50,11 @@ public class PositionData
     /// Is this position close enough to the cryo egg for alien spawning to be allowed during the tutorial?
     /// </summary>
     public bool IsInTutorialAlienSpawnArea { get => isInTutorialAlienSpawnArea; }
+
+    /// <summary>
+    /// The resource this tile has, if any.
+    /// </summary>
+    public EResource Resource { get => resource; }
 
     /// <summary>
     /// The nav mesh paths from this position to the cryo egg for each type of alien.
@@ -107,19 +114,19 @@ public class PositionData
     /// <param name="x">This position's x coordinate.</param>
     /// <param name="z">This position's z coordinate.</param>
     /// <param name="angle">The angle of this position from the centre of the map.</param>
-    /// <param name="hasBuilding">Does this position have a building occupying it?</param>
-    /// <param name="hasMineral">Does this position have a mineral occupying it?</param>
+    /// <param name="resource">What resource, if any, does this tile have?</param>
     /// <param name="isInTutorialAlienSpawnArea">Is this position inside the tutorial combat stage-only alien spawnable area around the cryo egg?</param>
     /// <param name="isInAlienExclusionArea">Is this position inside the non-tutorial alien exclusion area around the cryo egg?</param>
-    public PositionData(int x, int z, float angle, bool isInTutorialAlienSpawnArea, bool isInAlienExclusionArea)
+    public PositionData(int x, int z, float angle, EResource resource, bool isInTutorialAlienSpawnArea, bool isInAlienExclusionArea)
     {
         this.x = x;
         this.z = z;
         this.angle = angle;
-        this.hasBuilding = false;
-        this.hasMineral = false;
+        this.resource = resource;
         this.isInTutorialAlienSpawnArea = isInTutorialAlienSpawnArea;
         this.aliensBanned = isInAlienExclusionArea;
+        this.hasBuilding = false;
+        this.hasMineral = false;
         paths = new Dictionary<EAlien, NavMeshPath>();
     }
 }

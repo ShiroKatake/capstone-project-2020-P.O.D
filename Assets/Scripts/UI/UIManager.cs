@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UIManager : SerializableSingleton<UIManager>
+public class UIManager : PublicInstanceSerializableSingleton<UIManager>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 

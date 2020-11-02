@@ -43,14 +43,20 @@ public class Building : CollisionListener
 
     [Header("Building")]
     [SerializeField] private float buildTime;
-    [SerializeField] private List<GameObject> VFX;
     //[SerializeField] private BuildingAnimatorController animatorController;
+    [SerializeField] private bool buildInPits;
+    [Tooltip("What is the minimum worldspace height (i.e. Y-axis position) buildings can be built at before being considered in a pit?")]
+    [SerializeField] private float minBuildHeight;
+    [SerializeField] private List<GameObject> VFX;
+
 
     [Header("Offsets of Cliff Detection Raycasts from Position")]
     [SerializeField] private List<Vector3> cliffRaycastOffsets;
 
     [Header("Offsets of Foundations from Position")]
     [SerializeField] private List<Vector3> buildingFoundationOffsets;
+    [SerializeField] private int buildingFoundationOffsetsOnXAxis;
+    [SerializeField] private int buildingFoundationOffsetsOnZAxis;
 
     [Header("Model, Materials, etc.")]
     [SerializeField] private Transform model;
@@ -88,9 +94,8 @@ public class Building : CollisionListener
 
     //Positioning
     private bool colliding = false;
-    private bool validPlacement = true;
+    private bool initialisedValidPlacement = false;
 	private bool placementCurrentValid = true;
-	private bool materialChanged = false;
 	private List<Collider> otherColliders;
     Vector3 normalScale;
     LayerMask groundLayerMask;
@@ -102,7 +107,6 @@ public class Building : CollisionListener
     private bool operational = false;   //Is the building operational and doing its job?
     private bool built;                 //Has the building, after being placed, finished building?
     private bool disabledByPlayer;      //Has the player manually disabled this building? 
-
 
     private float normalBuildTime;
 
@@ -124,6 +128,16 @@ public class Building : CollisionListener
     /// The position of building foundations relative to the building's transform.position value.
     /// </summary>
     public List<Vector3> BuildingFoundationOffsets { get => buildingFoundationOffsets; }
+
+    /// <summary>
+    /// The number of building foundation offsets this building would have in a row along the X axis.
+    /// </summary>
+    public int BuildingFoundationOffsetsOnXAxis { get => buildingFoundationOffsetsOnXAxis; }
+
+    /// <summary>
+    /// The number of building foundation offsets this building would have in a row along the Z axis.
+    /// </summary>
+    public int BuildingFoundationOffsetsOnZAxis { get => buildingFoundationOffsetsOnZAxis; }
 
     /// <summary>
     /// The type of building this building is.
@@ -431,57 +445,83 @@ public class Building : CollisionListener
     /// Checks if the building is colliding while being placed, and updates colour appropriately.
     /// </summary>
     /// <returns>Is this building colliding with something?</returns>
-    public bool IsPlacementValid()
+    public bool CanPlace()
     {
-        if (active)
+        return CanPlace(out bool? none1, out bool? none2);
+    }
+
+    /// <summary>
+    /// Checks if the building is colliding while being placed, and updates colour appropriately.
+    /// </summary>
+    /// <param name="resourcesAvailable">Out parameter for whether sufficient resources were available for placing when running CanPlace().</param>
+    /// <param name="validPosition">Out parameter for whether sufficient resources were available for placing when running CanPlace().</param>
+    /// <returns>Is this building colliding with something?</returns>
+    public bool CanPlace(out bool? resourcesAvailable, out bool? validPosition)
+    {
+        resourcesAvailable = null;
+        validPosition = null;
+
+        if (!active) return true;
+        if (placed) return false;
+             
+        validPosition = !(
+                            (!buildInPits && IsInPit()) 
+                            || IsColliding() 
+                            || IsOnCliff() 
+                            || MouseOverUI() 
+                            || (resourceCollector != null && !resourceCollector.CanCollectResourcesAtPosition())
+                        ) && MapManager.Instance.PositionAvailableForBuilding(this);
+
+        resourcesAvailable = AreResourcesAvailable();
+        bool canPlace = resourcesAvailable.Value && validPosition.Value;
+	    bool changeMaterial = false;
+
+        if (canPlace)
         {
-            if (!placed)
+            if (!placementCurrentValid || !initialisedValidPlacement)
             {
-                validPlacement = !(CheckInPit() || CheckColliding() || CheckOnCliff() || CheckMouseOverUI()) && MapManager.Instance.PositionAvailableForBuilding(this);
-
-				if (!validPlacement && placementCurrentValid)
-				{
-					BuildingFactory.Instance.onPlacementInvalid?.Invoke();
-					placementCurrentValid = false;
-					materialChanged = false;
-				}
-
-				else if (validPlacement && !placementCurrentValid)
-				{
-					BuildingFactory.Instance.onPlacementValid?.Invoke();
-					placementCurrentValid = true;
-					materialChanged = false;
-				}
-
-				if (!materialChanged)
-				{
-					foreach (RendererMaterialSet r in rendererMaterialSets)
-					{
-						Material currentMaterial = (validPlacement ? r.transparent : buildingErrorMaterial);
-
-						for (int i = 0; i < r.renderer.materials.Length; i++)
-						{
-							UpdateRendererMaterials(r.renderer, currentMaterial, r.renderer.materials.Length);
-							break;
-						}
-					}
-
-					materialChanged = true;
-				}
-
-				return validPlacement;
-            }
-            else
-            {
-                Debug.Log($"Building {id} ran IsPlacementValid(), even though it's already placed.");
-                return false;
+                BuildingFactory.Instance.onPlacementValid?.Invoke();
+                placementCurrentValid = true;
+                changeMaterial = true;
+                initialisedValidPlacement = true;
             }
         }
         else
         {
-            return true;
+            if (placementCurrentValid || !initialisedValidPlacement)
+            {
+                BuildingFactory.Instance.onPlacementInvalid?.Invoke();
+                placementCurrentValid = false;
+                changeMaterial = true;
+                initialisedValidPlacement = true;
+            }
         }
 
+		if (changeMaterial)
+		{
+			foreach (RendererMaterialSet r in rendererMaterialSets)
+			{
+				Material currentMaterial = (canPlace ? r.transparent : buildingErrorMaterial);
+				UpdateRendererMaterials(r.renderer, currentMaterial, r.renderer.materials.Length);
+			}
+
+			changeMaterial = false;
+		}
+
+		return canPlace;
+    }
+
+    /// <summary>
+    /// Checks if there are enough resources available to build and maintain this building.
+    /// </summary>
+    /// <returns>Whether there are enough resources available to build and maintain this building.</returns>
+    private bool AreResourcesAvailable()
+    {
+        return ResourceManager.Instance.Ore >= oreCost
+            && (powerConsumption  == 0 || ResourceManager.Instance.PowerSupply  >= ResourceManager.Instance.PowerConsumption  + powerConsumption)
+            && (plantsConsumption == 0 || ResourceManager.Instance.PlantsSupply >= ResourceManager.Instance.PlantsConsumption + plantsConsumption)
+            && (waterConsumption  == 0 || ResourceManager.Instance.WaterSupply  >= ResourceManager.Instance.WaterConsumption  + waterConsumption)
+            && (gasConsumption    == 0 || ResourceManager.Instance.GasSupply    >= ResourceManager.Instance.GasConsumption    + gasConsumption);
     }
 
     /// <summary>
@@ -516,9 +556,9 @@ public class Building : CollisionListener
     /// <summary>
     /// Checks if this building is currently in a pit.
     /// </summary>
-    private bool CheckInPit()
+    private bool IsInPit()
     {
-        return transform.position.y < -0.1f;
+        return transform.position.y < minBuildHeight;
         //bool result = transform.position.y < -0.1f;
         //Debug.Log($"{this} in pit: {result}");
         //return result;
@@ -527,7 +567,7 @@ public class Building : CollisionListener
     /// <summary>
     /// Verifies if this building should be considered to be colliding with another object.
     /// </summary>
-    private bool CheckColliding()
+    private bool IsColliding()
     {
         //Weird quirk of destroying one object and then instantating another and moving it to the same position: it triggers boths' OnTriggerEnter(),
         //even though one doesn't exist, and then the other doesn't have OnTriggerExit() triggered in the next frame. This checks for the existence of
@@ -576,7 +616,7 @@ public class Building : CollisionListener
     /// <summary>
     /// Verifies if this building is extending over a cliff edge.
     /// </summary>
-    private bool CheckOnCliff()
+    private bool IsOnCliff()
     {
         RaycastHit hit;
         Vector3 raycastPos;
@@ -758,6 +798,8 @@ public class Building : CollisionListener
         built = true;
         Operational = true; //Using property to trigger activation of any resource collector component attached.
 
+		RatioManager.Instance.UpdateCurrentRatio();
+
         if (turretShooter != null)
         {
             turretShooter.Place();
@@ -800,6 +842,7 @@ public class Building : CollisionListener
         colliding = false;
         built = false;
         disabledByPlayer = false;
+        initialisedValidPlacement = false;
 
         //animator.enabled = false;
         health.Reset();
@@ -841,6 +884,11 @@ public class Building : CollisionListener
     /// <param name="other">The other Collider involved in this collision.</param>
     public override void OnTriggerEnter(Collider other)
     {
+        //bool isBarrelCollider = other.gameObject.name == "Barrel Collider";
+        //bool isBarrelDemolitionMenuCollider = other.gameObject.name == "Barrel Demolition Menu Collider";
+        //bool shouldAddToOtherColliders = active && !operational && !other.isTrigger && !isBarrelCollider && !isBarrelDemolitionMenuCollider;
+        //Debug.Log($"{this}.OnTriggerEnter, other is {other.gameObject.name}.");
+
         if (active 
             && !operational 
             && !other.isTrigger 

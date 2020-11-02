@@ -8,7 +8,7 @@ using UnityEngine.UI;
 /// <summary>
 /// A player script for disabling and demolishing buildings.
 /// </summary>
-public class BuildingDemolitionController : SerializableSingleton<BuildingDemolitionController>
+public class BuildingDemolitionController : PublicInstanceSerializableSingleton<BuildingDemolitionController>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
@@ -90,6 +90,8 @@ public class BuildingDemolitionController : SerializableSingleton<BuildingDemoli
     private void DemolishBuildings()
     {
         bool hitMenu = false;
+        //bool mouseOverUI = MouseOverUI(out hitMenu);
+        //Debug.Log($"BuildingDemolitionController.DemolishBuildings(), demolishBuilding is {demolishBuilding}, mouseOverUI is {mouseOverUI}");
 
         if (BuildingSpawnController.Instance.SpawningBuilding || MineralCollectionController.Instance.Mining)
         {
@@ -98,7 +100,7 @@ public class BuildingDemolitionController : SerializableSingleton<BuildingDemoli
                 HideDemolitionMenu();
             }
         }
-        else if (demolishBuilding /*&& clickTimeout <= 0*/ && !MouseOverUI(out hitMenu))
+        else if (demolishBuilding && !MouseOverUI(out hitMenu))
         {           
             //Debug.Log($"BuildingDemolitionController.DemolishBuildings(), physics raycasting");
             RaycastHit hit;
@@ -122,6 +124,10 @@ public class BuildingDemolitionController : SerializableSingleton<BuildingDemoli
                     return;
                 }            
             }
+            //else
+            //{
+            //    Debug.Log($"BuildingDemolitionController.DemolishBuildings(), physics raycast miss.");
+            //}
 
             if (showingDemolitionMenu)
             {
@@ -170,7 +176,7 @@ public class BuildingDemolitionController : SerializableSingleton<BuildingDemoli
         selectedBuilding = building;
         showingDemolitionMenu = true;
         Vector3 pos = building.transform.position;
-        menu.transform.position = new Vector3(pos.x, 1.5f, pos.z - 2f);
+        menu.transform.position = new Vector3(pos.x, pos.y + 0.5f, pos.z - 2f);
         enableDisableText.text = (building.DisabledByPlayer ? "Enable" : "Disable");
         menu.SetActive(true);
     }
@@ -210,6 +216,7 @@ public class BuildingDemolitionController : SerializableSingleton<BuildingDemoli
             enableDisableText.text = "Enable";
         }
 
+		RatioManager.Instance.UpdateCurrentRatio();
         HideDemolitionMenu();
     }
 

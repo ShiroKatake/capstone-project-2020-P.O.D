@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8050609336524741087}
   - component: {fileID: 6588907801554787069}
   - component: {fileID: 5365881250904557281}
-  m_Layer: 16
+  m_Layer: 13
   m_Name: Body Demolition Menu Collider
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -451,7 +451,7 @@ GameObject:
   - component: {fileID: 2659328593562774715}
   - component: {fileID: 7573001971798204962}
   - component: {fileID: 7388952437968535942}
-  m_Layer: 16
+  m_Layer: 13
   m_Name: Barrel Demolition Menu Collider
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -533,14 +533,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2387721251791164881}
+  - component: {fileID: 8629933168825371649}
   - component: {fileID: 6978301388140795322}
   - component: {fileID: 276844957512759736}
-  - component: {fileID: -3534231309336918695}
+  - component: {fileID: 1853964842327240659}
   - component: {fileID: 1219818938998714957}
   - component: {fileID: -6100819924566361332}
   - component: {fileID: 3380677155783403710}
-  - component: {fileID: 8629933168825371649}
-  - component: {fileID: 2320425670518256764}
   m_Layer: 10
   m_Name: Machine Gun Turret
   m_TagString: Building
@@ -566,6 +565,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &8629933168825371649
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2740937295730065718}
+  m_Enabled: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 22100000, guid: ce859a34f23359a408950f21479f1f24, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &6978301388140795322
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -601,6 +619,8 @@ MonoBehaviour:
   plantsConsumption: 0
   gasConsumption: 0
   buildTime: 5
+  buildInPits: 1
+  minBuildHeight: 1.5
   VFX: []
   cliffRaycastOffsets:
   - {x: -0.45, y: 0, z: -0.75}
@@ -617,6 +637,8 @@ MonoBehaviour:
   - {x: -0.5, y: -0.45, z: 0.5}
   - {x: 0.5, y: -0.45, z: -0.5}
   - {x: 0.5, y: -0.45, z: 0.5}
+  buildingFoundationOffsetsOnXAxis: 2
+  buildingFoundationOffsetsOnZAxis: 2
   model: {fileID: 7351240215580495256}
   rendererMaterialSets:
   - renderer: {fileID: 957260111606721453}
@@ -641,7 +663,7 @@ MonoBehaviour:
     type: 3}
   fxSize: 1.5
   materialPrime: {fileID: 0}
---- !u!114 &-3534231309336918695
+--- !u!114 &1853964842327240659
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -718,43 +740,11 @@ MonoBehaviour:
   projectileType: 3
   targetClosest: 1
   numProjectiles: 1
-  yAxisVariance: 0
-  zAxisVariance: 0
+  spreadAngle: 0
+  shotForce: 5
   shotCooldown: 0.2
   visibleTargets: []
   target: {fileID: 0}
---- !u!95 &8629933168825371649
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2740937295730065718}
-  m_Enabled: 0
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 22100000, guid: ce859a34f23359a408950f21479f1f24, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &2320425670518256764
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2740937295730065718}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5bfa9bda77c9c3488923b65c75f29e0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  affiliation: 0
 --- !u!1 &3018227449293362911
 GameObject:
   m_ObjectHideFlags: 0

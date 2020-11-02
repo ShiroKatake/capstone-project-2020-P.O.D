@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1025834903233913818}
   - component: {fileID: 7811568116054863030}
   - component: {fileID: 404578392010752061}
-  m_Layer: 16
+  m_Layer: 13
   m_Name: Barrel Housing Demolition Menu Collider
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -158,7 +158,7 @@ GameObject:
   - component: {fileID: 3824102319696306700}
   - component: {fileID: 1085200518175901428}
   - component: {fileID: 1863581869014743651}
-  m_Layer: 16
+  m_Layer: 13
   m_Name: Barrel Demolition Menu Collider
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -336,14 +336,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2387721251791164881}
+  - component: {fileID: 7595449155248944193}
   - component: {fileID: 7270633213526724645}
   - component: {fileID: 276844957512759736}
-  - component: {fileID: -3513195718502666501}
+  - component: {fileID: 5076518558525692737}
   - component: {fileID: 1219818938998714957}
   - component: {fileID: 6505921446254889876}
   - component: {fileID: 5814535936489597786}
-  - component: {fileID: 7595449155248944193}
-  - component: {fileID: -4813463451777356242}
   m_Layer: 10
   m_Name: Shotgun Turret
   m_TagString: Building
@@ -369,6 +368,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &7595449155248944193
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2740937295730065718}
+  m_Enabled: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 22100000, guid: c983f83433b2d864c9b44159895488ac, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &7270633213526724645
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -404,6 +422,8 @@ MonoBehaviour:
   plantsConsumption: 0
   gasConsumption: 0
   buildTime: 7
+  buildInPits: 1
+  minBuildHeight: 1.5
   VFX: []
   cliffRaycastOffsets:
   - {x: -0.3, y: 0, z: -0.3}
@@ -417,6 +437,8 @@ MonoBehaviour:
   - {x: 0.3, y: 0, z: 0.3}
   buildingFoundationOffsets:
   - {x: 0, y: -0.45, z: 0}
+  buildingFoundationOffsetsOnXAxis: 1
+  buildingFoundationOffsetsOnZAxis: 1
   model: {fileID: 6448044414127642783}
   rendererMaterialSets:
   - renderer: {fileID: 3025660970298743260}
@@ -441,7 +463,7 @@ MonoBehaviour:
     type: 3}
   fxSize: 1
   materialPrime: {fileID: 0}
---- !u!114 &-3513195718502666501
+--- !u!114 &5076518558525692737
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -516,44 +538,12 @@ MonoBehaviour:
   detectionRadius: 15
   projectileType: 2
   targetClosest: 1
-  numProjectiles: 10
-  yAxisVariance: 0.1
-  zAxisVariance: 0.1
+  numProjectiles: 20
+  spreadAngle: 25
+  shotForce: 7.5
   shotCooldown: 3
   visibleTargets: []
   target: {fileID: 0}
---- !u!95 &7595449155248944193
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2740937295730065718}
-  m_Enabled: 0
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 22100000, guid: c983f83433b2d864c9b44159895488ac, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &-4813463451777356242
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2740937295730065718}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5bfa9bda77c9c3488923b65c75f29e0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  affiliation: 0
 --- !u!1 &2946983348710066453
 GameObject:
   m_ObjectHideFlags: 0

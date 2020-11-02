@@ -6,7 +6,7 @@ using UnityEngine;
 /// <summary>
 /// The stage of the game where the player is taught the game's controls
 /// </summary>
-public class StageControls : SerializableSingleton<StageControls>, IStage
+public class StageControls : PublicInstanceSerializableSingleton<StageControls>, IStage
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
@@ -15,6 +15,7 @@ public class StageControls : SerializableSingleton<StageControls>, IStage
     [SerializeField] private UIElementStatusManager uiBorderUIEC;
     [SerializeField] private UIElementStatusManager consoleUIEC;
     [SerializeField] private UIElementStatusManager buildingAndResourcesBarUIEC;
+    [SerializeField] private UIElementStatusManager resourceBar;
     [SerializeField] private UIElementStatusManager miniMapBorderUIEC;
     [SerializeField] private UIElementStatusManager miniMapUIEC;
     [SerializeField] private UIElementStatusManager mineralsHighlightUIEC;
@@ -58,7 +59,8 @@ public class StageControls : SerializableSingleton<StageControls>, IStage
         s = DialogueBoxManager.Instance.GetDialogueBox("S");
         d = DialogueBoxManager.Instance.GetDialogueBox("D");
         cat = DialogueBoxManager.Instance.GetDialogueBox("CAT");
-        playerInputManager = ReInput.players.GetPlayer(PODController.Instance.GetComponent<PlayerID>().Value);
+        //playerInputManager = ReInput.players.GetPlayer(POD.Instance.GetComponent<PlayerID>().Value);
+        playerInputManager = POD.Instance.PlayerInputManager;
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
@@ -84,7 +86,7 @@ public class StageControls : SerializableSingleton<StageControls>, IStage
     /// </summary>
     private IEnumerator Setup()
     {
-        PODController.Instance.GetComponent<Health>().CurrentHealth = PODController.Instance.GetComponent<Health>().MaxHealth * 0.25f;  //Set the player's health ready for the healing section of the tutorial
+        POD.Instance.GetComponent<Health>().CurrentHealth = POD.Instance.GetComponent<Health>().MaxHealth * 0.25f;  //Set the player's health ready for the healing section of the tutorial
 
         ClockManager.Instance.Paused = true;
         ClockManager.Instance.SetTime(ClockManager.Instance.HalfCycleDuration * 0.2f);
@@ -203,7 +205,8 @@ public class StageControls : SerializableSingleton<StageControls>, IStage
         console.ClearDialogue();
         console.SubmitDialogue("detect minerals", 0, false, false);
         buildingAndResourcesBarUIEC.Visible = true;
-        miniMapBorderUIEC.Visible = true;
+		resourceBar.Visible = true;
+		miniMapBorderUIEC.Visible = true;
 
         while (!miniMapBorderUIEC.FinishedFlickeringIn)
         {

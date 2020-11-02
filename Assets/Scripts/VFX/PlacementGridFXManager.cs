@@ -73,8 +73,10 @@ public class PlacementGridFXManager : MonoBehaviour
 	/// <param name="y">The size of the building's width.</param>
 	private void InitializeGrid(float x, float y)
 	{
-		//Length
-		if (MathUtility.Instance.IsOdd(x))
+        //Debug.Log($"PlacementGridFXManager.InitialiseGrid()");
+
+        //Length
+        if (MathUtility.Instance.IsOdd(x))
 		{
 			offsetX = 0.5f;
 		}
@@ -108,11 +110,13 @@ public class PlacementGridFXManager : MonoBehaviour
 	/// </summary>
 	/// <param name="building">The building currently being held.</param>
 	private void OnPlacementStarted(Building building)
-	{
-		if (lastSizeX != Mathf.Sqrt(building.BuildingFoundationOffsets.Count) + 2 || lastSizeY != Mathf.Sqrt(building.BuildingFoundationOffsets.Count) + 2)
+    {
+        //Debug.Log($"PlacementGridFXManager.OnPlacementStarted()");
+
+        if (lastSizeX != building.BuildingFoundationOffsetsOnXAxis + 2 || lastSizeY != building.BuildingFoundationOffsetsOnZAxis + 2)
 		{
-			lastSizeX = Mathf.Sqrt(building.BuildingFoundationOffsets.Count) + 2;
-			lastSizeY = Mathf.Sqrt(building.BuildingFoundationOffsets.Count) + 2;
+			lastSizeX = building.BuildingFoundationOffsetsOnXAxis + 2;
+			lastSizeY = building.BuildingFoundationOffsetsOnZAxis + 2;
 			InitializeGrid(lastSizeX, lastSizeY);
 		}
 
@@ -133,6 +137,7 @@ public class PlacementGridFXManager : MonoBehaviour
 	/// </summary>
 	public void OnPlacementValid()
 	{
+        //Debug.Log($"PlacementGridFXManager.OnPlacementValid(), updating buildingAreaRenderer.color to validColor");
 		buildingAreaRenderer.color = validColor;
 	}
 
@@ -141,7 +146,8 @@ public class PlacementGridFXManager : MonoBehaviour
 	/// Change building area's color to a color that represents an invalid placement.
 	/// </summary>
 	public void OnPlacementInvalid()
-	{
-		buildingAreaRenderer.color = invalidColor;
+    {
+        //Debug.Log($"PlacementGridFXManager.OnPlacementInvalid(), updating buildingAreaRenderer.color to invalidColor");
+        buildingAreaRenderer.color = invalidColor;
 	}
 }

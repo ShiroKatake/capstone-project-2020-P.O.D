@@ -50,7 +50,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f153d1e8003789941934b31f180c4799, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skipTutorial: 0
+  skipTutorial: 1
 --- !u!114 &4952588298347314997
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65,12 +65,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uiBorder: {fileID: 0}
   console: {fileID: 0}
-  buildingAndResourcesBar: {fileID: 0}
+  buildingBar: {fileID: 0}
+  resourcesBar: {fileID: 0}
   miniMapBorder: {fileID: 0}
   miniMap: {fileID: 0}
   clock: {fileID: 0}
   fusionReactor: {fileID: 0}
   iceDrill: {fileID: 0}
+  harvester: {fileID: 0}
+  gasPump: {fileID: 0}
   boiler: {fileID: 0}
   greenhouse: {fileID: 0}
   incinerator: {fileID: 0}
@@ -95,6 +98,7 @@ MonoBehaviour:
   uiBorderUIEC: {fileID: 0}
   consoleUIEC: {fileID: 0}
   buildingAndResourcesBarUIEC: {fileID: 0}
+  resourceBar: {fileID: 0}
   miniMapBorderUIEC: {fileID: 0}
   miniMapUIEC: {fileID: 0}
   mineralsHighlightUIEC: {fileID: 0}
@@ -113,6 +117,8 @@ MonoBehaviour:
   clock: {fileID: 0}
   fusionReactor: {fileID: 0}
   iceDrill: {fileID: 0}
+  harvester: {fileID: 0}
+  gasPump: {fileID: 0}
   boiler: {fileID: 0}
   greenhouse: {fileID: 0}
   incinerator: {fileID: 0}

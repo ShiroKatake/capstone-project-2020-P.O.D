@@ -11,5 +11,6 @@ public enum EResource
     Power,
     Water,
     Plants,
-    Gas
+    Gas,
+    None
 }

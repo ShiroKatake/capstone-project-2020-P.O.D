@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// A manager class for projectiles.
 /// </summary>
-public class ProjectileManager : SerializableSingleton<ProjectileManager>
+public class ProjectileManager : PublicInstanceSerializableSingleton<ProjectileManager>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 

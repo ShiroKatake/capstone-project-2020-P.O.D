@@ -9,7 +9,7 @@ using UnityEngine.AI;
 /// <summary>
 /// A controller class for tracking which parts of the map have buildings, can be spawned to by aliens, etc.
 /// </summary>
-public class MapManager : SerializableSingleton<MapManager>
+public class MapManager : PublicInstanceSerializableSingleton<MapManager>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
@@ -38,6 +38,7 @@ public class MapManager : SerializableSingleton<MapManager>
     [SerializeField] private float nightTimeLimitPerFrame;
 
     [Header("Testing")]
+    [SerializeField] private bool debugResourcePositions;
     [SerializeField] private bool debugPathfinding;
     private EAlien currentPathfinder;
     private Vector2 currentPathfindingPos;
@@ -111,7 +112,7 @@ public class MapManager : SerializableSingleton<MapManager>
     /// </summary>
     private void Start()
     {
-        //Debug.Log($"MapController.Start()");
+        if (debugPathfinding) Debug.Log($"MapController.Start()");
         
         if (!initialised)
         {
@@ -124,8 +125,8 @@ public class MapManager : SerializableSingleton<MapManager>
     /// </summary>
     public void Initialise()
     {
-        //Debug.Log($"MapController.Initialise()");
-        float alienSpawnHeight = AlienFactory.Instance.AlienSpawnHeight;
+        if (debugPathfinding) Debug.Log($"MapManager.Initialise()");
+        float alienSpawnHeight = AlienFactory.Instance.AlienInstantiationHeight;
         int noAlienXMin = (int)Mathf.Round(noAliensBottomLeft.x);
         int noAlienXMax = (int)Mathf.Round(noAliensTopRight.x);
         int noAlienZMin = (int)Mathf.Round(noAliensBottomLeft.z);
@@ -143,6 +144,7 @@ public class MapManager : SerializableSingleton<MapManager>
                     i, //X coordinate
                     j, //Z coordinate
                     MathUtility.Instance.Angle(centre, new Vector2(i, j)), //Angle from centre to position
+                    CheckPositionResource(i, j),
                     (i >= tuteAlienXMin && i <= tuteAlienXMax && j >= tuteAlienZMin && j <= tuteAlienZMax), //Is inside the tutorial spawn area?
                     (i >= noAlienXMin && i <= noAlienXMax && j >= noAlienZMin && j <= noAlienZMax) //Is inside the alien exclusion area?
                 );
@@ -166,6 +168,7 @@ public class MapManager : SerializableSingleton<MapManager>
 
         //if (recalculatePathfinding)
         //{
+        if (debugPathfinding) Debug.Log("MapManager.Initialise(), finished. Starting coroutine CalculatePaths().");
         StartCoroutine(CalculatePaths(GetPathfinders()));
         //}
         //else
@@ -175,11 +178,51 @@ public class MapManager : SerializableSingleton<MapManager>
     }
 
     /// <summary>
+    /// Checks what resource the space at position (x, z) should have.
+    /// </summary>
+    /// <param name="x">The X coordinate of the position (x, z).</param>
+    /// <param name="z">The Z coordinate of the position (x, z).</param>
+    /// <returns>The resource the position (x, z) should have, if any.</returns>
+    private EResource CheckPositionResource(int x, int z)
+    {
+        Vector2 pos = new Vector2(x, z);
+        if (debugResourcePositions) Debug.Log($"MapManager.CheckPositionResource(), checking for position {pos}; {TilemapTerrainGenerator.Instance.TilesWithGas} tiles with gas, {TilemapTerrainGenerator.Instance.TilesWithPlants} tiles with plants, {TilemapTerrainGenerator.Instance.TilesWithWater} tiles with water.");
+
+        List<Vector2> tilesWithResource = TilemapTerrainGenerator.Instance.TilesWithGas;
+
+        if (tilesWithResource != null && tilesWithResource.Contains(pos))
+        {
+            if (debugResourcePositions) Debug.Log($"MapManager.CheckPositionResource(), position {pos} has gas");
+            return EResource.Gas;
+        }
+
+        tilesWithResource = TilemapTerrainGenerator.Instance.TilesWithPlants;
+
+        if (tilesWithResource != null && tilesWithResource.Contains(pos))
+        {
+            if (debugResourcePositions) Debug.Log($"MapManager.CheckPositionResource(), position {pos} has plants");
+            return EResource.Plants;
+        }
+
+        tilesWithResource = TilemapTerrainGenerator.Instance.TilesWithWater;
+
+        if (tilesWithResource != null && tilesWithResource.Contains(pos))
+        {
+            if (debugResourcePositions) Debug.Log($"MapManager.CheckPositionResource(), position {pos} has water");
+            return EResource.Water;
+        }
+
+        if (debugResourcePositions) Debug.Log($"MapManager.CheckPositionResource(), position {pos} has no resource");
+        return EResource.None;
+    }
+
+    /// <summary>
     /// Gets stripped down instances of each alien to use for pathfinding.
     /// </summary>
     /// <returns>A list of stripped down instances of each alien to use for pathfinding.</returns>
     private List<Alien> GetPathfinders()
     {
+        if (debugPathfinding) Debug.Log("MapManager.GetPathFinders(), starting.");
         List<Alien> result = new List<Alien>();
         System.Diagnostics.Stopwatch totalStopwatch = new System.Diagnostics.Stopwatch();
         System.Diagnostics.Stopwatch loopStopwatch = new System.Diagnostics.Stopwatch();
@@ -193,6 +236,7 @@ public class MapManager : SerializableSingleton<MapManager>
             if (pathfinder != null)
             {
                 result.Add(pathfinder);
+                pathfinder.IsPathfinder = true;
                 Destroy(pathfinder.GetComponent<Actor>());
                 Destroy(pathfinder.GetComponent<AlienFX>());
                 Destroy(pathfinder.GetComponent<Animator>());
@@ -225,6 +269,7 @@ public class MapManager : SerializableSingleton<MapManager>
             }
         }
 
+        if (debugPathfinding) Debug.Log($"MapManager.GetPathFinders(), finished. Pathfinders.Count is {pathfinders.Length}.");
         return result;
     }
 
@@ -239,10 +284,10 @@ public class MapManager : SerializableSingleton<MapManager>
         totalStopwatch.Restart();
         loopStopwatch.Restart();
 
-        //Debug.Log($"MapController.CalculatePaths(), starting");
+        if (debugPathfinding) Debug.Log($"MapController.CalculatePaths(), starting");
         NavMeshPath calculatedPath = null;
-        float alienSpawnHeight = AlienFactory.Instance.AlienSpawnHeight;
-        Transform cryoEggColliderTransform = Tower.Instance.ColliderTransform;
+        float alienSpawnHeight = AlienFactory.Instance.AlienInstantiationHeight;
+        Transform towerColliderTransform = Tower.Instance.ColliderTransform;
 
         if (pauseLoop && loopStopwatch.ElapsedMilliseconds >= (ClockManager.Instance.Daytime ? dayTimeLimitPerFrame : nightTimeLimitPerFrame))
         {
@@ -256,6 +301,7 @@ public class MapManager : SerializableSingleton<MapManager>
             currentPathfinder = alien.Type;
             NavMeshAgent agent = alien.NavMeshAgent;
             alien.gameObject.SetActive(true);
+            if (debugPathfinding) Debug.Log($"Starting pathfinding for {currentPathfinder}.");
 
             foreach (PositionData p in positions)
             {
@@ -273,17 +319,27 @@ public class MapManager : SerializableSingleton<MapManager>
                         agent.enabled = true;
                         calculatedPath = new NavMeshPath();
 
-                        if (agent.CalculatePath(cryoEggColliderTransform.position, calculatedPath))
+                        if (agent.CalculatePath(towerColliderTransform.position, calculatedPath))
                         {
+                            if (debugPathfinding) Debug.Log($"Calculated path from position {currentPathfindingPos} for alien type {currentPathfinder}.");
                             p.Paths[alien.Type] = calculatedPath;
+                        }
+                        else if (debugPathfinding)
+                        {
+                            Debug.Log($"Could not calculate path from position {currentPathfindingPos} for alien type {currentPathfinder}.");
                         }
 
                         agent.enabled = false;
                     }
                     else
                     {
+                        if (debugPathfinding) Debug.Log($"Position {currentPathfindingPos} is not on nav mesh for alien type {currentPathfinder}, registering off mesh position.");
                         RegisterOffMeshPosition(pos);
                     }
+                }
+                else if (debugPathfinding)
+                {
+                    Debug.Log($"Could not raycast to ground at position {currentPathfindingPos} for alien type {currentPathfinder}.");
                 }
 
                 if (pauseLoop && loopStopwatch.ElapsedMilliseconds >= (ClockManager.Instance.Daytime ? dayTimeLimitPerFrame : nightTimeLimitPerFrame))
@@ -299,7 +355,7 @@ public class MapManager : SerializableSingleton<MapManager>
 
         currentPathfinder = EAlien.None;
         currentPathfindingPos = Vector2.zero;
-        //Debug.Log($"MapController.CalculatePaths(), has finished, time elapsed is {totalStopwatch.ElapsedMilliseconds} ms, or {totalStopwatch.ElapsedMilliseconds / 1000} s.");
+        if (debugPathfinding) Debug.Log($"MapController.CalculatePaths(), has finished, time elapsed is {totalStopwatch.ElapsedMilliseconds} ms, or {totalStopwatch.ElapsedMilliseconds / 1000} s.");
         finishedCalculatingPaths = true;
         //StartCoroutine(SavePaths());
         yield return null;
@@ -469,29 +525,35 @@ public class MapManager : SerializableSingleton<MapManager>
             }
 
             RaycastHit hit;
+            float instantiationHeight = AlienFactory.Instance.AlienInstantiationHeight;
+            float minSpawnHeight = AlienFactory.Instance.MinAlienSpawnHeight;
 
             //Check if a cliff or pit or too close to either
             for (int i = -1; i <= 1; i++)
             {
                 for (int j = -1; j <= 1; j++)
                 {
-                    Vector3 testPos = new Vector3(position.x + i, position.y, position.z + j);
+                    Vector3 testPos = new Vector3(position.x + i, instantiationHeight, position.z + j);
                     //Debug.Log($"TestPos {testPos}");  
 
-                    if (testPos.x < 0 || testPos.x > xMax || testPos.z < 0 || testPos.z > zMax || !Physics.Raycast(testPos, Vector3.down, out hit, 25, groundLayerMask))
+                    if (testPos.x < 0 || testPos.x > xMax || testPos.z < 0 || testPos.z > zMax)
                     {
-                        //Debug.Log($"Out of bounds or failed to hit on raycast");
+                        //Debug.Log($"Out of bounds");
+                        return false;
+                    }
+                    else if (!Physics.Raycast(testPos, Vector3.down, out hit, 25, groundLayerMask))
+                    {
+                        //Debug.Log($"Failed to hit on raycast");
                         return false;
                     }
                     else
                     {
                         float hitHeight = hit.point.y;
-                        float errorMargin = 0.01f;
                         //Debug.Log($"Test modifier ({i}, {j}), adjusted position {position}, raycast down hit at height {hitHeight}, error margin {errorMargin}");
 
-                        if ((hitHeight < 0f - errorMargin || hitHeight > 0f + errorMargin) && (hitHeight < 2.5f - errorMargin || hitHeight > 2.5f + errorMargin))
+                        if (hitHeight < minSpawnHeight)
                         {
-                            //Debug.Log($"Point.y != 0 or 2.5, therefore pit or cliff, therefore not alien spawnable. Adding to alienExclusionArea.");
+                            //Debug.Log($"Point.y < {minSpawnHeight}, therefore unacceptable pit or off map, therefore not alien spawnable. Marking position as Banned for aliens.");
 
                             for (int k = -1; k <= 1; k++)
                             {
@@ -538,6 +600,7 @@ public class MapManager : SerializableSingleton<MapManager>
     public void RegisterMineral(Mineral mineral)
     {
         UpdatePositionAvailability(mineral.gameObject, mineral.transform.position, null, true);
+        mineral.NavMeshObstacle.carving = true;
     }
     
     /// <summary>
@@ -559,6 +622,7 @@ public class MapManager : SerializableSingleton<MapManager>
     public void DeRegisterMineral(Mineral mineral)
     {
         UpdatePositionAvailability(mineral.gameObject, mineral.transform.position, null, false);
+        mineral.NavMeshObstacle.carving = false;
     }
 
     /// <summary>
@@ -573,10 +637,10 @@ public class MapManager : SerializableSingleton<MapManager>
             int z = Mathf.RoundToInt(position.z);
             positions[x, z].AliensBanned = true;
 
-            Vector3 pos = new Vector3(x, AlienFactory.Instance.AlienSpawnHeight, z);
+            Vector3 pos = new Vector3(x, AlienFactory.Instance.AlienInstantiationHeight, z);
             tutorialAlienSpawnPoints.Remove(pos);
             gameplayAlienSpawnPoints.Remove(pos);
-            currentAlienSpawnPoints.Remove(pos);
+            currentAlienSpawnPoints?.Remove(pos);
             majorityAlienSpawnPoints?.Remove(pos);
             minorityAlienSpawnPoints?.Remove(pos);
         }
@@ -597,7 +661,7 @@ public class MapManager : SerializableSingleton<MapManager>
         {
             int x = (int)Mathf.Round(position.x);
             int z = (int)Mathf.Round(position.z);
-            Vector3 pos = new Vector3(x, AlienFactory.Instance.AlienSpawnHeight, z);
+            Vector3 pos = new Vector3(x, AlienFactory.Instance.AlienInstantiationHeight, z);
 
             //Debug.Log($"MapController.UpdateAvailablePositions() offset loop for {gameObject} at position {position}, x: {x}/{xMax}, z: {z}/{zMax}, hasBuilding: {hasBuilding}, hasMineral: {hasMineral}");
             if (hasBuilding != null)
@@ -607,6 +671,11 @@ public class MapManager : SerializableSingleton<MapManager>
 
             if (hasMineral != null)
             {
+                if (!initialised)
+                {
+                    Initialise();
+                }
+
                 positions[x, z].HasMineral = hasMineral.Value;
             }
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ToolTips : SerializableSingleton<ToolTips>
+public class ToolTips : PublicInstanceSerializableSingleton<ToolTips>
 {
     //All variables being set up setting up an Enum to direct what tooltip should pop up
     [SerializeField] private Camera uiCamera;

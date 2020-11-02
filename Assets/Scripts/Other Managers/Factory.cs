@@ -17,7 +17,7 @@ public enum ENone
 /// <typeparam name="FactoryType">The type of the factory.</typeparam>
 /// <typeparam name="ProductType">The type of the product that the factory makes.</typeparam>
 /// <typeparam name="ProductEnum">The enum of the product that the factory makes.</typeparam>
-public class Factory<FactoryType, ProductType, ProductEnum> : SerializableSingleton<FactoryType>
+public class Factory<FactoryType, ProductType, ProductEnum> : PublicInstanceSerializableSingleton<FactoryType>
     where FactoryType : Factory<FactoryType, ProductType, ProductEnum>, new()
     where ProductType : MonoBehaviour
     where ProductEnum : Enum

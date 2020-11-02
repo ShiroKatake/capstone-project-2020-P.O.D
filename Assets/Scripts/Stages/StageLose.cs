@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// The stage of the game that is triggered if the player loses.
 /// </summary>
-public class StageLose : SerializableSingleton<StageLose>, IStage
+public class StageLose : PublicInstanceSerializableSingleton<StageLose>, IStage
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
@@ -39,6 +39,7 @@ public class StageLose : SerializableSingleton<StageLose>, IStage
     {
         goMessage.SetText(false);
         uiManager.GetComponent<UIManager>().SetGameOverCanvasActive(true);
+		Time.timeScale = 0;
         yield return null;
     }
 }
