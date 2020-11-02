@@ -468,7 +468,7 @@ public class Building : CollisionListener
                             (!buildInPits && IsInPit()) 
                             || IsColliding() 
                             || IsOnCliff() 
-                            || MouseOverUI() 
+                            || CheckMouseOverUI() 
                             || (resourceCollector != null && !resourceCollector.CanCollectResourcesAtPosition())
                         ) && MapManager.Instance.PositionAvailableForBuilding(this);
 
@@ -527,9 +527,14 @@ public class Building : CollisionListener
     /// <summary>
     /// Checks if the mouse is over the UI before placement.
     /// </summary>
-    private bool MouseOverUI()
-    {        
-        PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
+    private bool CheckMouseOverUI()
+    {
+        if (MouseOverGraphic.Instance != null){
+            return MouseOverGraphic.Instance.IsOverGraphic();
+        } else {
+            return false;
+        }
+        /*PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
         pointerEventData.position = ReInput.controllers.Mouse.screenPosition;
 
         List<RaycastResult> raycastResultList = new List<RaycastResult>();
@@ -545,7 +550,7 @@ public class Building : CollisionListener
         }
 
         //Debug.Log("Not Over UI");
-        return false;
+        return false;*/
     }
 
     /// <summary>
