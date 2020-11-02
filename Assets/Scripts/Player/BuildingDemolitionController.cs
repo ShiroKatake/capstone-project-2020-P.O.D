@@ -8,7 +8,7 @@ using UnityEngine.UI;
 /// <summary>
 /// A player script for disabling and demolishing buildings.
 /// </summary>
-public class BuildingDemolitionController : SerializableSingleton<BuildingDemolitionController>
+public class BuildingDemolitionController : PublicInstanceSerializableSingleton<BuildingDemolitionController>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 

@@ -150,8 +150,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7d1fe85e34b94943ad23931779e30d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 20
-  currentHealth: 20
+  maxHealth: 50
+  currentHealth: 50
 --- !u!1 &6702033319860156753
 GameObject:
   m_ObjectHideFlags: 0
@@ -300,6 +300,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Tower Model
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 8fc4d12686ac9cd4b83ce0aa7395a139,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8fc4d12686ac9cd4b83ce0aa7395a139, type: 3}

@@ -4,7 +4,7 @@ using System;
 using UnityEngine.Audio;
 using UnityEngine;
 
-public class PlayUISound : SerializableSingleton<PlayUISound>
+public class PlayUISound : PublicInstanceSerializableSingleton<PlayUISound>
 {
     public void Negative()
     {
