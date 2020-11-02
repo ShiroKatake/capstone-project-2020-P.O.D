@@ -34,7 +34,12 @@ public class StoreDisperseUITexts : MonoBehaviour
 		disperseBonus.text = $"Disperse bonus: <color=#FFB500>+{RatioManager.Instance.DisperseBonus}%</color>";
 		wavesRemaining.text = $"Waves remaining: {AlienManager.Instance.WavesRemaining}";
 
-		Rebuild();
+		StartCoroutine("Enable");
+	}
+
+	private void OnDisable()
+	{		
+		Time.timeScale = 1;
 	}
 
 	private void Rebuild()
@@ -45,5 +50,12 @@ public class StoreDisperseUITexts : MonoBehaviour
 		}
 		//Refresh the biggest container last
 		LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
+	}
+
+	private IEnumerator Enable()
+	{
+		Rebuild();
+		yield return new WaitForEndOfFrame();
+		//Time.timeScale = 0;
 	}
 }
