@@ -50,6 +50,8 @@ public class ButtonInteract : MonoBehaviour
 	{
 		if (gameObject.activeInHierarchy)
 		{
+			if (currentCoroutine != null)
+				StopCoroutine(currentCoroutine);
 			currentCoroutine = FadeImageToColor(image, color);
 			StartCoroutine(currentCoroutine);
 		}
@@ -62,7 +64,7 @@ public class ButtonInteract : MonoBehaviour
 		{
 			currentFade += Time.unscaledDeltaTime;
 			image.color = Color.Lerp(image.color, color, currentFade / fadeDuration);
-			yield return null;
+			yield return new WaitForEndOfFrame();
 		}
     }
 
