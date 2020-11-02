@@ -5762,7 +5762,6 @@ GameObject:
   m_Component:
   - component: {fileID: 437762844162004883}
   - component: {fileID: 840230826730628676}
-  - component: {fileID: 8703347458339765905}
   m_Layer: 5
   m_Name: Building Bar
   m_TagString: Untagged
@@ -12655,7 +12654,7 @@ GameObject:
   - component: {fileID: 4528282981372622712}
   - component: {fileID: 4528282981372622713}
   - component: {fileID: 274707102}
-  - component: {fileID: 274707103}
+  - component: {fileID: 1550338136007018757}
   m_Layer: 5
   m_Name: UI
   m_TagString: Untagged
@@ -12913,7 +12912,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &274707103
+--- !u!114 &1550338136007018757
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -12922,11 +12921,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 4528282981372622706}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3bce5f937d33df84a8375c2383518dd0, type: 3}
+  m_Script: {fileID: 11500000, guid: 912d0bda65ef046408e0fa9f5789e010, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Raycaster: {fileID: 4528282981372622707}
-  evntSys: {fileID: 4528282981056551271}
+  evntSys: {fileID: 0}
 --- !u!1 &4528282981401134449
 GameObject:
   m_ObjectHideFlags: 0
@@ -15414,7 +15413,6 @@ GameObject:
   - component: {fileID: 7025873575584992104}
   - component: {fileID: 3849447040461422493}
   - component: {fileID: 4814866292403290904}
-  - component: {fileID: 6719690786183218521}
   m_Layer: 5
   m_Name: Gas Pump Button
   m_TagString: Untagged
@@ -21537,7 +21535,6 @@ GameObject:
   - component: {fileID: 2542754171024143946}
   - component: {fileID: 1279841938344895107}
   - component: {fileID: 2989815359949143417}
-  - component: {fileID: 4528034895661352830}
   m_Layer: 5
   m_Name: Harvester Button
   m_TagString: Untagged
@@ -25231,12 +25228,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!224 &2647383470585378577 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 2992411899632503212, guid: adf3464973acc184c946d90c2b49c1b1,
-    type: 3}
-  m_PrefabInstance: {fileID: 953157807707012797}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1329989833404019359 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2256120126282222626, guid: adf3464973acc184c946d90c2b49c1b1,
@@ -25267,3 +25258,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &2647383470585378577 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 2992411899632503212, guid: adf3464973acc184c946d90c2b49c1b1,
+    type: 3}
+  m_PrefabInstance: {fileID: 953157807707012797}
+  m_PrefabAsset: {fileID: 0}

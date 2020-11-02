@@ -468,7 +468,7 @@ public class Building : CollisionListener
                             (!buildInPits && IsInPit()) 
                             || IsColliding() 
                             || IsOnCliff() 
-                            || MouseOverUI() 
+                            || CheckMouseOverUI() 
                             || (resourceCollector != null && !resourceCollector.CanCollectResourcesAtPosition())
                         ) && MapManager.Instance.PositionAvailableForBuilding(this);
 
