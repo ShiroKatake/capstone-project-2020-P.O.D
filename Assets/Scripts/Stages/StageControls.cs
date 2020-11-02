@@ -15,6 +15,7 @@ public class StageControls : PublicInstanceSerializableSingleton<StageControls>,
     [SerializeField] private UIElementStatusManager uiBorderUIEC;
     [SerializeField] private UIElementStatusManager consoleUIEC;
     [SerializeField] private UIElementStatusManager buildingAndResourcesBarUIEC;
+    [SerializeField] private UIElementStatusManager resourceBar;
     [SerializeField] private UIElementStatusManager miniMapBorderUIEC;
     [SerializeField] private UIElementStatusManager miniMapUIEC;
     [SerializeField] private UIElementStatusManager mineralsHighlightUIEC;
@@ -204,7 +205,8 @@ public class StageControls : PublicInstanceSerializableSingleton<StageControls>,
         console.ClearDialogue();
         console.SubmitDialogue("detect minerals", 0, false, false);
         buildingAndResourcesBarUIEC.Visible = true;
-        miniMapBorderUIEC.Visible = true;
+		resourceBar.Visible = true;
+		miniMapBorderUIEC.Visible = true;
 
         while (!miniMapBorderUIEC.FinishedFlickeringIn)
         {

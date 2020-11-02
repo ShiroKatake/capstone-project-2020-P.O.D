@@ -168,7 +168,8 @@ public class ClockManager : PublicInstanceSerializableSingleton<ClockManager>
                 time24hr -= cycleDuration;
                 daytime = true;
                 UIColorManager.Instance.SetDay();
-                AudioManager.Instance.SwitchBackgroundTrack(AudioManager.ESound.DayTimeLvlOne);
+				RatioManager.Instance.UpdateTargetRatio();
+				AudioManager.Instance.SwitchBackgroundTrack(AudioManager.ESound.DayTimeLvlOne);
             }
         }
     }

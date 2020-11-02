@@ -46,7 +46,8 @@ public class StageWin : PublicInstanceSerializableSingleton<StageWin>, IStage
     public IEnumerator Execution()
     {
         goMessage.SetText(true);
-        uiManager.GetComponent<UIManager>().SetGameOverCanvasActive(true);
+		Time.timeScale = 0;
+		uiManager.GetComponent<UIManager>().SetGameOverCanvasActive(true);
         yield return null;
     }
 }

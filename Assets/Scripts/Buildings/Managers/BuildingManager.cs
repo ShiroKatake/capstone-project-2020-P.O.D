@@ -129,7 +129,7 @@ public class BuildingManager : PublicInstanceSerializableSingleton<BuildingManag
     }
 
     /// <summary>
-    /// Checks if a building of the specified type has been placed.
+    /// Checks the number of buildings of a specified type that have been placed.
     /// </summary>
     /// <param name="buildingType">The type of building you want to check for.</param>
     /// <returns>Whether a building of the specified type has been placed.</returns>
@@ -140,6 +140,46 @@ public class BuildingManager : PublicInstanceSerializableSingleton<BuildingManag
         foreach (Building b in buildings)
         {
             if (b.BuildingType == buildingType && b.Placed)
+            {
+                result++;
+            }
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// Checks the number of buildings of a specified type that are built and operational.
+    /// </summary>
+    /// <param name="buildingType">The type of building you want to check for.</param>
+    /// <returns>Whether a building of the specified type has been placed.</returns>
+    public int BuiltAndOperationalBuildingsCount(EBuilding buildingType)
+    {
+        int result = 0;
+
+        foreach (Building b in buildings)
+        {
+            if (b.BuildingType == buildingType && b.Built && b.Operational)
+            {
+                result++;
+            }
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// Checks the number of buildings of a specified type that are built but not operational.
+    /// </summary>
+    /// <param name="buildingType">The type of building you want to check for.</param>
+    /// <returns>Whether a building of the specified type has been placed.</returns>
+    public int BuiltAndNonOperationalBuildingsCount(EBuilding buildingType)
+    {
+        int result = 0;
+
+        foreach (Building b in buildings)
+        {
+            if (b.BuildingType == buildingType && b.Built && !b.Operational)
             {
                 result++;
             }
@@ -203,8 +243,10 @@ public class BuildingManager : PublicInstanceSerializableSingleton<BuildingManag
 			if (b.Operational && ((!power && b.PowerConsumption > 0) || (!water && b.WaterConsumption > 0) || (!plants && b.PlantsConsumption > 0) || (!gas && b.GasConsumption > 0)))
             {
                 Debug.Log($"Disabling {b.name}");
+
                 b.Operational = false;
-            }
+				RatioManager.Instance.UpdateCurrentRatio();
+			}
         }
     }
 
@@ -224,8 +266,10 @@ public class BuildingManager : PublicInstanceSerializableSingleton<BuildingManag
             if (!b.Operational && (power || b.PowerConsumption == 0) && (water || b.WaterConsumption == 0) && (waste || b.PlantsConsumption == 0) || (gas || b.GasConsumption == 0))
             {
                 Debug.Log($"Enabling {b.name}");
+
                 b.Operational = true;
-            }
+				RatioManager.Instance.UpdateCurrentRatio();
+			}
         }
     }
 }

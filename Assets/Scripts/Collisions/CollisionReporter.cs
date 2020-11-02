@@ -15,10 +15,10 @@ public class CollisionReporter : MonoBehaviour
     [SerializeField] private List<CollisionListener> collisionListeners;
     [SerializeField] private bool reportOnCollisionEnter;
     [SerializeField] private bool reportOnCollisionExit;
-    [SerializeField] private bool reportOnCollisionStay;
+    //[SerializeField] private bool reportOnCollisionStay;
     [SerializeField] private bool reportOnTriggerEnter;
     [SerializeField] private bool reportOnTriggerExit;
-    [SerializeField] private bool reportOnTriggerStay;
+    //[SerializeField] private bool reportOnTriggerStay;
     
     //Non-Serialized Fields------------------------------------------------------------------------
 
@@ -45,10 +45,10 @@ public class CollisionReporter : MonoBehaviour
     /// </summary>
     public bool ReportOnCollisionExit { get => reportOnCollisionExit; set => reportOnCollisionExit = value; }
 
-    /// <summary>
-    /// Should CollisionReporter report OnCollisionStay messages to its ICollisionListeners?
-    /// </summary>
-    public bool ReportOnCollisionStay { get => reportOnCollisionStay; set => reportOnCollisionStay = value; }
+    ///// <summary>
+    ///// Should CollisionReporter report OnCollisionStay messages to its ICollisionListeners?
+    ///// </summary>
+    //public bool ReportOnCollisionStay { get => reportOnCollisionStay; set => reportOnCollisionStay = value; }
 
     /// <summary>
     /// Should CollisionReporter report OnTriggerEnter messages to its ICollisionListeners?
@@ -60,10 +60,10 @@ public class CollisionReporter : MonoBehaviour
     /// </summary>
     public bool ReportOnTriggerExit { get => reportOnTriggerExit; set => reportOnTriggerExit = value; }
 
-    /// <summary>
-    /// Should CollisionReporter report OnTriggerStay messages to its ICollisionListeners?
-    /// </summary>
-    public bool ReportOnTriggerStay { get => reportOnTriggerStay; set => reportOnTriggerStay = value; }
+    ///// <summary>
+    ///// Should CollisionReporter report OnTriggerStay messages to its ICollisionListeners?
+    ///// </summary>
+    //public bool ReportOnTriggerStay { get => reportOnTriggerStay; set => reportOnTriggerStay = value; }
 
     /// <summary>
     /// This collision reporter's rigidbody component.
@@ -150,21 +150,21 @@ public class CollisionReporter : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// OnCollisionStay is called once per frame for every collider/rigidbody that is touching rigidbody/collider.
-    /// </summary>
-    /// <param name="collision">The collision data associated with this event.</param>
-    void OnCollisionStay(Collision collision)
-    {
-        if (reportOnCollisionStay)
-        {
-            //Debug.Log("CollisionReporter.OnCollisionStay()");
-            foreach (CollisionListener l in collisionListeners)
-            {
-                l.OnCollisionStay(collision);
-            }
-        }
-    }
+    ///// <summary>
+    ///// OnCollisionStay is called once per frame for every collider/rigidbody that is touching rigidbody/collider.
+    ///// </summary>
+    ///// <param name="collision">The collision data associated with this event.</param>
+    //void OnCollisionStay(Collision collision)
+    //{
+    //    if (reportOnCollisionStay)
+    //    {
+    //        //Debug.Log("CollisionReporter.OnCollisionStay()");
+    //        foreach (CollisionListener l in collisionListeners)
+    //        {
+    //            l.OnCollisionStay(collision);
+    //        }
+    //    }
+    //}
 
     /// <summary>
     /// When a GameObject collides with another GameObject, Unity calls OnTriggerEnter.
@@ -198,19 +198,19 @@ public class CollisionReporter : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// OnTriggerStay is called almost all the frames for every Collider other that is touching the trigger. The function is on the physics timer so it won't necessarily run every frame.
-    /// </summary>
-    /// <param name="other">The other Collider involved in this collision.</param>
-    void OnTriggerStay(Collider other)
-    {
-        if (reportOnTriggerStay)
-        {
-            //Debug.Log("CollisionReporter.OnTriggerStay()");
-            foreach (CollisionListener l in collisionListeners)
-            {
-                l.OnTriggerStay(other);
-            }
-        }
-    }
+    ///// <summary>
+    ///// OnTriggerStay is called almost all the frames for every Collider other that is touching the trigger. The function is on the physics timer so it won't necessarily run every frame.
+    ///// </summary>
+    ///// <param name="other">The other Collider involved in this collision.</param>
+    //void OnTriggerStay(Collider other)
+    //{
+    //    if (reportOnTriggerStay)
+    //    {
+    //        //Debug.Log("CollisionReporter.OnTriggerStay()");
+    //        foreach (CollisionListener l in collisionListeners)
+    //        {
+    //            l.OnTriggerStay(other);
+    //        }
+    //    }
+    //}
 }
