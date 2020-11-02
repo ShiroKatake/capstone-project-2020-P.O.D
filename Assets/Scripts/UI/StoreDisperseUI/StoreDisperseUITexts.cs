@@ -12,10 +12,17 @@ public class StoreDisperseUITexts : MonoBehaviour
 	[SerializeField] TextMeshProUGUI disperseBonus;
 	[SerializeField] TextMeshProUGUI wavesRemaining;
 
+	private List<RectTransform> rectsToRefresh = new List<RectTransform>();
 	private RectTransform rectTransform;
 
 	private void Awake()
-	{		
+	{
+		HoveringDialogueDemi_RefreshElement[] refreshElements = GetComponentsInChildren<HoveringDialogueDemi_RefreshElement>();
+		foreach (HoveringDialogueDemi_RefreshElement refreshElement in refreshElements)
+		{
+			rectsToRefresh.Add(refreshElement.GetComponent<RectTransform>());
+		}
+		rectsToRefresh.Reverse();
 		rectTransform = GetComponent<RectTransform>();
 	}
 
@@ -27,6 +34,16 @@ public class StoreDisperseUITexts : MonoBehaviour
 		disperseBonus.text = $"Disperse bonus: <color=#FFB500>+{RatioManager.Instance.DisperseBonus}%</color>";
 		wavesRemaining.text = $"Waves remaining: {AlienManager.Instance.WavesRemaining}";
 
+		Rebuild();
+	}
+
+	private void Rebuild()
+	{
+		foreach (var rect in rectsToRefresh)
+		{
+			LayoutRebuilder.ForceRebuildLayoutImmediate(rect);
+		}
+		//Refresh the biggest container last
 		LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
 	}
 }
