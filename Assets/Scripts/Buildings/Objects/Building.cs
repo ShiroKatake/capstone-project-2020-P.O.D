@@ -793,6 +793,8 @@ public class Building : CollisionListener
         built = true;
         Operational = true; //Using property to trigger activation of any resource collector component attached.
 
+		RatioManager.Instance.UpdateCurrentRatio();
+
         if (turretShooter != null)
         {
             turretShooter.Place();

@@ -46,6 +46,13 @@ public class StageMainGame: PublicInstanceSerializableSingleton<StageMainGame>, 
                 AudioManager.Instance.StopBackGroundMusic();
                 break;
             }
+            else if (POD.Instance.HealthController.IsDead())
+            {
+                StageManager.Instance.SetStage(EStage.Lose);
+                AudioManager.Instance.PlaySound(AudioManager.ESound.Lose);
+                AudioManager.Instance.StopBackGroundMusic();
+                break;
+            }
             else
             {
                 yield return null;

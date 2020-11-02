@@ -29,26 +29,49 @@ public class ButtonInteract : MonoBehaviour
 
     private bool interactable;
     private bool highlighted;
+	private float lerpPerc;
+	IEnumerator currentCoroutine;
 
-    private void Awake()
+	private void Awake()
     {
         interactable = true;
         highlighted = false;
-        SetNormal();
-    }
+
+		InitializeColors(border, borderNormal);
+		InitializeColors(fill, fillNormal);
+	}
 
     public void SetDefault()
     {
         SetNormal();
     }
 
-    private void FadeToColor(Image image, Color color)
-    {
-        Graphic graphic = image.GetComponent<Graphic>();
-        graphic.CrossFadeColor(color, fadeDuration, true, false);
+	public void FadeToColor(Image image, Color color)
+	{
+		if (gameObject.activeInHierarchy)
+		{
+			currentCoroutine = FadeImageToColor(image, color);
+			StartCoroutine(currentCoroutine);
+		}
+	}
+
+	private IEnumerator FadeImageToColor(Image image, Color color)
+	{
+		float currentFade = 0f;
+		while (currentFade < fadeDuration)
+		{
+			currentFade += Time.unscaledDeltaTime;
+			image.color = Color.Lerp(image.color, color, currentFade / fadeDuration);
+			yield return null;
+		}
     }
 
-    public void SetNormal()
+	public void InitializeColors(Image image, Color color)
+	{
+		image.color = color;
+	}
+
+	public void SetNormal()
     {
         highlighted = false;
 
@@ -56,8 +79,8 @@ public class ButtonInteract : MonoBehaviour
         {
             FadeToColor(border, borderNormal);
             FadeToColor(fill, fillNormal);
-        }
-    }
+		}
+	}
 
     public void SetHighlighted()
     {
@@ -85,6 +108,8 @@ public class ButtonInteract : MonoBehaviour
         {
             SetNormal();
         }
+
+		//Debug.Log("Setting to interactable");
     }
 
     private void SetUninteractable()
@@ -96,10 +121,12 @@ public class ButtonInteract : MonoBehaviour
         {
             FadeToColor(icon, iconUninteractable);
         }
-    }
+
+		//Debug.Log("Setting to UNinteractable");
+	}
 
 
-    public void SayYes()
+	public void SayYes()
     {
         print("Button has been pressed");
     }

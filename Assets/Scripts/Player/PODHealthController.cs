@@ -121,6 +121,15 @@ public class PODHealthController : PrivateInstanceSerializableSingleton<PODHealt
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
+    /// Checks with POD's health component if POD is dead.
+    /// </summary>
+    /// <returns>Is POD dead?</returns>
+    public bool IsDead()
+    {
+        return health.IsDead();
+    }
+
+    /// <summary>
     /// Checks the player's health and if they're still alive.
     /// </summary>
     private void OnDie()

@@ -216,6 +216,7 @@ public class BuildingDemolitionController : PublicInstanceSerializableSingleton<
             enableDisableText.text = "Enable";
         }
 
+		RatioManager.Instance.UpdateCurrentRatio();
         HideDemolitionMenu();
     }
 
