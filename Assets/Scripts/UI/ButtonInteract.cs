@@ -48,14 +48,17 @@ public class ButtonInteract : MonoBehaviour
 
 	public void FadeToColor(Image image, Color color)
 	{
-		currentCoroutine = FadeImageToColor(image, color);
-		StartCoroutine(currentCoroutine);
+		if (gameObject.activeInHierarchy)
+		{
+			currentCoroutine = FadeImageToColor(image, color);
+			StartCoroutine(currentCoroutine);
+		}
 	}
 
 	private IEnumerator FadeImageToColor(Image image, Color color)
 	{
 		float currentFade = 0f;
-		while (image != null && currentFade < fadeDuration)
+		while (currentFade < fadeDuration)
 		{
 			currentFade += Time.unscaledDeltaTime;
 			image.color = Color.Lerp(image.color, color, currentFade / fadeDuration);
