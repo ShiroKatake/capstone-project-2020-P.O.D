@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// A manager class for buildings.
 /// </summary>
-public class BuildingManager : SerializableSingleton<BuildingManager>
+public class BuildingManager : PublicInstanceSerializableSingleton<BuildingManager>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 

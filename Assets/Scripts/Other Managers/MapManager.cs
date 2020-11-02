@@ -9,7 +9,7 @@ using UnityEngine.AI;
 /// <summary>
 /// A controller class for tracking which parts of the map have buildings, can be spawned to by aliens, etc.
 /// </summary>
-public class MapManager : SerializableSingleton<MapManager>
+public class MapManager : PublicInstanceSerializableSingleton<MapManager>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
@@ -600,6 +600,7 @@ public class MapManager : SerializableSingleton<MapManager>
     public void RegisterMineral(Mineral mineral)
     {
         UpdatePositionAvailability(mineral.gameObject, mineral.transform.position, null, true);
+        mineral.NavMeshObstacle.carving = true;
     }
     
     /// <summary>
@@ -621,6 +622,7 @@ public class MapManager : SerializableSingleton<MapManager>
     public void DeRegisterMineral(Mineral mineral)
     {
         UpdatePositionAvailability(mineral.gameObject, mineral.transform.position, null, false);
+        mineral.NavMeshObstacle.carving = false;
     }
 
     /// <summary>

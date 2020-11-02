@@ -43,7 +43,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 4.9, y: 3, z: 4.9}
+  m_Size: {x: 4.9, y: 3, z: 3.9}
   m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!114 &688455073378012565
 MonoBehaviour:
@@ -124,7 +124,7 @@ MonoBehaviour:
   consoleName: '{Harvester}'
   oreCost: 4
   powerConsumption: 2
-  waterConsumption: 5
+  waterConsumption: 0
   plantsConsumption: 0
   gasConsumption: 0
   buildTime: 10
@@ -142,15 +142,14 @@ MonoBehaviour:
   - {x: 1.5, y: 0, z: 0}
   - {x: 1.5, y: 0, z: 0.75}
   buildingFoundationOffsets:
-  - {x: -1, y: -0.45, z: -1}
-  - {x: -1, y: -0.45, z: 0}
-  - {x: -1, y: -0.45, z: 1}
-  - {x: 0, y: -0.45, z: -1}
-  - {x: 0, y: -0.45, z: 0}
-  - {x: 0, y: -0.45, z: 1}
-  - {x: 1, y: -0.45, z: -1}
-  - {x: 1, y: -0.45, z: 0}
-  - {x: 1, y: -0.45, z: 1}
+  - {x: -1, y: -0.45, z: -0.5}
+  - {x: -1, y: -0.45, z: 0.5}
+  - {x: 0, y: -0.45, z: -0.5}
+  - {x: 0, y: -0.45, z: 0.5}
+  - {x: 1, y: -0.45, z: -0.5}
+  - {x: 1, y: -0.45, z: 0.5}
+  buildingFoundationOffsetsOnXAxis: 3
+  buildingFoundationOffsetsOnZAxis: 2
   model: {fileID: 6634092763135449967}
   rendererMaterialSets:
   - renderer: {fileID: 8247929216392846752}
@@ -263,7 +262,7 @@ GameObject:
   - component: {fileID: 6517538552908591757}
   - component: {fileID: 1627942342017203101}
   - component: {fileID: 2263595097177697541}
-  m_Layer: 16
+  m_Layer: 13
   m_Name: Demolition Menu Collider
   m_TagString: Building
   m_Icon: {fileID: 0}

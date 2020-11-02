@@ -6,7 +6,7 @@ using UnityEngine.UI;
 /// <summary>
 /// A class to control the clock in the UI and the day-night cycle.
 /// </summary>
-public class ClockManager : SerializableSingleton<ClockManager>
+public class ClockManager : PublicInstanceSerializableSingleton<ClockManager>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 

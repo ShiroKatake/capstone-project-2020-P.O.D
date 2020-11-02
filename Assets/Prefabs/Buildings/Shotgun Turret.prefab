@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1025834903233913818}
   - component: {fileID: 7811568116054863030}
   - component: {fileID: 404578392010752061}
-  m_Layer: 16
+  m_Layer: 13
   m_Name: Barrel Housing Demolition Menu Collider
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -158,7 +158,7 @@ GameObject:
   - component: {fileID: 3824102319696306700}
   - component: {fileID: 1085200518175901428}
   - component: {fileID: 1863581869014743651}
-  m_Layer: 16
+  m_Layer: 13
   m_Name: Barrel Demolition Menu Collider
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -437,6 +437,8 @@ MonoBehaviour:
   - {x: 0.3, y: 0, z: 0.3}
   buildingFoundationOffsets:
   - {x: 0, y: -0.45, z: 0}
+  buildingFoundationOffsetsOnXAxis: 1
+  buildingFoundationOffsetsOnZAxis: 1
   model: {fileID: 6448044414127642783}
   rendererMaterialSets:
   - renderer: {fileID: 3025660970298743260}
@@ -536,9 +538,9 @@ MonoBehaviour:
   detectionRadius: 15
   projectileType: 2
   targetClosest: 1
-  numProjectiles: 10
-  yAxisVariance: 0.1
-  zAxisVariance: 0.1
+  numProjectiles: 20
+  spreadAngle: 25
+  shotForce: 7.5
   shotCooldown: 3
   visibleTargets: []
   target: {fileID: 0}

@@ -4,7 +4,7 @@ using System;
 using UnityEngine.Audio;
 using UnityEngine;
 
-public class AudioManager : SerializableSingleton<AudioManager>
+public class AudioManager : PublicInstanceSerializableSingleton<AudioManager>
 {
     //gonna break these up later
     public enum ESound

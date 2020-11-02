@@ -7,7 +7,7 @@ using Rewired;
 /// <summary>
 /// A manager class for resource gathering and usage.
 /// </summary>
-public class ResourceManager : SerializableSingleton<ResourceManager>
+public class ResourceManager : PublicInstanceSerializableSingleton<ResourceManager>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
@@ -256,7 +256,7 @@ public class ResourceManager : SerializableSingleton<ResourceManager>
 	/// </summary>
 	private void Start()
     {
-        playerInputManager = PODController.Instance.PlayerInputManager;
+        playerInputManager = POD.Instance.PlayerInputManager;
     }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------

@@ -4,7 +4,7 @@ using System.Reflection;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-public class DamagePointer : SerializableSingleton<DamagePointer>
+public class DamagePointer : PublicInstanceSerializableSingleton<DamagePointer>
 {
     [SerializeField] private GameObject pointer;
     private Transform location;

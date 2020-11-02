@@ -226,6 +226,8 @@ MonoBehaviour:
   plantsConsumption: 0
   gasConsumption: 0
   buildTime: 10
+  buildInPits: 0
+  minBuildHeight: 0
   VFX: []
   cliffRaycastOffsets:
   - {x: -0.7, y: 0, z: -0.7}
@@ -242,6 +244,8 @@ MonoBehaviour:
   - {x: -0.5, y: -0.45, z: 0.5}
   - {x: 0.5, y: -0.45, z: -0.5}
   - {x: 0.5, y: -0.45, z: 0.5}
+  buildingFoundationOffsetsOnXAxis: 2
+  buildingFoundationOffsetsOnZAxis: 2
   model: {fileID: 5474086824787675355}
   rendererMaterialSets:
   - renderer: {fileID: 4982330930987599697}
@@ -325,6 +329,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resource: 4
   collectionRate: 4
+  isResourceGenerator: 0
 --- !u!95 &241347474389765784
 Animator:
   serializedVersion: 3
@@ -520,7 +525,7 @@ GameObject:
   - component: {fileID: 3558077146902482651}
   - component: {fileID: 5235377368204164264}
   - component: {fileID: 4205056560061834500}
-  m_Layer: 16
+  m_Layer: 13
   m_Name: Demolition Menu Collider
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -535,8 +540,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7152997880644383554}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0.0025004, y: 0.77897006, z: -0.074064}
-  m_LocalScale: {x: 0.275, y: 0.275, z: 0.275}
+  m_LocalPosition: {x: 0, y: 0.46, z: 0}
+  m_LocalScale: {x: 0.2064099, y: 0.2064099, z: 0.2064099}
   m_Children: []
   m_Father: {fileID: 2525359142059149831}
   m_RootOrder: 2

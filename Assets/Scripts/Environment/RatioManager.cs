@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class RatioManager : SerializableSingleton<RatioManager>
+public class RatioManager : PublicInstanceSerializableSingleton<RatioManager>
 {
 	[SerializeField] TerraformingUI terraformingUI;
 	[SerializeField] ProgressBar progressBar;

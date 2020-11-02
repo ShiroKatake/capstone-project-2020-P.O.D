@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public class TerraformingUI : SerializableSingleton<TerraformingUI>
+public class TerraformingUI : PublicInstanceSerializableSingleton<TerraformingUI>
 {
 	[SerializeField] private GameObject mainPanel;
 	[SerializeField] private GameObject greyPanel;
@@ -11,6 +11,14 @@ public class TerraformingUI : SerializableSingleton<TerraformingUI>
 	private int[] currentRatio = new int[3] { 0, 0 ,0 };
 	private int[] targetRatio = new int[3] { 0, 0, 0 };
 	private int[] buildingsNeeded = new int[3] { 0, 0, 0 };
+
+    private Rewired.Player playerInputManager;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        playerInputManager = POD.Instance.PlayerInputManager;
+    }
 
 	public bool IsEnabled
 	{
@@ -43,6 +51,20 @@ public class TerraformingUI : SerializableSingleton<TerraformingUI>
 	{
 		DisplayUI(false);
 	}
+
+    private void Update()
+    {
+        if (!PauseMenuManager.Paused)
+        {
+            bool productionUI = playerInputManager.GetButtonDown("ProductionUI");
+
+            if (productionUI)
+            {
+                //Debug.Log($"ProductionUI is {productionUI}, displaying UI");
+                IsEnabled = !IsEnabled;
+            }
+        }        
+    }
 
 	public void UpdateCurrent(int[] currentRatioArray)
 	{

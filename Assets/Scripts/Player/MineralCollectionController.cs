@@ -7,7 +7,7 @@ using UnityEngine.Events;
 /// <summary>
 /// A player script for collecting minerals.
 /// </summary>
-public class MineralCollectionController : SerializableSingleton<MineralCollectionController>
+public class MineralCollectionController : PublicInstanceSerializableSingleton<MineralCollectionController>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
@@ -53,7 +53,8 @@ public class MineralCollectionController : SerializableSingleton<MineralCollecti
     /// </summary>
     private void Start()
     {
-        playerInputManager = ReInput.players.GetPlayer(GetComponent<PlayerID>().Value);
+        playerInputManager = POD.Instance.PlayerInputManager;
+        //playerInputManager = ReInput.players.GetPlayer(GetComponent<PlayerID>().Value);
     }
 
     //Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------

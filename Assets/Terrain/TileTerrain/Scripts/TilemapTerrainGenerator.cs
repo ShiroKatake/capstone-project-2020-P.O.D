@@ -8,7 +8,7 @@ using UnityMeshSimplifier;
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
 [RequireComponent(typeof(MeshCollider))]
-public class TilemapTerrainGenerator : SerializableSingleton<TilemapTerrainGenerator>
+public class TilemapTerrainGenerator : PublicInstanceSerializableSingleton<TilemapTerrainGenerator>
 {
     MeshFilter filter;
     MeshCollider collider;

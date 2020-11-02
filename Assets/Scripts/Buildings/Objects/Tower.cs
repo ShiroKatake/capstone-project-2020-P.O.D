@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// A component class gathering all the bits of the tower needed by aliens because there's always that one stupid alien that can't find them.
 /// </summary>
-public class Tower : SerializableSingleton<Tower>
+public class Tower : PublicInstanceSerializableSingleton<Tower>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 

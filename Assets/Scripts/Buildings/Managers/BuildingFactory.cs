@@ -55,24 +55,12 @@ public class BuildingFactory : Factory<BuildingFactory, Building, EBuilding>
         building.Id = IdGenerator.Instance.GetNextId();
         building.Active = true;
 
-        if (building.Terraformer != null)
-        {
-            EnvironmentManager.Instance.RegisterBuilding(building.Terraformer);
-        }
+        if (building.Terraformer != null) EnvironmentManager.Instance.RegisterBuilding(building.Terraformer);
+        if (building.Model.localPosition != prefabs[buildingType].Model.localPosition) building.Model.localPosition = prefabs[buildingType].Model.localPosition;
+		if (buildingType == EBuilding.MachineGunTurret || buildingType == EBuilding.ShotgunTurret) onBuildingHasRange?.Invoke(building);
 
-        if (building.Model.localPosition != prefabs[buildingType].Model.localPosition)
-        {
-            //Debug.Log($"Correcting local position for {building}'s model");
-            building.Model.localPosition = prefabs[buildingType].Model.localPosition;
-        }
-
-		if (buildingType == EBuilding.MachineGunTurret || buildingType == EBuilding.ShotgunTurret)
-		{
-			//Debug.Log("Displaying Range.");
-			onBuildingHasRange?.Invoke(building);
-		}
-
-		onPlacementStarted?.Invoke(building);
+		onPlacementStarted?.Invoke(building);        
+        building.CanPlace();
 		
 		//Debug.Log($"BuildingFactory(), returning building ({building}), building collider position is {building.Collider.position} (world) / {building.Collider.localPosition} (local), building model position is {building.Model.position} (world) / {building.Model.localPosition} (local)");
 
