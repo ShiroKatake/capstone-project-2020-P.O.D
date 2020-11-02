@@ -159,7 +159,7 @@ MonoBehaviour:
   oreCost: 8
   powerConsumption: 6
   waterConsumption: 0
-  plantsConsumption: 0
+  plantsConsumption: 1
   gasConsumption: 0
   buildTime: 10
   buildInPits: 0
@@ -186,6 +186,8 @@ MonoBehaviour:
   - {x: -1, y: -0.45, z: -1}
   - {x: -1, y: -0.45, z: 0}
   - {x: -1, y: -0.45, z: 1}
+  buildingFoundationOffsetsOnXAxis: 3
+  buildingFoundationOffsetsOnZAxis: 3
   model: {fileID: 4215405745183885993}
   rendererMaterialSets:
   - renderer: {fileID: 1506364897671728230}
@@ -353,7 +355,7 @@ GameObject:
   - component: {fileID: 1405538788256786490}
   - component: {fileID: 4276839193058747821}
   - component: {fileID: 2771747102869957074}
-  m_Layer: 16
+  m_Layer: 13
   m_Name: Demolition Menu Collider
   m_TagString: Building
   m_Icon: {fileID: 0}

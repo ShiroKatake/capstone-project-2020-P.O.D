@@ -55,6 +55,8 @@ public class Building : CollisionListener
 
     [Header("Offsets of Foundations from Position")]
     [SerializeField] private List<Vector3> buildingFoundationOffsets;
+    [SerializeField] private int buildingFoundationOffsetsOnXAxis;
+    [SerializeField] private int buildingFoundationOffsetsOnZAxis;
 
     [Header("Model, Materials, etc.")]
     [SerializeField] private Transform model;
@@ -92,9 +94,8 @@ public class Building : CollisionListener
 
     //Positioning
     private bool colliding = false;
-    private bool validPlacement = true;
+    private bool initialisedValidPlacement = false;
 	private bool placementCurrentValid = true;
-	private bool materialChanged = false;
 	private List<Collider> otherColliders;
     Vector3 normalScale;
     LayerMask groundLayerMask;
@@ -106,7 +107,6 @@ public class Building : CollisionListener
     private bool operational = false;   //Is the building operational and doing its job?
     private bool built;                 //Has the building, after being placed, finished building?
     private bool disabledByPlayer;      //Has the player manually disabled this building? 
-
 
     private float normalBuildTime;
 
@@ -128,6 +128,16 @@ public class Building : CollisionListener
     /// The position of building foundations relative to the building's transform.position value.
     /// </summary>
     public List<Vector3> BuildingFoundationOffsets { get => buildingFoundationOffsets; }
+
+    /// <summary>
+    /// The number of building foundation offsets this building would have in a row along the X axis.
+    /// </summary>
+    public int BuildingFoundationOffsetsOnXAxis { get => buildingFoundationOffsetsOnXAxis; }
+
+    /// <summary>
+    /// The number of building foundation offsets this building would have in a row along the Z axis.
+    /// </summary>
+    public int BuildingFoundationOffsetsOnZAxis { get => buildingFoundationOffsetsOnZAxis; }
 
     /// <summary>
     /// The type of building this building is.
@@ -435,72 +445,89 @@ public class Building : CollisionListener
     /// Checks if the building is colliding while being placed, and updates colour appropriately.
     /// </summary>
     /// <returns>Is this building colliding with something?</returns>
-    public bool IsPlacementValid()
+    public bool CanPlace()
     {
-        if (active)
+        return CanPlace(out bool? none1, out bool? none2);
+    }
+
+    /// <summary>
+    /// Checks if the building is colliding while being placed, and updates colour appropriately.
+    /// </summary>
+    /// <param name="resourcesAvailable">Out parameter for whether sufficient resources were available for placing when running CanPlace().</param>
+    /// <param name="validPosition">Out parameter for whether sufficient resources were available for placing when running CanPlace().</param>
+    /// <returns>Is this building colliding with something?</returns>
+    public bool CanPlace(out bool? resourcesAvailable, out bool? validPosition)
+    {
+        resourcesAvailable = null;
+        validPosition = null;
+
+        if (!active) return true;
+        if (placed) return false;
+             
+        validPosition = !(
+                            (!buildInPits && IsInPit()) 
+                            || IsColliding() 
+                            || IsOnCliff() 
+                            || MouseOverUI() 
+                            || (resourceCollector != null && !resourceCollector.CanCollectResourcesAtPosition())
+                        ) && MapManager.Instance.PositionAvailableForBuilding(this);
+
+        resourcesAvailable = AreResourcesAvailable();
+        bool canPlace = resourcesAvailable.Value && validPosition.Value;
+	    bool changeMaterial = false;
+
+        if (canPlace)
         {
-            if (!placed)
+            if (!placementCurrentValid || !initialisedValidPlacement)
             {
-                //bool isInPit = !buildInPits && CheckInPit();
-                //bool isColliding = CheckColliding();
-                //bool isOnCliff = CheckOnCliff();
-                //bool isMouseOverUI = CheckMouseOverUI();
-                //bool isResourcesUnavailable = resourceCollector != null && !resourceCollector.CanCollectResourcesAtPosition();
-                //bool isErrorCondition = isInPit || isColliding || isOnCliff || isMouseOverUI || isResourcesUnavailable;
-
-                //Debug.Log($"{this}.IsPlacementValid(), isInPit: {isInPit}, isColliding: {isColliding}, isOnCliff: {isOnCliff}, isMouseOverUI: {isMouseOverUI}, isResourcesUnavailable: {isResourcesUnavailable}, isErrorCondition: {isErrorCondition}");
-                //validPlacement = !isErrorCondition && MapManager.Instance.PositionAvailableForBuilding(this);
-                validPlacement = !((!buildInPits && CheckInPit()) || CheckColliding() || CheckOnCliff() || CheckMouseOverUI() || (resourceCollector != null && !resourceCollector.CanCollectResourcesAtPosition())) && MapManager.Instance.PositionAvailableForBuilding(this);
-
-                if (!validPlacement && placementCurrentValid)
-				{
-					BuildingFactory.Instance.onPlacementInvalid?.Invoke();
-					placementCurrentValid = false;
-					materialChanged = false;
-				}
-
-				else if (validPlacement && !placementCurrentValid)
-				{
-					BuildingFactory.Instance.onPlacementValid?.Invoke();
-					placementCurrentValid = true;
-					materialChanged = false;
-				}
-
-				if (!materialChanged)
-				{
-					foreach (RendererMaterialSet r in rendererMaterialSets)
-					{
-						Material currentMaterial = (validPlacement ? r.transparent : buildingErrorMaterial);
-
-						for (int i = 0; i < r.renderer.materials.Length; i++)
-						{
-							UpdateRendererMaterials(r.renderer, currentMaterial, r.renderer.materials.Length);
-							break;
-						}
-					}
-
-					materialChanged = true;
-				}
-
-				return validPlacement;
-            }
-            else
-            {
-                Debug.Log($"Building {id} ran IsPlacementValid(), even though it's already placed.");
-                return false;
+                BuildingFactory.Instance.onPlacementValid?.Invoke();
+                placementCurrentValid = true;
+                changeMaterial = true;
+                initialisedValidPlacement = true;
             }
         }
         else
         {
-            return true;
+            if (placementCurrentValid || !initialisedValidPlacement)
+            {
+                BuildingFactory.Instance.onPlacementInvalid?.Invoke();
+                placementCurrentValid = false;
+                changeMaterial = true;
+                initialisedValidPlacement = true;
+            }
         }
 
+		if (changeMaterial)
+		{
+			foreach (RendererMaterialSet r in rendererMaterialSets)
+			{
+				Material currentMaterial = (canPlace ? r.transparent : buildingErrorMaterial);
+				UpdateRendererMaterials(r.renderer, currentMaterial, r.renderer.materials.Length);
+			}
+
+			changeMaterial = false;
+		}
+
+		return canPlace;
+    }
+
+    /// <summary>
+    /// Checks if there are enough resources available to build and maintain this building.
+    /// </summary>
+    /// <returns>Whether there are enough resources available to build and maintain this building.</returns>
+    private bool AreResourcesAvailable()
+    {
+        return ResourceManager.Instance.Ore >= oreCost
+            && (powerConsumption  == 0 || ResourceManager.Instance.PowerSupply  >= ResourceManager.Instance.PowerConsumption  + powerConsumption)
+            && (plantsConsumption == 0 || ResourceManager.Instance.PlantsSupply >= ResourceManager.Instance.PlantsConsumption + plantsConsumption)
+            && (waterConsumption  == 0 || ResourceManager.Instance.WaterSupply  >= ResourceManager.Instance.WaterConsumption  + waterConsumption)
+            && (gasConsumption    == 0 || ResourceManager.Instance.GasSupply    >= ResourceManager.Instance.GasConsumption    + gasConsumption);
     }
 
     /// <summary>
     /// Checks if the mouse is over the UI before placement.
     /// </summary>
-    private bool CheckMouseOverUI()
+    private bool MouseOverUI()
     {        
         PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
         pointerEventData.position = ReInput.controllers.Mouse.screenPosition;
@@ -524,7 +551,7 @@ public class Building : CollisionListener
     /// <summary>
     /// Checks if this building is currently in a pit.
     /// </summary>
-    private bool CheckInPit()
+    private bool IsInPit()
     {
         return transform.position.y < minBuildHeight;
         //bool result = transform.position.y < -0.1f;
@@ -535,7 +562,7 @@ public class Building : CollisionListener
     /// <summary>
     /// Verifies if this building should be considered to be colliding with another object.
     /// </summary>
-    private bool CheckColliding()
+    private bool IsColliding()
     {
         //Weird quirk of destroying one object and then instantating another and moving it to the same position: it triggers boths' OnTriggerEnter(),
         //even though one doesn't exist, and then the other doesn't have OnTriggerExit() triggered in the next frame. This checks for the existence of
@@ -584,7 +611,7 @@ public class Building : CollisionListener
     /// <summary>
     /// Verifies if this building is extending over a cliff edge.
     /// </summary>
-    private bool CheckOnCliff()
+    private bool IsOnCliff()
     {
         RaycastHit hit;
         Vector3 raycastPos;
@@ -808,6 +835,7 @@ public class Building : CollisionListener
         colliding = false;
         built = false;
         disabledByPlayer = false;
+        initialisedValidPlacement = false;
 
         //animator.enabled = false;
         health.Reset();

@@ -92,7 +92,7 @@ GameObject:
   - component: {fileID: 3352435815238226644}
   - component: {fileID: 5531650338609394439}
   - component: {fileID: 5879104661342599838}
-  m_Layer: 16
+  m_Layer: 13
   m_Name: Demolition Menu Collider
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -242,6 +242,8 @@ MonoBehaviour:
   - {x: 0.25, y: 0, z: 0.25}
   buildingFoundationOffsets:
   - {x: 0, y: -0.45, z: 0}
+  buildingFoundationOffsetsOnXAxis: 1
+  buildingFoundationOffsetsOnZAxis: 1
   model: {fileID: 8372951081081303490}
   rendererMaterialSets:
   - renderer: {fileID: 3018881853560271061}
