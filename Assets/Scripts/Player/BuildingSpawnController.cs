@@ -6,7 +6,7 @@ using Rewired;
 /// <summary>
 /// A controller class for building spawning.
 /// </summary>
-public class BuildingSpawnController : SerializableSingleton<BuildingSpawnController>
+public class BuildingSpawnController : PublicInstanceSerializableSingleton<BuildingSpawnController>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
@@ -267,7 +267,7 @@ public class BuildingSpawnController : SerializableSingleton<BuildingSpawnContro
     private Vector3 RawBuildingPositionToBuildingPosition(int radius)
     {
         Vector3 worldPos = transform.position;
-        Vector3 newOffset = rawBuildingMovement * PODController.Instance.MovementSpeed * Time.deltaTime;
+        Vector3 newOffset = rawBuildingMovement * POD.Instance.MovementController.MovementSpeed * Time.deltaTime;
         Vector3 newWorldPos = transform.position + newOffset;
         Vector3 newScreenPos = Camera.main.WorldToViewportPoint(newWorldPos);
 

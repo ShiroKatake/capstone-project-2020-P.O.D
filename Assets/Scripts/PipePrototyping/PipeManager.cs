@@ -6,7 +6,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-public class PipeManager : SerializableSingleton<PipeManager> {
+public class PipeManager : PublicInstanceSerializableSingleton<PipeManager> {
 
     List<PipeBuilding> buildings = new List<PipeBuilding>();
     List<PipeNode> nodes = new List<PipeNode>();

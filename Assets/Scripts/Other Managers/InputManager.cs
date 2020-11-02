@@ -7,7 +7,7 @@ using Rewired;
 /// <summary>
 /// A manager class for getting the right input values from the player's current input device(s) without having to specify the device-specific input for what you're after.
 /// </summary>
-public class InputManager : SerializableSingleton<InputManager>
+public class InputManager : PublicInstanceSerializableSingleton<InputManager>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 

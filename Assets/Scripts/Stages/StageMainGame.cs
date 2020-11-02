@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// The stage of the game where the player is just left to do their own thing and play the game.
 /// </summary>
-public class StageMainGame: SerializableSingleton<StageMainGame>, IStage
+public class StageMainGame: PublicInstanceSerializableSingleton<StageMainGame>, IStage
 {
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 

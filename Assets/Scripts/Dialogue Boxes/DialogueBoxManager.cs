@@ -50,7 +50,7 @@ public class ColourTag
 /// <summary>
 /// A manager class for the dialogue boxes.
 /// </summary>
-public class DialogueBoxManager : SerializableSingleton<DialogueBoxManager>
+public class DialogueBoxManager : PublicInstanceSerializableSingleton<DialogueBoxManager>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 

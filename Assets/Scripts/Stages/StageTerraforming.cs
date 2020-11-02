@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// The stage of the game where the player is introduced to the buildings and how terraforming works.
 /// </summary>
-public class StageTerraforming : SerializableSingleton<StageTerraforming>, IStage
+public class StageTerraforming : PublicInstanceSerializableSingleton<StageTerraforming>, IStage
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 

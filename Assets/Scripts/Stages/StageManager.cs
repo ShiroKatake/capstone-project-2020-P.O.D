@@ -6,7 +6,7 @@ using UnityEngine;
 /// <summary>
 /// A manager class for the current stage of the game
 /// </summary>
-public class StageManager : SerializableSingleton<StageManager>
+public class StageManager : PublicInstanceSerializableSingleton<StageManager>
 {
     //Fields-----------------------------------------------------------------------------------------------------------------------------------------
 

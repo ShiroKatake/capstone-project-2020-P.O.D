@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// The stage of the game where the player is just left to do their own thing and play the game.
 /// </summary>
-public class StageSkippedTutorial : SerializableSingleton<StageSkippedTutorial>, IStage
+public class StageSkippedTutorial : PublicInstanceSerializableSingleton<StageSkippedTutorial>, IStage
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
