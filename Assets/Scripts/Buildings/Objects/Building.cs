@@ -185,6 +185,11 @@ public class Building : CollisionListener
     public bool Placed { get => placed; }
 
     /// <summary>
+    /// How much waste this building requires per second to function.
+    /// </summary>
+    public int PlantsConsumption { get => plantsConsumption; }
+
+    /// <summary>
     /// How much power this building requires per second to function.
     /// </summary>
     public int PowerConsumption { get => powerConsumption; }
@@ -208,11 +213,6 @@ public class Building : CollisionListener
     /// The building's TurretShooting component, if it has one.
     /// </summary>
     public TurretShooting TurretShooter { get => turretShooter; }
-
-    /// <summary>
-    /// How much waste this building requires per second to function.
-    /// </summary>
-    public int PlantsConsumption { get => plantsConsumption; }
 
     /// <summary>
     /// How much water this building requires per second to function.
