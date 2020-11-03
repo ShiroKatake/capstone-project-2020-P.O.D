@@ -226,6 +226,8 @@ MonoBehaviour:
   plantsConsumption: 0
   gasConsumption: 0
   buildTime: 10
+  buildInPits: 0
+  minBuildHeight: 0
   VFX: []
   cliffRaycastOffsets:
   - {x: -0.7, y: 0, z: -0.7}
@@ -266,7 +268,7 @@ MonoBehaviour:
     dissolveEnd: 2.49
   buildingErrorMaterial: {fileID: 2100000, guid: 101275a717e4a1c4fb89e563e095dfd7,
     type: 2}
-  idleSound: 18
+  idleSound: 30
   constructionFinishedFX: {fileID: 5264390033885133910, guid: 9a30dc8a4a1a76241acc06f41a0df0e0,
     type: 3}
   fxSize: 1.5
@@ -325,6 +327,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resource: 4
   collectionRate: 4
+  isResourceGenerator: 0
 --- !u!95 &241347474389765784
 Animator:
   serializedVersion: 3

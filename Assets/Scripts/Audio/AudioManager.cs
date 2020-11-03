@@ -28,6 +28,8 @@ public class AudioManager : SerializableSingleton<AudioManager>
         Greenhouse_Idle,
         Incinorator_Idle,
         Boiler_Idle,
+        Harvester_Idle,
+        GasPump_Idle,
         Turret_Idle,
         Alien_Moves,
         Alien_Takes_Damage,
@@ -36,7 +38,8 @@ public class AudioManager : SerializableSingleton<AudioManager>
         Lose,
         Day_Shift,
         Night_Shift,
-        Attacked
+        Attacked,
+        Gas2
     }
 
     [System.Serializable]
