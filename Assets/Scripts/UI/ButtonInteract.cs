@@ -29,7 +29,7 @@ public class ButtonInteract : MonoBehaviour
 
     private bool interactable;
     private bool highlighted;
-	private float lerpPerc;
+	private bool breakCoroutine;
 	IEnumerator currentCoroutine;
 
 	private void Awake()
@@ -50,8 +50,8 @@ public class ButtonInteract : MonoBehaviour
 	{
 		if (gameObject.activeInHierarchy)
 		{
-			if (currentCoroutine != null)
-				StopCoroutine(currentCoroutine);
+			breakCoroutine = true;
+			breakCoroutine = false;
 			currentCoroutine = FadeImageToColor(image, color);
 			StartCoroutine(currentCoroutine);
 		}
@@ -62,11 +62,19 @@ public class ButtonInteract : MonoBehaviour
 		float currentFade = 0f;
 		while (currentFade < fadeDuration)
 		{
+			if (breakCoroutine)
+			{
+				breakCoroutine = false;
+				yield break;
+			}
 			currentFade += Time.unscaledDeltaTime;
 			image.color = Color.Lerp(image.color, color, currentFade / fadeDuration);
-			yield return new WaitForEndOfFrame();
+			yield return null;
 		}
-    }
+
+		image.color = color;
+		yield break;
+	}
 
 	public void InitializeColors(Image image, Color color)
 	{
