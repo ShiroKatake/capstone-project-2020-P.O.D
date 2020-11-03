@@ -1,13 +1,19 @@
 Stage	Dialogue Box	Dialogue Key	What is being said 	Required action	What happens in the game/Action																						
+N/A	Console	blank	 																								
 Controls	Console	ai online	Commencing system check . . .~AI unit: online.~Vitals: green.		"UI border appears, dialogue box Console appears in top left"																						
 Controls	Console	calibrate movement	Initialising movement system . . .~Movement calibration required.~Task: move using WASD.		Prompt appears above POD (with transition in sem 2) with image showing how to move																						
 Controls	Game	wasd	Move using WASD.	Move in each direction	Flashing bottom left corner of the image (sem 2)																						
-Controls	Console	systems online	Movement calibrated.~System check complete.~All systems online.		Prompt closes																						
-Controls	Console	welcome pod	Connecting to S.E.E.R. . . .~Welcome Protective.Observation.Drone.~Human Cryo Status: green.																								
+Controls	W	w	W																								
+Controls	A	a	A																								
+Controls	S	s	S																								
+Controls	D	d	D																								
+Controls	Console	systems online	Movement calibrated.~System check complete.~All systems online.~Connecting to S.E.E.R. . . .~Welcome Protective.Observation.Drone.~Human Cryo Status: green.		Prompt closes																						
 Controls	Console	planet livability	Initialising External Environment Scanner . . .~Planet P.R.I.M.E detected.~Launching planetlivability.exe . . .		Clear Console first																						
-Controls	Console	planet unlivable	<PLANET IS UNABLE TO SUPPORT LIFE.>																								
-Controls	Console	launch cat	Terraforming protocol updated.~Launching C.A.T.exe . . .																								
-Controls	CAT	need minerals	"Hello! I am the Construction Assistant Technician. Here to assist with all your terraforming needs!~Your mission is to terraform this planet and make it habitable for the humans in the terraforming tower.~This planet is currently inadequate for human life, fortunately you have been equipped with me!~Firstly, we are going to need some building materials."																								
+Controls	Console	launch cat	<PLANET IS UNABLE TO SUPPORT LIFE.>~Terraforming protocol updated.~Launching C.A.T.exe . . .																								
+Controls	CAT	need minerals	Hello! I am the Construction Assistant Technician. Here to assist with all your terraforming needs!																								
+Controls	CAT	need minerals	Your mission is to terraform this planet and make it habitable for the humans in the terraforming tower.																								
+Controls	CAT	need minerals	"This planet is currently inadequate for human life, fortunately you have been equipped with me!"																								
+Controls	CAT	need minerals	"Firstly, we are going to need some building materials."																								
 Controls	Console	scan minerals	Scanning for mineral deposits.		Minimap Appears																						
 Controls	Console	minerals detected	Detected +minerals&.		Minimap Detection + Mineral Layer (Minimap detection has layers)																						
 Controls	CAT	gather minerals	Please gather 4 +minerals&.																								
@@ -30,11 +36,12 @@ Terraforming	CAT	ratio bars	Perfect. These are the ratio bars that contribute to
 Terraforming	CAT	target building count	This shows your target building count! Try to build as close to this as you can.		Point at the golden bar																						
 Terraforming	Console	task press p	Task: press the P key.		Clear Console first	Terraforming	Console	task build boiler	Task: build a Boiler		Clear Console first	Terraforming	Console	task build boiler	Task: build a Boiler		Clear Console first	Terraforming	Console	task build boiler	Task: build a Boiler		Clear Console first				
 Terraforming	CAT	press p	Press P to display more details.																								
-Terraforming	CAT	terraforming progress	You can see your overall terraforming progress here.~Press P to disable this menu again.																								
+Terraforming	CAT	terraforming progress	You can see your overall terraforming progress here. Press P to disable this menu again.																								
 Terraforming	Console	task click building	Task: click a building to open the demolition menu.		Clear Console first																						
 Terraforming	CAT	demolition menu	"If you need less of one of your terraforming buildings, clicking on it will give you options for disabling or demolishing it. Try it."																								
 Terraforming	CAT	enabling buildings	"If you merely disable a building, you can re-enable it from this menu later."																								
-Terraforming	CAT	good luck	That should be all you need to know from me. Good luck and happy terraforming!~C.A.T. out. = ^__^ =		Resume clock																						
+Terraforming	CAT	good luck	That should be all you need to know from me. Good luck and happy terraforming!																								
+Terraforming	CAT	good luck	C.A.T. out. = ^__^ =		Resume clock																						
 Terraforming	Console	cat closed	C.A.T.exe has closed.		Clear console first																						
 Combat	Console	launch dog	Warning! Hostile alien activity detected.~Launching D.O.G.exe . . .		Triggered at night time; clear Console first																						
 Combat	DOG	dog launched	DEFENCE ORGANISATION GUIDE ONLINE!																								
@@ -49,7 +56,8 @@ Combat	DOG	heal at terraforming tower	If you wanna patch yourself up head to the
 Combat	Console	task heal	Task: heal yourself at the terraforming tower.		Clear console first																						
 Combat	Game	heal	Press E to heal.	Press E in range of the terraforming tower	"Image of ""E"" above terraforming tower"																						
 Combat	DOG	store disperse	"At the end of each wave, you need to decide whether points gained should to be stored for better point accumulation, or dispersed to terraform the planet."																								
-Combat	DOG	good luck	That's all you need to know. Good luck out there soldier! Don't die!~D.O.G. OUT! U???U																								
+Combat	DOG	good luck	That's all you need to know. Good luck out there soldier! Don't die!																								
+Combat	DOG	good luck	D.O.G. OUT! U???U																								
 Combat	Console	dog closed	D.O.G.exe has closed.																								
 Finished Tutorial	Game	finished tutorial	This is the end of the tutorial. You are on your own from here. Good luck!		Note: this is a texts that appear without a speaker (doesn't use dialogue box)																						
 	#Notes 																										

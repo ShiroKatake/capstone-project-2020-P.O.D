@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// The stage of the game where the player is introduced to the buildings and how terraforming works.
+/// The stage of the game where the player is introduced to the terraforming buildings and how terraforming works.
 /// </summary>
 public class StageTerraforming : PublicInstanceSerializableSingleton<StageTerraforming>, IStage
 {

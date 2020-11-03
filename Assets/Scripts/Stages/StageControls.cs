@@ -78,6 +78,7 @@ public class StageControls : PublicInstanceSerializableSingleton<StageControls>,
         yield return StartCoroutine(EnableUI());
         yield return StartCoroutine(MovementControls());
         yield return StartCoroutine(MiningControls());
+        //Debug.Log($"StageControls complete.");
         StageManager.Instance.SetStage(EStage.Terraforming);
     }
 
@@ -86,6 +87,7 @@ public class StageControls : PublicInstanceSerializableSingleton<StageControls>,
     /// </summary>
     private IEnumerator Setup()
     {
+        MineralCollectionController.Instance.CanMine = false;
         POD.Instance.GetComponent<Health>().CurrentHealth = POD.Instance.GetComponent<Health>().MaxHealth * 0.25f;  //Set the player's health ready for the healing section of the tutorial
 
         ClockManager.Instance.Paused = true;
@@ -102,10 +104,11 @@ public class StageControls : PublicInstanceSerializableSingleton<StageControls>,
         consoleUIEC.Visible = true;
         console.SubmitDialogue("blank", 0, false, false);
 
-        while (!uiBorderUIEC.FinishedFlickeringIn || !consoleUIEC.FinishedFlickeringIn)
+        do
         {
             yield return null;
         }
+        while (!uiBorderUIEC.FinishedFlickeringIn || !consoleUIEC.FinishedFlickeringIn);
 
         console.SubmitDialogue("ai online", 0, false, false);
     }
@@ -116,21 +119,29 @@ public class StageControls : PublicInstanceSerializableSingleton<StageControls>,
     private IEnumerator MovementControls()
     {
         console.SubmitDialogue("calibrate movement", 0, false, false);
+
+        do
+        {
+            yield return null;
+        }
+        while (console.LerpingDialogue);
+
         game.SubmitDialogue("wasd", 1, true, false);
         w.SubmitDialogue("w", 1, false, true);
         a.SubmitDialogue("a", 1, false, true);
         s.SubmitDialogue("s", 1, false, true);
         d.SubmitDialogue("d", 1, false, true);
 
-        while (!w.Clickable || !a.Clickable || !s.Clickable || !d.Clickable || !game.Clickable)
+        do
         {
             yield return null;
         }
+        while (!w.Clickable || !a.Clickable || !s.Clickable || !d.Clickable || !game.Clickable);
 
         float moveVertical;
         float moveHorizontal;
 
-        while (w.Activated || a.Activated || s.Activated || d.Activated)
+        do
         {
             yield return null;
 
@@ -139,44 +150,31 @@ public class StageControls : PublicInstanceSerializableSingleton<StageControls>,
 
             if (moveVertical != 0)
             {
-                if (moveVertical > 0 && w.Activated)
-                {
-                    w.SubmitDeactivation();
-                }
-
-                if (moveVertical < 0 && s.Activated)
-                {
-                    s.SubmitDeactivation();
-                }
+                if (moveVertical > 0 && w.Activated) w.SubmitDeactivation();
+                if (moveVertical < 0 && s.Activated) s.SubmitDeactivation();
             }
 
             if (moveHorizontal != 0)
             {
-                if (moveHorizontal < 0 && a.Activated)
-                {
-                    a.SubmitDeactivation();
-                }
-
-                if (moveHorizontal > 0 && d.Activated)
-                {
-                    d.SubmitDeactivation();
-                }
+                if (moveHorizontal < 0 && a.Activated) a.SubmitDeactivation();
+                if (moveHorizontal > 0 && d.Activated) d.SubmitDeactivation();
             }
         }
+        while (w.Activated || a.Activated || s.Activated || d.Activated);
 
-        if (game.Activated)
-        {
-            game.SubmitDeactivation();
-        }
-
+        if (game.Activated)  game.SubmitDeactivation();
         console.SubmitDialogue("systems online", 0, false, false);
 
-        while (console.LerpingDialogue)
+        do
         {
+            Debug.Log($"Sytems online lerping");
             yield return null;
         }
+        while (console.LerpingDialogue);
 
+        //Debug.Log($"Waiting for 2 seconds - start");
         yield return new WaitForSeconds(2);
+        //Debug.Log($"Waiting for 2 seconds - finished");
     }
 
     /// <summary>
@@ -184,60 +182,74 @@ public class StageControls : PublicInstanceSerializableSingleton<StageControls>,
     /// </summary>
     private IEnumerator MiningControls()
     {
+        //Debug.Log($"Planet livability, console.LerpingDialogue is {console.LerpingDialogue}");
         console.ClearDialogue();
         console.SubmitDialogue("planet livability", 0, false, false);
-
-        while (console.LerpingDialogue)
-        {
-            yield return null;
-        }
 
         yield return new WaitForSeconds(0.5f);
 
         console.SubmitDialogue("launch cat", 0, false, false);
+
+        do
+        {
+            yield return null;
+        }
+        while (console.LerpingDialogue) ;
+
         cat.SubmitDialogue("need minerals", 2, true, false);
 
-        while (!cat.DialogueRead)
+        do
         {
             yield return null;
         }
+        while (!cat.DialogueRead);
+
+        console.SubmitDialogue("scan minerals", 0, false, false);
+        buildingAndResourcesBarUIEC.Visible = true;
+        resourceBar.Visible = true;
+        miniMapBorderUIEC.Visible = true;
+
+        do
+        {
+            yield return null;
+        }
+        while (!miniMapBorderUIEC.FinishedFlickeringIn);
+
+        console.SubmitDialogue("minerals detected", 0, false, false);
+        ResourceTextManager.Instance.FadeIn();
+        miniMapUIEC.Visible = true;
+
+        do
+        {
+            yield return null;
+        }
+        while (!miniMapUIEC.FinishedFlickeringIn);
 
         console.ClearDialogue();
-        console.SubmitDialogue("detect minerals", 0, false, false);
-        buildingAndResourcesBarUIEC.Visible = true;
-		resourceBar.Visible = true;
-		miniMapBorderUIEC.Visible = true;
-
-        while (!miniMapBorderUIEC.FinishedFlickeringIn)
-        {
-            yield return null;
-        }
-
         console.SubmitDialogue("task gather minerals", 0, false, false);
         cat.SubmitDialogue("gather minerals", 0, true, false);
         game.SubmitDialogue("lmb", 1, true, false);
-        ResourceTextManager.Instance.FadeIn();
-        miniMapUIEC.Visible = true;
+        
         float startingMinerals = ResourceManager.Instance.Ore;
+        MineralCollectionController.Instance.CanMine = true;
 
-        while (ResourceManager.Instance.Ore < startingMinerals + 4)
+        do
         {
             yield return null;
         }
+        while (ResourceManager.Instance.Ore < startingMinerals + 4);
 
-        if (game.Activated)
-        {
-            game.SubmitDeactivation();
-        }
-
+        MineralCollectionController.Instance.CanMine = false;
+        if (game.Activated) game.SubmitDeactivation();
         console.ClearDialogue();
         cat.SubmitDialogue("collected minerals", 0, false, false);
         mineralsHighlightUIEC.Visible = true;
 
         //Start terraforming stage
-        while (!cat.DialogueRead || !cat.AcceptingSubmissions)
+        do
         {
             yield return null;
         }
+        while (!cat.DialogueRead || !cat.AcceptingSubmissions);
     }
 }
