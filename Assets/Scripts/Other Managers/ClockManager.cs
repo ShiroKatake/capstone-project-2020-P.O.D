@@ -6,7 +6,7 @@ using UnityEngine.UI;
 /// <summary>
 /// A class to control the clock in the UI and the day-night cycle.
 /// </summary>
-public class ClockManager : SerializableSingleton<ClockManager>
+public class ClockManager : PublicInstanceSerializableSingleton<ClockManager>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
@@ -168,7 +168,8 @@ public class ClockManager : SerializableSingleton<ClockManager>
                 time24hr -= cycleDuration;
                 daytime = true;
                 UIColorManager.Instance.SetDay();
-                AudioManager.Instance.SwitchBackgroundTrack(AudioManager.ESound.DayTimeLvlOne);
+				RatioManager.Instance.UpdateTargetRatio();
+				AudioManager.Instance.SwitchBackgroundTrack(AudioManager.ESound.DayTimeLvlOne);
             }
         }
     }

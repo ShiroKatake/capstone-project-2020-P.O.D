@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// The stage of the game that is triggered if the player wins.
 /// </summary>
-public class StageWin : SerializableSingleton<StageWin>, IStage
+public class StageWin : PublicInstanceSerializableSingleton<StageWin>, IStage
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
@@ -46,7 +46,8 @@ public class StageWin : SerializableSingleton<StageWin>, IStage
     public IEnumerator Execution()
     {
         goMessage.SetText(true);
-        uiManager.GetComponent<UIManager>().SetGameOverCanvasActive(true);
+		Time.timeScale = 0;
+		uiManager.GetComponent<UIManager>().SetGameOverCanvasActive(true);
         yield return null;
     }
 }

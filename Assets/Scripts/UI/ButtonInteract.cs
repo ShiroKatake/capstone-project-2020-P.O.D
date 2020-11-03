@@ -30,43 +30,105 @@ public class ButtonInteract : MonoBehaviour
     private bool interactable;
     private bool highlighted;
 
-    private void Awake()
+	Coroutine currentFillCoroutine;
+	Coroutine currentBorderCoroutine;
+    Coroutine currentIconCoroutine;
+
+	private void Awake()
     {
         interactable = true;
         highlighted = false;
-        SetNormal();
-    }
+
+		InitializeColors(border, borderNormal);
+		InitializeColors(fill, fillNormal);
+	}
 
     public void SetDefault()
     {
         SetNormal();
     }
 
-    private void FadeToColor(Image image, Color color)
-    {
-        Graphic graphic = image.GetComponent<Graphic>();
-        graphic.CrossFadeColor(color, fadeDuration, true, false);
-    }
+	public void StartCoroutineFadeToColour(Image image, Color colour)
+	{
+		if (gameObject.activeInHierarchy)
+		{
+            if (image == fill)
+            {
+                if (currentFillCoroutine != null) StopCoroutine(currentFillCoroutine);
+                IEnumerator coroutine = FadeToColour(image, colour);
+                currentFillCoroutine = StartCoroutine(coroutine);
+            }
+            else if (image == border)
+            {
+                if (currentBorderCoroutine != null) StopCoroutine(currentBorderCoroutine);
+                IEnumerator coroutine = FadeToColour(image, colour);
+                currentBorderCoroutine = StartCoroutine(coroutine);
+            }
+            else if (image == icon)
+            {
+                if (currentIconCoroutine != null) StopCoroutine(currentIconCoroutine);
+                IEnumerator coroutine = FadeToColour(image, colour);
+                currentIconCoroutine = StartCoroutine(coroutine);
+            }
+        }
+	}
 
-    public void SetNormal()
+	private IEnumerator FadeToColour(Image image, Color colour)
+	{
+		float currentFade = 0f;
+        Color startColour = image.color;
+
+        while (currentFade < fadeDuration)
+		{
+			currentFade += Time.unscaledDeltaTime;
+			image.color = Color.Lerp(startColour, colour, currentFade / fadeDuration);
+			yield return null;
+		}
+
+		image.color = colour;
+
+        if (image == fill)
+        {
+            if (currentFillCoroutine != null) currentFillCoroutine = null;
+        }
+        else if (image == border)
+        {
+            if (currentBorderCoroutine != null) currentBorderCoroutine = null;
+        }
+        else if (image == icon)
+        {
+            if (currentIconCoroutine != null) currentIconCoroutine = null;
+        }
+
+        yield break;
+	}
+
+	public void InitializeColors(Image image, Color color)
+	{
+		image.color = color;
+	}
+
+	public void SetNormal()
     {
+        //Debug.Log($"{this}.ButtonInteract.SetNormal()");
         highlighted = false;
 
         if (interactable)
         {
-            FadeToColor(border, borderNormal);
-            FadeToColor(fill, fillNormal);
-        }
-    }
+            StartCoroutineFadeToColour(border, borderNormal);
+            StartCoroutineFadeToColour(fill, fillNormal);
+		}
+	}
 
     public void SetHighlighted()
     {
+        //Debug.Log($"{this}.ButtonInteract.SetHighlighted()");
         highlighted = true;
 
         if (interactable)
         {
-            FadeToColor(border, borderHighlight);
-            FadeToColor(fill, fillHighlight);
+            StartCoroutineFadeToColour(border, borderHighlight);
+            StartCoroutineFadeToColour(fill, fillHighlight);
         }
     }
 
@@ -74,7 +136,7 @@ public class ButtonInteract : MonoBehaviour
     {
         if (icon != null)
         {
-            FadeToColor(icon, iconInteractable);
+            StartCoroutineFadeToColour(icon, iconInteractable);
         }
 
         if (highlighted)
@@ -85,24 +147,22 @@ public class ButtonInteract : MonoBehaviour
         {
             SetNormal();
         }
+
+		//Debug.Log("Setting to interactable");
     }
 
     private void SetUninteractable()
     {
-        FadeToColor(border, borderUninteractable);
-        FadeToColor(fill, fillUninteractable);
+        StartCoroutineFadeToColour(border, borderUninteractable);
+        StartCoroutineFadeToColour(fill, fillUninteractable);
 
         if (icon != null)
         {
-            FadeToColor(icon, iconUninteractable);
+            StartCoroutineFadeToColour(icon, iconUninteractable);
         }
-    }
 
-
-    public void SayYes()
-    {
-        print("Button has been pressed");
-    }
+		//Debug.Log("Setting to UNinteractable");
+	}
 
     public void OnInteractableChanged(bool interactable)
     {

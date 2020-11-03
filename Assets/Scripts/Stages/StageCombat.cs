@@ -6,7 +6,7 @@ using UnityEngine;
 /// <summary>
 /// The game stage that takes the player through the combat mechanics.
 /// </summary>
-public class StageCombat : SerializableSingleton<StageCombat>, IStage
+public class StageCombat : PublicInstanceSerializableSingleton<StageCombat>, IStage
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------
 
@@ -64,7 +64,8 @@ public class StageCombat : SerializableSingleton<StageCombat>, IStage
         console = DialogueBoxManager.Instance.GetDialogueBox("Console");
         game = DialogueBoxManager.Instance.GetDialogueBox("Game");
         dog = DialogueBoxManager.Instance.GetDialogueBox("DOG");
-        playerInputManager = ReInput.players.GetPlayer(PODController.Instance.GetComponent<PlayerID>().Value);
+        //playerInputManager = ReInput.players.GetPlayer(POD.Instance.GetComponent<PlayerID>().Value);
+        playerInputManager = POD.Instance.PlayerInputManager;
     }
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
@@ -212,14 +213,14 @@ public class StageCombat : SerializableSingleton<StageCombat>, IStage
     /// </summary>
     private IEnumerator Shooting()
     {
-        if (!ProjectileManager.Instance.HasProjectileWithOwner(PODController.Instance.transform))
+        if (!ProjectileManager.Instance.HasProjectileWithOwner(POD.Instance.transform))
         {
             console.ClearDialogue();
             console.SubmitDialogue("task shoot", 0, false, false);
             dog.SubmitDialogue("shoot", 0, true, false);
             game.SubmitDialogue("shoot", 0, true, false);
 
-            while (!ProjectileManager.Instance.HasProjectileWithOwner(PODController.Instance.transform) || !dog.AcceptingSubmissions)
+            while (!ProjectileManager.Instance.HasProjectileWithOwner(POD.Instance.transform) || !dog.AcceptingSubmissions)
             {
                 yield return null;
             }
@@ -236,14 +237,14 @@ public class StageCombat : SerializableSingleton<StageCombat>, IStage
     /// </summary>
     private IEnumerator Healing()
     {
-        if (!playerInputManager.GetButtonDown("Heal") || Vector3.Distance(PODController.Instance.transform.position, Tower.Instance.transform.position) >= PODController.Instance.HealingRange)
+        if (!playerInputManager.GetButtonDown("Heal") || Vector3.Distance(POD.Instance.transform.position, Tower.Instance.transform.position) >= POD.Instance.HealthController.HealingRange)
         {
             console.ClearDialogue();
             console.SubmitDialogue("task heal", 0, false, false);
             dog.SubmitDialogue("heal at cryo egg", 0, true, false);
             game.SubmitDialogue("heal", 0, true, false);
 
-            while (!playerInputManager.GetButtonDown("Heal") || Vector3.Distance(PODController.Instance.transform.position, Tower.Instance.transform.position) >= PODController.Instance.HealingRange || !dog.AcceptingSubmissions)
+            while (!playerInputManager.GetButtonDown("Heal") || Vector3.Distance(POD.Instance.transform.position, Tower.Instance.transform.position) >= POD.Instance.HealthController.HealingRange || !dog.AcceptingSubmissions)
             {
                 yield return null;
             }

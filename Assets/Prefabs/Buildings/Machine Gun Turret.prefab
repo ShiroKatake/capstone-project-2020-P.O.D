@@ -80,10 +80,8 @@ MonoBehaviour:
   - {fileID: 276844957512759736}
   reportOnCollisionEnter: 0
   reportOnCollisionExit: 0
-  reportOnCollisionStay: 0
   reportOnTriggerEnter: 0
   reportOnTriggerExit: 0
-  reportOnTriggerStay: 0
 --- !u!1 &273283519860098952
 GameObject:
   m_ObjectHideFlags: 0
@@ -197,10 +195,8 @@ MonoBehaviour:
   - {fileID: 276844957512759736}
   reportOnCollisionEnter: 0
   reportOnCollisionExit: 0
-  reportOnCollisionStay: 0
   reportOnTriggerEnter: 0
   reportOnTriggerExit: 0
-  reportOnTriggerStay: 0
 --- !u!1 &932979503140814771
 GameObject:
   m_ObjectHideFlags: 0
@@ -435,10 +431,8 @@ MonoBehaviour:
   - {fileID: 3380677155783403710}
   reportOnCollisionEnter: 0
   reportOnCollisionExit: 0
-  reportOnCollisionStay: 0
   reportOnTriggerEnter: 1
   reportOnTriggerExit: 1
-  reportOnTriggerStay: 0
 --- !u!1 &2053711677484398516
 GameObject:
   m_ObjectHideFlags: 0
@@ -520,10 +514,8 @@ MonoBehaviour:
   - {fileID: 276844957512759736}
   reportOnCollisionEnter: 0
   reportOnCollisionExit: 0
-  reportOnCollisionStay: 0
   reportOnTriggerEnter: 0
   reportOnTriggerExit: 0
-  reportOnTriggerStay: 0
 --- !u!1 &2740937295730065718
 GameObject:
   m_ObjectHideFlags: 0
@@ -618,7 +610,7 @@ MonoBehaviour:
   waterConsumption: 0
   plantsConsumption: 0
   gasConsumption: 0
-  buildTime: 5
+  buildTime: 7
   buildInPits: 1
   minBuildHeight: 1.5
   VFX: []
@@ -637,6 +629,8 @@ MonoBehaviour:
   - {x: -0.5, y: -0.45, z: 0.5}
   - {x: 0.5, y: -0.45, z: -0.5}
   - {x: 0.5, y: -0.45, z: 0.5}
+  buildingFoundationOffsetsOnXAxis: 2
+  buildingFoundationOffsetsOnZAxis: 2
   model: {fileID: 7351240215580495256}
   rendererMaterialSets:
   - renderer: {fileID: 957260111606721453}
@@ -738,8 +732,8 @@ MonoBehaviour:
   projectileType: 3
   targetClosest: 1
   numProjectiles: 1
-  yAxisVariance: 0
-  zAxisVariance: 0
+  spreadAngle: 0
+  shotForce: 5
   shotCooldown: 0.2
   visibleTargets: []
   target: {fileID: 0}
@@ -867,10 +861,8 @@ MonoBehaviour:
   - {fileID: 276844957512759736}
   reportOnCollisionEnter: 0
   reportOnCollisionExit: 0
-  reportOnCollisionStay: 0
   reportOnTriggerEnter: 1
   reportOnTriggerExit: 1
-  reportOnTriggerStay: 0
 --- !u!1 &4194406200538789502
 GameObject:
   m_ObjectHideFlags: 0
@@ -985,10 +977,8 @@ MonoBehaviour:
   - {fileID: 276844957512759736}
   reportOnCollisionEnter: 0
   reportOnCollisionExit: 0
-  reportOnCollisionStay: 0
   reportOnTriggerEnter: 0
   reportOnTriggerExit: 0
-  reportOnTriggerStay: 0
 --- !u!1 &5743454167680150813
 GameObject:
   m_ObjectHideFlags: 0

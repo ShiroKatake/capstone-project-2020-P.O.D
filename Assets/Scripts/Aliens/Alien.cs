@@ -25,19 +25,13 @@ public class Alien : MonoBehaviour, IMessenger
     [SerializeField] private float attackCooldown;
     [Tooltip("How long can it stall moving forward before it will be made to burrow into the ground and be destroyed by AlienFactory?")]
     [SerializeField] private float maxStall;
-    [Tooltip("How likely, between 0 (impossible) and 1 (certainty) is it that this alien will burrow into the ground any time it is dealt damage?")]
-    [SerializeField][Range(0, 1)] private float burrowingProbability;
+    [Tooltip("How likely, between 0 (impossible) and 100 (certainty) is it that this alien will burrow into the ground any time it is dealt damage?")]
+    [SerializeField][Range(0, 100)] private float burrowingProbability;
     [SerializeField] private float burrowSpeed;
 
     [Header("Shader Dissolving")]
     [SerializeField] private float dissolveStart;
     [SerializeField] private float dissolveEnd;
-
-    //[Header("Testing")]
-    //[SerializeField] private MeshRenderer rangeMesh;
-    //[SerializeField] private Material greenRangeMeshMaterial;
-    //[SerializeField] private Material yellowRangeMeshMaterial;
-    //[SerializeField] private Material redRangeMeshMaterial;
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
@@ -205,38 +199,6 @@ public class Alien : MonoBehaviour, IMessenger
         }
     }
 
-    //private void Update()
-    //{
-    //    if (rangeMesh != null)
-    //    {
-    //        CheckVisibleTargets();
-    //    }
-    //}
-
-    //private void UpdateRangeMeshMaterial(Material material)
-    //{
-    //    if (rangeMesh.material != material)
-    //    {
-    //        rangeMesh.material = material;
-    //    }
-    //}
-
-    //private void CheckVisibleTargets()
-    //{
-    //    if (visibleTargets.Count == 0)
-    //    {
-    //        UpdateRangeMeshMaterial(greenRangeMeshMaterial);
-    //    }
-    //    else if (target == Tower.Instance.transform)
-    //    {
-    //        UpdateRangeMeshMaterial(yellowRangeMeshMaterial);
-    //    }
-    //    else if (target != Tower.Instance.transform)
-    //    {
-    //        UpdateRangeMeshMaterial(redRangeMeshMaterial);
-    //    }
-    //}
-
     //Recurring Methods (Update())-------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
@@ -253,38 +215,6 @@ public class Alien : MonoBehaviour, IMessenger
             renderer.materials[0].SetFloat("_End", dissolveStart + currentYPos);
         }
     }
-
-    //private void Update()
-    //{
-    //    if (rangeMesh != null)
-    //    {
-    //        CheckVisibleTargets();
-    //    }
-    //}
-
-    //private void UpdateRangeMeshMaterial(Material material)
-    //{
-    //    if (rangeMesh.material != material)
-    //    {
-    //        rangeMesh.material = material;
-    //    }
-    //}
-
-    //private void CheckVisibleTargets()
-    //{
-    //    if (visibleTargets.Count == 0)
-    //    {
-    //        UpdateRangeMeshMaterial(greenRangeMeshMaterial);
-    //    }
-    //    else if (target == Tower.Instance.transform)
-    //    {
-    //        UpdateRangeMeshMaterial(yellowRangeMeshMaterial);
-    //    }
-    //    else if (target != Tower.Instance.transform)
-    //    {
-    //        UpdateRangeMeshMaterial(redRangeMeshMaterial);
-    //    }
-    //}
 
     //Recurring Methods (FixedUpdate())-------------------------------------------------------------------------------------------------------------  
 
@@ -319,9 +249,9 @@ public class Alien : MonoBehaviour, IMessenger
                     {
                         SetTarget(shotByTransform);
                     }
-                    else if (visibleTargets.Contains(PODController.Instance.transform))
+                    else if (visibleTargets.Contains(POD.Instance.transform))
                     {
-                        SetTarget(PODController.Instance.transform);
+                        SetTarget(POD.Instance.transform);
                     }
                     else
                     {
@@ -363,21 +293,22 @@ public class Alien : MonoBehaviour, IMessenger
         target = selectedTarget;
         targetHealth = target.GetComponentInParent<Health>();   //Gets Health from target or any of its parents that has it.
         targetSize = target.GetComponentInParent<Size>();   //Gets Size from target or any of its parents that has it.
-
-        PositionData data = MapManager.Instance.GetPositionData(transform.position);
+        timeOfLastMove = Time.time;
+        lastPosition = transform.position;
 
         if (!health.IsDead())
         {
+            PositionData data = MapManager.Instance.GetPositionData(transform.position);
+            NavMeshPath newPath = null;
+
             if (selectedTarget == Tower.Instance.transform && data != null && data.Paths.ContainsKey(type) && data.Paths[type] != null)
             {
                 //Debug.Log($"{this}.SetTarget(), getting nav mesh path to cryo egg");
-                navMeshAgent.SetPath(data.Paths[type]);
+                newPath = data.Paths[type];
             }
             else
             {
                 //Debug.Log($"{this}.SetTarget(), setting {target}'s position as nav mesh agent destination");
-                NavMeshPath newPath = null;
-
                 foreach (Alien a in visibleAliens)
                 {
                     if (a.Target == target && a.NavMeshAgent.hasPath && Vector3.Distance(a.NavMeshAgent.destination, a.Target.position) < 0.1f)
@@ -386,15 +317,15 @@ public class Alien : MonoBehaviour, IMessenger
                         break;
                     }
                 }
-
-                if (newPath == null)
-                {
-                    newPath = new NavMeshPath();
-                    navMeshAgent.CalculatePath(target.position, newPath);
-                }
-
-                navMeshAgent.SetPath(newPath);
             }
+
+            if (newPath == null)
+            {
+                newPath = new NavMeshPath();
+                navMeshAgent.CalculatePath(target.position, newPath);
+            }
+
+            navMeshAgent.SetPath(newPath);
         }
     }
 
@@ -429,25 +360,13 @@ public class Alien : MonoBehaviour, IMessenger
         if (Vector3.SqrMagnitude(PositionAtSameHeight(target.position) - transform.position) > ((attackRange + targetRadius) * (attackRange + targetRadius)))
         {
             AudioManager.Instance.PlaySound(AudioManager.ESound.Alien_Moves, gameObject);
-
-            if (navMeshAgent.speed != speed)
-            {
-                navMeshAgent.speed = speed;
-            }
-
-            if (navMeshAgent.stoppingDistance != attackRange * 0.67f + targetRadius)
-            {
-                navMeshAgent.stoppingDistance = attackRange * 0.67f + targetRadius;
-            }
-
+            if (navMeshAgent.speed != speed) navMeshAgent.speed = speed;
+            if (navMeshAgent.stoppingDistance != attackRange * 0.67f + targetRadius) navMeshAgent.stoppingDistance = attackRange * 0.67f + targetRadius;
             CheckStalling();
         }
         else
         {
-            if (navMeshAgent.speed != 0)
-            {
-                navMeshAgent.speed = 0;
-            }
+            if (navMeshAgent.speed != 0) navMeshAgent.speed = 0;
 
             if (Time.time - timeOfLastAttack > attackCooldown)
             {
@@ -462,7 +381,11 @@ public class Alien : MonoBehaviour, IMessenger
     /// </summary>
     private void CheckStalling()
     {
-        if (transform.position != lastPosition)
+        float targetRadius = targetSize.Radius(transform.position);
+        float minDistForOverride = attackRange * 2f + targetRadius;
+
+        if ((transform.position != lastPosition && Vector3.SqrMagnitude(lastPosition - transform.position) > 1)  //Because 1 * 1 is 1
+            || Vector3.SqrMagnitude(target.transform.position - transform.position) <= minDistForOverride * minDistForOverride)
         {
             timeOfLastMove = Time.time;
             lastPosition = transform.position;
@@ -470,6 +393,7 @@ public class Alien : MonoBehaviour, IMessenger
 
         if (Time.time - timeOfLastMove > maxStall)
         {
+            Debug.Log($"{this} has stalled, burrowing into the ground");
             StartCoroutine(Burrow());
         }
     }
@@ -533,7 +457,10 @@ public class Alien : MonoBehaviour, IMessenger
 
 		ShotBy(attackerTransform);
 
-        if (Random.Range(0f, 1f) > burrowingProbability)
+        float random = Random.Range(0f, 100f);
+        //Debug.Log($"{this}.OnDamaged(), random: {random}, burrowingProbability: {burrowingProbability}, random < burrowingProbability and therefore will burrow: {random < burrowingProbability}");
+
+        if (random < burrowingProbability)
         {
             StartCoroutine(Burrow());
         }

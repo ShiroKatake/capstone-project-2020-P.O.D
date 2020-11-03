@@ -96,10 +96,8 @@ MonoBehaviour:
   - {fileID: 6057790016772902916}
   reportOnCollisionEnter: 0
   reportOnCollisionExit: 0
-  reportOnCollisionStay: 0
   reportOnTriggerEnter: 0
   reportOnTriggerExit: 0
-  reportOnTriggerStay: 0
 --- !u!1 &6754134058031210308
 GameObject:
   m_ObjectHideFlags: 0
@@ -159,8 +157,8 @@ MonoBehaviour:
   oreCost: 8
   powerConsumption: 6
   waterConsumption: 0
-  plantsConsumption: 0
-  gasConsumption: 0
+  plantsConsumption: 1
+  gasConsumption: 2
   buildTime: 10
   buildInPits: 0
   minBuildHeight: 0
@@ -186,6 +184,8 @@ MonoBehaviour:
   - {x: -1, y: -0.45, z: -1}
   - {x: -1, y: -0.45, z: 0}
   - {x: -1, y: -0.45, z: 1}
+  buildingFoundationOffsetsOnXAxis: 3
+  buildingFoundationOffsetsOnZAxis: 3
   model: {fileID: 4215405745183885993}
   rendererMaterialSets:
   - renderer: {fileID: 1506364897671728230}
@@ -335,10 +335,8 @@ MonoBehaviour:
   - {fileID: 6057790016772902916}
   reportOnCollisionEnter: 0
   reportOnCollisionExit: 0
-  reportOnCollisionStay: 0
   reportOnTriggerEnter: 1
   reportOnTriggerExit: 1
-  reportOnTriggerStay: 0
 --- !u!1 &9120627644911530124
 GameObject:
   m_ObjectHideFlags: 0
@@ -435,10 +433,8 @@ MonoBehaviour:
   - {fileID: 6057790016772902916}
   reportOnCollisionEnter: 0
   reportOnCollisionExit: 0
-  reportOnCollisionStay: 0
   reportOnTriggerEnter: 0
   reportOnTriggerExit: 0
-  reportOnTriggerStay: 0
 --- !u!136 &2771747102869957074
 CapsuleCollider:
   m_ObjectHideFlags: 0

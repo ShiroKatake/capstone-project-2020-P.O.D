@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// A singleton class for reusable maths methods that don't seem to be included in Mathf or any other classes or libraries or that have been put together because people can't be bothered Googling the actual methods.
 /// </summary>
-public class MathUtility : SerializableSingleton<MathUtility>
+public class MathUtility : PublicInstanceSerializableSingleton<MathUtility>
 {
     [SerializeField] private Transform targeter;
 

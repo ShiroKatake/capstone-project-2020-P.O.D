@@ -15,24 +15,18 @@ public class HealField : MonoBehaviour
 
 	//Non-Serialized Fields------------------------------------------------------------------------                                                    
 
-	private PODController player;
+	private POD player;
 
 	//Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
-	/// <summary>
-	/// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
-	/// Awake() runs before Start().
-	/// </summary>
-	private void Awake()
-	{
-		player = FindPlayer();
-
-		if (player != null)
-		{
-			player.onPlayerHeal += ActivateHealingFX;
-			player.onPlayerHealCancelled += DeactivateHealingFX;
-		}
-	}
+	///// <summary>
+	///// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
+	///// Awake() runs before Start().
+	///// </summary>
+	//private void Awake()
+	//{
+		
+	//}
 
 	/// <summary>
 	/// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
@@ -40,7 +34,15 @@ public class HealField : MonoBehaviour
 	/// </summary>
 	private void Start()
 	{
-		InitializeHealingFieldSize();
+        player = FindPlayer();
+
+        if (player != null)
+        {
+            player.HealthController.onPlayerHeal += ActivateHealingFX;
+            player.HealthController.onPlayerHealCancelled += DeactivateHealingFX;
+        }
+
+        InitializeHealingFieldSize();
 	}
 
 	//Core Recurring Methods-------------------------------------------------------------------------------------------------------------------------
@@ -57,8 +59,8 @@ public class HealField : MonoBehaviour
 
 			if (player != null)
 			{
-				player.onPlayerHeal += ActivateHealingFX;
-				player.onPlayerHealCancelled += DeactivateHealingFX;
+				player.HealthController.onPlayerHeal += ActivateHealingFX;
+				player.HealthController.onPlayerHealCancelled += DeactivateHealingFX;
 			}
 		}
 	}
@@ -68,10 +70,10 @@ public class HealField : MonoBehaviour
 	/// <summary>
 	/// Finds the player and subscribe to the healing events to trigger healing FX.
 	/// </summary>
-	private PODController FindPlayer()
+	private POD FindPlayer()
 	{
         //Find the Player
-        PODController player = FindObjectOfType<PODController>();
+        POD player = FindObjectOfType<POD>();
 		if (player == null)
 			Debug.Log("CryoEgg can't find the player . . .");
 		return player;
@@ -108,9 +110,9 @@ public class HealField : MonoBehaviour
 		);
 
 		//Then set the start size according to the player's healing interaction range from the Cryo Egg
-		SetHealingFXRadius(healFieldFX, player.HealingRange);
-		SetHealingFXStartSize(healCircleFX, player.HealingRange);
-		SetHealingFXRadius(healSparksFX, player.HealingRange);
+		SetHealingFXRadius(healFieldFX, player.HealthController.HealingRange);
+		SetHealingFXStartSize(healCircleFX, player.HealthController.HealingRange);
+		SetHealingFXRadius(healSparksFX, player.HealthController.HealingRange);
 	}
 
 	/// <summary>
@@ -137,8 +139,8 @@ public class HealField : MonoBehaviour
 	void OnDrawGizmosSelected()
 	{
 		// Draw a green sphere at the transform's position
-		player = FindObjectOfType<PODController>();
+		player = FindObjectOfType<POD>();
 		Gizmos.color = Color.green;
-		Gizmos.DrawWireSphere(transform.position, player.HealingRange);
+		Gizmos.DrawWireSphere(transform.position, player.HealthController.HealingRange);
 	}
 }

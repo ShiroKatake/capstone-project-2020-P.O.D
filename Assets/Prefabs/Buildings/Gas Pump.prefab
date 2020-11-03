@@ -160,10 +160,8 @@ MonoBehaviour:
   - {fileID: 1206441947418653213}
   reportOnCollisionEnter: 0
   reportOnCollisionExit: 0
-  reportOnCollisionStay: 0
   reportOnTriggerEnter: 0
   reportOnTriggerExit: 0
-  reportOnTriggerStay: 0
 --- !u!1 &2924824314682187853
 GameObject:
   m_ObjectHideFlags: 0
@@ -225,7 +223,7 @@ MonoBehaviour:
   waterConsumption: 0
   plantsConsumption: 0
   gasConsumption: 0
-  buildTime: 10
+  buildTime: 7
   buildInPits: 0
   minBuildHeight: 0
   VFX: []
@@ -244,6 +242,8 @@ MonoBehaviour:
   - {x: -0.5, y: -0.45, z: 0.5}
   - {x: 0.5, y: -0.45, z: -0.5}
   - {x: 0.5, y: -0.45, z: 0.5}
+  buildingFoundationOffsetsOnXAxis: 2
+  buildingFoundationOffsetsOnZAxis: 2
   model: {fileID: 5474086824787675355}
   rendererMaterialSets:
   - renderer: {fileID: 4982330930987599697}
@@ -268,7 +268,7 @@ MonoBehaviour:
     dissolveEnd: 2.49
   buildingErrorMaterial: {fileID: 2100000, guid: 101275a717e4a1c4fb89e563e095dfd7,
     type: 2}
-  idleSound: 30
+  idleSound: 18
   constructionFinishedFX: {fileID: 5264390033885133910, guid: 9a30dc8a4a1a76241acc06f41a0df0e0,
     type: 3}
   fxSize: 1.5
@@ -538,8 +538,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7152997880644383554}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0.0025004, y: 0.77897006, z: -0.074064}
-  m_LocalScale: {x: 0.275, y: 0.275, z: 0.275}
+  m_LocalPosition: {x: 0, y: 0.46, z: 0}
+  m_LocalScale: {x: 0.2064099, y: 0.2064099, z: 0.2064099}
   m_Children: []
   m_Father: {fileID: 2525359142059149831}
   m_RootOrder: 2
@@ -591,10 +591,8 @@ MonoBehaviour:
   - {fileID: 1206441947418653213}
   reportOnCollisionEnter: 0
   reportOnCollisionExit: 0
-  reportOnCollisionStay: 0
   reportOnTriggerEnter: 0
   reportOnTriggerExit: 0
-  reportOnTriggerStay: 0
 --- !u!136 &2484946923471411956
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -741,10 +739,8 @@ MonoBehaviour:
   - {fileID: 1206441947418653213}
   reportOnCollisionEnter: 0
   reportOnCollisionExit: 0
-  reportOnCollisionStay: 0
   reportOnTriggerEnter: 1
   reportOnTriggerExit: 1
-  reportOnTriggerStay: 0
 --- !u!1 &7976891096312757140
 GameObject:
   m_ObjectHideFlags: 0

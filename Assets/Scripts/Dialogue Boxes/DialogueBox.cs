@@ -248,7 +248,7 @@ public class DialogueBox : MonoBehaviour
     ///// </summary>
     private void Start()
     {
-        playerInputManager = PODController.Instance.PlayerInputManager;
+        playerInputManager = POD.Instance.PlayerInputManager;
         newLineMarker = DialogueBoxManager.Instance.NewLineMarker;
 
         List<string[]> dialogueData = DialogueBoxManager.Instance.GetDialogueData(id);

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BuildingSelectionHUD : SerializableSingleton<BuildingSelectionHUD>
+public class BuildingSelectionHUD : PublicInstanceSerializableSingleton<BuildingSelectionHUD>
 {
     private List<ButtonClickEventManager> buttons;
     private ButtonClickEventManager button;

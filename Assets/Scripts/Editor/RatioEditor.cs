@@ -19,9 +19,14 @@ public class RatioEditor : Editor
 
 			if (GUILayout.Button("Get Current Ratio"))
 			{
-				ratioManager.UpdateCurrentRatio();
+				ratioManager.TestCurrentRatio();
 			}
 
 		GUILayout.EndHorizontal();
+
+		if (GUILayout.Button("Get Score"))
+		{
+			Debug.Log($"Score calculated: {ratioManager.ScoreRatioAlignment()}");
+		}
 	}
 }

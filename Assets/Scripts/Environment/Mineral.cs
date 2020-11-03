@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 /// <summary>
 /// Nodes of minerals for the player to collect for building.
@@ -26,6 +27,7 @@ public class Mineral : MonoBehaviour
     private List<MeshRenderer> renderers;
     private bool despawning;
 	private float timer = 0f;
+    private NavMeshObstacle navMeshObstacle;
 
 	//Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -41,7 +43,15 @@ public class Mineral : MonoBehaviour
     /// </summary>
     public int OreCount { get => oreCount; }
 
+    /// <summary>
+    /// The point on this object that the mining beam VFX will affix itself to.
+    /// </summary>
 	public Vector3 MiningPoint { get => miningPoint.position; }
+
+    /// <summary>
+    /// The NavMeshObstacle component of this mineral.
+    /// </summary>
+    public NavMeshObstacle NavMeshObstacle { get => navMeshObstacle; }
 
     /// <summary>
     /// Whether or not the mineral has been placed in the scene, or is pooled in the object pool.
@@ -77,6 +87,7 @@ public class Mineral : MonoBehaviour
     {
         colliders = new List<Collider>(GetComponentsInChildren<Collider>());
         renderers = new List<MeshRenderer>(GetComponentsInChildren<MeshRenderer>());
+        navMeshObstacle = GetComponent<NavMeshObstacle>();
 		initialCount = oreCount;
         timer = oreSpawnRate;
     }
@@ -129,7 +140,7 @@ public class Mineral : MonoBehaviour
 		ore.transform.rotation = transform.rotation;
 		ore.Start = transform;
 		ore.Mid = GetPointOnUnitSphereCap(Quaternion.LookRotation(Vector3.up), 90f) * oreCurveRadius + transform.position; //Choose a random point in a hemisphere, facing up, with a radius of 1, as a "curving point".
-		ore.End = FindObjectOfType<PlayerID>().transform;
+		ore.End = POD.Instance.transform;
 		ore.gameObject.SetActive(true);
 	}
 

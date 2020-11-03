@@ -60,12 +60,12 @@ MonoBehaviour:
   powerConsumption: 2
   waterConsumption: 5
   plantsConsumption: 0
-  gasConsumption: 0
+  gasConsumption: 2
   buildTime: 10
-  VFX:
-  - {fileID: 2202830091584974985}
   buildInPits: 1
   minBuildHeight: 1.5
+  VFX:
+  - {fileID: 2202830091584974985}
   cliffRaycastOffsets:
   - {x: -0.875, y: 0, z: -0.875}
   - {x: -1.3, y: 0, z: 0}
@@ -86,6 +86,8 @@ MonoBehaviour:
   - {x: 1, y: -0.45, z: -1}
   - {x: 1, y: -0.45, z: 0}
   - {x: 1, y: -0.45, z: 1}
+  buildingFoundationOffsetsOnXAxis: 3
+  buildingFoundationOffsetsOnZAxis: 3
   model: {fileID: 4595218341875925051}
   rendererMaterialSets:
   - renderer: {fileID: 1270843474368464628}
@@ -253,10 +255,8 @@ MonoBehaviour:
   - {fileID: 2427136214263755661}
   reportOnCollisionEnter: 0
   reportOnCollisionExit: 0
-  reportOnCollisionStay: 0
   reportOnTriggerEnter: 0
   reportOnTriggerExit: 0
-  reportOnTriggerStay: 0
 --- !u!1 &2202830091584974985
 GameObject:
   m_ObjectHideFlags: 0
@@ -357,10 +357,8 @@ MonoBehaviour:
   - {fileID: 2427136214263755661}
   reportOnCollisionEnter: 0
   reportOnCollisionExit: 0
-  reportOnCollisionStay: 0
   reportOnTriggerEnter: 1
   reportOnTriggerExit: 1
-  reportOnTriggerStay: 0
 --- !u!1 &5797989508795119653
 GameObject:
   m_ObjectHideFlags: 0
@@ -442,10 +440,8 @@ MonoBehaviour:
   - {fileID: 2427136214263755661}
   reportOnCollisionEnter: 0
   reportOnCollisionExit: 0
-  reportOnCollisionStay: 0
   reportOnTriggerEnter: 0
   reportOnTriggerExit: 0
-  reportOnTriggerStay: 0
 --- !u!1001 &1149017350054590353
 PrefabInstance:
   m_ObjectHideFlags: 0

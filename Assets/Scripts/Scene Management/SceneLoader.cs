@@ -8,7 +8,7 @@ using UnityEngine.UI;
 /// <summary>
 /// Handles the changing of scenes.
 /// </summary>
-public class SceneLoader : SerializableSingleton<SceneLoader>
+public class SceneLoader : PublicInstanceSerializableSingleton<SceneLoader>
 {
     //Private Fields---------------------------------------------------------------------------------------------------------------------------------  
 
@@ -77,6 +77,7 @@ public class SceneLoader : SerializableSingleton<SceneLoader>
         yield return StartCoroutine(Fade(false));
         canvas.SetActive(false);
         loadingScene = false;
+        if (Time.timeScale != 1) Time.timeScale = 1;        
     }
 
     /// <summary>
@@ -101,6 +102,7 @@ public class SceneLoader : SerializableSingleton<SceneLoader>
         yield return StartCoroutine(Fade(false));
         canvas.SetActive(false);
         loadingScene = false;
+        if (Time.timeScale != 1) Time.timeScale = 1;
     }
 
     /// <summary>
