@@ -1,68 +1,100 @@
-Stage	Dialogue Box	Dialogue Key	Dialogue	Required action	What happens in the game/Action																						
-Controls	Console	ai online	Commencing system check.~AI unit: online.~Vitals: green.		"UI border appears, dialogue box Console appears in top left"																						
-Controls	Console	calibrate movement	Initialising movement system.~Movement calibration required.~Task: move using the WASD keys.		Prompt appears above POD (with transition in sem 2) with image showing how to move																						
-Controls	W	w	W	Press W																							
-Controls	A	a	A	Press A																							
-Controls	S	s	S	Press S																							
-Controls	D	d	D	Press D																							
-Controls	Game	wasd	Move using the WASD keys.~(Click this box or press Q to dismiss it.)	Move in each direction	Flashing bottom left corner of the image (sem 2)																						
-Controls	Console	systems online	Movement calibrated.~Connecting to SEER.~System check complete.~All systems online.~Welcome Protective Observation Drone.		Prompt closes																						
-Controls	Console	planet livability	Initialising External Environment Scanner.~Planet PRIME detected.~Launching planetlivability.exe.		Clear Console first																						
-Controls	Console	launch cat	<PLANET IS UNABLE TO SUPPORT LIFE.>~Terraforming protocol updated.~Launching CAT.exe.																								
-Controls	CAT	need minerals	Hello! I am the Construction Assistant Technician. Here to assist with all your terraforming needs!																								
-Controls	CAT	need minerals	"This planet is currently inadequate for human life, fortunately you have been equipped with me!"																								
-Controls	CAT	need minerals	"Firstly, we are going to need some building materials."																								
-Controls	Console	detect minerals	Scanning for mineral deposits.~Minerals detected.		Minimap Appears																						
+Stage	Dialogue Box	Dialogue Key	What is being said 	Required action	What happens in the game/Action																						
+Controls	Console	ai online	Commencing system check . . .~AI unit: online.~Vitals: green.		"UI border appears, dialogue box Console appears in top left"																						
+Controls	Console	calibrate movement	Initialising movement system . . .~Movement calibration required.~Task: move using WASD.		Prompt appears above POD (with transition in sem 2) with image showing how to move																						
+Controls	Game	wasd	Move using WASD.	Move in each direction	Flashing bottom left corner of the image (sem 2)																						
+Controls	Console	systems online	Movement calibrated.~System check complete.~All systems online.		Prompt closes																						
+Controls	Console	welcome pod	Connecting to S.E.E.R. . . .~Welcome Protective.Observation.Drone.~Human Cryo Status: green.																								
+Controls	Console	planet livability	Initialising External Environment Scanner . . .~Planet P.R.I.M.E detected.~Launching planetlivability.exe . . .		Clear Console first																						
+Controls	Console	planet unlivable	<PLANET IS UNABLE TO SUPPORT LIFE.>																								
+Controls	Console	launch cat	Terraforming protocol updated.~Launching C.A.T.exe . . .																								
+Controls	CAT	need minerals	"Hello! I am the Construction Assistant Technician. Here to assist with all your terraforming needs!~Your mission is to terraform this planet and make it habitable for the humans in the terraforming tower.~This planet is currently inadequate for human life, fortunately you have been equipped with me!~Firstly, we are going to need some building materials."																								
+Controls	Console	scan minerals	Scanning for mineral deposits.		Minimap Appears																						
+Controls	Console	minerals detected	Detected +minerals&.		Minimap Detection + Mineral Layer (Minimap detection has layers)																						
 Controls	CAT	gather minerals	Please gather 4 +minerals&.																								
 Controls	Console	task gather minerals	Task: gather 4 +minerals&.		Clear console first																						
-Controls	Game	lmb	Move the mouse over a mineral and hold down the left mouse button to mine it.	Gather minerals	Image of LMB appears above POD when near mining node																						
-Controls	CAT	collected minerals	Good job! Any minerals you collect will be displayed here.		"Clear Console, game highlights the resource area after the first strike"																						
-Terraforming	CAT	enough for building	"Perfect, this should be enough to construct a building."																								
-Terraforming	CAT	build buildings	I have the blueprints of several that can help convert this rock into a paradise for the humans in the cryo egg.		"Building UI Appears, Building Icons are still hidden"																						
-Terraforming	Console	task build fusion reactor	Task: build a [Fusion Reactor].		Clear Console first																						
-Terraforming	CAT	build fusion reactor	"First, you'll need power, please build a [Fusion Reactor]."	Build a fusion reactor	"Highlights fusion reactor icon, player can only select reactor"																						
-Terraforming	Console	task build ice drill	Task: build an /Ice Drill\.		Clear Console first																						
-Terraforming	CAT	build ice drill	"Next, build an /Ice Drill\!"	Build an ice drill	"Highlights ice drill icon, player can only select drill"																						
-Terraforming	CAT	got power and water	"Wonderful! Now with water and power going, let's look at the rest of the buildings at your disposal!"																								
-Terraforming	CAT	greenhouse	"This is a {Greenhouse}, you can use it to cultivate flora for the planet!"		Greenhouse appears and is buildable																						
-Terraforming	CAT	boiler	"This is a /Boiler\, it turns water into oxygen for your humans to breathe."		Boiler appears and is buildable																						
-Terraforming	CAT	incinerator	This is an @Incinerator$. It burns waste into atmospheric gases for the planet.		Incinerator appears and is buildable																						
-Terraforming	CAT	buildings important	"Remember, all buildings are important! "																								
-Terraforming	CAT	buildings important	"The more you build, the quicker you'll reach the end goal."																								
-	CAT	ratios important	Make sure to keep the ratio between the buildings balanced; imbalance will slow down your progress.																								
-Terraforming	CAT	ratios important	"If you forget anything, press ESC and have a look in the pause menu."		Highlights the ratio bars																						
-Terraforming	CAT	good luck	Good luck and happy terraforming!		Resume clock																						
-Terraforming	CAT	good luck	CAT out. = ^__^ =																								
-Terraforming	Console	cat closed	CAT.exe has closed.		Clear console first																						
-Combat	Console	launch dog	Warning! Hostile alien activity detected.~Launching DOG.exe		Triggered at night time; clear Console first																						
+Controls	Game	lmb	Hold LMB to gather +minerals&.	Gather minerals	Image of LMB appears above POD when near mining node																						
+Controls	CAT	collected minerals	Good job! Any +minerals& you collect will be displayed here.		"Clear Console, game highlights the resource area after the first strike"																						
+Resource Buildings	CAT	enough for building	"Perfect, this should be enough to construct your first building."																								
+Resource Buildings	CAT	building blueprints	Stored in my memory are blueprints of buildings that can be used to convert this barren planet into a sustainable paradise for your humans in the tower.		"Building UI Appears, Building Icons are still hidden"																						
+Resource Buildings	Console	task build fusion reactor	Task: build a [fusion reactor].		Clear Console first																						
+Resource Buildings	CAT	build fusion reactor	"First, you'll need power, please build a [fusion reactor]."	Build a fusion reactor	"Highlights fusion reactor icon, player can only select reactor"																						
+Resource Buildings	CAT	resource buildings	"Awesome. Now that you've got power, you'll need these buildings to collect resources for your base."		"Highlights ice drill, harvester & gas pump"																						
+Resource Buildings	Console	task build ice drill	Task: build an /ice drill\.		Clear Console first																						
+Resource Buildings	CAT	build ice drill	"Firstly, build an /ice drill\!"	Build an ice drill	"Highlights ice drill icon, player can only select drill"																						
+Resource Buildings	Console	task build gas pump	Task: build a @gas pump$.		Clear Console first																						
+Resource Buildings	CAT	build gas pump	"Now, build a @gas pump$!"	Build a gas pump	"Highlights gas pump icon, player can only select gas pump"																						
+Terraforming	CAT	got power and water	Wonderful! Now let's look at the buildings that will contribute progress to the terraforming tower.		Highlights terraforming buildings																						
+Terraforming	Console	task build boiler	Task: build a /boiler\.		Clear Console first																						
+Terraforming	CAT	build boiler	"Because you have enough /water\ and @gas$, I'll get you to build a /boiler\ first."		"Highlights boiler icon, player can only select drill"																						
+Terraforming	CAT	ratio bars	Perfect. These are the ratio bars that contribute to your overall terraforming progress.		Highlight ratio bars																						
+Terraforming	CAT	target building count	This shows your target building count! Try to build as close to this as you can.		Point at the golden bar																						
+Terraforming	Console	task press p	Task: press the P key.		Clear Console first	Terraforming	Console	task build boiler	Task: build a Boiler		Clear Console first	Terraforming	Console	task build boiler	Task: build a Boiler		Clear Console first	Terraforming	Console	task build boiler	Task: build a Boiler		Clear Console first				
+Terraforming	CAT	press p	Press P to display more details.																								
+Terraforming	CAT	terraforming progress	You can see your overall terraforming progress here.~Press P to disable this menu again.																								
+Terraforming	Console	task click building	Task: click a building to open the demolition menu.		Clear Console first																						
+Terraforming	CAT	demolition menu	"If you need less of one of your terraforming buildings, clicking on it will give you options for disabling or demolishing it. Try it."																								
+Terraforming	CAT	enabling buildings	"If you merely disable a building, you can re-enable it from this menu later."																								
+Terraforming	CAT	good luck	That should be all you need to know from me. Good luck and happy terraforming!~C.A.T. out. = ^__^ =		Resume clock																						
+Terraforming	Console	cat closed	C.A.T.exe has closed.		Clear console first																						
+Combat	Console	launch dog	Warning! Hostile alien activity detected.~Launching D.O.G.exe . . .		Triggered at night time; clear Console first																						
 Combat	DOG	dog launched	DEFENCE ORGANISATION GUIDE ONLINE!																								
-Combat	DOG	aliens spawned	Listen up soldier! Those BUGs look angry.		3 enemies spawn here																						
-Combat	Console	task build turret	Task: build a <Shotgun Turret> and a <Machine Gun Turret>.		Clear console first																						
-Combat	DOG	build turret	Use these <Turrets> to defend your base.	Build turrets	Turret icons appear and are buildable																						
+Combat	DOG	aliens spawned	Listen up soldier! Those B.U.G.s look angry.		3 enemies spawn here																						
+Combat	Console	task build turret	Task: build a <turret>.		Clear console first																						
+Combat	DOG	build turret	Build turrets to defend your base.	Build turrets	Turret icons appear and are buildable																						
+Combat	DOG	protect tower	You must protect the terraforming tower at all costs! If that gets destroyed it's <game over>.		Highlight Terraforming Tower																						
 Combat	Console	task shoot	Weapon systems online.~Task: shoot with your on-board laser cannon.		Clear console first																						
 Combat	DOG	shoot	You also have an on-board laser cannon to defend yourself with.																								
 Combat	Game	shoot	Press space to shoot.	Shoot	Image of space bar + to shoot																						
-Combat	DOG	heal at cryo egg	If you wanna patch yourself up head to the cryo egg.																								
-Combat	Console	task heal	Task: heal yourself at the cryo egg.		Clear console first																						
-Combat	Game	heal	Press E to heal.	Press E in range of the cryo egg	"Image of ""E"" above cryo egg"																						
-Combat	DOG	good luck	That's all you need to know. Good luck out there soldier! Don't die!																								
-Combat	DOG	good luck	DOG OUT!																								
-Combat	Console	dog closed	DOG.exe has closed.																								
-Combat	Game	finished tutorial	This is the end of the tutorial. You are on your own from here. Good luck!																								
-Skipped Tutorial	Console	system check	Commencing system check.~AI unit: online.~Movement system: online and calibrated.~Vitals: green.~Chronometer: online.~GPS: online.~Inventory: online.																								
-Skipped Tutorial	Console	begin game	Construction system: online.~External environment scanner: online.~Construction system: enabled.~All systems are online.~Task: terraform this planet for human habitation. Begin.																								
-Any	Console	blank	 		"Console prints "" "" to initialise itself."																						
-N/A	#Notes 	Technical	"If the value of the ""Dialogue Box"" column starts with a #, it will be treated as a comment and ignored. The first line with the column headings will also be ignored and reading of this file's contents will begin from the second line."																								
-N/A	#Notes 	Technical	"The values in the columns ""Dialogue Box"" need to be character for character identical to the ID of the dialogue box that you want the dialogue to appear in."																								
-N/A	#Notes 	Technical	"To retrieve a dialogue set in-code, you need to retrieve it with the exact value listed in the ""Dialogue Key"" column."																								
-N/A	#Notes 	Technical	"If multiple lines of dialogue are listed with the same Dialogue Box ID and Dialogue Key, they'll be added to the same dialogue set and displayed in their dialogue box one after the other as the player indicates they've read each (except for the Console)."																								
-N/A	#Notes 	Technical	All manually continuable dialogue is continued by pressing button [Q] or clicking on the dialogue box.																								
-N/A	#Notes 	Technical	"If dialogue needs to be separated into multiple lines, denote the line break with a ~."																								
-N/A	#Notes 	Technical	"Special characters are used to denote a section of dialogue as being coloured differently to the default for a given dialogue box. For reference, check the UI's DialogueBoxManager component."																								
-N/A	#Notes 	Formatting	All lines of dialogue should have the speaker's name																								
-N/A	#Notes 	Formatting	You don't need to put dialogue in quotation marks unless the character is using them in-line. Just type it as you want it presented in the dialogue box excepting the special characters for line breaks and colour tags.																								
-N/A	#Notes 	Formatting	Please order dialogue here in order of when it will be called just to make it easier to understand for the humans reading it.																								
-N/A	#Notes 	TODO	Juice: Typewriter FX (might have already been covered by lerping of dialogue?)																								
+Combat	DOG	heal at terraforming tower	If you wanna patch yourself up head to the terraforming tower.																								
+Combat	Console	task heal	Task: heal yourself at the terraforming tower.		Clear console first																						
+Combat	Game	heal	Press E to heal.	Press E in range of the terraforming tower	"Image of ""E"" above terraforming tower"																						
+Combat	DOG	store disperse	"At the end of each wave, you need to decide whether points gained should to be stored for better point accumulation, or dispersed to terraform the planet."																								
+Combat	DOG	good luck	That's all you need to know. Good luck out there soldier! Don't die!~D.O.G. OUT! U???U																								
+Combat	Console	dog closed	D.O.G.exe has closed.																								
+Finished Tutorial	Game	finished tutorial	This is the end of the tutorial. You are on your own from here. Good luck!		Note: this is a texts that appear without a speaker (doesn't use dialogue box)																						
+	#Notes 																										
+	#Notes 	Technical	"If the value of the ""Dialogue Box"" column starts with a #, it will be treated as a comment and ignored. The first line with the column headings will also be ignored and reading of this file's contents will begin from the second line."																								
+	#Notes 	Technical	"The values in the columns ""Dialogue Box"" need to be character for character identical to the ID of the dialogue box that you want the dialogue to appear in."																								
+	#Notes 	Technical	"To retrieve a dialogue set in-code, you need to retrieve it with the exact value listed in the ""Dialogue Key"" column."																								
+	#Notes 	Technical	"If multiple lines of dialogue are listed with the same Dialogue Box ID and Dialogue Key, they'll be added to the same dialogue set and displayed in their dialogue box one after the other as the player indicates they've read each (except for the Console)."																								
+	#Notes 	Technical	All dialogue is continued by pressing button [z]																								
+	#Notes 	Technical	"If dialogue needs to be separated into multiple lines, denote the line break with a ~."																								
+	#Notes 	Technical	Special characters are used to denote a section of dialogue as being coloured differently to the default for a given dialogue box.																								
+	#Notes 	Formatting	All lines of dialogue should have the speaker's name																								
+	#Notes 	Formatting	Please order dialogue here in order of when it will be called just to make it easier to understand for the humans reading it.																								
+	#Notes 	TODO	Juice: Typewriter FX																								
+																											
+																											
+																											
+																											
+																											
+																											
+																											
+																											
+																											
+																											
+																											
+																											
+																											
+																											
+																											
+																											
+																											
+																											
+																											
+																											
+																											
+																											
+																											
+																											
+																											
+																											
+																											
+																											
+																											
+																											
+																											
+																											
 																											
 																											
 																											
