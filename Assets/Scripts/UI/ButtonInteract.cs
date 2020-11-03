@@ -30,7 +30,7 @@ public class ButtonInteract : MonoBehaviour
     private bool interactable;
     private bool highlighted;
 	private bool breakCoroutine;
-	IEnumerator currentCoroutine;
+	Coroutine currentCoroutine;
 
 	private void Awake()
     {
@@ -50,10 +50,12 @@ public class ButtonInteract : MonoBehaviour
 	{
 		if (gameObject.activeInHierarchy)
 		{
-			breakCoroutine = true;
-			breakCoroutine = false;
-			currentCoroutine = FadeImageToColor(image, color);
-			StartCoroutine(currentCoroutine);
+			//breakCoroutine = true;
+			//breakCoroutine = false;
+			if (currentCoroutine != null)
+				StopCoroutine(currentCoroutine);
+			IEnumerator coroutine = FadeImageToColor(image, color);
+			currentCoroutine = StartCoroutine(coroutine);
 		}
 	}
 
