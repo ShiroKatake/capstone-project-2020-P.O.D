@@ -106,7 +106,7 @@ public class BuildingFactory : Factory<BuildingFactory, Building, EBuilding>
             ResourceManager.Instance.PowerConsumption -= building.PowerConsumption;
             ResourceManager.Instance.WaterConsumption -= building.WaterConsumption;
             ResourceManager.Instance.PlantsConsumption -= building.PlantsConsumption;
-            ResourceManager.Instance.PlantsConsumption -= building.GasConsumption;
+            ResourceManager.Instance.GasConsumption -= building.GasConsumption;
         }
 
         if (killed)

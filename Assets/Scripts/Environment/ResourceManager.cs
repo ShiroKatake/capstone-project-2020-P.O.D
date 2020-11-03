@@ -43,21 +43,6 @@ public class ResourceManager : PublicInstanceSerializableSingleton<ResourceManag
 
 	public UnityAction resourcesUpdated;
 
-    //Basic Public Properties----------------------------------------------------------------------                                                                                                                          
-
-    /// <summary>
-    /// How much ore the player has collected
-    /// </summary>
-    public int Ore {
-		get => ore;
-		set
-		{
-			ore = value;
-			resourcesUpdated?.Invoke();
-			CheckResourceSupply();
-		}
-	}
-
     //Complex Public Properties--------------------------------------------------------------------                                                    
 
     /// <summary>
@@ -93,6 +78,24 @@ public class ResourceManager : PublicInstanceSerializableSingleton<ResourceManag
             gasSupply = value;
 			resourcesUpdated?.Invoke();
 			CheckResourceSupply();
+        }
+    }
+
+    /// <summary>
+    /// How much ore the player has collected
+    /// </summary>
+    public int Ore
+    {
+        get
+        {
+            return ore;
+        }
+
+        set
+        {
+            ore = value;
+            resourcesUpdated?.Invoke();
+            CheckResourceSupply();
         }
     }
 
