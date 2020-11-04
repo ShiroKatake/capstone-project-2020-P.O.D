@@ -12,6 +12,7 @@ public class StageControls : PublicInstanceSerializableSingleton<StageControls>,
 
     //Serialized Fields----------------------------------------------------------------------------
 
+    [Header("UI Element Prefabs")]
     [SerializeField] private UIElementStatusManager uiBorderUIEC;
     [SerializeField] private UIElementStatusManager consoleUIEC;
     [SerializeField] private UIElementStatusManager buildingAndResourcesBarUIEC;
@@ -19,6 +20,9 @@ public class StageControls : PublicInstanceSerializableSingleton<StageControls>,
     [SerializeField] private UIElementStatusManager miniMapBorderUIEC;
     [SerializeField] private UIElementStatusManager miniMapUIEC;
     [SerializeField] private UIElementStatusManager mineralsHighlightUIEC;
+
+    [Header("Building Prefabs")]
+    [SerializeField] private Building fusionReactorPrefab;
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
@@ -78,8 +82,7 @@ public class StageControls : PublicInstanceSerializableSingleton<StageControls>,
         yield return StartCoroutine(EnableUI());
         yield return StartCoroutine(MovementControls());
         yield return StartCoroutine(MiningControls());
-        //Debug.Log($"StageControls complete.");
-        StageManager.Instance.SetStage(EStage.Terraforming);
+        StageManager.Instance.SetStage(EStage.ResourceBuildings);
     }
 
     /// <summary>
@@ -167,14 +170,11 @@ public class StageControls : PublicInstanceSerializableSingleton<StageControls>,
 
         do
         {
-            Debug.Log($"Sytems online lerping");
             yield return null;
         }
         while (console.LerpingDialogue);
 
-        //Debug.Log($"Waiting for 2 seconds - start");
         yield return new WaitForSeconds(2);
-        //Debug.Log($"Waiting for 2 seconds - finished");
     }
 
     /// <summary>
@@ -182,7 +182,6 @@ public class StageControls : PublicInstanceSerializableSingleton<StageControls>,
     /// </summary>
     private IEnumerator MiningControls()
     {
-        //Debug.Log($"Planet livability, console.LerpingDialogue is {console.LerpingDialogue}");
         console.ClearDialogue();
         console.SubmitDialogue("planet livability", 0, false, false);
 
@@ -237,15 +236,14 @@ public class StageControls : PublicInstanceSerializableSingleton<StageControls>,
         {
             yield return null;
         }
-        while (ResourceManager.Instance.Ore < startingMinerals + 4);
+        while (ResourceManager.Instance.Ore < fusionReactorPrefab.OreCost);
 
         MineralCollectionController.Instance.CanMine = false;
         if (game.Activated) game.SubmitDeactivation();
         console.ClearDialogue();
         cat.SubmitDialogue("collected minerals", 0, false, false);
         mineralsHighlightUIEC.Visible = true;
-
-        //Start terraforming stage
+        
         do
         {
             yield return null;

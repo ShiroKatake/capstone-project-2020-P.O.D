@@ -30,8 +30,7 @@ public class StageTerraforming : PublicInstanceSerializableSingleton<StageTerraf
     [SerializeField] private UIElementStatusManager atmosphereBar;
 
     [Header("Highlights")]
-    [SerializeField] private UIElementStatusManager fusionReactorHighlight;
-    [SerializeField] private UIElementStatusManager iceDrillHighlight;
+    [SerializeField] private UIElementStatusManager harvesterHighlight;
     [SerializeField] private UIElementStatusManager boilerHighlight;
     [SerializeField] private UIElementStatusManager greenhouseHighlight;
     [SerializeField] private UIElementStatusManager incineratorHighlight;
@@ -39,6 +38,15 @@ public class StageTerraforming : PublicInstanceSerializableSingleton<StageTerraf
     [SerializeField] private UIElementStatusManager biodiversityBarHighlight;
     [SerializeField] private UIElementStatusManager atmosphereBarHighlight;
     [SerializeField] private UIElementStatusManager ratioBarsHighlight;
+
+    [Header("Building Prefabs")]
+    [SerializeField] private Building fusionReactorPrefab;
+    [SerializeField] private Building iceDrillPrefab;
+    [SerializeField] private Building harvesterPrefab;
+    [SerializeField] private Building gasPumpPrefab;
+    [SerializeField] private Building boilerPrefab;
+    [SerializeField] private Building greenhousePrefab;
+    [SerializeField] private Building incineratorPrefab;
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
@@ -80,108 +88,18 @@ public class StageTerraforming : PublicInstanceSerializableSingleton<StageTerraf
     /// </note>
     public IEnumerator Execution()
     {
-        yield return StartCoroutine(BuildFusionReactor());
-        yield return StartCoroutine(BuildIceDrill());
+        yield return StartCoroutine(BuildBoiler());
+
         yield return StartCoroutine(TerraformingWalkthrough());
+
+
         yield return StartCoroutine(StageComplete());        
         StageManager.Instance.SetStage(EStage.Combat);
     }
 
-    /// <summary>
-    /// Teaches the player about the fusion reactor.
-    /// </summary>
-    private IEnumerator BuildFusionReactor()
+    private IEnumerator BuildBoiler()
     {
-        cat.SubmitDialogue("enough for building", 0, false, false);
-
-        while (!cat.DialogueRead || !cat.AcceptingSubmissions)
-        {
-            yield return null;
-        }
-
-        cat.SubmitDialogue("build buildings", 0, false, false);
-
-        while (!cat.DialogueRead || !cat.AcceptingSubmissions)
-        {
-            yield return null;
-        }
-
-        console.ClearDialogue();
-        console.SubmitDialogue("task build fusion reactor", 0, false, false);
-        cat.SubmitDialogue("build fusion reactor", 0, true, false);
-        fusionReactor.Visible = true;
-        fusionReactor.Interactable = true;
-        fusionReactorHighlight.Visible = true;
-
-        while (BuildingManager.Instance.BuiltBuildingsCount(EBuilding.FusionReactor) == 0)
-        {
-            bool placedFusionReactor = BuildingManager.Instance.PlacedBuildingsCount(EBuilding.FusionReactor) > 0;
-
-            //Keep fusion reactor button interactable only while it needs to be placed
-            if (placedFusionReactor)
-            {
-                if (fusionReactor.Interactable)
-                {
-                    fusionReactor.Interactable = false;
-                }
-            }
-            else
-            {
-                if (!fusionReactor.Interactable)
-                {
-                    fusionReactor.Interactable = true;
-                }
-            }
-
-            yield return null;
-        }
-
-        fusionReactor.Interactable = false;
-    }
-
-    /// <summary>
-    /// Teaches the player about the ice drill.
-    /// </summary>
-    private IEnumerator BuildIceDrill()
-    {
-        console.ClearDialogue();
-        console.SubmitDialogue("task build ice drill", 0, false, false);
-        cat.SubmitDialogue("build ice drill", 0, true, false);
-        iceDrill.Visible = true;
-        iceDrill.Interactable = true;
-        iceDrillHighlight.Visible = true;
-
-        while (BuildingManager.Instance.BuiltBuildingsCount(EBuilding.IceDrill) == 0)
-        {
-            bool placedIceDrill = BuildingManager.Instance.PlacedBuildingsCount(EBuilding.IceDrill) > 0;
-
-            //Keep ice drill button interactable only while it needs to be placed
-            if (placedIceDrill)
-            {
-                if (iceDrill.Interactable)
-                {
-                    iceDrill.Interactable = false;
-                }
-            }
-            else
-            {
-                if (!iceDrill.Interactable)
-                {
-                    iceDrill.Interactable = true;
-                }
-            }
-
-            yield return null;
-        }
-
-        iceDrill.Interactable = false;
-        console.ClearDialogue();
-        cat.SubmitDialogue("got power and water", 0, false, false);
-
-        while (!cat.DialogueRead || !cat.AcceptingSubmissions)
-        {
-            yield return null;
-        }
+        yield return null;
     }
 
     /// <summary>

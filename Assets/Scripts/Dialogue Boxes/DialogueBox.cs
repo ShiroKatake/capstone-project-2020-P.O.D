@@ -621,7 +621,7 @@ public class DialogueBox : MonoBehaviour
     /// <param name="submission">The dialogue submission to have its content displayed.</param>
     private IEnumerator ChangeDialogue(DialogueSubmission submission)
     {
-        //Debug.Log($"{this}.ChangeDialogue() called during update {lastUpdate} with dialogue set with key {submission.key}");
+        Debug.Log($"{this}.ChangeDialogue() called for dialogue set with key {submission.key} at index {dialogueIndex}");
 
         if (dialogue.ContainsKey(submission.key) && dialogue[submission.key].Count > 0)
         {

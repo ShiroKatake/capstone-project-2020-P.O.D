@@ -65,6 +65,11 @@ public class UIElementStatusManager : MonoBehaviour
     //Simple Public Properties---------------------------------------------------------------------
 
     /// <summary>
+    /// The button's ButtonInteract component.
+    /// </summary>
+    public ButtonInteract ButtonInteract { get => buttonInteract; }
+
+    /// <summary>
     /// Has this UI element finished flickering in?
     /// </summary>
     public bool FinishedFlickeringIn { get => finishedFlickeringIn; }
@@ -83,7 +88,7 @@ public class UIElementStatusManager : MonoBehaviour
 
         set
         {
-            interactable = value;
+            interactable = (buttonInteract == null || buttonInteract.InInteractableGameStage) && value;
 
             if (/*!requiresResources && */button != null /*&& button.interactable != interactable*/)
             {
@@ -220,6 +225,7 @@ public class UIElementStatusManager : MonoBehaviour
     /// </summary>
     private void Awake()
     {
+        buttonInteract = GetComponent<ButtonInteract>();
         rectTransform = GetComponent<RectTransform>();
 
         if (button != null)

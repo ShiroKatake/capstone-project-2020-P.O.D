@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7009541622833408660}
   - component: {fileID: 4952588298347314997}
   - component: {fileID: 7691648321688888052}
+  - component: {fileID: 1039795079246337228}
   - component: {fileID: 1629162378140240872}
   - component: {fileID: 3011167280432518999}
   - component: {fileID: 8778031101374311301}
@@ -50,7 +51,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f153d1e8003789941934b31f180c4799, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skipTutorial: 1
+  skipTutorial: 0
 --- !u!114 &4952588298347314997
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -102,6 +103,33 @@ MonoBehaviour:
   miniMapBorderUIEC: {fileID: 0}
   miniMapUIEC: {fileID: 0}
   mineralsHighlightUIEC: {fileID: 0}
+  fusionReactorPrefab: {fileID: 7989155517478719925, guid: 24cf1029333088241ba2e0353577d9d1,
+    type: 3}
+--- !u!114 &1039795079246337228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2959021111598887537}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 865cca37c54d4654995951560dfb7391, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fusionReactor: {fileID: 0}
+  iceDrill: {fileID: 0}
+  harvester: {fileID: 0}
+  gasPump: {fileID: 0}
+  fusionReactorHighlight: {fileID: 0}
+  iceDrillHighlight: {fileID: 0}
+  gasPumpHighlight: {fileID: 0}
+  fusionReactorPrefab: {fileID: 7989155517478719925, guid: 24cf1029333088241ba2e0353577d9d1,
+    type: 3}
+  iceDrillPrefab: {fileID: 6356630498027900237, guid: 2863a907b049ebd4b92f73a71635ec1d,
+    type: 3}
+  gasPumpPrefab: {fileID: 1206441947418653213, guid: bf98a15c7e0b55c4d93c40e4b542322f,
+    type: 3}
 --- !u!114 &1629162378140240872
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -126,8 +154,7 @@ MonoBehaviour:
   humidityBar: {fileID: 0}
   biodiversityBar: {fileID: 0}
   atmosphereBar: {fileID: 0}
-  fusionReactorHighlight: {fileID: 0}
-  iceDrillHighlight: {fileID: 0}
+  harvesterHighlight: {fileID: 0}
   boilerHighlight: {fileID: 0}
   greenhouseHighlight: {fileID: 0}
   incineratorHighlight: {fileID: 0}
@@ -135,6 +162,20 @@ MonoBehaviour:
   biodiversityBarHighlight: {fileID: 0}
   atmosphereBarHighlight: {fileID: 0}
   ratioBarsHighlight: {fileID: 0}
+  fusionReactorPrefab: {fileID: 7989155517478719925, guid: 24cf1029333088241ba2e0353577d9d1,
+    type: 3}
+  iceDrillPrefab: {fileID: 6356630498027900237, guid: 2863a907b049ebd4b92f73a71635ec1d,
+    type: 3}
+  harvesterPrefab: {fileID: 1110411587212194942, guid: 9a271bc4716515042a571aedc0a2f8b0,
+    type: 3}
+  gasPumpPrefab: {fileID: 1206441947418653213, guid: bf98a15c7e0b55c4d93c40e4b542322f,
+    type: 3}
+  boilerPrefab: {fileID: 2427136214263755661, guid: 0332084ab57deef4aa60fa1089c3c8cb,
+    type: 3}
+  greenhousePrefab: {fileID: 9054559055595012424, guid: 588682734d3c4d347bd6ed96a5858e1a,
+    type: 3}
+  incineratorPrefab: {fileID: 6057790016772902916, guid: a1ed15bf36ab48b499fe23ef5ceb8ca6,
+    type: 3}
 --- !u!114 &3011167280432518999
 MonoBehaviour:
   m_ObjectHideFlags: 0
