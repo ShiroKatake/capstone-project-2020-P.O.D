@@ -79,7 +79,7 @@ public class AlienFX : MonoBehaviour
 	/// </summary>
 	private void OnDie()
 	{
-		AudioManager.Instance.PlaySound(AudioManager.ESound.Alien_Dies, this.gameObject);
+		
 		animator.SetTrigger(ANIMATOR_DIE);
 		//Debug.Log("Die");
 	}

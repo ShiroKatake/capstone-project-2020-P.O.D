@@ -177,6 +177,7 @@ public class BuildingDemolitionController : PublicInstanceSerializableSingleton<
         showingDemolitionMenu = true;
         Vector3 pos = building.transform.position;
         menu.transform.position = new Vector3(pos.x, pos.y + 0.5f, pos.z - 2f);
+        menu.transform.rotation = Quaternion.Euler(45, 0, 0);
         enableDisableText.text = (building.DisabledByPlayer ? "Enable" : "Disable");
         menu.SetActive(true);
     }
