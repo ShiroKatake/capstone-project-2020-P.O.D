@@ -19,11 +19,14 @@ public class RatioManager : PublicInstanceSerializableSingleton<RatioManager>
 
 	private int[] waveStartRatio;
 
-	float currentMultiplier = 1;
-	float storedPoints = 0;
+	float currentMultiplier = 1f;
+	float storedPoints = 0f;
 	float pointsThisWave;
+	float currentPoints = 0f;
 
 	public UnityAction<bool> updateStoreDisperse;
+
+	public bool Win { get; private set; } = false;
 
 	public float WinAmount { get => winAmount; }
 	public float PointsStored { get => storedPoints; }
@@ -41,6 +44,13 @@ public class RatioManager : PublicInstanceSerializableSingleton<RatioManager>
 	{
 		UpdateTargetRatio();
 		terraformingUI.UpdateTarget(targetRatio, currentRatio);
+		terraformingUI.UpdateCurrent(currentRatio);
+	}
+
+	private void Update()
+	{
+		if (currentPoints >= winAmount)
+			Win = true;
 	}
 
 	public float ScoreRatioAlignment()
@@ -187,11 +197,11 @@ public class RatioManager : PublicInstanceSerializableSingleton<RatioManager>
 	/// <returns></returns>
 	public void DispersePoints()
 	{
-		float returnVal = (pointsThisWave + storedPoints) * currentMultiplier;
+		currentPoints += (pointsThisWave + storedPoints) * currentMultiplier;
 		storedPoints = 0;
 		ClearMultiplier();
 
-		progressBar.SetBarValue(returnVal);
+		progressBar.SetBarValue(currentPoints);
 		//Debug.Log("Disperse");
 	}
 
