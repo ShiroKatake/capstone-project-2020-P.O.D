@@ -8,6 +8,7 @@ public class StoreDisperseUI : MonoBehaviour
 	[SerializeField] GameObject mainPanel;
 	[SerializeField] GameObject greyPanel;
 	[SerializeField] ButtonInteract storeButton;
+	[SerializeField] TerraformingOrbDemo terraformingOrb;
 
     // Start is called before the first frame update
     void Start()
@@ -26,6 +27,7 @@ public class StoreDisperseUI : MonoBehaviour
 	{
 		RatioManager.Instance.DispersePoints();
 		DisplayUI(false);
+		terraformingOrb.TriggerExplode();
 	}
 
 	private void DisplayUI(bool state)
