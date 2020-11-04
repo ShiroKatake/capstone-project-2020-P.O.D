@@ -56,7 +56,7 @@ public class StageResourceBuildings : PublicInstanceSerializableSingleton<StageR
         cat = DialogueBoxManager.Instance.GetDialogueBox("CAT");
     }
 
-    //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
+    //Recurring Methods------------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
     /// The main behaviour of the stage. 
@@ -73,7 +73,7 @@ public class StageResourceBuildings : PublicInstanceSerializableSingleton<StageR
         yield return StartCoroutine(IntroduceResourceCollectors());
         yield return StartCoroutine(BuildIceDrill());
         yield return StartCoroutine(BuildGasPump());
-        StageManager.Instance.SetStage(EStage.ResourceBuildings);
+        StageManager.Instance.SetStage(EStage.Terraforming);
     }
 
     /// <summary>
@@ -112,10 +112,8 @@ public class StageResourceBuildings : PublicInstanceSerializableSingleton<StageR
 
         do
         {
-            bool placedFusionReactor = BuildingManager.Instance.PlacedBuildingsCount(EBuilding.FusionReactor) > 0;
-
             //Keep fusion reactor button interactable only while it needs to be placed
-            if (placedFusionReactor)
+            if (BuildingManager.Instance.PlacedBuildingsCount(EBuilding.FusionReactor) > 0)
             {
                 if (fusionReactor.Interactable) fusionReactor.Interactable = false;
             }
@@ -123,8 +121,14 @@ public class StageResourceBuildings : PublicInstanceSerializableSingleton<StageR
             {
                 if (!fusionReactor.Interactable) fusionReactor.Interactable = true;
 
-                if (ResourceManager.Instance.Ore < fusionReactorPrefab.OreCost && !MineralCollectionController.Instance.CanMine) MineralCollectionController.Instance.CanMine = true;
-                else if (ResourceManager.Instance.Ore >= fusionReactorPrefab.OreCost && MineralCollectionController.Instance.CanMine) MineralCollectionController.Instance.CanMine = false;
+                if (MineralCollectionController.Instance.CanMine)
+                {
+                    if (ResourceManager.Instance.Ore >= fusionReactorPrefab.OreCost) MineralCollectionController.Instance.CanMine = false;
+                }
+                else
+                {
+                    if (ResourceManager.Instance.Ore < fusionReactorPrefab.OreCost) MineralCollectionController.Instance.CanMine = true;
+                } 
             }
 
             yield return null;
@@ -159,28 +163,26 @@ public class StageResourceBuildings : PublicInstanceSerializableSingleton<StageR
     /// </summary>
     private IEnumerator BuildIceDrill()
     {
-        Debug.Log($"BuildIceDrill() start");
+        //Debug.Log($"BuildIceDrill() start");
         console.ClearDialogue();
-        Debug.Log($"BuildIceDrill(), cleared console dialogue");
+        //Debug.Log($"BuildIceDrill(), cleared console dialogue");
         console.SubmitDialogue("task build ice drill", 0, false, false);
-        Debug.Log($"BuildIceDrill(), submitted console dialogue");
+        //Debug.Log($"BuildIceDrill(), submitted console dialogue");
         cat.SubmitDialogue("build ice drill", 0, true, false);
-        Debug.Log($"BuildIceDrill(), submitted cat dialogue");
+        //Debug.Log($"BuildIceDrill(), submitted cat dialogue");
         iceDrill.ButtonInteract.InInteractableGameStage = true;
-        Debug.Log($"BuildIceDrill(), set ice drill button interactable allowed to true");
+        //Debug.Log($"BuildIceDrill(), set ice drill button interactable allowed to true");
         iceDrillHighlight.Visible = true;
-        Debug.Log($"BuildIceDrill(), set ice drill button visible to true");
+        //Debug.Log($"BuildIceDrill(), set ice drill button visible to true");
 
         do
         {
-            bool placedIceDrill = BuildingManager.Instance.PlacedBuildingsCount(EBuilding.IceDrill) > 0;
-
             //Keep ice drill button interactable only while it needs to be placed
-            if (placedIceDrill)
+            if (BuildingManager.Instance.PlacedBuildingsCount(EBuilding.IceDrill) > 0)
             {
                 if (fusionReactor.ButtonInteract.InInteractableGameStage) fusionReactor.ButtonInteract.InInteractableGameStage = false;
                 if (fusionReactor.Interactable) fusionReactor.Interactable = false;
-                if (iceDrill.Interactable) iceDrill.ButtonInteract.InInteractableGameStage = false;
+                if (iceDrill.ButtonInteract.InInteractableGameStage) iceDrill.ButtonInteract.InInteractableGameStage = false;
                 if (iceDrill.Interactable) iceDrill.Interactable = false;
                 if (MineralCollectionController.Instance.CanMine) MineralCollectionController.Instance.CanMine = false;
             }
@@ -192,24 +194,23 @@ public class StageResourceBuildings : PublicInstanceSerializableSingleton<StageR
                     UIBuildingBar.Instance.UpdateButton(iceDrillPrefab, iceDrill.ButtonInteract);
                 }
 
-                if (ResourceManager.Instance.SurplusPower < iceDrillPrefab.PowerConsumption && !fusionReactor.ButtonInteract.InInteractableGameStage)
-                {
-                    fusionReactor.ButtonInteract.InInteractableGameStage = true;
-                    UIBuildingBar.Instance.UpdateButton(fusionReactorPrefab, fusionReactor.ButtonInteract);
-                }
-                else if (ResourceManager.Instance.SurplusPower >= iceDrillPrefab.PowerConsumption && fusionReactor.ButtonInteract.InInteractableGameStage)
-                {
-                    fusionReactor.ButtonInteract.InInteractableGameStage = false;
-                    fusionReactor.Interactable = false;
-                }
+                UpdateResourceBuildingButtonInteractability(ResourceManager.Instance.SurplusPower, iceDrillPrefab.PowerConsumption, fusionReactorPrefab, fusionReactor);
 
-                if (!MineralCollectionController.Instance.CanMine && (ResourceManager.Instance.Ore < iceDrillPrefab.OreCost || (fusionReactor.ButtonInteract.InInteractableGameStage && ResourceManager.Instance.Ore < fusionReactorPrefab.OreCost)))
+                if (MineralCollectionController.Instance.CanMine)
                 {
-                    MineralCollectionController.Instance.CanMine = true;
+                    if (ResourceManager.Instance.Ore >= iceDrillPrefab.OreCost
+                        && (!fusionReactor.ButtonInteract.InInteractableGameStage || ResourceManager.Instance.Ore >= fusionReactorPrefab.OreCost))
+                    {
+                        MineralCollectionController.Instance.CanMine = false;
+                    }
                 }
-                else if (MineralCollectionController.Instance.CanMine && ResourceManager.Instance.Ore >= iceDrillPrefab.OreCost && (!fusionReactor.ButtonInteract.InInteractableGameStage || ResourceManager.Instance.Ore >= fusionReactorPrefab.OreCost))
+                else
                 {
-                    MineralCollectionController.Instance.CanMine = false;
+                    if (ResourceManager.Instance.Ore < iceDrillPrefab.OreCost
+                        || (fusionReactor.ButtonInteract.InInteractableGameStage && ResourceManager.Instance.Ore < fusionReactorPrefab.OreCost))
+                    {
+                        MineralCollectionController.Instance.CanMine = true;
+                    }
                 }
             }
 
@@ -237,14 +238,12 @@ public class StageResourceBuildings : PublicInstanceSerializableSingleton<StageR
 
         do
         {
-            bool placedGasPump = BuildingManager.Instance.PlacedBuildingsCount(EBuilding.GasPump) > 0;
-
             //Keep gas pump button interactable only while it needs to be placed
-            if (placedGasPump)
+            if (BuildingManager.Instance.PlacedBuildingsCount(EBuilding.GasPump) > 0)
             {
                 if (fusionReactor.ButtonInteract.InInteractableGameStage) fusionReactor.ButtonInteract.InInteractableGameStage = false;
                 if (fusionReactor.Interactable) fusionReactor.Interactable = false;
-                if (gasPump.Interactable) gasPump.ButtonInteract.InInteractableGameStage = false;
+                if (gasPump.ButtonInteract.InInteractableGameStage) gasPump.ButtonInteract.InInteractableGameStage = false;
                 if (gasPump.Interactable) gasPump.Interactable = false;
                 if (MineralCollectionController.Instance.CanMine) MineralCollectionController.Instance.CanMine = false;
             }
@@ -256,24 +255,23 @@ public class StageResourceBuildings : PublicInstanceSerializableSingleton<StageR
                     UIBuildingBar.Instance.UpdateButton(gasPumpPrefab, gasPump.ButtonInteract);
                 }
 
-                if (ResourceManager.Instance.SurplusPower < gasPumpPrefab.PowerConsumption && !fusionReactor.ButtonInteract.InInteractableGameStage)
-                {
-                    fusionReactor.ButtonInteract.InInteractableGameStage = true;
-                    UIBuildingBar.Instance.UpdateButton(fusionReactorPrefab, fusionReactor.ButtonInteract);
-                }
-                else if (ResourceManager.Instance.SurplusPower >= gasPumpPrefab.PowerConsumption && fusionReactor.ButtonInteract.InInteractableGameStage)
-                {
-                    fusionReactor.ButtonInteract.InInteractableGameStage = false;
-                    fusionReactor.Interactable = false;
-                }
+                UpdateResourceBuildingButtonInteractability(ResourceManager.Instance.SurplusPower, gasPumpPrefab.PowerConsumption, fusionReactorPrefab, fusionReactor);
 
-                if (!MineralCollectionController.Instance.CanMine && (ResourceManager.Instance.Ore < gasPumpPrefab.OreCost || (fusionReactor.ButtonInteract.InInteractableGameStage && ResourceManager.Instance.Ore < fusionReactorPrefab.OreCost)))
+                if (MineralCollectionController.Instance.CanMine)
                 {
-                    MineralCollectionController.Instance.CanMine = true;
+                    if (ResourceManager.Instance.Ore >= gasPumpPrefab.OreCost 
+                        && (!fusionReactor.ButtonInteract.InInteractableGameStage || ResourceManager.Instance.Ore >= fusionReactorPrefab.OreCost))
+                    {
+                        MineralCollectionController.Instance.CanMine = false;
+                    }
                 }
-                else if (MineralCollectionController.Instance.CanMine && ResourceManager.Instance.Ore >= gasPumpPrefab.OreCost && (!fusionReactor.ButtonInteract.InInteractableGameStage || ResourceManager.Instance.Ore >= fusionReactorPrefab.OreCost))
+                else
                 {
-                    MineralCollectionController.Instance.CanMine = false;
+                    if (ResourceManager.Instance.Ore < gasPumpPrefab.OreCost
+                        || (fusionReactor.ButtonInteract.InInteractableGameStage && ResourceManager.Instance.Ore < fusionReactorPrefab.OreCost))
+                    {
+                        MineralCollectionController.Instance.CanMine = true;
+                    }
                 }
             }
 
@@ -286,5 +284,34 @@ public class StageResourceBuildings : PublicInstanceSerializableSingleton<StageR
         gasPump.ButtonInteract.InInteractableGameStage = false;
         gasPump.Interactable = false;
         MineralCollectionController.Instance.CanMine = false;
+    }
+
+    //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Checks if a building that provides resources for the building the tutorial currently wants built still needs to be built or if there is enough of the resource it produces.
+    /// </summary>
+    /// <param name="resourceSurplus">The current surplus of the resource the building produces.</param>
+    /// <param name="requiredQty">The ammount that the currently required building needs in order to be built.</param>
+    /// <param name="buildingPrefab">The prefab of the resource building under consideration.</param>
+    /// <param name="buildingButton">The UI button for the resource building under consideration.</param>
+    private void UpdateResourceBuildingButtonInteractability(float resourceSurplus, float requiredQty, Building buildingPrefab, UIElementStatusManager buildingButton)
+    {
+        if (resourceSurplus < requiredQty)
+        {
+            if (!buildingButton.ButtonInteract.InInteractableGameStage)
+            {
+                buildingButton.ButtonInteract.InInteractableGameStage = true;
+                UIBuildingBar.Instance.UpdateButton(buildingPrefab, buildingButton.ButtonInteract);
+            }
+        }
+        else
+        {
+            if (buildingButton.ButtonInteract.InInteractableGameStage)
+            {
+                buildingButton.ButtonInteract.InInteractableGameStage = false;
+                buildingButton.Interactable = false;
+            }
+        }
     }
 }

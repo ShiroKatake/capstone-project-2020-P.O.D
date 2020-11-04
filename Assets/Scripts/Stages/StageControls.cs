@@ -67,7 +67,7 @@ public class StageControls : PublicInstanceSerializableSingleton<StageControls>,
         playerInputManager = POD.Instance.PlayerInputManager;
     }
 
-    //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
+    //Recurring Methods------------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
     /// The main behaviour of StageControls.
@@ -91,6 +91,7 @@ public class StageControls : PublicInstanceSerializableSingleton<StageControls>,
     private IEnumerator Setup()
     {
         MineralCollectionController.Instance.CanMine = false;
+        BuildingDemolitionController.Instance.CanDemolish = false;
         POD.Instance.GetComponent<Health>().CurrentHealth = POD.Instance.GetComponent<Health>().MaxHealth * 0.25f;  //Set the player's health ready for the healing section of the tutorial
 
         ClockManager.Instance.Paused = true;

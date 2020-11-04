@@ -24,7 +24,7 @@ public class MineralCollectionController : PublicInstanceSerializableSingleton<M
     private LayerMask mineralsLayerMask;
     private bool mining;
 	private Mineral cacheMineral = null;
-    private bool canMine;
+    private bool canMine = true;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
