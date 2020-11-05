@@ -303,14 +303,12 @@ public class StageCombat : PublicInstanceSerializableSingleton<StageCombat>, ISt
 
         do
         {
-            Debug.Log($"StageCombat(), waiting for store disperse menu to appear");
             yield return null;
         }
         while (!StoreDisperseUI.Instance.IsVisible);
 
         do
         {
-            Debug.Log($"StageCombat(), waiting for player to store or disperse collected terraforming points");
             yield return null;
         }
         while (StoreDisperseUI.Instance.IsVisible);
