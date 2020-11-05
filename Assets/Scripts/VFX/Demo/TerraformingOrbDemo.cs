@@ -29,15 +29,15 @@ public class TerraformingOrbDemo : MonoBehaviour
 	[SerializeField] Transform playerCameraTransform;
 	[SerializeField] private TestPhase setPhase = 0;
 	[SerializeField] private bool beginSequenceDemo;
-	[SerializeField] float cameraTransitionDuration = 3f;
-	[SerializeField] float stageSixPoints = 30f;
+	[SerializeField] private float cameraTransitionDuration = 3f;
+	[SerializeField] private float stageSixPoints = 30f;
+	[SerializeField] private float targetPhase;
 
 	[SerializeField] private bool explode;
 	[SerializeField] private bool isInDemo;
 
 	private bool isExploding = false;
 	private float timeElapsed;
-	public float targetPhase;
 
 	void Update()
 	{
