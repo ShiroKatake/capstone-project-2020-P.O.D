@@ -29,8 +29,8 @@ public class StageResourceBuildings : PublicInstanceSerializableSingleton<StageR
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
-    DialogueBox console;
-    DialogueBox cat;
+    private DialogueBox console;
+    private DialogueBox cat;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -107,7 +107,6 @@ public class StageResourceBuildings : PublicInstanceSerializableSingleton<StageR
         console.SubmitDialogue("task build fusion reactor", 0, false, false);
         cat.SubmitDialogue("build fusion reactor", 0, true, false);
         fusionReactor.Visible = true;
-        fusionReactor.ButtonInteract.InInteractableGameStage = true;
         fusionReactorHighlight.Visible = true;
 
         do
@@ -115,11 +114,16 @@ public class StageResourceBuildings : PublicInstanceSerializableSingleton<StageR
             //Keep fusion reactor button interactable only while it needs to be placed
             if (BuildingManager.Instance.PlacedBuildingsCount(EBuilding.FusionReactor) > 0)
             {
+                if (fusionReactor.ButtonInteract.InInteractableGameStage) fusionReactor.ButtonInteract.InInteractableGameStage = false;
                 if (fusionReactor.Interactable) fusionReactor.Interactable = false;
             }
             else
             {
-                if (!fusionReactor.Interactable) fusionReactor.Interactable = true;
+                if (!fusionReactor.ButtonInteract.InInteractableGameStage)
+                {
+                    fusionReactor.ButtonInteract.InInteractableGameStage = true;
+                    UIBuildingBar.Instance.UpdateButton(fusionReactorPrefab, fusionReactor.ButtonInteract);
+                }
 
                 if (MineralCollectionController.Instance.CanMine)
                 {
@@ -136,6 +140,7 @@ public class StageResourceBuildings : PublicInstanceSerializableSingleton<StageR
         while (BuildingManager.Instance.BuiltBuildingsCount(EBuilding.FusionReactor) == 0) ;
 
         fusionReactor.ButtonInteract.InInteractableGameStage = false;
+        fusionReactor.Interactable = false;
     }
 
     /// <summary>
@@ -144,12 +149,15 @@ public class StageResourceBuildings : PublicInstanceSerializableSingleton<StageR
     private IEnumerator IntroduceResourceCollectors()
     {
         cat.SubmitDialogue("resource buildings", 0, true, false);
-        iceDrill.Visible = true;
         iceDrill.ButtonInteract.InInteractableGameStage = false;
-        harvester.Visible = true;
+        iceDrill.Interactable = false;
+        iceDrill.Visible = true;
         harvester.ButtonInteract.InInteractableGameStage = false;
-        gasPump.Visible = true;
+        harvester.Interactable = false;
+        harvester.Visible = true;
         gasPump.ButtonInteract.InInteractableGameStage = false;
+        gasPump.Interactable = false;
+        gasPump.Visible = true;
 
         do
         {
@@ -163,17 +171,10 @@ public class StageResourceBuildings : PublicInstanceSerializableSingleton<StageR
     /// </summary>
     private IEnumerator BuildIceDrill()
     {
-        //Debug.Log($"BuildIceDrill() start");
         console.ClearDialogue();
-        //Debug.Log($"BuildIceDrill(), cleared console dialogue");
         console.SubmitDialogue("task build ice drill", 0, false, false);
-        //Debug.Log($"BuildIceDrill(), submitted console dialogue");
         cat.SubmitDialogue("build ice drill", 0, true, false);
-        //Debug.Log($"BuildIceDrill(), submitted cat dialogue");
-        iceDrill.ButtonInteract.InInteractableGameStage = true;
-        //Debug.Log($"BuildIceDrill(), set ice drill button interactable allowed to true");
         iceDrillHighlight.Visible = true;
-        //Debug.Log($"BuildIceDrill(), set ice drill button visible to true");
 
         do
         {
@@ -233,7 +234,6 @@ public class StageResourceBuildings : PublicInstanceSerializableSingleton<StageR
         console.ClearDialogue();
         console.SubmitDialogue("task build gas pump", 0, false, false);
         cat.SubmitDialogue("build gas pump", 0, true, false);
-        gasPump.ButtonInteract.InInteractableGameStage = true;
         gasPumpHighlight.Visible = true;
 
         do

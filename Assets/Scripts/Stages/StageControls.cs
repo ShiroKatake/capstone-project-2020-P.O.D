@@ -26,14 +26,14 @@ public class StageControls : PublicInstanceSerializableSingleton<StageControls>,
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
-    DialogueBox console;
-    DialogueBox game;
-    DialogueBox w;
-    DialogueBox a;
-    DialogueBox s;
-    DialogueBox d;
-    DialogueBox cat;
-    Player playerInputManager;
+    private DialogueBox console;
+    private DialogueBox game;
+    private DialogueBox w;
+    private DialogueBox a;
+    private DialogueBox s;
+    private DialogueBox d;
+    private DialogueBox cat;
+    private Player playerInputManager;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -92,8 +92,10 @@ public class StageControls : PublicInstanceSerializableSingleton<StageControls>,
     {
         MineralCollectionController.Instance.CanMine = false;
         BuildingDemolitionController.Instance.CanDemolish = false;
-        POD.Instance.GetComponent<Health>().CurrentHealth = POD.Instance.GetComponent<Health>().MaxHealth * 0.25f;  //Set the player's health ready for the healing section of the tutorial
-
+        POD.Instance.HealthController.CanHeal = false;
+        POD.Instance.ShootingController.CanShoot = false;
+        AlienManager.Instance.CanSpawnAliens = false;
+        StoreDisperseUI.Instance.CanShowMenu = false;
         ClockManager.Instance.Paused = true;
         ClockManager.Instance.SetTime(ClockManager.Instance.HalfCycleDuration * 0.2f);
         yield return new WaitForSeconds(3);

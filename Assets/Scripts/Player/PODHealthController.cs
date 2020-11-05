@@ -27,6 +27,7 @@ public class PODHealthController : PrivateInstanceSerializableSingleton<PODHealt
     //Healing variables
     private bool heal;
     private bool isHealing;
+    private bool canHeal = true;
 
     ////Other
     private bool repsawn;
@@ -39,9 +40,19 @@ public class PODHealthController : PrivateInstanceSerializableSingleton<PODHealt
     public UnityAction onPlayerHealCancelled;
 
     /// <summary>
+    /// Is the game in a stage where POD is allowed to be healed?
+    /// </summary>
+    public bool CanHeal { get => canHeal; set => canHeal = value; }
+
+    /// <summary>
     /// How close the player needs to be to the tower to heal themselves.
     /// </summary>
     public float HealingRange { get => healingRange; }
+
+    /// <summary>
+    /// POD's health component.
+    /// </summary>
+    public Health Health { get => health; }
 
     /// <summary>
     /// Is the player currently healing themselves?
@@ -102,7 +113,7 @@ public class PODHealthController : PrivateInstanceSerializableSingleton<PODHealt
     /// </summary>
     private void CheckHealing() //No-healing conditions checked for in GetInput() when determining the value of healing.
     {
-        if (heal)
+        if (canHeal && heal)
         {
             health.Heal(healingSpeed * Time.deltaTime);
             onPlayerHeal?.Invoke();

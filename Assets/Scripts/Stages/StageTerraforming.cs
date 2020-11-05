@@ -50,8 +50,8 @@ public class StageTerraforming : PublicInstanceSerializableSingleton<StageTerraf
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
-    DialogueBox console;
-    DialogueBox cat;
+    private DialogueBox console;
+    private DialogueBox cat;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -102,12 +102,15 @@ public class StageTerraforming : PublicInstanceSerializableSingleton<StageTerraf
     private IEnumerator IntroduceTerraformingBuildings()
     {
         cat.SubmitDialogue("got resources", 0, false, false);
-        boiler.Visible = true;
         boiler.ButtonInteract.InInteractableGameStage = false;
-        greenhouse.Visible = true;
+        boiler.Interactable = false;
+        boiler.Visible = true;
         greenhouse.ButtonInteract.InInteractableGameStage = false;
-        incinerator.Visible = true;
+        greenhouse.Interactable = false;
+        greenhouse.Visible = true;
         incinerator.ButtonInteract.InInteractableGameStage = false;
+        incinerator.Interactable = false;
+        incinerator.Visible = true;
 
         do
         {
@@ -124,7 +127,6 @@ public class StageTerraforming : PublicInstanceSerializableSingleton<StageTerraf
         console.ClearDialogue();
         console.SubmitDialogue("task build boiler", 0, false, false);
         cat.SubmitDialogue("build boiler", 0, true, false);
-        boiler.ButtonInteract.InInteractableGameStage = true;
         boilerHighlight.Visible = true;
 
         do
@@ -216,8 +218,9 @@ public class StageTerraforming : PublicInstanceSerializableSingleton<StageTerraf
         {
             yield return null;
         }
-        while (!TerraformingUI.Instance.IsEnabled);    
+        while (!TerraformingUI.Instance.IsEnabled);
 
+        if (!cat.DialogueRead) cat.DialogueRead = true;
         cat.SubmitDialogue("terraforming progress", 0, true, false);
 
         do
@@ -225,6 +228,8 @@ public class StageTerraforming : PublicInstanceSerializableSingleton<StageTerraf
             yield return null;
         }
         while (TerraformingUI.Instance.IsEnabled);
+
+        if (!cat.DialogueRead) cat.DialogueRead = true;
     }
 
     /// <summary>
@@ -243,6 +248,7 @@ public class StageTerraforming : PublicInstanceSerializableSingleton<StageTerraf
         }
         while (!BuildingDemolitionController.Instance.ShowingDemolitionMenu);
 
+        if (!cat.DialogueRead) cat.DialogueRead = true;
         cat.SubmitDialogue("enabling buildings", 0, true, false);
 
         do
@@ -251,6 +257,7 @@ public class StageTerraforming : PublicInstanceSerializableSingleton<StageTerraf
         }
         while (BuildingDemolitionController.Instance.ShowingDemolitionMenu);
 
+        if (!cat.DialogueRead) cat.DialogueRead = true;
         BuildingDemolitionController.Instance.CanDemolish = false;
     }
 

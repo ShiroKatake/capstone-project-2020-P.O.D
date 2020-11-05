@@ -34,7 +34,7 @@ Terraforming	CAT	got resources	Wonderful! Now let's look at the buildings that w
 Terraforming	Console	task build boiler	Task: build a /boiler\.		Clear Console first
 Terraforming	CAT	build boiler	Because you have enough /water\ and @gas$, I'll get you to build a /boiler\ first.		Highlights boiler icon, player can only select drill
 Terraforming	CAT	ratio bars	Perfect. These are the ratio bars that contribute to your overall terraforming progress.		Highlight ratio bars
-Terraforming	CAT	target building count	This shows your target building count! Try to build as close to this as you can.		Point at the golden bar
+Terraforming	CAT	ratio bars	The gold sections show your target building counts! Try to build as close to this as you can.		Point at the golden bar
 Terraforming	Console	task press p	Task: press the P key.		Clear Console first
 Terraforming	CAT	press p	Press P to display more details.		
 Terraforming	CAT	terraforming progress	You can see your overall terraforming progress here. Press P to disable this menu again.		
@@ -50,15 +50,17 @@ Combat	DOG	aliens spawned	Listen up soldier! Those B.U.G.s look angry.		3 enemie
 Combat	Console	task build turret	Task: build a <turret>.		Clear console first
 Combat	DOG	build turret	Build turrets to defend your base.	Build turrets	Turret icons appear and are buildable
 Combat	DOG	protect tower	You must protect the terraforming tower at all costs! If that gets destroyed it's <game over>.		Highlight Terraforming Tower
-Combat	Console	task shoot	Weapon systems online.~Task: shoot with your on-board laser cannon.		Clear console first
+Combat	Console	task shoot	Weapon systems online.~Task: shoot with your on-board laser cannon by pressing the spacebar.		Clear console first
 Combat	DOG	shoot	You also have an on-board laser cannon to defend yourself with.		
 Combat	Game	shoot	Press space to shoot.	Shoot	Image of space bar + to shoot
-Combat	DOG	heal at terraforming tower	If you wanna patch yourself up head to the terraforming tower.		
-Combat	Console	task heal	Task: heal yourself at the terraforming tower.		Clear console first
-Combat	Game	heal	Press E to heal.	Press E in range of the terraforming tower	Image of "E" above terraforming tower
-Combat	DOG	store disperse	At the end of each wave, you need to decide whether points gained should to be stored for better point accumulation, or dispersed to terraform the planet.		
+Combat	Console	task heal	Task: heal yourself at the terraforming tower by holding E.		Clear console first
+	DOG	heal at cryo egg	If you wanna patch yourself up, head to the tower and hold E.		
+Combat	Game	heal	To heal yourself, move close to the terraforming tower and hold E.	Press E in range of the terraforming tower	Image of "E" above terraforming tower
+Combat	DOG	store disperse	At the end of each wave, you need to decide what to do with the terraforming tower's accumulated charge.		
+	DOG	store disperse	You can store its charge and increase your potential gains.		
+	DOG	store disperse	Or you can disperse it immediately but terraform the planet less than you might have if you risked storing it. 		
 Combat	DOG	good luck	That's all you need to know. Good luck out there soldier! Don't die!		
-Combat	DOG	good luck	D.O.G. OUT! U???U		
+Combat	DOG	good luck	D.O.G. OUT! U^w^U		
 Combat	Console	dog closed	D.O.G.exe has closed.		
 Finished Tutorial	Game	finished tutorial	This is the end of the tutorial. You are on your own from here. Good luck!		Note: this is a texts that appear without a speaker (doesn't use dialogue box)
 Skipped Tutorial	Console	system check	Commencing system check.~AI unit: online.~Movement system: online and calibrated.~Vitals: green.~Chronometer: online.~GPS: online.~Inventory: online.		

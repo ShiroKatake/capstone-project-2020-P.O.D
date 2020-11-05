@@ -15,6 +15,8 @@ public class StageCombat : PublicInstanceSerializableSingleton<StageCombat>, ISt
     [Header("Uninteractable Building Buttons")]
     [SerializeField] private UIElementStatusManager fusionReactor;
     [SerializeField] private UIElementStatusManager iceDrill;
+    [SerializeField] private UIElementStatusManager harvester;
+    [SerializeField] private UIElementStatusManager gasPump;
     [SerializeField] private UIElementStatusManager boiler;
     [SerializeField] private UIElementStatusManager greenhouse;
     [SerializeField] private UIElementStatusManager incinerator;
@@ -22,15 +24,21 @@ public class StageCombat : PublicInstanceSerializableSingleton<StageCombat>, ISt
     [Header("Interactable Building Buttons")]
     [SerializeField] private UIElementStatusManager shotgunTurret;
     [SerializeField] private UIElementStatusManager machineGunTurret;
-
-    [Header("Highlights")]
-    [SerializeField] private UIElementStatusManager shotgunTurretHighlight;
-    [SerializeField] private UIElementStatusManager machineGunTurretHighlight;
-
+    
     [Header("Building Prefabs")]
-    [SerializeField] private ResourceCollector fusionReactorPrefab;
+    [SerializeField] private Building fusionReactorPrefab;
+    [SerializeField] private Building iceDrillPrefab;
+    [SerializeField] private Building harvesterPrefab;
+    [SerializeField] private Building gasPumpPrefab;
+    [SerializeField] private Building boilerPrefab;
+    [SerializeField] private Building greenhousePrefab;
+    [SerializeField] private Building incineratorPrefab;
     [SerializeField] private Building shotgunTurretPrefab;
     [SerializeField] private Building machineGunTurretPrefab;
+
+    [Header("Other Variables")]
+    [Tooltip("How long should the tutorial delay the spawning of the next wave of aliens so that the player has a chance to build some turrets?")]
+    [SerializeField] private float nextAlienWaveDelay;
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
@@ -64,11 +72,10 @@ public class StageCombat : PublicInstanceSerializableSingleton<StageCombat>, ISt
         console = DialogueBoxManager.Instance.GetDialogueBox("Console");
         game = DialogueBoxManager.Instance.GetDialogueBox("Game");
         dog = DialogueBoxManager.Instance.GetDialogueBox("DOG");
-        //playerInputManager = ReInput.players.GetPlayer(POD.Instance.GetComponent<PlayerID>().Value);
         playerInputManager = POD.Instance.PlayerInputManager;
     }
 
-    //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
+    //Recurring Methods------------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
     /// The main behaviour of the stage. 
@@ -84,6 +91,7 @@ public class StageCombat : PublicInstanceSerializableSingleton<StageCombat>, ISt
         yield return StartCoroutine(BuildTurrets());
         yield return StartCoroutine(Shooting());
         yield return StartCoroutine(Healing());
+        yield return StartCoroutine(StoreDisperse());
         yield return StartCoroutine(CompleteStage());
         StageManager.Instance.SetStage(EStage.MainGame);
     }
@@ -93,16 +101,32 @@ public class StageCombat : PublicInstanceSerializableSingleton<StageCombat>, ISt
     /// </summary>
     private IEnumerator WaitForNightTime()
     {
-        while (ClockManager.Instance.Daytime)
+        do
         {
             yield return null;
         }
+        while (ClockManager.Instance.Daytime);
 
+        MineralCollectionController.Instance.CanMine = false;
+        BuildingDemolitionController.Instance.CanDemolish = false;
+        fusionReactor.ButtonInteract.InInteractableGameStage = false;
         fusionReactor.Interactable = false;
+        iceDrill.ButtonInteract.InInteractableGameStage = false;
         iceDrill.Interactable = false;
+        harvester.ButtonInteract.InInteractableGameStage = false;
+        harvester.Interactable = false;
+        gasPump.ButtonInteract.InInteractableGameStage = false;
+        gasPump.Interactable = false;
+        boiler.ButtonInteract.InInteractableGameStage = false;
         boiler.Interactable = false;
+        greenhouse.ButtonInteract.InInteractableGameStage = false;
         greenhouse.Interactable = false;
+        incinerator.ButtonInteract.InInteractableGameStage = false;
         incinerator.Interactable = false;
+        shotgunTurret.ButtonInteract.InInteractableGameStage = false;
+        shotgunTurret.Interactable = false;
+        machineGunTurret.ButtonInteract.InInteractableGameStage = false;
+        machineGunTurret.Interactable = false;
     }
 
     /// <summary>
@@ -111,6 +135,7 @@ public class StageCombat : PublicInstanceSerializableSingleton<StageCombat>, ISt
     private IEnumerator AlienWalkthrough()
     {
         ClockManager.Instance.Paused = true;
+        AlienManager.Instance.CanSpawnAliens = true;
         console.SubmitDialogue("launch dog", 0, false, false);
 
         do
@@ -121,17 +146,19 @@ public class StageCombat : PublicInstanceSerializableSingleton<StageCombat>, ISt
 
         dog.SubmitDialogue("dog launched", 0, false, false);
 
-        while (!dog.DialogueRead || !dog.AcceptingSubmissions)
+        do
         {
             yield return null;
         }
-
+        while (!dog.DialogueRead || !dog.AcceptingSubmissions);
+        
         dog.SubmitDialogue("aliens spawned", 0, false, false);
 
-        while (!dog.DialogueRead || !dog.AcceptingSubmissions)
+        do
         {
             yield return null;
         }
+        while (!dog.DialogueRead || !dog.AcceptingSubmissions);
     }
 
     /// <summary>
@@ -144,92 +171,101 @@ public class StageCombat : PublicInstanceSerializableSingleton<StageCombat>, ISt
         dog.SubmitDialogue("build turret", 0, true, false);
         shotgunTurret.Visible = true;
         machineGunTurret.Visible = true;
-        shotgunTurret.Interactable = true;
-        machineGunTurret.Interactable = true;
-        shotgunTurretHighlight.Visible = true;
-        machineGunTurretHighlight.Visible = true;
 
-        while (BuildingManager.Instance.BuiltBuildingsCount(EBuilding.ShotgunTurret) == 0 || BuildingManager.Instance.BuiltBuildingsCount(EBuilding.MachineGunTurret) == 0)
+        do
         {
-            bool placedShotgunTurret = BuildingManager.Instance.PlacedBuildingsCount(EBuilding.ShotgunTurret) > 0;
-            bool placedMachineGunTurret = BuildingManager.Instance.PlacedBuildingsCount(EBuilding.MachineGunTurret) > 0;
-            int pendingPowerSupply = fusionReactorPrefab.CollectionRate * (BuildingManager.Instance.PlacedBuildingsCount(EBuilding.FusionReactor) - BuildingManager.Instance.BuiltBuildingsCount(EBuilding.FusionReactor));
-
-            //Keep shotgun turret button interactable only while it needs to be placed
-            if (placedShotgunTurret)
+            //Keep ice drill button interactable only while it needs to be placed
+            if (BuildingManager.Instance.PlacedBuildingsCount(EBuilding.ShotgunTurret) > 0 || BuildingManager.Instance.PlacedBuildingsCount(EBuilding.MachineGunTurret) > 0)
             {
-                if (shotgunTurret.Interactable)
-                {
-                    shotgunTurret.Interactable = false;
-                }
+                if (fusionReactor.ButtonInteract.InInteractableGameStage) fusionReactor.ButtonInteract.InInteractableGameStage = false;
+                if (fusionReactor.Interactable) fusionReactor.Interactable = false;
+                if (shotgunTurret.ButtonInteract.InInteractableGameStage) shotgunTurret.ButtonInteract.InInteractableGameStage = false;
+                if (shotgunTurret.Interactable) shotgunTurret.Interactable = false;
+                if (machineGunTurret.ButtonInteract.InInteractableGameStage) machineGunTurret.ButtonInteract.InInteractableGameStage = false;
+                if (machineGunTurret.Interactable) machineGunTurret.Interactable = false;
+                if (MineralCollectionController.Instance.CanMine) MineralCollectionController.Instance.CanMine = false;
             }
             else
             {
-                if (!shotgunTurret.Interactable)
+                if (!shotgunTurret.ButtonInteract.InInteractableGameStage)
                 {
-                    shotgunTurret.Interactable = true;
+                    shotgunTurret.ButtonInteract.InInteractableGameStage = true;
+                    UIBuildingBar.Instance.UpdateButton(shotgunTurretPrefab, shotgunTurret.ButtonInteract);
                 }
-            }
 
-            //Keep machine gun turret button interactable only while it needs to be placed
-            if (placedMachineGunTurret)
-            {
-                if (machineGunTurret.Interactable)
+                if (!machineGunTurret.ButtonInteract.InInteractableGameStage)
                 {
-                    machineGunTurret.Interactable = false;
+                    machineGunTurret.ButtonInteract.InInteractableGameStage = true;
+                    UIBuildingBar.Instance.UpdateButton(machineGunTurretPrefab, machineGunTurret.ButtonInteract);
                 }
-            }
-            else
-            {
-                if (!machineGunTurret.Interactable)
-                {
-                    machineGunTurret.Interactable = true;
-                }
-            }
 
-            //Keep fusion reactor button interactable only while there's insufficient power
-            if ((!placedShotgunTurret && ResourceManager.Instance.SurplusPower + pendingPowerSupply < shotgunTurretPrefab.PowerConsumption) 
-                || (!placedMachineGunTurret && ResourceManager.Instance.SurplusPower + pendingPowerSupply < machineGunTurretPrefab.PowerConsumption))
-            {
-                if (!fusionReactor.Interactable)
+                float maxPowerRequired = Mathf.Max(shotgunTurretPrefab.PowerConsumption, machineGunTurretPrefab.PowerConsumption);
+                UpdateResourceBuildingButtonInteractability(ResourceManager.Instance.SurplusPower, maxPowerRequired, fusionReactorPrefab, fusionReactor);
+
+                if (MineralCollectionController.Instance.CanMine)
                 {
-                    fusionReactor.Interactable = true;
+                    if (ResourceManager.Instance.Ore >= shotgunTurretPrefab.OreCost
+                        && ResourceManager.Instance.Ore >= machineGunTurretPrefab.OreCost
+                        && (!fusionReactor.ButtonInteract.InInteractableGameStage || ResourceManager.Instance.Ore >= fusionReactorPrefab.OreCost))
+                    {
+                        MineralCollectionController.Instance.CanMine = false;
+                    }
                 }
-            }
-            else
-            {
-                if (fusionReactor.Interactable)
+                else
                 {
-                    fusionReactor.Interactable = false;
+                    if (ResourceManager.Instance.Ore < shotgunTurretPrefab.OreCost
+                        || ResourceManager.Instance.Ore < machineGunTurretPrefab.OreCost
+                        || (fusionReactor.ButtonInteract.InInteractableGameStage && ResourceManager.Instance.Ore < fusionReactorPrefab.OreCost))
+                    {
+                        MineralCollectionController.Instance.CanMine = true;
+                    }
                 }
             }
 
             yield return null;
         }
+        while (BuildingManager.Instance.BuiltBuildingsCount(EBuilding.ShotgunTurret) == 0 && BuildingManager.Instance.BuiltBuildingsCount(EBuilding.MachineGunTurret) == 0);
+
+        fusionReactor.ButtonInteract.InInteractableGameStage = false;
+        fusionReactor.Interactable = false;
+        shotgunTurret.ButtonInteract.InInteractableGameStage = false;
+        shotgunTurret.Interactable = false;
+        machineGunTurret.ButtonInteract.InInteractableGameStage = false;
+        machineGunTurret.Interactable = false;
+        MineralCollectionController.Instance.CanMine = false;
+        AlienManager.Instance.CanSpawnAliens = false;
+
+        dog.SubmitDialogue("protect tower", 0, false, false);
+        //TODO: highlight tower
+
+        do
+        {
+            yield return null;
+        }
+        while (!dog.DialogueRead || !dog.AcceptingSubmissions);
     }
 
     /// <summary>
     /// Teaches the player how to shoot.
     /// </summary>
     private IEnumerator Shooting()
-    {
-        if (!ProjectileManager.Instance.HasProjectileWithOwner(POD.Instance.transform))
+    {        
+        console.ClearDialogue();
+        console.SubmitDialogue("task shoot", 0, false, false);
+        dog.SubmitDialogue("shoot", 0, true, false);
+        game.SubmitDialogue("shoot", 0, true, false);
+        POD.Instance.ShootingController.CanShoot = true;
+
+        do
         {
-            console.ClearDialogue();
-            console.SubmitDialogue("task shoot", 0, false, false);
-            dog.SubmitDialogue("shoot", 0, true, false);
-            game.SubmitDialogue("shoot", 0, true, false);
-
-            while (!ProjectileManager.Instance.HasProjectileWithOwner(POD.Instance.transform) || !dog.AcceptingSubmissions)
-            {
-                yield return null;
-            }
-
-            if (!dog.DialogueRead)
-            {
-                dog.DialogueRead = true;
-            }
+            yield return null;
         }
+        while (!ProjectileManager.Instance.HasProjectileWithOwner(POD.Instance.transform) || !dog.AcceptingSubmissions);
+
+        yield return new WaitForSeconds(2f);
+
+        POD.Instance.ShootingController.CanShoot = false;
+        if (!dog.DialogueRead) dog.DialogueRead = true;
     }
 
     /// <summary>
@@ -237,23 +273,50 @@ public class StageCombat : PublicInstanceSerializableSingleton<StageCombat>, ISt
     /// </summary>
     private IEnumerator Healing()
     {
-        if (!playerInputManager.GetButtonDown("Heal") || Vector3.Distance(POD.Instance.transform.position, Tower.Instance.transform.position) >= POD.Instance.HealthController.HealingRange)
+        console.ClearDialogue();
+        console.SubmitDialogue("task heal", 0, false, false);
+        dog.SubmitDialogue("heal at cryo egg", 0, true, false);
+        game.SubmitDialogue("heal", 0, true, false);
+        POD.Instance.HealthController.CanHeal = true;
+        POD.Instance.HealthController.Health.CurrentHealth *= 0.5f;
+
+        do
         {
-            console.ClearDialogue();
-            console.SubmitDialogue("task heal", 0, false, false);
-            dog.SubmitDialogue("heal at cryo egg", 0, true, false);
-            game.SubmitDialogue("heal", 0, true, false);
-
-            while (!playerInputManager.GetButtonDown("Heal") || Vector3.Distance(POD.Instance.transform.position, Tower.Instance.transform.position) >= POD.Instance.HealthController.HealingRange || !dog.AcceptingSubmissions)
-            {
-                yield return null;
-            }
-
-            if (!dog.DialogueRead)
-            {
-                dog.DialogueRead = true;
-            }
+            yield return null;
         }
+        while (!playerInputManager.GetButtonDown("Heal") || Vector3.Distance(POD.Instance.transform.position, Tower.Instance.transform.position) >= POD.Instance.HealthController.HealingRange || !dog.AcceptingSubmissions);
+        
+        yield return new WaitForSeconds(2f);
+
+        POD.Instance.HealthController.CanHeal = false;
+        if (!dog.DialogueRead) dog.DialogueRead = true;
+    }
+
+    /// <summary>
+    /// Introduces the player to the store disperse menu, the final part of the terraforming mechanics.
+    /// </summary>
+    private IEnumerator StoreDisperse()
+    {
+        StoreDisperseUI.Instance.CanShowMenu = true;
+        RatioManager.Instance.updateStoreDisperse?.Invoke(true);
+        dog.SubmitDialogue("store disperse", 0, true, false);
+
+        do
+        {
+            Debug.Log($"StageCombat(), waiting for store disperse menu to appear");
+            yield return null;
+        }
+        while (!StoreDisperseUI.Instance.IsVisible);
+
+        do
+        {
+            Debug.Log($"StageCombat(), waiting for player to store or disperse collected terraforming points");
+            yield return null;
+        }
+        while (StoreDisperseUI.Instance.IsVisible);
+
+        StoreDisperseUI.Instance.CanShowMenu = false;
+        if (!dog.DialogueRead) dog.DialogueRead = true;
     }
 
     /// <summary>
@@ -261,28 +324,76 @@ public class StageCombat : PublicInstanceSerializableSingleton<StageCombat>, ISt
     /// </summary>
     private IEnumerator CompleteStage()
     {
-        if (game.Activated)
-        {
-            game.SubmitDeactivation();
-        }
-
+        if (game.Activated) game.SubmitDeactivation();
         console.ClearDialogue();
         dog.SubmitDialogue("good luck", 0, true, false);
 
-        while (!dog.DialogueRead)
+        do
         {
             yield return null;
         }
+        while (!dog.DialogueRead);
 
         console.SubmitDialogue("dog closed", 0, false, false);
         game.SubmitDialogue("finished tutorial", 0, true, false);
         ClockManager.Instance.Paused = false;
-        fusionReactor.Interactable = true;
-        iceDrill.Interactable = true;
-        boiler.Interactable = true;
-        greenhouse.Interactable = true;
-        incinerator.Interactable = true;
-        shotgunTurret.Interactable = true;
-        machineGunTurret.Interactable = true;
+
+        MineralCollectionController.Instance.CanMine = true;
+        BuildingDemolitionController.Instance.CanDemolish = true;
+        POD.Instance.HealthController.CanHeal = true;
+        POD.Instance.ShootingController.CanShoot = true;
+        StoreDisperseUI.Instance.CanShowMenu = true;
+
+        fusionReactor.ButtonInteract.InInteractableGameStage = true;
+        iceDrill.ButtonInteract.InInteractableGameStage = true;
+        harvester.ButtonInteract.InInteractableGameStage = true;
+        gasPump.ButtonInteract.InInteractableGameStage = true;
+        boiler.ButtonInteract.InInteractableGameStage = true;
+        greenhouse.ButtonInteract.InInteractableGameStage = true;
+        incinerator.ButtonInteract.InInteractableGameStage = true;
+        shotgunTurret.ButtonInteract.InInteractableGameStage = true;
+        machineGunTurret.ButtonInteract.InInteractableGameStage = true;
+
+        UIBuildingBar.Instance.UpdateButton(fusionReactorPrefab, fusionReactor.ButtonInteract);
+        UIBuildingBar.Instance.UpdateButton(iceDrillPrefab, iceDrill.ButtonInteract);
+        UIBuildingBar.Instance.UpdateButton(harvesterPrefab, harvester.ButtonInteract);
+        UIBuildingBar.Instance.UpdateButton(gasPumpPrefab, gasPump.ButtonInteract);
+        UIBuildingBar.Instance.UpdateButton(boilerPrefab, boiler.ButtonInteract);
+        UIBuildingBar.Instance.UpdateButton(greenhousePrefab, greenhouse.ButtonInteract);
+        UIBuildingBar.Instance.UpdateButton(incineratorPrefab, incinerator.ButtonInteract);
+        UIBuildingBar.Instance.UpdateButton(shotgunTurretPrefab, shotgunTurret.ButtonInteract);
+        UIBuildingBar.Instance.UpdateButton(machineGunTurretPrefab, machineGunTurret.ButtonInteract);
+
+        yield return new WaitForSeconds(nextAlienWaveDelay);
+        AlienManager.Instance.CanSpawnAliens = true;
+    }
+
+    //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Checks if a building that provides resources for the building the tutorial currently wants built still needs to be built or if there is enough of the resource it produces.
+    /// </summary>
+    /// <param name="resourceSurplus">The current surplus of the resource the building produces.</param>
+    /// <param name="requiredQty">The ammount that the currently required building needs in order to be built.</param>
+    /// <param name="buildingPrefab">The prefab of the resource building under consideration.</param>
+    /// <param name="buildingButton">The UI button for the resource building under consideration.</param>
+    private void UpdateResourceBuildingButtonInteractability(float resourceSurplus, float requiredQty, Building buildingPrefab, UIElementStatusManager buildingButton)
+    {
+        if (resourceSurplus < requiredQty)
+        {
+            if (!buildingButton.ButtonInteract.InInteractableGameStage)
+            {
+                buildingButton.ButtonInteract.InInteractableGameStage = true;
+                UIBuildingBar.Instance.UpdateButton(buildingPrefab, buildingButton.ButtonInteract);
+            }
+        }
+        else
+        {
+            if (buildingButton.ButtonInteract.InInteractableGameStage)
+            {
+                buildingButton.ButtonInteract.InInteractableGameStage = false;
+                buildingButton.Interactable = false;
+            }
+        }
     }
 }

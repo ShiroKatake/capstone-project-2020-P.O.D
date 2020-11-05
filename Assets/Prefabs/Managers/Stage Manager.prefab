@@ -154,13 +154,7 @@ MonoBehaviour:
   humidityBar: {fileID: 0}
   biodiversityBar: {fileID: 0}
   atmosphereBar: {fileID: 0}
-  harvesterHighlight: {fileID: 0}
   boilerHighlight: {fileID: 0}
-  greenhouseHighlight: {fileID: 0}
-  incineratorHighlight: {fileID: 0}
-  humidityBarHighlight: {fileID: 0}
-  biodiversityBarHighlight: {fileID: 0}
-  atmosphereBarHighlight: {fileID: 0}
   ratioBarsHighlight: {fileID: 0}
   fusionReactorPrefab: {fileID: 7989155517478719925, guid: 24cf1029333088241ba2e0353577d9d1,
     type: 3}
@@ -190,19 +184,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fusionReactor: {fileID: 0}
   iceDrill: {fileID: 0}
+  harvester: {fileID: 0}
+  gasPump: {fileID: 0}
   boiler: {fileID: 0}
   greenhouse: {fileID: 0}
   incinerator: {fileID: 0}
   shotgunTurret: {fileID: 0}
   machineGunTurret: {fileID: 0}
-  shotgunTurretHighlight: {fileID: 0}
-  machineGunTurretHighlight: {fileID: 0}
-  fusionReactorPrefab: {fileID: -3725313067051829311, guid: 24cf1029333088241ba2e0353577d9d1,
+  fusionReactorPrefab: {fileID: 7989155517478719925, guid: 24cf1029333088241ba2e0353577d9d1,
+    type: 3}
+  iceDrillPrefab: {fileID: 6356630498027900237, guid: 2863a907b049ebd4b92f73a71635ec1d,
+    type: 3}
+  harvesterPrefab: {fileID: 1110411587212194942, guid: 9a271bc4716515042a571aedc0a2f8b0,
+    type: 3}
+  gasPumpPrefab: {fileID: 1206441947418653213, guid: bf98a15c7e0b55c4d93c40e4b542322f,
+    type: 3}
+  boilerPrefab: {fileID: 2427136214263755661, guid: 0332084ab57deef4aa60fa1089c3c8cb,
+    type: 3}
+  greenhousePrefab: {fileID: 9054559055595012424, guid: 588682734d3c4d347bd6ed96a5858e1a,
+    type: 3}
+  incineratorPrefab: {fileID: 6057790016772902916, guid: a1ed15bf36ab48b499fe23ef5ceb8ca6,
     type: 3}
   shotgunTurretPrefab: {fileID: 276844957512759736, guid: c70a812886afc7d40ac547ba1ec4bc8a,
     type: 3}
   machineGunTurretPrefab: {fileID: 276844957512759736, guid: fa376f85c4e268445b5be711efbccc8a,
     type: 3}
+  nextAlienWaveDelay: 30
 --- !u!114 &8778031101374311301
 MonoBehaviour:
   m_ObjectHideFlags: 0
