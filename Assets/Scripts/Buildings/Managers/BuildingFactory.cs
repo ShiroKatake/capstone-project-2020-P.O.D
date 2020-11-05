@@ -55,7 +55,7 @@ public class BuildingFactory : Factory<BuildingFactory, Building, EBuilding>
         building.Id = IdGenerator.Instance.GetNextId();
         building.Active = true;
 
-        if (building.Terraformer != null) EnvironmentManager.Instance.RegisterBuilding(building.Terraformer);
+        //if (building.Terraformer != null) EnvironmentManager.Instance.RegisterBuilding(building.Terraformer);
         if (building.Model.localPosition != prefabs[buildingType].Model.localPosition) building.Model.localPosition = prefabs[buildingType].Model.localPosition;
 		if (buildingType == EBuilding.MachineGunTurret || buildingType == EBuilding.ShotgunTurret) onBuildingHasRange?.Invoke(building);
 
@@ -98,7 +98,7 @@ public class BuildingFactory : Factory<BuildingFactory, Building, EBuilding>
 
         if (building.Terraformer != null)
         {
-            EnvironmentManager.Instance.RemoveBuilding(building.Id);
+            //EnvironmentManager.Instance.RemoveBuilding(building.Id);
         }
 
         if (consumingResources && !building.DisabledByPlayer)
