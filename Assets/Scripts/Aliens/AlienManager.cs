@@ -257,9 +257,7 @@ public class AlienManager : PublicInstanceSerializableSingleton<AlienManager>
     /// </summary>
     private IEnumerator SpawnAliens(EStage currentStage)
     {
-        Debug.Log($"AlienManager.SpawnAliens(), stage is {currentStage}");
         coroutineSpawnAliensRunning = true;
-
         spawningAliens = true;
         aliensInCurrentWave = CalculateAliensInWave(currentStage);
         majorityCount = 0;
@@ -269,13 +267,9 @@ public class AlienManager : PublicInstanceSerializableSingleton<AlienManager>
         float cumulativeCrawlerFrequency = 0;
         List<Vector3> availableSpawnPoints = (currentStage == EStage.Combat ? MapManager.Instance.TutorialAlienSpawnPoints : MapManager.Instance.MajorityAlienSpawnPoints);
         List<Vector3> minoritySpawnPoints = MapManager.Instance.MinorityAlienSpawnPoints;
-
-        Debug.Log($"AlienManager.SpawnAliens(), aliens in current wave: {aliensInCurrentWave}, available spawn points: {availableSpawnPoints.Count}");
-
+        
         for (int i = 0; i < aliensInCurrentWave; i++)
-        //for (int i = 0; i < 100; i++)
         {
-            Debug.Log($"AlienManager.SpawnAliens(), for number of aliens in current wave");
             if (loopStopwatch.ElapsedMilliseconds >= spawningFrameTimeLimit)
             {
                 yield return null;
@@ -287,18 +281,11 @@ public class AlienManager : PublicInstanceSerializableSingleton<AlienManager>
             float angle = MapManager.Instance.GetPositionData(spawnPos).Angle;
             bool positionAvailable;
             Alien alien = SpawnAlien(spawnPos, (cumulativeCrawlerFrequency >= 1 && MapManager.Instance.FinishedCalculatingPaths ? EAlien.Crawler : EAlien.Scuttler), out positionAvailable);
-            //Debug.Log($"spawnPos: {spawnPos}, angle from centre: {angle}, minAngle: {minAngle}, maxAngle: {maxAngle}, alien is {alien}");
 
             if (alien != null)
             {
-                Debug.Log($"AlienManager.SpawnAliens(), alien spawn successful");
                 aliens.Add(alien);
-
-                if (cumulativeCrawlerFrequency >= 1)
-                {
-                    cumulativeCrawlerFrequency--;
-                }
-
+                if (cumulativeCrawlerFrequency >= 1) cumulativeCrawlerFrequency--;
                 cumulativeCrawlerFrequency += crawlerFrequency;
 
                 if (currentStage != EStage.Combat)
@@ -319,7 +306,6 @@ public class AlienManager : PublicInstanceSerializableSingleton<AlienManager>
 
                 if (positionAvailable)
                 {
-                    //Debug.Log($"AlienController.SpawnAliens(), position is available, alien is {alien}, type is {alien.Type}");
                     int margin = (alien?.Type == EAlien.Scuttler ? 1 : 2);
 
                     for (int m = -margin; m <= margin; m++)
@@ -382,7 +368,7 @@ public class AlienManager : PublicInstanceSerializableSingleton<AlienManager>
     /// <returns></returns>
     public Alien SpawnAlien(Vector3 spawnPos, EAlien type, out bool positionAvailable)
     {
-        Debug.Log($"AlienManager.SpawnAlien()");
+        //Debug.Log($"AlienManager.SpawnAlien()");
         Alien alien = null;
 
         if (MapManager.Instance.PositionAvailableForSpawning(spawnPos, true))
@@ -399,13 +385,13 @@ public class AlienManager : PublicInstanceSerializableSingleton<AlienManager>
                 MapManager.Instance.RegisterOffMeshPosition(spawnPos);
                 AlienFactory.Instance.Destroy(alien, alien.Type);
                 alien = null;
-                Debug.Log($"Position {spawnPos} not on nav mesh, can't spawn");
+                //Debug.Log($"Position {spawnPos} not on nav mesh, can't spawn");
             }            
         }
         else
         {
             positionAvailable = false;
-            Debug.Log($"Position {spawnPos} not available for alien spawning according to MapController.PositionAvailableForSpawning()");
+            //Debug.Log($"Position {spawnPos} not available for alien spawning according to MapController.PositionAvailableForSpawning()");
         }
 
         return alien;
