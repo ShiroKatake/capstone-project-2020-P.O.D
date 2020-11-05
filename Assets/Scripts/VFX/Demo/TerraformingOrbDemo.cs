@@ -30,12 +30,15 @@ public class TerraformingOrbDemo : MonoBehaviour
 	[SerializeField] private TestPhase setPhase = 0;
 	[SerializeField] private bool beginSequenceDemo;
 	[SerializeField] float cameraTransitionDuration = 3f;
+	[SerializeField] float stageSixPoints = 30f;
 
 	[SerializeField] private bool explode;
 	[SerializeField] private bool isInDemo;
 
 	private bool isExploding = false;
 	private float timeElapsed;
+	private bool nextPhaseReached = false;
+	private float orbStrength;
 
 	void Update()
 	{
@@ -73,11 +76,53 @@ public class TerraformingOrbDemo : MonoBehaviour
 		{
 			terraformingOrbController.CurrentPhase = Mathf.RoundToInt(6 * AlienManager.Instance.AlienKillProgress);
 		}
+
+		else if (!nextPhaseReached)
+		{
+			terraformingOrbController.CurrentPhase = Mathf.RoundToInt(orbStrength * AlienManager.Instance.AlienWaveProgress);
+			nextPhaseReached = true;
+		}
 	}
 
-	public void TriggerExplode()
+	public void DisperseOrb()
 	{
 		explode = true;
+	}
+
+	public IEnumerator StoreOrb()
+	{
+		//Everything except the orb fx will be running (creates focus)
+		Time.timeScale = 0;
+		float timeElapsed = 0f;
+
+		//Lerp Camera to Tower's position
+		while (timeElapsed < cameraTransitionDuration)
+		{
+			timeElapsed += Time.unscaledDeltaTime;
+			float t = timeElapsed / cameraTransitionDuration;
+			t = t * t * t * (t * (6f * t - 15f) + 10f);
+			playerCamera.transform.position = Vector3.Lerp(playerCameraTransform.position, towerCameraTransform.position, t);
+			yield return null;
+		}
+
+		//Trigger explode, then pause for a bit
+		orbStrength = RatioManager.Instance.PointsStored / stageSixPoints * 6;
+		//TODO: Insert store fx here
+		yield return new WaitForSecondsRealtime(1f);
+
+		//Then lerp the camera back to the player
+		timeElapsed = 0f;
+		while (timeElapsed < cameraTransitionDuration)
+		{
+			timeElapsed += Time.unscaledDeltaTime;
+			float t = timeElapsed / cameraTransitionDuration;
+			t = t * t * t * (t * (6f * t - 15f) + 10f);
+			playerCamera.transform.position = Vector3.Lerp(towerCameraTransform.position, playerCameraTransform.position, t);
+			yield return null;
+		}
+		Time.timeScale = 1;
+		yield return null;
+
 	}
 
 	private IEnumerator Explode()

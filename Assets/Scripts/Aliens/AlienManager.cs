@@ -110,6 +110,24 @@ public class AlienManager : PublicInstanceSerializableSingleton<AlienManager>
         }
     }
 
+	public float AlienWaveProgress
+	{
+		get
+		{
+			if (currentWave == 0)
+			{
+				return 0;
+			}
+			else
+			{
+				float wavesCompleted = currentWave - 1;
+				float aliensLeftInCurrentWave = spawningAliens ? aliensInCurrentWave : aliens.Count;
+				float progressInCurrentWave = (aliensInCurrentWave - aliensLeftInCurrentWave) / aliensInCurrentWave;
+				return progressInCurrentWave;
+			}
+		}
+	}
+
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>

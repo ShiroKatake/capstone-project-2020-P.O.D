@@ -28,6 +28,7 @@ public class RatioManager : PublicInstanceSerializableSingleton<RatioManager>
 	public float WinAmount { get => winAmount; }
 	public float PointsStored { get => storedPoints; }
 	public float PointsGained { get => pointsThisWave; }
+	public float PointsPerRatio { get => pointsPerRatio; }
 	public float DisperseBonus { get => Mathf.Round((currentMultiplier - 1f) * 100f); }
 
 	protected override void Awake()
