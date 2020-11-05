@@ -31,16 +31,12 @@ public class TerraformingOrbDemo : MonoBehaviour
 	[SerializeField] private bool beginSequenceDemo;
 	[SerializeField] float cameraTransitionDuration = 3f;
 
-	// Explode() should only be called ONCE (if it happens in update, make sure to have a bool to prevent multiple calls)
 	[SerializeField] private bool explode;
 	[SerializeField] private bool isInDemo;
 
 	private bool isExploding = false;
 	private float timeElapsed;
 
-	public bool IxExploding { get => isExploding; }
-
-	// Update is called once per frame
 	void Update()
 	{
 		if (explode)
@@ -86,8 +82,11 @@ public class TerraformingOrbDemo : MonoBehaviour
 
 	private IEnumerator Explode()
 	{
+		//Everything except the orb fx will be running (creates focus)
 		Time.timeScale = 0;
 		float timeElapsed = 0f;
+
+		//Lerp Camera to Tower's position
 		while (timeElapsed < cameraTransitionDuration)
 		{
 			timeElapsed += Time.unscaledDeltaTime;
@@ -96,21 +95,25 @@ public class TerraformingOrbDemo : MonoBehaviour
 			playerCamera.transform.position = Vector3.Lerp(playerCameraTransform.position, towerCameraTransform.position, t);
 			yield return null;
 		}
-		Debug.Log("explode");
+
+		//Trigger explode, then pause for a bit
 		terraformingOrbController.Explode();
 		yield return new WaitForSecondsRealtime(1f);
 
+		//Wait for the explosion effect to finish
 		while (!terraformingOrbController.IsShockwaveFinished)
 		{
 			yield return null;
 		}
 
+		//Reset everything
 		isExploding = false;
 		explode = false;
 		setPhase = 0;
 
 		yield return new WaitForSecondsRealtime(0.5f);
 
+		//Then lerp the camera back to the player
 		timeElapsed = 0f;
 		while (timeElapsed < cameraTransitionDuration)
 		{
