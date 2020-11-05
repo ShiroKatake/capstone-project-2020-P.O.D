@@ -154,9 +154,9 @@ public class TerraformingOrbController : MonoBehaviour
 		phaseEffects = new GameObject[8] { spark.gameObject, pulsatingOrb.gameObject, lines.gameObject, outerSphere, windBlades.gameObject, pulses.gameObject, expandingWindBlades.gameObject, shockwave };
 		fxControl = new bool[8, 8]
 		{ //Phase:  0      1      2      3      4      5      6   EXPLODE
-				{ false,  true,  true,  true,  true,  true, false, false },	//Spark
+				{ false,  true,  true,  true,  true,  true,  true, false },	//Spark
 				{ false,  true,  true,  true,  true,  true,  true,  true },	//PulsatingOrb
-				{ false, false, false,  true,  true,  true, false, false },	//Lines
+				{ false, false, false,  true,  true,  true,  true, false },	//Lines
 				{ false, false, false, false,  true,  true,  true,  true },	//OuterSphere
 				{ false, false, false, false, false,  true,  true, false },	//WindBlades
 				{ false, false, false, false, false, false,  true, false },	//Pulses
