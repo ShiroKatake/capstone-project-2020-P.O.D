@@ -122,6 +122,8 @@ public class TerraformingOrbController : MonoBehaviour
 			currentPhase = value;
 			shockwave.GetComponent<ShockwaveFX>().ShockwaveLevel = Mathf.CeilToInt(currentPhase / 2f);
 			DoPhase(currentPhase);
+			//Debug.Log($"Value received: {value}");
+			//Debug.Log($"Phase set to: {currentPhase}");
 		}
 	}
 	

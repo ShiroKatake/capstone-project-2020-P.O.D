@@ -110,6 +110,7 @@ public class TerraformingOrbDemo : MonoBehaviour
 		isExploding = false;
 		explode = false;
 		setPhase = 0;
+		terraformingOrbController.CurrentPhase = 0;
 
 		yield return new WaitForSecondsRealtime(0.5f);
 
