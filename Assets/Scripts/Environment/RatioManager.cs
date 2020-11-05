@@ -44,6 +44,11 @@ public class RatioManager : PublicInstanceSerializableSingleton<RatioManager>
 		terraformingUI.UpdateTarget(targetRatio, currentRatio);
 	}
 
+	public void CalculateScore()
+	{
+		pointsThisWave = ScoreRatioAlignment();
+	}
+
 	public float ScoreRatioAlignment()
 	{
 		int gatingIndex = 0;
@@ -138,6 +143,7 @@ public class RatioManager : PublicInstanceSerializableSingleton<RatioManager>
 
 		terraformingUI.UpdateTarget(targetRatio, currentRatio);
 		terraformingUI.UpdateCurrent(currentRatio);
+		CalculateScore();
 	}
 
 	/// <summary>
@@ -151,6 +157,7 @@ public class RatioManager : PublicInstanceSerializableSingleton<RatioManager>
 
 		terraformingUI.UpdateTarget(targetRatio, currentRatio);
 		terraformingUI.UpdateCurrent(currentRatio);
+		CalculateScore();
 	}
 
 	/// <summary>
@@ -168,7 +175,7 @@ public class RatioManager : PublicInstanceSerializableSingleton<RatioManager>
 	/// <param name="ratios"></param>
 	public void EndWave(/*int[] ratios*/)
 	{
-		pointsThisWave = ScoreRatioAlignment();
+		CalculateScore();
 		// Are any building counts lower than at the start of the wave
 		bool isCountLower = (waveStartRatio[0] > currentRatio[0] ||
 							 waveStartRatio[1] > currentRatio[1] ||

@@ -37,8 +37,7 @@ public class TerraformingOrbDemo : MonoBehaviour
 
 	private bool isExploding = false;
 	private float timeElapsed;
-	private bool nextPhaseReached = false;
-	private float orbStrength;
+	public float targetPhase;
 
 	void Update()
 	{
@@ -72,16 +71,15 @@ public class TerraformingOrbDemo : MonoBehaviour
 			}
 		}
 
-		else if (terraformingOrbController.CurrentPhase != Mathf.RoundToInt(6 * AlienManager.Instance.AlienKillProgress))
-		{
-			terraformingOrbController.CurrentPhase = Mathf.RoundToInt(6 * AlienManager.Instance.AlienKillProgress);
-		}
+		//else if (terraformingOrbController.CurrentPhase != Mathf.RoundToInt(6 * AlienManager.Instance.AlienKillProgress))
+		//{
+		//	terraformingOrbController.CurrentPhase = Mathf.RoundToInt(6 * AlienManager.Instance.AlienKillProgress);
+		//}
 
-		else if (!nextPhaseReached)
-		{
-			terraformingOrbController.CurrentPhase = Mathf.RoundToInt(orbStrength * AlienManager.Instance.AlienWaveProgress);
-			nextPhaseReached = true;
-		}
+		//else if (terraformingOrbController.CurrentPhase != Mathf.RoundToInt(currentPhase))
+		//{
+		//	terraformingOrbController.CurrentPhase = (int)currentPhase;
+		//}
 	}
 
 	public void DisperseOrb()
@@ -89,7 +87,12 @@ public class TerraformingOrbDemo : MonoBehaviour
 		explode = true;
 	}
 
-	public IEnumerator StoreOrb()
+	public void StoreOrb()
+	{
+		StartCoroutine(Store());
+	}
+
+	public IEnumerator Store()
 	{
 		//Everything except the orb fx will be running (creates focus)
 		Time.timeScale = 0;
@@ -105,9 +108,19 @@ public class TerraformingOrbDemo : MonoBehaviour
 			yield return null;
 		}
 
-		//Trigger explode, then pause for a bit
-		orbStrength = RatioManager.Instance.PointsStored / stageSixPoints * 6;
-		//TODO: Insert store fx here
+		//Trigger store, then pause for a bit
+		targetPhase = Mathf.Round(RatioManager.Instance.PointsStored / stageSixPoints * 6);
+		if (targetPhase > 6)
+			targetPhase = 6;
+
+		while (terraformingOrbController.CurrentPhase < targetPhase)
+		{
+			if (terraformingOrbController.IsScaleLerpingFinished)
+			{
+				terraformingOrbController.CurrentPhase = terraformingOrbController.CurrentPhase + 1;
+			}
+			yield return null;
+		}
 		yield return new WaitForSecondsRealtime(1f);
 
 		//Then lerp the camera back to the player

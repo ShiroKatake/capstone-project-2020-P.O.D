@@ -21,6 +21,7 @@ public class StoreDisperseUI : MonoBehaviour
 	{
 		RatioManager.Instance.StorePoints();
 		DisplayUI(false);
+		terraformingOrb.StoreOrb();
 	}
 
 	public void Disperse()
