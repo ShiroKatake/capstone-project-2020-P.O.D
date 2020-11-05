@@ -173,6 +173,7 @@ public class TerraformingOrbController : MonoBehaviour
 	/// </summary>
 	private void Update()
 	{
+		#region OuterSphere Rotation
 		if (rotationTimeElapsed < 1f)
 		{
 			rotationTimeElapsed += Time.unscaledDeltaTime;
@@ -183,6 +184,7 @@ public class TerraformingOrbController : MonoBehaviour
 			outerSphereMaterial.SetFloat("Time", 1f);
 			rotationTimeElapsed = 0f;
 		}
+		#endregion
 
 		#region OuterSphere Alpha Lerping
 		if (isAlphaLerping)
