@@ -807,6 +807,7 @@ public class Building : CollisionListener
 
         AudioManager.Instance.PlaySound(idleSound, gameObject);
         AudioManager.Instance.PlaySound(AudioManager.ESound.Building_Completes, gameObject);
+        Debug.Log("I should be making sound");
     }
 
     /// <summary>

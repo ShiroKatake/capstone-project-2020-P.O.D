@@ -136,7 +136,7 @@ MonoBehaviour:
     sound: 14
     clip: {fileID: 8300000, guid: 66e0c45c9168f8043bfa710e14978727, type: 3}
     loop: 1
-    volume: 0.1
+    volume: 0.05
     pitch: 1
     minDistance: 0
     maxDistance: 8
@@ -173,7 +173,7 @@ MonoBehaviour:
     minDistance: 0
     maxDistance: 8
   - name: Turret Idle
-    sound: 19
+    sound: 21
     clip: {fileID: 8300000, guid: 1dc18eea3fdcd2549a8e48d3739804ba, type: 3}
     loop: 0
     volume: 0.1
@@ -205,7 +205,7 @@ MonoBehaviour:
     minDistance: 0
     maxDistance: 0
   - name: Win
-    sound: 23
+    sound: 25
     clip: {fileID: 8300000, guid: b1969d928315709468ce08b420607d13, type: 3}
     loop: 0
     volume: 1
@@ -213,7 +213,7 @@ MonoBehaviour:
     minDistance: 0
     maxDistance: 0
   - name: Losing
-    sound: 24
+    sound: 26
     clip: {fileID: 8300000, guid: a9cb72cdca40b9d4a8e432a962ce2efb, type: 3}
     loop: 0
     volume: 1
@@ -221,7 +221,7 @@ MonoBehaviour:
     minDistance: 0
     maxDistance: 0
   - name: Day Transition
-    sound: 25
+    sound: 27
     clip: {fileID: 8300000, guid: 8b7bccc60839c9048ba2594711569219, type: 3}
     loop: 0
     volume: 0.1
@@ -229,7 +229,7 @@ MonoBehaviour:
     minDistance: 0
     maxDistance: 0
   - name: Night Transition
-    sound: 26
+    sound: 28
     clip: {fileID: 8300000, guid: 17d0972c4be339144b5a301d32dfbd0c, type: 3}
     loop: 0
     volume: 0.1
@@ -237,13 +237,37 @@ MonoBehaviour:
     minDistance: 0
     maxDistance: 0
   - name: Attack!
-    sound: 27
+    sound: 29
     clip: {fileID: 8300000, guid: 2f6cd0b9094d0284e80db0b13976cb00, type: 3}
     loop: 0
     volume: 0.2
     pitch: 0.3
     minDistance: 0
     maxDistance: 0
+  - name: Harvester
+    sound: 19
+    clip: {fileID: 8300000, guid: d7f155ec331eb47499a2eecd58dd948b, type: 3}
+    loop: 1
+    volume: 0.159
+    pitch: 0.3
+    minDistance: 0
+    maxDistance: 9
+  - name: Gas Pump
+    sound: 20
+    clip: {fileID: 8300000, guid: b5e34a77abb8b0a42ad4a0f31385c3bd, type: 3}
+    loop: 1
+    volume: 1
+    pitch: 0.3
+    minDistance: 0
+    maxDistance: 327
+  - name: Gas Pump2
+    sound: 30
+    clip: {fileID: 8300000, guid: b5e34a77abb8b0a42ad4a0f31385c3bd, type: 3}
+    loop: 0
+    volume: 0.29
+    pitch: 0.3
+    minDistance: 0
+    maxDistance: 9
   BackGroundSounds:
   - name: NightTime
     sound: 1
