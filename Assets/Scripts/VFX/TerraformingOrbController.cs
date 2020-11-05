@@ -85,6 +85,7 @@ public class TerraformingOrbController : MonoBehaviour
 	private bool isAlphaLerping;
 	private bool isAlphaLerpingFinished = true;
 	private float alphaTimeElapsed = 0f;
+	private float rotationTimeElapsed = 0f;
 	private Color outerSphereStartColor;
 	private Color outerSphereEndColor;
 
@@ -172,6 +173,17 @@ public class TerraformingOrbController : MonoBehaviour
 	/// </summary>
 	private void Update()
 	{
+		if (rotationTimeElapsed < 1f)
+		{
+			rotationTimeElapsed += Time.unscaledDeltaTime;
+			outerSphereMaterial.SetFloat("Time", rotationTimeElapsed);
+		}
+		else
+		{
+			outerSphereMaterial.SetFloat("Time", 1f);
+			rotationTimeElapsed = 0f;
+		}
+
 		#region OuterSphere Alpha Lerping
 		if (isAlphaLerping)
 		{
