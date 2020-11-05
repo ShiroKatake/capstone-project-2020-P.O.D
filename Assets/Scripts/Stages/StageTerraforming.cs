@@ -101,7 +101,7 @@ public class StageTerraforming : PublicInstanceSerializableSingleton<StageTerraf
     /// </summary>
     private IEnumerator IntroduceTerraformingBuildings()
     {
-        cat.SubmitDialogue("got resources", 0, true, false);
+        cat.SubmitDialogue("got resources", 0, false, false);
         boiler.Visible = true;
         boiler.ButtonInteract.InInteractableGameStage = false;
         greenhouse.Visible = true;
