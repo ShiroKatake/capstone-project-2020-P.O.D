@@ -163,6 +163,8 @@ public class AudioManager : PublicInstanceSerializableSingleton<AudioManager>
 
     public void PlaySound(ESound sound, GameObject obj)
     {
+        //Debug.Log($"AudioManager.PlaySound(), sound: {sound}, obj: {obj}");
+
         if (!ContainsSound(obj, sound))
         {
             bool tmp = true;
@@ -170,6 +172,12 @@ public class AudioManager : PublicInstanceSerializableSingleton<AudioManager>
             foreach (AudioSource source in sources)
             {
                 oneShotAudioSource = source;
+
+                //Debug.Log($"AudioManager.PlaySound(), current source in for each loop is {source}");
+                //Debug.Log($"AudioManager.PlaySound(), current source.clip in for each loop is {source.clip}");
+                //Debug.Log($"AudioManager.PlaySound(), current GetAudio(sound) in for each loop is {GetAudio(sound)}");
+                //Debug.Log($"AudioManager.PlaySound(), current GetAudio(sound).Clip in for each loop is {GetAudio(sound).Clip}");
+
                 if (source.clip == GetAudio(sound).Clip)
                 {
                     tmp = false;
