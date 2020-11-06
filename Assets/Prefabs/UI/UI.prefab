@@ -13798,7 +13798,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.5882353, g: 0.9568628, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -25658,6 +25658,11 @@ PrefabInstance:
         type: 3}
       propertyPath: goMessage
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7009541622833408660, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: skipTutorial
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7691648321688888052, guid: 7ec13c4878030604f886d212027c72e6,
         type: 3}
