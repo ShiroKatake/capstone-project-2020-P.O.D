@@ -200,7 +200,7 @@ public class AlienManager : PublicInstanceSerializableSingleton<AlienManager>
 					//If conditions for starting the next wave is met, begin a new wave
 					loopStopwatch.Restart();
 
-					if (currentStage != EStage.Combat) currentWave++;
+					currentWave++;
 					RatioManager.Instance.StartWave();
 					waveEnded = false;
 					yield return StartCoroutine(SpawnAliens(currentStage));
