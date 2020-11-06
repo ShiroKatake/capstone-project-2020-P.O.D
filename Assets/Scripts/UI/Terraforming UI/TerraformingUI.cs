@@ -44,8 +44,8 @@ public class TerraformingUI : PublicInstanceSerializableSingleton<TerraformingUI
 		return buildingsNeeded[index];
 	}
 
-	public UnityAction<int[]> updateCurrentRatio;
-	public UnityAction<int[]> updateTargetRatio;
+	public static UnityAction<int[]> updateCurrentRatio;
+	public static UnityAction<int[]> updateTargetRatio;
 
 	private void Start()
 	{
@@ -74,6 +74,7 @@ public class TerraformingUI : PublicInstanceSerializableSingleton<TerraformingUI
 
 	public void UpdateTarget(int[] targetRatioArray, int[] currentRatioArray)
 	{
+        Debug.Log("TerraformingUI.UpdateTarget()");
 		targetRatio = targetRatioArray;
 		maxMultiplier = 1;
 		int currentMultiplier;
@@ -99,6 +100,7 @@ public class TerraformingUI : PublicInstanceSerializableSingleton<TerraformingUI
 		}
 		maxBarValue = buildingsNeeded.Max() + 5;
 
+        Debug.Log($"Invoking updateTargetRatio");
 		updateTargetRatio?.Invoke(targetRatioArray);
 	}
 
@@ -109,6 +111,7 @@ public class TerraformingUI : PublicInstanceSerializableSingleton<TerraformingUI
 
 		if (state == true)
 		{
+            Debug.Log($"Invoking updateCurrentRatio and updateTargetRatio");
 			updateCurrentRatio?.Invoke(currentRatio);
 			updateTargetRatio?.Invoke(targetRatio);
 		}

@@ -39,14 +39,7 @@ public class StageMainGame: PublicInstanceSerializableSingleton<StageMainGame>, 
                 AudioManager.Instance.StopBackGroundMusic();
                 break;
             }
-            else if (Tower.Instance.Health.IsDead())
-            {
-                StageManager.Instance.SetStage(EStage.Lose);
-                AudioManager.Instance.PlaySound(AudioManager.ESound.Lose);
-                AudioManager.Instance.StopBackGroundMusic();
-                break;
-            }
-            else if (POD.Instance.HealthController.IsDead())
+            else if (Tower.Instance.Health.IsDead() || POD.Instance.HealthController.IsDead())
             {
                 StageManager.Instance.SetStage(EStage.Lose);
                 AudioManager.Instance.PlaySound(AudioManager.ESound.Lose);

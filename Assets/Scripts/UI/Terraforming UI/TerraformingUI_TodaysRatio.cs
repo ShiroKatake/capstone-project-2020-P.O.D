@@ -14,7 +14,7 @@ public class TerraformingUI_TodaysRatio : MonoBehaviour
 
 	private void Start()
 	{
-		TerraformingUI.Instance.updateTargetRatio += ChangeTexts;
+		TerraformingUI.updateTargetRatio += ChangeTexts;
 	}
 
 	private void ChangeTexts(int[] ratioArray)

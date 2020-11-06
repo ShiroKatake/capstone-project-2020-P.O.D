@@ -50,7 +50,7 @@ public class MapManager : PublicInstanceSerializableSingleton<MapManager>
 
     private List<Vector3> gameplayAlienSpawnPoints;
     private List<Vector3> tutorialAlienSpawnPoints;
-    private List<Vector3> currentAlienSpawnPoints;
+    //private List<Vector3> currentAlienSpawnPoints;
     private List<Vector3> majorityAlienSpawnPoints;
     private List<Vector3> minorityAlienSpawnPoints;
 
@@ -64,7 +64,7 @@ public class MapManager : PublicInstanceSerializableSingleton<MapManager>
     /// <summary>
     /// The list of positions that are spawnable in the current wave.
     /// </summary>
-    public List<Vector3> CurrentAlienSpawnPoints { get => currentAlienSpawnPoints; }
+    public List<Vector3> GameplayAlienSpawnPoints { get => gameplayAlienSpawnPoints; }
 
     /// <summary>
     /// Has MapController finished calculating paths for all types of aliens for each position on the map?
@@ -85,6 +85,11 @@ public class MapManager : PublicInstanceSerializableSingleton<MapManager>
     /// The list of positions that are spawnable in the current wave between the angles denoting 30% of spawnings.
     /// </summary>
     public List<Vector3> MinorityAlienSpawnPoints { get => minorityAlienSpawnPoints; }
+
+    /// <summary>
+    /// The list of positions that are spawnable during the tutorial.
+    /// </summary>
+    public List<Vector3> TutorialAlienSpawnPoints { get => tutorialAlienSpawnPoints; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -357,104 +362,18 @@ public class MapManager : PublicInstanceSerializableSingleton<MapManager>
         currentPathfindingPos = Vector2.zero;
         if (debugPathfinding) Debug.Log($"MapController.CalculatePaths(), has finished, time elapsed is {totalStopwatch.ElapsedMilliseconds} ms, or {totalStopwatch.ElapsedMilliseconds / 1000} s.");
         finishedCalculatingPaths = true;
-        //StartCoroutine(SavePaths());
         yield return null;
     }
-
-    ///// <summary>
-    ///// Saves pre-calculated NavMeshPaths to a text file.
-    ///// </summary>
-    //private IEnumerator SavePaths()
-    //{
-    //    Debug.Log("Starting saving paths to file");
-    //    System.Diagnostics.Stopwatch loopStopwatch = new System.Diagnostics.Stopwatch();
-    //    loopStopwatch.Restart();
-    //    string pathsToSave = "# Start of file comment";
-
-    //    foreach (PositionData p in positions)
-    //    {
-    //        Debug.Log($"Writing data for position ({p.X},{p.Z})");
-    //        foreach (EAlien a in p.Paths.Keys)
-    //        {
-    //            Debug.Log($"Writing line for position alien {a} for position ({p.X},{p.Z})");
-    //            string line = $"{p.X},{p.Z}:{a}:{p.Paths[a].corners.Length}";
-
-    //            for (int i = 0; i < p.Paths[a].corners.Length; i++)
-    //            {
-    //                line += $":{p.Paths[a].corners[i].x},{p.Paths[a].corners[i].y},{p.Paths[a].corners[i].z}";
-    //            }
-
-    //            pathsToSave += $"\n{line}";
-
-    //            if (pauseLoop && loopStopwatch.ElapsedMilliseconds >= timeLimitPerFrame * 5)
-    //            {
-    //                if (debugPathfinding) Debug.Log($"MapController.SavePaths(), pause loop, x: {p.X}/{xMax}, z: {p.Z}/{zMax}, milliseconds elapsed: {loopStopwatch.ElapsedMilliseconds}/{timeLimitPerFrame}");
-    //                yield return null;
-    //                loopStopwatch.Restart();
-    //            }
-    //        }
-    //    }
-
-    //    StreamWriter writer = new StreamWriter($"{Application.dataPath}/{filePathInAssets}", true);
-    //    writer.Write(pathsToSave);
-    //    writer.Close();
-    //    Debug.Log($"Finished saving calculated paths to file");
-    //    yield return null;
-    //}
-
-    ///// <summary>
-    ///// Loads previously-calculated NavMeshPaths from a text file.
-    ///// </summary>
-    ///// <param name="pathfinderInstances">Alien instances to use for pathfinding.</param>
-    //private IEnumerator LoadPaths(List<Alien> pathfinderInstances)
-    //{
-    //    string text = savedPaths.text;
-    //    string[] lines = text.Split('\n');
-    //    Dictionary<int, NavMeshPath> pathTemplates = new Dictionary<int, NavMeshPath>();
-
-    //    for(int i = 0; i < lines.Length; i++)
-    //    {
-    //        string line = lines[i];
-
-    //        if (line[0] == '#')
-    //        {
-    //            continue;
-    //        }
-
-    //        string[] segments = line.Split(':');
-
-    //        if (segments.Length < 3)
-    //        {
-    //            Debug.LogError($"MapController.LoadPaths(), line {i + 1} of saved paths file does not have the minimum number of segments to be valid. Line is \"{line}\".");
-    //        }
-
-    //        //parse segments[2] (i.e. path length) as int, if 0 ignore.
-
-    //        //parse segments[0] as x and z coordinates, and segments[1] as EAlien value.
-
-    //        //If pathTemplate does not exist for path length, take appropriate alien pathfinder and position and calculate path to cryo egg. If path length doesn't match, error. If matches, save in dictionary.
-
-    //        //Create new NavMeshPath copying template.
-
-    //        //Parse Vector3s and copy into new NavMeshPath.
-
-    //        //Get position data, assign path according to EAlien value.
-
-    //    }
-
-    //    yield return null;
-    //}
 
     //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
 
     //Availabile Position Methods------------------------------------------------------------------
 
     /// <summary>
-    /// Resets the list of currently available alien spawn positions.
+    /// Resets the majority and minority lists of available alien spawn positions.
     /// </summary>
-    public void ResetCurrentAlienSpawnPoints()
+    public void ResetMajorityAndMinorityAlienSpawnPoints()
     {
-        currentAlienSpawnPoints = new List<Vector3>(StageManager.Instance.CurrentStage.GetID() == EStage.Combat ? tutorialAlienSpawnPoints : gameplayAlienSpawnPoints);
         majorityAlienSpawnPoints.Clear();
         minorityAlienSpawnPoints.Clear();
     }
@@ -467,13 +386,6 @@ public class MapManager : PublicInstanceSerializableSingleton<MapManager>
     public bool PositionAvailableForBuilding(Building building)
     {
         Vector3 buildingPos = building.transform.position;
-        //string positions = "";
-
-        //foreach (Vector3 offset in building.BuildingFoundationOffsets)
-        //{
-        //    positions += $"{offset}, ";
-        //}
-
         //Debug.Log($"MapController checking positions [{positions}] available for building");
 
         foreach (Vector3 offset in building.BuildingFoundationOffsets)
@@ -501,10 +413,7 @@ public class MapManager : PublicInstanceSerializableSingleton<MapManager>
         position.x = Mathf.Round(position.x);
         position.z = Mathf.Round(position.z);
 
-        if (IsPositionOutOfBounds(position))
-        {
-            return false;
-        }
+        if (IsPositionOutOfBounds(position)) return false;
 
         PositionData positionData = positions[(int)position.x, (int)position.z];
 
@@ -561,11 +470,7 @@ public class MapManager : PublicInstanceSerializableSingleton<MapManager>
                                 {
                                     int m = (int)(position.x + i + k);
                                     int n = (int)(position.z + j + l);
-
-                                    if (m >= 0 && m <= xMax && n >= 0 && n <= zMax)
-                                    {
-                                        positions[m, n].AliensBanned = true;
-                                    }
+                                    if (m >= 0 && m <= xMax && n >= 0 && n <= zMax) positions[m, n].AliensBanned = true;
                                 }
                             }
                             
@@ -640,7 +545,6 @@ public class MapManager : PublicInstanceSerializableSingleton<MapManager>
             Vector3 pos = new Vector3(x, AlienFactory.Instance.AlienInstantiationHeight, z);
             tutorialAlienSpawnPoints.Remove(pos);
             gameplayAlienSpawnPoints.Remove(pos);
-            currentAlienSpawnPoints?.Remove(pos);
             majorityAlienSpawnPoints?.Remove(pos);
             minorityAlienSpawnPoints?.Remove(pos);
         }
@@ -664,18 +568,11 @@ public class MapManager : PublicInstanceSerializableSingleton<MapManager>
             Vector3 pos = new Vector3(x, AlienFactory.Instance.AlienInstantiationHeight, z);
 
             //Debug.Log($"MapController.UpdateAvailablePositions() offset loop for {gameObject} at position {position}, x: {x}/{xMax}, z: {z}/{zMax}, hasBuilding: {hasBuilding}, hasMineral: {hasMineral}");
-            if (hasBuilding != null)
-            {
-                positions[x, z].HasBuilding = hasBuilding.Value;
-            }
+            if (hasBuilding != null)  positions[x, z].HasBuilding = hasBuilding.Value;
 
             if (hasMineral != null)
             {
-                if (!initialised)
-                {
-                    Initialise();
-                }
-
+                if (!initialised) Initialise();
                 positions[x, z].HasMineral = hasMineral.Value;
             }
 
@@ -687,8 +584,8 @@ public class MapManager : PublicInstanceSerializableSingleton<MapManager>
                 }
                 else
                 {
-                    tutorialAlienSpawnPoints.Remove(pos);
-                    currentAlienSpawnPoints?.Remove(pos);
+                    tutorialAlienSpawnPoints?.Remove(pos);
+                    gameplayAlienSpawnPoints?.Remove(pos);
                     majorityAlienSpawnPoints?.Remove(pos);
                     minorityAlienSpawnPoints?.Remove(pos);
                 }
@@ -701,8 +598,8 @@ public class MapManager : PublicInstanceSerializableSingleton<MapManager>
                 }
                 else
                 {
-                    gameplayAlienSpawnPoints.Remove(pos);
-                    currentAlienSpawnPoints?.Remove(pos);
+                    tutorialAlienSpawnPoints?.Remove(pos);
+                    gameplayAlienSpawnPoints?.Remove(pos);
                     majorityAlienSpawnPoints?.Remove(pos);
                     minorityAlienSpawnPoints?.Remove(pos);
                 }

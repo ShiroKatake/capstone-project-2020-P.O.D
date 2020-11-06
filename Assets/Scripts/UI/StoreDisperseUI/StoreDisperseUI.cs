@@ -3,35 +3,44 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class StoreDisperseUI : MonoBehaviour
+public class StoreDisperseUI : PublicInstanceSerializableSingleton<StoreDisperseUI>
 {
 	[SerializeField] GameObject mainPanel;
 	[SerializeField] GameObject greyPanel;
 	[SerializeField] ButtonInteract storeButton;
 
+    private bool canShowMenu;
+
+    public bool CanShowMenu { get => canShowMenu; set => canShowMenu = value; }
+
+    public bool IsVisible { get => mainPanel.activeSelf; }
+
     // Start is called before the first frame update
     void Start()
     {
-		RatioManager.Instance.updateStoreDisperse += DisplayUI;
+		RatioManager.Instance.updateStoreDisperse += ToggleUI;
 		mainPanel.SetActive(false);
     }
 
 	public void Store()
 	{
 		RatioManager.Instance.StorePoints();
-		DisplayUI(false);
+		ToggleUI(false);
 	}
 
 	public void Disperse()
 	{
 		RatioManager.Instance.DispersePoints();
-		DisplayUI(false);
+		ToggleUI(false);
 	}
 
-	private void DisplayUI(bool state)
+	private void ToggleUI(bool state)
 	{
-		greyPanel.SetActive(state);
-		mainPanel.SetActive(state);
-		storeButton.OnInteractableChanged(storeButton.GetComponent<Button>().interactable = AlienManager.Instance.WavesRemaining != 0);
+        if (canShowMenu)
+        {
+            greyPanel.SetActive(state);
+            mainPanel.SetActive(state);
+            storeButton.OnInteractableChanged(storeButton.GetComponent<Button>().interactable = AlienManager.Instance.WavesRemaining != 0);
+        }
 	}
 }

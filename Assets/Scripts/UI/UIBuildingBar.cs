@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-public class UIBuildingBar : MonoBehaviour
+public class UIBuildingBar : PublicInstanceSerializableSingleton<UIBuildingBar>
 {
     [System.Serializable]
     public struct Button {
@@ -15,24 +15,31 @@ public class UIBuildingBar : MonoBehaviour
 
     [SerializeField] private List<Button> buttonList;
 
-	private void Awake()
+	protected override void Awake()
 	{
-		ResourceManager.Instance.resourcesUpdated += UpdateButton;
-		UpdateButton();
+        base.Awake();
+		ResourceManager.Instance.resourcesUpdated += UpdateButtons;
+		UpdateButtons();
 	}
 
-	private void UpdateButton()
+	private void UpdateButtons()
 	{
 		foreach (Button b in buttonList)
 		{
-			bool interactable =
-				b.AssociatedBuilding.OreCost <= ResourceManager.Instance.Ore
-				&& b.AssociatedBuilding.PowerConsumption <= ResourceManager.Instance.SurplusPower
-				&& b.AssociatedBuilding.GasConsumption <= ResourceManager.Instance.SurplusGas
-				&& b.AssociatedBuilding.PlantsConsumption <= ResourceManager.Instance.SurplusPlants
-				&& b.AssociatedBuilding.WaterConsumption <= ResourceManager.Instance.SurplusWater;
-			b.Btn.GetComponent<UIElementStatusManager>().Interactable = interactable;
-			b.Btn.OnInteractableChanged(interactable);
+            UpdateButton(b.AssociatedBuilding, b.Btn);
 		}
 	}
+
+    public void UpdateButton(Building building, ButtonInteract buttonInteract)
+    {
+        bool interactable =
+                buttonInteract.InInteractableGameStage
+                && building.OreCost <= ResourceManager.Instance.Ore
+                && building.PowerConsumption <= ResourceManager.Instance.SurplusPower
+                && building.GasConsumption <= ResourceManager.Instance.SurplusGas
+                && building.PlantsConsumption <= ResourceManager.Instance.SurplusPlants
+                && building.WaterConsumption <= ResourceManager.Instance.SurplusWater;
+        buttonInteract.GetComponent<UIElementStatusManager>().Interactable = interactable;
+        buttonInteract.OnInteractableChanged(interactable);
+    }
 }

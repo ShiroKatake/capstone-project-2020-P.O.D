@@ -24,10 +24,16 @@ public class MineralCollectionController : PublicInstanceSerializableSingleton<M
     private LayerMask mineralsLayerMask;
     private bool mining;
 	private Mineral cacheMineral = null;
+    private bool canMine = true;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
     //Basic Public Properties----------------------------------------------------------------------
+
+    /// <summary>
+    /// Is the player allowed to mine at this stage in the game?
+    /// </summary>
+    public bool CanMine { get => canMine; set => canMine = value; }
 
     /// <summary>
     /// Is the player currently mining a mineral?
@@ -75,7 +81,7 @@ public class MineralCollectionController : PublicInstanceSerializableSingleton<M
     /// </summary>
     private void GetInput()
     {
-        collectMinerals = playerInputManager.GetButton("Mine");
+        collectMinerals = canMine && playerInputManager.GetButton("Mine");
     }
 
     /// <summary>

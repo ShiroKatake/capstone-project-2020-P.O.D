@@ -31,7 +31,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4528282981372622710}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -770,7 +770,7 @@ RectTransform:
   m_Children:
   - {fileID: 6239563488045089765}
   m_Father: {fileID: 4528282981372622710}
-  m_RootOrder: 15
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -883,7 +883,7 @@ RectTransform:
   - {fileID: 2752959905473254356}
   - {fileID: 3585630854207325345}
   m_Father: {fileID: 4528282981372622710}
-  m_RootOrder: 10
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -1008,6 +1008,9 @@ MonoBehaviour:
   logColour: {r: 0.5882353, g: 0.95686275, b: 1, a: 1}
   cullOverflow: 0
   lines: 0
+  debug: 0
+  dialogueKeys: []
+  dialogueSetContents: []
 --- !u!114 &4433129839947561425
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1429,7 +1432,7 @@ RectTransform:
   m_Children:
   - {fileID: 7845763664837621371}
   m_Father: {fileID: 4528282981372622710}
-  m_RootOrder: 17
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1487,7 +1490,7 @@ RectTransform:
   - {fileID: 2160291042973338587}
   - {fileID: 8874052885200879441}
   m_Father: {fileID: 4528282981372622710}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -1558,6 +1561,9 @@ MonoBehaviour:
   logColour: {r: 0, g: 1, b: 0, a: 1}
   cullOverflow: 1
   lines: 14
+  debug: 0
+  dialogueKeys: []
+  dialogueSetContents: []
 --- !u!114 &8880507035171191458
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1770,7 +1776,7 @@ RectTransform:
   - {fileID: 3531740422580242906}
   - {fileID: 1051413322912414676}
   m_Father: {fileID: 4528282981372622710}
-  m_RootOrder: 9
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
@@ -1895,6 +1901,9 @@ MonoBehaviour:
   logColour: {r: 0.6, g: 0, b: 0.6, a: 1}
   cullOverflow: 0
   lines: 0
+  debug: 0
+  dialogueKeys: []
+  dialogueSetContents: []
 --- !u!114 &2091543218769703194
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4105,7 +4114,7 @@ RectTransform:
   - {fileID: 689080539166750308}
   - {fileID: 8227469997159936252}
   m_Father: {fileID: 4528282981372622710}
-  m_RootOrder: 13
+  m_RootOrder: 17
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -4148,6 +4157,9 @@ MonoBehaviour:
   logColour: {r: 0.5882353, g: 0.95686275, b: 1, a: 1}
   cullOverflow: 0
   lines: 0
+  debug: 0
+  dialogueKeys: []
+  dialogueSetContents: []
 --- !u!114 &690784511054925863
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4303,7 +4315,7 @@ RectTransform:
   - {fileID: 4317107796772841090}
   - {fileID: 6690475854056154758}
   m_Father: {fileID: 4528282981372622710}
-  m_RootOrder: 14
+  m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -4346,6 +4358,9 @@ MonoBehaviour:
   logColour: {r: 0.5882353, g: 0.95686275, b: 1, a: 1}
   cullOverflow: 0
   lines: 0
+  debug: 0
+  dialogueKeys: []
+  dialogueSetContents: []
 --- !u!114 &4536188841799625784
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5797,7 +5812,7 @@ RectTransform:
   - {fileID: 4528282982005485690}
   - {fileID: 4528282980538792952}
   m_Father: {fileID: 4528282981372622710}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -9611,7 +9626,7 @@ RectTransform:
   - {fileID: 135142114145749527}
   - {fileID: 3215868912396416406}
   m_Father: {fileID: 4528282981372622710}
-  m_RootOrder: 12
+  m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -9654,6 +9669,9 @@ MonoBehaviour:
   logColour: {r: 0.5882353, g: 0.95686275, b: 1, a: 1}
   cullOverflow: 0
   lines: 0
+  debug: 0
+  dialogueKeys: []
+  dialogueSetContents: []
 --- !u!114 &6822742310505757991
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11934,7 +11952,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4528282981372622710}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4528282981056551271
 MonoBehaviour:
@@ -12830,6 +12848,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
+  - {fileID: 8103728088213489497}
   - {fileID: 2647383470585378577}
   - {fileID: 2488220658781858207}
   - {fileID: 2762728365931718879}
@@ -12838,6 +12857,9 @@ RectTransform:
   - {fileID: 437762844162004883}
   - {fileID: 4528282981056551269}
   - {fileID: 138956039}
+  - {fileID: 2780045094755110957}
+  - {fileID: 7226979220510113920}
+  - {fileID: 7549780620195208771}
   - {fileID: 6154235084965322592}
   - {fileID: 90160584236061847}
   - {fileID: 6599183669827652317}
@@ -12845,9 +12867,6 @@ RectTransform:
   - {fileID: 6904385778752213337}
   - {fileID: 8320493137344769711}
   - {fileID: 1538022467383247928}
-  - {fileID: 2780045094755110957}
-  - {fileID: 7226979220510113920}
-  - {fileID: 7549780620195208771}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -12992,7 +13011,7 @@ MonoBehaviour:
     notes: For error messages, turrets
   - openingTag: 123
     closingTag: 125
-    colour: {r: 0.61960787, g: 1, b: 0.2784314, a: 1}
+    colour: {r: 1, g: 0.40784314, b: 0.3254902, a: 1}
     notes: For greenhouse, harvester
   - openingTag: 91
     closingTag: 93
@@ -13008,7 +13027,7 @@ MonoBehaviour:
     notes: For minerals
   - openingTag: 64
     closingTag: 36
-    colour: {r: 1, g: 0.67058825, b: 0.98039216, a: 1}
+    colour: {r: 0.7882353, g: 1, b: 0.5764706, a: 1}
     notes: For incinerator, gas pump
 --- !u!114 &4528282981372622712
 MonoBehaviour:
@@ -13750,7 +13769,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4528282981372622710}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 1}
@@ -13779,7 +13798,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.5882353, g: 0.9568628, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -16406,11 +16425,11 @@ MonoBehaviour:
   border: {fileID: 7612242861521560196}
   fill: {fileID: 3688863988012061578}
   icon: {fileID: 8672416634813304512}
-  borderNormal: {r: 0, g: 1, b: 0.98823535, a: 1}
+  borderNormal: {r: 0, g: 1, b: 0.9882353, a: 1}
   borderHighlight: {r: 0, g: 1, b: 0.98823535, a: 1}
   borderUninteractable: {r: 0.33, g: 0.33, b: 0.33, a: 1}
   fillNormal: {r: 0.05340945, g: 0.2733307, b: 0.39900002, a: 1}
-  fillHighlight: {r: 0.30936277, g: 0.82406116, b: 0.8301887, a: 1}
+  fillHighlight: {r: 0.3372549, g: 0.9254902, b: 0.92156863, a: 1}
   fillUninteractable: {r: 0.21698111, g: 0.21698111, b: 0.21698111, a: 1}
   iconInteractable: {r: 1, g: 1, b: 1, a: 1}
   iconUninteractable: {r: 0.5, g: 0.5, b: 0.5, a: 0.5019608}
@@ -17565,11 +17584,11 @@ MonoBehaviour:
   border: {fileID: 2383843343602647306}
   fill: {fileID: 162938622913134473}
   icon: {fileID: 673611826570913767}
-  borderNormal: {r: 0.78823537, g: 1, b: 0.5764706, a: 1}
-  borderHighlight: {r: 0.78823537, g: 1, b: 0.5764706, a: 1}
+  borderNormal: {r: 1, g: 0.40784314, b: 0.3254902, a: 1}
+  borderHighlight: {r: 1, g: 0.40784314, b: 0.3254902, a: 1}
   borderUninteractable: {r: 0.33, g: 0.33, b: 0.33, a: 1}
   fillNormal: {r: 0.05340945, g: 0.2733307, b: 0.39900002, a: 1}
-  fillHighlight: {r: 0.6598434, g: 0.8301887, b: 0.48949805, a: 1}
+  fillHighlight: {r: 0.90588236, g: 0.35686275, b: 0.2784314, a: 1}
   fillUninteractable: {r: 0.21698111, g: 0.21698111, b: 0.21698111, a: 1}
   iconInteractable: {r: 1, g: 1, b: 1, a: 1}
   iconUninteractable: {r: 0.5, g: 0.5, b: 0.5, a: 0.5019608}
@@ -18418,7 +18437,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4528282981372622710}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -18658,7 +18677,7 @@ RectTransform:
   - {fileID: 3198115626530256560}
   - {fileID: 3450168577257645814}
   m_Father: {fileID: 4528282981372622710}
-  m_RootOrder: 8
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
@@ -18783,6 +18802,9 @@ MonoBehaviour:
   logColour: {r: 1, g: 0.5019608, b: 0, a: 1}
   cullOverflow: 0
   lines: 0
+  debug: 0
+  dialogueKeys: []
+  dialogueSetContents: []
 --- !u!114 &6936570400009893306
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20146,7 +20168,7 @@ RectTransform:
   - {fileID: 2521579392289397843}
   - {fileID: 1943488184824043674}
   m_Father: {fileID: 4528282981372622710}
-  m_RootOrder: 11
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -20189,6 +20211,9 @@ MonoBehaviour:
   logColour: {r: 0.5882353, g: 0.95686275, b: 1, a: 1}
   cullOverflow: 0
   lines: 0
+  debug: 0
+  dialogueKeys: []
+  dialogueSetContents: []
 --- !u!114 &7619575729628806103
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22572,7 +22597,7 @@ RectTransform:
   - {fileID: 5155507066742092236}
   - {fileID: 4528282981135839341}
   m_Father: {fileID: 4528282981372622710}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -23174,11 +23199,11 @@ MonoBehaviour:
   border: {fileID: 4318817759863960730}
   fill: {fileID: 9118716743215072180}
   icon: {fileID: 5703063722263499198}
-  borderNormal: {r: 1, g: 0.67058825, b: 0.9803922, a: 1}
-  borderHighlight: {r: 1, g: 0.67058825, b: 0.9803922, a: 1}
+  borderNormal: {r: 0.7882353, g: 1, b: 0.5764706, a: 1}
+  borderHighlight: {r: 0.7882353, g: 1, b: 0.5764706, a: 1}
   borderUninteractable: {r: 0.33, g: 0.33, b: 0.33, a: 1}
   fillNormal: {r: 0.05340945, g: 0.2733307, b: 0.39900002, a: 1}
-  fillHighlight: {r: 0.8773585, g: 0.6000801, b: 0.8608539, a: 1}
+  fillHighlight: {r: 0.6901961, g: 0.9254902, b: 0.4509804, a: 1}
   fillUninteractable: {r: 0.21698111, g: 0.21698111, b: 0.21698111, a: 1}
   iconInteractable: {r: 1, g: 1, b: 1, a: 1}
   iconUninteractable: {r: 0.5, g: 0.5, b: 0.5, a: 0.5019608}
@@ -23285,7 +23310,7 @@ RectTransform:
   m_Children:
   - {fileID: 1076779473778779520}
   m_Father: {fileID: 4528282981372622710}
-  m_RootOrder: 16
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -25307,6 +25332,496 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1001 &553355385358593180
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 4528282981372622710}
+    m_Modifications:
+    - target: {fileID: 1039795079246337228, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: fusionReactor
+      value: 
+      objectReference: {fileID: 6423223947723147842}
+    - target: {fileID: 1039795079246337228, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: iceDrill
+      value: 
+      objectReference: {fileID: 6947550878621997391}
+    - target: {fileID: 1039795079246337228, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: harvester
+      value: 
+      objectReference: {fileID: 2989815359949143417}
+    - target: {fileID: 1039795079246337228, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: gasPump
+      value: 
+      objectReference: {fileID: 4814866292403290904}
+    - target: {fileID: 1039795079246337228, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: fusionReactorHighlight
+      value: 
+      objectReference: {fileID: 902794780700172386}
+    - target: {fileID: 1039795079246337228, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: iceDrillHighlight
+      value: 
+      objectReference: {fileID: 7465663089143963346}
+    - target: {fileID: 1039795079246337228, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: gasPumpHighlight
+      value: 
+      objectReference: {fileID: 8745396083263152801}
+    - target: {fileID: 1629162378140240872, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: clock
+      value: 
+      objectReference: {fileID: 6533320398353285700}
+    - target: {fileID: 1629162378140240872, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: fusionReactor
+      value: 
+      objectReference: {fileID: 6423223947723147842}
+    - target: {fileID: 1629162378140240872, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: iceDrill
+      value: 
+      objectReference: {fileID: 6947550878621997391}
+    - target: {fileID: 1629162378140240872, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: harvester
+      value: 
+      objectReference: {fileID: 2989815359949143417}
+    - target: {fileID: 1629162378140240872, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: gasPump
+      value: 
+      objectReference: {fileID: 4814866292403290904}
+    - target: {fileID: 1629162378140240872, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: boiler
+      value: 
+      objectReference: {fileID: 6550139056606552756}
+    - target: {fileID: 1629162378140240872, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: greenhouse
+      value: 
+      objectReference: {fileID: 6568876604321424781}
+    - target: {fileID: 1629162378140240872, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: incinerator
+      value: 
+      objectReference: {fileID: 8126381566869788200}
+    - target: {fileID: 1629162378140240872, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: progressBar
+      value: 
+      objectReference: {fileID: 2312497827490316173}
+    - target: {fileID: 1629162378140240872, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: humidityBar
+      value: 
+      objectReference: {fileID: 2052130362167888498}
+    - target: {fileID: 1629162378140240872, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: biodiversityBar
+      value: 
+      objectReference: {fileID: 7550513530897948168}
+    - target: {fileID: 1629162378140240872, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: atmosphereBar
+      value: 
+      objectReference: {fileID: 4263071006822036109}
+    - target: {fileID: 1629162378140240872, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: fusionReactorHighlight
+      value: 
+      objectReference: {fileID: 902794780700172386}
+    - target: {fileID: 1629162378140240872, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: iceDrillHighlight
+      value: 
+      objectReference: {fileID: 7465663089143963346}
+    - target: {fileID: 1629162378140240872, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: boilerHighlight
+      value: 
+      objectReference: {fileID: 3443732342953523236}
+    - target: {fileID: 1629162378140240872, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: greenhouseHighlight
+      value: 
+      objectReference: {fileID: 8639191327922969982}
+    - target: {fileID: 1629162378140240872, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: incineratorHighlight
+      value: 
+      objectReference: {fileID: 7218184346397955369}
+    - target: {fileID: 1629162378140240872, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: humidityBarHighlight
+      value: 
+      objectReference: {fileID: 7020516388719194837}
+    - target: {fileID: 1629162378140240872, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: biodiversityBarHighlight
+      value: 
+      objectReference: {fileID: 2866124041759145551}
+    - target: {fileID: 1629162378140240872, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: atmosphereBarHighlight
+      value: 
+      objectReference: {fileID: 1128957933815549088}
+    - target: {fileID: 1629162378140240872, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: ratioBarsHighlight
+      value: 
+      objectReference: {fileID: 7407222742120731520}
+    - target: {fileID: 2959021111598887537, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: m_Name
+      value: Stage Manager
+      objectReference: {fileID: 0}
+    - target: {fileID: 3011167280432518999, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: fusionReactor
+      value: 
+      objectReference: {fileID: 6423223947723147842}
+    - target: {fileID: 3011167280432518999, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: iceDrill
+      value: 
+      objectReference: {fileID: 6947550878621997391}
+    - target: {fileID: 3011167280432518999, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: boiler
+      value: 
+      objectReference: {fileID: 6550139056606552756}
+    - target: {fileID: 3011167280432518999, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: greenhouse
+      value: 
+      objectReference: {fileID: 6568876604321424781}
+    - target: {fileID: 3011167280432518999, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: incinerator
+      value: 
+      objectReference: {fileID: 8126381566869788200}
+    - target: {fileID: 3011167280432518999, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: shotgunTurret
+      value: 
+      objectReference: {fileID: 5976878004857127873}
+    - target: {fileID: 3011167280432518999, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: machineGunTurret
+      value: 
+      objectReference: {fileID: 4249380639338491681}
+    - target: {fileID: 3011167280432518999, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: shotgunTurretHighlight
+      value: 
+      objectReference: {fileID: 5394457118809542479}
+    - target: {fileID: 3011167280432518999, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: machineGunTurretHighlight
+      value: 
+      objectReference: {fileID: 2532479517155010452}
+    - target: {fileID: 3011167280432518999, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: harvester
+      value: 
+      objectReference: {fileID: 2989815359949143417}
+    - target: {fileID: 3011167280432518999, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: gasPump
+      value: 
+      objectReference: {fileID: 4814866292403290904}
+    - target: {fileID: 4952588298347314997, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: uiBorder
+      value: 
+      objectReference: {fileID: 46043822539940048}
+    - target: {fileID: 4952588298347314997, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: console
+      value: 
+      objectReference: {fileID: 3808045080015975989}
+    - target: {fileID: 4952588298347314997, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: buildingBar
+      value: 
+      objectReference: {fileID: 840230826730628676}
+    - target: {fileID: 4952588298347314997, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: resourcesBar
+      value: 
+      objectReference: {fileID: 8528894375712487100}
+    - target: {fileID: 4952588298347314997, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: miniMapBorder
+      value: 
+      objectReference: {fileID: 3885950429090063900}
+    - target: {fileID: 4952588298347314997, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: miniMap
+      value: 
+      objectReference: {fileID: 7191830422312699477}
+    - target: {fileID: 4952588298347314997, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: clock
+      value: 
+      objectReference: {fileID: 6533320398353285700}
+    - target: {fileID: 4952588298347314997, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: fusionReactor
+      value: 
+      objectReference: {fileID: 6423223947723147842}
+    - target: {fileID: 4952588298347314997, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: iceDrill
+      value: 
+      objectReference: {fileID: 6947550878621997391}
+    - target: {fileID: 4952588298347314997, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: harvester
+      value: 
+      objectReference: {fileID: 2989815359949143417}
+    - target: {fileID: 4952588298347314997, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: gasPump
+      value: 
+      objectReference: {fileID: 4814866292403290904}
+    - target: {fileID: 4952588298347314997, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: boiler
+      value: 
+      objectReference: {fileID: 6550139056606552756}
+    - target: {fileID: 4952588298347314997, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: greenhouse
+      value: 
+      objectReference: {fileID: 6568876604321424781}
+    - target: {fileID: 4952588298347314997, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: incinerator
+      value: 
+      objectReference: {fileID: 8126381566869788200}
+    - target: {fileID: 4952588298347314997, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: shotgunTurret
+      value: 
+      objectReference: {fileID: 5976878004857127873}
+    - target: {fileID: 4952588298347314997, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: machineGunTurret
+      value: 
+      objectReference: {fileID: 4249380639338491681}
+    - target: {fileID: 4952588298347314997, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: progressBar
+      value: 
+      objectReference: {fileID: 2312497827490316173}
+    - target: {fileID: 4952588298347314997, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: humidityBar
+      value: 
+      objectReference: {fileID: 2052130362167888498}
+    - target: {fileID: 4952588298347314997, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: biodiversityBar
+      value: 
+      objectReference: {fileID: 7550513530897948168}
+    - target: {fileID: 4952588298347314997, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: atmosphereBar
+      value: 
+      objectReference: {fileID: 4263071006822036109}
+    - target: {fileID: 6305260852210968538, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: uiManager
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6305260852210968538, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: goMessage
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6849662262458465755, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: uiManager
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6849662262458465755, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: goMessage
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7009541622833408660, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: skipTutorial
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7691648321688888052, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: uiBorderUIEC
+      value: 
+      objectReference: {fileID: 46043822539940048}
+    - target: {fileID: 7691648321688888052, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: consoleUIEC
+      value: 
+      objectReference: {fileID: 3808045080015975989}
+    - target: {fileID: 7691648321688888052, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: buildingAndResourcesBarUIEC
+      value: 
+      objectReference: {fileID: 840230826730628676}
+    - target: {fileID: 7691648321688888052, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: resourceBar
+      value: 
+      objectReference: {fileID: 8528894375712487100}
+    - target: {fileID: 7691648321688888052, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: miniMapBorderUIEC
+      value: 
+      objectReference: {fileID: 3885950429090063900}
+    - target: {fileID: 7691648321688888052, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: miniMapUIEC
+      value: 
+      objectReference: {fileID: 7191830422312699477}
+    - target: {fileID: 7691648321688888052, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: mineralsHighlightUIEC
+      value: 
+      objectReference: {fileID: 138956040}
+    - target: {fileID: 7691648321688888052, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: fusionReactor
+      value: 
+      objectReference: {fileID: 6423223947723147842}
+    - target: {fileID: 7691648321688888052, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: iceDrill
+      value: 
+      objectReference: {fileID: 6947550878621997391}
+    - target: {fileID: 7691648321688888052, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: harvester
+      value: 
+      objectReference: {fileID: 2989815359949143417}
+    - target: {fileID: 7691648321688888052, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: gasPump
+      value: 
+      objectReference: {fileID: 4814866292403290904}
+    - target: {fileID: 7691648321688888052, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: boiler
+      value: 
+      objectReference: {fileID: 6550139056606552756}
+    - target: {fileID: 7691648321688888052, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: greenhouse
+      value: 
+      objectReference: {fileID: 6568876604321424781}
+    - target: {fileID: 7691648321688888052, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: incinerator
+      value: 
+      objectReference: {fileID: 8126381566869788200}
+    - target: {fileID: 7691648321688888052, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: shotgunTurret
+      value: 
+      objectReference: {fileID: 5976878004857127873}
+    - target: {fileID: 7691648321688888052, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: machineGunTurret
+      value: 
+      objectReference: {fileID: 4249380639338491681}
+    - target: {fileID: 8636725444475562949, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -789.97046
+      objectReference: {fileID: 0}
+    - target: {fileID: 8636725444475562949, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -517.4168
+      objectReference: {fileID: 0}
+    - target: {fileID: 8636725444475562949, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 169.8596
+      objectReference: {fileID: 0}
+    - target: {fileID: 8636725444475562949, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8636725444475562949, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8636725444475562949, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8636725444475562949, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8636725444475562949, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8636725444475562949, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8636725444475562949, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8636725444475562949, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8636725444475562949, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.6985961
+      objectReference: {fileID: 0}
+    - target: {fileID: 8636725444475562949, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.6985961
+      objectReference: {fileID: 0}
+    - target: {fileID: 8636725444475562949, guid: 7ec13c4878030604f886d212027c72e6,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.6985961
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 7ec13c4878030604f886d212027c72e6, type: 3}
+--- !u!4 &8103728088213489497 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8636725444475562949, guid: 7ec13c4878030604f886d212027c72e6,
+    type: 3}
+  m_PrefabInstance: {fileID: 553355385358593180}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &953157807707012797
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -25352,7 +25867,7 @@ PrefabInstance:
     - target: {fileID: 2992411899632503212, guid: adf3464973acc184c946d90c2b49c1b1,
         type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2992411899632503212, guid: adf3464973acc184c946d90c2b49c1b1,
         type: 3}
@@ -25451,12 +25966,48 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: adf3464973acc184c946d90c2b49c1b1, type: 3}
+--- !u!114 &9200324286807422904 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8256318335881971973, guid: adf3464973acc184c946d90c2b49c1b1,
+    type: 3}
+  m_PrefabInstance: {fileID: 953157807707012797}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6533320398353285700 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6309912171680464121, guid: adf3464973acc184c946d90c2b49c1b1,
+    type: 3}
+  m_PrefabInstance: {fileID: 953157807707012797}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97335b3d8af8d9141a331358af6c3300, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &2647383470585378577 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2992411899632503212, guid: adf3464973acc184c946d90c2b49c1b1,
     type: 3}
   m_PrefabInstance: {fileID: 953157807707012797}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &3885950429090063900 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4095989408005920929, guid: adf3464973acc184c946d90c2b49c1b1,
+    type: 3}
+  m_PrefabInstance: {fileID: 953157807707012797}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97335b3d8af8d9141a331358af6c3300, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &6824322231021532679 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6020915848218331322, guid: adf3464973acc184c946d90c2b49c1b1,
@@ -25485,17 +26036,5 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &9200324286807422904 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8256318335881971973, guid: adf3464973acc184c946d90c2b49c1b1,
-    type: 3}
-  m_PrefabInstance: {fileID: 953157807707012797}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
