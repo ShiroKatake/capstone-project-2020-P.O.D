@@ -108,18 +108,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4635870159163347478}
     m_Modifications:
-    - target: {fileID: 1715956235, guid: c59556a7ef07f27488ad22ca85e6db1c, type: 3}
-      propertyPath: povCamera
-      value: 
-      objectReference: {fileID: 4635870161075411414}
-    - target: {fileID: 1715956235, guid: c59556a7ef07f27488ad22ca85e6db1c, type: 3}
-      propertyPath: birdseyeCamera
-      value: 
-      objectReference: {fileID: 9119373101858140772}
-    - target: {fileID: 1715956235, guid: c59556a7ef07f27488ad22ca85e6db1c, type: 3}
-      propertyPath: cameraTarget
-      value: 
-      objectReference: {fileID: 4635870159605178319}
     - target: {fileID: 403112268726757337, guid: c59556a7ef07f27488ad22ca85e6db1c,
         type: 3}
       propertyPath: m_Name
@@ -214,7 +202,7 @@ PrefabInstance:
         type: 3}
       propertyPath: audioListener
       value: 
-      objectReference: {fileID: 4635870159443615667}
+      objectReference: {fileID: 4529335742280760076}
     - target: {fileID: 5404796149539190811, guid: c59556a7ef07f27488ad22ca85e6db1c,
         type: 3}
       propertyPath: camera
@@ -235,8 +223,7 @@ PrefabInstance:
       propertyPath: cam
       value: 
       objectReference: {fileID: 4635870161075411411}
-    m_RemovedComponents:
-    - {fileID: 1715956235, guid: c59556a7ef07f27488ad22ca85e6db1c, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c59556a7ef07f27488ad22ca85e6db1c, type: 3}
 --- !u!4 &5029904101723603987 stripped
 Transform:
@@ -319,12 +306,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 9119373102510744767}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &4635870161075411414 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4529335742813191529, guid: 5778567ec991d6b43be9e63c26d48713,
-    type: 3}
-  m_PrefabInstance: {fileID: 9119373102510744767}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4635870161075411411 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4529335742813191532, guid: 5778567ec991d6b43be9e63c26d48713,
@@ -337,9 +318,9 @@ Camera:
     type: 3}
   m_PrefabInstance: {fileID: 9119373102510744767}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &9119373101858140772 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 736499419, guid: 5778567ec991d6b43be9e63c26d48713,
+--- !u!4 &4529335742280760076 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4635870159443615667, guid: 5778567ec991d6b43be9e63c26d48713,
     type: 3}
   m_PrefabInstance: {fileID: 9119373102510744767}
   m_PrefabAsset: {fileID: 0}

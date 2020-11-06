@@ -36,6 +36,16 @@ public class PODShootingController : PrivateInstanceSerializableSingleton<PODSho
     private bool wantToShoot;
     private float barrelHeat;
     private bool overheated;
+    private bool canShoot = true;
+
+    //Public Properties------------------------------------------------------------------------------------------------------------------------------
+
+    //Basic Public Properties----------------------------------------------------------------------
+
+    /// <summary>
+    /// Is the game in a stage where POD is allowed to shoot?
+    /// </summary>
+    public bool CanShoot { get => canShoot; set => canShoot = value; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -113,7 +123,7 @@ public class PODShootingController : PrivateInstanceSerializableSingleton<PODSho
     /// </summary>
     private void CheckShooting()
     {
-        if (wantToShoot && CanShoot()) //No-shooting conditions checked for in GetInput() when determining the value of shooting.
+        if (wantToShoot && ReadyToShoot()) //No-shooting conditions checked for in GetInput() when determining the value of shooting.
         {
             //Debug.Log($"{this}.CheckShooting(), can and wants to shoot, calling Shoot()");
             Shoot();
@@ -125,12 +135,12 @@ public class PODShootingController : PrivateInstanceSerializableSingleton<PODSho
     }
 
     /// <summary>
-    /// Checks if the player can shoot.
+    /// Checks if the player is ready to shoot.
     /// </summary>
     /// <returns>Whether or not the player can shoot.</returns>
-    private bool CanShoot()
+    private bool ReadyToShoot()
     {
-        return !overheated && !POD.Instance.HealthController.IsHealing && Time.time - timeOfLastShot > shotCooldown;
+        return canShoot && !overheated && !POD.Instance.HealthController.IsHealing && Time.time - timeOfLastShot > shotCooldown;
     }
 
     /// <summary>

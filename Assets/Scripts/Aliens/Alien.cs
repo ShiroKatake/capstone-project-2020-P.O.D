@@ -409,13 +409,13 @@ public class Alien : MonoBehaviour, IMessenger
 		if (onAttack != null)
 		{
 			onAttack.Invoke();
-            DamagePointer.Jump_Static(transform);
+            //DamagePointer.Jump_Static(transform);
         }
 		else
 		{
 			Debug.Log("No script for Alien FX attached, doing damage without visuals . . .");
 			UnsheathClaw();
-            DamagePointer.Jump_Static(transform);
+            //DamagePointer.Jump_Static(transform);
         }
 	}
 
@@ -482,7 +482,8 @@ public class Alien : MonoBehaviour, IMessenger
             navMeshAgent.enabled = false;
 
 			onDie.Invoke();
-		}
+          
+        }
 		else
 		{
 			Debug.Log("No script for Alien FX attached, destroying alien without visuals . . .");
@@ -526,6 +527,7 @@ public class Alien : MonoBehaviour, IMessenger
 	public void DestroyAlien()
 	{
 		AlienFactory.Instance.Destroy(this, type);
+
 	}
 
 	/// <summary>

@@ -12,24 +12,41 @@ public class StageControls : PublicInstanceSerializableSingleton<StageControls>,
 
     //Serialized Fields----------------------------------------------------------------------------
 
+    [Header("General UI Elements")]
     [SerializeField] private UIElementStatusManager uiBorderUIEC;
     [SerializeField] private UIElementStatusManager consoleUIEC;
     [SerializeField] private UIElementStatusManager buildingAndResourcesBarUIEC;
     [SerializeField] private UIElementStatusManager resourceBar;
     [SerializeField] private UIElementStatusManager miniMapBorderUIEC;
     [SerializeField] private UIElementStatusManager miniMapUIEC;
+
+    [Header("Building Buttons")]
+    [SerializeField] private UIElementStatusManager fusionReactor;
+    [SerializeField] private UIElementStatusManager iceDrill;
+    [SerializeField] private UIElementStatusManager harvester;
+    [SerializeField] private UIElementStatusManager gasPump;
+    [SerializeField] private UIElementStatusManager boiler;
+    [SerializeField] private UIElementStatusManager greenhouse;
+    [SerializeField] private UIElementStatusManager incinerator;
+    [SerializeField] private UIElementStatusManager shotgunTurret;
+    [SerializeField] private UIElementStatusManager machineGunTurret;
+
+    [Header("Highlights")]
     [SerializeField] private UIElementStatusManager mineralsHighlightUIEC;
+
+    [Header("Building Prefabs")]
+    [SerializeField] private Building fusionReactorPrefab;
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
-    DialogueBox console;
-    DialogueBox game;
-    DialogueBox w;
-    DialogueBox a;
-    DialogueBox s;
-    DialogueBox d;
-    DialogueBox cat;
-    Player playerInputManager;
+    private DialogueBox console;
+    private DialogueBox game;
+    private DialogueBox w;
+    private DialogueBox a;
+    private DialogueBox s;
+    private DialogueBox d;
+    private DialogueBox cat;
+    private Player playerInputManager;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -63,7 +80,7 @@ public class StageControls : PublicInstanceSerializableSingleton<StageControls>,
         playerInputManager = POD.Instance.PlayerInputManager;
     }
 
-    //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
+    //Recurring Methods------------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
     /// The main behaviour of StageControls.
@@ -78,7 +95,7 @@ public class StageControls : PublicInstanceSerializableSingleton<StageControls>,
         yield return StartCoroutine(EnableUI());
         yield return StartCoroutine(MovementControls());
         yield return StartCoroutine(MiningControls());
-        StageManager.Instance.SetStage(EStage.Terraforming);
+        StageManager.Instance.SetStage(EStage.ResourceBuildings);
     }
 
     /// <summary>
@@ -86,11 +103,35 @@ public class StageControls : PublicInstanceSerializableSingleton<StageControls>,
     /// </summary>
     private IEnumerator Setup()
     {
-        POD.Instance.GetComponent<Health>().CurrentHealth = POD.Instance.GetComponent<Health>().MaxHealth * 0.25f;  //Set the player's health ready for the healing section of the tutorial
-
+        MineralCollectionController.Instance.CanMine = false;
+        BuildingDemolitionController.Instance.CanDemolish = false;
+        POD.Instance.HealthController.CanHeal = false;
+        POD.Instance.ShootingController.CanShoot = false;
+        AlienManager.Instance.CanSpawnAliens = false;
+        StoreDisperseUI.Instance.CanShowMenu = false;
         ClockManager.Instance.Paused = true;
         ClockManager.Instance.SetTime(ClockManager.Instance.HalfCycleDuration * 0.2f);
+
         yield return new WaitForSeconds(3);
+
+        fusionReactor.ButtonInteract.InInteractableGameStage = false;
+        fusionReactor.Interactable = false;
+        iceDrill.ButtonInteract.InInteractableGameStage = false;
+        iceDrill.Interactable = false;
+        harvester.ButtonInteract.InInteractableGameStage = false;
+        harvester.Interactable = false;
+        gasPump.ButtonInteract.InInteractableGameStage = false;
+        gasPump.Interactable = false;
+        boiler.ButtonInteract.InInteractableGameStage = false;
+        boiler.Interactable = false;
+        greenhouse.ButtonInteract.InInteractableGameStage = false;
+        greenhouse.Interactable = false;
+        incinerator.ButtonInteract.InInteractableGameStage = false;
+        incinerator.Interactable = false;
+        shotgunTurret.ButtonInteract.InInteractableGameStage = false;
+        shotgunTurret.Interactable = false;
+        machineGunTurret.ButtonInteract.InInteractableGameStage = false;
+        machineGunTurret.Interactable = false;
     }
 
     /// <summary>
@@ -102,10 +143,11 @@ public class StageControls : PublicInstanceSerializableSingleton<StageControls>,
         consoleUIEC.Visible = true;
         console.SubmitDialogue("blank", 0, false, false);
 
-        while (!uiBorderUIEC.FinishedFlickeringIn || !consoleUIEC.FinishedFlickeringIn)
+        do
         {
             yield return null;
         }
+        while (!uiBorderUIEC.FinishedFlickeringIn || !consoleUIEC.FinishedFlickeringIn);
 
         console.SubmitDialogue("ai online", 0, false, false);
     }
@@ -116,21 +158,29 @@ public class StageControls : PublicInstanceSerializableSingleton<StageControls>,
     private IEnumerator MovementControls()
     {
         console.SubmitDialogue("calibrate movement", 0, false, false);
+
+        do
+        {
+            yield return null;
+        }
+        while (console.LerpingDialogue);
+
         game.SubmitDialogue("wasd", 1, true, false);
         w.SubmitDialogue("w", 1, false, true);
         a.SubmitDialogue("a", 1, false, true);
         s.SubmitDialogue("s", 1, false, true);
         d.SubmitDialogue("d", 1, false, true);
 
-        while (!w.Clickable || !a.Clickable || !s.Clickable || !d.Clickable || !game.Clickable)
+        do
         {
             yield return null;
         }
+        while (!w.Clickable || !a.Clickable || !s.Clickable || !d.Clickable || !game.Clickable);
 
         float moveVertical;
         float moveHorizontal;
 
-        while (w.Activated || a.Activated || s.Activated || d.Activated)
+        do
         {
             yield return null;
 
@@ -139,42 +189,26 @@ public class StageControls : PublicInstanceSerializableSingleton<StageControls>,
 
             if (moveVertical != 0)
             {
-                if (moveVertical > 0 && w.Activated)
-                {
-                    w.SubmitDeactivation();
-                }
-
-                if (moveVertical < 0 && s.Activated)
-                {
-                    s.SubmitDeactivation();
-                }
+                if (moveVertical > 0 && w.Activated) w.SubmitDeactivation();
+                if (moveVertical < 0 && s.Activated) s.SubmitDeactivation();
             }
 
             if (moveHorizontal != 0)
             {
-                if (moveHorizontal < 0 && a.Activated)
-                {
-                    a.SubmitDeactivation();
-                }
-
-                if (moveHorizontal > 0 && d.Activated)
-                {
-                    d.SubmitDeactivation();
-                }
+                if (moveHorizontal < 0 && a.Activated) a.SubmitDeactivation();
+                if (moveHorizontal > 0 && d.Activated) d.SubmitDeactivation();
             }
         }
+        while (w.Activated || a.Activated || s.Activated || d.Activated);
 
-        if (game.Activated)
-        {
-            game.SubmitDeactivation();
-        }
-
+        if (game.Activated)  game.SubmitDeactivation();
         console.SubmitDialogue("systems online", 0, false, false);
 
-        while (console.LerpingDialogue)
+        do
         {
             yield return null;
         }
+        while (console.LerpingDialogue);
 
         yield return new WaitForSeconds(2);
     }
@@ -187,57 +221,69 @@ public class StageControls : PublicInstanceSerializableSingleton<StageControls>,
         console.ClearDialogue();
         console.SubmitDialogue("planet livability", 0, false, false);
 
-        while (console.LerpingDialogue)
-        {
-            yield return null;
-        }
-
         yield return new WaitForSeconds(0.5f);
 
         console.SubmitDialogue("launch cat", 0, false, false);
+
+        do
+        {
+            yield return null;
+        }
+        while (console.LerpingDialogue) ;
+
         cat.SubmitDialogue("need minerals", 2, true, false);
 
-        while (!cat.DialogueRead)
+        do
         {
             yield return null;
         }
+        while (!cat.DialogueRead);
+
+        console.SubmitDialogue("scan minerals", 0, false, false);
+        buildingAndResourcesBarUIEC.Visible = true;
+        resourceBar.Visible = true;
+        miniMapBorderUIEC.Visible = true;
+
+        do
+        {
+            yield return null;
+        }
+        while (!miniMapBorderUIEC.FinishedFlickeringIn);
+
+        console.SubmitDialogue("minerals detected", 0, false, false);
+        ResourceTextManager.Instance.FadeIn();
+        miniMapUIEC.Visible = true;
+
+        do
+        {
+            yield return null;
+        }
+        while (!miniMapUIEC.FinishedFlickeringIn);
 
         console.ClearDialogue();
-        console.SubmitDialogue("detect minerals", 0, false, false);
-        buildingAndResourcesBarUIEC.Visible = true;
-		resourceBar.Visible = true;
-		miniMapBorderUIEC.Visible = true;
-
-        while (!miniMapBorderUIEC.FinishedFlickeringIn)
-        {
-            yield return null;
-        }
-
         console.SubmitDialogue("task gather minerals", 0, false, false);
         cat.SubmitDialogue("gather minerals", 0, true, false);
         game.SubmitDialogue("lmb", 1, true, false);
-        ResourceTextManager.Instance.FadeIn();
-        miniMapUIEC.Visible = true;
+        
         float startingMinerals = ResourceManager.Instance.Ore;
+        MineralCollectionController.Instance.CanMine = true;
 
-        while (ResourceManager.Instance.Ore < startingMinerals + 4)
+        do
         {
             yield return null;
         }
+        while (ResourceManager.Instance.Ore < fusionReactorPrefab.OreCost);
 
-        if (game.Activated)
-        {
-            game.SubmitDeactivation();
-        }
-
+        MineralCollectionController.Instance.CanMine = false;
+        if (game.Activated) game.SubmitDeactivation();
         console.ClearDialogue();
         cat.SubmitDialogue("collected minerals", 0, false, false);
         mineralsHighlightUIEC.Visible = true;
-
-        //Start terraforming stage
-        while (!cat.DialogueRead || !cat.AcceptingSubmissions)
+        
+        do
         {
             yield return null;
         }
+        while (!cat.DialogueRead || !cat.AcceptingSubmissions);
     }
 }

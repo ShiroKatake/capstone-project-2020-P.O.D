@@ -28,15 +28,31 @@ public class ButtonInteract : MonoBehaviour
     [SerializeField] private Color iconUninteractable;
 
     private bool interactable;
+    private bool inInteractableGameStage;
     private bool highlighted;
 
 	Coroutine currentFillCoroutine;
 	Coroutine currentBorderCoroutine;
     Coroutine currentIconCoroutine;
 
-	private void Awake()
+
+    public bool InInteractableGameStage
+    {
+        get
+        {
+            return inInteractableGameStage;
+        }
+
+        set
+        {
+            inInteractableGameStage = value;
+        }
+    }
+
+    private void Awake()
     {
         interactable = true;
+        inInteractableGameStage = true;
         highlighted = false;
 
 		InitializeColors(border, borderNormal);
@@ -134,6 +150,8 @@ public class ButtonInteract : MonoBehaviour
 
     private void SetInteractable()
     {
+        //Debug.Log($"{this}.ButtonInteract.SetInteractable()");
+
         if (icon != null)
         {
             StartCoroutineFadeToColour(icon, iconInteractable);
@@ -147,12 +165,12 @@ public class ButtonInteract : MonoBehaviour
         {
             SetNormal();
         }
-
-		//Debug.Log("Setting to interactable");
     }
 
     private void SetUninteractable()
     {
+        //Debug.Log($"{this}.ButtonInteract.SetUnInteractable()");
+
         StartCoroutineFadeToColour(border, borderUninteractable);
         StartCoroutineFadeToColour(fill, fillUninteractable);
 
@@ -160,13 +178,11 @@ public class ButtonInteract : MonoBehaviour
         {
             StartCoroutineFadeToColour(icon, iconUninteractable);
         }
-
-		//Debug.Log("Setting to UNinteractable");
 	}
 
     public void OnInteractableChanged(bool interactable)
     {
-        this.interactable = interactable;
+        this.interactable = interactable && inInteractableGameStage;
 
         if (interactable)
         {

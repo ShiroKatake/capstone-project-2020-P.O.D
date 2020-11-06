@@ -410,12 +410,12 @@ MonoBehaviour:
   id: 0
   buildingType: 9
   consoleName: <Shotgun Turret>
-  oreCost: 4
-  powerConsumption: 6
+  oreCost: 2
+  powerConsumption: 4
   waterConsumption: 0
   plantsConsumption: 0
   gasConsumption: 0
-  buildTime: 5
+  buildTime: 3
   buildInPits: 1
   minBuildHeight: 1.5
   VFX: []
@@ -482,7 +482,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7d1fe85e34b94943ad23931779e30d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 40
+  maxHealth: 20
   currentHealth: 0
 --- !u!114 &6505921446254889876
 MonoBehaviour:
@@ -533,9 +533,9 @@ MonoBehaviour:
   projectileType: 2
   targetClosest: 1
   numProjectiles: 20
-  spreadAngle: 25
+  spreadAngle: 15
   shotForce: 7.5
-  shotCooldown: 3
+  shotCooldown: 1.5
   visibleTargets: []
   target: {fileID: 0}
 --- !u!1 &2946983348710066453

@@ -34,7 +34,6 @@ public class DialogueBox : MonoBehaviour
     [SerializeField] private Image background;
     [SerializeField] private Image border;
     [SerializeField] private TextMeshProUGUI textBox;
-    //[SerializeField] private TextMeshProUGUI debug;
 
     [Header("Tween Stats")]
     [SerializeField] private Vector2 offScreenPos;
@@ -55,6 +54,11 @@ public class DialogueBox : MonoBehaviour
     [Header("Cull Overflowing Text")]
     [SerializeField] private bool cullOverflow;
     [SerializeField] private int lines;
+
+    [Header("Testing")]
+    [SerializeField] private bool debug;
+    [SerializeField] private List<string> dialogueKeys;
+    [SerializeField] [TextArea] private List<string> dialogueSetContents;
 
     //Non-Serialized Fields------------------------------------------------------------------------
 
@@ -106,10 +110,7 @@ public class DialogueBox : MonoBehaviour
 
     //Logging dialogue
     private string logColourName;
-
-    //Test variable for players spamming LMB or Z
-    //private int lastUpdate;
-
+    
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
     //Basic Public Properties----------------------------------------------------------------------
@@ -201,8 +202,8 @@ public class DialogueBox : MonoBehaviour
         deactivating = false;
 
         //Dialogue submissions
-        currentDialogueKey = "";
-        lastDialogueKey = "";
+        currentDialogueKey = null;
+        lastDialogueKey = null;
 
         //Dialogue lerping special characters
         colourTags = new List<ColourTag>();
@@ -222,24 +223,10 @@ public class DialogueBox : MonoBehaviour
         //Dialogue logging
         logColourName = $"#{ColorUtility.ToHtmlStringRGB(logColour)}";
 
-        //Test variable for players spamming LMB or Z
-        //lastUpdate = 0;
-
         //Populating graphics
-        if (background != null)
-        {
-            graphics.Add(background);
-        }
-        
-        if (border != null)
-        {
-            graphics.Add(border);
-        }
-
-        if (textBox != null)
-        {
-            graphics.Add(textBox);
-        }
+        if (background != null) graphics.Add(background);        
+        if (border != null) graphics.Add(border);
+        if (textBox != null) graphics.Add(textBox);
     }
 
     ///// <summary>
@@ -261,12 +248,27 @@ public class DialogueBox : MonoBehaviour
         {
             foreach (string[] row in dialogueData)
             {
-                if (!dialogue.ContainsKey(row[2]))
-                {
-                    dialogue[row[2]] = new List<string>();
-                }
-
+                if (!dialogue.ContainsKey(row[2])) dialogue[row[2]] = new List<string>();
                 dialogue[row[2]].Add(row[3]);
+            }
+
+            if (debug)
+            {
+                dialogueKeys = new List<string>();
+                dialogueSetContents = new List<string>();
+
+                foreach (KeyValuePair<string, List<string>> p in dialogue)
+                {
+                    dialogueKeys.Add(p.Key);
+                    string contents = "";
+
+                    for (int i = 0; i < p.Value.Count; i++)
+                    {
+                        contents += $"{i}: {p.Value[i]}\n";
+                    }
+
+                    dialogueSetContents.Add(contents);
+                }
             }
         }
     }
@@ -300,10 +302,7 @@ public class DialogueBox : MonoBehaviour
     /// </summary>
     private void GetInput()
     {
-        if (!dialogueReadRegistered && playerInputManager.GetButtonDown("DialogueRead"))
-        {
-            RegisterDialogueRead();
-        }
+        if (!dialogueReadRegistered && playerInputManager.GetButtonDown("DialogueRead")) RegisterDialogueRead();
     }
 
     /// <summary>
@@ -324,7 +323,7 @@ public class DialogueBox : MonoBehaviour
                 if (tweenOut)
                 {
                     lastDialogueKey = currentDialogueKey;
-                    currentDialogueKey = "";
+                    currentDialogueKey = null;
                     clickable = false;
                     Deactivate();
                 }
@@ -352,7 +351,7 @@ public class DialogueBox : MonoBehaviour
         else if (deactivationSubmitted && activated && clickable && (tweenOut || fadeOut))
         {
             lastDialogueKey = currentDialogueKey;
-            currentDialogueKey = "";
+            currentDialogueKey = null;
             clickable = false;
             Deactivate();
         }
@@ -405,10 +404,7 @@ public class DialogueBox : MonoBehaviour
             }
 
             //Add if coloured
-            if (colourTags.Count > 0)
-            {
-                pendingText += $"</b></color>";
-            }
+            if (colourTags.Count > 0) pendingText += $"</b></color>";
 
             //Add all pending text
             textBox.text = dialogueStash + pendingText;
@@ -447,12 +443,7 @@ public class DialogueBox : MonoBehaviour
         {
             string result = $"</b></color>";
             colourTags.RemoveAt(colourTags.Count - 1);
-
-            if (colourTags.Count > 0)
-            {
-                result += $"<color={colourTags[colourTags.Count - 1].ColourName}><b>";
-            }
-
+            if (colourTags.Count > 0) result += $"<color={colourTags[colourTags.Count - 1].ColourName}><b>";
             return result;
         }
         //Check for opening colour tag
@@ -463,12 +454,7 @@ public class DialogueBox : MonoBehaviour
                 if (c == t.OpeningTag)
                 {
                     string result = "";
-
-                    if (colourTags.Count > 0)
-                    {
-                        result += $"</b></color>";
-                    }
-
+                    if (colourTags.Count > 0) result += $"</b></color>";
                     colourTags.Add(t);
                     result += $"<color={colourTags[colourTags.Count - 1].ColourName}><b>";
                     return result;
@@ -498,22 +484,9 @@ public class DialogueBox : MonoBehaviour
             if (info.lineCount > lines)
             {
                 dialogueStash = dialogueStash.Substring(cullChars);
-
-                if (dialogueStash.StartsWith("br>"))
-                {
-                    dialogueStash = dialogueStash.Substring(3);
-                }
-
-                if (dialogueStash.StartsWith("r>"))
-                {
-                    dialogueStash = dialogueStash.Substring(2);
-                }
-
-                if (dialogueStash.StartsWith(">"))
-                {
-                    dialogueStash = dialogueStash.Substring(1);
-                }
-
+                if (dialogueStash.StartsWith("br>")) dialogueStash = dialogueStash.Substring(3);
+                if (dialogueStash.StartsWith("r>")) dialogueStash = dialogueStash.Substring(2);
+                if (dialogueStash.StartsWith(">")) dialogueStash = dialogueStash.Substring(1);
                 textBox.text = dialogueStash + pendingText;
             }
         }
@@ -554,7 +527,7 @@ public class DialogueBox : MonoBehaviour
     /// <param name="fadeOut">Should the dialogue box fade out on completion of the dialogue set?</param>
     public void SubmitDialogue(string key, float delay, bool tweenOut, bool fadeOut)
     {
-        //Debug.Log($"{this} received dialogue submission with key {key} during update {lastUpdate}. appendDialogue: {appendDialogue}, lerpFinished: {lerpFinished}, dialogueRead: {dialogueRead}, dialogueQueue.Count: {dialogueQueue.Count}");
+        if (debug) Debug.Log($"{this} received dialogue submission with key {key}. appendDialogue: {appendDialogue}, lerpFinished: {lerpFinished}, dialogueRead: {dialogueRead}, dialogueQueue.Count: {dialogueQueue.Count}");
 
         if (!appendDialogue && ((!lerpFinished && !dialogueRead) || dialogueQueue.Count > 0))
         {
@@ -590,10 +563,10 @@ public class DialogueBox : MonoBehaviour
     /// <param name="submission">The dialogue submission to have its content displayed.</param>
     private IEnumerator Activate(DialogueSubmission submission)
     {
-        //Debug.Log($"{this}.Activate() called during update {lastUpdate} with dialogue set with key {submission.key}");
+        if (debug) Debug.Log($"{this}.Activate() called with dialogue set with key {submission.key}");
         acceptingSubmissions = true;
         dialogueIndex = 0;
-        lastDialogueKey = currentDialogueKey == "" ? lastDialogueKey : currentDialogueKey;
+        lastDialogueKey = currentDialogueKey == null ? lastDialogueKey : currentDialogueKey;
         currentDialogueKey = submission.key;
         tweenOut = submission.tweenOut;
         fadeOut = submission.fadeOut;
@@ -621,15 +594,20 @@ public class DialogueBox : MonoBehaviour
     /// <param name="submission">The dialogue submission to have its content displayed.</param>
     private IEnumerator ChangeDialogue(DialogueSubmission submission)
     {
-        //Debug.Log($"{this}.ChangeDialogue() called during update {lastUpdate} with dialogue set with key {submission.key}");
+        if (debug) Debug.Log($"{this}.ChangeDialogue() called for dialogue set with key {submission.key} (is null: {submission.key == null}). currentDialogueKey is {currentDialogueKey} (is null: {currentDialogueKey == null}), index is {dialogueIndex}");
 
         if (dialogue.ContainsKey(submission.key) && dialogue[submission.key].Count > 0)
         {
+            if (debug) Debug.Log($"{this}.ChangeDialogue(), has dialogue set with key {submission.key}. dialogue[submission.key].Count is {dialogue[submission.key].Count}.");
+
             while (dialogueIndex < dialogue[currentDialogueKey].Count)
             {
+                if (debug) Debug.Log($"{this}.ChangeDialogue(), logging dialogue for set with key {currentDialogueKey}, index is {dialogueIndex}/{dialogue[currentDialogueKey].Count}");
                 LogDialogue();
                 dialogueIndex++;
             }
+
+            if (debug) Debug.Log($"{this}.ChangeDialogue(), logged dialogue for set with key {currentDialogueKey}, changing to set with key {submission.key}");
 
             acceptingSubmissions = true;
             changing = true;
@@ -730,7 +708,6 @@ public class DialogueBox : MonoBehaviour
     /// </summary>
     public void RegisterDialogueRead()
     {
-        //Debug.Log($"{this}.RegisterDialogueRead() called during update {lastUpdate}");
         dialogueReadRegistered = true;
     }
     
@@ -741,11 +718,7 @@ public class DialogueBox : MonoBehaviour
     {
         textBox.text = "";
         dialogueStash = "";
-
-        if (appendDialogue)
-        {
-            SubmitDialogue("blank", 0, false, false);
-        }
+        if (appendDialogue) SubmitDialogue("blank", 0, false, false);
     }
 
     /// <summary>
@@ -764,7 +737,7 @@ public class DialogueBox : MonoBehaviour
         dialogueTimer = 0;
         deactivating = true;
 
-        if (lastDialogueKey != "")
+        if (lastDialogueKey != null)
         {
             while (dialogueIndex < dialogue[lastDialogueKey].Count)
             {
@@ -773,15 +746,8 @@ public class DialogueBox : MonoBehaviour
             }
         }
 
-        if (fadeOut)
-        {
-            StartCoroutine(FadeOut());
-        }
-
-        if (tweenOut)
-        {
-            TweenOut(tweenOutDuration);
-        }
+        if (fadeOut) StartCoroutine(FadeOut());
+        if (tweenOut) TweenOut(tweenOutDuration);
     }
 
     /// <summary>
@@ -813,10 +779,7 @@ public class DialogueBox : MonoBehaviour
         }
         while (!finished);
 
-        if (!tweenOut)
-        {
-            TweenOut(0);
-        }
+        if (!tweenOut) TweenOut(0);
     }
 
     /// <summary>

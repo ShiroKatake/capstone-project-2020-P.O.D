@@ -31,15 +31,26 @@ public class BuildingDemolitionController : PublicInstanceSerializableSingleton<
     private Building selectedBuilding;
     private GraphicRaycaster graphicRaycaster;
     private int clickTimeout;
+    private bool canDemolish = true;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
     //Basic Public Properties----------------------------------------------------------------------
 
     /// <summary>
+    /// Is the game in a stage where the player is allowed to demolish buildings?
+    /// </summary>
+    public bool CanDemolish { get => canDemolish; set => canDemolish = value; }
+
+    /// <summary>
     /// The building the player has clicked on to show the demolition menu for.
     /// </summary>
     public Building SelectedBuilding { get => selectedBuilding; }
+
+    /// <summary>
+    /// Is the building demolition menu currently being shown to the player?
+    /// </summary>
+    public bool ShowingDemolitionMenu { get => showingDemolitionMenu; }
 
     //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
 
@@ -172,13 +183,17 @@ public class BuildingDemolitionController : PublicInstanceSerializableSingleton<
     /// </summary>
     private void ShowDemolitionMenu(Building building)
     {
-        //Debug.Log($"BuildingDemolitionController.ShowDemolitionMenu()");
-        selectedBuilding = building;
-        showingDemolitionMenu = true;
-        Vector3 pos = building.transform.position;
-        menu.transform.position = new Vector3(pos.x, pos.y + 0.5f, pos.z - 2f);
-        enableDisableText.text = (building.DisabledByPlayer ? "Enable" : "Disable");
-        menu.SetActive(true);
+        if (canDemolish)
+        {
+            //Debug.Log($"BuildingDemolitionController.ShowDemolitionMenu()");
+            selectedBuilding = building;
+            showingDemolitionMenu = true;
+            Vector3 pos = building.transform.position;
+            menu.transform.position = new Vector3(pos.x, pos.y + 1f, pos.z - 2f);
+            menu.transform.rotation = Quaternion.Euler(45, 0, 0);
+            enableDisableText.text = (building.DisabledByPlayer ? "Enable" : "Disable");
+            menu.SetActive(true);
+        }
     }
 
     /// <summary>

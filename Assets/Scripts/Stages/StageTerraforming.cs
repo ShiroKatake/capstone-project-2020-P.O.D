@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// The stage of the game where the player is introduced to the buildings and how terraforming works.
+/// The stage of the game where the player is introduced to the terraforming buildings and how terraforming works.
 /// </summary>
 public class StageTerraforming : PublicInstanceSerializableSingleton<StageTerraforming>, IStage
 {
@@ -30,20 +30,28 @@ public class StageTerraforming : PublicInstanceSerializableSingleton<StageTerraf
     [SerializeField] private UIElementStatusManager atmosphereBar;
 
     [Header("Highlights")]
-    [SerializeField] private UIElementStatusManager fusionReactorHighlight;
-    [SerializeField] private UIElementStatusManager iceDrillHighlight;
+    //[SerializeField] private UIElementStatusManager harvesterHighlight;
     [SerializeField] private UIElementStatusManager boilerHighlight;
-    [SerializeField] private UIElementStatusManager greenhouseHighlight;
-    [SerializeField] private UIElementStatusManager incineratorHighlight;
-    [SerializeField] private UIElementStatusManager humidityBarHighlight;
-    [SerializeField] private UIElementStatusManager biodiversityBarHighlight;
-    [SerializeField] private UIElementStatusManager atmosphereBarHighlight;
+    //[SerializeField] private UIElementStatusManager greenhouseHighlight;
+    //[SerializeField] private UIElementStatusManager incineratorHighlight;
+    //[SerializeField] private UIElementStatusManager humidityBarHighlight;
+    //[SerializeField] private UIElementStatusManager biodiversityBarHighlight;
+    //[SerializeField] private UIElementStatusManager atmosphereBarHighlight;
     [SerializeField] private UIElementStatusManager ratioBarsHighlight;
+
+    [Header("Building Prefabs")]
+    [SerializeField] private Building fusionReactorPrefab;
+    [SerializeField] private Building iceDrillPrefab;
+    [SerializeField] private Building harvesterPrefab;
+    [SerializeField] private Building gasPumpPrefab;
+    [SerializeField] private Building boilerPrefab;
+    [SerializeField] private Building greenhousePrefab;
+    [SerializeField] private Building incineratorPrefab;
 
     //Non-Serialized Fields------------------------------------------------------------------------                                                    
 
-    DialogueBox console;
-    DialogueBox cat;
+    private DialogueBox console;
+    private DialogueBox cat;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
@@ -69,7 +77,7 @@ public class StageTerraforming : PublicInstanceSerializableSingleton<StageTerraf
         cat = DialogueBoxManager.Instance.GetDialogueBox("CAT");
     }
 
-    //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
+    //Recurring Methods------------------------------------------------------------------------------------------------------------------------------
 
     /// <summary>
     /// The main behaviour of the stage. 
@@ -80,170 +88,177 @@ public class StageTerraforming : PublicInstanceSerializableSingleton<StageTerraf
     /// </note>
     public IEnumerator Execution()
     {
-        yield return StartCoroutine(BuildFusionReactor());
-        yield return StartCoroutine(BuildIceDrill());
+        yield return StartCoroutine(IntroduceTerraformingBuildings());
+        yield return StartCoroutine(BuildBoiler());
         yield return StartCoroutine(TerraformingWalkthrough());
+        yield return StartCoroutine(DemolitionMenu());
         yield return StartCoroutine(StageComplete());        
         StageManager.Instance.SetStage(EStage.Combat);
     }
 
     /// <summary>
-    /// Teaches the player about the fusion reactor.
+    /// Introduces the player to the terraforming buildings.
     /// </summary>
-    private IEnumerator BuildFusionReactor()
+    private IEnumerator IntroduceTerraformingBuildings()
     {
-        cat.SubmitDialogue("enough for building", 0, false, false);
+        cat.SubmitDialogue("got resources", 0, false, false);
+        boiler.ButtonInteract.InInteractableGameStage = false;
+        boiler.Interactable = false;
+        boiler.Visible = true;
+        greenhouse.ButtonInteract.InInteractableGameStage = false;
+        greenhouse.Interactable = false;
+        greenhouse.Visible = true;
+        incinerator.ButtonInteract.InInteractableGameStage = false;
+        incinerator.Interactable = false;
+        incinerator.Visible = true;
 
-        while (!cat.DialogueRead || !cat.AcceptingSubmissions)
+        do
         {
             yield return null;
         }
+        while (!cat.DialogueRead || !cat.AcceptingSubmissions);
+    }
 
-        cat.SubmitDialogue("build buildings", 0, false, false);
-
-        while (!cat.DialogueRead || !cat.AcceptingSubmissions)
-        {
-            yield return null;
-        }
-
+    /// <summary>
+    /// Introduces the player to the boiler.
+    /// </summary>
+    private IEnumerator BuildBoiler()
+    {
         console.ClearDialogue();
-        console.SubmitDialogue("task build fusion reactor", 0, false, false);
-        cat.SubmitDialogue("build fusion reactor", 0, true, false);
-        fusionReactor.Visible = true;
-        fusionReactor.Interactable = true;
-        fusionReactorHighlight.Visible = true;
+        console.SubmitDialogue("task build boiler", 0, false, false);
+        cat.SubmitDialogue("build boiler", 0, true, false);
+        boilerHighlight.Visible = true;
 
-        while (BuildingManager.Instance.BuiltBuildingsCount(EBuilding.FusionReactor) == 0)
+        do
         {
-            bool placedFusionReactor = BuildingManager.Instance.PlacedBuildingsCount(EBuilding.FusionReactor) > 0;
-
-            //Keep fusion reactor button interactable only while it needs to be placed
-            if (placedFusionReactor)
+            //Keep gas pump button interactable only while it needs to be placed
+            if (BuildingManager.Instance.PlacedBuildingsCount(EBuilding.Boiler) > 0)
             {
-                if (fusionReactor.Interactable)
-                {
-                    fusionReactor.Interactable = false;
-                }
+                if (fusionReactor.ButtonInteract.InInteractableGameStage) fusionReactor.ButtonInteract.InInteractableGameStage = false;
+                if (fusionReactor.Interactable) fusionReactor.Interactable = false;
+                if (iceDrill.ButtonInteract.InInteractableGameStage) iceDrill.ButtonInteract.InInteractableGameStage = false;
+                if (iceDrill.Interactable) iceDrill.Interactable = false;
+                if (gasPump.ButtonInteract.InInteractableGameStage) gasPump.ButtonInteract.InInteractableGameStage = false;
+                if (gasPump.Interactable) gasPump.Interactable = false;
+                if (boiler.ButtonInteract.InInteractableGameStage) boiler.ButtonInteract.InInteractableGameStage = false;
+                if (boiler.Interactable) boiler.Interactable = false;
+                if (MineralCollectionController.Instance.CanMine) MineralCollectionController.Instance.CanMine = false;
             }
             else
             {
-                if (!fusionReactor.Interactable)
+                //Boiler must be interactable
+                if (!boiler.ButtonInteract.InInteractableGameStage)
                 {
-                    fusionReactor.Interactable = true;
+                    boiler.ButtonInteract.InInteractableGameStage = true;
+                    UIBuildingBar.Instance.UpdateButton(boilerPrefab, boiler.ButtonInteract);
                 }
+
+                UpdateResourceBuildingButtonInteractability(ResourceManager.Instance.SurplusPower, boilerPrefab.PowerConsumption, fusionReactorPrefab, fusionReactor);
+                UpdateResourceBuildingButtonInteractability(ResourceManager.Instance.SurplusWater, boilerPrefab.WaterConsumption, iceDrillPrefab, iceDrill);
+                UpdateResourceBuildingButtonInteractability(ResourceManager.Instance.SurplusGas, boilerPrefab.GasConsumption, gasPumpPrefab, gasPump);
+
+                if (MineralCollectionController.Instance.CanMine)
+                {
+                    if (ResourceManager.Instance.Ore >= boilerPrefab.OreCost 
+                        && (!fusionReactor.ButtonInteract.InInteractableGameStage || ResourceManager.Instance.Ore >= fusionReactorPrefab.OreCost)
+                        && (!iceDrill.ButtonInteract.InInteractableGameStage || ResourceManager.Instance.Ore >= iceDrillPrefab.OreCost)
+                        && (!gasPump.ButtonInteract.InInteractableGameStage || ResourceManager.Instance.Ore >= gasPumpPrefab.OreCost)
+                    )
+                    {
+                        MineralCollectionController.Instance.CanMine = false;
+                    }
+                }
+                else
+                {
+                    if (ResourceManager.Instance.Ore < boilerPrefab.OreCost 
+                        || (fusionReactor.ButtonInteract.InInteractableGameStage && ResourceManager.Instance.Ore < fusionReactorPrefab.OreCost)
+                        || (iceDrill.ButtonInteract.InInteractableGameStage && ResourceManager.Instance.Ore < iceDrillPrefab.OreCost)
+                        || (gasPump.ButtonInteract.InInteractableGameStage && ResourceManager.Instance.Ore < gasPumpPrefab.OreCost)
+                    )
+                    {
+                        MineralCollectionController.Instance.CanMine = true;
+                    }
+                } 
             }
 
             yield return null;
         }
+        while (BuildingManager.Instance.BuiltBuildingsCount(EBuilding.Boiler) == 0);
 
+        fusionReactor.ButtonInteract.InInteractableGameStage = false;
         fusionReactor.Interactable = false;
+        gasPump.ButtonInteract.InInteractableGameStage = false;
+        gasPump.Interactable = false;
+        MineralCollectionController.Instance.CanMine = false;
     }
 
     /// <summary>
-    /// Teaches the player about the ice drill.
-    /// </summary>
-    private IEnumerator BuildIceDrill()
-    {
-        console.ClearDialogue();
-        console.SubmitDialogue("task build ice drill", 0, false, false);
-        cat.SubmitDialogue("build ice drill", 0, true, false);
-        iceDrill.Visible = true;
-        iceDrill.Interactable = true;
-        iceDrillHighlight.Visible = true;
-
-        while (BuildingManager.Instance.BuiltBuildingsCount(EBuilding.IceDrill) == 0)
-        {
-            bool placedIceDrill = BuildingManager.Instance.PlacedBuildingsCount(EBuilding.IceDrill) > 0;
-
-            //Keep ice drill button interactable only while it needs to be placed
-            if (placedIceDrill)
-            {
-                if (iceDrill.Interactable)
-                {
-                    iceDrill.Interactable = false;
-                }
-            }
-            else
-            {
-                if (!iceDrill.Interactable)
-                {
-                    iceDrill.Interactable = true;
-                }
-            }
-
-            yield return null;
-        }
-
-        iceDrill.Interactable = false;
-        console.ClearDialogue();
-        cat.SubmitDialogue("got power and water", 0, false, false);
-
-        while (!cat.DialogueRead || !cat.AcceptingSubmissions)
-        {
-            yield return null;
-        }
-    }
-
-    /// <summary>
-    /// Teaches the player about terraforming.
+    /// Brings the ratio bars to the player's attention and their relationship to the progress of the terraforming of the planet.
     /// </summary>
     private IEnumerator TerraformingWalkthrough()
     {
-        cat.SubmitDialogue("boiler", 0, false, false);
-        boiler.Visible = true;
-        boilerHighlight.Visible = true;
-        humidityBar.Visible = true;
-        humidityBarHighlight.Visible = true;
-
-        while (!cat.DialogueRead || !cat.AcceptingSubmissions)
-        {
-            yield return null;
-        }
-
-        boilerHighlight.Visible = false;
-        humidityBarHighlight.Visible = false;
-        cat.SubmitDialogue("greenhouse", 0, false, false);
-        greenhouse.Visible = true;
-        greenhouseHighlight.Visible = true;
-        biodiversityBar.Visible = true;
-        biodiversityBarHighlight.Visible = true;
-
-        while (!cat.DialogueRead || !cat.AcceptingSubmissions)
-        {
-            yield return null;
-        }
-
-        greenhouseHighlight.Visible = false;
-        biodiversityBarHighlight.Visible = false;
-        cat.SubmitDialogue("incinerator", 0, false, false);
-        incinerator.Visible = true;
-        incineratorHighlight.Visible = true;
-        atmosphereBar.Visible = true;
-        atmosphereBarHighlight.Visible = true;
-
-        while (!cat.DialogueRead || !cat.AcceptingSubmissions)
-        {
-            yield return null;
-        }
-
-        incineratorHighlight.Visible = false;
-        atmosphereBarHighlight.Visible = false;
-
-        cat.SubmitDialogue("buildings important", 0, false, false);
-
-        while (!cat.DialogueRead || !cat.AcceptingSubmissions)
-        {
-            yield return null;
-        }
-
-        cat.SubmitDialogue("ratios important", 0, false, false);
+        cat.SubmitDialogue("ratio bars", 0, false, false);
         progressBar.Visible = true;
+        humidityBar.Visible = true;
+        biodiversityBar.Visible = true;
+        atmosphereBar.Visible = true;
         ratioBarsHighlight.Visible = true;
 
-        while (!cat.DialogueRead || !cat.AcceptingSubmissions)
+        do
         {
             yield return null;
         }
+        while (!cat.DialogueRead || !cat.AcceptingSubmissions);
+
+        console.ClearDialogue();
+        console.SubmitDialogue("task press p", 0, false, false);
+        cat.SubmitDialogue("press p", 0, true, false);
+
+        do
+        {
+            yield return null;
+        }
+        while (!TerraformingUI.Instance.IsEnabled);
+
+        if (!cat.DialogueRead) cat.DialogueRead = true;
+        cat.SubmitDialogue("terraforming progress", 0, true, false);
+
+        do
+        {
+            yield return null;
+        }
+        while (TerraformingUI.Instance.IsEnabled);
+
+        if (!cat.DialogueRead) cat.DialogueRead = true;
+    }
+
+    /// <summary>
+    /// Introduces the player to the demolition menu.
+    /// </summary>
+    private IEnumerator DemolitionMenu()
+    {
+        BuildingDemolitionController.Instance.CanDemolish = true;
+        console.ClearDialogue();
+        console.SubmitDialogue("task click building", 0, false, false);
+        cat.SubmitDialogue("demolition menu", 0, true, false);
+
+        do
+        {
+            yield return null;
+        }
+        while (!BuildingDemolitionController.Instance.ShowingDemolitionMenu);
+
+        if (!cat.DialogueRead) cat.DialogueRead = true;
+        cat.SubmitDialogue("enabling buildings", 0, true, false);
+
+        do
+        {
+            yield return null;
+        }
+        while (BuildingDemolitionController.Instance.ShowingDemolitionMenu);
+
+        if (!cat.DialogueRead) cat.DialogueRead = true;
+        BuildingDemolitionController.Instance.CanDemolish = false;
     }
 
     /// <summary>
@@ -255,20 +270,59 @@ public class StageTerraforming : PublicInstanceSerializableSingleton<StageTerraf
         clock.Visible = true;
         ClockManager.Instance.Paused = false;
 
-        while (!cat.DialogueRead || !cat.AcceptingSubmissions)
+        do
         {
             yield return null;
         }
+        while (!cat.DialogueRead || !cat.AcceptingSubmissions);
 
+        MineralCollectionController.Instance.CanMine = true;
+        BuildingDemolitionController.Instance.CanDemolish = true;
         console.SubmitDialogue("cat closed", 1, false, false);
-        harvester.Visible = true;
-        gasPump.Visible = true;
-        fusionReactor.Interactable = true;
-        iceDrill.Interactable = true;
-        harvester.Interactable = true;
-        gasPump.Interactable = true;
-        boiler.Interactable = true;
-        greenhouse.Interactable = true;
-        incinerator.Interactable = true;
+
+        fusionReactor.ButtonInteract.InInteractableGameStage = true;
+        iceDrill.ButtonInteract.InInteractableGameStage = true;
+        harvester.ButtonInteract.InInteractableGameStage = true;
+        gasPump.ButtonInteract.InInteractableGameStage = true;
+        boiler.ButtonInteract.InInteractableGameStage = true;
+        greenhouse.ButtonInteract.InInteractableGameStage = true;
+        incinerator.ButtonInteract.InInteractableGameStage = true;
+
+        UIBuildingBar.Instance.UpdateButton(fusionReactorPrefab, fusionReactor.ButtonInteract);
+        UIBuildingBar.Instance.UpdateButton(iceDrillPrefab, iceDrill.ButtonInteract);
+        UIBuildingBar.Instance.UpdateButton(harvesterPrefab, harvester.ButtonInteract);
+        UIBuildingBar.Instance.UpdateButton(gasPumpPrefab, gasPump.ButtonInteract);
+        UIBuildingBar.Instance.UpdateButton(boilerPrefab, boiler.ButtonInteract);
+        UIBuildingBar.Instance.UpdateButton(greenhousePrefab, greenhouse.ButtonInteract);
+        UIBuildingBar.Instance.UpdateButton(incineratorPrefab, incinerator.ButtonInteract);
+    }
+
+    //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Checks if a building that provides resources for the building the tutorial currently wants built still needs to be built or if there is enough of the resource it produces.
+    /// </summary>
+    /// <param name="resourceSurplus">The current surplus of the resource the building produces.</param>
+    /// <param name="requiredQty">The ammount that the currently required building needs in order to be built.</param>
+    /// <param name="buildingPrefab">The prefab of the resource building under consideration.</param>
+    /// <param name="buildingButton">The UI button for the resource building under consideration.</param>
+    private void UpdateResourceBuildingButtonInteractability(float resourceSurplus, float requiredQty, Building buildingPrefab, UIElementStatusManager buildingButton)
+    {
+        if (resourceSurplus < requiredQty)
+        {
+            if (!buildingButton.ButtonInteract.InInteractableGameStage)
+            {
+                buildingButton.ButtonInteract.InInteractableGameStage = true;
+                UIBuildingBar.Instance.UpdateButton(buildingPrefab, buildingButton.ButtonInteract);
+            }
+        }
+        else
+        {
+            if (buildingButton.ButtonInteract.InInteractableGameStage)
+            {
+                buildingButton.ButtonInteract.InInteractableGameStage = false;
+                buildingButton.Interactable = false;
+            }
+        }
     }
 }

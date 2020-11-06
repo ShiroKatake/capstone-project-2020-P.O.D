@@ -10,6 +10,7 @@ public enum EStage
     None,
     SkippedTutorial,
     Controls,
+    ResourceBuildings,
     Terraforming,
     Combat,
     MainGame,
