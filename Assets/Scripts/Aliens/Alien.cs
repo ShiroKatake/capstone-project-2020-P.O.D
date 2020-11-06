@@ -409,13 +409,13 @@ public class Alien : MonoBehaviour, IMessenger
 		if (onAttack != null)
 		{
 			onAttack.Invoke();
-            DamagePointer.Jump_Static(transform);
+            //DamagePointer.Jump_Static(transform);
         }
 		else
 		{
 			Debug.Log("No script for Alien FX attached, doing damage without visuals . . .");
 			UnsheathClaw();
-            DamagePointer.Jump_Static(transform);
+            //DamagePointer.Jump_Static(transform);
         }
 	}
 
