@@ -12,13 +12,26 @@ public class StageControls : PublicInstanceSerializableSingleton<StageControls>,
 
     //Serialized Fields----------------------------------------------------------------------------
 
-    [Header("UI Element Prefabs")]
+    [Header("General UI Elements")]
     [SerializeField] private UIElementStatusManager uiBorderUIEC;
     [SerializeField] private UIElementStatusManager consoleUIEC;
     [SerializeField] private UIElementStatusManager buildingAndResourcesBarUIEC;
     [SerializeField] private UIElementStatusManager resourceBar;
     [SerializeField] private UIElementStatusManager miniMapBorderUIEC;
     [SerializeField] private UIElementStatusManager miniMapUIEC;
+
+    [Header("Building Buttons")]
+    [SerializeField] private UIElementStatusManager fusionReactor;
+    [SerializeField] private UIElementStatusManager iceDrill;
+    [SerializeField] private UIElementStatusManager harvester;
+    [SerializeField] private UIElementStatusManager gasPump;
+    [SerializeField] private UIElementStatusManager boiler;
+    [SerializeField] private UIElementStatusManager greenhouse;
+    [SerializeField] private UIElementStatusManager incinerator;
+    [SerializeField] private UIElementStatusManager shotgunTurret;
+    [SerializeField] private UIElementStatusManager machineGunTurret;
+
+    [Header("Highlights")]
     [SerializeField] private UIElementStatusManager mineralsHighlightUIEC;
 
     [Header("Building Prefabs")]
@@ -98,7 +111,27 @@ public class StageControls : PublicInstanceSerializableSingleton<StageControls>,
         StoreDisperseUI.Instance.CanShowMenu = false;
         ClockManager.Instance.Paused = true;
         ClockManager.Instance.SetTime(ClockManager.Instance.HalfCycleDuration * 0.2f);
+
         yield return new WaitForSeconds(3);
+
+        fusionReactor.ButtonInteract.InInteractableGameStage = false;
+        fusionReactor.Interactable = false;
+        iceDrill.ButtonInteract.InInteractableGameStage = false;
+        iceDrill.Interactable = false;
+        harvester.ButtonInteract.InInteractableGameStage = false;
+        harvester.Interactable = false;
+        gasPump.ButtonInteract.InInteractableGameStage = false;
+        gasPump.Interactable = false;
+        boiler.ButtonInteract.InInteractableGameStage = false;
+        boiler.Interactable = false;
+        greenhouse.ButtonInteract.InInteractableGameStage = false;
+        greenhouse.Interactable = false;
+        incinerator.ButtonInteract.InInteractableGameStage = false;
+        incinerator.Interactable = false;
+        shotgunTurret.ButtonInteract.InInteractableGameStage = false;
+        shotgunTurret.Interactable = false;
+        machineGunTurret.ButtonInteract.InInteractableGameStage = false;
+        machineGunTurret.Interactable = false;
     }
 
     /// <summary>
