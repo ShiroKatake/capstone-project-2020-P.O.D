@@ -108,7 +108,10 @@ public class TerraformingOrbDemo : MonoBehaviour
 			yield return null;
 		}
 
-		//Trigger store, then pause for a bit
+		//Store points
+		RatioManager.Instance.StorePoints();
+
+		//Trigger store fx, then pause for a bit
 		targetPhase = Mathf.Round(RatioManager.Instance.PointsStored / stageSixPoints * 6);
 		if (targetPhase > 6)
 			targetPhase = 6;
@@ -154,6 +157,24 @@ public class TerraformingOrbDemo : MonoBehaviour
 			yield return null;
 		}
 
+		//Trigger store, then pause for a bit
+		targetPhase = Mathf.Round((RatioManager.Instance.PointsStored + RatioManager.Instance.PointsGained) / stageSixPoints * 6);
+		if (targetPhase > 6)
+			targetPhase = 6;
+
+		Debug.Log($"Target Phase: {targetPhase}");
+
+		while (terraformingOrbController.CurrentPhase < targetPhase)
+		{
+			if (terraformingOrbController.IsScaleLerpingFinished)
+			{
+				terraformingOrbController.CurrentPhase = terraformingOrbController.CurrentPhase + 1;
+				Debug.Log($"Target Phase: {terraformingOrbController.CurrentPhase}");
+			}
+			yield return null;
+		}
+		yield return new WaitForSecondsRealtime(1f);
+
 		//Trigger explode, then pause for a bit
 		terraformingOrbController.Explode();
 		yield return new WaitForSecondsRealtime(1f);
@@ -163,6 +184,9 @@ public class TerraformingOrbDemo : MonoBehaviour
 		{
 			yield return null;
 		}
+
+		//Contribute points to progress bar
+		RatioManager.Instance.DispersePoints();
 
 		//Reset everything
 		isExploding = false;

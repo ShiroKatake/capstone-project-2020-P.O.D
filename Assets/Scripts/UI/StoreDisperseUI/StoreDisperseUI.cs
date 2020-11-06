@@ -10,7 +10,7 @@ public class StoreDisperseUI : PublicInstanceSerializableSingleton<StoreDisperse
 	[SerializeField] ButtonInteract storeButton;
 	[SerializeField] TerraformingOrbDemo terraformingOrb;
 
-    private bool canShowMenu;
+    private bool canShowMenu = true;
 
     public bool CanShowMenu { get => canShowMenu; set => canShowMenu = value; }
 
@@ -25,14 +25,12 @@ public class StoreDisperseUI : PublicInstanceSerializableSingleton<StoreDisperse
 
 	public void Store()
 	{
-		RatioManager.Instance.StorePoints();
 		ToggleUI(false);
 		terraformingOrb.StoreOrb();
 	}
 
 	public void Disperse()
 	{
-		RatioManager.Instance.DispersePoints();
 		ToggleUI(false);
 		terraformingOrb.DisperseOrb();
 	}
