@@ -42,6 +42,7 @@ public class RatioManager : PublicInstanceSerializableSingleton<RatioManager>
 
 	private void Start()
 	{
+        Debug.Log($"RatioManager.Start()");
 		UpdateTargetRatio();
 		terraformingUI.UpdateTarget(targetRatio, currentRatio);
 		terraformingUI.UpdateCurrent(currentRatio);
@@ -122,6 +123,7 @@ public class RatioManager : PublicInstanceSerializableSingleton<RatioManager>
 	/// </summary>
 	public void UpdateTargetRatio()
 	{
+        Debug.Log($"RatioManager.UpdateTargetRatio()");
 		targetRatio[0] = Random.Range(1, maxRatioValue + 1);
 		targetRatio[1] = Random.Range(1, maxRatioValue + 1);
 		targetRatio[2] = Random.Range(1, maxRatioValue + 1);
