@@ -19,11 +19,14 @@ public class RatioManager : PublicInstanceSerializableSingleton<RatioManager>
 
 	private int[] waveStartRatio;
 
-	float currentMultiplier = 1;
-	float storedPoints = 0;
+	float currentMultiplier = 1f;
+	float storedPoints = 0f;
 	float pointsThisWave;
+	float currentPoints = 0f;
 
 	public UnityAction<bool> updateStoreDisperse;
+
+	public bool Win { get; private set; } = false;
 
 	public float WinAmount { get => winAmount; }
 	public float PointsStored { get => storedPoints; }
@@ -41,6 +44,13 @@ public class RatioManager : PublicInstanceSerializableSingleton<RatioManager>
 	{
 		UpdateTargetRatio();
 		terraformingUI.UpdateTarget(targetRatio, currentRatio);
+		terraformingUI.UpdateCurrent(currentRatio);
+	}
+
+	private void Update()
+	{
+		if (currentPoints >= winAmount)
+			Win = true;
 	}
 
 	public float ScoreRatioAlignment()
@@ -53,7 +63,7 @@ public class RatioManager : PublicInstanceSerializableSingleton<RatioManager>
 		factors[1] = (float)currentRatio[1] / (float)targetRatio[1];
 		factors[2] = (float)currentRatio[2] / (float)targetRatio[2];
 
-		//Debug.Log($"factors array: {factors[0]}, {factors[1]}, {factors[2]}");
+		Debug.Log($"factors array: {factors[0]}, {factors[1]}, {factors[2]}");
 
 		for (int i = 0; i < factors.Length; i++)
 		{
@@ -72,7 +82,7 @@ public class RatioManager : PublicInstanceSerializableSingleton<RatioManager>
 		leftoverRatio[1] = currentRatio[1] - multiplier * targetRatio[1];
 		leftoverRatio[2] = currentRatio[2] - multiplier * targetRatio[2];
 
-		//Debug.Log($"leftoverRatio array: {leftoverRatio[0]}, {leftoverRatio[1]}, {leftoverRatio[2]}");
+		Debug.Log($"leftoverRatio array: {leftoverRatio[0]}, {leftoverRatio[1]}, {leftoverRatio[2]}");
 
 		float[] ratioDiviationAccuracy = new float[3];
 		ratioDiviationAccuracy[0] = (float)leftoverRatio[0] / (float)(targetRatio[0] * leftoverTier);
@@ -85,14 +95,14 @@ public class RatioManager : PublicInstanceSerializableSingleton<RatioManager>
 				ratioDiviationAccuracy[i] = 0;
 		}
 
-		//Debug.Log($"ratioAccuracy array: {ratioDiviationAccuracy[0]}, {ratioDiviationAccuracy[1]}, {ratioDiviationAccuracy[2]}");
+		Debug.Log($"ratioAccuracy array: {ratioDiviationAccuracy[0]}, {ratioDiviationAccuracy[1]}, {ratioDiviationAccuracy[2]}");
 
 		float averageAccuracy = (ratioDiviationAccuracy[0] + ratioDiviationAccuracy[1] + ratioDiviationAccuracy[2]) / 3;
 		float maxPoints = pointsPerRatio * maxTier;
 
 		float scoredPoints = multiplier * pointsPerRatio + averageAccuracy * pointsPerRatio;
 
-		//Debug.Log(scoredPoints);
+		Debug.Log(scoredPoints);
 
 		return Mathf.Round(scoredPoints);
 	}
@@ -187,11 +197,11 @@ public class RatioManager : PublicInstanceSerializableSingleton<RatioManager>
 	/// <returns></returns>
 	public void DispersePoints()
 	{
-		float returnVal = (pointsThisWave + storedPoints) * currentMultiplier;
+		currentPoints += (pointsThisWave + storedPoints) * currentMultiplier;
 		storedPoints = 0;
 		ClearMultiplier();
 
-		progressBar.SetBarValue(returnVal);
+		progressBar.SetBarValue(currentPoints);
 		//Debug.Log("Disperse");
 	}
 

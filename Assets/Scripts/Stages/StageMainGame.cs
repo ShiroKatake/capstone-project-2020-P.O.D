@@ -32,7 +32,7 @@ public class StageMainGame: PublicInstanceSerializableSingleton<StageMainGame>, 
     {
         while (true)
         {
-            if (EnvironmentManager.Instance.Win)
+            if (RatioManager.Instance.Win)
             {
                 StageManager.Instance.SetStage(EStage.Win);
                 AudioManager.Instance.PlaySound(AudioManager.ESound.Win);

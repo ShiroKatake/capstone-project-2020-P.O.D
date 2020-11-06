@@ -139,8 +139,8 @@ public class HealField : MonoBehaviour
 	void OnDrawGizmosSelected()
 	{
 		// Draw a green sphere at the transform's position
-		player = FindObjectOfType<POD>();
+		float healingRange = FindObjectOfType<POD>().GetComponent<PODHealthController>().HealingRange;
 		Gizmos.color = Color.green;
-		Gizmos.DrawWireSphere(transform.position, player.HealthController.HealingRange);
+		Gizmos.DrawWireSphere(transform.position, healingRange);
 	}
 }
