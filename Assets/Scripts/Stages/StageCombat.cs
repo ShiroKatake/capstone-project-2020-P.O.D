@@ -260,7 +260,7 @@ public class StageCombat : PublicInstanceSerializableSingleton<StageCombat>, ISt
         {
             yield return null;
         }
-        while (!ProjectileManager.Instance.HasProjectileWithOwner(POD.Instance.transform) || !dog.AcceptingSubmissions);
+        while (!ProjectileManager.Instance.HasProjectileWithOwner(POD.Instance.transform) || !dog.AcceptingSubmissions || AlienManager.Instance.Aliens.Count > 0);
 
         yield return new WaitForSeconds(2f);
 
