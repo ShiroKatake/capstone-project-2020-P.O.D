@@ -14,6 +14,7 @@ public class StoreDisperseUITexts : MonoBehaviour
 
 	private List<RectTransform> rectsToRefresh = new List<RectTransform>();
 	private RectTransform rectTransform;
+	private bool startHappened = false;
 
 	private void Awake()
 	{
@@ -28,13 +29,21 @@ public class StoreDisperseUITexts : MonoBehaviour
 
 	private void OnEnable()
 	{
-		header.text = $"Wave {AlienManager.Instance.CurrentWave} complete!";
-		pointsStored.text = $"Points stored: {RatioManager.Instance.PointsStored}";
-		pointsGained.text = $"Points gained: <color=#75FF00>{RatioManager.Instance.PointsGained}</color>";
-		disperseBonus.text = $"Disperse bonus: <color=#FFB500>+{RatioManager.Instance.DisperseBonus}%</color>";
-		wavesRemaining.text = $"Waves remaining: {AlienManager.Instance.WavesRemaining}";
+		if (startHappened)
+		{
+			header.text = $"Wave {AlienManager.Instance.CurrentWave} complete!";
+			pointsStored.text = $"Points stored: {RatioManager.Instance.PointsStored}";
+			pointsGained.text = $"Points gained: <color=#75FF00>{RatioManager.Instance.PointsGained}</color>";
+			disperseBonus.text = $"Disperse bonus: <color=#FFB500>+{RatioManager.Instance.DisperseBonus}%</color>";
+			wavesRemaining.text = $"Waves remaining: {AlienManager.Instance.WavesRemaining}";
 
-		StartCoroutine("Enable");
+			StartCoroutine("Enable");
+		}
+	}
+
+	private void Start()
+	{
+		startHappened = true;
 	}
 
 	private void OnDisable()
