@@ -3,6 +3,7 @@ using TMPro;
 
 public class GOMessageManager : MonoBehaviour
 {
+    [SerializeField] private TextMeshProUGUI title;
     [SerializeField] private TextMeshProUGUI message;
 	[TextArea]
 	[SerializeField] private string winMessage;
@@ -33,9 +34,11 @@ public class GOMessageManager : MonoBehaviour
         TerraformingUI.Instance.CanDisplay = false;
 
         if (win) {
+			title.text = "Victory!";
             message.text = winMessage;
         } else {
-            message.text = loseMessage;
+			title.text = "Game Over!";
+			message.text = loseMessage;
         }
     }
 }
