@@ -15,9 +15,8 @@ public class UIBuildingBar : PublicInstanceSerializableSingleton<UIBuildingBar>
 
     [SerializeField] private List<Button> buttonList;
 
-	protected override void Awake()
+	private void Start()
 	{
-        base.Awake();
 		ResourceManager.Instance.resourcesUpdated += UpdateButtons;
 		UpdateButtons();
 	}
