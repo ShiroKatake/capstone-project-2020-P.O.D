@@ -518,10 +518,10 @@ public class Building : CollisionListener
     private bool AreResourcesAvailable()
     {
         return ResourceManager.Instance.Ore >= oreCost
-            && (powerConsumption  == 0 || ResourceManager.Instance.PowerSupply  >= ResourceManager.Instance.PowerConsumption  + powerConsumption)
-            && (plantsConsumption == 0 || ResourceManager.Instance.PlantsSupply >= ResourceManager.Instance.PlantsConsumption + plantsConsumption)
-            && (waterConsumption  == 0 || ResourceManager.Instance.WaterSupply  >= ResourceManager.Instance.WaterConsumption  + waterConsumption)
-            && (gasConsumption    == 0 || ResourceManager.Instance.GasSupply    >= ResourceManager.Instance.GasConsumption    + gasConsumption);
+            && (powerConsumption == 0 || ResourceManager.Instance.SurplusPower >= powerConsumption)
+            && (waterConsumption == 0 || ResourceManager.Instance.SurplusWater >= waterConsumption)
+            && (plantsConsumption == 0 || ResourceManager.Instance.SurplusPlants >= plantsConsumption)
+            && (gasConsumption == 0 || ResourceManager.Instance.SurplusGas >= gasConsumption);
     }
 
     /// <summary>

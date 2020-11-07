@@ -236,14 +236,23 @@ public class BuildingManager : PublicInstanceSerializableSingleton<BuildingManag
     /// <param name="gas">Is there sufficient gas to supply all buildings?</param>
     public void ShutdownBuildings(bool power, bool water, bool plants, bool gas)
     {
-		Debug.Log("Disabling Buildings");
+        //Debug.Log($"BuildingManager.ShutdownBuildings(), power available: {power}, water available: {water}, plants available: {plants}, gas available: {gas}");
 
         foreach (Building b in buildings)
-        {			
-			if (b.Operational && ((!power && b.PowerConsumption > 0) || (!water && b.WaterConsumption > 0) || (!plants && b.PlantsConsumption > 0) || (!gas && b.GasConsumption > 0)))
-            {
-                Debug.Log($"Disabling {b.name}");
+        {
+            bool powerRequiredButUnavailable = (!power && b.PowerConsumption > 0);
+            bool waterRequiredButUnavailable = (!water && b.WaterConsumption > 0);
+            bool plantsRequiredButUnavailable = (!plants && b.PlantsConsumption > 0);
+            bool gasRequiredButUnavailable = (!gas && b.GasConsumption > 0);
+            bool resourceRequiredButUnavailable = (powerRequiredButUnavailable || waterRequiredButUnavailable || plantsRequiredButUnavailable || gasRequiredButUnavailable);
+            bool shutdownBuilding = b.Operational && resourceRequiredButUnavailable;
+            //Debug.Log($"BuildingManager.ShutdownBuildings(), building is {b}, resource usage: {b.PowerConsumption} power, {b.WaterConsumption} water, {b.PlantsConsumption} plants, {b.GasConsumption} gas");
+            //Debug.Log($"BuildingManager.ShutdownBuildings(), building is {b}, power required but unavailable: {powerRequiredButUnavailable}, water required but unavailable: {waterRequiredButUnavailable}, plants required but unavailable: {plantsRequiredButUnavailable}, gas required but unavailable: {gasRequiredButUnavailable}");
+            //Debug.Log($"BuildingManager.ShutdownBuildings(), building is {b}, operational: {b.Operational}, resource required but unavailable: {resourceRequiredButUnavailable}, shutdown building: {shutdownBuilding}");
 
+            if (shutdownBuilding)
+            {
+                //Debug.Log($"Disabling {b.name}");
                 b.Operational = false;
 				RatioManager.Instance.UpdateCurrentRatio();
 			}
@@ -255,18 +264,27 @@ public class BuildingManager : PublicInstanceSerializableSingleton<BuildingManag
     /// </summary>
     /// <param name="power">Is there sufficient power to supply all buildings?</param>
     /// <param name="water">Is there sufficient water to supply all buildings?</param>
-    /// <param name="water">Is there sufficient waste to supply all buildings?</param>
+    /// <param name="plants">Is there sufficient plants to supply all buildings?</param>
     /// <param name="gas">Is there sufficient gas to supply all buildings?</param>
-    public void RestoreBuildings(bool power, bool water, bool waste, bool gas)
+    public void RestoreBuildings(bool power, bool water, bool plants, bool gas)
     {
-        Debug.Log("Enabling Buildings");
+        //Debug.Log($"BuildingManager.RestoreBuildings(), power available: {power}, water available: {water}, plants available: {plants}, gas available: {gas}");
 
         foreach (Building b in buildings)
         {
-            if (!b.Operational && (power || b.PowerConsumption == 0) && (water || b.WaterConsumption == 0) && (waste || b.PlantsConsumption == 0) || (gas || b.GasConsumption == 0))
-            {
-                Debug.Log($"Enabling {b.name}");
+            bool powerAvailableOrIrrelevant = (power || b.PowerConsumption == 0);
+            bool waterAvailableOrIrrelevant = (water || b.WaterConsumption == 0);
+            bool plantsAvailableOrIrrelevant = (plants || b.PlantsConsumption == 0);
+            bool gasAvailableOrIrrelevant = (gas || b.GasConsumption == 0);
+            bool resourcesAvailableOrIrrelevant = (powerAvailableOrIrrelevant && waterAvailableOrIrrelevant && plantsAvailableOrIrrelevant && gasAvailableOrIrrelevant);
+            bool restoreBuilding = !b.Operational && resourcesAvailableOrIrrelevant;
+            //Debug.Log($"BuildingManager.RestoreBuildings(), building is {b}, resource usage: {b.PowerConsumption} power, {b.WaterConsumption} water, {b.PlantsConsumption} plants, {b.GasConsumption} gas");
+            //Debug.Log($"BuildingManager.RestoreBuildings(), building is {b}, power available or irrelevant: {powerAvailableOrIrrelevant}, water available or irrelevant: {waterAvailableOrIrrelevant}, plants available or irrelevant: {plantsAvailableOrIrrelevant}, gas available or irrelevant: {gasAvailableOrIrrelevant}");
+            //Debug.Log($"BuildingManager.RestoreBuildings(), building is {b}, operational: {b.Operational}, resources available or irrelevant: {resourcesAvailableOrIrrelevant}, restore building: {restoreBuilding}");
 
+            if (restoreBuilding)
+            {
+                //Debug.Log($"Enabling {b.name}");
                 b.Operational = true;
 				RatioManager.Instance.UpdateCurrentRatio();
 			}
