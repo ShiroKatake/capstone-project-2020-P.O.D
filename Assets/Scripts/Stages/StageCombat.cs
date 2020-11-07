@@ -109,6 +109,7 @@ public class StageCombat : PublicInstanceSerializableSingleton<StageCombat>, ISt
 
         MineralCollectionController.Instance.CanMine = false;
         BuildingDemolitionController.Instance.CanDemolish = false;
+        TerraformingUI.Instance.CanDisplay = false;
         fusionReactor.ButtonInteract.InInteractableGameStage = false;
         fusionReactor.Interactable = false;
         iceDrill.ButtonInteract.InInteractableGameStage = false;
@@ -321,13 +322,14 @@ public class StageCombat : PublicInstanceSerializableSingleton<StageCombat>, ISt
     /// Concludes the tutorial.
     /// </summary>
     private IEnumerator CompleteStage()
-    {
+    {        
         if (game.Activated) game.SubmitDeactivation();
         console.ClearDialogue();
         dog.SubmitDialogue("good luck", 0, true, false);
 
         do
         {
+            if (TerraformingUI.Instance.CanDisplay) TerraformingUI.Instance.CanDisplay = false;  //Added this since the store disperse process will re-enable the terraforming UI.
             yield return null;
         }
         while (!dog.DialogueRead);
@@ -341,6 +343,7 @@ public class StageCombat : PublicInstanceSerializableSingleton<StageCombat>, ISt
         POD.Instance.HealthController.CanHeal = true;
         POD.Instance.ShootingController.CanShoot = true;
         StoreDisperseUI.Instance.CanShowMenu = true;
+        TerraformingUI.Instance.CanDisplay = true;
 
         fusionReactor.ButtonInteract.InInteractableGameStage = true;
         iceDrill.ButtonInteract.InInteractableGameStage = true;

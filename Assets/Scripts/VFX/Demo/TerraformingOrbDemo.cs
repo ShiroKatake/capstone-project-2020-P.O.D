@@ -94,8 +94,10 @@ public class TerraformingOrbDemo : MonoBehaviour
 
 	public IEnumerator Store()
 	{
-		//Everything except the orb fx will be running (creates focus)
-		Time.timeScale = 0;
+        //Everything except the orb fx will be running (creates focus)
+        PauseMenuManager.Instance.CanPause = false;
+        TerraformingUI.Instance.CanDisplay = false;
+        Time.timeScale = 0;
 		float timeElapsed = 0f;
 
 		//Lerp Camera to Tower's position
@@ -137,14 +139,18 @@ public class TerraformingOrbDemo : MonoBehaviour
 			yield return null;
 		}
 		Time.timeScale = 1;
-		yield return null;
+        PauseMenuManager.Instance.CanPause = true;
+        TerraformingUI.Instance.CanDisplay = true;
+        yield return null;
 
 	}
 
 	private IEnumerator Explode()
 	{
-		//Everything except the orb fx will be running (creates focus)
-		Time.timeScale = 0;
+        //Everything except the orb fx will be running (creates focus)
+        PauseMenuManager.Instance.CanPause = false;
+        TerraformingUI.Instance.CanDisplay = false;
+        Time.timeScale = 0;
 		float timeElapsed = 0f;
 
 		//Lerp Camera to Tower's position
@@ -207,6 +213,8 @@ public class TerraformingOrbDemo : MonoBehaviour
 			yield return null;
 		}
 		Time.timeScale = 1;
-		yield return null;
+        PauseMenuManager.Instance.CanPause = true;
+        TerraformingUI.Instance.CanDisplay = true;
+        yield return null;
 	}
 }

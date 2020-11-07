@@ -109,6 +109,7 @@ public class StageControls : PublicInstanceSerializableSingleton<StageControls>,
         POD.Instance.ShootingController.CanShoot = false;
         AlienManager.Instance.CanSpawnAliens = false;
         StoreDisperseUI.Instance.CanShowMenu = false;
+        TerraformingUI.Instance.CanDisplay = false;
         ClockManager.Instance.Paused = true;
         ClockManager.Instance.SetTime(ClockManager.Instance.HalfCycleDuration * 0.2f);
 

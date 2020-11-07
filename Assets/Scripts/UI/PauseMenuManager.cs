@@ -29,10 +29,16 @@ public class PauseMenuManager : PublicInstanceSerializableSingleton<PauseMenuMan
     //Variables
     private static bool paused;
     private bool changePause;
+    private bool canPause = true;
 
     //Public Properties------------------------------------------------------------------------------------------------------------------------------
 
     //Basic Public Properties----------------------------------------------------------------------
+
+    /// <summary>
+    /// Is the player allowed to pause the game?
+    /// </summary>
+    public bool CanPause { get => canPause; set => canPause = value; }
 
     /// <summary>
     /// The log of all dialogue in the pause menu.
@@ -99,7 +105,7 @@ public class PauseMenuManager : PublicInstanceSerializableSingleton<PauseMenuMan
     /// </summary>
     private void CheckPaused()
     {
-        if (changePause)
+        if (canPause && changePause)
         {
             if (paused)
             {
@@ -119,7 +125,6 @@ public class PauseMenuManager : PublicInstanceSerializableSingleton<PauseMenuMan
     /// </summary>
     public void Pause()
     {
-        //Set timeScale and fixedTimeScale to 0
         Time.timeScale = 0f;
         canvas.SetActive(true);
         buttonInitialiser.Initialise();
@@ -132,7 +137,6 @@ public class PauseMenuManager : PublicInstanceSerializableSingleton<PauseMenuMan
     /// </summary>
     public void Resume()
     {
-        //Set timeScale and fixedTimeScale to 1
         canvas.SetActive(false);
         Time.timeScale = 1f;
         paused = false;
