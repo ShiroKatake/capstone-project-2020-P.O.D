@@ -114,7 +114,7 @@ public class TerraformingOrbDemo : MonoBehaviour
 		RatioManager.Instance.StorePoints();
 
 		//Trigger store fx, then pause for a bit
-		targetPhase = Mathf.Round(RatioManager.Instance.PointsStored / stageSixPoints * 6);
+		targetPhase = Mathf.Ceil(RatioManager.Instance.PointsStored / stageSixPoints * 6);
 		if (targetPhase > 6)
 			targetPhase = 6;
 
@@ -164,7 +164,7 @@ public class TerraformingOrbDemo : MonoBehaviour
 		}
 
 		//Trigger store, then pause for a bit
-		targetPhase = Mathf.Round((RatioManager.Instance.PointsStored + RatioManager.Instance.PointsGained) / stageSixPoints * 6);
+		targetPhase = Mathf.Ceil((RatioManager.Instance.PointsStored + RatioManager.Instance.PointsGained) / stageSixPoints * 6);
 		if (targetPhase > 6)
 			targetPhase = 6;
 
