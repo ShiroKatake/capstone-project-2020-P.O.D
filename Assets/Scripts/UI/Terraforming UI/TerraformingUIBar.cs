@@ -15,7 +15,8 @@ public class TerraformingUIBar : MonoBehaviour
 
 	public void UpdateTargetRatio(int[] ratioArray)
 	{
-        targetFill.fillAmount = ratioArray[(int)bar - 6] * TerraformingUI.Instance.MaxMultiplier / (float)TerraformingUI.Instance.MaxBarValue;
+        if (targetFill.isActiveAndEnabled)
+			targetFill.fillAmount = ratioArray[(int)bar - 6] * TerraformingUI.Instance.MaxMultiplier / (float)TerraformingUI.Instance.MaxBarValue;
         //Debug.Log($"Value: {(int)bar - 6}");
         //Debug.Log($"Value: {this.gameObject.name}, {(int)bar}");
         //Debug.Log($"Max Value: {TerraformingUI.Instance.MaxMultiplier}");
@@ -24,7 +25,8 @@ public class TerraformingUIBar : MonoBehaviour
 
     public void UpdateCurrentRatio(int[] ratioArray)
 	{
-		currentFill.fillAmount = ratioArray[(int)bar - 6] / (float)TerraformingUI.Instance.MaxBarValue;
+		if (currentFill.isActiveAndEnabled)
+			currentFill.fillAmount = ratioArray[(int)bar - 6] / (float)TerraformingUI.Instance.MaxBarValue;
         //Debug.Log($"Value: {ratioArray[(int)bar - 6]}");
         //Debug.Log($"Max Value: {TerraformingUI.Instance.MaxMultiplier}");
         //Debug.Log($"Max Value: {TerraformingUI.Instance.MaxBarValue}");
