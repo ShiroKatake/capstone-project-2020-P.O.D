@@ -85,6 +85,7 @@ public class TerraformingOrbController : MonoBehaviour
 	private bool isAlphaLerping;
 	private bool isAlphaLerpingFinished = true;
 	private float alphaTimeElapsed = 0f;
+	private float rotationTimeElapsed = 0f;
 	private Color outerSphereStartColor;
 	private Color outerSphereEndColor;
 
@@ -121,6 +122,8 @@ public class TerraformingOrbController : MonoBehaviour
 			currentPhase = value;
 			shockwave.GetComponent<ShockwaveFX>().ShockwaveLevel = Mathf.CeilToInt(currentPhase / 2f);
 			DoPhase(currentPhase);
+			//Debug.Log($"Value received: {value}");
+			//Debug.Log($"Phase set to: {currentPhase}");
 		}
 	}
 	
@@ -151,9 +154,9 @@ public class TerraformingOrbController : MonoBehaviour
 		phaseEffects = new GameObject[8] { spark.gameObject, pulsatingOrb.gameObject, lines.gameObject, outerSphere, windBlades.gameObject, pulses.gameObject, expandingWindBlades.gameObject, shockwave };
 		fxControl = new bool[8, 8]
 		{ //Phase:  0      1      2      3      4      5      6   EXPLODE
-				{ false,  true,  true,  true,  true,  true, false, false },	//Spark
+				{ false,  true,  true,  true,  true,  true,  true, false },	//Spark
 				{ false,  true,  true,  true,  true,  true,  true,  true },	//PulsatingOrb
-				{ false, false, false,  true,  true,  true, false, false },	//Lines
+				{ false, false, false,  true,  true,  true,  true, false },	//Lines
 				{ false, false, false, false,  true,  true,  true,  true },	//OuterSphere
 				{ false, false, false, false, false,  true,  true, false },	//WindBlades
 				{ false, false, false, false, false, false,  true, false },	//Pulses
@@ -172,6 +175,19 @@ public class TerraformingOrbController : MonoBehaviour
 	/// </summary>
 	private void Update()
 	{
+		#region OuterSphere Rotation
+		if (rotationTimeElapsed < 1f)
+		{
+			rotationTimeElapsed += Time.unscaledDeltaTime;
+			outerSphereMaterial.SetFloat("Time", rotationTimeElapsed);
+		}
+		else
+		{
+			outerSphereMaterial.SetFloat("Time", 1f);
+			rotationTimeElapsed = 0f;
+		}
+		#endregion
+
 		#region OuterSphere Alpha Lerping
 		if (isAlphaLerping)
 		{
@@ -186,7 +202,7 @@ public class TerraformingOrbController : MonoBehaviour
 			//Delay the shrinkage
 			if (shrinkDelayElapsed < shrinkDelay)
 			{
-				shrinkDelayElapsed += Time.deltaTime;
+				shrinkDelayElapsed += Time.unscaledDeltaTime;
 			}
 			else
 			{
@@ -207,7 +223,7 @@ public class TerraformingOrbController : MonoBehaviour
 			isShockwaveFinished = false;
 			if (shockwaveDelayElapsed < shockwaveDelay)
 			{
-				shockwaveDelayElapsed += Time.deltaTime;
+				shockwaveDelayElapsed += Time.unscaledDeltaTime;
 			}
 			else
 			{
@@ -242,7 +258,7 @@ public class TerraformingOrbController : MonoBehaviour
 	{
 		if (scaleTimeElapsed < scaleDuration)
 		{
-			scaleTimeElapsed += Time.deltaTime;
+			scaleTimeElapsed += Time.unscaledDeltaTime;
 			float t = scaleTimeElapsed / scaleDuration;
 			t = t * t * t * (t * (6f * t - 15f) + 10f);
 			pulsatingOrb.transform.localScale = Vector3.Lerp(new Vector3(startSize, startSize, startSize), new Vector3(endSize, endSize, endSize), t);
@@ -269,7 +285,7 @@ public class TerraformingOrbController : MonoBehaviour
 	{
 		if (alphaTimeElapsed < alphaDuration)
 		{
-			alphaTimeElapsed += Time.deltaTime;
+			alphaTimeElapsed += Time.unscaledDeltaTime;
 			outerSphereMaterial.SetColor("_MainColor", Color.Lerp(startValue, endValue, alphaTimeElapsed / alphaDuration));
 		}
 		else
@@ -294,7 +310,7 @@ public class TerraformingOrbController : MonoBehaviour
 		{
 			float t = shockwaveTimeElapsed / shockwaveDuration;
 			t = 1 - Mathf.Pow(2, -10 * t);
-			shockwaveTimeElapsed += Time.deltaTime;
+			shockwaveTimeElapsed += Time.unscaledDeltaTime;
 			shockwaveMaterial.SetFloat("_FXScale", Mathf.Lerp(startSize, endSize, t));
 		}
 		else

@@ -31,6 +31,7 @@ public class RatioManager : PublicInstanceSerializableSingleton<RatioManager>
 	public float WinAmount { get => winAmount; }
 	public float PointsStored { get => storedPoints; }
 	public float PointsGained { get => pointsThisWave; }
+	public float PointsPerRatio { get => pointsPerRatio; }
 	public float DisperseBonus { get => Mathf.Round((currentMultiplier - 1f) * 100f); }
 
 	protected override void Awake()
@@ -52,6 +53,11 @@ public class RatioManager : PublicInstanceSerializableSingleton<RatioManager>
 	{
 		if (currentPoints >= winAmount)
 			Win = true;
+	}
+
+	public void CalculateScore()
+	{
+		pointsThisWave = ScoreRatioAlignment();
 	}
 
 	public float ScoreRatioAlignment()
@@ -149,6 +155,7 @@ public class RatioManager : PublicInstanceSerializableSingleton<RatioManager>
 
 		terraformingUI.UpdateTarget(targetRatio, currentRatio);
 		terraformingUI.UpdateCurrent(currentRatio);
+		CalculateScore();
 	}
 
 	/// <summary>
@@ -162,6 +169,7 @@ public class RatioManager : PublicInstanceSerializableSingleton<RatioManager>
 
 		terraformingUI.UpdateTarget(targetRatio, currentRatio);
 		terraformingUI.UpdateCurrent(currentRatio);
+		CalculateScore();
 	}
 
 	/// <summary>
@@ -179,7 +187,7 @@ public class RatioManager : PublicInstanceSerializableSingleton<RatioManager>
 	/// <param name="ratios"></param>
 	public void EndWave(/*int[] ratios*/)
 	{
-		pointsThisWave = ScoreRatioAlignment();
+		CalculateScore();
 		// Are any building counts lower than at the start of the wave
 		bool isCountLower = (waveStartRatio[0] > currentRatio[0] ||
 							 waveStartRatio[1] > currentRatio[1] ||

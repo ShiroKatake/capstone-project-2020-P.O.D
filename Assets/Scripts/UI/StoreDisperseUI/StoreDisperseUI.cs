@@ -8,8 +8,9 @@ public class StoreDisperseUI : PublicInstanceSerializableSingleton<StoreDisperse
 	[SerializeField] GameObject mainPanel;
 	[SerializeField] GameObject greyPanel;
 	[SerializeField] ButtonInteract storeButton;
+	[SerializeField] TerraformingOrbDemo terraformingOrb;
 
-    private bool canShowMenu;
+    private bool canShowMenu = true;
 
     public bool CanShowMenu { get => canShowMenu; set => canShowMenu = value; }
 
@@ -24,20 +25,26 @@ public class StoreDisperseUI : PublicInstanceSerializableSingleton<StoreDisperse
 
 	public void Store()
 	{
-		RatioManager.Instance.StorePoints();
 		ToggleUI(false);
+		terraformingOrb.StoreOrb();
 	}
 
 	public void Disperse()
 	{
-		RatioManager.Instance.DispersePoints();
 		ToggleUI(false);
+		terraformingOrb.DisperseOrb();
 	}
 
 	private void ToggleUI(bool state)
 	{
         if (canShowMenu)
         {
+            if (state)
+            {
+                PauseMenuManager.Instance.CanPause = false;
+                TerraformingUI.Instance.CanDisplay = false;
+            }
+
             greyPanel.SetActive(state);
             mainPanel.SetActive(state);
             storeButton.OnInteractableChanged(storeButton.GetComponent<Button>().interactable = AlienManager.Instance.WavesRemaining != 0);
