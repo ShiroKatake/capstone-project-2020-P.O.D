@@ -163,7 +163,10 @@ public class TerraformingOrbController : MonoBehaviour
 				{ false, false, false, false, false, false, false,  true },	//ExpandingWindBlades
 				{ false, false, false, false, false, false, false, false }	//Shockwave
 		};
+	}
 
+	private void Start()
+	{
 		//Set current phase to 0
 		CurrentPhase = 0;
 	}
