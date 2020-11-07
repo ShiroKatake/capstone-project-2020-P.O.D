@@ -31,19 +31,25 @@ public class StoreDisperseUITexts : MonoBehaviour
 	{
 		if (startHappened)
 		{
-			header.text = $"Wave {AlienManager.Instance.CurrentWave} complete!";
-			pointsStored.text = $"Points stored: {RatioManager.Instance.PointsStored}";
-			pointsGained.text = $"Points gained: <color=#75FF00>{RatioManager.Instance.PointsGained}</color>";
-			disperseBonus.text = $"Disperse bonus: <color=#FFB500>+{RatioManager.Instance.DisperseBonus}%</color>";
-			wavesRemaining.text = $"Waves remaining: {AlienManager.Instance.WavesRemaining}";
-
-			StartCoroutine("Enable");
+			FillTexts();
 		}
+	}
+
+	private void FillTexts()
+	{
+		header.text = $"Wave {AlienManager.Instance.CurrentWave} complete!";
+		pointsStored.text = $"Points stored: {RatioManager.Instance.PointsStored}";
+		pointsGained.text = $"Points gained: <color=#75FF00>{RatioManager.Instance.PointsGained}</color>";
+		disperseBonus.text = $"Disperse bonus: <color=#FFB500>+{RatioManager.Instance.DisperseBonus}%</color>";
+		wavesRemaining.text = $"Waves remaining: {AlienManager.Instance.WavesRemaining}";
+
+		StartCoroutine(Enable());
 	}
 
 	private void Start()
 	{
 		startHappened = true;
+		FillTexts();
 	}
 
 	private void OnDisable()
