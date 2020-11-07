@@ -32,12 +32,11 @@ public class UIBuildingBar : PublicInstanceSerializableSingleton<UIBuildingBar>
     public void UpdateButton(Building building, ButtonInteract buttonInteract)
     {
         bool interactable =
-                buttonInteract.InInteractableGameStage
-                && building.OreCost <= ResourceManager.Instance.Ore
-                && building.PowerConsumption <= ResourceManager.Instance.SurplusPower
-                && building.GasConsumption <= ResourceManager.Instance.SurplusGas
-                && building.PlantsConsumption <= ResourceManager.Instance.SurplusPlants
-                && building.WaterConsumption <= ResourceManager.Instance.SurplusWater;
+            buttonInteract.InInteractableGameStage
+            && (building.PowerConsumption == 0 || ResourceManager.Instance.SurplusPower >= building.PowerConsumption)
+            && (building.WaterConsumption == 0 || ResourceManager.Instance.SurplusWater >= building.WaterConsumption)
+            && (building.PlantsConsumption == 0 || ResourceManager.Instance.SurplusPlants >= building.PlantsConsumption)
+            && (building.GasConsumption == 0 || ResourceManager.Instance.SurplusGas >= building.GasConsumption);
         buttonInteract.GetComponent<UIElementStatusManager>().Interactable = interactable;
         buttonInteract.OnInteractableChanged(interactable);
     }

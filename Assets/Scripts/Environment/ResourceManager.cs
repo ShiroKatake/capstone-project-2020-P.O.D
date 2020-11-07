@@ -313,8 +313,9 @@ public class ResourceManager : PublicInstanceSerializableSingleton<ResourceManag
         //Get initial values
         bool initialPowerStatus = powerAvailable;
         bool initialWaterStatus = waterAvailable;
-        bool initialWasteStatus = plantsAvailable;
+        bool initialPlantsStatus = plantsAvailable;
         bool initialGasStatus = gasAvailable;
+        //Debug.Log($"ResourceManager.CheckResourceSupply() starting, power available: {powerAvailable}, water available: {waterAvailable}, plants available: {plantsAvailable}, gas available: {gasAvailable}");
 
         //Check if power needs to be updated
         if ((powerAvailable && powerSupply < powerConsumption) || (powerAvailable && powerSupply == 0) || (!powerAvailable && powerSupply >= powerConsumption && powerSupply != 0))
@@ -340,20 +341,22 @@ public class ResourceManager : PublicInstanceSerializableSingleton<ResourceManag
             gasAvailable = !gasAvailable;
         }
 
+        //Debug.Log($"ResourceManager.CheckResourceSupply() checked if resource availability changed, power available: {powerAvailable} (was {initialPowerStatus}), water available: {waterAvailable} (was {initialWaterStatus}), plants available: {plantsAvailable} (was {initialPlantsStatus}), gas available: {gasAvailable} (was {initialGasStatus})");
+
         //Check if there's been a change
-        if (initialPowerStatus != powerAvailable || initialWaterStatus != waterAvailable || initialWasteStatus != plantsAvailable || initialGasStatus != gasAvailable)
+        if (initialPowerStatus != powerAvailable || initialWaterStatus != waterAvailable || initialPlantsStatus != plantsAvailable || initialGasStatus != gasAvailable)
         {
             //Check if buildings need to be shutdown
-            if (!powerAvailable || !plantsAvailable || !waterAvailable || !gasAvailable)
+            if (!powerAvailable || !waterAvailable || !plantsAvailable || !gasAvailable)
             {
-                Debug.Log("Shutdown Buildings.");
+                //Debug.Log("Shutdown Buildings.");
                 BuildingManager.Instance.ShutdownBuildings(powerAvailable, waterAvailable, plantsAvailable, gasAvailable);
             }
 
             //Check if buildings can be restored
             if (powerAvailable || waterAvailable || plantsAvailable || gasAvailable)
             {
-                Debug.Log("Restore Buildings");
+                //Debug.Log("Restore Buildings");
                 BuildingManager.Instance.RestoreBuildings(powerAvailable, waterAvailable, plantsAvailable, gasAvailable);
             }
 		}
