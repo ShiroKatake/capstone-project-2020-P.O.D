@@ -29,6 +29,9 @@ public class GOMessageManager : MonoBehaviour
 	}
 
 	public void SetText(bool win){
+        PauseMenuManager.Instance.CanPause = false;
+        TerraformingUI.Instance.CanDisplay = false;
+
         if (win) {
             message.text = winMessage;
         } else {

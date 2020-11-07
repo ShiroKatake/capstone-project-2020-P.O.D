@@ -39,6 +39,12 @@ public class StoreDisperseUI : PublicInstanceSerializableSingleton<StoreDisperse
 	{
         if (canShowMenu)
         {
+            if (state)
+            {
+                PauseMenuManager.Instance.CanPause = false;
+                TerraformingUI.Instance.CanDisplay = false;
+            }
+
             greyPanel.SetActive(state);
             mainPanel.SetActive(state);
             storeButton.OnInteractableChanged(storeButton.GetComponent<Button>().interactable = AlienManager.Instance.WavesRemaining != 0);

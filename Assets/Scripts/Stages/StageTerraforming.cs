@@ -213,6 +213,7 @@ public class StageTerraforming : PublicInstanceSerializableSingleton<StageTerraf
         console.ClearDialogue();
         console.SubmitDialogue("task press p", 0, false, false);
         cat.SubmitDialogue("press p", 0, true, false);
+        TerraformingUI.Instance.CanDisplay = true;
 
         do
         {
@@ -229,6 +230,7 @@ public class StageTerraforming : PublicInstanceSerializableSingleton<StageTerraf
         }
         while (TerraformingUI.Instance.IsEnabled);
 
+        TerraformingUI.Instance.CanDisplay = false;
         if (!cat.DialogueRead) cat.DialogueRead = true;
     }
 
@@ -278,6 +280,7 @@ public class StageTerraforming : PublicInstanceSerializableSingleton<StageTerraf
 
         MineralCollectionController.Instance.CanMine = true;
         BuildingDemolitionController.Instance.CanDemolish = true;
+        TerraformingUI.Instance.CanDisplay = true;
         console.SubmitDialogue("cat closed", 1, false, false);
 
         fusionReactor.ButtonInteract.InInteractableGameStage = true;
