@@ -49,8 +49,9 @@ public class AudioManager : PublicInstanceSerializableSingleton<AudioManager>
         [SerializeField] private AudioManager.ESound sound;
         [SerializeField] private AudioClip clip;
         [SerializeField] private bool loop;
+		[SerializeField] private bool playOnAwake = true;
 
-        [SerializeField] [Range(0f, 1f)] private float volume;
+		[SerializeField] [Range(0f, 1f)] private float volume;
         [SerializeField] [Range(0.3f, 3f)] private float pitch;
         [SerializeField] [Range(0f, 500f)] private float minDistance;
         [SerializeField] [Range(0f, 500f)] private float maxDistance;
@@ -64,6 +65,7 @@ public class AudioManager : PublicInstanceSerializableSingleton<AudioManager>
         public float Volume { get => volume; }
         public float Pitch { get => pitch; }
         public bool Loop { get => loop; }
+        public bool PlayOnAwake { get => playOnAwake; }
         public float MinDistance { get => minDistance; }
         public float MaxDistance { get => maxDistance; }
         public AudioSource Source { get => source; set => source = value; }
@@ -98,6 +100,7 @@ public class AudioManager : PublicInstanceSerializableSingleton<AudioManager>
             s.Source.volume = s.Volume;
             s.Source.pitch = s.Pitch;
             s.Source.loop = s.Loop;
+			s.Source.playOnAwake = s.PlayOnAwake;
         }
 
         currentBackgroundTrack = Array.Find(BackGroundSounds, SoundClip => SoundClip.Sound == ESound.DayTimeLvlOne).Source;
@@ -192,6 +195,7 @@ public class AudioManager : PublicInstanceSerializableSingleton<AudioManager>
                 audioSource.volume = s.Volume;
                 audioSource.pitch = s.Pitch;
                 audioSource.loop = s.Loop;
+				audioSource.playOnAwake = s.PlayOnAwake;
                 audioSource.spatialBlend = 1f;
                 audioSource.rolloffMode = AudioRolloffMode.Linear;
                 audioSource.minDistance = s.MinDistance;
@@ -251,6 +255,7 @@ public class AudioManager : PublicInstanceSerializableSingleton<AudioManager>
             s.Source.volume = s.Volume;
             s.Source.pitch = s.Pitch;
             s.Source.loop = s.Loop;
+			s.Source.playOnAwake = s.PlayOnAwake;
             audioSourceReferenceDictionary.Add(sound, s.Source);
         }
         //oneShotAudioSource.PlayOneShot(GetAudio(sound).Clip);
