@@ -33,6 +33,7 @@ public class UIBuildingBar : PublicInstanceSerializableSingleton<UIBuildingBar>
     {
         bool interactable =
             buttonInteract.InInteractableGameStage
+            && (building.OreCost == 0 || ResourceManager.Instance.Ore >= building.OreCost)
             && (building.PowerConsumption == 0 || ResourceManager.Instance.SurplusPower >= building.PowerConsumption)
             && (building.WaterConsumption == 0 || ResourceManager.Instance.SurplusWater >= building.WaterConsumption)
             && (building.PlantsConsumption == 0 || ResourceManager.Instance.SurplusPlants >= building.PlantsConsumption)

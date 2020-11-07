@@ -40,6 +40,7 @@ public class ResourceManager : PublicInstanceSerializableSingleton<ResourceManag
     private bool waterAvailable = false;
     private bool gasAvailable = false;
     private Player playerInputManager;
+    private List<ResourceCollector> buildingsContributingResources;
 
 	public UnityAction resourcesUpdated;
 
@@ -71,13 +72,6 @@ public class ResourceManager : PublicInstanceSerializableSingleton<ResourceManag
         get
         {
             return gasSupply;
-        }
-
-        set
-        {
-            gasSupply = value;
-			resourcesUpdated?.Invoke();
-			CheckResourceSupply();
         }
     }
 
@@ -126,13 +120,6 @@ public class ResourceManager : PublicInstanceSerializableSingleton<ResourceManag
         {
             return powerSupply;
         }
-
-        set
-        {
-            powerSupply = value;
-			resourcesUpdated?.Invoke();
-			CheckResourceSupply();
-        }
 	}
 
 	/// <summary>
@@ -162,13 +149,6 @@ public class ResourceManager : PublicInstanceSerializableSingleton<ResourceManag
 		{
 			return plantsSupply;
 		}
-
-		set
-		{
-			plantsSupply = value;
-			resourcesUpdated?.Invoke();
-			CheckResourceSupply();
-		}
 	}
 
 	/// <summary>
@@ -197,13 +177,6 @@ public class ResourceManager : PublicInstanceSerializableSingleton<ResourceManag
         get
         {
             return waterSupply;
-        }
-
-        set
-        {
-            waterSupply = value;
-			resourcesUpdated?.Invoke();
-			CheckResourceSupply();
         }
 	}
 
@@ -251,7 +224,17 @@ public class ResourceManager : PublicInstanceSerializableSingleton<ResourceManag
 		}
 	}
 
-	//Initialization Methods-------------------------------------------------------------------------------------------------------------------------
+    //Initialization Methods-------------------------------------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Awake() is run when the script instance is being loaded, regardless of whether or not the script is enabled. 
+    /// Awake() runs before Start().
+    /// </summary>
+    protected override void Awake()
+    {
+        base.Awake();
+        buildingsContributingResources = new List<ResourceCollector>();
+    }
 
 	/// <summary>
 	/// Start() is run on the frame when a script is enabled just before any of the Update methods are called for the first time. 
@@ -288,21 +271,24 @@ public class ResourceManager : PublicInstanceSerializableSingleton<ResourceManag
             if (playerInputManager.GetButtonDown("Get Developer Resources"))
             {
                 Ore += developerResources;
-                PowerSupply += developerResources;
-                PlantsSupply += developerResources;
-                WaterSupply += developerResources;
-                GasSupply += developerResources;
+                powerSupply += developerResources;
+                plantsSupply += developerResources;
+                waterSupply += developerResources;
+                gasSupply += developerResources;
+                resourcesUpdated?.Invoke();
+                CheckResourceSupply();
             }
             else if (playerInputManager.GetButtonDown("Remove Developer Resources"))
             {
                 Ore = Mathf.Max(0, ore - developerResources);
-                PowerSupply = Mathf.Max(0, powerSupply - developerResources);
-                PlantsSupply = Mathf.Max(0, plantsSupply - developerResources);
-                WaterSupply = Mathf.Max(0, waterSupply - developerResources);
-                GasSupply = Mathf.Max(0, gasSupply - developerResources);
+                powerSupply = Mathf.Max(0, powerSupply - developerResources);
+                plantsSupply = Mathf.Max(0, plantsSupply - developerResources);
+                waterSupply = Mathf.Max(0, waterSupply - developerResources);
+                gasSupply = Mathf.Max(0, gasSupply - developerResources);
+                resourcesUpdated?.Invoke();
+                CheckResourceSupply();
             }
         }
-
     }
 
     /// <summary>
@@ -360,5 +346,69 @@ public class ResourceManager : PublicInstanceSerializableSingleton<ResourceManag
                 BuildingManager.Instance.RestoreBuildings(powerAvailable, waterAvailable, plantsAvailable, gasAvailable);
             }
 		}
+    }
+
+    //Triggered Methods------------------------------------------------------------------------------------------------------------------------------
+
+    /// <summary>
+    /// Registers a building as being built or enabled, and starting contributing to the supply of resources.
+    /// </summary>
+    /// <param name="building">The new resource building being added.</param>
+    public void RegisterBuildingAsStartingResourceContribution(ResourceCollector building)
+    {
+        if (!buildingsContributingResources.Contains(building))
+        {
+            buildingsContributingResources.Add(building);
+
+            switch (building.Resource)
+            {
+                case EResource.Power:
+                    powerSupply += building.CollectionRate;
+                    break;
+                case EResource.Water:
+                    waterSupply += building.CollectionRate;
+                    break;
+                case EResource.Plants:
+                    plantsSupply += building.CollectionRate;
+                    break;
+                case EResource.Gas:
+                    gasSupply += building.CollectionRate;
+                    break;
+            }
+
+            resourcesUpdated?.Invoke();
+            CheckResourceSupply();
+        }
+    }
+
+    /// <summary>
+    /// Registers a building as being disabled or destroyed, and stopping contributing to the supply of resources.
+    /// </summary>
+    /// <param name="building">The resource building being removed.</param>
+    public void RegisterBuildingAsStoppingResourceContribution(ResourceCollector building)
+    {
+        if (buildingsContributingResources.Contains(building))
+        {
+            buildingsContributingResources.Remove(building);
+
+            switch (building.Resource)
+            {
+                case EResource.Power:
+                    powerSupply -= building.CollectionRate;
+                    break;
+                case EResource.Water:
+                    waterSupply -= building.CollectionRate;
+                    break;
+                case EResource.Plants:
+                    plantsSupply -= building.CollectionRate;
+                    break;
+                case EResource.Gas:
+                    gasSupply -= building.CollectionRate;
+                    break;
+            }
+
+            resourcesUpdated?.Invoke();
+            CheckResourceSupply();
+        }
     }
 }
