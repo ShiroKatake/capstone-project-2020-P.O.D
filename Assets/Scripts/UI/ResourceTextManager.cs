@@ -71,13 +71,17 @@ public class ResourceTextManager : PublicInstanceSerializableSingleton<ResourceT
 		}
 		rectsToRefresh.Reverse();
 		rectTransform = GetComponent<RectTransform>();
+	}
 
+	private void Start()
+	{
 		ResourceManager.Instance.resourcesUpdated += UpdateText;
 		UpdateText();
 	}
-    /// <summary>
-    /// Update() is run every frame.
-    /// </summary>
+
+	/// <summary>
+	/// Update() is run every frame.
+	/// </summary>
 	private void UpdateText()
 	{
 		ore.text = ResourceManager.Instance.Ore.ToString();
