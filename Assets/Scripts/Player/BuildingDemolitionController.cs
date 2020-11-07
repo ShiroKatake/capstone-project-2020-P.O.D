@@ -216,26 +216,23 @@ public class BuildingDemolitionController : PublicInstanceSerializableSingleton<
     /// </summary>
     public void ToggleBuildingEnabled()
     {
-        if (showingDemolitionMenu)
+        //Debug.Log($"BuildingDemolitionController.ToggleEnabled()");
+
+        if (selectedBuilding.DisabledByPlayer)
         {
-            Debug.Log($"BuildingDemolitionController.ToggleEnabled()");
-
-            if (selectedBuilding.DisabledByPlayer)
-            {
-                selectedBuilding.DisabledByPlayer = false;
-                selectedBuilding.Operational = true;
-                enableDisableText.text = "Disable";
-            }
-            else
-            {
-                selectedBuilding.DisabledByPlayer = true;
-                selectedBuilding.Operational = false;
-                enableDisableText.text = "Enable";
-            }
-
-            RatioManager.Instance.UpdateCurrentRatio();
-            HideDemolitionMenu();
+            selectedBuilding.DisabledByPlayer = false;
+            selectedBuilding.Operational = true;
+            enableDisableText.text = "Disable";
         }
+        else
+        {
+            selectedBuilding.DisabledByPlayer = true;
+            selectedBuilding.Operational = false;
+            enableDisableText.text = "Enable";
+        }
+
+		RatioManager.Instance.UpdateCurrentRatio();
+        HideDemolitionMenu();
     }
 
     /// <summary>
@@ -243,10 +240,7 @@ public class BuildingDemolitionController : PublicInstanceSerializableSingleton<
     /// </summary>
     public void DemolishBuilding()
     {
-        if (showingDemolitionMenu)
-        {
-            Debug.Log($"BuildingDemolitionController.DemolishBuilding()");
-            BuildingFactory.Instance.Destroy(selectedBuilding, true, false);
-        }
+        //Debug.Log($"BuildingDemolitionController.DemolishBuilding()");
+        BuildingFactory.Instance.Destroy(selectedBuilding, true, false);
     }
 }

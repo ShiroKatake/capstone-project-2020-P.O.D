@@ -93,21 +93,7 @@ public class ResourceCollector : MonoBehaviour
     /// </summary>
     public void Activate()
     {
-        switch(resource)
-        {
-            case EResource.Power:
-                ResourceManager.Instance.PowerSupply += collectionRate;
-                break;
-            case EResource.Water:
-                ResourceManager.Instance.WaterSupply += collectionRate;
-                break;
-            case EResource.Plants:
-                ResourceManager.Instance.PlantsSupply += collectionRate;
-                break;
-            case EResource.Gas:
-                ResourceManager.Instance.GasSupply += collectionRate;
-                break;
-        }
+        ResourceManager.Instance.RegisterBuildingAsStartingResourceContribution(this);
     }
 
     /// <summary>
@@ -115,20 +101,6 @@ public class ResourceCollector : MonoBehaviour
     /// </summary>
     public void Deactivate()
     {
-        switch (resource)
-        {
-            case EResource.Power:
-                ResourceManager.Instance.PowerSupply -= collectionRate;
-                break;
-            case EResource.Water:
-                ResourceManager.Instance.WaterSupply -= collectionRate;
-                break;
-            case EResource.Plants:
-                ResourceManager.Instance.PlantsSupply -= collectionRate;
-                break;
-            case EResource.Gas:
-                ResourceManager.Instance.GasSupply -= collectionRate;
-                break;
-        }
+        ResourceManager.Instance.RegisterBuildingAsStoppingResourceContribution(this);
     }
 }
