@@ -14,18 +14,19 @@ public class BuildingStats : MonoBehaviour
 
 	private void Start()
 	{
-		TerraformingUI.updateCurrentRatio += DisplayBuildingInfo;
-		TerraformingUI.updateTargetRatio += DisplayBuildingInfo;
+		//TerraformingUI.updateCurrentRatio += DisplayBuildingInfo;
+		//TerraformingUI.updateTargetRatio += DisplayBuildingInfo;
 		DisplayBuildingInfo();
 	}
 
-	private void DisplayBuildingInfo(int[] ratioArray)
-	{
-		DisplayBuildingInfo();
-	}
+	//private void DisplayBuildingInfo(int[] ratioArray)
+	//{
+	//	DisplayBuildingInfo();
+	//}
 
 	public void DisplayBuildingInfo()
 	{
+        Debug.Log($"{this}.BuildingStats.DisplayBuildingInfo()");
 		buildingName.text = $"{ratioBuilding.ToString()}";
 		enabledText.text = $"Enabled: {BuildingManager.Instance.BuiltAndOperationalBuildingsCount(ratioBuilding)}";
 		disabledText.text = $"Disabled: {BuildingManager.Instance.BuiltAndNonOperationalBuildingsCount(ratioBuilding)}";

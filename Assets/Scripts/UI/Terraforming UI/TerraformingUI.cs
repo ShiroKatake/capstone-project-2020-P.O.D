@@ -6,6 +6,7 @@ public class TerraformingUI : PublicInstanceSerializableSingleton<TerraformingUI
 {
     [SerializeField] private GameObject mainPanel;
     [SerializeField] private GameObject greyPanel;
+    [SerializeField] private TerraformingUIBarController[] barControllers;
     private int maxMultiplier;
     private int maxBarValue;
     private int[] currentRatio = new int[3] { 0, 0, 0 };
@@ -48,8 +49,27 @@ public class TerraformingUI : PublicInstanceSerializableSingleton<TerraformingUI
         return buildingsNeeded[index];
     }
 
-    public static UnityAction<int[]> updateCurrentRatio;
-    public static UnityAction<int[]> updateTargetRatio;
+    public void UpdateCurrentRatio(int[] currentRatioArray)
+    {
+        foreach (TerraformingUIBarController barController in barControllers)
+        {
+            if (barController.gameObject.activeSelf)
+            {
+                barController.UpdateCurrentRatio(currentRatioArray);
+            }
+        }
+    }
+
+    public void UpdateTargetRatio(int[] targetRatioArray)
+    {
+        foreach (TerraformingUIBarController barController in barControllers)
+        {
+            if (barController.gameObject.activeSelf)
+            {
+                barController.UpdateTargetRatio(targetRatioArray);
+            }
+        }
+    }
 
     private void Start()
     {
@@ -75,7 +95,7 @@ public class TerraformingUI : PublicInstanceSerializableSingleton<TerraformingUI
     public void UpdateCurrent(int[] currentRatioArray)
     {
         currentRatio = currentRatioArray;
-        updateCurrentRatio?.Invoke(currentRatioArray);
+        UpdateCurrentRatio(currentRatioArray);
     }
 
     public void UpdateTarget(int[] targetRatioArray, int[] currentRatioArray)
@@ -107,7 +127,7 @@ public class TerraformingUI : PublicInstanceSerializableSingleton<TerraformingUI
         maxBarValue = buildingsNeeded.Max() + 5;
 
         Debug.Log($"Invoking updateTargetRatio");
-        updateTargetRatio?.Invoke(targetRatioArray);
+        UpdateTargetRatio(targetRatioArray);
     }
 
     public void DisplayUI(bool state)
@@ -120,8 +140,8 @@ public class TerraformingUI : PublicInstanceSerializableSingleton<TerraformingUI
             if (state == true)
             {
                 Debug.Log($"Invoking updateCurrentRatio and updateTargetRatio");
-                updateCurrentRatio?.Invoke(currentRatio);
-                updateTargetRatio?.Invoke(targetRatio);
+                UpdateCurrentRatio(currentRatio);
+                UpdateTargetRatio(targetRatio);
             }
 
             PauseMenuManager.Instance.CanPause = !state;

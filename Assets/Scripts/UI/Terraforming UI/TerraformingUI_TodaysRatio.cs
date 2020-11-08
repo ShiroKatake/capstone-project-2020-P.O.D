@@ -12,13 +12,15 @@ public class TerraformingUI_TodaysRatio : MonoBehaviour
 		todaysRatio = GetComponent<TextMeshProUGUI>();
 	}
 
-	private void Start()
-	{
-		TerraformingUI.updateTargetRatio += ChangeTexts;
-	}
+	//private void Start()
+	//{
+	//	TerraformingUI.updateTargetRatio += ChangeTexts;
+	//}
 
-	private void ChangeTexts(int[] ratioArray)
+	public void ChangeTexts(int[] ratioArray)
 	{
-		todaysRatio.text = $"{ratioArray[0]} : {ratioArray[1]} : {ratioArray[2]}";
+        string text = $"{ratioArray[0]} : {ratioArray[1]} : {ratioArray[2]}";
+        Debug.Log($"{this}.TerraformingUI_TodaysRatio.ChangeTexts(), ratio is {ratioArray[0]}:{ratioArray[1]}:{ratioArray[2]}, text is \"{text}\"");
+        todaysRatio.text = text;
 	}
 }
