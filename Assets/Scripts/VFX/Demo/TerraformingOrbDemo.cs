@@ -33,23 +33,12 @@ public class TerraformingOrbDemo : MonoBehaviour
 	[SerializeField] private float stageSixPoints = 30f;
 	[SerializeField] private float targetPhase;
 
-	[SerializeField] private bool explode;
 	[SerializeField] private bool isInDemo;
 
-	private bool isExploding = false;
 	private float timeElapsed;
 
 	void Update()
 	{
-		if (explode)
-		{
-			if (!isExploding)
-			{
-				StartCoroutine(Explode());
-				isExploding = true;
-			}
-		}
-
 		if (isInDemo)
 		{
 			if (beginSequenceDemo)
@@ -84,144 +73,83 @@ public class TerraformingOrbDemo : MonoBehaviour
 
 	public void DisperseOrb()
 	{
-		explode = true;
-	}
+        StartCoroutine(Store(true));
+    }
 
 	public void StoreOrb()
 	{
-		StartCoroutine(Store());
-	}
+		StartCoroutine(Store(false));
+	}	
 
-	public IEnumerator Store()
-	{
+    private IEnumerator Store(bool explode)
+    {
         //Everything except the orb fx will be running (creates focus)
         PauseMenuManager.Instance.CanPause = false;
         TerraformingUI.Instance.CanDisplay = false;
         Time.timeScale = 0;
-		float timeElapsed = 0f;
+        float timeElapsed = 0f;
 
-		//Lerp Camera to Tower's position
-		while (timeElapsed < cameraTransitionDuration)
-		{
-			timeElapsed += Time.unscaledDeltaTime;
-			float t = timeElapsed / cameraTransitionDuration;
-			t = t * t * t * (t * (6f * t - 15f) + 10f);
-			playerCamera.transform.position = Vector3.Lerp(playerCameraTransform.position, towerCameraTransform.position, t);
-			yield return null;
-		}
+        //Lerp Camera to Tower's position
+        while (timeElapsed < cameraTransitionDuration)
+        {
+            timeElapsed += Time.unscaledDeltaTime;
+            float t = timeElapsed / cameraTransitionDuration;
+            t = t * t * t * (t * (6f * t - 15f) + 10f);
+            playerCamera.transform.position = Vector3.Lerp(playerCameraTransform.position, towerCameraTransform.position, t);
+            yield return null;
+        }
 
-		//Store points
-		RatioManager.Instance.StorePoints();
+        //Store points
+        RatioManager.Instance.StorePoints();
 
-		//Trigger store fx, then pause for a bit
-		targetPhase = Mathf.Ceil(RatioManager.Instance.PointsStored / stageSixPoints * 6);
-		if (targetPhase > 6) targetPhase = 6;
+        //Trigger store, then pause for a bit
+        targetPhase = Mathf.Ceil((RatioManager.Instance.PointsStored) / stageSixPoints * 6);
+        if (targetPhase > 6) targetPhase = 6;
         float lerpStartTime = Time.unscaledTime;
-        Debug.Log($"TerraformingOrbDemo.Store(), starting orb scale lerping, targetPhase: {targetPhase}, lerpStartTime: {lerpStartTime}");
+        Debug.Log($"TerraformingOrbDemo.Store(explode=={explode}), starting orb scale lerping, targetPhase: {targetPhase}, lerpStartTime: {lerpStartTime}");
 
         while (terraformingOrbController.CurrentPhase < targetPhase && Time.unscaledTime - lerpStartTime < 5)
         {
-            Debug.Log($"TerraformingOrbDemo.Explode(), terraformingOrbController.IsScaleLerpingFinished: {terraformingOrbController.IsScaleLerpingFinished}");
+            Debug.Log($"TerraformingOrbDemo.Store(explode=={explode}), terraformingOrbController.IsScaleLerpingFinished: {terraformingOrbController.IsScaleLerpingFinished}");
 
             if (terraformingOrbController.IsScaleLerpingFinished)
             {
                 terraformingOrbController.CurrentPhase++;
-                Debug.Log($"TerraformingOrbDemo.Explode(), finished orb scale lerping for current phase, terraformingOrbController. CurrentPhase is now {terraformingOrbController.CurrentPhase}");
+                Debug.Log($"TerraformingOrbDemo.Store(explode=={explode}), finished orb scale lerping for current phase, terraformingOrbController. CurrentPhase is now {terraformingOrbController.CurrentPhase}");
             }
-			yield return null;
-		}
 
-        if (Time.unscaledTime - lerpStartTime >= 5) Debug.LogError($"TerraformingOrbDemo.Store(), orb lerping timed out after 5 seconds. lerpStartTime: {lerpStartTime}, Time.unscaledTime: {Time.unscaledTime}, targetPhase: {targetPhase}, terraformingOrbController.CurrentPhase: {terraformingOrbController.CurrentPhase}, terraformingOrbController.IsScaleLerpingFinished: {terraformingOrbController.IsScaleLerpingFinished}");
+            yield return null;
+        }
+
+        if (Time.unscaledTime - lerpStartTime >= 5) Debug.LogError($"TerraformingOrbDemo.Store(explode=={explode}), orb lerping timed out after 5 seconds. lerpStartTime: {lerpStartTime}, Time.unscaledTime: {Time.unscaledTime}, targetPhase: {targetPhase}, terraformingOrbController.CurrentPhase: {terraformingOrbController.CurrentPhase}, terraformingOrbController.IsScaleLerpingFinished: {terraformingOrbController.IsScaleLerpingFinished}");
 
         yield return new WaitForSecondsRealtime(1f);
 
-		//Then lerp the camera back to the player
-		timeElapsed = 0f;
-		while (timeElapsed < cameraTransitionDuration)
-		{
-			timeElapsed += Time.unscaledDeltaTime;
-			float t = timeElapsed / cameraTransitionDuration;
-			t = t * t * t * (t * (6f * t - 15f) + 10f);
-			playerCamera.transform.position = Vector3.Lerp(towerCameraTransform.position, playerCameraTransform.position, t);
-			yield return null;
-		}
-
-        EStage currentStage = StageManager.Instance.CurrentStage.GetID();
-
-        if (currentStage != EStage.Win && currentStage != EStage.Lose)
+        if (explode)
         {
-            Time.timeScale = 1;
-            PauseMenuManager.Instance.CanPause = true;
-            TerraformingUI.Instance.CanDisplay = true;
-        }
+            //Trigger explode, then pause for a bit
+            terraformingOrbController.Explode();
+            yield return new WaitForSecondsRealtime(1f);
 
-        yield return null;
-	}
-
-	private IEnumerator Explode()
-	{
-        //Everything except the orb fx will be running (creates focus)
-        PauseMenuManager.Instance.CanPause = false;
-        TerraformingUI.Instance.CanDisplay = false;
-        Time.timeScale = 0;
-		float timeElapsed = 0f;
-
-		//Lerp Camera to Tower's position
-		while (timeElapsed < cameraTransitionDuration)
-		{
-			timeElapsed += Time.unscaledDeltaTime;
-			float t = timeElapsed / cameraTransitionDuration;
-			t = t * t * t * (t * (6f * t - 15f) + 10f);
-			playerCamera.transform.position = Vector3.Lerp(playerCameraTransform.position, towerCameraTransform.position, t);
-			yield return null;
-		}
-
-		//Trigger store, then pause for a bit
-		targetPhase = Mathf.Ceil((RatioManager.Instance.PointsStored + RatioManager.Instance.PointsGained) / stageSixPoints * 6);
-		if (targetPhase > 6) targetPhase = 6;
-        float lerpStartTime = Time.unscaledTime;
-		Debug.Log($"TerraformingOrbDemo.Explode(), starting orb scale lerping, targetPhase: {targetPhase}, lerpStartTime: {lerpStartTime}");
-
-        while (terraformingOrbController.CurrentPhase < targetPhase && Time.unscaledTime - lerpStartTime < 5)
-		{
-            Debug.Log($"TerraformingOrbDemo.Explode(), terraformingOrbController.IsScaleLerpingFinished: {terraformingOrbController.IsScaleLerpingFinished}");
-
-            if (terraformingOrbController.IsScaleLerpingFinished)
+            //Wait for the explosion effect to finish
+            while (!terraformingOrbController.IsShockwaveFinished)
             {
-                terraformingOrbController.CurrentPhase++;
-                Debug.Log($"TerraformingOrbDemo.Explode(), finished orb scale lerping for current phase, terraformingOrbController. CurrentPhase is now {terraformingOrbController.CurrentPhase}");
+                yield return null;
             }
 
-			yield return null;
-		}
+            //Contribute points to progress bar
+            RatioManager.Instance.DispersePoints();
 
-        if (Time.unscaledTime - lerpStartTime >= 5) Debug.LogError($"TerraformingOrbDemo.Explode(), orb lerping timed out after 5 seconds. lerpStartTime: {lerpStartTime}, Time.unscaledTime: {Time.unscaledTime}, targetPhase: {targetPhase}, terraformingOrbController.CurrentPhase: {terraformingOrbController.CurrentPhase}, terraformingOrbController.IsScaleLerpingFinished: {terraformingOrbController.IsScaleLerpingFinished}");
+		    //Reset everything
+		    setPhase = 0;
+		    terraformingOrbController.CurrentPhase = 0;
 
-		yield return new WaitForSecondsRealtime(1f);
-
-		//Trigger explode, then pause for a bit
-		terraformingOrbController.Explode();
-		yield return new WaitForSecondsRealtime(1f);
-
-		//Wait for the explosion effect to finish
-		while (!terraformingOrbController.IsShockwaveFinished)
-		{
-			yield return null;
-		}
-
-		//Contribute points to progress bar
-		RatioManager.Instance.DispersePoints();
-
-		//Reset everything
-		isExploding = false;
-		explode = false;
-		setPhase = 0;
-		terraformingOrbController.CurrentPhase = 0;
-
-		yield return new WaitForSecondsRealtime(0.5f);
+		    yield return new WaitForSecondsRealtime(0.5f);
+        }
 
 		//Then lerp the camera back to the player
 		timeElapsed = 0f;
+
 		while (timeElapsed < cameraTransitionDuration)
 		{
 			timeElapsed += Time.unscaledDeltaTime;

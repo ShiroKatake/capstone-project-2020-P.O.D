@@ -131,6 +131,7 @@ public class BuildingDemolitionController : PublicInstanceSerializableSingleton<
                 }
                 else if (building.BuildingType != EBuilding.Tower && (!showingDemolitionMenu || selectedBuilding != building))
                 {
+                    HideDemolitionMenu();
                     ShowDemolitionMenu(building);
                     return;
                 }            
@@ -201,7 +202,7 @@ public class BuildingDemolitionController : PublicInstanceSerializableSingleton<
     /// </summary>
     public void HideDemolitionMenu()
     {
-        //Debug.Log($"BuildingDemolitionController.HideDemolitionMenu()");
+        Debug.Log($"BuildingDemolitionController.HideDemolitionMenu(), selectedBuilding: {selectedBuilding}");
         selectedBuilding = null;
         showingDemolitionMenu = false;
         menu.SetActive(false);
@@ -216,21 +217,10 @@ public class BuildingDemolitionController : PublicInstanceSerializableSingleton<
     /// </summary>
     public void ToggleBuildingEnabled()
     {
-        //Debug.Log($"BuildingDemolitionController.ToggleEnabled()");
-
-        if (selectedBuilding.DisabledByPlayer)
-        {
-            selectedBuilding.DisabledByPlayer = false;
-            selectedBuilding.Operational = true;
-            enableDisableText.text = "Disable";
-        }
-        else
-        {
-            selectedBuilding.DisabledByPlayer = true;
-            selectedBuilding.Operational = false;
-            enableDisableText.text = "Enable";
-        }
-
+        Debug.Log($"BuildingDemolitionController.ToggleEnabled(), selectedBuilding: {selectedBuilding}, will be set to disabled by player: {!selectedBuilding.DisabledByPlayer}");
+        selectedBuilding.DisabledByPlayer = !selectedBuilding.DisabledByPlayer;
+        selectedBuilding.Operational = !selectedBuilding.DisabledByPlayer;
+        enableDisableText.text = selectedBuilding.DisabledByPlayer ? "Enable" : "Disable";
 		RatioManager.Instance.UpdateCurrentRatio();
         HideDemolitionMenu();
     }

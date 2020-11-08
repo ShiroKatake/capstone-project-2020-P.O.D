@@ -207,7 +207,7 @@ public class RatioManager : PublicInstanceSerializableSingleton<RatioManager>
 	/// <returns></returns>
 	public void DispersePoints()
 	{
-		currentPoints += (pointsThisWave + storedPoints) * currentMultiplier;
+		currentPoints += storedPoints * currentMultiplier;
 		storedPoints = 0;
 		ClearMultiplier();
 
