@@ -100,7 +100,7 @@ public class TerraformingUI : PublicInstanceSerializableSingleton<TerraformingUI
 
     public void UpdateTarget(int[] targetRatioArray, int[] currentRatioArray)
     {
-        Debug.Log("TerraformingUI.UpdateTarget()");
+        //Debug.Log("TerraformingUI.UpdateTarget()");
         targetRatio = targetRatioArray;
         maxMultiplier = 1;
         int currentMultiplier;
@@ -126,7 +126,7 @@ public class TerraformingUI : PublicInstanceSerializableSingleton<TerraformingUI
         }
         maxBarValue = buildingsNeeded.Max() + 5;
 
-        Debug.Log($"Invoking updateTargetRatio");
+        //Debug.Log($"Invoking updateTargetRatio");
         UpdateTargetRatio(targetRatioArray);
     }
 
@@ -139,7 +139,7 @@ public class TerraformingUI : PublicInstanceSerializableSingleton<TerraformingUI
 
             if (state == true)
             {
-                Debug.Log($"Invoking updateCurrentRatio and updateTargetRatio");
+                //Debug.Log($"Invoking updateCurrentRatio and updateTargetRatio");
                 UpdateCurrentRatio(currentRatio);
                 UpdateTargetRatio(targetRatio);
             }

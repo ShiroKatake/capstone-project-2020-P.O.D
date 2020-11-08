@@ -20,7 +20,7 @@ public class TerraformingUI_TodaysRatio : MonoBehaviour
 	public void ChangeTexts(int[] ratioArray)
 	{
         string text = $"{ratioArray[0]} : {ratioArray[1]} : {ratioArray[2]}";
-        Debug.Log($"{this}.TerraformingUI_TodaysRatio.ChangeTexts(), ratio is {ratioArray[0]}:{ratioArray[1]}:{ratioArray[2]}, text is \"{text}\"");
+        //Debug.Log($"{this}.TerraformingUI_TodaysRatio.ChangeTexts(), ratio is {ratioArray[0]}:{ratioArray[1]}:{ratioArray[2]}, text is \"{text}\"");
         todaysRatio.text = text;
 	}
 }

@@ -26,7 +26,7 @@ public class BuildingStats : MonoBehaviour
 
 	public void DisplayBuildingInfo()
 	{
-        Debug.Log($"{this}.BuildingStats.DisplayBuildingInfo()");
+        //Debug.Log($"{this}.BuildingStats.DisplayBuildingInfo()");
 		buildingName.text = $"{ratioBuilding.ToString()}";
 		enabledText.text = $"Enabled: {BuildingManager.Instance.BuiltAndOperationalBuildingsCount(ratioBuilding)}";
 		disabledText.text = $"Disabled: {BuildingManager.Instance.BuiltAndNonOperationalBuildingsCount(ratioBuilding)}";
