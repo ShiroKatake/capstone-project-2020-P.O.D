@@ -355,23 +355,34 @@ public class Alien : MonoBehaviour, IMessenger
     /// </summary>
     private void Move()
     {
-        float targetRadius = targetSize.Radius(transform.position);
-
-        if (Vector3.SqrMagnitude(PositionAtSameHeight(target.position) - transform.position) > ((attackRange + targetRadius) * (attackRange + targetRadius)))
+        if (targetSize == null)
         {
-            AudioManager.Instance.PlaySound(AudioManager.ESound.Alien_Moves, gameObject);
-            if (navMeshAgent.speed != speed) navMeshAgent.speed = speed;
-            if (navMeshAgent.stoppingDistance != attackRange * 0.67f + targetRadius) navMeshAgent.stoppingDistance = attackRange * 0.67f + targetRadius;
-            CheckStalling();
-        }
-        else
-        {
-            if (navMeshAgent.speed != 0) navMeshAgent.speed = 0;
-
-            if (Time.time - timeOfLastAttack > attackCooldown)
+            if (target != null)
             {
-                timeOfLastAttack = Time.time;
-				Attack();
+                targetSize = target.GetComponentInParent<Size>();
+            }
+        }
+
+        if (targetSize != null)
+        { 
+            float targetRadius = targetSize.Radius(transform.position);
+
+            if (Vector3.SqrMagnitude(PositionAtSameHeight(target.position) - transform.position) > ((attackRange + targetRadius) * (attackRange + targetRadius)))
+            {
+                AudioManager.Instance.PlaySound(AudioManager.ESound.Alien_Moves, gameObject);
+                if (navMeshAgent.speed != speed) navMeshAgent.speed = speed;
+                if (navMeshAgent.stoppingDistance != attackRange * 0.67f + targetRadius) navMeshAgent.stoppingDistance = attackRange * 0.67f + targetRadius;
+                CheckStalling();
+            }
+            else
+            {
+                if (navMeshAgent.speed != 0) navMeshAgent.speed = 0;
+
+                if (Time.time - timeOfLastAttack > attackCooldown)
+                {
+                    timeOfLastAttack = Time.time;
+				    Attack();
+                }
             }
         }
     }
