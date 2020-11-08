@@ -115,18 +115,18 @@ public class TerraformingOrbDemo : MonoBehaviour
 
 		//Trigger store fx, then pause for a bit
 		targetPhase = Mathf.Ceil(RatioManager.Instance.PointsStored / stageSixPoints * 6);
-		if (targetPhase > 6)
-			targetPhase = 6;
+		if (targetPhase > 6) targetPhase = 6;
+        float lerpStartTime = Time.unscaledTime;
 
-		while (terraformingOrbController.CurrentPhase < targetPhase)
+		while (terraformingOrbController.CurrentPhase < targetPhase || Time.unscaledTime - lerpStartTime > 5)
 		{
-			if (terraformingOrbController.IsScaleLerpingFinished)
-			{
-				terraformingOrbController.CurrentPhase = terraformingOrbController.CurrentPhase + 1;
-			}
+			if (terraformingOrbController.IsScaleLerpingFinished) terraformingOrbController.CurrentPhase++;
 			yield return null;
 		}
-		yield return new WaitForSecondsRealtime(1f);
+
+        if (Time.unscaledTime - lerpStartTime > 5) Debug.LogError($"TerraformingOrbDemo.Store(), orb lerping timed out after 5 seconds. targetPhase: {targetPhase}, terraformingOrbController.CurrentPhase: {terraformingOrbController.CurrentPhase}, terraformingOrbController.IsScaleLerpingFinished: {terraformingOrbController.IsScaleLerpingFinished}");
+
+        yield return new WaitForSecondsRealtime(1f);
 
 		//Then lerp the camera back to the player
 		timeElapsed = 0f;
@@ -138,11 +138,17 @@ public class TerraformingOrbDemo : MonoBehaviour
 			playerCamera.transform.position = Vector3.Lerp(towerCameraTransform.position, playerCameraTransform.position, t);
 			yield return null;
 		}
-		Time.timeScale = 1;
-        PauseMenuManager.Instance.CanPause = true;
-        TerraformingUI.Instance.CanDisplay = true;
-        yield return null;
 
+        EStage currentStage = StageManager.Instance.CurrentStage.GetID();
+
+        if (currentStage != EStage.Win && currentStage != EStage.Lose)
+        {
+            Time.timeScale = 1;
+            PauseMenuManager.Instance.CanPause = true;
+            TerraformingUI.Instance.CanDisplay = true;
+        }
+
+        yield return null;
 	}
 
 	private IEnumerator Explode()
@@ -165,20 +171,23 @@ public class TerraformingOrbDemo : MonoBehaviour
 
 		//Trigger store, then pause for a bit
 		targetPhase = Mathf.Ceil((RatioManager.Instance.PointsStored + RatioManager.Instance.PointsGained) / stageSixPoints * 6);
-		if (targetPhase > 6)
-			targetPhase = 6;
+		if (targetPhase > 6) targetPhase = 6;
+        float lerpStartTime = Time.unscaledTime;
+		Debug.Log($"TerraformingOrbDemo.Explode(), starting orb scale lerping, targetPhase: {targetPhase}");
 
-		Debug.Log($"Target Phase: {targetPhase}");
-
-		while (terraformingOrbController.CurrentPhase < targetPhase)
+		while (terraformingOrbController.CurrentPhase < targetPhase || Time.unscaledTime - lerpStartTime > 5)
 		{
-			if (terraformingOrbController.IsScaleLerpingFinished)
-			{
-				terraformingOrbController.CurrentPhase = terraformingOrbController.CurrentPhase + 1;
-				Debug.Log($"Target Phase: {terraformingOrbController.CurrentPhase}");
-			}
+            if (terraformingOrbController.IsScaleLerpingFinished)
+            {
+                terraformingOrbController.CurrentPhase++;
+                Debug.Log($"TerraformingOrbDemo.Explode(), finished orb scale lerping for current phase, terraformingOrbController.CurrentPhase: {terraformingOrbController.CurrentPhase}");
+            }
+
 			yield return null;
 		}
+
+        if (Time.unscaledTime - lerpStartTime > 5) Debug.LogError($"TerraformingOrbDemo.Explode(), orb lerping timed out after 5 seconds. targetPhase: {targetPhase}, terraformingOrbController.CurrentPhase: {terraformingOrbController.CurrentPhase}, terraformingOrbController.IsScaleLerpingFinished: {terraformingOrbController.IsScaleLerpingFinished}");
+
 		yield return new WaitForSecondsRealtime(1f);
 
 		//Trigger explode, then pause for a bit
@@ -212,9 +221,16 @@ public class TerraformingOrbDemo : MonoBehaviour
 			playerCamera.transform.position = Vector3.Lerp(towerCameraTransform.position, playerCameraTransform.position, t);
 			yield return null;
 		}
-		Time.timeScale = 1;
-        PauseMenuManager.Instance.CanPause = true;
-        TerraformingUI.Instance.CanDisplay = true;
+
+        EStage currentStage = StageManager.Instance.CurrentStage.GetID();
+
+        if (currentStage != EStage.Win && currentStage != EStage.Lose)
+        {
+            Time.timeScale = 1;
+            PauseMenuManager.Instance.CanPause = true;
+            TerraformingUI.Instance.CanDisplay = true;
+        }
+
         yield return null;
 	}
 }

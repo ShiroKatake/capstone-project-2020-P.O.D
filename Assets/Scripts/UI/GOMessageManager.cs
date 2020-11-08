@@ -32,6 +32,7 @@ public class GOMessageManager : MonoBehaviour
 	public void SetText(bool win){
         PauseMenuManager.Instance.CanPause = false;
         TerraformingUI.Instance.CanDisplay = false;
+        Time.timeScale = 0;
 
         if (win) {
 			title.text = "Victory!";
