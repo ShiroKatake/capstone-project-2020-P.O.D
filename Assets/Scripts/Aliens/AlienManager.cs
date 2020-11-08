@@ -226,6 +226,21 @@ public class AlienManager : PublicInstanceSerializableSingleton<AlienManager>
 					MapManager.Instance.MinorityAlienSpawnPoints.Clear();
 				}
 			}
+            else if (aliens.Count > 0)
+            {
+                int totalAliens = aliens.Count;
+
+                for (int i = 0; i < totalAliens; i++)
+                {
+                    if (aliens[i] == null || !aliens[i].gameObject.activeSelf)
+                    {
+                        timeOfLastDeath = Time.time;
+                        aliens.RemoveAt(i);
+                        i--;
+                        totalAliens--;
+                    }
+                }
+            }
 
             yield return null;
         }
