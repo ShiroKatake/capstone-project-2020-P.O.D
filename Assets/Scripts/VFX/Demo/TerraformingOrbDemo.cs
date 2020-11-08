@@ -117,14 +117,21 @@ public class TerraformingOrbDemo : MonoBehaviour
 		targetPhase = Mathf.Ceil(RatioManager.Instance.PointsStored / stageSixPoints * 6);
 		if (targetPhase > 6) targetPhase = 6;
         float lerpStartTime = Time.unscaledTime;
+        Debug.Log($"TerraformingOrbDemo.Store(), starting orb scale lerping, targetPhase: {targetPhase}, lerpStartTime: {lerpStartTime}");
 
-		while (terraformingOrbController.CurrentPhase < targetPhase || Time.unscaledTime - lerpStartTime > 5)
-		{
-			if (terraformingOrbController.IsScaleLerpingFinished) terraformingOrbController.CurrentPhase++;
+        while (terraformingOrbController.CurrentPhase < targetPhase && Time.unscaledTime - lerpStartTime < 5)
+        {
+            Debug.Log($"TerraformingOrbDemo.Explode(), terraformingOrbController.IsScaleLerpingFinished: {terraformingOrbController.IsScaleLerpingFinished}");
+
+            if (terraformingOrbController.IsScaleLerpingFinished)
+            {
+                terraformingOrbController.CurrentPhase++;
+                Debug.Log($"TerraformingOrbDemo.Explode(), finished orb scale lerping for current phase, terraformingOrbController. CurrentPhase is now {terraformingOrbController.CurrentPhase}");
+            }
 			yield return null;
 		}
 
-        if (Time.unscaledTime - lerpStartTime > 5) Debug.LogError($"TerraformingOrbDemo.Store(), orb lerping timed out after 5 seconds. targetPhase: {targetPhase}, terraformingOrbController.CurrentPhase: {terraformingOrbController.CurrentPhase}, terraformingOrbController.IsScaleLerpingFinished: {terraformingOrbController.IsScaleLerpingFinished}");
+        if (Time.unscaledTime - lerpStartTime >= 5) Debug.LogError($"TerraformingOrbDemo.Store(), orb lerping timed out after 5 seconds. lerpStartTime: {lerpStartTime}, Time.unscaledTime: {Time.unscaledTime}, targetPhase: {targetPhase}, terraformingOrbController.CurrentPhase: {terraformingOrbController.CurrentPhase}, terraformingOrbController.IsScaleLerpingFinished: {terraformingOrbController.IsScaleLerpingFinished}");
 
         yield return new WaitForSecondsRealtime(1f);
 
@@ -173,20 +180,22 @@ public class TerraformingOrbDemo : MonoBehaviour
 		targetPhase = Mathf.Ceil((RatioManager.Instance.PointsStored + RatioManager.Instance.PointsGained) / stageSixPoints * 6);
 		if (targetPhase > 6) targetPhase = 6;
         float lerpStartTime = Time.unscaledTime;
-		Debug.Log($"TerraformingOrbDemo.Explode(), starting orb scale lerping, targetPhase: {targetPhase}");
+		Debug.Log($"TerraformingOrbDemo.Explode(), starting orb scale lerping, targetPhase: {targetPhase}, lerpStartTime: {lerpStartTime}");
 
-		while (terraformingOrbController.CurrentPhase < targetPhase || Time.unscaledTime - lerpStartTime > 5)
+        while (terraformingOrbController.CurrentPhase < targetPhase && Time.unscaledTime - lerpStartTime < 5)
 		{
+            Debug.Log($"TerraformingOrbDemo.Explode(), terraformingOrbController.IsScaleLerpingFinished: {terraformingOrbController.IsScaleLerpingFinished}");
+
             if (terraformingOrbController.IsScaleLerpingFinished)
             {
                 terraformingOrbController.CurrentPhase++;
-                Debug.Log($"TerraformingOrbDemo.Explode(), finished orb scale lerping for current phase, terraformingOrbController.CurrentPhase: {terraformingOrbController.CurrentPhase}");
+                Debug.Log($"TerraformingOrbDemo.Explode(), finished orb scale lerping for current phase, terraformingOrbController. CurrentPhase is now {terraformingOrbController.CurrentPhase}");
             }
 
 			yield return null;
 		}
 
-        if (Time.unscaledTime - lerpStartTime > 5) Debug.LogError($"TerraformingOrbDemo.Explode(), orb lerping timed out after 5 seconds. targetPhase: {targetPhase}, terraformingOrbController.CurrentPhase: {terraformingOrbController.CurrentPhase}, terraformingOrbController.IsScaleLerpingFinished: {terraformingOrbController.IsScaleLerpingFinished}");
+        if (Time.unscaledTime - lerpStartTime >= 5) Debug.LogError($"TerraformingOrbDemo.Explode(), orb lerping timed out after 5 seconds. lerpStartTime: {lerpStartTime}, Time.unscaledTime: {Time.unscaledTime}, targetPhase: {targetPhase}, terraformingOrbController.CurrentPhase: {terraformingOrbController.CurrentPhase}, terraformingOrbController.IsScaleLerpingFinished: {terraformingOrbController.IsScaleLerpingFinished}");
 
 		yield return new WaitForSecondsRealtime(1f);
 
